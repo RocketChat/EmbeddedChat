@@ -1,0 +1,15 @@
+.container {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+}
+
+.textInput {
+  width: 100%;
+  height: 50px;
+  border: none;
+  outline: none;
+}

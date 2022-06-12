@@ -1,0 +1,22 @@
+.container {
+  overflow: scroll;
+  overflow: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c3c3c3;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b1;
+}
