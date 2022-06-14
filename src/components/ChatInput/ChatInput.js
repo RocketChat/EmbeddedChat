@@ -1,29 +1,16 @@
 import { Box, Icon } from "@rocket.chat/fuselage";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./ChatInput.module.css";
-import JSEMOJI from "emoji-js";
-import CustomEmojiPicker from "./EmojiPicker";
+import { EmojiPicker } from "../EmojiPicker/index";
 import Popup from "reactjs-popup";
-
-let jsemoji = new JSEMOJI();
-jsemoji.img_set = "emojione";
-jsemoji.img_sets.emojione.path =
-  "https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/";
-jsemoji.supports_css = false;
-jsemoji.allow_native = false;
-jsemoji.replace_mode = "unified";
 
 const ChatInput = () => {
   const [message, setMessage] = useState("");
-  const [emoji, setEmoji] = useState(null);
-  const [openEmoji, setOpenEmoji] = useState(false);
 
   const handleEmojiClick = (n, e) => {
-    let emoji = jsemoji.replace_colons(`:${e.name}:`);
-    setEmoji(emoji);
+    let emoji_inside_colons = `:${e.name}:`;
+    setMessage(message+emoji_inside_colons);
   };
-
-  const ref = useRef();
 
   return (
     <Box>
@@ -31,8 +18,6 @@ const ChatInput = () => {
         <Popup
           trigger={
             <Icon
-              ref={ref}
-              onClick={() => {}}
               name="emoji"
               size="x25"
               padding={6}
@@ -40,7 +25,7 @@ const ChatInput = () => {
           }
           position="top left"
         >
-          <CustomEmojiPicker handleEmojiClick={handleEmojiClick} />
+          <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>
         <input
           placeholder="Message"

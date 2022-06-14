@@ -62,8 +62,11 @@
     "@rocket.chat/fuselage-hooks": "^0.31.12",
     "@rocket.chat/fuselage-polyfills": "^0.31.12",
     "@rocket.chat/icons": "^0.31.12",
+    "dompurify": "^2.3.8",
     "emoji-js": "3.4.1",
     "emoji-picker-react": "2.1.1",
+    "emoji-toolkit": "^6.6.0",
+    "marked": "^4.0.17",
     "react-virtuoso": "^1.2.4",
     "reactjs-popup": "^2.0.5"
   }

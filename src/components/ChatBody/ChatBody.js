@@ -2,17 +2,10 @@ import { Box, Message, MessageToolbox } from "@rocket.chat/fuselage";
 import React from "react";
 import styles from "./ChatBody.module.css";
 import PropTypes from "prop-types";
-import CustomEmojiPicker from "./EmojiPicker";
+import {EmojiPicker} from "../EmojiPicker/index";
 import Popup from "reactjs-popup";
-import JSEMOJI from "emoji-js";
-
-let jsemoji = new JSEMOJI();
-jsemoji.img_set = "emojione";
-jsemoji.img_sets.emojione.path =
-  "https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/";
-jsemoji.supports_css = false;
-jsemoji.allow_native = false;
-jsemoji.replace_mode = "unified";
+import {Markdown} from '../Markdown/index'
+import { jsemoji } from "../../lib/jsemoji";
 
 const ChatBody = ({ height }) => {
   const arr = [
@@ -20,8 +13,8 @@ const ChatBody = ({ height }) => {
     124, 1224, 35, 25, 255, 32,
   ];
   const handleEmojiClick = (n, e) => {
-    // let emoji = jsemoji.replace_colons(`:${e.name}:`);
-    // setEmoji(emoji);
+    let emoji = jsemoji.replace_colons(`:${e.name}:`);
+    console.log(emoji)
   };
 
   return (
@@ -34,7 +27,7 @@ const ChatBody = ({ height }) => {
               <Message.Username>@sidharth.mohanty</Message.Username>
               <Message.Timestamp>12:00 PM</Message.Timestamp>
             </Message.Header>
-            <Message.Body>Hello everyone! Whats up?</Message.Body>
+            <Message.Body><Markdown body={"Hello, `@all` I am Sid :smirk::relieved::smile: <br> *thank you* <br> `const apple = 'hello'`"} /></Message.Body>
           </Message.Container>
           <MessageToolbox.Wrapper>
             <MessageToolbox>
@@ -49,7 +42,7 @@ const ChatBody = ({ height }) => {
                 }
                 position="left center"
               >
-                <CustomEmojiPicker handleEmojiClick={handleEmojiClick} />
+                <EmojiPicker handleEmojiClick={handleEmojiClick} />
               </Popup>
               <MessageToolbox.Item icon="pin" />
             </MessageToolbox>

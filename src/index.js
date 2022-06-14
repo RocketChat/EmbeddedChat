@@ -1,9 +1,9 @@
 import { Box } from "@rocket.chat/fuselage";
 import React from "react";
 import PropTypes from "prop-types";
-import ChatBody from "./components/ChatBody";
-import ChatHeader from "./components/ChatHeader";
-import ChatInput from "./components/ChatInput";
+import {ChatBody} from "./components/ChatBody/index";
+import {ChatHeader} from "./components/ChatHeader/index";
+import {ChatInput} from "./components/ChatInput/index";
 
 export const RCComponent = ({
   isClosable = false,
