@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 
 function emojify(message) {
   return EmojiOne.toImage(message);
-};
+}
 
 const Markdown = (props) => {
   return (
