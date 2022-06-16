@@ -1,17 +1,16 @@
 import { Box } from "@rocket.chat/fuselage";
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {ChatBody} from "./components/ChatBody/index";
-import {ChatHeader} from "./components/ChatHeader/index";
-import {ChatInput} from "./components/ChatInput/index";
+import { ChatBody, ChatHeader, ChatInput } from "./components";
 
 export const RCComponent = ({
   isClosable = false,
   setClosableState,
   moreOpts = false,
   width = "100%",
-  height = "83vh",
+  height = "30vh",
 }) => {
+  const [fullScreen, setFullScreen] = useState(false)
   if (isClosable && !setClosableState) {
     throw Error(
       "Please provide a setClosableState to props when isClosable = true"
@@ -23,6 +22,8 @@ export const RCComponent = ({
         isClosable={isClosable}
         setClosableState={setClosableState}
         moreOpts={moreOpts}
+        fullScreen={fullScreen}
+        setFullScreen={setFullScreen}
       />
       <ChatBody height={height} />
       <ChatInput />
