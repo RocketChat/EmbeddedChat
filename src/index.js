@@ -25,7 +25,7 @@ export const RCComponent = ({
         fullScreen={fullScreen}
         setFullScreen={setFullScreen}
       />
-      <ChatBody height={height} />
+      <ChatBody height={!fullScreen ? height : "83vh"} />
       <ChatInput />
     </Box>
   );

@@ -33,12 +33,12 @@ const ChatHeader = ({
               margin={"0 4px"}
               display={"inline"}
               options={{
-                minimise: {
+                minimize: {
                   action: () => setFullScreen((prev) => !prev),
                   label: (
                     <Box alignItems="center" display="flex">
                       <Icon mie="x4" name="mobile" size="x16" />
-                      Minimise
+                      Minimize
                     </Box>
                   ),
                 },

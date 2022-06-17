@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import styles from "./ChatInput.module.css";
 import { EmojiPicker } from "../EmojiPicker/index";
 import Popup from "reactjs-popup";
+import { useMediaQuery } from "@rocket.chat/fuselage-hooks";
 
 const ChatInput = () => {
   const [message, setMessage] = useState("");
+  const isSmallScreen = useMediaQuery("(max-width: 992px)");
 
   const handleEmojiClick = (n, e) => {
     let emoji_inside_colons = `:${e.name}:`;
@@ -23,7 +25,7 @@ const ChatInput = () => {
               padding={6}
             />
           }
-          position="top left"
+          position={isSmallScreen ? "right top" : "top left"}
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>
