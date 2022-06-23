@@ -4,7 +4,6 @@ export default class RocketChatInstance {
   host = 'http://localhost:3000';
   rid = '';
   rcClient = new Rocketchat({
-    logger: console,
     protocol: 'ddp',
     host: this.host,
     useSsl: false,
@@ -14,17 +13,22 @@ export default class RocketChatInstance {
     this.rid = rid;
   }
 
-  async realtime(cookies) {
+  async realtime(cookies, callback) {
     try {
       await this.rcClient.connect();
       await this.rcClient.resume({ token: cookies.rc_token });
       await this.rcClient.subscribe('stream-room-messages', this.rid);
-      this.rcClient.onMessage((data) => {
-        console.log(data);
+      await this.rcClient.onMessage((data) => {
+        callback(data);
       });
     } catch (err) {
-      console.log(err.message);
+      await this.close();
     }
+  }
+
+  async close() {
+    await this.rcClient.unsubscribeAll();
+    await this.rcClient.disconnect();
   }
 
   async getMessages(cookies) {
