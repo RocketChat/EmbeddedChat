@@ -2,6 +2,9 @@ import { Box } from "@rocket.chat/fuselage";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { ChatBody, ChatHeader, ChatInput } from "./components";
+import RocketChatInstance from './lib/api';
+import { RCInstanceProvider } from './context/RCInstance';
+import Cookie from 'js-cookie';
 
 export const RCComponent = ({
   isClosable = false,
@@ -13,11 +16,17 @@ export const RCComponent = ({
   const [fullScreen, setFullScreen] = useState(false)
   if (isClosable && !setClosableState) {
     throw Error(
-      "Please provide a setClosableState to props when isClosable = true"
+      'Please provide a setClosableState to props when isClosable = true'
     );
   }
+  const RCInstance = new RocketChatInstance('http://localhost:3000', 'GENERAL');
+  const cookies = {
+    rc_token: Cookie.get('rc_token'),
+    rc_uid: Cookie.get('rc_uid'),
+  };
   return (
-    <Box width={width}>
+    <RCInstanceProvider value={{ RCInstance, cookies }}>
+      <Box width={width}>
       <ChatHeader
         isClosable={isClosable}
         setClosableState={setClosableState}
@@ -26,8 +35,9 @@ export const RCComponent = ({
         setFullScreen={setFullScreen}
       />
       <ChatBody height={!fullScreen ? height : "83vh"} />
-      <ChatInput />
-    </Box>
+        <ChatInput />
+      </Box>
+    </RCInstanceProvider>
   );
 };
 

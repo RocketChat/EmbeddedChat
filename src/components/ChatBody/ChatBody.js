@@ -1,5 +1,5 @@
 import { Box, Message, MessageToolbox } from "@rocket.chat/fuselage";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./ChatBody.module.css";
 import PropTypes from "prop-types";
 import {EmojiPicker} from "../EmojiPicker/index";
@@ -7,30 +7,45 @@ import Popup from "reactjs-popup";
 import {Markdown} from '../Markdown/index'
 import { jsemoji } from "../../lib/jsemoji";
 import { useMediaQuery } from "@rocket.chat/fuselage-hooks";
+import RCContext from '../../context/RCInstance';
 
 const ChatBody = ({ height }) => {
-  const arr = [
-    1, 22, 3, 4, 5543, 6436, 346, 574, 73, 64, 463, 324, 313, 523, 412, 212,
-    124, 1224, 35, 25, 255, 32,
-  ];
+  const { RCInstance, cookies } = useContext(RCContext);
   const isSmallScreen = useMediaQuery("(max-width: 992px)");
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function getMessages() {
+      const { messages } = await RCInstance.getMessages(cookies);
+      setData(messages);
+    }
+    RCInstance.realtime(cookies, getMessages);
+    getMessages();
+
+    return () => RCInstance.close();
+  }, []);
 
   const handleEmojiClick = (n, e) => {
     let emoji = jsemoji.replace_colons(`:${e.name}:`);
-    console.log(emoji)
+    console.log(emoji);
   };
 
   return (
     <Box className={styles.container} height={height}>
-      {arr.map((val) => (
-        <Message key={val} className="customclass">
+      {data.map((msg) => (
+        <Message key={msg._id}>
           <Message.Container>
             <Message.Header>
-              <Message.Name>Sidharth Mohanty</Message.Name>
-              <Message.Username>@sidharth.mohanty</Message.Username>
-              <Message.Timestamp>12:00 PM</Message.Timestamp>
+              <Message.Name>{msg.u?.name}</Message.Name>
+              <Message.Username>@{msg.u.username}</Message.Username>
+              <Message.Timestamp>
+                {new Date(msg.ts).toDateString()}
+              </Message.Timestamp>
             </Message.Header>
-            <Message.Body><Markdown body={"Hello, `@all` I am Sid :smirk::relieved::smile: <br> *thank you* <br> `const apple = 'hello'`"} /></Message.Body>
+            <Message.Body>
+              <Markdown body={msg.msg} />
+            </Message.Body>
           </Message.Container>
           <MessageToolbox.Wrapper>
             <MessageToolbox>
