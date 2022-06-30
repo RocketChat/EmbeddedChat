@@ -72,7 +72,11 @@
     "emoji-js": "3.4.1",
     "emoji-picker-react": "2.1.1",
     "emoji-toolkit": "^6.6.0",
+<<<<<<< HEAD
     "js-cookie": "^3.0.1",
+=======
+    "he": "^1.2.0",
+>>>>>>> parsing emojis in message box
     "marked": "^4.0.17",
     "react-virtuoso": "^1.2.4",
     "reactjs-popup": "^2.0.5"

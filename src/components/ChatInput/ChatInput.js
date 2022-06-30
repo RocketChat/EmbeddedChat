@@ -3,22 +3,26 @@ import React, { useState, useContext } from "react";
 import styles from "./ChatInput.module.css";
 import { EmojiPicker } from "../EmojiPicker/index";
 import Popup from "reactjs-popup";
-import { useMediaQuery } from "@rocket.chat/fuselage-hooks";
 import RCContext from '../../context/RCInstance';
+import he from 'he'
 
 const ChatInput = () => {
-  const [message, setMessage] = useState("");
-  const isSmallScreen = useMediaQuery("(max-width: 992px)");
-  const { RCInstance, cookies } = useContext(RCContext);
-
+    const [message, setMessage] = useState("");
+    const { RCInstance, cookies } = useContext(RCContext);
+    const sendMessage = async () => {
+      await RCInstance.sendMessage(message, cookies);
+      setMessage('');
+    }
+    
   const handleEmojiClick = (n, e) => {
-    let emoji_inside_colons = `:${e.name}:`;
-    setMessage(message + emoji_inside_colons);
-  };
-
-  const sendMessage = async () => {
-    await RCInstance.sendMessage(message, cookies);
-    setMessage('');
+    if (n.length > 5) {
+      let flagUnifed = '&#x' + n.split('-').join(';&#x')+';';
+      let flag = he.decode(flagUnifed);
+      setMessage(message+flag);
+      return;
+    }
+    let unified_emoji = he.decode(`&#x${n};`);
+    setMessage(message+unified_emoji);
   };
 
   return (
@@ -32,7 +36,7 @@ const ChatInput = () => {
               padding={6}
             />
           }
-          position={isSmallScreen ? "right top" : "top left"}
+          position={"top left"}
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>
