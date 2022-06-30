@@ -1,3 +1,9 @@
+---
+name: Feature
+about: Create a feature request
+
+---
+
 As an EmbedChat developer
 
 **I need to**: 
@@ -9,3 +15,4 @@ As an EmbedChat developer
 - [ ] TODO 1
 - [ ] TODO 2
 - [ ] TODO 3
+
