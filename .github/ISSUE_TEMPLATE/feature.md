@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: Create a feature request
-
+labels: enhancement
 ---
 
 As an EmbedChat developer
