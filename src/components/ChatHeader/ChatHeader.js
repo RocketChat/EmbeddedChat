@@ -1,7 +1,7 @@
-import { ActionButton, Box, Icon, Menu } from "@rocket.chat/fuselage";
-import React from "react";
-import styles from "./ChatHeader.module.css";
-import PropTypes from "prop-types";
+import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
+import React from 'react';
+import styles from './ChatHeader.module.css';
+import PropTypes from 'prop-types';
 
 const ChatHeader = ({
   isClosable,
@@ -91,11 +91,11 @@ const ChatHeader = ({
               setClosableState((prev) => !prev);
             }}
             ghost
-            display={"inline"}
+            display={'inline'}
             square
             small
           >
-            <Icon name="cross" size={"x20"} />
+            <Icon name="cross" size={'x20'} />
           </ActionButton>
         )}
       </Box>

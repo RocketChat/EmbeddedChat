@@ -3,6 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import babel from "@rollup/plugin-babel";
 import postcss from "rollup-plugin-postcss";
 import external from "rollup-plugin-peer-deps-external";
+import json from "@rollup/plugin-json";
 
 const packageJson = require("./package.json");
 
@@ -14,7 +15,7 @@ export default [
       { file: packageJson.module, format: "esm", sourcemap: true },
     ],
     plugins: [
-      resolve(),
+      resolve({ browser: true }),
       commonjs({ include: ['node_modules/**'] }),
       babel({
         exclude: "node_modules/**",
@@ -22,6 +23,7 @@ export default [
         babelHelpers: 'bundled'
       }),
       postcss(),
+      json(),
       external(),
     ],
   },
