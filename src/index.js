@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { ChatBody, ChatHeader, ChatInput } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
-import Cookie from 'js-cookie';
 
 export const RCComponent = ({
   isClosable = false,
@@ -14,18 +13,17 @@ export const RCComponent = ({
   height = '30vh',
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
     );
   }
+
   const RCInstance = new RocketChatInstance('http://localhost:3000', 'GENERAL');
-  const cookies = {
-    rc_token: Cookie.get('rc_token'),
-    rc_uid: Cookie.get('rc_uid'),
-  };
+
   return (
-    <RCInstanceProvider value={{ RCInstance, cookies }}>
+    <RCInstanceProvider value={{ RCInstance }}>
       <Box width={width}>
         <ChatHeader
           isClosable={isClosable}

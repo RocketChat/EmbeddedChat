@@ -9,17 +9,17 @@ import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import RCContext from '../../context/RCInstance';
 
 const ChatBody = ({ height }) => {
-  const { RCInstance, cookies } = useContext(RCContext);
+  const { RCInstance } = useContext(RCContext);
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
 
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function getMessages() {
-      const { messages } = await RCInstance.getMessages(cookies);
+      const { messages } = await RCInstance.getMessages();
       setData(messages);
     }
-    RCInstance.realtime(cookies, getMessages);
+    RCInstance.realtime(getMessages);
     getMessages();
 
     return () => RCInstance.close();

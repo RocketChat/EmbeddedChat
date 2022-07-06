@@ -9,11 +9,11 @@ import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 
 const ChatInput = () => {
   const [message, setMessage] = useState('');
-  const { RCInstance, cookies } = useContext(RCContext);
+  const { RCInstance } = useContext(RCContext);
   const { signIn } = useGoogleLogin();
 
   const sendMessage = async () => {
-    await RCInstance.sendMessage(message, cookies);
+    await RCInstance.sendMessage(message);
     setMessage('');
   };
 
@@ -28,21 +28,8 @@ const ChatInput = () => {
     setMessage(message + unified_emoji);
   }
   const handleLogin = async () => {
-    const tokens = await signIn();
-    const req = await fetch('http://localhost:3000/api/v1/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        serviceName: 'google',
-        accessToken: tokens.access_token,
-        idToken: tokens.id_token,
-        expiresIn: 3600,
-      }),
-    });
-    const response = await req.json();
-    console.log(response);
+    const cookies = await RCInstance.googleSSOLogin(signIn);
+    RCInstance.setCookies(cookies);
   };
 
   return (
@@ -67,8 +54,11 @@ const ChatInput = () => {
             }
           }}
         />
-        {/* <Icon onClick={sendMessage} name="send" size="x25" padding={6} /> */}
-        <Button onClick={handleLogin}>Login</Button>
+        {RCInstance.getCookies().rc_token ? (
+          <Icon onClick={sendMessage} name="send" size="x25" padding={6} />
+        ) : (
+          <Button onClick={handleLogin}>Login</Button>
+        )}
       </Box>
     </Box>
   );
