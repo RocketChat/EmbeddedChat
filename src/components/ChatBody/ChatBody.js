@@ -32,7 +32,7 @@ const ChatBody = ({ height }) => {
 
   return (
     <Box className={styles.container} height={height}>
-      {data.map((msg) => (
+      {data?.map((msg) => (
         <Message key={msg._id}>
           <Message.Container>
             <Message.Header>
