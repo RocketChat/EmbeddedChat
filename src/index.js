@@ -1,7 +1,7 @@
-import { Box } from "@rocket.chat/fuselage";
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { ChatBody, ChatHeader, ChatInput } from "./components";
+import { Box } from '@rocket.chat/fuselage';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { ChatBody, ChatHeader, ChatInput } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import Cookie from 'js-cookie';
@@ -10,10 +10,10 @@ export const RCComponent = ({
   isClosable = false,
   setClosableState,
   moreOpts = false,
-  width = "100%",
-  height = "30vh",
+  width = '100%',
+  height = '30vh',
 }) => {
-  const [fullScreen, setFullScreen] = useState(false)
+  const [fullScreen, setFullScreen] = useState(false);
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -27,14 +27,14 @@ export const RCComponent = ({
   return (
     <RCInstanceProvider value={{ RCInstance, cookies }}>
       <Box width={width}>
-      <ChatHeader
-        isClosable={isClosable}
-        setClosableState={setClosableState}
-        moreOpts={moreOpts}
-        fullScreen={fullScreen}
-        setFullScreen={setFullScreen}
-      />
-      <ChatBody height={!fullScreen ? height : "83vh"} />
+        <ChatHeader
+          isClosable={isClosable}
+          setClosableState={setClosableState}
+          moreOpts={moreOpts}
+          fullScreen={fullScreen}
+          setFullScreen={setFullScreen}
+        />
+        <ChatBody height={!fullScreen ? height : '83vh'} />
         <ChatInput />
       </Box>
     </RCInstanceProvider>

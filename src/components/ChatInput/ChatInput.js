@@ -1,42 +1,36 @@
-import { Box, Icon } from "@rocket.chat/fuselage";
-import React, { useState, useContext } from "react";
-import styles from "./ChatInput.module.css";
-import { EmojiPicker } from "../EmojiPicker/index";
-import Popup from "reactjs-popup";
+import { Box, Icon } from '@rocket.chat/fuselage';
+import React, { useState, useContext } from 'react';
+import styles from './ChatInput.module.css';
+import { EmojiPicker } from '../EmojiPicker/index';
+import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
-import he from 'he'
+import he from 'he';
 
 const ChatInput = () => {
-    const [message, setMessage] = useState("");
-    const { RCInstance, cookies } = useContext(RCContext);
-    const sendMessage = async () => {
-      await RCInstance.sendMessage(message, cookies);
-      setMessage('');
-    }
-    
-  const handleEmojiClick = (n, e) => {
+  const [message, setMessage] = useState('');
+  const { RCInstance, cookies } = useContext(RCContext);
+  const sendMessage = async () => {
+    await RCInstance.sendMessage(message, cookies);
+    setMessage('');
+  };
+
+  const handleEmojiClick = (n) => {
     if (n.length > 5) {
-      let flagUnifed = '&#x' + n.split('-').join(';&#x')+';';
+      let flagUnifed = '&#x' + n.split('-').join(';&#x') + ';';
       let flag = he.decode(flagUnifed);
-      setMessage(message+flag);
+      setMessage(message + flag);
       return;
     }
     let unified_emoji = he.decode(`&#x${n};`);
-    setMessage(message+unified_emoji);
+    setMessage(message + unified_emoji);
   };
 
   return (
     <Box>
       <Box m={2} className={styles.container} border={'2px solid #ddd'}>
         <Popup
-          trigger={
-            <Icon
-              name="emoji"
-              size="x25"
-              padding={6}
-            />
-          }
-          position={"top left"}
+          trigger={<Icon name="emoji" size="x25" padding={6} />}
+          position={'top left'}
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>

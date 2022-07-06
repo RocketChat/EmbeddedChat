@@ -13,13 +13,13 @@ const ChatHeader = ({
   return (
     <Box className={styles.container} border="1px solid #b1b1b1" p={10}>
       <Box display="flex">
-        <Icon name="hash" size={fullScreen ? "x40" : "x30"} />
-        <Box margin={"0 1rem"}>
+        <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
+        <Box margin={'0 1rem'}>
           <h2 className={styles.nospace}>channelName</h2>
           {fullScreen && (
             <p
               className={styles.nospace}
-              style={{ color: "gray", fontSize: 14 }}
+              style={{ color: 'gray', fontSize: 14 }}
             >
               this is channel description, i like it
             </p>
@@ -30,8 +30,8 @@ const ChatHeader = ({
         {fullScreen ? (
           moreOpts && (
             <Menu
-              margin={"0 4px"}
-              display={"inline"}
+              margin={'0 4px'}
+              display={'inline'}
               options={{
                 minimize: {
                   action: () => setFullScreen((prev) => !prev),
@@ -78,11 +78,11 @@ const ChatHeader = ({
               setFullScreen((prev) => !prev);
             }}
             ghost
-            display={"inline"}
+            display={'inline'}
             square
             small
           >
-            <Icon name="computer" size={"x20"} />
+            <Icon name="computer" size={'x20'} />
           </ActionButton>
         )}
         {isClosable && (
