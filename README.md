@@ -4,6 +4,8 @@ An easy to use full-stack component (ReactJS + backend behaviors) embedding Rock
 
 *EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System.*
 
+![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
+
 ## Installation
 
 ```bash
@@ -27,9 +29,9 @@ and use it,
   moreOpts={true}
   width="100%"
   height="30vh"
-  host={process.env.HOST}
-  GOOGLE_CLIENT_ID={process,env.GOOGLE_CLIENT_ID}
-  roomId={process.env.RC_ROOM_ID}
+  host={process.env.REACT_APP_RC_HOST}
+  GOOGLE_CLIENT_ID={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+  roomId={process.env.REACT_APP_RC_ROOM_ID}
 />
 ```
 
@@ -49,6 +51,8 @@ and use it,
 ## Setting up Authentication
 
 Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
+
+> Note: You need to disable TOTP for this to work!
 
 ## Development
 
