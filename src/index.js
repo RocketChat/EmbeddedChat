@@ -11,6 +11,9 @@ export const RCComponent = ({
   moreOpts = false,
   width = '100%',
   height = '30vh',
+  GOOGLE_CLIENT_ID,
+  host = 'http://localhost:3000',
+  roomId = 'GENERAL',
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -20,7 +23,7 @@ export const RCComponent = ({
     );
   }
 
-  const RCInstance = new RocketChatInstance('http://localhost:3000', 'GENERAL');
+  const RCInstance = new RocketChatInstance(host, roomId);
 
   return (
     <RCInstanceProvider value={{ RCInstance }}>
@@ -33,7 +36,7 @@ export const RCComponent = ({
           setFullScreen={setFullScreen}
         />
         <ChatBody height={!fullScreen ? height : '83vh'} />
-        <ChatInput />
+        <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
       </Box>
     </RCInstanceProvider>
   );
@@ -45,4 +48,7 @@ RCComponent.propTypes = {
   isClosable: PropTypes.bool,
   setClosableState: PropTypes.func,
   moreOpts: PropTypes.bool,
+  GOOGLE_CLIENT_ID: PropTypes.string,
+  host: PropTypes.string,
+  roomId: PropTypes.string,
 };

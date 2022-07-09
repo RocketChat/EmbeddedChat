@@ -1,15 +1,14 @@
 import { gapi } from 'gapi-cjs';
 import { useState, useEffect } from 'react';
 
-export const useGoogleLogin = () => {
+export const useGoogleLogin = (GOOGLE_CLIENT_ID) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     gapi.load('client:auth2', () => {
       gapi.client
         .init({
-          clientId:
-            '168202722255-fnrndu7aq5vbsk0evbdgn93d054a2v5g.apps.googleusercontent.com',
+          clientId: GOOGLE_CLIENT_ID,
           scope: 'openid',
         })
         .then(() => {

@@ -1,5 +1,6 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -7,10 +8,10 @@ import RCContext from '../../context/RCInstance';
 import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 
-const ChatInput = () => {
+const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { RCInstance } = useContext(RCContext);
-  const { signIn } = useGoogleLogin();
+  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
 
   const sendMessage = async () => {
     await RCInstance.sendMessage(message);
@@ -65,3 +66,7 @@ const ChatInput = () => {
 };
 
 export default ChatInput;
+
+ChatInput.propTypes = {
+  GOOGLE_CLIENT_ID: PropTypes.string,
+};
