@@ -1,10 +1,64 @@
 # EmbeddedChat
-An easy to use full-stack component  (ReactJS + backend behaviors)  embedding Rocket.Chat into your webapp
+
+An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
+
+*EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System.*
+
+## Installation
+
+```bash
+npm i @rocket.chat/embeddedchat
+```
+
+## Usage
+
+Just import the component,
+
+```javascript
+import  { RCComponent }  from  "@rocket.chat/embeddedchat";
+```
+
+and use it,
+
+```jsx
+<RCComponent
+  isClosable={true}
+  setClosableState={setClosable}
+  moreOpts={true}
+  width="100%"
+  height="30vh"
+  host={process.env.HOST}
+  GOOGLE_CLIENT_ID={process,env.GOOGLE_CLIENT_ID}
+  roomId={process.env.RC_ROOM_ID}
+/>
+```
+
+## Props
+
+|prop|description  |
+|--|--|
+|isClosable  | is the component closable?, defaults to `false`. |
+|setClosableState | the reusable setState, which will track the opening and closing of EmbeddedChat. It is a `setState fn` => which toggles the previous state.|
+|moreOpts | it adds a kebab menu with added functionalities like showing pinned, starred, thread messages |
+| width| `width` of the component|
+| height| `height` of the component (based on the `ChatBody`) |
+|host | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)|
+|GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console|
+|roomId | the public room's id that you want to subscribe to|
+
+## Setting up Authentication
+
+Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
 
 ## Development
 
+For development,
+
 ```bash
-npm install
-cd playground && npm install
+npm i
+cd playground && npm i
 npm run dev # at root
 ```
+
+It will open up a playground react app at `http://localhost:4000`.
+Make a `.env` file in the playground directory following the `.env[example]` file.
