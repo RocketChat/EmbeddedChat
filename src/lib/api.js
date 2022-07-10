@@ -29,7 +29,6 @@ export default class RocketChatInstance {
   setCookies(cookies) {
     Cookies.set('rc_token', cookies.rc_token, { expires: 3600 });
     Cookies.set('rc_uid', cookies.rc_uid);
-    console.log('cookies set, ', cookies);
     this.cookies = {
       rc_token: Cookies.get('rc_token'),
       rc_uid: Cookies.get('rc_uid'),
@@ -38,24 +37,74 @@ export default class RocketChatInstance {
 
   async googleSSOLogin(signIn) {
     const tokens = await signIn();
-    const req = await fetch(`${this.host}/api/v1/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        serviceName: 'google',
-        accessToken: tokens.access_token,
-        idToken: tokens.id_token,
-        expiresIn: 3600,
-      }),
-    });
-    const response = await req.json();
-    if (response.status === 'success') {
-      const cookies = {};
-      cookies.rc_token = response.data.authToken;
-      cookies.rc_uid = response.data.userId;
-      return cookies;
+    try {
+      const req = await fetch(`${this.host}/api/v1/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceName: 'google',
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+        }),
+      });
+      const response = await req.json();
+      if (response.status === 'success') {
+        const cookies = {};
+        cookies.rc_token = response.data.authToken;
+        cookies.rc_uid = response.data.userId;
+        this.setCookies(cookies);
+        if (!response.data.me.username) {
+          console.log('here!!!');
+          await this.updateUserUsername(
+            response.data.userId,
+            response.data.me.name
+          );
+        }
+        return cookies;
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async updateUserUsername(userid, username) {
+    let newUserName = username.replace(/\s/g, '.').toLowerCase();
+    try {
+      const response = await fetch(`${this.host}/api/v1/users.update`, {
+        body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.cookies.rc_token,
+          'X-User-Id': this.cookies.rc_uid,
+        },
+        method: 'POST',
+      });
+      console.log(await response.json());
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async channelInfo() {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/channels.info?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': this.cookies.rc_token,
+            'X-User-Id': this.cookies.rc_uid,
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
     }
   }
 

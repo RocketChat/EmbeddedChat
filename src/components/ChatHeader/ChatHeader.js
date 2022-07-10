@@ -1,7 +1,8 @@
 import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
+import RCContext from '../../context/RCInstance';
 
 const ChatHeader = ({
   isClosable,
@@ -10,18 +11,33 @@ const ChatHeader = ({
   fullScreen,
   setFullScreen,
 }) => {
+  const [channelInfo, setChannelInfo] = useState({});
+  const { RCInstance } = useContext(RCContext);
+
+  useEffect(() => {
+    const getChannelInfo = async () => {
+      const res = await RCInstance.channelInfo();
+      if (res.success) {
+        setChannelInfo(res.channel);
+      }
+    };
+    getChannelInfo();
+  }, []);
+
   return (
     <Box className={styles.container} border="1px solid #b1b1b1" p={10}>
       <Box display="flex">
         <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
         <Box margin={'0 1rem'}>
-          <h2 className={styles.nospace}>channelName</h2>
+          <h2 className={styles.nospace}>
+            {channelInfo.name || 'channelName'}
+          </h2>
           {fullScreen && (
             <p
               className={styles.nospace}
               style={{ color: 'gray', fontSize: 14 }}
             >
-              this is channel description, i like it
+              {channelInfo.description || ''}
             </p>
           )}
         </Box>

@@ -29,8 +29,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     setMessage(message + unified_emoji);
   }
   const handleLogin = async () => {
-    const cookies = await RCInstance.googleSSOLogin(signIn);
-    RCInstance.setCookies(cookies);
+    await RCInstance.googleSSOLogin(signIn);
   };
 
   return (
