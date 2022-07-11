@@ -1,17 +1,16 @@
-import { Box, Message, MessageToolbox } from "@rocket.chat/fuselage";
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./ChatBody.module.css";
-import PropTypes from "prop-types";
-import {EmojiPicker} from "../EmojiPicker/index";
-import Popup from "reactjs-popup";
-import {Markdown} from '../Markdown/index'
-import { jsemoji } from "../../lib/jsemoji";
-import { useMediaQuery } from "@rocket.chat/fuselage-hooks";
+import { Box, Message, MessageToolbox } from '@rocket.chat/fuselage';
+import React, { useContext, useEffect, useState } from 'react';
+import styles from './ChatBody.module.css';
+import PropTypes from 'prop-types';
+import { EmojiPicker } from '../EmojiPicker/index';
+import Popup from 'reactjs-popup';
+import { Markdown } from '../Markdown/index';
+import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import RCContext from '../../context/RCInstance';
 
 const ChatBody = ({ height }) => {
   const { RCInstance, cookies } = useContext(RCContext);
-  const isSmallScreen = useMediaQuery("(max-width: 992px)");
+  const isSmallScreen = useMediaQuery('(max-width: 992px)');
 
   const [data, setData] = useState([]);
 
@@ -26,8 +25,8 @@ const ChatBody = ({ height }) => {
     return () => RCInstance.close();
   }, []);
 
-  const handleEmojiClick = (n, e) => {
-    let emoji = jsemoji.replace_colons(`:${e.name}:`);
+  const handleEmojiClick = (_, e) => {
+    let emoji = `:${e.name}:`;
     console.log(emoji);
   };
 
@@ -55,10 +54,10 @@ const ChatBody = ({ height }) => {
                 trigger={
                   <MessageToolbox.Item
                     icon="emoji"
-                    onClick={() => console.log("saf")}
+                    onClick={() => console.log('saf')}
                   />
                 }
-                position={isSmallScreen ? "left top" : "left center"}
+                position={isSmallScreen ? 'left top' : 'left center'}
               >
                 <EmojiPicker handleEmojiClick={handleEmojiClick} />
               </Popup>

@@ -69,10 +69,10 @@
     "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rollup/plugin-json": "^4.1.0",
     "dompurify": "^2.3.8",
-    "emoji-js": "3.4.1",
     "emoji-picker-react": "2.1.1",
     "emoji-toolkit": "^6.6.0",
     "js-cookie": "^3.0.1",
+    "he": "^1.2.0",
     "marked": "^4.0.17",
     "react-virtuoso": "^1.2.4",
     "reactjs-popup": "^2.0.5"
