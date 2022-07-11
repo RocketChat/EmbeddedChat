@@ -27,8 +27,8 @@ export default class RocketChatInstance {
   }
 
   setCookies(cookies) {
-    Cookies.set('rc_token', cookies.rc_token, { expires: 3600 });
-    Cookies.set('rc_uid', cookies.rc_uid);
+    Cookies.set('rc_token', cookies.rc_token || '', { expires: 3600 });
+    Cookies.set('rc_uid', cookies.rc_uid || '');
     this.cookies = {
       rc_token: Cookies.get('rc_token'),
       rc_uid: Cookies.get('rc_uid'),
@@ -57,7 +57,6 @@ export default class RocketChatInstance {
         cookies.rc_uid = response.data.userId;
         this.setCookies(cookies);
         if (!response.data.me.username) {
-          console.log('here!!!');
           await this.updateUserUsername(
             response.data.userId,
             response.data.me.name
@@ -65,6 +64,23 @@ export default class RocketChatInstance {
         }
         return cookies;
       }
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async logout() {
+    try {
+      const response = await fetch(`${this.host}/api/v1/logout`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.cookies.rc_token,
+          'X-User-Id': this.cookies.rc_uid,
+        },
+        method: 'POST',
+      });
+      this.setCookies({});
+      return await response.json();
     } catch (err) {
       console.error(err.message);
     }

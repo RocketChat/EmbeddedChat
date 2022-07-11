@@ -12,6 +12,8 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { RCInstance } = useContext(RCContext);
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
+  const isUserAuthenticated =
+    RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
 
   const sendMessage = async () => {
     await RCInstance.sendMessage(message);
@@ -54,10 +56,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
             }
           }}
         />
-        {RCInstance.getCookies().rc_token ? (
+        {isUserAuthenticated ? (
           <Icon onClick={sendMessage} name="send" size="x25" padding={6} />
         ) : (
-          <Button onClick={handleLogin}>Login</Button>
+          <Button onClick={handleLogin} square>
+            <Icon name="google" size="x20" />
+          </Button>
         )}
       </Box>
     </Box>
