@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { ChatBody, ChatHeader, ChatInput } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
+import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 
 export const RCComponent = ({
   isClosable = false,
@@ -26,19 +27,21 @@ export const RCComponent = ({
   const RCInstance = new RocketChatInstance(host, roomId);
 
   return (
-    <RCInstanceProvider value={{ RCInstance }}>
-      <Box width={width}>
-        <ChatHeader
-          isClosable={isClosable}
-          setClosableState={setClosableState}
-          moreOpts={moreOpts}
-          fullScreen={fullScreen}
-          setFullScreen={setFullScreen}
-        />
-        <ChatBody height={!fullScreen ? height : '83vh'} />
-        <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
-      </Box>
-    </RCInstanceProvider>
+    <ToastBarProvider>
+      <RCInstanceProvider value={{ RCInstance }}>
+        <Box width={width}>
+          <ChatHeader
+            isClosable={isClosable}
+            setClosableState={setClosableState}
+            moreOpts={moreOpts}
+            fullScreen={fullScreen}
+            setFullScreen={setFullScreen}
+          />
+          <ChatBody height={!fullScreen ? height : '83vh'} />
+          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
+        </Box>
+      </RCInstanceProvider>
+    </ToastBarProvider>
   );
 };
 

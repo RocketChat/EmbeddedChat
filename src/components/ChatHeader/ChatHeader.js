@@ -1,8 +1,10 @@
-import { ActionButton, Box, Callout, Icon, Menu } from '@rocket.chat/fuselage';
+import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
+import { useMessageStore } from '../../store';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatHeader = ({
   isClosable,
@@ -12,16 +14,19 @@ const ChatHeader = ({
   setFullScreen,
 }) => {
   const [channelInfo, setChannelInfo] = useState({});
-  const [calloutShow, setCalloutShow] = useState(false);
   const { RCInstance } = useContext(RCContext);
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const setMessages = useMessageStore((state) => state.setMessages);
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
     if (res.status === 'success') {
-      setCalloutShow(true);
-      setTimeout(() => {
-        setCalloutShow(false);
-      }, 3000);
+      setMessages([]);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Successfully logged out',
+      });
     }
   };
 
@@ -36,110 +41,105 @@ const ChatHeader = ({
   }, []);
 
   return (
-    <>
-      {calloutShow && (
-        <Callout title="You've successfully logged out!" type="success" />
-      )}
-      <Box className={styles.container} border="1px solid #b1b1b1" p={10}>
-        <Box display="flex">
-          <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
-          <Box margin={'0 1rem'}>
-            <h2 className={styles.nospace}>
-              {channelInfo.name || 'channelName'}
-            </h2>
-            {fullScreen && (
-              <p
-                className={styles.nospace}
-                style={{ color: 'gray', fontSize: 14 }}
-              >
-                {channelInfo.description || ''}
-              </p>
-            )}
-          </Box>
-        </Box>
-        <Box>
-          {fullScreen ? (
-            moreOpts && (
-              <Menu
-                margin={'0 4px'}
-                display={'inline'}
-                options={{
-                  minimize: {
-                    action: () => setFullScreen((prev) => !prev),
-                    label: (
-                      <Box alignItems="center" display="flex">
-                        <Icon mie="x4" name="mobile" size="x16" />
-                        Minimize
-                      </Box>
-                    ),
-                  },
-                  threads: {
-                    action: function noRefCheck() {},
-                    label: (
-                      <Box alignItems="center" display="flex">
-                        <Icon mie="x4" name="thread" size="x16" />
-                        Threads
-                      </Box>
-                    ),
-                  },
-                  starred: {
-                    action: function noRefCheck() {},
-                    label: (
-                      <Box alignItems="center" display="flex">
-                        <Icon mie="x4" name="star" size="x16" />
-                        Starred
-                      </Box>
-                    ),
-                  },
-                  pinned: {
-                    action: function noRefCheck() {},
-                    label: (
-                      <Box alignItems="center" display="flex">
-                        <Icon mie="x4" name="pin" size="x16" />
-                        Pinned
-                      </Box>
-                    ),
-                  },
-                  logout: {
-                    action: handleLogout,
-                    label: (
-                      <Box alignItems="center" display="flex">
-                        Logout
-                      </Box>
-                    ),
-                  },
-                }}
-              />
-            )
-          ) : (
-            <ActionButton
-              onClick={() => {
-                setFullScreen((prev) => !prev);
-              }}
-              ghost
-              display={'inline'}
-              square
-              small
+    <Box className={styles.container} border="1px solid #b1b1b1" p={10}>
+      <Box display="flex">
+        <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
+        <Box margin={'0 1rem'}>
+          <h2 className={styles.nospace}>
+            {channelInfo.name || 'channelName'}
+          </h2>
+          {fullScreen && (
+            <p
+              className={styles.nospace}
+              style={{ color: 'gray', fontSize: 14 }}
             >
-              <Icon name="computer" size={'x20'} />
-            </ActionButton>
-          )}
-          {isClosable && (
-            <ActionButton
-              onClick={() => {
-                setClosableState((prev) => !prev);
-              }}
-              ghost
-              display={'inline'}
-              square
-              small
-            >
-              <Icon name="cross" size={'x20'} />
-            </ActionButton>
+              {channelInfo.description || ''}
+            </p>
           )}
         </Box>
       </Box>
-    </>
+      <Box>
+        {fullScreen ? (
+          moreOpts && (
+            <Menu
+              margin={'0 4px'}
+              display={'inline'}
+              options={{
+                minimize: {
+                  action: () => setFullScreen((prev) => !prev),
+                  label: (
+                    <Box alignItems="center" display="flex">
+                      <Icon mie="x4" name="mobile" size="x16" />
+                      Minimize
+                    </Box>
+                  ),
+                },
+                threads: {
+                  action: function noRefCheck() {},
+                  label: (
+                    <Box alignItems="center" display="flex">
+                      <Icon mie="x4" name="thread" size="x16" />
+                      Threads
+                    </Box>
+                  ),
+                },
+                starred: {
+                  action: function noRefCheck() {},
+                  label: (
+                    <Box alignItems="center" display="flex">
+                      <Icon mie="x4" name="star" size="x16" />
+                      Starred
+                    </Box>
+                  ),
+                },
+                pinned: {
+                  action: function noRefCheck() {},
+                  label: (
+                    <Box alignItems="center" display="flex">
+                      <Icon mie="x4" name="pin" size="x16" />
+                      Pinned
+                    </Box>
+                  ),
+                },
+                logout: {
+                  action: handleLogout,
+                  label: (
+                    <Box alignItems="center" display="flex">
+                      Logout
+                    </Box>
+                  ),
+                },
+              }}
+            />
+          )
+        ) : (
+          <ActionButton
+            onClick={() => {
+              setFullScreen((prev) => !prev);
+            }}
+            ghost
+            display={'inline'}
+            square
+            small
+          >
+            <Icon name="computer" size={'x20'} />
+          </ActionButton>
+        )}
+        {isClosable && (
+          <ActionButton
+            onClick={() => {
+              setClosableState((prev) => !prev);
+            }}
+            ghost
+            display={'inline'}
+            square
+            small
+          >
+            <Icon name="cross" size={'x20'} />
+          </ActionButton>
+        )}
+      </Box>
+    </Box>
   );
 };
 

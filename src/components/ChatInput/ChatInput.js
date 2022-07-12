@@ -7,6 +7,8 @@ import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
+import { useMessageStore } from '../../store';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
@@ -14,6 +16,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const isUserAuthenticated =
     RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
+
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const setMessages = useMessageStore((state) => state.setMessages);
 
   const sendMessage = async () => {
     await RCInstance.sendMessage(message);
@@ -32,6 +38,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   }
   const handleLogin = async () => {
     await RCInstance.googleSSOLogin(signIn);
+    const { messages } = await RCInstance.getMessages();
+    setMessages(messages);
+    dispatchToastMessage({
+      type: 'success',
+      message: 'Successfully logged in',
+    });
   };
 
   return (
