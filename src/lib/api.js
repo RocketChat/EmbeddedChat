@@ -98,7 +98,6 @@ export default class RocketChatInstance {
         },
         method: 'POST',
       });
-      console.log(await response.json());
       return await response.json();
     } catch (err) {
       console.error(err.message);
@@ -140,6 +139,22 @@ export default class RocketChatInstance {
   async close() {
     await this.rcClient.unsubscribeAll();
     await this.rcClient.disconnect();
+  }
+
+  async me() {
+    try {
+      const response = await fetch(`${this.host}/api/v1/me`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': this.cookies.rc_token,
+          'X-User-Id': this.cookies.rc_uid,
+        },
+        method: 'GET',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   async getMessages() {

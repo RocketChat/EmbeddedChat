@@ -1,27 +1,24 @@
-import { Box, Button, Icon } from '@rocket.chat/fuselage';
+import { Box, Icon } from '@rocket.chat/fuselage';
 import React, { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
-import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useMessageStore } from '../../store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import { useUserStore } from '../../store';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
+const ChatInput = () => {
   const [message, setMessage] = useState('');
   const { RCInstance } = useContext(RCContext);
-  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
-  const isUserAuthenticated =
-    RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
 
-  const dispatchToastMessage = useToastBarDispatch();
-
-  const setMessages = useMessageStore((state) => state.setMessages);
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
 
   const sendMessage = async () => {
+    if (!message.length || !isUserAuthenticated) {
+      return;
+    }
     await RCInstance.sendMessage(message);
     setMessage('');
   };
@@ -50,38 +47,39 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     <Box>
       <Box m={2} className={styles.container} border={'2px solid #ddd'}>
         <Popup
+          disabled={!isUserAuthenticated}
           trigger={<Icon name="emoji" size="x25" padding={6} />}
           position={'top left'}
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>
         <input
-          placeholder="Message"
+          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+          disabled={!isUserAuthenticated}
           value={message}
           className={styles.textInput}
           onChange={(e) => {
             setMessage(e.target.value);
           }}
           onKeyDown={(e) => {
+            if (!message.length || !isUserAuthenticated) {
+              return;
+            }
             if (e.keyCode === 13) {
               sendMessage();
             }
           }}
         />
-        {isUserAuthenticated ? (
-          <Icon onClick={sendMessage} name="send" size="x25" padding={6} />
-        ) : (
-          <Button onClick={handleLogin} square>
-            <Icon name="google" size="x20" />
-          </Button>
-        )}
+        <Icon
+          disabled={!isUserAuthenticated}
+          onClick={sendMessage}
+          name="send"
+          size="x25"
+          padding={6}
+        />
       </Box>
     </Box>
   );
 };
 
 export default ChatInput;
-
-ChatInput.propTypes = {
-  GOOGLE_CLIENT_ID: PropTypes.string,
-};

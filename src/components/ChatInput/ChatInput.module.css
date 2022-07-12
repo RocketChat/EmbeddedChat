@@ -13,3 +13,7 @@
   border: none;
   outline: none;
 }
+
+.textInput:disabled {
+  cursor: not-allowed;
+}

@@ -1,10 +1,11 @@
 import { Box } from '@rocket.chat/fuselage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ChatBody, ChatHeader, ChatInput } from './components';
+import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
+import { useUserStore } from './store';
 
 export const RCComponent = ({
   isClosable = false,
@@ -25,6 +26,26 @@ export const RCComponent = ({
   }
 
   const RCInstance = new RocketChatInstance(host, roomId);
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
+
+  useEffect(() => {
+    async function checkIfUserAuthenticated() {
+      const data = await RCInstance.me();
+      if (data.name) {
+        setIsUserAuthenticated(true);
+      } else {
+        setIsUserAuthenticated(false);
+      }
+    }
+    if (RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid) {
+      checkIfUserAuthenticated();
+    }
+  }, []);
 
   return (
     <ToastBarProvider>
@@ -37,8 +58,15 @@ export const RCComponent = ({
             fullScreen={fullScreen}
             setFullScreen={setFullScreen}
           />
-          <ChatBody height={!fullScreen ? height : '83vh'} />
-          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
+          {isUserAuthenticated ? (
+            <ChatBody height={!fullScreen ? height : '83vh'} />
+          ) : (
+            <Home
+              GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
+              height={!fullScreen ? height : '83vh'}
+            />
+          )}
+          <ChatInput />
         </Box>
       </RCInstanceProvider>
     </ToastBarProvider>
