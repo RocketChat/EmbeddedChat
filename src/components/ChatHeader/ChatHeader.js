@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore } from '../../store';
+import { useUserStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatHeader = ({
@@ -12,6 +12,7 @@ const ChatHeader = ({
   moreOpts,
   fullScreen,
   setFullScreen,
+  channelName,
 }) => {
   const [channelInfo, setChannelInfo] = useState({});
   const { RCInstance } = useContext(RCContext);
@@ -24,12 +25,9 @@ const ChatHeader = ({
     (state) => state.setIsUserAuthenticated
   );
 
-  const setMessages = useMessageStore((state) => state.setMessages);
-
   const handleLogout = async () => {
     const res = await RCInstance.logout();
     if (res.status === 'success') {
-      setMessages([]);
       setIsUserAuthenticated(false);
       dispatchToastMessage({
         type: 'success',
@@ -110,7 +108,7 @@ const ChatHeader = ({
           {isUserAuthenticated ? (
             <>
               <h2 className={styles.nospace}>
-                {channelInfo.name || 'channelName'}
+                {channelInfo.name || channelName || 'channelName'}
               </h2>
               {fullScreen && (
                 <p
@@ -122,7 +120,7 @@ const ChatHeader = ({
               )}
             </>
           ) : (
-            <h2 className={styles.nospace}>Login to chat</h2>
+            <h2 className={styles.nospace}>{channelName || 'Login to chat'}</h2>
           )}
         </Box>
       </Box>
@@ -170,4 +168,5 @@ ChatHeader.propTypes = {
   setClosableState: PropTypes.func,
   setFullScreen: PropTypes.func,
   moreOpts: PropTypes.bool,
+  channelName: PropTypes.string,
 };

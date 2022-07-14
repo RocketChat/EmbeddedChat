@@ -17,6 +17,8 @@ function App() {
           isClosable={true}
           setClosableState={setClosable}
           moreOpts={true}
+          channelName="General"
+          anonymousMode={false}
         />
       )}
     </div>

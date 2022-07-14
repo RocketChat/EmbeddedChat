@@ -8,37 +8,39 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
-const ChatBody = ({ height }) => {
+const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
 
   const messages = useMessageStore((state) => state.messages);
   const setMessages = useMessageStore((state) => state.setMessages);
 
-  const dispatchToastMessage = useToastBarDispatch();
-
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
 
   useEffect(() => {
-    async function getMessages() {
-      const data = await RCInstance.getMessages();
+    async function getMessages(anonymousMode) {
+      const data = await RCInstance.getMessages(anonymousMode);
       if (data.messages) {
         setMessages(data.messages);
-        setIsUserAuthenticated(true);
+        if (!anonymousMode) {
+          setIsUserAuthenticated(true);
+        }
       } else {
         setIsUserAuthenticated(false);
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Unauthorized',
-        });
       }
     }
     RCInstance.realtime(getMessages);
-    getMessages();
+    if (isUserAuthenticated) {
+      getMessages(!anonymousMode);
+    } else {
+      getMessages(anonymousMode);
+    }
 
     return () => RCInstance.close();
   }, []);
@@ -94,4 +96,5 @@ export default ChatBody;
 
 ChatBody.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  anonymousMode: PropTypes.bool,
 };

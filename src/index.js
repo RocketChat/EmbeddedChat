@@ -6,6 +6,7 @@ import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 import { useUserStore } from './store';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 export const RCComponent = ({
   isClosable = false,
@@ -16,14 +17,18 @@ export const RCComponent = ({
   GOOGLE_CLIENT_ID,
   host = 'http://localhost:3000',
   roomId = 'GENERAL',
+  channelName,
+  anonymousMode = false,
+  isFullScreenFromStart = false,
 }) => {
-  const [fullScreen, setFullScreen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(isFullScreenFromStart);
 
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
     );
   }
+  const dispatchToastMessage = useToastBarDispatch();
 
   const RCInstance = new RocketChatInstance(host, roomId);
   const isUserAuthenticated = useUserStore(
@@ -33,6 +38,9 @@ export const RCComponent = ({
     (state) => state.setIsUserAuthenticated
   );
 
+  const cookiesPresent =
+    RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
+
   useEffect(() => {
     async function checkIfUserAuthenticated() {
       const data = await RCInstance.me();
@@ -40,9 +48,13 @@ export const RCComponent = ({
         setIsUserAuthenticated(true);
       } else {
         setIsUserAuthenticated(false);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Unauthorized',
+        });
       }
     }
-    if (RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid) {
+    if (cookiesPresent) {
       checkIfUserAuthenticated();
     }
   }, []);
@@ -52,21 +64,22 @@ export const RCComponent = ({
       <RCInstanceProvider value={{ RCInstance }}>
         <Box width={width}>
           <ChatHeader
+            channelName={channelName}
             isClosable={isClosable}
             setClosableState={setClosableState}
             moreOpts={moreOpts}
             fullScreen={fullScreen}
             setFullScreen={setFullScreen}
           />
-          {isUserAuthenticated ? (
-            <ChatBody height={!fullScreen ? height : '83vh'} />
-          ) : (
-            <Home
-              GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
+          {isUserAuthenticated || anonymousMode ? (
+            <ChatBody
               height={!fullScreen ? height : '83vh'}
+              anonymousMode={anonymousMode}
             />
+          ) : (
+            <Home height={!fullScreen ? height : '83vh'} />
           )}
-          <ChatInput />
+          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
         </Box>
       </RCInstanceProvider>
     </ToastBarProvider>
@@ -82,4 +95,7 @@ RCComponent.propTypes = {
   GOOGLE_CLIENT_ID: PropTypes.string,
   host: PropTypes.string,
   roomId: PropTypes.string,
+  channelName: PropTypes.string,
+  isFullScreenFromStart: PropTypes.bool,
+  anonymousMode: PropTypes.bool,
 };

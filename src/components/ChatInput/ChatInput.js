@@ -1,19 +1,30 @@
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Box, Button, Icon } from '@rocket.chat/fuselage';
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
-import { useUserStore } from '../../store';
+import { useGoogleLogin } from '../../hooks/useGoogleLogin';
+import { useMessageStore, useUserStore } from '../../store';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
-const ChatInput = () => {
+const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
+  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
+
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const setMessages = useMessageStore((state) => state.setMessages);
 
   const sendMessage = async () => {
     if (!message.length || !isUserAuthenticated) {
@@ -37,6 +48,7 @@ const ChatInput = () => {
     await RCInstance.googleSSOLogin(signIn);
     const { messages } = await RCInstance.getMessages();
     setMessages(messages);
+    setIsUserAuthenticated(true);
     dispatchToastMessage({
       type: 'success',
       message: 'Successfully logged in',
@@ -70,16 +82,27 @@ const ChatInput = () => {
             }
           }}
         />
-        <Icon
-          disabled={!isUserAuthenticated}
-          onClick={sendMessage}
-          name="send"
-          size="x25"
-          padding={6}
-        />
+        {isUserAuthenticated ? (
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={sendMessage}
+            name="send"
+            size="x25"
+            padding={6}
+          />
+        ) : (
+          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
+            <Icon name="google" size="x20" />
+            Sign In with Google
+          </Button>
+        )}
       </Box>
     </Box>
   );
 };
 
 export default ChatInput;
+
+ChatInput.propTypes = {
+  GOOGLE_CLIENT_ID: PropTypes.string,
+};

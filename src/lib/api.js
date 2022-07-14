@@ -157,19 +157,34 @@ export default class RocketChatInstance {
     }
   }
 
-  async getMessages() {
+  async getMessages(anonymousMode) {
+    let messages;
     try {
-      const messages = await fetch(
-        `${this.host}/api/v1/channels.messages?roomId=${this.rid}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Auth-Token': this.cookies.rc_token ?? '',
-            'X-User-Id': this.cookies.rc_uid ?? '',
-          },
-          method: 'GET',
-        }
-      );
+      if (anonymousMode) {
+        messages = await fetch(
+          `${this.host}/api/v1/channels.anonymousread?roomId=${this.rid}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Auth-Token': this.cookies.rc_token ?? '',
+              'X-User-Id': this.cookies.rc_uid ?? '',
+            },
+            method: 'GET',
+          }
+        );
+      } else {
+        messages = await fetch(
+          `${this.host}/api/v1/channels.messages?roomId=${this.rid}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Auth-Token': this.cookies.rc_token ?? '',
+              'X-User-Id': this.cookies.rc_uid ?? '',
+            },
+            method: 'GET',
+          }
+        );
+      }
       return await messages.json();
     } catch (err) {
       console.log(err.message);
