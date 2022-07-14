@@ -1,6 +1,7 @@
 import { Box } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styles from './Home.module.css';
 
 const Home = ({ height }) => {
   return (
@@ -22,8 +23,12 @@ const Home = ({ height }) => {
           README
         </a>
       </p>
-      <p style={{ marginTop: '1rem' }}>
-        To enable anonymous mode, Go to -&gt;{' '}
+      <p className={styles.paraText}>
+        To enable anonymous mode pass in{' '}
+        <strong>anonymousMode prop as true</strong> and, then
+      </p>
+      <p className={styles.paraText}>
+        Enable Anonymous read by going to -&gt;{' '}
         <code>Admin -&gt; Accounts -&gt; Allow Anonymous Read</code>. This will
         allow users to see the chat without logging in.
       </p>

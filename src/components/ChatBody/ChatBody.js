@@ -19,21 +19,11 @@ const ChatBody = ({ height, anonymousMode }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
 
   useEffect(() => {
     async function getMessages(anonymousMode) {
-      const data = await RCInstance.getMessages(anonymousMode);
-      if (data.messages) {
-        setMessages(data.messages);
-        if (!anonymousMode) {
-          setIsUserAuthenticated(true);
-        }
-      } else {
-        setIsUserAuthenticated(false);
-      }
+      const { messages } = await RCInstance.getMessages(anonymousMode);
+      setMessages(messages);
     }
     RCInstance.realtime(getMessages);
     if (isUserAuthenticated) {

@@ -45,14 +45,21 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     setMessage(message + unified_emoji);
   }
   const handleLogin = async () => {
-    await RCInstance.googleSSOLogin(signIn);
-    const { messages } = await RCInstance.getMessages();
-    setMessages(messages);
-    setIsUserAuthenticated(true);
-    dispatchToastMessage({
-      type: 'success',
-      message: 'Successfully logged in',
-    });
+    const res = await RCInstance.googleSSOLogin(signIn);
+    if (res.status === 'success') {
+      const { messages } = await RCInstance.getMessages();
+      setMessages(messages);
+      setIsUserAuthenticated(true);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Successfully logged in',
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Something wrong happened',
+      });
+    }
   };
 
   return (
@@ -74,9 +81,6 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
             setMessage(e.target.value);
           }}
           onKeyDown={(e) => {
-            if (!message.length || !isUserAuthenticated) {
-              return;
-            }
             if (e.keyCode === 13) {
               sendMessage();
             }

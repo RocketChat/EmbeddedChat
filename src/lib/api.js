@@ -52,17 +52,17 @@ export default class RocketChatInstance {
       });
       const response = await req.json();
       if (response.status === 'success') {
-        const cookies = {};
-        cookies.rc_token = response.data.authToken;
-        cookies.rc_uid = response.data.userId;
-        this.setCookies(cookies);
+        this.setCookies({
+          rc_token: response.data.authToken,
+          rc_uid: response.data.userId,
+        });
         if (!response.data.me.username) {
           await this.updateUserUsername(
             response.data.userId,
             response.data.me.name
           );
         }
-        return cookies;
+        return { status: response.status };
       }
     } catch (err) {
       console.error(err.message);
@@ -158,33 +158,19 @@ export default class RocketChatInstance {
   }
 
   async getMessages(anonymousMode) {
-    let messages;
+    const endp = anonymousMode ? 'anonymousread' : 'messages';
     try {
-      if (anonymousMode) {
-        messages = await fetch(
-          `${this.host}/api/v1/channels.anonymousread?roomId=${this.rid}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Auth-Token': this.cookies.rc_token ?? '',
-              'X-User-Id': this.cookies.rc_uid ?? '',
-            },
-            method: 'GET',
-          }
-        );
-      } else {
-        messages = await fetch(
-          `${this.host}/api/v1/channels.messages?roomId=${this.rid}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Auth-Token': this.cookies.rc_token ?? '',
-              'X-User-Id': this.cookies.rc_uid ?? '',
-            },
-            method: 'GET',
-          }
-        );
-      }
+      const messages = await fetch(
+        `${this.host}/api/v1/channels.${endp}?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': this.cookies.rc_token ?? '',
+            'X-User-Id': this.cookies.rc_uid ?? '',
+          },
+          method: 'GET',
+        }
+      );
       return await messages.json();
     } catch (err) {
       console.log(err.message);
