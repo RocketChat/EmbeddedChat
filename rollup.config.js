@@ -4,6 +4,10 @@ import babel from "@rollup/plugin-babel";
 import postcss from "rollup-plugin-postcss";
 import external from "rollup-plugin-peer-deps-external";
 import json from "@rollup/plugin-json";
+import bundleSize from "rollup-plugin-bundle-size";
+
+// we will be using terser in shipped version
+// import { terser } from "rollup-plugin-terser";
 
 const packageJson = require("./package.json");
 
@@ -25,6 +29,8 @@ export default [
       postcss(),
       json(),
       external(),
+      // terser(),
+      bundleSize(),
     ],
   },
 ];
