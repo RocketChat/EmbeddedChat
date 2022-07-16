@@ -25,15 +25,15 @@ const ChatBody = ({ height, anonymousMode }) => {
       const { messages } = await RCInstance.getMessages(anonymousMode);
       setMessages(messages);
     }
-    RCInstance.realtime(getMessages);
     if (isUserAuthenticated) {
+      RCInstance.realtime(() => getMessages(!anonymousMode));
       getMessages(!anonymousMode);
     } else {
       getMessages(anonymousMode);
     }
 
     return () => RCInstance.close();
-  }, []);
+  }, [isUserAuthenticated]);
 
   const handleEmojiClick = (_, e) => {
     let emoji = `:${e.name}:`;
