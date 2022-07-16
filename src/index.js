@@ -37,6 +37,7 @@ export const RCComponent = ({
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
+  const setUser = useUserStore((state) => state.setUser);
 
   const cookiesPresent =
     RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
@@ -44,8 +45,9 @@ export const RCComponent = ({
   useEffect(() => {
     async function checkIfUserAuthenticated() {
       const data = await RCInstance.me();
-      if (data.name) {
+      if (data.success) {
         setIsUserAuthenticated(true);
+        setUser(data);
       } else {
         setIsUserAuthenticated(false);
         dispatchToastMessage({
@@ -57,7 +59,7 @@ export const RCComponent = ({
     if (cookiesPresent) {
       checkIfUserAuthenticated();
     }
-  }, []);
+  }, [cookiesPresent]);
 
   return (
     <ToastBarProvider>
