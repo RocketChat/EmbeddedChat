@@ -25,17 +25,22 @@ and use it,
 ```jsx
 <RCComponent
   isClosable={true}
-  setClosableState={setClosable}
+  setClosableState={setClosableState}
   moreOpts={true}
   width="100%"
-  height="30vh"
-  host={process.env.REACT_APP_RC_HOST}
+  height="40vh"
   GOOGLE_CLIENT_ID={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-  roomId={process.env.REACT_APP_RC_ROOM_ID}
+  host={'http://localhost:3000'}
+  roomId={'GENERAL'}
+  channelName="Customer Service"
+  anonymousMode={false}
+  isFullScreenFromStart={false}
 />
 ```
 
 ## Props
+
+Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) for more info on each prop.
 
 |prop|description  |
 |--|--|
@@ -47,6 +52,9 @@ and use it,
 |host | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)|
 |GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console|
 |roomId | the public room's id that you want to subscribe to|
+|channelName| the fallback channel name to be present on the chat header|
+|anonymousMode | if the user can see the chat without logging in|
+|isFullScreenFromStart | if the EmbeddedChat is full screen from the initialization|
 
 ## Setting up Authentication
 
