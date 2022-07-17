@@ -61,13 +61,15 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   return (
     <Box>
       <Box m={2} className={styles.container} border={'2px solid #ddd'}>
-        <Popup
-          disabled={!isUserAuthenticated}
-          trigger={<Icon name="emoji" size="x25" padding={6} />}
-          position={'top left'}
-        >
-          <EmojiPicker handleEmojiClick={handleEmojiClick} />
-        </Popup>
+        {isUserAuthenticated && (
+          <Popup
+            disabled={!isUserAuthenticated}
+            trigger={<Icon name="emoji" size="x25" padding={6} />}
+            position={'top left'}
+          >
+            <EmojiPicker handleEmojiClick={handleEmojiClick} />
+          </Popup>
+        )}
         <input
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           disabled={!isUserAuthenticated}

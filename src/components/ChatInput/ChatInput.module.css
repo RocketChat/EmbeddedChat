@@ -17,3 +17,7 @@
 .textInput:disabled {
   cursor: not-allowed;
 }
+
+.textInput::placeholder {
+  padding-left: 5px;
+}
