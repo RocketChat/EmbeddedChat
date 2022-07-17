@@ -94,7 +94,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           />
         ) : (
           <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-            <Icon name="google" size="x20" />
+            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
             Sign In with Google
           </Button>
         )}

@@ -130,15 +130,12 @@ const ChatHeader = ({
       </Box>
       <Box display="flex" alignItems="center">
         {user.success && (
-          <>
-            <img
-              width={'20px'}
-              height={'20px'}
-              src={user.avatarUrl || ''}
-              alt="avatar"
-            />
-            <p style={{ marginLeft: '2px' }}>Hi, {user.username}</p>
-          </>
+          <img
+            width={'20px'}
+            height={'20px'}
+            src={user.avatarUrl || ''}
+            alt="avatar"
+          />
         )}
         {fullScreen ? (
           moreOpts && (
