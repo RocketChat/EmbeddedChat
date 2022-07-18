@@ -63,33 +63,35 @@ const ChatHeader = ({
           </Box>
         ),
       },
-      threads: {
-        action: function noRefCheck() {},
-        label: (
-          <Box alignItems="center" display="flex">
-            <Icon mie="x4" name="thread" size="x16" />
-            Threads
-          </Box>
-        ),
-      },
-      starred: {
-        action: function noRefCheck() {},
-        label: (
-          <Box alignItems="center" display="flex">
-            <Icon mie="x4" name="star" size="x16" />
-            Starred
-          </Box>
-        ),
-      },
-      pinned: {
-        action: function noRefCheck() {},
-        label: (
-          <Box alignItems="center" display="flex">
-            <Icon mie="x4" name="pin" size="x16" />
-            Pinned
-          </Box>
-        ),
-      },
+      ...(moreOpts && {
+        threads: {
+          action: function noRefCheck() {},
+          label: (
+            <Box alignItems="center" display="flex">
+              <Icon mie="x4" name="thread" size="x16" />
+              Threads
+            </Box>
+          ),
+        },
+        starred: {
+          action: function noRefCheck() {},
+          label: (
+            <Box alignItems="center" display="flex">
+              <Icon mie="x4" name="star" size="x16" />
+              Starred
+            </Box>
+          ),
+        },
+        pinned: {
+          action: function noRefCheck() {},
+          label: (
+            <Box alignItems="center" display="flex">
+              <Icon mie="x4" name="pin" size="x16" />
+              Pinned
+            </Box>
+          ),
+        },
+      }),
       ...(isUserAuthenticated && {
         logout: {
           action: handleLogout,
@@ -138,9 +140,7 @@ const ChatHeader = ({
           />
         )}
         {fullScreen ? (
-          moreOpts && (
-            <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
-          )
+          <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
         ) : (
           <ActionButton
             onClick={() => {
