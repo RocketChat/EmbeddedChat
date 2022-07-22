@@ -1,12 +1,11 @@
 import { Box } from '@rocket.chat/fuselage';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 import { useUserStore } from './store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 export const RCComponent = ({
   isClosable = false,
@@ -28,38 +27,11 @@ export const RCComponent = ({
       'Please provide a setClosableState to props when isClosable = true'
     );
   }
-  const dispatchToastMessage = useToastBarDispatch();
 
   const RCInstance = new RocketChatInstance(host, roomId);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-  const setUser = useUserStore((state) => state.setUser);
-
-  const cookiesPresent =
-    RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
-
-  useEffect(() => {
-    async function checkIfUserAuthenticated() {
-      const data = await RCInstance.me();
-      if (data.success) {
-        setIsUserAuthenticated(true);
-        setUser(data);
-      } else {
-        setIsUserAuthenticated(false);
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Unauthorized',
-        });
-      }
-    }
-    if (cookiesPresent) {
-      checkIfUserAuthenticated();
-    }
-  }, [cookiesPresent]);
 
   return (
     <ToastBarProvider>

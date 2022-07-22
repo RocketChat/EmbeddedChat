@@ -28,7 +28,15 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     if (!message.length || !isUserAuthenticated) {
       return;
     }
-    await RCInstance.sendMessage(message);
+    const res = await RCInstance.sendMessage(message);
+    if (!res.success) {
+      await RCInstance.logout();
+      setIsUserAuthenticated(false);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error sending message, login again',
+      });
+    }
     setMessage('');
   };
 

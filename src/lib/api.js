@@ -9,30 +9,22 @@ export default class RocketChatInstance {
     host: this.host,
     useSsl: false,
   });
-  cookies = {
-    rc_token: Cookies.get('rc_token'),
-    rc_uid: Cookies.get('rc_uid'),
-  };
+
   constructor(host, rid) {
     this.host = host;
     this.rid = rid;
-    this.cookies = {
-      rc_token: Cookies.get('rc_token'),
-      rc_uid: Cookies.get('rc_uid'),
-    };
   }
 
   getCookies() {
-    return this.cookies;
-  }
-
-  setCookies(cookies) {
-    Cookies.set('rc_token', cookies.rc_token || '', { expires: 3600 });
-    Cookies.set('rc_uid', cookies.rc_uid || '');
-    this.cookies = {
+    return {
       rc_token: Cookies.get('rc_token'),
       rc_uid: Cookies.get('rc_uid'),
     };
+  }
+
+  setCookies(cookies) {
+    Cookies.set('rc_token', cookies.rc_token || '');
+    Cookies.set('rc_uid', cookies.rc_uid || '');
   }
 
   async googleSSOLogin(signIn) {
@@ -74,8 +66,8 @@ export default class RocketChatInstance {
       const response = await fetch(`${this.host}/api/v1/logout`, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': this.cookies.rc_token,
-          'X-User-Id': this.cookies.rc_uid,
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
         },
         method: 'POST',
       });
@@ -93,8 +85,8 @@ export default class RocketChatInstance {
         body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': this.cookies.rc_token,
-          'X-User-Id': this.cookies.rc_uid,
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
         },
         method: 'POST',
       });
@@ -111,8 +103,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': this.cookies.rc_token,
-            'X-User-Id': this.cookies.rc_uid,
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
           },
           method: 'GET',
         }
@@ -126,7 +118,7 @@ export default class RocketChatInstance {
   async realtime(callback) {
     try {
       await this.rcClient.connect();
-      await this.rcClient.resume({ token: this.cookies.rc_token });
+      await this.rcClient.resume({ token: Cookies.get('rc_token') });
       await this.rcClient.subscribe('stream-room-messages', this.rid);
       await this.rcClient.onMessage((data) => {
         callback(data);
@@ -146,8 +138,8 @@ export default class RocketChatInstance {
       const response = await fetch(`${this.host}/api/v1/me`, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': this.cookies.rc_token,
-          'X-User-Id': this.cookies.rc_uid,
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
         },
         method: 'GET',
       });
@@ -157,7 +149,7 @@ export default class RocketChatInstance {
     }
   }
 
-  async getMessages(anonymousMode) {
+  async getMessages(anonymousMode = false) {
     const endp = anonymousMode ? 'anonymousread' : 'messages';
     try {
       const messages = await fetch(
@@ -165,8 +157,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': this.cookies.rc_token ?? '',
-            'X-User-Id': this.cookies.rc_uid ?? '',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
           },
           method: 'GET',
         }
@@ -183,8 +175,8 @@ export default class RocketChatInstance {
         body: `{"message": { "rid": "${this.rid}", "msg": "${message}" }}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': this.cookies.rc_token,
-          'X-User-Id': this.cookies.rc_uid,
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
         },
         method: 'POST',
       });

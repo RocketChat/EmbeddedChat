@@ -26,8 +26,8 @@ const ChatBody = ({ height, anonymousMode }) => {
       setMessages(messages);
     }
     if (isUserAuthenticated) {
-      RCInstance.realtime(() => getMessages(!anonymousMode));
-      getMessages(!anonymousMode);
+      RCInstance.realtime(() => getMessages());
+      getMessages();
     } else {
       getMessages(anonymousMode);
     }
