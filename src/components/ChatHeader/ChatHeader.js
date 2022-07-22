@@ -131,11 +131,11 @@ const ChatHeader = ({
         </Box>
       </Box>
       <Box display="flex" alignItems="center">
-        {user.success && (
+        {user.avatarUrl && (
           <img
             width={'20px'}
             height={'20px'}
-            src={user.avatarUrl || ''}
+            src={user.avatarUrl}
             alt="avatar"
           />
         )}

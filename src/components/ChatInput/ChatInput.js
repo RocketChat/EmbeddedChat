@@ -22,6 +22,8 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     (state) => state.setIsUserAuthenticated
   );
 
+  const setUser = useUserStore((state) => state.setUser);
+
   const dispatchToastMessage = useToastBarDispatch();
 
   const sendMessage = async () => {
@@ -50,9 +52,11 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     let unified_emoji = he.decode(`&#x${n};`);
     setMessage(message + unified_emoji);
   };
+
   const handleLogin = async () => {
     const res = await RCInstance.googleSSOLogin(signIn);
     if (res.status === 'success') {
+      setUser(res.me);
       setIsUserAuthenticated(true);
       dispatchToastMessage({
         type: 'success',

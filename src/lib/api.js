@@ -54,7 +54,7 @@ export default class RocketChatInstance {
             response.data.me.name
           );
         }
-        return { status: response.status };
+        return { status: response.status, me: response.data.me };
       }
     } catch (err) {
       console.error(err.message);
@@ -131,22 +131,6 @@ export default class RocketChatInstance {
   async close() {
     await this.rcClient.unsubscribeAll();
     await this.rcClient.disconnect();
-  }
-
-  async me() {
-    try {
-      const response = await fetch(`${this.host}/api/v1/me`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
-        },
-        method: 'GET',
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err.message);
-    }
   }
 
   async getMessages(anonymousMode = false) {
