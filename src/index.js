@@ -1,5 +1,5 @@
 import { Box } from '@rocket.chat/fuselage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
@@ -32,6 +32,17 @@ export const RCComponent = ({
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
+
+  useEffect(() => {
+    const cookiesPresent =
+      RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
+    if (cookiesPresent) {
+      setIsUserAuthenticated(true);
+    }
+  }, []);
 
   return (
     <ToastBarProvider>
