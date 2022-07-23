@@ -22,7 +22,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     (state) => state.setIsUserAuthenticated
   );
 
-  const setUser = useUserStore((state) => state.setUser);
+  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
 
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -56,7 +56,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const handleLogin = async () => {
     const res = await RCInstance.googleSSOLogin(signIn);
     if (res.status === 'success') {
-      setUser(res.me);
+      setUserAvatarUrl(res.me.avatarUrl);
       setIsUserAuthenticated(true);
       dispatchToastMessage({
         type: 'success',

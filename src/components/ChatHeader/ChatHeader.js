@@ -25,14 +25,14 @@ const ChatHeader = ({
     (state) => state.setIsUserAuthenticated
   );
 
-  const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
+  const avatarUrl = useUserStore((state) => state.avatarUrl);
+  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
     if (res.status === 'success') {
       setIsUserAuthenticated(false);
-      setUser({});
+      setUserAvatarUrl('');
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged out',
@@ -131,13 +131,8 @@ const ChatHeader = ({
         </Box>
       </Box>
       <Box display="flex" alignItems="center">
-        {user.avatarUrl && (
-          <img
-            width={'20px'}
-            height={'20px'}
-            src={user.avatarUrl}
-            alt="avatar"
-          />
+        {avatarUrl && (
+          <img width={'20px'} height={'20px'} src={avatarUrl} alt="avatar" />
         )}
         {fullScreen ? (
           <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
