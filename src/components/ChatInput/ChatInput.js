@@ -1,16 +1,44 @@
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Box, Button, Icon } from '@rocket.chat/fuselage';
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
+import { useGoogleLogin } from '../../hooks/useGoogleLogin';
+import { useUserStore } from '../../store';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
-const ChatInput = () => {
+const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
-  const { RCInstance, cookies } = useContext(RCContext);
+  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
+  const { RCInstance } = useContext(RCContext);
+
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
+
+  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
+
+  const dispatchToastMessage = useToastBarDispatch();
+
   const sendMessage = async () => {
-    await RCInstance.sendMessage(message, cookies);
+    if (!message.length || !isUserAuthenticated) {
+      return;
+    }
+    const res = await RCInstance.sendMessage(message);
+    if (!res.success) {
+      await RCInstance.logout();
+      setIsUserAuthenticated(false);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error sending message, login again',
+      });
+    }
     setMessage('');
   };
 
@@ -25,17 +53,38 @@ const ChatInput = () => {
     setMessage(message + unified_emoji);
   };
 
+  const handleLogin = async () => {
+    const res = await RCInstance.googleSSOLogin(signIn);
+    if (res.status === 'success') {
+      setUserAvatarUrl(res.me.avatarUrl);
+      setIsUserAuthenticated(true);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Successfully logged in',
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Something wrong happened',
+      });
+    }
+  };
+
   return (
     <Box>
       <Box m={2} className={styles.container} border={'2px solid #ddd'}>
-        <Popup
-          trigger={<Icon name="emoji" size="x25" padding={6} />}
-          position={'top left'}
-        >
-          <EmojiPicker handleEmojiClick={handleEmojiClick} />
-        </Popup>
+        {isUserAuthenticated && (
+          <Popup
+            disabled={!isUserAuthenticated}
+            trigger={<Icon name="emoji" size="x25" padding={6} />}
+            position={'top left'}
+          >
+            <EmojiPicker handleEmojiClick={handleEmojiClick} />
+          </Popup>
+        )}
         <input
-          placeholder="Message"
+          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+          disabled={!isUserAuthenticated}
           value={message}
           className={styles.textInput}
           onChange={(e) => {
@@ -47,10 +96,27 @@ const ChatInput = () => {
             }
           }}
         />
-        <Icon onClick={sendMessage} name="send" size="x25" padding={6} />
+        {isUserAuthenticated ? (
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={sendMessage}
+            name="send"
+            size="x25"
+            padding={6}
+          />
+        ) : (
+          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
+            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
+            Sign In with Google
+          </Button>
+        )}
       </Box>
     </Box>
   );
 };
 
 export default ChatInput;
+
+ChatInput.propTypes = {
+  GOOGLE_CLIENT_ID: PropTypes.string,
+};

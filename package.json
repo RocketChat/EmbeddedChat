@@ -9,15 +9,15 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "rollup -c",
-    "watch": "rollup -c --watch",
+    "build": "rollup -c --context=window",
+    "watch": "rollup -c --watch --context=window",
     "dev": "concurrently \" npm run watch \" \" npm run start --prefix playground \"",
     "test": "run-s test:unit test:lint test:build",
     "test:lint": "eslint src/**/*.js",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/components/**/*.js",
     "test:build": "run-s build",
-    "format": "prettier --write 'src/'",
+    "format": "prettier --write 'src/' --loglevel=silent",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "prepublish": "npm run build",
     "prepare": "husky install"
@@ -58,23 +58,28 @@
     "react-scripts": "^5.0.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
+    "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2"
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@rocket.chat/fuselage": "^0.31.12",
     "@rocket.chat/fuselage-hooks": "^0.31.12",
     "@rocket.chat/fuselage-polyfills": "^0.31.12",
+    "@rocket.chat/fuselage-toastbar": "^0.31.14",
     "@rocket.chat/icons": "^0.31.12",
     "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rollup/plugin-json": "^4.1.0",
     "dompurify": "^2.3.8",
     "emoji-picker-react": "2.1.1",
     "emoji-toolkit": "^6.6.0",
-    "js-cookie": "^3.0.1",
+    "gapi-cjs": "^1.0.2",
     "he": "^1.2.0",
+    "js-cookie": "^3.0.1",
     "marked": "^4.0.17",
     "react-virtuoso": "^1.2.4",
-    "reactjs-popup": "^2.0.5"
+    "reactjs-popup": "^2.0.5",
+    "zustand": "^4.0.0-rc.1"
   }
 }
