@@ -18,6 +18,7 @@ export const RCComponent = ({
   roomId = 'GENERAL',
   channelName,
   anonymousMode = false,
+  headerColor = '#fff',
   isFullScreenFromStart = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(isFullScreenFromStart);
@@ -55,6 +56,7 @@ export const RCComponent = ({
             moreOpts={moreOpts}
             fullScreen={fullScreen}
             setFullScreen={setFullScreen}
+            headerColor={headerColor}
           />
           {isUserAuthenticated || anonymousMode ? (
             <ChatBody
@@ -83,4 +85,5 @@ RCComponent.propTypes = {
   channelName: PropTypes.string,
   isFullScreenFromStart: PropTypes.bool,
   anonymousMode: PropTypes.bool,
+  headerColor: PropTypes.string,
 };
