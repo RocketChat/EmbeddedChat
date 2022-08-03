@@ -7,7 +7,7 @@ import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useUserStore } from '../../store';
+import { useToastStore, useUserStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
@@ -23,6 +23,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   );
 
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
+  const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -37,6 +38,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       dispatchToastMessage({
         type: 'error',
         message: 'Error sending message, login again',
+        position: toastPosition,
       });
     }
     setMessage('');
@@ -61,56 +63,56 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged in',
+        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
         message: 'Something wrong happened',
+        position: toastPosition,
       });
     }
   };
 
   return (
-    <Box>
-      <Box m={2} className={styles.container} border={'2px solid #ddd'}>
-        {isUserAuthenticated && (
-          <Popup
-            disabled={!isUserAuthenticated}
-            trigger={<Icon name="emoji" size="x25" padding={6} />}
-            position={'top left'}
-          >
-            <EmojiPicker handleEmojiClick={handleEmojiClick} />
-          </Popup>
-        )}
-        <input
-          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+    <Box className={styles.container} border={'2px solid #ddd'}>
+      {isUserAuthenticated && (
+        <Popup
           disabled={!isUserAuthenticated}
-          value={message}
-          className={styles.textInput}
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.keyCode === 13) {
-              sendMessage();
-            }
-          }}
+          trigger={<Icon name="emoji" size="x25" padding={6} />}
+          position={'top left'}
+        >
+          <EmojiPicker handleEmojiClick={handleEmojiClick} />
+        </Popup>
+      )}
+      <input
+        placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+        disabled={!isUserAuthenticated}
+        value={message}
+        className={styles.textInput}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13) {
+            sendMessage();
+          }
+        }}
+      />
+      {isUserAuthenticated ? (
+        <Icon
+          disabled={!isUserAuthenticated}
+          onClick={sendMessage}
+          name="send"
+          size="x25"
+          padding={6}
         />
-        {isUserAuthenticated ? (
-          <Icon
-            disabled={!isUserAuthenticated}
-            onClick={sendMessage}
-            name="send"
-            size="x25"
-            padding={6}
-          />
-        ) : (
-          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-            Sign In with Google
-          </Button>
-        )}
-      </Box>
+      ) : (
+        <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
+          <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
+          Sign In with Google
+        </Button>
+      )}
     </Box>
   );
 };

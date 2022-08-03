@@ -41,7 +41,14 @@ const ChatBody = ({ height, anonymousMode }) => {
   };
 
   return (
-    <Box className={styles.container} height={height}>
+    <Box
+      style={{
+        borderLeft: '1px solid #b1b1b1',
+        borderRight: '1px solid #b1b1b1',
+      }}
+      className={styles.container}
+      height={height}
+    >
       {messages &&
         messages.map((msg) => (
           <Message key={msg._id}>
