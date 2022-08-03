@@ -5,7 +5,7 @@ import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
-import { useUserStore } from './store';
+import { useToastStore, useUserStore } from './store';
 
 export const RCComponent = ({
   isClosable = false,
@@ -20,8 +20,11 @@ export const RCComponent = ({
   anonymousMode = false,
   headerColor = '#fff',
   isFullScreenFromStart = false,
+  toastBarPosition = 'bottom-end',
 }) => {
   const [fullScreen, setFullScreen] = useState(isFullScreenFromStart);
+  const setToastbarPosition = useToastStore((state) => state.setPosition);
+  setToastbarPosition(toastBarPosition);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -86,4 +89,5 @@ RCComponent.propTypes = {
   isFullScreenFromStart: PropTypes.bool,
   anonymousMode: PropTypes.bool,
   headerColor: PropTypes.string,
+  toastBarPosition: PropTypes.string,
 };

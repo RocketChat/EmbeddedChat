@@ -7,7 +7,7 @@ import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
 import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useUserStore } from '../../store';
+import { useToastStore, useUserStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
@@ -23,6 +23,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   );
 
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
+  const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -37,6 +38,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       dispatchToastMessage({
         type: 'error',
         message: 'Error sending message, login again',
+        position: toastPosition,
       });
     }
     setMessage('');
@@ -61,11 +63,13 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged in',
+        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
         message: 'Something wrong happened',
+        position: toastPosition,
       });
     }
   };

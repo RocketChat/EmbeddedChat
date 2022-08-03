@@ -20,10 +20,10 @@
   color: #000;
 }
 
-.icon_light_mode:hover i {
+.icon_light_mode:hover > i {
   color: #000;
 }
 
-.icon_dark_mode:hover i {
-  color: #fff;
+.icon_dark_mode:hover > i {
+  color: #000;
 }

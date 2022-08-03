@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import { useUserStore } from '../../store';
+import { useToastStore, useUserStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { darken, isDark, lighten } from '../../lib/color';
 
@@ -42,6 +42,8 @@ const ChatHeader = ({
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
 
+  const toastPosition = useToastStore((state) => state.position);
+
   const handleLogout = async () => {
     const res = await RCInstance.logout();
     if (res.status === 'success') {
@@ -50,6 +52,7 @@ const ChatHeader = ({
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged out',
+        position: toastPosition,
       });
     }
   };
