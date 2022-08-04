@@ -158,7 +158,12 @@ const ChatHeader = ({
               )}
             </>
           ) : (
-            <h2 className={styles.nospace}>{channelName || 'Login to chat'}</h2>
+            <h2
+              style={{ color: computedHeaderTextColor }}
+              className={styles.nospace}
+            >
+              {channelName || 'Login to chat'}
+            </h2>
           )}
         </Box>
       </Box>
