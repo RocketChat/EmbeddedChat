@@ -1,6 +1,6 @@
 {
   "name": "rc-component-react",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -20,7 +20,10 @@
     "format": "prettier --write 'src/' --loglevel=silent",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "prepublish": "npm run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy:playground": "npm run build && cd playground && npm run deploy",
+    "semantic-release": "semantic-release --branches main",
+    "commit": "git-cz"
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
@@ -45,6 +48,7 @@
     "babel-jest": "^27.5.1",
     "concurrently": "^7.2.0",
     "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.16.0",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-react": "^7.30.0",
@@ -61,7 +65,8 @@
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "semantic-release": "^19.0.3"
   },
   "dependencies": {
     "@rocket.chat/fuselage": "^0.31.12",
@@ -81,5 +86,14 @@
     "react-virtuoso": "^1.2.4",
     "reactjs-popup": "^2.0.5",
     "zustand": "^4.0.0-rc.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RocketChat/EmbeddedChat.git"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
