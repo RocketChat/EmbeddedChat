@@ -1,8 +1,0 @@
-name: 'First Person'
-
-steps:
--  uses: actions/first-interaction@v1
-   with:
-    repo-token: ${{ secrets.GITHUB_TOKEN }}
-    issue-message: 'Thank you so much for using the product and glad you liked it so much that you came here posting your first issue to make it better! We really appreciate you!'
-    pr-message: 'WOW!!! We can't thank you enough for your time making your first PR on this project, hope we continue our relationship like this!'
