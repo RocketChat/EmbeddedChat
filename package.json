@@ -17,7 +17,7 @@
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/components/**/*.js",
     "test:build": "run-s build",
-    "format": "prettier --write 'src/' --loglevel=silent",
+    "format": "prettier --write . --loglevel=silent",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "prepublish": "npm run build",
     "prepare": "husky install"
