@@ -4,15 +4,16 @@ import Cookies from 'js-cookie';
 export default class RocketChatInstance {
   host = 'http://localhost:3000';
   rid = '';
-  rcClient = new Rocketchat({
-    protocol: 'ddp',
-    host: this.host,
-    useSsl: false,
-  });
+  rcClient = null;
 
   constructor(host, rid) {
     this.host = host;
     this.rid = rid;
+    this.rcClient = new Rocketchat({
+      protocol: 'ddp',
+      host: this.host,
+      useSsl: !/http:\/\//.test(host),
+    });
   }
 
   getCookies() {
