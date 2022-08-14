@@ -71,15 +71,17 @@ const ChatHeader = ({
 
   const menuOptions = () => {
     return {
-      minimize: {
-        action: () => setFullScreen((prev) => !prev),
-        label: (
-          <Box alignItems="center" display="flex">
-            <Icon mie="x4" name="mobile" size="x16" />
-            Minimize
-          </Box>
-        ),
-      },
+      ...(fullScreen && {
+        minimize: {
+          action: () => setFullScreen((prev) => !prev),
+          label: (
+            <Box alignItems="center" display="flex">
+              <Icon mie="x4" name="mobile" size="x16" />
+              Minimize
+            </Box>
+          ),
+        },
+      }),
       ...(moreOpts && {
         threads: {
           action: function noRefCheck() {},
@@ -179,18 +181,20 @@ const ChatHeader = ({
             options={menuOptions()}
           />
         ) : (
-          <ActionButton
-            onClick={() => {
-              setFullScreen((prev) => !prev);
-            }}
-            ghost
-            display={'inline'}
-            square
-            small
-            className={computedIconClassName}
-          >
-            <Icon name="computer" size={'x20'} />
-          </ActionButton>
+          <>
+            <ActionButton
+              onClick={() => {
+                setFullScreen((prev) => !prev);
+              }}
+              ghost
+              display={'inline'}
+              square
+              small
+            >
+              <Icon name="computer" size={'x20'} />
+            </ActionButton>
+            <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
+          </>
         )}
         {isClosable && (
           <ActionButton
