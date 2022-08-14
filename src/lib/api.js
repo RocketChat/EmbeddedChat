@@ -170,4 +170,110 @@ export default class RocketChatInstance {
       console.error(err.message);
     }
   }
+
+  async starMessage(mid) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.starMessage`, {
+        body: `{"messageId": "${mid}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async unstarMessage(mid) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.unStarMessage`, {
+        body: `{"messageId": "${mid}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async getStarredMessages() {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/chat.getStarredMessages?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async getPinnedMessages() {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/chat.getPinnedMessages?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async pinMessage(mid) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.pinMessage`, {
+        body: `{"messageId": "${mid}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async unpinMessage(mid) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.unPinMessage`, {
+        body: `{"messageId": "${mid}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 }

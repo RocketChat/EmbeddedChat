@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import { useToastStore, useUserStore } from '../../store';
+import { useToastStore, useUserStore, useMessageStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { darken, isDark, lighten } from '../../lib/color';
 
@@ -43,6 +43,8 @@ const ChatHeader = ({
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
 
   const toastPosition = useToastStore((state) => state.position);
+  const setMessages = useMessageStore((state) => state.setMessages);
+  const setFilter = useMessageStore((state) => state.setFilter);
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
@@ -55,6 +57,18 @@ const ChatHeader = ({
         position: toastPosition,
       });
     }
+  };
+
+  const showStarredMessage = async () => {
+    const { messages } = await RCInstance.getStarredMessages();
+    setMessages(messages);
+    setFilter(true);
+  };
+
+  const showPinnedMessage = async () => {
+    const { messages } = await RCInstance.getPinnedMessages();
+    setMessages(messages);
+    setFilter(true);
   };
 
   useEffect(() => {
@@ -93,7 +107,7 @@ const ChatHeader = ({
           ),
         },
         starred: {
-          action: function noRefCheck() {},
+          action: showStarredMessage,
           label: (
             <Box alignItems="center" display="flex">
               <Icon mie="x4" name="star" size="x16" />
@@ -102,7 +116,7 @@ const ChatHeader = ({
           ),
         },
         pinned: {
-          action: function noRefCheck() {},
+          action: showPinnedMessage,
           label: (
             <Box alignItems="center" display="flex">
               <Icon mie="x4" name="pin" size="x16" />

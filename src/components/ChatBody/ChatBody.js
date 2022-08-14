@@ -1,24 +1,27 @@
-import { Box, Message, MessageToolbox } from '@rocket.chat/fuselage';
+import { Box } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import styles from './ChatBody.module.css';
 import PropTypes from 'prop-types';
-import { EmojiPicker } from '../EmojiPicker/index';
-import Popup from 'reactjs-popup';
-import { Markdown } from '../Markdown/index';
-import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
+import MessageList from '../MessageList';
 
 const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
-  const isSmallScreen = useMediaQuery('(max-width: 992px)');
 
   const messages = useMessageStore((state) => state.messages);
   const setMessages = useMessageStore((state) => state.setMessages);
+  const setFilter = useMessageStore((state) => state.setFilter);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+
+  const handleGoBack = async () => {
+    const { messages } = await RCInstance.getMessages(anonymousMode);
+    setFilter(false);
+    setMessages(messages);
+  };
 
   useEffect(() => {
     async function getMessages(anonymousMode) {
@@ -35,55 +38,9 @@ const ChatBody = ({ height, anonymousMode }) => {
     return () => RCInstance.close();
   }, [isUserAuthenticated]);
 
-  const handleEmojiClick = (_, e) => {
-    let emoji = `:${e.name}:`;
-    console.log(emoji);
-  };
-
   return (
-    <Box
-      style={{
-        borderLeft: '1px solid #b1b1b1',
-        borderRight: '1px solid #b1b1b1',
-      }}
-      className={styles.container}
-      height={height}
-    >
-      {messages &&
-        messages.map((msg) => (
-          <Message key={msg._id}>
-            <Message.Container>
-              <Message.Header>
-                <Message.Name>{msg.u?.name}</Message.Name>
-                <Message.Username>@{msg.u.username}</Message.Username>
-                <Message.Timestamp>
-                  {new Date(msg.ts).toDateString()}
-                </Message.Timestamp>
-              </Message.Header>
-              <Message.Body>
-                <Markdown body={msg.msg} />
-              </Message.Body>
-            </Message.Container>
-            <MessageToolbox.Wrapper>
-              <MessageToolbox>
-                <MessageToolbox.Item icon="thread" />
-                <MessageToolbox.Item icon="star" />
-                <Popup
-                  trigger={
-                    <MessageToolbox.Item
-                      icon="emoji"
-                      onClick={() => console.log('saf')}
-                    />
-                  }
-                  position={isSmallScreen ? 'left top' : 'left center'}
-                >
-                  <EmojiPicker handleEmojiClick={handleEmojiClick} />
-                </Popup>
-                <MessageToolbox.Item icon="pin" />
-              </MessageToolbox>
-            </MessageToolbox.Wrapper>
-          </Message>
-        ))}
+    <Box className={styles.container} height={height}>
+      <MessageList messages={messages} handleGoBack={handleGoBack} />
     </Box>
   );
 };
