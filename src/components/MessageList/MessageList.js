@@ -25,12 +25,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
-
-  const handleEmojiClick = (_, e) => {
-    let emoji = `:${e.name}:`;
-    console.log(emoji);
-  };
-
+  
   const handleStarMessage = async (message) => {
     const isStarred =
       message.starred &&
@@ -72,6 +67,11 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
+  const handleEmojiClick = async (e, msg) => {
+    const react = await RCInstance.reactToMessage(e.name, msg._id, true);
+    console.log(react);
+  };
+
   return (
     <>
       {messages &&
@@ -90,6 +90,25 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <Message.Body>
                     <Markdown body={msg.msg} />
                   </Message.Body>
+                  <MessageReactions>
+                {msg.reactions &&
+                  serializeReactions(msg.reactions).map((reaction) => (
+                    <MessageReactions.Reaction
+                      key={reaction.name}
+                      mine={isSameUser(reaction, authenticatedUserUsername)}
+                      onClick={() =>
+                        handleEmojiClick(
+                          reaction,
+                          msg,
+                          !isSameUser(reaction, authenticatedUserUsername)
+                        )
+                      }
+                    >
+                      <Markdown body={reaction.name} />
+                      <p>{reaction.count}</p>
+                    </MessageReactions.Reaction>
+                  ))}
+              </MessageReactions>
                 </Message.Container>
                 <MessageToolbox.Wrapper>
                   <MessageToolbox>
@@ -112,7 +131,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                       }
                       position={isSmallScreen ? 'left top' : 'left center'}
                     >
-                      <EmojiPicker handleEmojiClick={handleEmojiClick} />
+                      <EmojiPicker handleEmojiClick={(_, e) => handleEmojiClick(e, msg, true)} />
                     </Popup>
                     <MessageToolbox.Item
                       icon="pin"
