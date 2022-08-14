@@ -29,8 +29,10 @@ const MessageList = ({ messages, handleGoBack }) => {
   };
 
   const handleStarMessage = async (message) => {
-    const isStarred = message.starred.find((u) => u._id === message.u._id);
-    if (isStarred) {
+    const isStarred =
+      message.starred && message.starred.find((u) => u._id === message.u._id);
+    console.log(isStarred);
+    if (!isStarred) {
       await RCInstance.starMessage(message._id);
       dispatchToastMessage({
         type: 'success',
@@ -66,7 +68,11 @@ const MessageList = ({ messages, handleGoBack }) => {
               <MessageToolbox>
                 <MessageToolbox.Item icon="thread" />
                 <MessageToolbox.Item
-                  icon="star"
+                  icon={`${
+                    msg.starred && msg.starred.find((u) => u._id === msg.u._id)
+                      ? 'star-filled'
+                      : 'star'
+                  }`}
                   onClick={() => handleStarMessage(msg)}
                 />
                 <Popup
