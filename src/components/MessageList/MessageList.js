@@ -47,6 +47,11 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
+  const handlePinMessage = async (mid) => {
+    const isPrevileged = await RCInstance.channelRoles();
+    console.log(isPrevileged);
+  };
+
   return (
     <>
       {messages &&
@@ -86,7 +91,10 @@ const MessageList = ({ messages, handleGoBack }) => {
                 >
                   <EmojiPicker handleEmojiClick={handleEmojiClick} />
                 </Popup>
-                <MessageToolbox.Item icon="pin" />
+                <MessageToolbox.Item
+                  icon="pin"
+                  onClick={() => handlePinMessage(msg._id)}
+                />
               </MessageToolbox>
             </MessageToolbox.Wrapper>
           </Message>
