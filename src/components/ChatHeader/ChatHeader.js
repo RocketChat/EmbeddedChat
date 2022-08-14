@@ -91,6 +91,15 @@ const ChatHeader = ({
             </Box>
           ),
         },
+        members: {
+          action: () => {},
+          label: (
+            <Box alignItems="center" display="flex">
+              <Icon mie="x4" name="team" size="x16" />
+              Members
+            </Box>
+          ),
+        },
       }),
       ...(isUserAuthenticated && {
         logout: {
