@@ -17,8 +17,10 @@ function App() {
           isClosable={true}
           setClosableState={setClosable}
           moreOpts={true}
-          channelName="General"
-          anonymousMode={false}
+          channelName="general"
+          anonymousMode={true}
+          headerColor="white"
+          toastBarPosition='bottom-end'
         />
       )}
     </div>

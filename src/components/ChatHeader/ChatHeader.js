@@ -3,8 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import { useUserStore } from '../../store';
+import { useToastStore, useUserStore } from '../../store';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import { darken, isDark, lighten } from '../../lib/color';
 
 const ChatHeader = ({
   isClosable,
@@ -13,7 +14,20 @@ const ChatHeader = ({
   fullScreen,
   setFullScreen,
   channelName,
+  headerColor,
 }) => {
+  const computedHeaderTextColor = isDark(headerColor) ? 'white' : 'black';
+  const computedHeaderBackgroundColor = headerColor;
+  const computedHeaderDescriptionColor = isDark(headerColor)
+    ? 'whitesmoke'
+    : 'rgba(0, 0, 0, 0.5)';
+  const computedIconClassName = isDark(headerColor)
+    ? styles.icon_light_mode
+    : styles.icon_dark_mode;
+  const computedBorderColor = isDark(headerColor)
+    ? lighten(headerColor, 0.3)
+    : darken(headerColor, 0.3);
+
   const [channelInfo, setChannelInfo] = useState({});
   const { RCInstance } = useContext(RCContext);
   const dispatchToastMessage = useToastBarDispatch();
@@ -28,6 +42,8 @@ const ChatHeader = ({
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
 
+  const toastPosition = useToastStore((state) => state.position);
+
   const handleLogout = async () => {
     const res = await RCInstance.logout();
     if (res.status === 'success') {
@@ -36,6 +52,7 @@ const ChatHeader = ({
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged out',
+        position: toastPosition,
       });
     }
   };
@@ -107,26 +124,46 @@ const ChatHeader = ({
   };
 
   return (
-    <Box className={styles.container} border="1px solid #b1b1b1" p={10}>
+    <Box
+      className={styles.container}
+      border={`1px solid ${computedBorderColor}`}
+      p={10}
+      backgroundColor={computedHeaderBackgroundColor}
+    >
       <Box display="flex">
-        <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
+        <Icon
+          color={computedHeaderTextColor}
+          name="hash"
+          size={fullScreen ? 'x40' : 'x30'}
+        />
         <Box margin={'0 1rem'}>
           {isUserAuthenticated ? (
             <>
-              <h2 className={styles.nospace}>
+              <h2
+                className={styles.nospace}
+                style={{ color: computedHeaderTextColor }}
+              >
                 {channelInfo.name || channelName || 'channelName'}
               </h2>
               {fullScreen && (
                 <p
                   className={styles.nospace}
-                  style={{ color: 'gray', fontSize: 14 }}
+                  style={{
+                    color: computedHeaderDescriptionColor,
+                    fontSize: 14,
+                  }}
                 >
                   {channelInfo.description || ''}
                 </p>
               )}
             </>
           ) : (
-            <h2 className={styles.nospace}>{channelName || 'Login to chat'}</h2>
+            <h2
+              style={{ color: computedHeaderTextColor }}
+              className={styles.nospace}
+            >
+              {channelName || 'Login to chat'}
+            </h2>
           )}
         </Box>
       </Box>
@@ -135,7 +172,12 @@ const ChatHeader = ({
           <img width={'20px'} height={'20px'} src={avatarUrl} alt="avatar" />
         )}
         {fullScreen ? (
-          <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
+          <Menu
+            margin={'0 4px'}
+            display={'inline'}
+            className={computedIconClassName}
+            options={menuOptions()}
+          />
         ) : (
           <ActionButton
             onClick={() => {
@@ -145,6 +187,7 @@ const ChatHeader = ({
             display={'inline'}
             square
             small
+            className={computedIconClassName}
           >
             <Icon name="computer" size={'x20'} />
           </ActionButton>
@@ -158,6 +201,7 @@ const ChatHeader = ({
             display={'inline'}
             square
             small
+            className={computedIconClassName}
           >
             <Icon name="cross" size={'x20'} />
           </ActionButton>
@@ -176,4 +220,5 @@ ChatHeader.propTypes = {
   setFullScreen: PropTypes.func,
   moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
+  headerColor: PropTypes.string,
 };

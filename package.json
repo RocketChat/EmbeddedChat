@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "rollup -c --context=window",
+    "build": "NODE_ENV=development rollup -c --context=window",
+    "build:prod": "NODE_ENV=production rollup -c --context=window",
     "watch": "rollup -c --watch --context=window",
     "dev": "concurrently \" npm run watch \" \" npm run start --prefix playground \"",
     "test": "run-s test:unit test:lint test:build",
@@ -71,6 +72,7 @@
     "@rocket.chat/icons": "^0.31.12",
     "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rollup/plugin-json": "^4.1.0",
+    "color": "^4.2.3",
     "dompurify": "^2.3.8",
     "emoji-picker-react": "2.1.1",
     "emoji-toolkit": "^6.6.0",

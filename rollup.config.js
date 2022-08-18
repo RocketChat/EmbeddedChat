@@ -5,18 +5,17 @@ import postcss from "rollup-plugin-postcss";
 import external from "rollup-plugin-peer-deps-external";
 import json from "@rollup/plugin-json";
 import bundleSize from "rollup-plugin-bundle-size";
-
-// we will be using terser in shipped version
-// import { terser } from "rollup-plugin-terser";
+import { terser } from "rollup-plugin-terser";
 
 const packageJson = require("./package.json");
+const env = process.env.NODE_ENV;
 
 export default [
   {
     input: "src/index.js",
     output: [
-      { file: packageJson.main, format: "cjs", sourcemap: true },
-      { file: packageJson.module, format: "esm", sourcemap: true },
+      { file: packageJson.main, format: "cjs", sourcemap: true, plugins: [env === "production" && terser()] },
+      { file: packageJson.module, format: "esm", sourcemap: true, plugins: [env === "production" && terser()] },
     ],
     plugins: [
       resolve({ browser: true }),
@@ -29,7 +28,6 @@ export default [
       postcss(),
       json(),
       external(),
-      // terser(),
       bundleSize(),
     ],
   },
