@@ -47,58 +47,75 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
-  const handlePinMessage = async (mid) => {
-    const isPrevileged = await RCInstance.channelRoles();
-    console.log(isPrevileged);
+  const handlePinMessage = async (message) => {
+    const isPinned = message.pinned;
+    let pinOrUnpin = isPinned
+      ? await RCInstance.unpinMessage(message._id)
+      : await RCInstance.pinMessage(message._id);
+    if (pinOrUnpin.error) {
+      dispatchToastMessage({
+        type: 'error',
+        message: pinOrUnpin.error,
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'success',
+        message: isPinned ? 'Message unpinned' : 'Message pinned',
+      });
+    }
   };
 
   return (
     <>
       {messages &&
-        messages.map((msg) => (
-          <Message key={msg._id}>
-            <Message.Container>
-              <Message.Header>
-                <Message.Name>{msg.u?.name}</Message.Name>
-                <Message.Username>@{msg.u.username}</Message.Username>
-                <Message.Timestamp>
-                  {new Date(msg.ts).toDateString()}
-                </Message.Timestamp>
-              </Message.Header>
-              <Message.Body>
-                <Markdown body={msg.msg} />
-              </Message.Body>
-            </Message.Container>
-            <MessageToolbox.Wrapper>
-              <MessageToolbox>
-                <MessageToolbox.Item icon="thread" />
-                <MessageToolbox.Item
-                  icon={`${
-                    msg.starred && msg.starred.find((u) => u._id === msg.u._id)
-                      ? 'star-filled'
-                      : 'star'
-                  }`}
-                  onClick={() => handleStarMessage(msg)}
-                />
-                <Popup
-                  trigger={
+        messages.map(
+          (msg) =>
+            msg.msg && (
+              <Message key={msg._id}>
+                <Message.Container>
+                  <Message.Header>
+                    <Message.Name>{msg.u?.name}</Message.Name>
+                    <Message.Username>@{msg.u.username}</Message.Username>
+                    <Message.Timestamp>
+                      {new Date(msg.ts).toDateString()}
+                    </Message.Timestamp>
+                  </Message.Header>
+                  <Message.Body>
+                    <Markdown body={msg.msg} />
+                  </Message.Body>
+                </Message.Container>
+                <MessageToolbox.Wrapper>
+                  <MessageToolbox>
+                    <MessageToolbox.Item icon="thread" />
                     <MessageToolbox.Item
-                      icon="emoji"
-                      onClick={() => console.log('saf')}
+                      icon={`${
+                        msg.starred &&
+                        msg.starred.find((u) => u._id === msg.u._id)
+                          ? 'star-filled'
+                          : 'star'
+                      }`}
+                      onClick={() => handleStarMessage(msg)}
                     />
-                  }
-                  position={isSmallScreen ? 'left top' : 'left center'}
-                >
-                  <EmojiPicker handleEmojiClick={handleEmojiClick} />
-                </Popup>
-                <MessageToolbox.Item
-                  icon="pin"
-                  onClick={() => handlePinMessage(msg._id)}
-                />
-              </MessageToolbox>
-            </MessageToolbox.Wrapper>
-          </Message>
-        ))}
+                    <Popup
+                      trigger={
+                        <MessageToolbox.Item
+                          icon="emoji"
+                          onClick={() => console.log('saf')}
+                        />
+                      }
+                      position={isSmallScreen ? 'left top' : 'left center'}
+                    >
+                      <EmojiPicker handleEmojiClick={handleEmojiClick} />
+                    </Popup>
+                    <MessageToolbox.Item
+                      icon="pin"
+                      onClick={() => handlePinMessage(msg)}
+                    />
+                  </MessageToolbox>
+                </MessageToolbox.Wrapper>
+              </Message>
+            )
+        )}
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
