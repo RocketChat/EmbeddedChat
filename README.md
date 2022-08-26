@@ -34,7 +34,6 @@ and use it,
   roomId={'GENERAL'}
   channelName="Customer Service"
   anonymousMode={false}
-  isFullScreenFromStart={false}
 />
 ```
 
@@ -54,7 +53,6 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 |roomId | the public room's id that you want to subscribe to|
 |channelName| the fallback channel name to be present on the chat header|
 |anonymousMode | if the user can see the chat without logging in|
-|isFullScreenFromStart | if the EmbeddedChat is full screen from the initialization|
 
 ## Setting up Authentication
 

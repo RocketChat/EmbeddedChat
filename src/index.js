@@ -18,18 +18,12 @@ export const RCComponent = ({
   roomId = 'GENERAL',
   channelName,
   anonymousMode = false,
-<<<<<<< HEAD
   headerColor = '#fff',
-  isFullScreenFromStart = false,
   toastBarPosition = 'bottom-end',
 }) => {
-  const [fullScreen, setFullScreen] = useState(isFullScreenFromStart);
+  const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   setToastbarPosition(toastBarPosition);
-=======
-}) => {
-  const [fullScreen, setFullScreen] = useState(false);
->>>>>>> feat: more options to be present whether or not its fullscreen
 
   if (isClosable && !setClosableState) {
     throw Error(
