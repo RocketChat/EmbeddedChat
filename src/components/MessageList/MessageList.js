@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   Message,
+  MessageReactions,
   MessageToolbox,
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
@@ -15,6 +16,7 @@ import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore } from '../../store';
 import Cookies from 'js-cookie';
+import { isSameUser, serializeReactions } from '../../lib/reaction';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -25,7 +27,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
-  
+
   const handleStarMessage = async (message) => {
     const isStarred =
       message.starred &&
