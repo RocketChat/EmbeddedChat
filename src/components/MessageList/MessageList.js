@@ -17,6 +17,7 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
+import { Attachments } from '../Attachments';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -90,7 +91,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                     </Message.Timestamp>
                   </Message.Header>
                   <Message.Body>
-                    <Markdown body={msg.msg} />
+                    {msg.attachments && msg.attachments.length > 0 ? (
+                      <Attachments attachments={msg.attachments} />
+                    ) : (
+                      <Markdown body={msg.msg} />
+                    )}
                   </Message.Body>
                   <MessageReactions>
                     {msg.reactions &&
