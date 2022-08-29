@@ -19,10 +19,9 @@ export const RCComponent = ({
   channelName,
   anonymousMode = false,
   headerColor = '#fff',
-  isFullScreenFromStart = false,
   toastBarPosition = 'bottom-end',
 }) => {
-  const [fullScreen, setFullScreen] = useState(isFullScreenFromStart);
+  const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   setToastbarPosition(toastBarPosition);
 
@@ -86,7 +85,6 @@ RCComponent.propTypes = {
   host: PropTypes.string,
   roomId: PropTypes.string,
   channelName: PropTypes.string,
-  isFullScreenFromStart: PropTypes.bool,
   anonymousMode: PropTypes.bool,
   headerColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
