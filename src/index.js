@@ -6,6 +6,7 @@ import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 import { useToastStore, useUserStore } from './store';
+import Cookies from 'js-cookie';
 
 export const RCComponent = ({
   isClosable = false,
@@ -40,8 +41,7 @@ export const RCComponent = ({
   );
 
   useEffect(() => {
-    const cookiesPresent =
-      RCInstance.getCookies().rc_token && RCInstance.getCookies().rc_uid;
+    const cookiesPresent = Cookies.get('rc_token') && Cookies.get('rc_uid');
     if (cookiesPresent) {
       setIsUserAuthenticated(true);
     }
