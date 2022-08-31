@@ -14,9 +14,11 @@ import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
+import Cookies from 'js-cookie';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
+  const authenticatedUserId = Cookies.get('rc_uid');
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
   const dispatchToastMessage = useToastBarDispatch();
@@ -30,8 +32,8 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const handleStarMessage = async (message) => {
     const isStarred =
-      message.starred && message.starred.find((u) => u._id === message.u._id);
-    console.log(isStarred);
+      message.starred &&
+      message.starred.find((u) => u._id === authenticatedUserId);
     if (!isStarred) {
       await RCInstance.starMessage(message._id);
       dispatchToastMessage({
@@ -55,7 +57,7 @@ const MessageList = ({ messages, handleGoBack }) => {
     if (pinOrUnpin.error) {
       dispatchToastMessage({
         type: 'error',
-        message: pinOrUnpin.error,
+        message: 'Error pinning message',
       });
     } else {
       dispatchToastMessage({
@@ -90,7 +92,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                     <MessageToolbox.Item
                       icon={`${
                         msg.starred &&
-                        msg.starred.find((u) => u._id === msg.u._id)
+                        msg.starred.find((u) => u._id === authenticatedUserId)
                           ? 'star-filled'
                           : 'star'
                       }`}
