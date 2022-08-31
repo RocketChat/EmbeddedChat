@@ -13,7 +13,7 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useToastStore } from '../../store';
 import Cookies from 'js-cookie';
 
 const MessageList = ({ messages, handleGoBack }) => {
@@ -24,6 +24,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const filtered = useMessageStore((state) => state.filtered);
+  const toastPosition = useToastStore((state) => state.position);
 
   const handleEmojiClick = (_, e) => {
     let emoji = `:${e.name}:`;
@@ -39,12 +40,14 @@ const MessageList = ({ messages, handleGoBack }) => {
       dispatchToastMessage({
         type: 'success',
         message: 'Message starred',
+        position: toastPosition,
       });
     } else {
       await RCInstance.unstarMessage(message._id);
       dispatchToastMessage({
         type: 'success',
         message: 'Message unstarred',
+        position: toastPosition,
       });
     }
   };
@@ -58,11 +61,13 @@ const MessageList = ({ messages, handleGoBack }) => {
       dispatchToastMessage({
         type: 'error',
         message: 'Error pinning message',
+        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
+        position: toastPosition,
       });
     }
   };
