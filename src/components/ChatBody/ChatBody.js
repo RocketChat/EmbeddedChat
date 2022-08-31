@@ -8,8 +8,9 @@ import MessageList from '../MessageList';
 
 const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
-
   const messages = useMessageStore((state) => state.messages);
+
+  const authenticatedUserUsername = useUserStore((state) => state.username);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
 
