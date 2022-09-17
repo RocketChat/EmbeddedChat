@@ -2,7 +2,9 @@ import create from 'zustand';
 
 const useMessageStore = create((set) => ({
   messages: [],
-  setMessages: (messages) => set(() => ({ messages: messages })),
+  filtered: false,
+  setFilter: (filter) => set((state) => ({ ...state, filtered: filter })),
+  setMessages: (messages) => set((state) => ({ ...state, messages })),
 }));
 
 export default useMessageStore;
