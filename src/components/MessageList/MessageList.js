@@ -14,13 +14,14 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useToastStore } from '../../store';
+import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get('rc_uid');
+  const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
   const dispatchToastMessage = useToastBarDispatch();
@@ -69,9 +70,8 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
-  const handleEmojiClick = async (e, msg) => {
-    const react = await RCInstance.reactToMessage(e.name, msg._id, true);
-    console.log(react);
+  const handleEmojiClick = async (e, msg, canReact) => {
+    await RCInstance.reactToMessage(e.name, msg._id, canReact);
   };
 
   return (
@@ -93,24 +93,24 @@ const MessageList = ({ messages, handleGoBack }) => {
                     <Markdown body={msg.msg} />
                   </Message.Body>
                   <MessageReactions>
-                {msg.reactions &&
-                  serializeReactions(msg.reactions).map((reaction) => (
-                    <MessageReactions.Reaction
-                      key={reaction.name}
-                      mine={isSameUser(reaction, authenticatedUserUsername)}
-                      onClick={() =>
-                        handleEmojiClick(
-                          reaction,
-                          msg,
-                          !isSameUser(reaction, authenticatedUserUsername)
-                        )
-                      }
-                    >
-                      <Markdown body={reaction.name} />
-                      <p>{reaction.count}</p>
-                    </MessageReactions.Reaction>
-                  ))}
-              </MessageReactions>
+                    {msg.reactions &&
+                      serializeReactions(msg.reactions).map((reaction) => (
+                        <MessageReactions.Reaction
+                          key={reaction.name}
+                          mine={isSameUser(reaction, authenticatedUserUsername)}
+                          onClick={() =>
+                            handleEmojiClick(
+                              reaction,
+                              msg,
+                              !isSameUser(reaction, authenticatedUserUsername)
+                            )
+                          }
+                        >
+                          <Markdown body={reaction.name} />
+                          <p>{reaction.count}</p>
+                        </MessageReactions.Reaction>
+                      ))}
+                  </MessageReactions>
                 </Message.Container>
                 <MessageToolbox.Wrapper>
                   <MessageToolbox>
@@ -133,7 +133,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                       }
                       position={isSmallScreen ? 'left top' : 'left center'}
                     >
-                      <EmojiPicker handleEmojiClick={(_, e) => handleEmojiClick(e, msg, true)} />
+                      <EmojiPicker
+                        handleEmojiClick={(_, e) =>
+                          handleEmojiClick(e, msg, true)
+                        }
+                      />
                     </Popup>
                     <MessageToolbox.Item
                       icon="pin"

@@ -278,7 +278,7 @@ export default class RocketChatInstance {
       console.error(err.message);
     }
   }
-  
+
   async reactToMessage(emoji, messageId, shouldReact) {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.react`, {
