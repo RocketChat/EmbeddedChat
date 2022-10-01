@@ -40,10 +40,28 @@ export const RCComponent = ({
     (state) => state.setIsUserAuthenticated
   );
 
+  const authenticatedUserUsername = useUserStore((state) => state.username);
+  const authenticatedUserAvatarUrl = useUserStore((state) => state.avatarUrl);
+
+  const setAuthenticatedUserUsername = useUserStore(
+    (state) => state.setUsername
+  );
+  const setAuthenticatedUserAvatarUrl = useUserStore(
+    (state) => state.setUserAvatarUrl
+  );
+
   useEffect(() => {
+    async function getUserEssentials() {
+      const res = await RCInstance.me();
+      setAuthenticatedUserAvatarUrl(res.avatarUrl);
+      setAuthenticatedUserUsername(res.username);
+    }
     const cookiesPresent = Cookies.get('rc_token') && Cookies.get('rc_uid');
     if (cookiesPresent) {
       setIsUserAuthenticated(true);
+    }
+    if (!authenticatedUserUsername || !authenticatedUserAvatarUrl) {
+      getUserEssentials();
     }
   }, []);
 
