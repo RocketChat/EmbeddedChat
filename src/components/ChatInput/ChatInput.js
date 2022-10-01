@@ -1,5 +1,5 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
@@ -14,6 +14,11 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
+  const inputRef = useRef(null);
+
+  const handleClickToOpenFiles = () => {
+    inputRef.current.click();
+  };
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -78,6 +83,14 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     }
   };
 
+  const sendAttachment = async (event) => {
+    const fileObj = event.target.files && event.target.files[0];
+    if (!fileObj) {
+      return;
+    }
+    await RCInstance.sendAttachment(event.target);
+  };
+
   return (
     <Box className={styles.container} border={'2px solid #ddd'}>
       {isUserAuthenticated && (
@@ -103,14 +116,25 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           }
         }}
       />
+      <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
       {isUserAuthenticated ? (
-        <Icon
-          disabled={!isUserAuthenticated}
-          onClick={sendMessage}
-          name="send"
-          size="x25"
-          padding={6}
-        />
+        message ? (
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={sendMessage}
+            name="send"
+            size="x25"
+            padding={6}
+          />
+        ) : (
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={handleClickToOpenFiles}
+            name="plus"
+            size="x25"
+            padding={6}
+          />
+        )
       ) : (
         <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
           <Icon name="google" size="x20" padding="0px 5px 0px 0px" />

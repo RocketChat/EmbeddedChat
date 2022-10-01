@@ -80,7 +80,7 @@ const MessageList = ({ messages, handleGoBack }) => {
       {messages &&
         messages.map(
           (msg) =>
-            msg.msg && (
+            (msg.msg || msg.attachments.length) && (
               <Message key={msg._id}>
                 <Message.Container>
                   <Message.Header>
