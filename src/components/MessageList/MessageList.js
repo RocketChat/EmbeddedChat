@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   Message,
+  MessageReactions,
   MessageToolbox,
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
@@ -13,23 +14,20 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useToastStore } from '../../store';
+import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import Cookies from 'js-cookie';
+import { isSameUser, serializeReactions } from '../../lib/reaction';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get('rc_uid');
+  const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
   const dispatchToastMessage = useToastBarDispatch();
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
-
-  const handleEmojiClick = (_, e) => {
-    let emoji = `:${e.name}:`;
-    console.log(emoji);
-  };
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -72,6 +70,10 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
+  const handleEmojiClick = async (e, msg, canReact) => {
+    await RCInstance.reactToMessage(e.name, msg._id, canReact);
+  };
+
   return (
     <>
       {messages &&
@@ -90,6 +92,25 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <Message.Body>
                     <Markdown body={msg.msg} />
                   </Message.Body>
+                  <MessageReactions>
+                    {msg.reactions &&
+                      serializeReactions(msg.reactions).map((reaction) => (
+                        <MessageReactions.Reaction
+                          key={reaction.name}
+                          mine={isSameUser(reaction, authenticatedUserUsername)}
+                          onClick={() =>
+                            handleEmojiClick(
+                              reaction,
+                              msg,
+                              !isSameUser(reaction, authenticatedUserUsername)
+                            )
+                          }
+                        >
+                          <Markdown body={reaction.name} />
+                          <p>{reaction.count}</p>
+                        </MessageReactions.Reaction>
+                      ))}
+                  </MessageReactions>
                 </Message.Container>
                 <MessageToolbox.Wrapper>
                   <MessageToolbox>
@@ -112,7 +133,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                       }
                       position={isSmallScreen ? 'left top' : 'left center'}
                     >
-                      <EmojiPicker handleEmojiClick={handleEmojiClick} />
+                      <EmojiPicker
+                        handleEmojiClick={(_, e) =>
+                          handleEmojiClick(e, msg, true)
+                        }
+                      />
                     </Popup>
                     <MessageToolbox.Item
                       icon="pin"

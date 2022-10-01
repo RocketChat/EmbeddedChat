@@ -1,10 +1,15 @@
 import create from 'zustand';
 
 const useUserStore = create((set) => ({
-  avatarUrl: localStorage.getItem('avatarUrl') || '',
+  username: localStorage.getItem('rc_uname') || '',
+  setUsername: (username) => {
+    localStorage.setItem('rc_uname', username);
+    set({ username });
+  },
+  avatarUrl: localStorage.getItem('rc_avatar_url') || '',
   setUserAvatarUrl: (avatarUrl) =>
     set(() => {
-      localStorage.setItem('avatarUrl', avatarUrl);
+      localStorage.setItem('rc_avatar_url', avatarUrl);
       return {
         avatarUrl,
       };
