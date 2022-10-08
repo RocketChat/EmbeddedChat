@@ -295,4 +295,25 @@ export default class RocketChatInstance {
       console.error(err.message);
     }
   }
+
+  async sendAttachment(e) {
+    try {
+      const form = new FormData();
+      let response;
+      e.files[0].text().then((t) => {
+        form.append('file', new Blob([t]), e.files[0].name);
+        response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
+          method: 'POST',
+          body: form,
+          headers: {
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+        }).then((r) => r.json());
+      });
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
