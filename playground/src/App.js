@@ -1,6 +1,6 @@
 import './App.css';
 import '@rocket.chat/icons/dist/rocketchat.css';
-import { RCComponent } from 'rc-component-react';
+import { RCComponent } from 'embeddedchat';
 import { useState } from 'react';
 
 function App() {

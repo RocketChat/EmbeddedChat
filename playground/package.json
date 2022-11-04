@@ -9,7 +9,7 @@
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
     "react-scripts": "file:../node_modules/react-scripts",
-    "rc-component-react": "file:../",
+    "embeddedchat": "file:../",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
