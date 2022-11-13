@@ -9,7 +9,7 @@ An easy to use full-stack component (ReactJS + backend behaviors) embedding Rock
 ## Installation
 
 ```bash
-npm i @rocket.chat/embeddedchat
+npm i embeddedchat
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm i @rocket.chat/embeddedchat
 Just import the component,
 
 ```javascript
-import  { RCComponent }  from  "@rocket.chat/embeddedchat";
+import  { RCComponent }  from  "embeddedchat";
 ```
 
 and use it,

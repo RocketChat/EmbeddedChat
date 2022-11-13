@@ -1,5 +1,5 @@
 {
-  "name": "rc-component-react",
+  "name": "embeddedchat",
   "version": "0.0.1",
   "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
   "main": "dist/cjs/index.js",
