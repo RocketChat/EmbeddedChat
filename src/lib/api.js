@@ -80,18 +80,33 @@ export default class RocketChatInstance {
   }
 
   async updateUserUsername(userid, username) {
-    let newUserName = username.replace(/\s/g, '.').toLowerCase();
     try {
-      const response = await fetch(`${this.host}/api/v1/users.update`, {
-        body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
-        },
-        method: 'POST',
-      });
-      return await response.json();
+      const res = await fetch(
+        `${this.host}/api/v1/users.getUsernameSuggestion`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'GET',
+        }
+      );
+
+      const newUserName = await res.json();
+
+      if (newUserName.success){
+        const response = await fetch(`${this.host}/api/v1/users.update`, {
+          body: `{"userId": "${userid}", "data": { "username": "${newUserName.result}" }}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'POST',
+        });
+        return await response.json();
+      }
     } catch (err) {
       console.error(err.message);
     }
