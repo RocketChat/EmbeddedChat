@@ -79,9 +79,9 @@ export default class RocketChatInstance {
     }
   }
 
-  async updateUserUsername(userid, username) {
+  async getUserNameSuggestion(){
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.host}/api/v1/users.getUsernameSuggestion`,
         {
           headers: {
@@ -93,11 +93,19 @@ export default class RocketChatInstance {
         }
       );
 
-      const newUserName = await res.json();
+      return await response.json()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
-      if (newUserName.success){
+  async updateUserUsername(userid, username) {
+    try {
+      const username = await this.getUserNameSuggestion();
+
+      if (username.success){
         const response = await fetch(`${this.host}/api/v1/users.update`, {
-          body: `{"userId": "${userid}", "data": { "username": "${newUserName.result}" }}`,
+          body: `{"userId": "${userid}", "data": { "username": "${username.result}" }}`,
           headers: {
             'Content-Type': 'application/json',
             'X-Auth-Token': Cookies.get('rc_token'),
