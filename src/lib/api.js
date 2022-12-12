@@ -79,21 +79,72 @@ export default class RocketChatInstance {
     }
   }
 
+  async updateUserNameThroughSuggestion(userid) {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/users.getUsernameSuggestion`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'GET',
+        }
+      );
+
+      const suggestedUsername = await response.json();
+
+      if (suggestedUsername.success) {
+        const response2 = await fetch(`${this.host}/api/v1/users.update`, {
+          body: `{"userId": "${userid}", "data": { "username": "${suggestedUsername.result}" }}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'POST',
+        });
+
+        return await response2.json();
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   async updateUserUsername(userid, username) {
     let newUserName = username.replace(/\s/g, '.').toLowerCase();
-    try {
-      const response = await fetch(`${this.host}/api/v1/users.update`, {
-        body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
-        },
-        method: 'POST',
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err.message);
+
+    const usernameRegExp = /[0-9a-zA-Z-_.]+/;
+
+    if (usernameRegExp.test(newUserName)) {
+      try {
+        const response = await fetch(`${this.host}/api/v1/users.update`, {
+          body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'POST',
+        });
+
+        const result = await response.json();
+
+        if (
+          !result.success &&
+          result.errorType === 'error-could-not-save-identity'
+        ) {
+          return await this.updateUserNameThroughSuggestion(userid);
+        } else {
+          return result;
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      return await this.updateUserNameThroughSuggestion(userid);
     }
   }
 
