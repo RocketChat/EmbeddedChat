@@ -1,7 +1,8 @@
+/* eslint-disable no-shadow */
 import { Box } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
-import styles from './ChatBody.module.css';
 import PropTypes from 'prop-types';
+import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';

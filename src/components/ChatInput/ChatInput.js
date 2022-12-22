@@ -1,14 +1,14 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
+import Popup from 'reactjs-popup';
+import he from 'he';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
-import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
-import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore } from '../../store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
@@ -54,12 +54,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
   const handleEmojiClick = (n) => {
     if (n.length > 5) {
-      let flagUnifed = '&#x' + n.split('-').join(';&#x') + ';';
-      let flag = he.decode(flagUnifed);
+      const flagUnifed = `&#x${n.split('-').join(';&#x')};`;
+      const flag = he.decode(flagUnifed);
       setMessage(message + flag);
       return;
     }
-    let unified_emoji = he.decode(`&#x${n};`);
+    const unified_emoji = he.decode(`&#x${n};`);
     setMessage(message + unified_emoji);
   };
 
@@ -92,12 +92,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   };
 
   return (
-    <Box className={styles.container} border={'2px solid #ddd'}>
+    <Box className={styles.container} border="2px solid #ddd">
       {isUserAuthenticated && (
         <Popup
           disabled={!isUserAuthenticated}
           trigger={<Icon name="emoji" size="x25" padding={6} />}
-          position={'top left'}
+          position="top left"
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>

@@ -1,7 +1,9 @@
+/* eslint-disable guard-for-in */
 export const serializeReactions = (reactions) => {
-  let arr = [];
+  const arr = [];
 
-  for (let emoji in reactions) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const emoji in reactions) {
     arr.push({
       name: emoji,
       count: reactions[emoji].usernames.length,
@@ -12,6 +14,5 @@ export const serializeReactions = (reactions) => {
   return arr;
 };
 
-export const isSameUser = (reaction, username) => {
-  return reaction.usernames.find((u) => u === username);
-};
+export const isSameUser = (reaction, username) =>
+  reaction.usernames.find((u) => u === username);
