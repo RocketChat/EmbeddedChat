@@ -10,15 +10,13 @@ function emojify(message) {
   return EmojiOne.toImage(message);
 }
 
-const Markdown = (props) => {
-  return (
-    <Box
-      dangerouslySetInnerHTML={{
-        __html: emojify(DOMPurify.sanitize(marked.parse(props.body))),
-      }}
-    ></Box>
-  );
-};
+const Markdown = (props) => (
+  <Box
+    dangerouslySetInnerHTML={{
+      __html: emojify(DOMPurify.sanitize(marked.parse(props.body))),
+    }}
+  />
+);
 
 export default Markdown;
 
