@@ -73,8 +73,9 @@ cd .. # This takes you to the root folder --> EMBEDDEDCHAT
 npm run dev
 ```
 
-For EmbeddedChat wiki, to get a better sense of understanding of the internals of EmbeddedChat : [EmbeddedChat](https://github.com/RocketChat/EmbeddedChat/wiki)
-
-
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
+```bash 
+To get a better sense of understanding of the internals of EmbeddedChat : [EmbeddedChat](https://github.com/RocketChat/EmbeddedChat/wiki)
+```
