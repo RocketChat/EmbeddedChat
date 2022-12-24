@@ -67,7 +67,8 @@ For development,
 ```bash
 npm i
 cd playground && npm i
-npm run dev # at root folder(EMBEDDEDCHAT)
+# at the root folder - embeddedchat
+npm run dev 
 ```
 
 It will open up a playground react app at `http://localhost:4000`.
