@@ -53,8 +53,7 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | roomId           | the public room's id that you want to subscribe to                                                                                          |
 | channelName      | the fallback channel name to be present on the chat header                                                                                  |
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
-|headerColor       | this set the color of the header and the default color is ( #fff )                                                                          |
-|toastBarPosition  | this is the set for a toastBar and toastBar are used as tooltips/popups to show a message on the screen here defualt position is at the bottom|
+
 
 ## Setting up Authentication
 
@@ -76,7 +75,3 @@ npm run dev
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
 
-To get a better sense of understanding of the internals of EmbeddedChat :
-```bash 
-https://github.com/RocketChat/EmbeddedChat/wiki
-```
