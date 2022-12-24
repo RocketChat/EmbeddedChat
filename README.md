@@ -67,7 +67,7 @@ For development,
 ```bash
 npm i
 cd playground && npm i
-# at the root folder - embeddedchat
+cd .. # This takes you to the root folder --> EMBEDDEDCHAT
 npm run dev 
 ```
 
