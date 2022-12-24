@@ -76,6 +76,7 @@ npm run dev
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
 
+To get a better sense of understanding of the internals of EmbeddedChat :
 ```bash 
-To get a better sense of understanding of the internals of EmbeddedChat : [EmbeddedChat](https://github.com/RocketChat/EmbeddedChat/wiki)
+https://github.com/RocketChat/EmbeddedChat/wiki
 ```
