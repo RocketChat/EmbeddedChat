@@ -3,13 +3,11 @@ import EmojiPicker from 'emoji-picker-react';
 import PropTypes from 'prop-types';
 import { Box } from '@rocket.chat/fuselage';
 
-const CustomEmojiPicker = ({ handleEmojiClick }) => {
-  return (
-    <Box>
-      <EmojiPicker onEmojiClick={handleEmojiClick} />
-    </Box>
-  );
-};
+const CustomEmojiPicker = ({ handleEmojiClick }) => (
+  <Box>
+    <EmojiPicker onEmojiClick={handleEmojiClick} />
+  </Box>
+);
 
 export default CustomEmojiPicker;
 

@@ -10,7 +10,7 @@ describe('Rendering of RCComponent Component', () => {
 
   test('if isClosable = true, and setClosableState is not provided.. throw an error', () => {
     expect(() => {
-      render(<RCComponent isClosable={true} />);
+      render(<RCComponent isClosable />);
     }).toThrowError();
   });
 });

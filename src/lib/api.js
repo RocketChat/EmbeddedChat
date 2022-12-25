@@ -2,10 +2,6 @@ import { Rocketchat } from '@rocket.chat/sdk';
 import Cookies from 'js-cookie';
 
 export default class RocketChatInstance {
-  host = 'http://localhost:3000';
-  rid = '';
-  rcClient = null;
-
   constructor(host, rid) {
     this.host = host;
     this.rid = rid;
@@ -114,7 +110,7 @@ export default class RocketChatInstance {
   }
 
   async updateUserUsername(userid, username) {
-    let newUserName = username.replace(/\s/g, '.').toLowerCase();
+    const newUserName = username.replace(/\s/g, '.').toLowerCase();
 
     const usernameRegExp = /[0-9a-zA-Z-_.]+/;
 
@@ -137,14 +133,13 @@ export default class RocketChatInstance {
           result.errorType === 'error-could-not-save-identity'
         ) {
           return await this.updateUserNameThroughSuggestion(userid);
-        } else {
-          return result;
         }
+        return result;
       } catch (err) {
         console.error(err.message);
       }
     } else {
-      return await this.updateUserNameThroughSuggestion(userid);
+      return this.updateUserNameThroughSuggestion(userid);
     }
   }
 

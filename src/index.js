@@ -1,12 +1,12 @@
 import { Box } from '@rocket.chat/fuselage';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
+import Cookies from 'js-cookie';
 import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
-import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 import { useToastStore, useUserStore } from './store';
-import Cookies from 'js-cookie';
 
 export const RCComponent = ({
   isClosable = false,

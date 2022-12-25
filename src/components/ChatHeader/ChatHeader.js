@@ -1,10 +1,10 @@
 import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect, useState } from 'react';
-import styles from './ChatHeader.module.css';
 import PropTypes from 'prop-types';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import styles from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { darken, isDark, lighten } from '../../lib/color';
 
 const ChatHeader = ({
@@ -83,61 +83,59 @@ const ChatHeader = ({
     }
   }, [isUserAuthenticated]);
 
-  const menuOptions = () => {
-    return {
-      ...(fullScreen && {
-        minimize: {
-          action: () => setFullScreen((prev) => !prev),
-          label: (
-            <Box alignItems="center" display="flex">
-              <Icon mie="x4" name="mobile" size="x16" />
-              Minimize
-            </Box>
-          ),
-        },
-      }),
-      ...(moreOpts && {
-        threads: {
-          action: function noRefCheck() {},
-          label: (
-            <Box alignItems="center" display="flex">
-              <Icon mie="x4" name="thread" size="x16" />
-              Threads
-            </Box>
-          ),
-        },
-        starred: {
-          action: showStarredMessage,
-          label: (
-            <Box alignItems="center" display="flex">
-              <Icon mie="x4" name="star" size="x16" />
-              Starred
-            </Box>
-          ),
-        },
-        pinned: {
-          action: showPinnedMessage,
-          label: (
-            <Box alignItems="center" display="flex">
-              <Icon mie="x4" name="pin" size="x16" />
-              Pinned
-            </Box>
-          ),
-        },
-      }),
-      ...(isUserAuthenticated && {
-        logout: {
-          action: handleLogout,
-          label: (
-            <Box alignItems="center" display="flex" color="danger">
-              <Icon mie="x4" name="reply-directly" size="x16" />
-              Logout
-            </Box>
-          ),
-        },
-      }),
-    };
-  };
+  const menuOptions = () => ({
+    ...(fullScreen && {
+      minimize: {
+        action: () => setFullScreen((prev) => !prev),
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="mobile" size="x16" />
+            Minimize
+          </Box>
+        ),
+      },
+    }),
+    ...(moreOpts && {
+      threads: {
+        action: function noRefCheck() {},
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="thread" size="x16" />
+            Threads
+          </Box>
+        ),
+      },
+      starred: {
+        action: showStarredMessage,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="star" size="x16" />
+            Starred
+          </Box>
+        ),
+      },
+      pinned: {
+        action: showPinnedMessage,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="pin" size="x16" />
+            Pinned
+          </Box>
+        ),
+      },
+    }),
+    ...(isUserAuthenticated && {
+      logout: {
+        action: handleLogout,
+        label: (
+          <Box alignItems="center" display="flex" color="danger">
+            <Icon mie="x4" name="reply-directly" size="x16" />
+            Logout
+          </Box>
+        ),
+      },
+    }),
+  });
 
   return (
     <Box
@@ -152,7 +150,7 @@ const ChatHeader = ({
           name="hash"
           size={fullScreen ? 'x40' : 'x30'}
         />
-        <Box margin={'0 1rem'}>
+        <Box margin="0 1rem">
           {isUserAuthenticated ? (
             <>
               <h2
@@ -185,12 +183,12 @@ const ChatHeader = ({
       </Box>
       <Box display="flex" alignItems="center">
         {avatarUrl && (
-          <img width={'20px'} height={'20px'} src={avatarUrl} alt="avatar" />
+          <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
         )}
         {fullScreen ? (
           <Menu
-            margin={'0 4px'}
-            display={'inline'}
+            margin="0 4px"
+            display="inline"
             className={computedIconClassName}
             options={menuOptions()}
           />
@@ -201,13 +199,13 @@ const ChatHeader = ({
                 setFullScreen((prev) => !prev);
               }}
               ghost
-              display={'inline'}
+              display="inline"
               square
               small
             >
-              <Icon name="computer" size={'x20'} />
+              <Icon name="computer" size="x20" />
             </ActionButton>
-            <Menu margin={'0 4px'} display={'inline'} options={menuOptions()} />
+            <Menu margin="0 4px" display="inline" options={menuOptions()} />
           </>
         )}
         {isClosable && (
@@ -216,12 +214,12 @@ const ChatHeader = ({
               setClosableState((prev) => !prev);
             }}
             ghost
-            display={'inline'}
+            display="inline"
             square
             small
             className={computedIconClassName}
           >
-            <Icon name="cross" size={'x20'} />
+            <Icon name="cross" size="x20" />
           </ActionButton>
         )}
       </Box>
