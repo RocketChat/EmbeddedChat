@@ -6,9 +6,7 @@ An easy to use full-stack component (ReactJS + backend behaviors) embedding Rock
 
 *EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System.*
 
-![embeddedchatwall](https://raw.githubusercontent.com/RocketChat/RC4Community/master/assets/readme-banner.png)
-
-![embeddedchatwall](https://raw.githubusercontent.com/RocketChat/RC4Community/master/assets/readme-hero.png)
+![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
 
 ---
 
@@ -85,22 +83,8 @@ npm run dev # at root
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
 
-## 🤔FAQ🤔
+## 🙌🏻Learn🙌🏻
 
-#### How to set up?
+Learn more about the wiki/setup of EmbeddedChat [here](https://github.com/RocketChat/EmbeddedChat.wiki.git).
 
-Part 1 - https://www.youtube.com/watch?v=l-6OIvolqyE
-
-Part 2 - https://www.youtube.com/watch?v=AspuaA36VsA
-
-Part 3 - https://www.youtube.com/watch?v=3PfEJypXXTQ
-
-#### Features
-
-https://www.youtube.com/watch?v=DU5C2vlUVjI
-
-https://www.youtube.com/watch?v=8FFNUWgqdro
-
-https://www.youtube.com/watch?v=f_f-4PUgSRI
-
-https://www.youtube.com/watch?v=aQix55Qd7wY
+Learn more about the root of EmbeddedChat [here](https://github.com/RocketChat/EmbeddedChat/wiki/How-to-create-your-own-component-library%3F).
