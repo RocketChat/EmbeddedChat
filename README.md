@@ -1,18 +1,24 @@
-# EmbeddedChat
+# 🚀EmbeddedChat 🚀
+
+## ✨About the Repository✨
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
 *EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System.*
 
-![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
+![embeddedchatwall](https://raw.githubusercontent.com/RocketChat/RC4Community/master/assets/readme-banner.png)
 
-## Installation
+![embeddedchatwall](https://raw.githubusercontent.com/RocketChat/RC4Community/master/assets/readme-hero.png)
+
+---
+
+## 💻Installation💻
 
 ```bash
 npm i embeddedchat
 ```
 
-## Usage
+## 🧑🏻‍💻Usage🧑🏻‍💻
 
 Just import the component,
 
@@ -34,12 +40,16 @@ and use it,
   roomId={'GENERAL'}
   channelName="Customer Service"
   anonymousMode={false}
+  headerColor = '#fff'
+  toastBarPosition = 'bottom-end'
 />
 ```
 
-## Props
+## 📖Props📖
 
 Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) for more info on each prop.
+
+Want to know how to create your own component library? Read this [article](https://github.com/RocketChat/EmbeddedChat/wiki/How-to-create-your-own-component-library%3F).
 
 |prop|description  |
 |--|--|
@@ -53,14 +63,16 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 |roomId | the public room's id that you want to subscribe to|
 |channelName| the fallback channel name to be present on the chat header|
 |anonymousMode | if the user can see the chat without logging in|
+|headerColor | it is the color of the header i.e `#fff`|
+|toastBarPosition | By default, all the toasts will be positioned on the `bottom-end` of your browser|
 
-## Setting up Authentication
+## ⚙️Setting up Authentication⚙️
 
 Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
 
 > Note: You need to disable TOTP for this to work!
 
-## Development
+## 💥Development💥
 
 For development,
 
@@ -72,3 +84,23 @@ npm run dev # at root
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
+## 🤔FAQ🤔
+
+#### How to set up?
+
+Part 1 - https://www.youtube.com/watch?v=l-6OIvolqyE
+
+Part 2 - https://www.youtube.com/watch?v=AspuaA36VsA
+
+Part 3 - https://www.youtube.com/watch?v=3PfEJypXXTQ
+
+#### Features
+
+https://www.youtube.com/watch?v=DU5C2vlUVjI
+
+https://www.youtube.com/watch?v=8FFNUWgqdro
+
+https://www.youtube.com/watch?v=f_f-4PUgSRI
+
+https://www.youtube.com/watch?v=aQix55Qd7wY
