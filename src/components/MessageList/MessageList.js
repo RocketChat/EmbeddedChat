@@ -7,6 +7,7 @@ import {
   Message,
   MessageReactions,
   MessageToolbox,
+  ActionButton
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -70,6 +71,10 @@ const MessageList = ({ messages, handleGoBack }) => {
       });
     }
   };
+
+  const handleDeleteMessage = async (message) => {
+    await RCInstance.deleteMessage(message._id)
+  }
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
@@ -148,6 +153,18 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
+                    {
+                      msg.u._id === authenticatedUserId && (
+                        <ActionButton
+                          ghost
+                          display="inline"
+                          square
+                          small
+                          onClick={() => { handleDeleteMessage(msg) }}
+                        >
+                          <Icon mie="x4" color='danger' name="trash" size="x20" />
+                        </ActionButton>)
+                    }
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
