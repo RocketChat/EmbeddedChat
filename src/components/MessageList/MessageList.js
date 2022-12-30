@@ -73,7 +73,21 @@ const MessageList = ({ messages, handleGoBack }) => {
   };
 
   const handleDeleteMessage = async (message) => {
-    await RCInstance.deleteMessage(message._id)
+    const res = await RCInstance.deleteMessage(message._id);
+
+    if (res.success) {
+      dispatchToastMessage({
+        type: 'success',
+        message: "Message deleted successfully",
+        position: toastPosition,
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: "Error in deleting message",
+        position: toastPosition,
+      });
+    }
   }
 
   const handleEmojiClick = async (e, msg, canReact) => {

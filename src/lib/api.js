@@ -171,14 +171,14 @@ export default class RocketChatInstance {
         callback(data);
       });
       await this.rcClient.subscribeRoom(this.rid);
-      await this.rcClient.onStreamData('stream-notify-room',(ddpMessage) => {
+      await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
         const [roomId, event] = ddpMessage.fields.eventName.split('/');
 
-        if(roomId !== this.rid){
+        if (roomId !== this.rid) {
           return;
         }
 
-        if(event === 'deleteMessage'){
+        if (event === 'deleteMessage') {
           callback(ddpMessage)
         }
       })
