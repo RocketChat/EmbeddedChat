@@ -6,7 +6,7 @@ import {
   Icon,
   Message,
   MessageReactions,
-  MessageToolbox,
+  MessageToolbox
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -70,6 +70,24 @@ const MessageList = ({ messages, handleGoBack }) => {
       });
     }
   };
+
+  const handleDeleteMessage = async (message) => {
+    const res = await RCInstance.deleteMessage(message._id);
+
+    if (res.success) {
+      dispatchToastMessage({
+        type: 'success',
+        message: "Message deleted successfully",
+        position: toastPosition,
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: "Error in deleting message",
+        position: toastPosition,
+      });
+    }
+  }
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
@@ -148,6 +166,15 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
+                    {
+                      msg.u._id === authenticatedUserId && (
+                        <MessageToolbox.Item
+                          icon="trash"
+                          color='danger'
+                          onClick={() => handleDeleteMessage(msg)}
+                        />
+                      )
+                    }
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
