@@ -6,8 +6,7 @@ import {
   Icon,
   Message,
   MessageReactions,
-  MessageToolbox,
-  ActionButton
+  MessageToolbox
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -169,15 +168,12 @@ const MessageList = ({ messages, handleGoBack }) => {
                     />
                     {
                       msg.u._id === authenticatedUserId && (
-                        <ActionButton
-                          ghost
-                          display="inline"
-                          square
-                          small
-                          onClick={() => { handleDeleteMessage(msg) }}
-                        >
-                          <Icon mie="x4" color='danger' name="trash" size="x20" />
-                        </ActionButton>)
+                        <MessageToolbox.Item
+                          icon="trash"
+                          color='danger'
+                          onClick={() => handleDeleteMessage(msg)}
+                        />
+                      )
                     }
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
