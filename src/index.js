@@ -47,6 +47,44 @@ export const RCComponent = ({
     }
   }, []);
 
+  const authenticatedUserUsername = useUserStore((state) => state.username);
+  const authenticatedUserAvatarUrl = useUserStore((state) => state.avatarUrl);
+  const authenticatedUserId = useUserStore((state) => state.userId);
+
+  const setAuthenticatedUserUsername = useUserStore(
+    (state) => state.setUsername
+  );
+  const setAuthenticatedUserAvatarUrl = useUserStore(
+    (state) => state.setUserAvatarUrl
+  );
+  const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
+
+  useEffect(() => {
+    async function getUserEssentials() {
+      const res = await RCInstance.me();
+      setAuthenticatedUserAvatarUrl(res.avatarUrl);
+      setAuthenticatedUserUsername(res.username);
+      setAuthenticatedUserId(res.userId);
+    }
+
+    const cookiesPresent = Cookies.get('rc_token') && Cookies.get('rc_uid');
+    if (cookiesPresent) {
+      setIsUserAuthenticated(true);
+    }
+
+    const storedUserId = localStorage.getItem('userId');
+    const currentUserId = Cookies.get('rc_uid');
+    if (
+      !authenticatedUserUsername ||
+      !authenticatedUserAvatarUrl ||
+      !authenticatedUserId ||
+      storedUserId !== currentUserId
+    ) {
+      getUserEssentials();
+      localStorage.setItem('userId', currentUserId);
+    }
+  }, []);
+
   return (
     <ToastBarProvider>
       <RCInstanceProvider value={{ RCInstance }}>
