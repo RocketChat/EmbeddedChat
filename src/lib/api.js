@@ -179,9 +179,9 @@ export default class RocketChatInstance {
         }
 
         if (event === 'deleteMessage') {
-          callback(ddpMessage)
+          callback(ddpMessage);
         }
-      })
+      });
     } catch (err) {
       await this.close();
     }
@@ -389,6 +389,22 @@ export default class RocketChatInstance {
       return response;
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async me() {
+    try {
+      const response = await fetch(`${this.host}/api/v1/me`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'GET',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
     }
   }
 }
