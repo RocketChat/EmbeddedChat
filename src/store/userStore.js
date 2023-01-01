@@ -1,6 +1,11 @@
 import create from 'zustand';
 
 const useUserStore = create((set) => ({
+  userId: localStorage.getItem('userId') || '',
+  setUserId: (userId) => {
+    localStorage.setItem('userId', userId);
+    set({ userId });
+  },
   username: localStorage.getItem('rc_uname') || '',
   setUsername: (username) => {
     localStorage.setItem('rc_uname', username);
