@@ -1,20 +1,25 @@
 import create from 'zustand';
+import {
+  RC_LOCAL_USER_AVATAR_URL,
+  RC_LOCAL_USER_ID,
+  RC_LOCAL_USER_NAME,
+} from '../lib/constant';
 
 const useUserStore = create((set) => ({
-  userId: localStorage.getItem('rc_uid') || '',
+  userId: localStorage.getItem(RC_LOCAL_USER_ID) || '',
   setUserId: (userId) => {
-    localStorage.setItem('rc_uid', userId);
+    localStorage.setItem(RC_LOCAL_USER_ID, userId);
     set({ userId });
   },
-  username: localStorage.getItem('rc_uname') || '',
+  username: localStorage.getItem(RC_LOCAL_USER_NAME) || '',
   setUsername: (username) => {
-    localStorage.setItem('rc_uname', username);
+    localStorage.setItem(RC_LOCAL_USER_NAME, username);
     set({ username });
   },
-  avatarUrl: localStorage.getItem('rc_avatar_url') || '',
+  avatarUrl: localStorage.getItem(RC_LOCAL_USER_AVATAR_URL) || '',
   setUserAvatarUrl: (avatarUrl) =>
     set(() => {
-      localStorage.setItem('rc_avatar_url', avatarUrl);
+      localStorage.setItem(RC_LOCAL_USER_AVATAR_URL, avatarUrl);
       return {
         avatarUrl,
       };
