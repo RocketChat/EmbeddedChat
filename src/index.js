@@ -81,7 +81,7 @@ export const RCComponent = ({
       storedUserId !== currentUserId
     ) {
       getUserEssentials();
-      localStorage.setItem('userId', currentUserId);
+      localStorage.setItem('rc_uid', currentUserId);
     }
   }, []);
 
