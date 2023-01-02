@@ -1,9 +1,9 @@
 import create from 'zustand';
 
 const useUserStore = create((set) => ({
-  userId: localStorage.getItem('userId') || '',
+  userId: localStorage.getItem('rc_uid') || '',
   setUserId: (userId) => {
-    localStorage.setItem('userId', userId);
+    localStorage.setItem('rc_uid', userId);
     set({ userId });
   },
   username: localStorage.getItem('rc_uname') || '',
