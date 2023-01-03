@@ -72,16 +72,3 @@ npm run dev # at root
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
-
----
-
-## Differences between EmbeddedChat and iFrame
-
-EmbeddedChat  | iFrame
-----------|----------
-  **Embedded chat** is a feature that allows you to easily add a chat widget to your website or web application. It is typically implemented using a full-stack component, such as ReactJS, and may include both front-end and back-end behaviors.  | **iFrame** is an HTML element that allows you to embed one web page within another. This allows users to interact with the chat platform as if they were on the chat platform's site, while remaining on your site.
-**Features:** Embedded chat may offer a wide range of features, such as group and direct messaging, audio and integrations with other tools and services       | *iFrame* on the other hand, may be more limited in terms of features, as it is simply displaying another website within a frame on your site.
-| **One channel vs. multichannel:** Embedded chat widgets may allow users to participate in multiple channels or conversations                                                                                                                     | *iFrames* may only allow users to interact with a single channel or conversation at a time.
-| **UI improvements:** Embedded Chat may offer more flexibility in terms of UI improvements, as it is provided by the chat platform and can be customized to some extent                                                                           | An *iFrame* may be more limited in terms of UI improvements, as it is simply displaying another website within a frame on your site.  
- **Usecases:** Embedded Chat may be well-suited for use cases such as customer support, online communities, and team communication, |*iFrame* may be more suitable for displaying content from another website within your site.
- **Demo deploy:** [EmbeddedChat](https://sidmohanty11.github.io/embeddedchat-demo-deploy/) | [iFrame](https://sidmohanty11.github.io/embeddedchat-iframe-deploy/)
