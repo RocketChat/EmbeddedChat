@@ -7,7 +7,11 @@ import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { useToastStore, useUserStore } from './store';
-import { RC_LOCAL_USER_ID, RC_LOCAL_USER_TOKEN } from './lib/constant';
+import {
+  RC_USER_ID_COOKIE,
+  RC_USER_TOKEN_COOKIE,
+  RC_LOCAL_USER_ID,
+} from './lib/constant';
 
 export const RCComponent = ({
   isClosable = false,
@@ -43,7 +47,7 @@ export const RCComponent = ({
 
   useEffect(() => {
     const cookiesPresent =
-      Cookies.get(RC_LOCAL_USER_TOKEN) && Cookies.get(RC_LOCAL_USER_ID);
+      Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
     if (cookiesPresent) {
       setIsUserAuthenticated(true);
     }
@@ -70,13 +74,13 @@ export const RCComponent = ({
     }
 
     const cookiesPresent =
-      Cookies.get(RC_LOCAL_USER_TOKEN) && Cookies.get(RC_LOCAL_USER_ID);
+      Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
     if (cookiesPresent) {
       setIsUserAuthenticated(true);
     }
 
-    const storedUserId = localStorage.getItem('userId');
-    const currentUserId = Cookies.get(RC_LOCAL_USER_ID);
+    const storedUserId = localStorage.getItem(RC_LOCAL_USER_ID);
+    const currentUserId = Cookies.get(RC_USER_ID_COOKIE);
     if (
       !authenticatedUserUsername ||
       !authenticatedUserAvatarUrl ||
