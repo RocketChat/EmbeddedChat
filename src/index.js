@@ -26,6 +26,12 @@ export const RCComponent = ({
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   setToastbarPosition(toastBarPosition);
 
+  const [messageToEdit, setMessageToEdit] = useState({});
+
+  const handleMessageEdit = (msg) => {
+    setMessageToEdit(msg)
+  }
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -64,11 +70,13 @@ export const RCComponent = ({
             <ChatBody
               height={!fullScreen ? height : '83vh'}
               anonymousMode={anonymousMode}
+              handleMessageEdit={handleMessageEdit}
+              messageToEdit={messageToEdit}
             />
           ) : (
             <Home height={!fullScreen ? height : '83vh'} />
           )}
-          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
+          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} messageToEdit={messageToEdit} handleMessageEdit={handleMessageEdit} />
         </Box>
       </RCInstanceProvider>
     </ToastBarProvider>
