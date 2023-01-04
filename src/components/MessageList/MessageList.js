@@ -19,11 +19,11 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
-import { RC_LOCAL_USER_ID } from '../../lib/constant';
+import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get(RC_LOCAL_USER_ID);
+  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
