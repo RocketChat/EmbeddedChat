@@ -19,7 +19,7 @@ import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 
-const MessageList = ({ messages, handleGoBack }) => {
+const MessageList = ({ messages, handleGoBack, handleMessageEdit, messageToEdit }) => {
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get('rc_uid');
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -99,7 +99,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         messages.map(
           (msg) =>
             (msg.msg || msg.attachments.length) && (
-              <Message key={msg._id}>
+              <Message key={msg._id} isEditing={messageToEdit.id === msg._id}>
                 <Message.Container>
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
@@ -107,6 +107,9 @@ const MessageList = ({ messages, handleGoBack }) => {
                     <Message.Timestamp>
                       {new Date(msg.ts).toDateString()}
                     </Message.Timestamp>
+                    {
+                      msg.editedAt && <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    }
                   </Message.Header>
                   <Message.Body>
                     {msg.attachments && msg.attachments.length > 0 ? (
@@ -139,12 +142,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <MessageToolbox>
                     <MessageToolbox.Item icon="thread" />
                     <MessageToolbox.Item
-                      icon={`${
-                        msg.starred &&
+                      icon={`${msg.starred &&
                         msg.starred.find((u) => u._id === authenticatedUserId)
-                          ? 'star-filled'
-                          : 'star'
-                      }`}
+                        ? 'star-filled'
+                        : 'star'
+                        }`}
                       onClick={() => handleStarMessage(msg)}
                     />
                     <Popup
@@ -167,13 +169,17 @@ const MessageList = ({ messages, handleGoBack }) => {
                       onClick={() => handlePinMessage(msg)}
                     />
                     {
-                      msg.u._id === authenticatedUserId && (
+                      msg.u._id === authenticatedUserId && (<>
+                        <MessageToolbox.Item
+                          icon="edit"
+                          onClick={() => { handleMessageEdit({ msg: msg.msg, id: msg._id }) }}
+                        />
                         <MessageToolbox.Item
                           icon="trash"
                           color='danger'
                           onClick={() => handleDeleteMessage(msg)}
                         />
-                      )
+                      </>)
                     }
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
@@ -197,4 +203,6 @@ export default MessageList;
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object),
   handleGoBack: PropTypes.func,
+  handleMessageEdit: PropTypes.func,
+  messageToEdit: PropTypes.object
 };

@@ -1,5 +1,5 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Popup from 'reactjs-popup';
 import he from 'he';
@@ -10,7 +10,7 @@ import RCContext from '../../context/RCInstance';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore } from '../../store';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
+const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
   const [message, setMessage] = useState('');
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
@@ -37,19 +37,38 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
   const sendMessage = async () => {
     if (!message.length || !isUserAuthenticated) {
+      if (messageToEdit.msg) {
+        handleMessageEdit({});
+      }
       return;
     }
-    const res = await RCInstance.sendMessage(message);
-    if (!res.success) {
-      await RCInstance.logout();
-      setIsUserAuthenticated(false);
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Error sending message, login again',
-        position: toastPosition,
-      });
+
+    if (!messageToEdit.msg) {
+      const res = await RCInstance.sendMessage(message);
+      if (!res.success) {
+        await RCInstance.logout();
+        setIsUserAuthenticated(false);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error sending message, login again',
+          position: toastPosition,
+        });
+      }
+      setMessage('');
+    } else {
+      const res = await RCInstance.updateMessage(messageToEdit.id, message);
+      if (!res.success) {
+        await RCInstance.logout();
+        setIsUserAuthenticated(false);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error editing message, login again',
+          position: toastPosition,
+        });
+      }
+      setMessage('');
+      handleMessageEdit({});
     }
-    setMessage('');
   };
 
   const handleEmojiClick = (n) => {
@@ -91,6 +110,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     await RCInstance.sendAttachment(event.target);
   };
 
+  useEffect(() => {
+    if (messageToEdit.msg) {
+      setMessage(messageToEdit.msg)
+    }
+  }, [messageToEdit])
+
   return (
     <Box className={styles.container} border="2px solid #ddd">
       {isUserAuthenticated && (
@@ -111,7 +136,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           setMessage(e.target.value);
         }}
         onKeyDown={(e) => {
-          if (e.keyCode === 13) {
+          if (messageToEdit.msg && e.keyCode === 27) {
+            setMessage('');
+            handleMessageEdit({});
+          } else if (e.keyCode === 13) {
             sendMessage();
           }
         }}
@@ -149,4 +177,6 @@ export default ChatInput;
 
 ChatInput.propTypes = {
   GOOGLE_CLIENT_ID: PropTypes.string,
+  handleMessageEdit: PropTypes.func,
+  messageToEdit: PropTypes.object
 };
