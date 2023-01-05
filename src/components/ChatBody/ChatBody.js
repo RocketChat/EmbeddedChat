@@ -7,7 +7,7 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 
-const ChatBody = ({ height, anonymousMode, handleMessageEdit, messageToEdit }) => {
+const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
 
@@ -48,7 +48,7 @@ const ChatBody = ({ height, anonymousMode, handleMessageEdit, messageToEdit }) =
       className={styles.container}
       height={height}
     >
-      <MessageList messages={messages} handleGoBack={handleGoBack} handleMessageEdit={handleMessageEdit} messageToEdit={messageToEdit} />
+      <MessageList messages={messages} handleGoBack={handleGoBack} />
     </Box>
   );
 };
@@ -58,6 +58,4 @@ export default ChatBody;
 ChatBody.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
-  handleMessageEdit: PropTypes.func,
-  messageToEdit: PropTypes.object
 };

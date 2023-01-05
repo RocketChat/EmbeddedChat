@@ -14,12 +14,12 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useToastStore, useUserStore } from '../../store';
+import { useMessageStore, useToastStore, useUserStore, useEditMessageStore } from '../../store';
 import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 
-const MessageList = ({ messages, handleGoBack, handleMessageEdit, messageToEdit }) => {
+const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get('rc_uid');
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -29,6 +29,8 @@ const MessageList = ({ messages, handleGoBack, handleMessageEdit, messageToEdit 
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
+
+  const { editMessage, setEditMessage } = useEditMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -99,7 +101,7 @@ const MessageList = ({ messages, handleGoBack, handleMessageEdit, messageToEdit 
         messages.map(
           (msg) =>
             (msg.msg || msg.attachments.length) && (
-              <Message key={msg._id} isEditing={messageToEdit.id === msg._id}>
+              <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
@@ -172,7 +174,7 @@ const MessageList = ({ messages, handleGoBack, handleMessageEdit, messageToEdit 
                       msg.u._id === authenticatedUserId && (<>
                         <MessageToolbox.Item
                           icon="edit"
-                          onClick={() => { handleMessageEdit({ msg: msg.msg, id: msg._id }) }}
+                          onClick={() => { setEditMessage({ msg: msg.msg, id: msg._id }) }}
                         />
                         <MessageToolbox.Item
                           icon="trash"
@@ -203,6 +205,4 @@ export default MessageList;
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object),
   handleGoBack: PropTypes.func,
-  handleMessageEdit: PropTypes.func,
-  messageToEdit: PropTypes.object
 };
