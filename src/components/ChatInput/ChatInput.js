@@ -8,13 +8,15 @@ import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useToastStore, useUserStore } from '../../store';
+import { useToastStore, useUserStore, useEditMessageStore } from '../../store';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
+const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+
+  const { editMessage, setEditMessage } = useEditMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -37,13 +39,13 @@ const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
 
   const sendMessage = async () => {
     if (!message.length || !isUserAuthenticated) {
-      if (messageToEdit.msg) {
-        handleMessageEdit({});
+      if (editMessage.msg) {
+        setEditMessage({});
       }
       return;
     }
 
-    if (!messageToEdit.msg) {
+    if (!editMessage.msg) {
       const res = await RCInstance.sendMessage(message);
       if (!res.success) {
         await RCInstance.logout();
@@ -56,7 +58,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
       }
       setMessage('');
     } else {
-      const res = await RCInstance.updateMessage(messageToEdit.id, message);
+      const res = await RCInstance.updateMessage(editMessage.id, message);
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
@@ -67,7 +69,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
         });
       }
       setMessage('');
-      handleMessageEdit({});
+      setEditMessage({});
     }
   };
 
@@ -111,10 +113,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
   };
 
   useEffect(() => {
-    if (messageToEdit.msg) {
-      setMessage(messageToEdit.msg)
+    if (editMessage.msg) {
+      setMessage(editMessage.msg)
     }
-  }, [messageToEdit])
+  }, [editMessage])
 
   return (
     <Box className={styles.container} border="2px solid #ddd">
@@ -136,9 +138,9 @@ const ChatInput = ({ GOOGLE_CLIENT_ID, handleMessageEdit, messageToEdit }) => {
           setMessage(e.target.value);
         }}
         onKeyDown={(e) => {
-          if (messageToEdit.msg && e.keyCode === 27) {
+          if (editMessage.msg && e.keyCode === 27) {
             setMessage('');
-            handleMessageEdit({});
+            setEditMessage({});
           } else if (e.keyCode === 13) {
             sendMessage();
           }
@@ -177,6 +179,4 @@ export default ChatInput;
 
 ChatInput.propTypes = {
   GOOGLE_CLIENT_ID: PropTypes.string,
-  handleMessageEdit: PropTypes.func,
-  messageToEdit: PropTypes.object
 };
