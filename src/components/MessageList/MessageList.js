@@ -14,7 +14,7 @@ import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useToastStore, useUserStore, useEditMessageStore } from '../../store';
+import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
@@ -30,7 +30,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
 
-  const { editMessage, setEditMessage } = useEditMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
 
   const handleStarMessage = async (message) => {
     const isStarred =
