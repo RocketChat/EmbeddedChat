@@ -8,7 +8,7 @@ import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useToastStore, useUserStore, useEditMessageStore } from '../../store';
+import { useToastStore, useUserStore, useMessageStore } from '../../store';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
@@ -16,7 +16,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
 
-  const { editMessage, setEditMessage } = useEditMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
