@@ -7,11 +7,7 @@ import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { useToastStore, useUserStore } from './store';
-import {
-  RC_USER_ID_COOKIE,
-  RC_USER_TOKEN_COOKIE,
-  RC_LOCAL_USER_ID,
-} from './lib/constant';
+import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './lib/constant';
 
 export const RCComponent = ({
   isClosable = false,
