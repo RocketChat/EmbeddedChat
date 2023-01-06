@@ -79,16 +79,13 @@ export const RCComponent = ({
       setIsUserAuthenticated(true);
     }
 
-    const storedUserId = localStorage.getItem(RC_LOCAL_USER_ID);
     const currentUserId = Cookies.get(RC_USER_ID_COOKIE);
     if (
       !authenticatedUserUsername ||
       !authenticatedUserAvatarUrl ||
-      !authenticatedUserId ||
-      storedUserId !== currentUserId
+      authenticatedUserId !== currentUserId
     ) {
       getUserEssentials();
-      localStorage.setItem(RC_LOCAL_USER_ID, currentUserId);
     }
   }, []);
 
