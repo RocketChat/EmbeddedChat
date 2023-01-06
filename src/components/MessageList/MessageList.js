@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+import { isSameDay } from 'date-fns';
 import {
   Box,
   Button,
   Icon,
   Message,
   MessageReactions,
-  MessageToolbox
+  MessageToolbox,
+  MessageDivider,
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -77,35 +80,47 @@ const MessageList = ({ messages, handleGoBack }) => {
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
-        message: "Message deleted successfully",
+        message: 'Message deleted successfully',
         position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
-        message: "Error in deleting message",
+        message: 'Error in deleting message',
         position: toastPosition,
       });
     }
-  }
+  };
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
   };
 
+  const isMessageNewDay = (current, previous) => {
+    return !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+  };
+
   return (
     <>
       {messages &&
-        messages.map(
-          (msg) =>
+        messages.map((msg, index, arr) => {
+          const prev = arr[index + 1];
+          const newDay = isMessageNewDay(msg, prev);
+
+          return (
             (msg.msg || msg.attachments.length) && (
               <Message key={msg._id}>
                 <Message.Container>
+                  {newDay && (
+                    <MessageDivider>
+                      {moment(msg.ts).format('LL')}
+                    </MessageDivider>
+                  )}
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
                     <Message.Username>@{msg.u.username}</Message.Username>
                     <Message.Timestamp>
-                      {new Date(msg.ts).toDateString()}
+                      {moment(msg.ts).format('hh:mm A')}
                     </Message.Timestamp>
                   </Message.Header>
                   <Message.Body>
@@ -166,20 +181,19 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
-                    {
-                      msg.u._id === authenticatedUserId && (
-                        <MessageToolbox.Item
-                          icon="trash"
-                          color='danger'
-                          onClick={() => handleDeleteMessage(msg)}
-                        />
-                      )
-                    }
+                    {msg.u._id === authenticatedUserId && (
+                      <MessageToolbox.Item
+                        icon="trash"
+                        color="danger"
+                        onClick={() => handleDeleteMessage(msg)}
+                      />
+                    )}
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
             )
-        )}
+          );
+        })}
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
