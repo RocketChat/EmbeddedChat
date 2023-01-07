@@ -32,6 +32,8 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
 
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+
   const handleStarMessage = async (message) => {
     const isStarred =
       message.starred &&
@@ -101,7 +103,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         messages.map(
           (msg) =>
             (msg.msg || msg.attachments.length) && (
-              <Message key={msg._id}>
+              <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
@@ -109,6 +111,9 @@ const MessageList = ({ messages, handleGoBack }) => {
                     <Message.Timestamp>
                       {new Date(msg.ts).toDateString()}
                     </Message.Timestamp>
+                    {
+                      msg.editedAt && <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    }
                   </Message.Header>
                   <Message.Body>
                     {msg.attachments && msg.attachments.length > 0 ? (
@@ -141,12 +146,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <MessageToolbox>
                     <MessageToolbox.Item icon="thread" />
                     <MessageToolbox.Item
-                      icon={`${
-                        msg.starred &&
+                      icon={`${msg.starred &&
                         msg.starred.find((u) => u._id === authenticatedUserId)
-                          ? 'star-filled'
-                          : 'star'
-                      }`}
+                        ? 'star-filled'
+                        : 'star'
+                        }`}
                       onClick={() => handleStarMessage(msg)}
                     />
                     <Popup
@@ -168,6 +172,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
+
                     {msg.u._id === authenticatedUserId && (
                       <MessageToolbox.Item
                         icon="trash"
@@ -175,6 +180,20 @@ const MessageList = ({ messages, handleGoBack }) => {
                         onClick={() => handleDeleteMessage(msg)}
                       />
                     )}
+
+                    {
+                      msg.u._id === authenticatedUserId && (<>
+                        <MessageToolbox.Item
+                          icon="edit"
+                          onClick={() => { setEditMessage({ msg: msg.msg, id: msg._id }) }}
+                        />
+                        <MessageToolbox.Item
+                          icon="trash"
+                          color='danger'
+                          onClick={() => handleDeleteMessage(msg)}
+                        />
+                      </>)
+                    }
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
