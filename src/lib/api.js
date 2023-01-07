@@ -179,9 +179,9 @@ export default class RocketChatInstance {
         }
 
         if (event === 'deleteMessage') {
-          callback(ddpMessage)
+          callback(ddpMessage);
         }
-      })
+      });
     } catch (err) {
       await this.close();
     }
@@ -233,6 +233,23 @@ export default class RocketChatInstance {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
         body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get('rc_token'),
+          'X-User-Id': Cookies.get('rc_uid'),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async updateMessage(msgId, text) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.update`, {
+        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","text" : "${text}" }`,
         headers: {
           'Content-Type': 'application/json',
           'X-Auth-Token': Cookies.get('rc_token'),
