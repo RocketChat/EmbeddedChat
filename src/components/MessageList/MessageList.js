@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { isSameDay } from 'date-fns';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Button,
@@ -118,14 +117,14 @@ const MessageList = ({ messages, handleGoBack }) => {
                 <Message.Container>
                   {newDay && (
                     <MessageDivider>
-                      {moment(msg.ts).format('LL')}
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   )}
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
                     <Message.Username>@{msg.u.username}</Message.Username>
                     <Message.Timestamp>
-                      {moment(msg.ts).format('hh:mm A')}
+                      {format(new Date(msg.ts), 'h:mm a')}
                     </Message.Timestamp>
                     {msg.editedAt && (
                       <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
