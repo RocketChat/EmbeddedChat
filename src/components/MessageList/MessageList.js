@@ -6,7 +6,7 @@ import {
   Icon,
   Message,
   MessageReactions,
-  MessageToolbox
+  MessageToolbox,
 } from '@rocket.chat/fuselage';
 import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
@@ -18,6 +18,7 @@ import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
+import SystemMessage from '../SystemMessage/SystemMessage';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -30,7 +31,10 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
 
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+  }));
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -79,17 +83,17 @@ const MessageList = ({ messages, handleGoBack }) => {
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
-        message: "Message deleted successfully",
+        message: 'Message deleted successfully',
         position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
-        message: "Error in deleting message",
+        message: 'Error in deleting message',
         position: toastPosition,
       });
     }
-  }
+  };
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
@@ -98,8 +102,10 @@ const MessageList = ({ messages, handleGoBack }) => {
   return (
     <>
       {messages &&
-        messages.map(
-          (msg) =>
+        messages.map((msg) => {
+          const isPinned = !!msg.t;
+
+          return (
             (msg.msg || msg.attachments.length) && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
@@ -109,16 +115,19 @@ const MessageList = ({ messages, handleGoBack }) => {
                     <Message.Timestamp>
                       {new Date(msg.ts).toDateString()}
                     </Message.Timestamp>
-                    {
-                      msg.editedAt && <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
-                    }
+                    {msg.editedAt && (
+                      <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    )}
                   </Message.Header>
                   <Message.Body>
-                    {msg.attachments && msg.attachments.length > 0 ? (
+                    {!isPinned &&
+                    msg.attachments &&
+                    msg.attachments.length > 0 ? (
                       <Attachments attachments={msg.attachments} />
                     ) : (
                       <Markdown body={msg.msg} />
                     )}
+                    {isPinned && <SystemMessage message={msg} />}
                   </Message.Body>
                   <MessageReactions>
                     {msg.reactions &&
@@ -144,11 +153,12 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <MessageToolbox>
                     <MessageToolbox.Item icon="thread" />
                     <MessageToolbox.Item
-                      icon={`${msg.starred &&
+                      icon={`${
+                        msg.starred &&
                         msg.starred.find((u) => u._id === authenticatedUserId)
-                        ? 'star-filled'
-                        : 'star'
-                        }`}
+                          ? 'star-filled'
+                          : 'star'
+                      }`}
                       onClick={() => handleStarMessage(msg)}
                     />
                     <Popup
@@ -170,24 +180,27 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
-                    {
-                      msg.u._id === authenticatedUserId && (<>
+                    {msg.u._id === authenticatedUserId && (
+                      <>
                         <MessageToolbox.Item
                           icon="edit"
-                          onClick={() => { setEditMessage({ msg: msg.msg, id: msg._id }) }}
+                          onClick={() => {
+                            setEditMessage({ msg: msg.msg, id: msg._id });
+                          }}
                         />
                         <MessageToolbox.Item
                           icon="trash"
-                          color='danger'
+                          color="danger"
                           onClick={() => handleDeleteMessage(msg)}
                         />
-                      </>)
-                    }
+                      </>
+                    )}
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
             )
-        )}
+          );
+        })}
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
