@@ -1,4 +1,6 @@
-# EmbeddedChat
+# 🚀EmbeddedChat 🚀
+
+## ✨About the Repository✨
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
@@ -6,13 +8,15 @@ An easy to use full-stack component (ReactJS + backend behaviors) embedding Rock
 
 ![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
 
-## Installation
+---
+
+## 💻Installation💻
 
 ```bash
 npm i embeddedchat
 ```
 
-## Usage
+## 🧑🏻‍💻Usage🧑🏻‍💻
 
 Just import the component,
 
@@ -34,12 +38,16 @@ and use it,
   roomId={'GENERAL'}
   channelName="Customer Service"
   anonymousMode={false}
+  headerColor = '#fff'
+  toastBarPosition = 'bottom-end'
 />
 ```
 
-## Props
+## 📖Props📖
 
 Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) for more info on each prop.
+
+Want to know how to create your own component library? Read this [article](https://github.com/RocketChat/EmbeddedChat/wiki/How-to-create-your-own-component-library%3F).
 
 |prop|description  |
 |--|--|
@@ -53,14 +61,16 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 |roomId | the public room's id that you want to subscribe to|
 |channelName| the fallback channel name to be present on the chat header|
 |anonymousMode | if the user can see the chat without logging in|
+|headerColor | it is the color of the header i.e `#fff`|
+|toastBarPosition | By default, all the toasts will be positioned on the `bottom-end` of your browser|
 
-## Setting up Authentication
+## ⚙️Setting up Authentication⚙️
 
 Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
 
 > Note: You need to disable TOTP for this to work!
 
-## Development
+## 💥Development💥
 
 For development,
 
@@ -72,3 +82,9 @@ npm run dev # at root
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
+## 🙌🏻Learn🙌🏻
+
+Learn more about the wiki/setup of EmbeddedChat [here](https://github.com/RocketChat/EmbeddedChat.wiki.git).
+
+Learn more about the root of EmbeddedChat [here](https://github.com/RocketChat/EmbeddedChat/wiki/How-to-create-your-own-component-library%3F).
