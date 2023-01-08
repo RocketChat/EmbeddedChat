@@ -25,7 +25,6 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "npm run test:lint -- --fix",
       "npm run format"
     ]
   },

@@ -16,7 +16,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
 
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+  }));
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -114,9 +117,9 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
   useEffect(() => {
     if (editMessage.msg) {
-      setMessage(editMessage.msg)
+      setMessage(editMessage.msg);
     }
-  }, [editMessage])
+  }, [editMessage]);
 
   return (
     <Box className={styles.container} border="2px solid #ddd">

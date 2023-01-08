@@ -179,9 +179,9 @@ export default class RocketChatInstance {
         }
 
         if (event === 'deleteMessage') {
-          callback(ddpMessage)
+          callback(ddpMessage);
         }
-      })
+      });
     } catch (err) {
       await this.close();
     }
