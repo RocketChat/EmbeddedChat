@@ -6,7 +6,7 @@ const useMessageStore = create((set) => ({
   editMessage: {},
   setFilter: (filter) => set((state) => ({ ...state, filtered: filter })),
   setMessages: (messages) => set((state) => ({ ...state, messages })),
-  setEditMessage: (editMessage) => set(() => ({ editMessage }))
+  setEditMessage: (editMessage) => set(() => ({ editMessage })),
 }));
 
 export default useMessageStore;

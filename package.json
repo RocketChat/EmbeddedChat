@@ -79,6 +79,7 @@
     "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rollup/plugin-json": "^4.1.0",
     "color": "^4.2.3",
+    "date-fns": "^2.29.3",
     "dompurify": "^2.3.8",
     "emoji-picker-react": "2.1.1",
     "emoji-toolkit": "^6.6.0",

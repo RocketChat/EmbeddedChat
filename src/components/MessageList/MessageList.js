@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Button,
@@ -8,6 +9,7 @@ import {
   Message,
   MessageReactions,
   MessageToolbox,
+  MessageDivider,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
@@ -32,7 +34,10 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
 
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({ editMessage: state.editMessage, setEditMessage: state.setEditMessage }))
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+  }));
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -97,23 +102,34 @@ const MessageList = ({ messages, handleGoBack }) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
   };
 
+  const isMessageNewDay = (current, previous) =>
+    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
   return (
     <>
       {messages &&
-        messages.map(
-          (msg) =>
+        messages.map((msg, index, arr) => {
+          const prev = arr[index + 1];
+          const newDay = isMessageNewDay(msg, prev);
+
+          return (
             (msg.msg || msg.attachments.length) && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
+                  {newDay && (
+                    <MessageDivider>
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                    </MessageDivider>
+                  )}
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
                     <Message.Username>@{msg.u.username}</Message.Username>
                     <Message.Timestamp>
-                      {new Date(msg.ts).toDateString()}
+                      {format(new Date(msg.ts), 'h:mm a')}
                     </Message.Timestamp>
-                    {
-                      msg.editedAt && <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
-                    }
+                    {msg.editedAt && (
+                      <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    )}
                   </Message.Header>
                   <Message.Body>
                     {msg.attachments && msg.attachments.length > 0 ? (
@@ -146,11 +162,12 @@ const MessageList = ({ messages, handleGoBack }) => {
                   <MessageToolbox>
                     <MessageToolbox.Item icon="thread" />
                     <MessageToolbox.Item
-                      icon={`${msg.starred &&
+                      icon={`${
+                        msg.starred &&
                         msg.starred.find((u) => u._id === authenticatedUserId)
-                        ? 'star-filled'
-                        : 'star'
-                        }`}
+                          ? 'star-filled'
+                          : 'star'
+                      }`}
                       onClick={() => handleStarMessage(msg)}
                     />
                     <Popup
@@ -172,33 +189,27 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
-
                     {msg.u._id === authenticatedUserId && (
-                      <MessageToolbox.Item
-                        icon="trash"
-                        color="danger"
-                        onClick={() => handleDeleteMessage(msg)}
-                      />
-                    )}
-
-                    {
-                      msg.u._id === authenticatedUserId && (<>
+                      <>
                         <MessageToolbox.Item
                           icon="edit"
-                          onClick={() => { setEditMessage({ msg: msg.msg, id: msg._id }) }}
+                          onClick={() => {
+                            setEditMessage({ msg: msg.msg, id: msg._id });
+                          }}
                         />
                         <MessageToolbox.Item
                           icon="trash"
-                          color='danger'
+                          color="danger"
                           onClick={() => handleDeleteMessage(msg)}
                         />
-                      </>)
-                    }
+                      </>
+                    )}
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
             )
-        )}
+          );
+        })}
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
