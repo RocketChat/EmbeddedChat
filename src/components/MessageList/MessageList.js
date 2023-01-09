@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
@@ -10,20 +11,21 @@ import {
   MessageToolbox,
   MessageDivider,
 } from '@rocket.chat/fuselage';
-import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
-import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import Cookies from 'js-cookie';
+import { EmojiPicker } from '../EmojiPicker/index';
+import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
-import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
+import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get('rc_uid');
+  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
@@ -60,7 +62,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const handlePinMessage = async (message) => {
     const isPinned = message.pinned;
-    let pinOrUnpin = isPinned
+    const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(message._id)
       : await RCInstance.pinMessage(message._id);
     if (pinOrUnpin.error) {
@@ -100,9 +102,8 @@ const MessageList = ({ messages, handleGoBack }) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
   };
 
-  const isMessageNewDay = (current, previous) => {
-    return !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
-  };
+  const isMessageNewDay = (current, previous) =>
+    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
     <>
@@ -224,6 +225,6 @@ const MessageList = ({ messages, handleGoBack }) => {
 export default MessageList;
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.object),
+  messages: PropTypes.arrayOf(PropTypes.shape),
   handleGoBack: PropTypes.func,
 };
