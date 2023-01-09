@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -6,22 +7,23 @@ import {
   Icon,
   Message,
   MessageReactions,
-  MessageToolbox
+  MessageToolbox,
 } from '@rocket.chat/fuselage';
-import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
-import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import Cookies from 'js-cookie';
+import { EmojiPicker } from '../EmojiPicker/index';
+import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
-import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
+import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get('rc_uid');
+  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
@@ -55,7 +57,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const handlePinMessage = async (message) => {
     const isPinned = message.pinned;
-    let pinOrUnpin = isPinned
+    const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(message._id)
       : await RCInstance.pinMessage(message._id);
     if (pinOrUnpin.error) {
@@ -79,17 +81,17 @@ const MessageList = ({ messages, handleGoBack }) => {
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
-        message: "Message deleted successfully",
+        message: 'Message deleted successfully',
         position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
-        message: "Error in deleting message",
+        message: 'Error in deleting message',
         position: toastPosition,
       });
     }
-  }
+  };
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
@@ -170,6 +172,15 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
+
+                    {msg.u._id === authenticatedUserId && (
+                      <MessageToolbox.Item
+                        icon="trash"
+                        color="danger"
+                        onClick={() => handleDeleteMessage(msg)}
+                      />
+                    )}
+
                     {
                       msg.u._id === authenticatedUserId && (<>
                         <MessageToolbox.Item
@@ -203,6 +214,6 @@ const MessageList = ({ messages, handleGoBack }) => {
 export default MessageList;
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.object),
+  messages: PropTypes.arrayOf(PropTypes.shape),
   handleGoBack: PropTypes.func,
 };
