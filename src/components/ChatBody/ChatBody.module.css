@@ -1,4 +1,5 @@
 .container {
+  word-break: break-all;
   overflow: scroll;
   overflow: auto;
   display: flex;
