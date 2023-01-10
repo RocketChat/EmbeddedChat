@@ -1,0 +1,30 @@
+{
+    "parser": "@babel/eslint-parser",
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb",
+        "plugin:react/recommended",
+        "prettier"
+    ],
+    "plugins": [
+        "react",
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": "error",
+        "no-unused-vars" : "warn",
+        "no-console": "off",
+        "react/function-component-definition" : "off",
+        "react/require-default-props" : "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "arrow-body-style": ["error", "as-needed"],
+        "import/prefer-default-export": "off",
+        "camelcase": "off",
+        "no-param-reassign": "off",
+        "class-methods-use-this": "off",
+        "consistent-return": "off"
+    }
+}

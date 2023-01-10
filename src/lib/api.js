@@ -1,11 +1,8 @@
 import { Rocketchat } from '@rocket.chat/sdk';
 import Cookies from 'js-cookie';
+import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './constant';
 
 export default class RocketChatInstance {
-  host = 'http://localhost:3000';
-  rid = '';
-  rcClient = null;
-
   constructor(host, rid) {
     this.host = host;
     this.rid = rid;
@@ -18,14 +15,14 @@ export default class RocketChatInstance {
 
   getCookies() {
     return {
-      rc_token: Cookies.get('rc_token'),
-      rc_uid: Cookies.get('rc_uid'),
+      rc_token: Cookies.get(RC_USER_TOKEN_COOKIE),
+      rc_uid: Cookies.get(RC_USER_ID_COOKIE),
     };
   }
 
   setCookies(cookies) {
-    Cookies.set('rc_token', cookies.rc_token || '');
-    Cookies.set('rc_uid', cookies.rc_uid || '');
+    Cookies.set(RC_USER_TOKEN_COOKIE, cookies.rc_token || '');
+    Cookies.set(RC_USER_ID_COOKIE, cookies.rc_uid || '');
   }
 
   async googleSSOLogin(signIn) {
@@ -67,8 +64,8 @@ export default class RocketChatInstance {
       const response = await fetch(`${this.host}/api/v1/logout`, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -86,8 +83,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'GET',
         }
@@ -100,8 +97,8 @@ export default class RocketChatInstance {
           body: `{"userId": "${userid}", "data": { "username": "${suggestedUsername.result}" }}`,
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'POST',
         });
@@ -114,7 +111,7 @@ export default class RocketChatInstance {
   }
 
   async updateUserUsername(userid, username) {
-    let newUserName = username.replace(/\s/g, '.').toLowerCase();
+    const newUserName = username.replace(/\s/g, '.').toLowerCase();
 
     const usernameRegExp = /[0-9a-zA-Z-_.]+/;
 
@@ -124,8 +121,8 @@ export default class RocketChatInstance {
           body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'POST',
         });
@@ -137,14 +134,13 @@ export default class RocketChatInstance {
           result.errorType === 'error-could-not-save-identity'
         ) {
           return await this.updateUserNameThroughSuggestion(userid);
-        } else {
-          return result;
         }
+        return result;
       } catch (err) {
         console.error(err.message);
       }
     } else {
-      return await this.updateUserNameThroughSuggestion(userid);
+      return this.updateUserNameThroughSuggestion(userid);
     }
   }
 
@@ -155,8 +151,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'GET',
         }
@@ -170,10 +166,22 @@ export default class RocketChatInstance {
   async realtime(callback) {
     try {
       await this.rcClient.connect();
-      await this.rcClient.resume({ token: Cookies.get('rc_token') });
+      await this.rcClient.resume({ token: Cookies.get(RC_USER_TOKEN_COOKIE) });
       await this.rcClient.subscribe('stream-room-messages', this.rid);
       await this.rcClient.onMessage((data) => {
         callback(data);
+      });
+      await this.rcClient.subscribeRoom(this.rid);
+      await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
+        const [roomId, event] = ddpMessage.fields.eventName.split('/');
+
+        if (roomId !== this.rid) {
+          return;
+        }
+
+        if (event === 'deleteMessage') {
+          callback(ddpMessage);
+        }
       });
     } catch (err) {
       await this.close();
@@ -193,8 +201,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'GET',
         }
@@ -209,6 +217,40 @@ export default class RocketChatInstance {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
         body: `{"message": { "rid": "${this.rid}", "msg": "${message}" }}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async deleteMessage(msgId) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.delete`, {
+        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async updateMessage(msgId, text) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.update`, {
+        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","text" : "${text}" }`,
         headers: {
           'Content-Type': 'application/json',
           'X-Auth-Token': Cookies.get('rc_token'),
@@ -228,8 +270,8 @@ export default class RocketChatInstance {
         body: `{"messageId": "${mid}"}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -245,8 +287,8 @@ export default class RocketChatInstance {
         body: `{"messageId": "${mid}"}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -263,8 +305,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'GET',
         }
@@ -282,8 +324,8 @@ export default class RocketChatInstance {
         {
           headers: {
             'Content-Type': 'application/json',
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
           method: 'GET',
         }
@@ -300,8 +342,8 @@ export default class RocketChatInstance {
         body: `{"messageId": "${mid}"}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -319,8 +361,8 @@ export default class RocketChatInstance {
         body: `{"messageId": "${mid}"}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -336,8 +378,8 @@ export default class RocketChatInstance {
         body: `{"messageId": "${messageId}", "emoji": "${emoji}", "shouldReact": ${shouldReact}}`,
         headers: {
           'Content-Type': 'application/json',
-          'X-Auth-Token': Cookies.get('rc_token'),
-          'X-User-Id': Cookies.get('rc_uid'),
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
         },
         method: 'POST',
       });
@@ -357,14 +399,30 @@ export default class RocketChatInstance {
           method: 'POST',
           body: form,
           headers: {
-            'X-Auth-Token': Cookies.get('rc_token'),
-            'X-User-Id': Cookies.get('rc_uid'),
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
           },
         }).then((r) => r.json());
       });
       return response;
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async me() {
+    try {
+      const response = await fetch(`${this.host}/api/v1/me`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'GET',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
     }
   }
 }

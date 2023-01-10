@@ -1,20 +1,25 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Popup from 'reactjs-popup';
+import he from 'he';
+import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
-import Popup from 'reactjs-popup';
 import RCContext from '../../context/RCInstance';
-import he from 'he';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useToastStore, useUserStore } from '../../store';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import { useToastStore, useUserStore, useMessageStore } from '../../store';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+  }));
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -37,29 +42,48 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
   const sendMessage = async () => {
     if (!message.length || !isUserAuthenticated) {
+      if (editMessage.msg) {
+        setEditMessage({});
+      }
       return;
     }
-    const res = await RCInstance.sendMessage(message);
-    if (!res.success) {
-      await RCInstance.logout();
-      setIsUserAuthenticated(false);
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Error sending message, login again',
-        position: toastPosition,
-      });
+
+    if (!editMessage.msg) {
+      const res = await RCInstance.sendMessage(message);
+      if (!res.success) {
+        await RCInstance.logout();
+        setIsUserAuthenticated(false);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error sending message, login again',
+          position: toastPosition,
+        });
+      }
+      setMessage('');
+    } else {
+      const res = await RCInstance.updateMessage(editMessage.id, message);
+      if (!res.success) {
+        await RCInstance.logout();
+        setIsUserAuthenticated(false);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error editing message, login again',
+          position: toastPosition,
+        });
+      }
+      setMessage('');
+      setEditMessage({});
     }
-    setMessage('');
   };
 
   const handleEmojiClick = (n) => {
     if (n.length > 5) {
-      let flagUnifed = '&#x' + n.split('-').join(';&#x') + ';';
-      let flag = he.decode(flagUnifed);
+      const flagUnifed = `&#x${n.split('-').join(';&#x')};`;
+      const flag = he.decode(flagUnifed);
       setMessage(message + flag);
       return;
     }
-    let unified_emoji = he.decode(`&#x${n};`);
+    const unified_emoji = he.decode(`&#x${n};`);
     setMessage(message + unified_emoji);
   };
 
@@ -91,13 +115,19 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     await RCInstance.sendAttachment(event.target);
   };
 
+  useEffect(() => {
+    if (editMessage.msg) {
+      setMessage(editMessage.msg);
+    }
+  }, [editMessage]);
+
   return (
-    <Box className={styles.container} border={'2px solid #ddd'}>
+    <Box className={styles.container} border="2px solid #ddd">
       {isUserAuthenticated && (
         <Popup
           disabled={!isUserAuthenticated}
           trigger={<Icon name="emoji" size="x25" padding={6} />}
-          position={'top left'}
+          position="top left"
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
         </Popup>
@@ -111,7 +141,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           setMessage(e.target.value);
         }}
         onKeyDown={(e) => {
-          if (e.keyCode === 13) {
+          if (editMessage.msg && e.keyCode === 27) {
+            setMessage('');
+            setEditMessage({});
+          } else if (e.keyCode === 13) {
             sendMessage();
           }
         }}

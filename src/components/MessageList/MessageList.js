@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Button,
@@ -7,21 +9,23 @@ import {
   Message,
   MessageReactions,
   MessageToolbox,
+  MessageDivider,
 } from '@rocket.chat/fuselage';
-import { EmojiPicker } from '../EmojiPicker/index';
 import Popup from 'reactjs-popup';
-import { Markdown } from '../Markdown/index';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import Cookies from 'js-cookie';
+import { EmojiPicker } from '../EmojiPicker/index';
+import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
-import Cookies from 'js-cookie';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
+import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get('rc_uid');
+  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
@@ -29,6 +33,11 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
+
+  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+  }));
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -53,7 +62,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const handlePinMessage = async (message) => {
     const isPinned = message.pinned;
-    let pinOrUnpin = isPinned
+    const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(message._id)
       : await RCInstance.pinMessage(message._id);
     if (pinOrUnpin.error) {
@@ -71,24 +80,56 @@ const MessageList = ({ messages, handleGoBack }) => {
     }
   };
 
+  const handleDeleteMessage = async (message) => {
+    const res = await RCInstance.deleteMessage(message._id);
+
+    if (res.success) {
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message deleted successfully',
+        position: toastPosition,
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in deleting message',
+        position: toastPosition,
+      });
+    }
+  };
+
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
   };
 
+  const isMessageNewDay = (current, previous) =>
+    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
   return (
     <>
       {messages &&
-        messages.map(
-          (msg) =>
+        messages.map((msg, index, arr) => {
+          const prev = arr[index + 1];
+          const newDay = isMessageNewDay(msg, prev);
+
+          return (
             (msg.msg || msg.attachments.length) && (
-              <Message key={msg._id}>
+              <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
+                  {newDay && (
+                    <MessageDivider>
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                    </MessageDivider>
+                  )}
                   <Message.Header>
                     <Message.Name>{msg.u?.name}</Message.Name>
                     <Message.Username>@{msg.u.username}</Message.Username>
                     <Message.Timestamp>
-                      {new Date(msg.ts).toDateString()}
+                      {format(new Date(msg.ts), 'h:mm a')}
                     </Message.Timestamp>
+                    {msg.editedAt && (
+                      <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    )}
                   </Message.Header>
                   <Message.Body>
                     {msg.attachments && msg.attachments.length > 0 ? (
@@ -148,11 +189,27 @@ const MessageList = ({ messages, handleGoBack }) => {
                       icon="pin"
                       onClick={() => handlePinMessage(msg)}
                     />
+                    {msg.u._id === authenticatedUserId && (
+                      <>
+                        <MessageToolbox.Item
+                          icon="edit"
+                          onClick={() => {
+                            setEditMessage({ msg: msg.msg, id: msg._id });
+                          }}
+                        />
+                        <MessageToolbox.Item
+                          icon="trash"
+                          color="danger"
+                          onClick={() => handleDeleteMessage(msg)}
+                        />
+                      </>
+                    )}
                   </MessageToolbox>
                 </MessageToolbox.Wrapper>
               </Message>
             )
-        )}
+          );
+        })}
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
@@ -168,6 +225,6 @@ const MessageList = ({ messages, handleGoBack }) => {
 export default MessageList;
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.object),
+  messages: PropTypes.arrayOf(PropTypes.shape),
   handleGoBack: PropTypes.func,
 };
