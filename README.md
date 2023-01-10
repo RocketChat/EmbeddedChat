@@ -2,7 +2,7 @@
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
-*EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System.*
+_EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI using RocketChat's Fuselage Design System._
 
 ![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
 
@@ -17,7 +17,7 @@ npm i embeddedchat
 Just import the component,
 
 ```javascript
-import  { RCComponent }  from  "embeddedchat";
+import { RCComponent } from 'embeddedchat';
 ```
 
 and use it,
@@ -41,18 +41,19 @@ and use it,
 
 Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) for more info on each prop.
 
-|prop|description  |
-|--|--|
-|isClosable  | is the component closable?, defaults to `false`. |
-|setClosableState | the reusable setState, which will track the opening and closing of EmbeddedChat. It is a `setState fn` => which toggles the previous state.|
-|moreOpts | it adds a kebab menu with added functionalities like showing pinned, starred, thread messages |
-| width| `width` of the component|
-| height| `height` of the component (based on the `ChatBody`) |
-|host | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)|
-|GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console|
-|roomId | the public room's id that you want to subscribe to|
-|channelName| the fallback channel name to be present on the chat header|
-|anonymousMode | if the user can see the chat without logging in|
+| prop             | description                                                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| isClosable       | is the component closable?, defaults to `false`.                                                                                            |
+| setClosableState | the reusable setState, which will track the opening and closing of EmbeddedChat. It is a `setState fn` => which toggles the previous state. |
+| moreOpts         | it adds a kebab menu with added functionalities like showing pinned, starred, thread messages                                               |
+| width            | `width` of the component                                                                                                                    |
+| height           | `height` of the component (based on the `ChatBody`)                                                                                         |
+| host             | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)                                                          |
+| GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console                                                 |
+| roomId           | the public room's id that you want to subscribe to                                                                                          |
+| channelName      | the fallback channel name to be present on the chat header                                                                                  |
+| anonymousMode    | if the user can see the chat without logging in                                                                                             |
+
 
 ## Setting up Authentication
 
@@ -67,8 +68,10 @@ For development,
 ```bash
 npm i
 cd playground && npm i
-npm run dev # at root
+npm run dev # at the root folder --> EMBEDDEDCHAT
+
 ```
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
