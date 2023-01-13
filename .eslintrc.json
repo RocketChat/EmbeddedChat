@@ -33,6 +33,7 @@
         "no-nested-ternary": "off",
         "no-undef": "off",
         "no-restricted-exports": "off",
-        "react/destructuring-assignment": "off"
+        "react/destructuring-assignment": "off",
+        "react/jsx-no-useless-fragment": "off"
     }
 }
