@@ -7,14 +7,23 @@ import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
-import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
+import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+// import TotpForm from '../UI/Totpform';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
-  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+
+  const {
+    handleLogin,
+    handleResend,
+    isModalOpen,
+    setIsModalOpen,
+    method,
+    userOrEmail,
+  } = useRCAuth4Google();
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -32,11 +41,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     (state) => state.setIsUserAuthenticated
   );
 
-  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const toastPosition = useToastStore((state) => state.position);
-  const setAuthenticatedUserUsername = useUserStore(
-    (state) => state.setUsername
-  );
 
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -87,26 +92,6 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     setMessage(message + unified_emoji);
   };
 
-  const handleLogin = async () => {
-    const res = await RCInstance.googleSSOLogin(signIn);
-    if (res.status === 'success') {
-      setUserAvatarUrl(res.me.avatarUrl);
-      setAuthenticatedUserUsername(res.me.username);
-      setIsUserAuthenticated(true);
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Successfully logged in',
-        position: toastPosition,
-      });
-    } else {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Something wrong happened',
-        position: toastPosition,
-      });
-    }
-  };
-
   const sendAttachment = async (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
@@ -122,59 +107,62 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   }, [editMessage]);
 
   return (
-    <Box className={styles.container} border="2px solid #ddd">
-      {isUserAuthenticated && (
-        <Popup
+    <>
+      <Box className={styles.container} border="2px solid #ddd">
+        {isUserAuthenticated && (
+          <Popup
+            disabled={!isUserAuthenticated}
+            trigger={<Icon name="emoji" size="x25" padding={6} />}
+            position="top left"
+          >
+            <EmojiPicker handleEmojiClick={handleEmojiClick} />
+          </Popup>
+        )}
+        <input
+          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           disabled={!isUserAuthenticated}
-          trigger={<Icon name="emoji" size="x25" padding={6} />}
-          position="top left"
-        >
-          <EmojiPicker handleEmojiClick={handleEmojiClick} />
-        </Popup>
-      )}
-      <input
-        placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-        disabled={!isUserAuthenticated}
-        value={message}
-        className={styles.textInput}
-        onChange={(e) => {
-          setMessage(e.target.value);
-        }}
-        onKeyDown={(e) => {
-          if (editMessage.msg && e.keyCode === 27) {
-            setMessage('');
-            setEditMessage({});
-          } else if (e.keyCode === 13) {
-            sendMessage();
-          }
-        }}
-      />
-      <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-      {isUserAuthenticated ? (
-        message ? (
-          <Icon
-            disabled={!isUserAuthenticated}
-            onClick={sendMessage}
-            name="send"
-            size="x25"
-            padding={6}
-          />
+          value={message}
+          className={styles.textInput}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (editMessage.msg && e.keyCode === 27) {
+              setMessage('');
+              setEditMessage({});
+            } else if (e.keyCode === 13) {
+              sendMessage();
+            }
+          }}
+        />
+        <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+        {isUserAuthenticated ? (
+          message ? (
+            <Icon
+              disabled={!isUserAuthenticated}
+              onClick={sendMessage}
+              name="send"
+              size="x25"
+              padding={6}
+            />
+          ) : (
+            <Icon
+              disabled={!isUserAuthenticated}
+              onClick={handleClickToOpenFiles}
+              name="plus"
+              size="x25"
+              padding={6}
+            />
+          )
         ) : (
-          <Icon
-            disabled={!isUserAuthenticated}
-            onClick={handleClickToOpenFiles}
-            name="plus"
-            size="x25"
-            padding={6}
-          />
-        )
-      ) : (
-        <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-          <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-          Sign In with Google
-        </Button>
-      )}
-    </Box>
+          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
+            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
+            Sign In with Google
+          </Button>
+        )}
+      </Box>
+      {/* <TotpForm /> */}
+    </>
   );
 };
 
