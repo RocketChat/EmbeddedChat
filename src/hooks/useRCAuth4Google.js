@@ -9,7 +9,9 @@ export const useRCAuth4Google = () => {
   const [userOrEmail, setUserOrEmail] = useState(null);
   const [method, setMethod] = useState(undefined);
 
-  const { signIn } = useGoogleLogin(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+  const { signIn, signOut } = useGoogleLogin(
+    process.env.REACT_APP_GOOGLE_CLIENT_ID
+  );
 
   const { RCInstance } = useContext(RCContext);
 
