@@ -29,7 +29,13 @@ const RoomMembers = ({ members }) => {
       >
         <Icon name="members" pi="x2" size="x24" />
         <Box>Members</Box>
-        <div className={classes.close} onClick={showChannelMembers}>
+        <div
+          className={classes.close}
+          onClick={showChannelMembers}
+          onKeyPress={showChannelMembers}
+          role="button"
+          tabIndex="0"
+        >
           x
         </div>
       </Box>
