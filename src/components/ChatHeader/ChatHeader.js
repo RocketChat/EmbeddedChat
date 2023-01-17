@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
-import { useToastStore, useUserStore, useMessageStore } from '../../store';
+import {
+  useToastStore,
+  useUserStore,
+  useMessageStore,
+  useMemberStore,
+} from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 
 const ChatHeader = ({
@@ -45,6 +50,10 @@ const ChatHeader = ({
   const toastPosition = useToastStore((state) => state.position);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
+  const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
+  const showMembersHandler = useMemberStore(
+    (state) => state.showMembersHandler
+  );
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
@@ -69,6 +78,12 @@ const ChatHeader = ({
     const { messages } = await RCInstance.getPinnedMessages();
     setMessages(messages);
     setFilter(true);
+  };
+
+  const showChannelMembers = async () => {
+    const { members } = await RCInstance.getChannelMembers();
+    setMembersHandler(members);
+    showMembersHandler(true);
   };
 
   useEffect(() => {
@@ -102,6 +117,15 @@ const ChatHeader = ({
           <Box alignItems="center" display="flex">
             <Icon mie="x4" name="thread" size="x16" />
             Threads
+          </Box>
+        ),
+      },
+      members: {
+        action: showChannelMembers,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="members" size="x16" />
+            Members
           </Box>
         ),
       },

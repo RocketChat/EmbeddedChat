@@ -18,10 +18,16 @@ import Cookies from 'js-cookie';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useToastStore, useUserStore } from '../../store';
+import {
+  useMessageStore,
+  useToastStore,
+  useUserStore,
+  useMemberStore,
+} from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
+import RoomMembers from '../RoomMembers/RoomMember';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -38,6 +44,9 @@ const MessageList = ({ messages, handleGoBack }) => {
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
+
+  const showMembers = useMemberStore((state) => state.showMembers);
+  const members = useMemberStore((state) => state.members);
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -218,6 +227,7 @@ const MessageList = ({ messages, handleGoBack }) => {
           </Button>
         </Box>
       )}
+      {showMembers && <RoomMembers members={members} />}
     </>
   );
 };
