@@ -11,7 +11,7 @@ const RoomMembers = ({ members }) => {
     (state) => state.showMembersHandler
   );
 
-  const showChannelMembers = async (event) => {
+  const showChannelMembers = async () => {
     showMembersHandler(false);
   };
   return (
