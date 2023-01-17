@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Icon } from '@rocket.chat/fuselage';
@@ -39,8 +38,8 @@ const RoomMembers = ({ members }) => {
           x
         </div>
       </Box>
-      {members.map((member, index) => (
-        <RoomMemberItem user={member} key={index} />
+      {members.map((member) => (
+        <RoomMemberItem user={member} key={member._id} />
       ))}
     </div>
   );
