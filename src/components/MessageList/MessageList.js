@@ -105,6 +105,19 @@ const MessageList = ({ messages, handleGoBack }) => {
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
+  const userActions = (type, msg) => {
+    switch (type) {
+      case 'ul':
+        return 'left the channel';
+      case 'uj':
+        return 'joined the channel';
+      case 'ru':
+        return `removed @${msg.msg}`;
+      case 'au':
+        return `added @${msg.msg}`;
+    }
+  };
+
   return (
     <>
       {messages &&
@@ -121,7 +134,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                       {format(new Date(msg.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   )}
-                  {msg.t === undefined ? (
+                  {!msg.t ? (
                     <>
                       <Message.Header>
                         <Message.Name>{msg.u?.name}</Message.Name>
@@ -167,58 +180,18 @@ const MessageList = ({ messages, handleGoBack }) => {
                       </MessageReactions>
                     </>
                   ) : (
-                    <>
-                      {msg.t === 'ul' && (
-                        <Message.Header>
-                          <Message.Name>@{msg.u.username} </Message.Name>
-                          <Message.Username style={{ marginLeft: '2px' }}>
-                            left the channel
-                          </Message.Username>
-                          <Message.Timestamp>
-                            {format(new Date(msg.ts), 'h:mm a')}
-                          </Message.Timestamp>
-                        </Message.Header>
-                      )}
-
-                      {msg.t === 'uj' && (
-                        <Message.Header>
-                          <Message.Name>@{msg.u.username} </Message.Name>
-                          <Message.Username style={{ marginLeft: '2px' }}>
-                            joined the channel
-                          </Message.Username>
-                          <Message.Timestamp>
-                            {format(new Date(msg.ts), 'h:mm a')}
-                          </Message.Timestamp>
-                        </Message.Header>
-                      )}
-
-                      {msg.t === 'ru' && (
-                        <Message.Header>
-                          <Message.Name>@{msg.u.username}</Message.Name>
-                          <Message.Username style={{ marginLeft: '2px' }}>
-                            removed @{msg.msg}
-                          </Message.Username>
-                          <Message.Timestamp>
-                            {format(new Date(msg.ts), 'h:mm a')}
-                          </Message.Timestamp>
-                        </Message.Header>
-                      )}
-
-                      {msg.t === 'au' && (
-                        <Message.Header>
-                          <Message.Name>@{msg.u.username}</Message.Name>
-                          <Message.Username style={{ marginLeft: '2px' }}>
-                            added @{msg.msg}
-                          </Message.Username>
-                          <Message.Timestamp>
-                            {format(new Date(msg.ts), 'h:mm a')}
-                          </Message.Timestamp>
-                        </Message.Header>
-                      )}
-                    </>
+                    <Message.Header>
+                      <Message.Name>@{msg.u.username} </Message.Name>
+                      <Message.Username style={{ marginLeft: '2px' }}>
+                        {userActions(msg.t, msg)}
+                      </Message.Username>
+                      <Message.Timestamp>
+                        {format(new Date(msg.ts), 'h:mm a')}
+                      </Message.Timestamp>
+                    </Message.Header>
                   )}
                 </Message.Container>
-                {msg.t === undefined ? (
+                {!msg.t ? (
                   <MessageToolbox.Wrapper>
                     <MessageToolbox>
                       <MessageToolbox.Item icon="thread" />
