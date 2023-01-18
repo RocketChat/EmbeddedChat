@@ -51,9 +51,7 @@ const ChatHeader = ({
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
-  const showMembersHandler = useMemberStore(
-    (state) => state.showMembersHandler
-  );
+  const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
@@ -83,7 +81,7 @@ const ChatHeader = ({
   const showChannelMembers = async () => {
     const { members } = await RCInstance.getChannelMembers();
     setMembersHandler(members);
-    showMembersHandler(true);
+    toggleShowMembers();
   };
 
   useEffect(() => {

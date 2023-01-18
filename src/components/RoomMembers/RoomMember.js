@@ -1,20 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
 
 const RoomMembers = ({ members }) => {
-  const showMembersHandler = useMemberStore(
-    (state) => state.showMembersHandler
-  );
+  const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
 
   const showChannelMembers = async () => {
-    showMembersHandler(false);
+    toggleShowMembers();
   };
   return (
-    <div className={classes.modal}>
+    <Box className={classes.modal} p="x16">
       <Box
         data-qa-id="RoomHeader-Members"
         display="flex"
@@ -28,20 +26,21 @@ const RoomMembers = ({ members }) => {
       >
         <Icon name="members" pi="x2" size="x24" />
         <Box>Members</Box>
-        <div
-          className={classes.close}
+        <ActionButton
           onClick={showChannelMembers}
-          onKeyPress={showChannelMembers}
-          role="button"
-          tabIndex="0"
+          ghost
+          display="inline"
+          square
+          small
+          className={classes.close}
         >
-          x
-        </div>
+          <Icon name="cross" size="x20" />
+        </ActionButton>
       </Box>
       {members.map((member) => (
         <RoomMemberItem user={member} key={member._id} />
       ))}
-    </div>
+    </Box>
   );
 };
 export default RoomMembers;
