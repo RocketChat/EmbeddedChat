@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
@@ -123,6 +122,8 @@ const MessageList = ({ messages, handleGoBack }) => {
         return `removed @${msg.msg}`;
       case 'au':
         return `added @${msg.msg}`;
+      case 'message_pinned':
+        return 'Pinned a message:';
       default:
         return '';
     }
@@ -190,15 +191,20 @@ const MessageList = ({ messages, handleGoBack }) => {
                       </MessageReactions>
                     </>
                   ) : (
-                    <Message.Header>
-                      <Message.Name>@{msg.u.username} </Message.Name>
-                      <Message.Username style={{ marginLeft: '2px' }}>
-                        {userActions(msg.t, msg)}
-                      </Message.Username>
-                      <Message.Timestamp>
-                        {format(new Date(msg.ts), 'h:mm a')}
-                      </Message.Timestamp>
-                    </Message.Header>
+                    <>
+                      <Message.Header>
+                        <Message.Name>@{msg.u.username} </Message.Name>
+                        <Message.Username style={{ marginLeft: '2px' }}>
+                          {userActions(msg.t, msg)}
+                        </Message.Username>
+                        <Message.Timestamp>
+                          {format(new Date(msg.ts), 'h:mm a')}
+                        </Message.Timestamp>
+                      </Message.Header>
+                      {msg.attachments && (
+                        <Attachments attachments={msg.attachments} />
+                      )}
+                    </>
                   )}
                 </Message.Container>
                 {!msg.t ? (

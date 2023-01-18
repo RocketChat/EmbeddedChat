@@ -17,7 +17,7 @@ const Attachment = ({ attachment }) => {
     return <ImageAttachment attachment={attachment} />;
   }
   if (attachment && attachment.text) {
-    return <PinnedAttachment />;
+    return <PinnedAttachment attachment={attachment} />;
   }
   return (
     <Box>
