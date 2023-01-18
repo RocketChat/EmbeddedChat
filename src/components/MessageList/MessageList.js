@@ -69,6 +69,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   };
 
   const handlePinMessage = async (message) => {
+    const isPinned = message.pinned;
     const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(message._id)
       : await RCInstance.pinMessage(message._id);
