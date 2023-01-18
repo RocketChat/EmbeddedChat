@@ -8,9 +8,6 @@ import { useMemberStore } from '../../store';
 const RoomMembers = ({ members }) => {
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
 
-  const showChannelMembers = async () => {
-    toggleShowMembers();
-  };
   return (
     <Box className={classes.modal} p="x16">
       <Box
@@ -27,7 +24,7 @@ const RoomMembers = ({ members }) => {
         <Icon name="members" pi="x2" size="x24" />
         <Box>Members</Box>
         <ActionButton
-          onClick={showChannelMembers}
+          onClick={toggleShowMembers}
           ghost
           display="inline"
           square
