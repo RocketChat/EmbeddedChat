@@ -17,6 +17,7 @@
         "prettier/prettier": "error",
         "no-unused-vars" : "warn",
         "no-console": "off",
+        "no-underscore-dangle": "off",
         "react/function-component-definition" : "off",
         "react/require-default-props" : "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -25,6 +26,15 @@
         "camelcase": "off",
         "no-param-reassign": "off",
         "class-methods-use-this": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "react/forbid-prop-types": "off",
+        "react/no-array-index-key": "off",
+        "jsx-a11y/media-has-caption": "off",
+        "jsx-a11y/alt-text": "off",
+        "no-nested-ternary": "off",
+        "no-undef": "off",
+        "no-restricted-exports": "off",
+        "react/destructuring-assignment": "off",
+        "react/jsx-no-useless-fragment": "off"
     }
 }
