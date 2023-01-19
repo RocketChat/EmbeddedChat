@@ -6,9 +6,7 @@ import { useToastStore, useUserStore } from '../store';
 
 export const useRCAuth4Google = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userOrEmail, setUserOrEmail] = useState(null);
   const [method, setMethod] = useState(undefined);
-
   const { signIn, signOut } = useGoogleLogin(
     process.env.REACT_APP_GOOGLE_CLIENT_ID
   );
@@ -29,7 +27,6 @@ export const useRCAuth4Google = () => {
     try {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
       if (res.error === 'totp-required') {
-        setUserOrEmail(res.details.emailOrUsername);
         setIsModalOpen(true);
         if (res.details.availableMethods.length > 1) {
           setMethod('totp');
@@ -71,18 +68,11 @@ export const useRCAuth4Google = () => {
     }
   };
 
-  const handleResend = async () => {
-    const res = await RCInstance.resend2FA(userOrEmail);
-    return res;
-  };
-
   return {
     handleLogin,
     handleLogout,
-    handleResend,
     isModalOpen,
     setIsModalOpen,
     method,
-    userOrEmail,
   };
 };
