@@ -83,29 +83,6 @@ export default class RocketChatInstance {
     }
   }
 
-  async resend2FA(emailOrUsername) {
-    try {
-      const response = await fetch(
-        `${this.host}/api/v1/users.2fa.sendEmailCode`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Auth-Token': null,
-            'X-User-Id': null,
-          },
-          mode: 'cors',
-          method: 'POST',
-          body: JSON.stringify({
-            emailOrUsername,
-          }),
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err.message);
-    }
-  }
-
   async logout() {
     try {
       const response = await fetch(`${this.host}/api/v1/logout`, {
