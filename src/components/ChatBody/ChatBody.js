@@ -18,10 +18,10 @@ const ChatBody = ({ height, anonymousMode }) => {
     (state) => state.isUserAuthenticated
   );
 
-  async function getMessages(anonymousMode) {
+  const getMessages = async (anonymousMode) => {
     const { messages } = await RCInstance.getMessages(anonymousMode);
     setMessages(messages);
-  }
+  };
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
@@ -30,7 +30,6 @@ const ChatBody = ({ height, anonymousMode }) => {
       getMessages(anonymousMode);
     }
     setFilter(false);
-    setMessages(messages);
   };
 
   useEffect(() => {
