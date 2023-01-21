@@ -41,7 +41,7 @@ const ChatBody = ({ height, anonymousMode }) => {
     }
 
     return () => RCInstance.close();
-  }, [isUserAuthenticated]);
+  }, [isUserAuthenticated, getMessages]);
 
   return (
     <Box
