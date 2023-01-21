@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { Box } from '@rocket.chat/fuselage';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
@@ -18,10 +18,10 @@ const ChatBody = ({ height, anonymousMode }) => {
     (state) => state.isUserAuthenticated
   );
 
-  const getMessages = async (anonymousMode) => {
+  const getMessages = useCallback(async (anonymousMode) => {
     const { messages } = await RCInstance.getMessages(anonymousMode);
     setMessages(messages);
-  };
+  }, []);
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
