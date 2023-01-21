@@ -126,7 +126,14 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       {isUserAuthenticated && (
         <Popup
           disabled={!isUserAuthenticated}
-          trigger={<Icon name="emoji" size="x25" padding={6} />}
+          trigger={
+            <Icon
+              style={{ cursor: 'pointer' }}
+              name="emoji"
+              size="x25"
+              padding={6}
+            />
+          }
           position="top left"
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
