@@ -126,7 +126,14 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       {isUserAuthenticated && (
         <Popup
           disabled={!isUserAuthenticated}
-          trigger={<Icon name="emoji" size="x25" padding={6} />}
+          trigger={
+            <Icon
+              className={styles.chatInputIconCursor}
+              name="emoji"
+              size="x25"
+              padding={6}
+            />
+          }
           position="top left"
         >
           <EmojiPicker handleEmojiClick={handleEmojiClick} />
@@ -153,6 +160,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       {isUserAuthenticated ? (
         message ? (
           <Icon
+            className={styles.chatInputIconCursor}
             disabled={!isUserAuthenticated}
             onClick={sendMessage}
             name="send"
@@ -161,6 +169,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           />
         ) : (
           <Icon
+            className={styles.chatInputIconCursor}
             disabled={!isUserAuthenticated}
             onClick={handleClickToOpenFiles}
             name="plus"
