@@ -5,8 +5,8 @@ import { useGoogleLogin } from './useGoogleLogin';
 import { useToastStore, useUserStore } from '../store';
 
 export const useRCAuth4Google = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [method, setMethod] = useState(undefined);
+  const [userOrEmail, setUserOrEmail] = useState(null);
+
   const { signIn, signOut } = useGoogleLogin(
     process.env.REACT_APP_GOOGLE_CLIENT_ID
   );
@@ -27,12 +27,7 @@ export const useRCAuth4Google = () => {
     try {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
       if (res.error === 'totp-required') {
-        setIsModalOpen(true);
-        if (res.details.availableMethods.length > 1) {
-          setMethod('totp');
-        } else {
-          setMethod(res.details.availableMethods[0]);
-        }
+        setUserOrEmail(res.details.emailOrUsername);
       }
       if (res.status === 'success') {
         setUserAvatarUrl(res.me.avatarUrl);
@@ -71,8 +66,6 @@ export const useRCAuth4Google = () => {
   return {
     handleLogin,
     handleLogout,
-    isModalOpen,
-    setIsModalOpen,
-    method,
+    userOrEmail,
   };
 };
