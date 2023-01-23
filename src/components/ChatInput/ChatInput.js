@@ -98,63 +98,59 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   }, [editMessage]);
 
   return (
-    <>
-      <Box className={styles.container} border="2px solid #ddd">
-        {isUserAuthenticated && (
-          <Popup
-            disabled={!isUserAuthenticated}
-            trigger={<Icon name="emoji" size="x25" padding={6} />}
-            position="top left"
-          >
-            <EmojiPicker handleEmojiClick={handleEmojiClick} />
-          </Popup>
-        )}
-        <input
-          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+    <Box className={styles.container} border="2px solid #ddd">
+      {isUserAuthenticated && (
+        <Popup
           disabled={!isUserAuthenticated}
-          value={message}
-          className={styles.textInput}
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (editMessage.msg && e.keyCode === 27) {
-              setMessage('');
-              setEditMessage({});
-            } else if (e.keyCode === 13) {
-              sendMessage();
-            }
-          }}
-        />
-        <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-        {isUserAuthenticated ? (
-          message ? (
-            <Icon
-              disabled={!isUserAuthenticated}
-              onClick={sendMessage}
-              name="send"
-              size="x25"
-              padding={6}
-            />
-          ) : (
-            <Icon
-              disabled={!isUserAuthenticated}
-              onClick={handleClickToOpenFiles}
-              name="plus"
-              size="x25"
-              padding={6}
-            />
-          )
+          trigger={<Icon name="emoji" size="x25" padding={6} />}
+          position="top left"
+        >
+          <EmojiPicker handleEmojiClick={handleEmojiClick} />
+        </Popup>
+      )}
+      <input
+        placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+        disabled={!isUserAuthenticated}
+        value={message}
+        className={styles.textInput}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (editMessage.msg && e.keyCode === 27) {
+            setMessage('');
+            setEditMessage({});
+          } else if (e.keyCode === 13) {
+            sendMessage();
+          }
+        }}
+      />
+      <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+      {isUserAuthenticated ? (
+        message ? (
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={sendMessage}
+            name="send"
+            size="x25"
+            padding={6}
+          />
         ) : (
-          <>
-            <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-              <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-              Sign In with Google
-            </Button>
-          </>
-        )}
-      </Box>
-    </>
+          <Icon
+            disabled={!isUserAuthenticated}
+            onClick={handleClickToOpenFiles}
+            name="plus"
+            size="x25"
+            padding={6}
+          />
+        )
+      ) : (
+        <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
+          <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
+          Sign In with Google
+        </Button>
+      )}
+    </Box>
   );
 };
 
