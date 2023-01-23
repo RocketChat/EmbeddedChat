@@ -9,15 +9,12 @@ import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
-import TwoFactorTotpModal from '../UI/TwoFactorTotpModal';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [message, setMessage] = useState('');
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
-
-  const { handleLogin, isModalOpen, setIsModalOpen, method } =
-    useRCAuth4Google();
+  const { handleLogin } = useRCAuth4Google();
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -154,12 +151,6 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
               <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
               Sign In with Google
             </Button>
-            <TwoFactorTotpModal
-              handleLogin={handleLogin}
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-              Method={method}
-            />
           </>
         )}
       </Box>
