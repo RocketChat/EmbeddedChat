@@ -11,6 +11,7 @@ import {
   useMemberStore,
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
+import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
 const ChatHeader = ({
   isClosable,
@@ -46,26 +47,13 @@ const ChatHeader = ({
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
-
   const toastPosition = useToastStore((state) => state.position);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
 
-  const handleLogout = async () => {
-    const res = await RCInstance.logout();
-    if (res.status === 'success') {
-      setIsUserAuthenticated(false);
-      setUserAvatarUrl('');
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Successfully logged out',
-        position: toastPosition,
-      });
-    }
-  };
-
+  const { handleLogout } = useRCAuth4Google();
   const showStarredMessage = async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);
