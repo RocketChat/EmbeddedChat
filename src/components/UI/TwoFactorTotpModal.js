@@ -25,7 +25,7 @@ export default function TotpModal({ handleLogin }) {
       textAlign="center"
       position="absolute"
       display="inline-block"
-      pi="x800"
+      pi="x500"
     >
       <Tile elevation="2" margin={25}>
         <form onSubmit={handleSubmit}>
