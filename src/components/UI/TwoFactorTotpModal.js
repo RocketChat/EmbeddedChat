@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Button, PasswordInput, Box, Tile } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useUserStore } from '../../store';
 
 export default function TotpModal({ handleLogin }) {
@@ -38,3 +39,7 @@ export default function TotpModal({ handleLogin }) {
     </Box>
   ) : null;
 }
+
+TotpModal.prototype = {
+  handleLogin: PropTypes.func,
+};
