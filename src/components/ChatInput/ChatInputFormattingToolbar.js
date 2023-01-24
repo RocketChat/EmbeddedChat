@@ -58,6 +58,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           disabled={!isUserAuthenticated}
           trigger={
             <Icon
+              borderInlineEnd="1px solid #989393"
               className={styles.chatInputIconCursor}
               name="emoji"
               size="x20"

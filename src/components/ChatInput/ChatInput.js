@@ -1,5 +1,5 @@
-import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { useContext, useRef, useEffect } from 'react';
+import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
@@ -13,6 +13,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
   const messageRef = useRef();
+  const [disableButton, setDisableButton] = useState(true);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -55,6 +56,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
         });
       }
       messageRef.current.value = '';
+      setDisableButton(true);
     } else {
       const res = await RCInstance.updateMessage(editMessage.id, message);
       if (!res.success) {
@@ -67,6 +69,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
         });
       }
       messageRef.current.value = '';
+      setDisableButton(true);
       setEditMessage({});
     }
   };
@@ -114,10 +117,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           className={styles.textInput}
           onChange={(e) => {
             messageRef.current.value = e.target.value;
+            setDisableButton(!messageRef.current.value.length);
           }}
           onKeyDown={(e) => {
             if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
+              setDisableButton(true);
               setEditMessage({});
             } else if (e.keyCode === 13) {
               sendMessage();
@@ -127,14 +132,15 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
         />
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
-          <Icon
-            className={styles.chatInputIconCursor}
-            disabled={!isUserAuthenticated}
-            onClick={sendMessage}
-            name="send"
-            size="x25"
-            padding={6}
-          />
+          <ActionButton bg="surface" border="0px" disabled={disableButton}>
+            <Icon
+              className={styles.chatInputIconCursor}
+              onClick={sendMessage}
+              name="send"
+              size="x25"
+              padding={6}
+            />
+          </ActionButton>
         ) : (
           <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
             <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
