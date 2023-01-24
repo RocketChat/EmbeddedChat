@@ -1,11 +1,8 @@
 import { Box, Button, Icon } from '@rocket.chat/fuselage';
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Popup from 'reactjs-popup';
-import he from 'he';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
-import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
@@ -21,10 +18,6 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
-
-  const handleClickToOpenFiles = () => {
-    inputRef.current.click();
-  };
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -134,25 +127,14 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
         />
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
-          !messageRef.current.value ? (
-            <Icon
-              className={styles.chatInputIconCursor}
-              disabled={!isUserAuthenticated}
-              onClick={sendMessage}
-              name="send"
-              size="x25"
-              padding={6}
-            />
-          ) : (
-            <Icon
-              className={styles.chatInputIconCursor}
-              disabled={!isUserAuthenticated}
-              onClick={handleClickToOpenFiles}
-              name="plus"
-              size="x25"
-              padding={6}
-            />
-          )
+          <Icon
+            className={styles.chatInputIconCursor}
+            disabled={!isUserAuthenticated}
+            onClick={sendMessage}
+            name="send"
+            size="x25"
+            padding={6}
+          />
         ) : (
           <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
             <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
@@ -160,7 +142,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           </Button>
         )}
       </Box>
-      <ChatInputFormattingToolbar messageRef={messageRef} />
+      <ChatInputFormattingToolbar messageRef={messageRef} inputRef={inputRef} />
     </Box>
   );
 };

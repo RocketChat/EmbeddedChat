@@ -2,15 +2,20 @@
 import React from 'react';
 import Popup from 'reactjs-popup';
 import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
+import he from 'he';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useUserStore } from '../../store';
 import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
 
-const ChatInputFormattingToolbar = ({ messageRef }) => {
+const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+
+  const handleClickToOpenFiles = () => {
+    inputRef.current.click();
+  };
 
   const handleEmojiClick = (n) => {
     if (n.length > 5) {
@@ -76,6 +81,14 @@ const ChatInputFormattingToolbar = ({ messageRef }) => {
           <Icon name={item.name} size="x20" />
         </ActionButton>
       ))}
+      <Icon
+        className={styles.chatInputIconCursor}
+        disabled={!isUserAuthenticated}
+        name="plus"
+        size="x20"
+        padding={6}
+        onClick={handleClickToOpenFiles}
+      />
     </Box>
   );
 };
