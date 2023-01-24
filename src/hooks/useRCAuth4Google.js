@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../context/RCInstance';
 import { useGoogleLogin } from './useGoogleLogin';
-import { useToastStore, useUserStore } from '../store';
+import { useToastStore, useUserStore, useTotpStore } from '../store';
 
 export const useRCAuth4Google = () => {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -13,6 +13,7 @@ export const useRCAuth4Google = () => {
 
   const { RCInstance } = useContext(RCContext);
 
+  const SetisModalOpen = useTotpStore((state) => state.SetisModalOpen);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
@@ -28,11 +29,13 @@ export const useRCAuth4Google = () => {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
       if (res.error === 'totp-required') {
         setUserOrEmail(res.details.emailOrUsername);
+        SetisModalOpen(true);
       }
       if (res.status === 'success') {
         setUserAvatarUrl(res.me.avatarUrl);
         setAuthenticatedUserUsername(res.me.username);
         setIsUserAuthenticated(true);
+        SetisModalOpen(false);
         dispatchToastMessage({
           type: 'success',
           message: 'Successfully logged in',
