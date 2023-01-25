@@ -15,7 +15,6 @@ import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
 import { EmojiPicker } from '../EmojiPicker/index';
-import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
@@ -27,6 +26,7 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
+import Markup from '../Markup/Markup';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -162,7 +162,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                         {msg.attachments && msg.attachments.length > 0 ? (
                           <Attachments attachments={msg.attachments} />
                         ) : (
-                          <Markdown body={msg.msg} />
+                          <Markup tokens={msg.md} />
                         )}
                       </Message.Body>
                       <MessageReactions>
@@ -185,7 +185,6 @@ const MessageList = ({ messages, handleGoBack }) => {
                                 )
                               }
                             >
-                              <Markdown body={reaction.name} />
                               <p>{reaction.count}</p>
                             </MessageReactions.Reaction>
                           ))}

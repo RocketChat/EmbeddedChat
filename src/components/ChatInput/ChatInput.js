@@ -36,6 +36,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const sendMessage = async () => {
+    messageRef.current.style.height = '38px';
     const message = messageRef.current.value;
     if (!message.length || !isUserAuthenticated) {
       if (editMessage.msg) {
@@ -111,13 +112,17 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
-        <input
+        <textarea
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           disabled={!isUserAuthenticated}
           className={styles.textInput}
           onChange={(e) => {
             messageRef.current.value = e.target.value;
             setDisableButton(!messageRef.current.value.length);
+            e.target.style.height = 'auto';
+            if (e.target.scrollHeight <= 150)
+              e.target.style.height = `${e.target.scrollHeight - 10}px`;
+            else e.target.style.height = '129px';
           }}
           onKeyDown={(e) => {
             if (editMessage.msg && e.keyCode === 27) {
@@ -125,6 +130,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
               setDisableButton(true);
               setEditMessage({});
             } else if (e.keyCode === 13) {
+              e.target.style.height = '38px';
               sendMessage();
             }
           }}
@@ -148,7 +154,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           </Button>
         )}
       </Box>
-      <ChatInputFormattingToolbar messageRef={messageRef} inputRef={inputRef} />
+      {isUserAuthenticated && (
+        <ChatInputFormattingToolbar
+          messageRef={messageRef}
+          inputRef={inputRef}
+        />
+      )}
     </Box>
   );
 };

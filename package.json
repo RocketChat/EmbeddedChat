@@ -76,6 +76,7 @@
     "@rocket.chat/fuselage-polyfills": "^0.31.12",
     "@rocket.chat/fuselage-toastbar": "^0.31.14",
     "@rocket.chat/icons": "^0.31.12",
+    "@rocket.chat/message-parser": "^0.31.22",
     "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rollup/plugin-json": "^4.1.0",
     "color": "^4.2.3",
