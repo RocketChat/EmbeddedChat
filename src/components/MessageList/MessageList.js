@@ -26,7 +26,7 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
-import Markup from '../Markup/Markup';
+import { Markdown } from '../Markdown';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -162,7 +162,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                         {msg.attachments && msg.attachments.length > 0 ? (
                           <Attachments attachments={msg.attachments} />
                         ) : (
-                          <Markup tokens={msg.md} />
+                          <Markdown body={msg} />
                         )}
                       </Message.Body>
                       <MessageReactions>
@@ -185,6 +185,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                                 )
                               }
                             >
+                              <Markdown body={reaction.name} />
                               <p>{reaction.count}</p>
                             </MessageReactions.Reaction>
                           ))}
