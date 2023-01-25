@@ -20,6 +20,10 @@ export default class RocketChatInstance {
     };
   }
 
+  getHost() {
+    return this.host;
+  }
+
   setCookies(cookies) {
     Cookies.set(RC_USER_TOKEN_COOKIE, cookies.rc_token || '');
     Cookies.set(RC_USER_ID_COOKIE, cookies.rc_uid || '');
