@@ -1,18 +1,17 @@
 .copyonly {
-	display: none;
+  display: none;
 
-	width: 100%;
-	height: 0;
+  width: 100%;
+  height: 0;
 
-	user-select: none;
-	vertical-align: baseline;
+  user-select: none;
+  vertical-align: baseline;
 
-	font-size: 0;
-	-moz-box-orient: vertical;
-
+  font-size: 0;
+  -moz-box-orient: vertical;
 }
 
 .prestyle {
-	display: inline-block;
-	width: 100%;
+  display: inline-block;
+  width: 100%;
 }
