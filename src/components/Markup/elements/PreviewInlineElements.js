@@ -4,6 +4,7 @@ import ItalicSpan from './ItalicSpan';
 import StrikeSpan from './StrikeSpan';
 import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
+import Emoji from './Emoji';
 
 const PreviewInlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -22,6 +23,9 @@ const PreviewInlineElements = ({ contents }) =>
 
       case 'INLINE_CODE':
         return <CodeElement key={index} contents={content.value} />;
+
+      case 'EMOJI':
+        return <Emoji key={index} emoji={content} />;
 
       default:
         return null;
