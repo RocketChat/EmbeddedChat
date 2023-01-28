@@ -6,11 +6,13 @@ import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
+import TotpModal from '../UI/TwoFactorTotpModal';
+import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
 const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
-
+  const { handleLogin } = useRCAuth4Google();
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
 
@@ -53,6 +55,7 @@ const ChatBody = ({ height, anonymousMode }) => {
       height={height}
     >
       <MessageList messages={messages} handleGoBack={handleGoBack} />
+      <TotpModal handleLogin={handleLogin} />
     </Box>
   );
 };

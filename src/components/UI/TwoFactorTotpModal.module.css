@@ -1,9 +1,8 @@
-
-.modalcontainer{
-    position: fixed;
-    z-index: 2;
-    top: 40%;
-    left: 40%;
-    transform: translate(-50%,-50%);
-    max-width: 30rem;
+.modalcontainer {
+  position: fixed;
+  z-index: 2;
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  max-width: 30rem;
 }
