@@ -27,8 +27,6 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
-// import TotpModal from '../UI/TwoFactorTotpModal';
-// import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -276,7 +274,6 @@ const MessageList = ({ messages, handleGoBack }) => {
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
-      {/* <TotpModal handleLogin={handleLogin} /> */}
     </>
   );
 };
