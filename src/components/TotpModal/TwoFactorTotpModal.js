@@ -43,7 +43,7 @@ export default function TotpModal({ handleLogin }) {
                 w="125px"
                 fontScale="h4"
                 onChange={handleEdit}
-                placeholder="123 456"
+                placeholder="123456"
               />
               <Box className={styles.actionButton}>
                 <Button margin="5px" onClick={handleSubmit} primary>

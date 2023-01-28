@@ -6,7 +6,7 @@
   transform: translate(-50%, -50%);
 }
 
-.actionButton{
+.actionButton {
   display: flex;
   column-gap: 20px;
   align-items: flex-start;
