@@ -29,18 +29,14 @@ const isMessageSequential = (current, previous, groupingRange) => {
     return false;
   }
 
-  console.log(
-    differenceInSeconds(new Date(current.ts), new Date(previous.ts)),
-    current.msg,
-    previous.msg
-  );
-
-  return (
+  const isTimeDiffSmall =
     differenceInSeconds(new Date(current.ts), new Date(previous.ts)) <
-      groupingRange &&
-    previous &&
-    isSameDay(new Date(current.ts), new Date(previous.ts))
-  );
+    groupingRange;
+
+  const isMessageNewDay =
+    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
+  return isTimeDiffSmall && !isMessageNewDay;
 };
 
 export default isMessageSequential;
