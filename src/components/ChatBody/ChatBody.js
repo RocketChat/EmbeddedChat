@@ -6,7 +6,7 @@ import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
-import TotpModal from '../UI/TwoFactorTotpModal';
+import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
 const ChatBody = ({ height, anonymousMode }) => {

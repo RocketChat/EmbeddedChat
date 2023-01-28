@@ -1,0 +1,14 @@
+.modalcontainer {
+  position: fixed;
+  z-index: 2;
+  top: 30%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.actionButton{
+  display: flex;
+  column-gap: 20px;
+  align-items: flex-start;
+  margin: 20px;
+}
