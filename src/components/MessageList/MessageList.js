@@ -27,6 +27,8 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
+import classes from '../RoomMembers/RoomMember.module.css';
+import MessageReportWindow from '../MessageReporter/MessageReportWindow';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -66,6 +68,10 @@ const MessageList = ({ messages, handleGoBack }) => {
         position: toastPosition,
       });
     }
+  };
+
+  const handleReportMessage = async (message) => {
+    console.log('Report Message Clicked!');
   };
 
   const handlePinMessage = async (message) => {
@@ -255,6 +261,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                           />
                         </>
                       )}
+                      <MessageToolbox.Item
+                        icon="report"
+                        color="danger"
+                        onClick={() => handleReportMessage(msg)}
+                      />
                     </MessageToolbox>
                   </MessageToolbox.Wrapper>
                 ) : (
@@ -273,6 +284,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
+      {true && <MessageReportWindow />}
     </>
   );
 };
