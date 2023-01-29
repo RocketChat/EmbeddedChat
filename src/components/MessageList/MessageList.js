@@ -27,7 +27,6 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
-import classes from '../RoomMembers/RoomMember.module.css';
 import MessageReportWindow from '../MessageReporter/MessageReportWindow';
 
 const MessageList = ({ messages, handleGoBack }) => {
@@ -49,6 +48,15 @@ const MessageList = ({ messages, handleGoBack }) => {
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
 
+  const showReportMessage = useMessageStore((state) => state.showReportMessage);
+
+  const [messageToReport, setMessageToReport, toggletoggleShowReportMessage] =
+    useMessageStore((state) => [
+      state.messageToReport,
+      state.setMessageToReport,
+      state.toggleShowReportMessage,
+    ]);
+
   const handleStarMessage = async (message) => {
     const isStarred =
       message.starred &&
@@ -68,10 +76,6 @@ const MessageList = ({ messages, handleGoBack }) => {
         position: toastPosition,
       });
     }
-  };
-
-  const handleReportMessage = async (message) => {
-    console.log('Report Message Clicked!');
   };
 
   const handlePinMessage = async (message) => {
@@ -135,6 +139,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         return '';
     }
   };
+  console.log(messageToReport);
 
   return (
     <>
@@ -142,7 +147,6 @@ const MessageList = ({ messages, handleGoBack }) => {
         messages.map((msg, index, arr) => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
-
           return (
             (msg.msg || msg.attachments.length) && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
@@ -264,7 +268,10 @@ const MessageList = ({ messages, handleGoBack }) => {
                       <MessageToolbox.Item
                         icon="report"
                         color="danger"
-                        onClick={() => handleReportMessage(msg)}
+                        onClick={() => {
+                          setMessageToReport(msg._id);
+                          toggletoggleShowReportMessage();
+                        }}
                       />
                     </MessageToolbox>
                   </MessageToolbox.Wrapper>
@@ -278,13 +285,13 @@ const MessageList = ({ messages, handleGoBack }) => {
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
-            <Icon mie="x4" name="back" size="x20" />
+            <Icon mie="x4" name="back" size="x20" color="danger" />
             <p style={{ display: 'inline' }}>Go Back</p>
           </Button>
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
-      {true && <MessageReportWindow />}
+      {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
     </>
   );
 };

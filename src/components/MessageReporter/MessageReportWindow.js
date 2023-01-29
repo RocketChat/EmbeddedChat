@@ -1,22 +1,37 @@
 import React from 'react';
-import { ModalBackdrop } from '@rocket.chat/fuselage';
-import GenericModal from './GenericModal';
-// eslint-disable-next-line arrow-body-style
-const MessageReportWindow = () => {
+import { ModalBackdrop, TextAreaInput, Box } from '@rocket.chat/fuselage';
+import PropTypes from 'prop-types';
+import ReportBox from './ReportBox';
+import classes from './MessageReporter.module.css';
+import { useMessageStore } from '../../store';
+
+const MessageReportWindow = ({ messageId }) => {
+  const messages = useMessageStore((state) => state.messages);
+
+  const messageText = messages.filter((message) => message._id === messageId)[0]
+    ?.msg;
   return (
     <ModalBackdrop>
-      <GenericModal
+      <ReportBox
         variant="danger"
         title="Report_this_message_question_mark"
-        onClose={NaN}
-        onCancel={NaN}
         onConfirm={NaN}
         confirmText="Report_exclamation_mark"
       >
-        Heyy
-      </GenericModal>
+        <Box>
+          <Box>{JSON.stringify(messageText)}</Box>
+          <TextAreaInput
+            className={classes.textArea}
+            TextAreaInput
+            placeholder="Why do you want to report this message?"
+          />
+        </Box>
+      </ReportBox>
     </ModalBackdrop>
   );
 };
 
 export default MessageReportWindow;
+MessageReportWindow.propTypes = {
+  messageId: PropTypes.string.isRequired,
+};
