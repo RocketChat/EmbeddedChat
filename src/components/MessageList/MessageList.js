@@ -27,6 +27,8 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
+import MessageHeader from './MessageHeader';
+import isMessageSequential from '../../lib/isMessageSequential';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -113,37 +115,19 @@ const MessageList = ({ messages, handleGoBack }) => {
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
-  const userActions = (type, msg) => {
-    switch (type) {
-      case 'ul':
-        return 'left the channel';
-      case 'uj':
-        return 'joined the channel';
-      case 'ru':
-        return `removed @${msg.msg}`;
-      case 'au':
-        return `added @${msg.msg}`;
-      case 'message_pinned':
-        return 'Pinned a message:';
-      case 'rm':
-        return 'message removed';
-      default:
-        return '';
-    }
-  };
-
   return (
     <>
       {messages &&
         messages.map((msg, index, arr) => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
-          const next = arr[index-1];
-          
-          if(next && !next.msg)
-            return <></>
+          const sequential = isMessageSequential(msg, prev, 300);
+
+          const next = arr[index - 1];
+
+          if (next && !next.msg) return <></>;
           return (
-            (msg) && (
+            msg && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
                   {newDay && (
@@ -151,18 +135,9 @@ const MessageList = ({ messages, handleGoBack }) => {
                       {format(new Date(msg.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   )}
+                  {!sequential && <MessageHeader msg={msg} />}
                   {!msg.t ? (
                     <>
-                      <Message.Header>
-                        <Message.Name>{msg.u?.name}</Message.Name>
-                        <Message.Username>@{msg.u.username}</Message.Username>
-                        <Message.Timestamp>
-                          {format(new Date(msg.ts), 'h:mm a')}
-                        </Message.Timestamp>
-                        {msg.editedAt && (
-                          <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
-                        )}
-                      </Message.Header>
                       <Message.Body>
                         {msg.attachments && msg.attachments.length > 0 ? (
                           <Attachments attachments={msg.attachments} />
@@ -198,15 +173,6 @@ const MessageList = ({ messages, handleGoBack }) => {
                     </>
                   ) : (
                     <>
-                      <Message.Header>
-                        <Message.Name>@{msg.u.username} </Message.Name>
-                        <Message.Username style={{ marginLeft: '2px' }}>
-                          {userActions(msg.t, msg)}
-                        </Message.Username>
-                        <Message.Timestamp>
-                          {format(new Date(msg.ts), 'h:mm a')}
-                        </Message.Timestamp>
-                      </Message.Header>
                       {msg.attachments && (
                         <Attachments attachments={msg.attachments} />
                       )}
