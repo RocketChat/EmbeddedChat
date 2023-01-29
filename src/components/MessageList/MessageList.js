@@ -125,6 +125,8 @@ const MessageList = ({ messages, handleGoBack }) => {
         return `added @${msg.msg}`;
       case 'message_pinned':
         return 'Pinned a message:';
+      case 'rm':
+        return 'message removed';
       default:
         return '';
     }
@@ -136,9 +138,12 @@ const MessageList = ({ messages, handleGoBack }) => {
         messages.map((msg, index, arr) => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
-
+          const next = arr[index-1];
+          
+          if(next && !next.msg)
+            return <></>
           return (
-            (msg.msg || msg.attachments.length) && (
+            (msg) && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
                 <Message.Container>
                   {newDay && (
