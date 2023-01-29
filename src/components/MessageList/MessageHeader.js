@@ -16,6 +16,8 @@ const MessageHeader = ({ msg }) => {
         return `added @${msg.msg}`;
       case 'message_pinned':
         return 'Pinned a message:';
+      case 'rm':
+        return 'message removed';
       default:
         return '';
     }
