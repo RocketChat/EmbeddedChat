@@ -9,6 +9,7 @@ import {
   MessageReactions,
   MessageToolbox,
   MessageDivider,
+  Avatar,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
@@ -48,6 +49,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
+  const showAvatar = useUserStore((state) => state.showAvatar);
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -115,6 +117,12 @@ const MessageList = ({ messages, handleGoBack }) => {
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
+  const getUserAvatarUrl = (username) => {
+    const host = RCInstance.getHost();
+    const URL = `${host}/avatar/${username}`;
+    return URL;
+  };
+
   return (
     <>
       {messages &&
@@ -135,49 +143,65 @@ const MessageList = ({ messages, handleGoBack }) => {
                       {format(new Date(msg.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   )}
-                  {!sequential && <MessageHeader msg={msg} />}
-                  {!msg.t ? (
-                    <>
-                      <Message.Body>
-                        {msg.attachments && msg.attachments.length > 0 ? (
-                          <Attachments attachments={msg.attachments} />
-                        ) : (
-                          <Markdown body={msg.msg} />
-                        )}
-                      </Message.Body>
-                      <MessageReactions>
-                        {msg.reactions &&
-                          serializeReactions(msg.reactions).map((reaction) => (
-                            <MessageReactions.Reaction
-                              key={reaction.name}
-                              mine={isSameUser(
-                                reaction,
-                                authenticatedUserUsername
-                              )}
-                              onClick={() =>
-                                handleEmojiClick(
-                                  reaction,
-                                  msg,
-                                  !isSameUser(
-                                    reaction,
-                                    authenticatedUserUsername
-                                  )
+                  <Box display="flex">
+                    {showAvatar && (
+                      <Box margin="3px">
+                        <Avatar
+                          url={getUserAvatarUrl(msg.u.username)}
+                          size="x36"
+                          alt="avatar"
+                        />
+                      </Box>
+                    )}
+                    <Box margin="5px">
+                      {!sequential && <MessageHeader msg={msg} />}
+                      {!msg.t ? (
+                        <>
+                          <Message.Body>
+                            {msg.attachments && msg.attachments.length > 0 ? (
+                              <Attachments attachments={msg.attachments} />
+                            ) : (
+                              <Markdown body={msg.msg} />
+                            )}
+                          </Message.Body>
+
+                          <MessageReactions>
+                            {msg.reactions &&
+                              serializeReactions(msg.reactions).map(
+                                (reaction) => (
+                                  <MessageReactions.Reaction
+                                    key={reaction.name}
+                                    mine={isSameUser(
+                                      reaction,
+                                      authenticatedUserUsername
+                                    )}
+                                    onClick={() =>
+                                      handleEmojiClick(
+                                        reaction,
+                                        msg,
+                                        !isSameUser(
+                                          reaction,
+                                          authenticatedUserUsername
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <Markdown body={reaction.name} />
+                                    <p>{reaction.count}</p>
+                                  </MessageReactions.Reaction>
                                 )
-                              }
-                            >
-                              <Markdown body={reaction.name} />
-                              <p>{reaction.count}</p>
-                            </MessageReactions.Reaction>
-                          ))}
-                      </MessageReactions>
-                    </>
-                  ) : (
-                    <>
-                      {msg.attachments && (
-                        <Attachments attachments={msg.attachments} />
+                              )}
+                          </MessageReactions>
+                        </>
+                      ) : (
+                        <>
+                          {msg.attachments && (
+                            <Attachments attachments={msg.attachments} />
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
+                    </Box>
+                  </Box>
                 </Message.Container>
                 {!msg.t ? (
                   <MessageToolbox.Wrapper>
