@@ -9,5 +9,10 @@
 
 .textArea {
   width: 100%;
-  padding: 0.5rem 0.9rem
+  padding: 0.5rem 0.9rem;
+}
+
+.reportWindowFooter {
+  display: flex;
+  justify-content: space-around;
 }

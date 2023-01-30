@@ -27,7 +27,7 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
-import MessageReportWindow from '../MessageReporter/MessageReportWindow';
+import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -139,7 +139,6 @@ const MessageList = ({ messages, handleGoBack }) => {
         return '';
     }
   };
-  console.log(messageToReport);
 
   return (
     <>

@@ -393,6 +393,23 @@ export default class RocketChatInstance {
     }
   }
 
+  async reportMessage(messageId, description) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.reportMessage`, {
+        body: `{"messageId": "${messageId}", "description": "${description}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   async sendAttachment(e) {
     try {
       const form = new FormData();
