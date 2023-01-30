@@ -27,35 +27,25 @@ export default function TotpModal({ handleLogin }) {
   return isModalOpen ? (
     <>
       <Box className={styles.modalcontainer}>
-        <Box
-          zIndex="2"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          position="absolute"
-          margin="x50"
-          p="x50"
-        >
-          <Tile elevation="2" margin={25}>
-            <form onSubmit={handleSubmit}>
-              <Box>Enter TOTP</Box>
-              <PasswordInput
-                w="125px"
-                fontScale="h4"
-                onChange={handleEdit}
-                placeholder="123456"
-              />
-              <Box className={styles.actionButton}>
-                <Button margin="5px" onClick={handleSubmit} primary>
-                  Submit
-                </Button>
-                <Button margin="5px" onClick={handleClose}>
-                  Close
-                </Button>
-              </Box>
-            </form>
-          </Tile>
-        </Box>
+        <Tile elevation="2" margin={25}>
+          <form onSubmit={handleSubmit}>
+            <Box>Enter TOTP</Box>
+            <PasswordInput
+              w="125px"
+              fontScale="h4"
+              onChange={handleEdit}
+              placeholder="123456"
+            />
+            <Box className={styles.actionButton}>
+              <Button margin="5px 1px 1px" onClick={handleSubmit} primary>
+                Submit
+              </Button>
+              <Button margin="5px 1px 1px 10px" onClick={handleClose}>
+                Close
+              </Button>
+            </Box>
+          </form>
+        </Tile>
       </Box>
     </>
   ) : null;
