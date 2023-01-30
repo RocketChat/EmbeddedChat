@@ -27,26 +27,42 @@ export const useRCAuth4Google = () => {
   const handleLogin = async (acsCode) => {
     try {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
-      if (res.error === 'totp-required') {
-        setUserOrEmail(res.details.emailOrUsername);
-        SetisModalOpen(true);
-      }
-      if (res.status === 'success') {
-        setUserAvatarUrl(res.me.avatarUrl);
-        setAuthenticatedUserUsername(res.me.username);
-        setIsUserAuthenticated(true);
-        SetisModalOpen(false);
+
+      if (res === undefined) {
         dispatchToastMessage({
-          type: 'success',
-          message: 'Successfully logged in',
+          type: 'error',
+          message:
+            'Something went wrong. Please check your TOTP and try again.',
           position: toastPosition,
         });
       } else {
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Something wrong happened',
-          position: toastPosition,
-        });
+        if (res.error === 'totp-required') {
+          setUserOrEmail(res.details.emailOrUsername);
+          SetisModalOpen(true);
+          dispatchToastMessage({
+            type: 'info',
+            message: 'Please Open your authentication app and enter the code.',
+            position: toastPosition,
+          });
+        }
+
+        if (res.status === 'success') {
+          setUserAvatarUrl(res.me.avatarUrl);
+          setAuthenticatedUserUsername(res.me.username);
+          setIsUserAuthenticated(true);
+          SetisModalOpen(false);
+          dispatchToastMessage({
+            type: 'success',
+            message: 'Successfully logged in',
+            position: toastPosition,
+          });
+        } else if (res.status === 'error' && !(res.error === 'totp-required')) {
+          dispatchToastMessage({
+            type: 'error',
+            message: 'Something wrong happened',
+            position: toastPosition,
+          });
+        }
       }
     } catch (e) {
       console.error('A error occurred while setting up user', e);
