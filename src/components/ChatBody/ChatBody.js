@@ -9,13 +9,13 @@ import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
-const ChatBody = ({ height, anonymousMode }) => {
+const ChatBody = ({ height, anonymousMode, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
-  const { handleLogin } = useRCAuth4Google();
+  const { handleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -65,4 +65,5 @@ export default ChatBody;
 ChatBody.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
+  GOOGLE_CLIENT_ID: PropTypes.string,
 };

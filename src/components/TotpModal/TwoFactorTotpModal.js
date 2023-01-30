@@ -1,16 +1,13 @@
 import { Button, PasswordInput, Box, Tile, Flex } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useUserStore, useTotpStore } from '../../store';
+import { totpModalStore } from '../../store';
 import styles from './TwoFactorTotpModal.module.css';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const isModalOpen = useTotpStore((state) => state.isModalOpen);
-  const SetisModalOpen = useTotpStore((state) => state.SetisModalOpen);
+  const isModalOpen = totpModalStore((state) => state.isModalOpen);
+  const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +15,7 @@ export default function TotpModal({ handleLogin }) {
     setAccessCode(undefined);
   };
   const handleClose = () => {
-    SetisModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const handleEdit = (e) => {

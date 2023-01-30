@@ -2,18 +2,16 @@ import { useState, useContext } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../context/RCInstance';
 import { useGoogleLogin } from './useGoogleLogin';
-import { useToastStore, useUserStore, useTotpStore } from '../store';
+import { useToastStore, useUserStore, totpModalStore } from '../store';
 
-export const useRCAuth4Google = () => {
+export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const [userOrEmail, setUserOrEmail] = useState(null);
 
-  const { signIn, signOut } = useGoogleLogin(
-    process.env.REACT_APP_GOOGLE_CLIENT_ID
-  );
+  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
 
   const { RCInstance } = useContext(RCContext);
 
-  const SetisModalOpen = useTotpStore((state) => state.SetisModalOpen);
+  const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
@@ -38,7 +36,7 @@ export const useRCAuth4Google = () => {
       } else {
         if (res.error === 'totp-required') {
           setUserOrEmail(res.details.emailOrUsername);
-          SetisModalOpen(true);
+          setIsModalOpen(true);
           dispatchToastMessage({
             type: 'info',
             message: 'Please Open your authentication app and enter the code.',
@@ -50,7 +48,7 @@ export const useRCAuth4Google = () => {
           setUserAvatarUrl(res.me.avatarUrl);
           setAuthenticatedUserUsername(res.me.username);
           setIsUserAuthenticated(true);
-          SetisModalOpen(false);
+          setIsModalOpen(false);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',
