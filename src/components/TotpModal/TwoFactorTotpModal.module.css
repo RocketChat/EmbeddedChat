@@ -1,9 +1,9 @@
 .modalcontainer {
-  position: fixed;
-  z-index: 2;
-  top: 30%;
-  left: 40%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 30;
 }
 
 .actionButton {
