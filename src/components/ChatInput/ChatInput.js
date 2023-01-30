@@ -10,7 +10,7 @@ import RCContext from '../../context/RCInstance';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
+const ChatInput = () => {
   const [message, setMessage] = useState('');
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
@@ -155,7 +155,3 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 };
 
 export default ChatInput;
-
-ChatInput.propTypes = {
-  GOOGLE_CLIENT_ID: PropTypes.string,
-};
