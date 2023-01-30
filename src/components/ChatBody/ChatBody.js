@@ -12,10 +12,10 @@ import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 const ChatBody = ({ height, anonymousMode }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
-  const { handleLogin } = useRCAuth4Google();
+
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
-
+  const { handleLogin } = useRCAuth4Google();
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
