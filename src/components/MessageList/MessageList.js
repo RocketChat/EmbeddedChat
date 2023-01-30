@@ -48,7 +48,6 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
-  // const { handleLogin } = useRCAuth4Google();
 
   const handleStarMessage = async (message) => {
     const isStarred =
