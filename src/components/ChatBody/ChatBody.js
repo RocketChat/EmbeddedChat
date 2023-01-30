@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useRolesStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 
 const ChatBody = ({ height, anonymousMode }) => {
@@ -14,34 +14,43 @@ const ChatBody = ({ height, anonymousMode }) => {
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
 
+  const setRoles = useRolesStore((state) => state.setRoles);
+
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
 
-  const getMessages = useCallback(async (anonymousMode) => {
+  const getMessagesAndRoles = useCallback(async (anonymousMode) => {
     const { messages } = await RCInstance.getMessages(anonymousMode);
     setMessages(messages);
+    const { roles } = await RCInstance.getChannelRoles();
+    // convert roles array from api into object for better search
+    const rolesObj = roles.reduce(
+      (obj, item) => Object.assign(obj, { [item.u.username]: item }),
+      {}
+    );
+    setRoles(rolesObj);
   }, []);
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
-      getMessages();
+      getMessagesAndRoles();
     } else {
-      getMessages(anonymousMode);
+      getMessagesAndRoles(anonymousMode);
     }
     setFilter(false);
   };
 
   useEffect(() => {
     if (isUserAuthenticated) {
-      RCInstance.realtime(() => getMessages());
-      getMessages();
+      RCInstance.realtime(() => getMessagesAndRoles());
+      getMessagesAndRoles();
     } else {
-      getMessages(anonymousMode);
+      getMessagesAndRoles(anonymousMode);
     }
 
     return () => RCInstance.close();
-  }, [isUserAuthenticated, getMessages]);
+  }, [isUserAuthenticated, getMessagesAndRoles]);
 
   return (
     <Box
