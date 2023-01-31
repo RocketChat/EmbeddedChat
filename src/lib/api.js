@@ -220,7 +220,7 @@ export default class RocketChatInstance {
   async sendMessage(message) {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
-        body: `{"message": { "rid": "${this.rid}", "msg": "${message}" }}`,
+        body: JSON.stringify({ message: { rid: this.rid, msg: message } }),
         headers: {
           'Content-Type': 'application/json',
           'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
