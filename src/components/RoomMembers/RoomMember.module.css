@@ -1,7 +1,7 @@
 .modal {
   position: fixed;
-  top: 10vh;
-  left: 10%;
+  top: 50%;
+  left: 50%;
   width: 90%;
   background-color: white;
   padding: 1rem;

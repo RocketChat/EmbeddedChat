@@ -27,6 +27,7 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
+import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
@@ -51,6 +52,15 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
+
+  const showReportMessage = useMessageStore((state) => state.showReportMessage);
+
+  const [messageToReport, setMessageToReport, toggletoggleShowReportMessage] =
+    useMessageStore((state) => [
+      state.messageToReport,
+      state.setMessageToReport,
+      state.toggleShowReportMessage,
+    ]);
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -229,6 +239,14 @@ const MessageList = ({ messages, handleGoBack }) => {
                           />
                         </>
                       )}
+                      <MessageToolbox.Item
+                        icon="report"
+                        color="danger"
+                        onClick={() => {
+                          setMessageToReport(msg._id);
+                          toggletoggleShowReportMessage();
+                        }}
+                      />
                     </MessageToolbox>
                   </MessageToolbox.Wrapper>
                 ) : (
@@ -241,12 +259,13 @@ const MessageList = ({ messages, handleGoBack }) => {
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
-            <Icon mie="x4" name="back" size="x20" />
+            <Icon mie="x4" name="back" size="x20" color="danger" />
             <p style={{ display: 'inline' }}>Go Back</p>
           </Button>
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
+      {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage/>}
     </>
   );
