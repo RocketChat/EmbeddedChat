@@ -20,6 +20,10 @@ export default class RocketChatInstance {
     };
   }
 
+  getHost() {
+    return this.host;
+  }
+
   setCookies(cookies) {
     Cookies.set(RC_USER_TOKEN_COOKIE, cookies.rc_token || '');
     Cookies.set(RC_USER_ID_COOKIE, cookies.rc_uid || '');
@@ -392,18 +396,16 @@ export default class RocketChatInstance {
   async sendAttachment(e) {
     try {
       const form = new FormData();
-      let response;
-      e.files[0].text().then((t) => {
-        form.append('file', new Blob([t]), e.files[0].name);
-        response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
-          method: 'POST',
-          body: form,
-          headers: {
-            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
-            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
-          },
-        }).then((r) => r.json());
-      });
+      const file = e.files[0];
+      form.append('file', file, file.name);
+      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
+        method: 'POST',
+        body: form,
+        headers: {
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+      }).then((r) => r.json());
       return response;
     } catch (err) {
       console.log(err);
