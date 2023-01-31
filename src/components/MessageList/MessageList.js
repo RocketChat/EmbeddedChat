@@ -21,6 +21,7 @@ import {
   useToastStore,
   useUserStore,
   useMemberStore,
+  useSearchMessageStore,
 } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
@@ -29,6 +30,7 @@ import RoomMembers from '../RoomMembers/RoomMember';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
+import SearchMessage from '../SearchMessage/SearchMessage'
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -40,6 +42,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
+  const showSearch = useSearchMessageStore((state) => state.showSearch);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -244,6 +247,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
+      {showSearch && <SearchMessage/>}
     </>
   );
 };
