@@ -108,11 +108,12 @@ export const RCComponent = ({
             <ChatBody
               height={!fullScreen ? height : '83vh'}
               anonymousMode={anonymousMode}
+              GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
             />
           ) : (
             <Home height={!fullScreen ? height : '83vh'} />
           )}
-          <ChatInput GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID} />
+          <ChatInput />
         </Box>
       </RCInstanceProvider>
     </ToastBarProvider>
