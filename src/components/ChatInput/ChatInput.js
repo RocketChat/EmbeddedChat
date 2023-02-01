@@ -1,29 +1,24 @@
-import { Box, Button, Icon } from '@rocket.chat/fuselage';
+import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Popup from 'reactjs-popup';
-import he from 'he';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
-import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
+import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 
 const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
-  const [message, setMessage] = useState('');
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+  const messageRef = useRef();
+  const [disableButton, setDisableButton] = useState(true);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
-
-  const handleClickToOpenFiles = () => {
-    inputRef.current.click();
-  };
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -41,6 +36,8 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const sendMessage = async () => {
+    messageRef.current.style.height = '38px';
+    const message = messageRef.current.value;
     if (!message.length || !isUserAuthenticated) {
       if (editMessage.msg) {
         setEditMessage({});
@@ -59,7 +56,8 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           position: toastPosition,
         });
       }
-      setMessage('');
+      messageRef.current.value = '';
+      setDisableButton(true);
     } else {
       const res = await RCInstance.updateMessage(editMessage.id, message);
       if (!res.success) {
@@ -71,20 +69,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           position: toastPosition,
         });
       }
-      setMessage('');
+      messageRef.current.value = '';
+      setDisableButton(true);
       setEditMessage({});
     }
-  };
-
-  const handleEmojiClick = (n) => {
-    if (n.length > 5) {
-      const flagUnifed = `&#x${n.split('-').join(';&#x')};`;
-      const flag = he.decode(flagUnifed);
-      setMessage(message + flag);
-      return;
-    }
-    const unified_emoji = he.decode(`&#x${n};`);
-    setMessage(message + unified_emoji);
   };
 
   const handleLogin = async () => {
@@ -117,75 +105,64 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
   useEffect(() => {
     if (editMessage.msg) {
-      setMessage(editMessage.msg);
+      messageRef.current.value = editMessage.msg;
     }
   }, [editMessage]);
 
   return (
-    <Box className={styles.container} border="2px solid #ddd">
-      {isUserAuthenticated && (
-        <Popup
+    <Box m="x20" border="2px solid #ddd">
+      <Box className={styles.container}>
+        <textarea
+          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           disabled={!isUserAuthenticated}
-          trigger={
+          className={styles.textInput}
+          onChange={(e) => {
+            messageRef.current.value = e.target.value;
+            setDisableButton(!messageRef.current.value.length);
+            e.target.style.height = 'auto';
+            if (e.target.scrollHeight <= 150)
+              e.target.style.height = `${e.target.scrollHeight - 10}px`;
+            else e.target.style.height = '129px';
+          }}
+          onKeyDown={(e) => {
+            if (editMessage.msg && e.keyCode === 27) {
+              messageRef.current.value = '';
+              setDisableButton(true);
+              setEditMessage({});
+            } else if (e.keyCode === 13) {
+              e.target.style.height = '38px';
+              sendMessage();
+            }
+          }}
+          ref={messageRef}
+        />
+        <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+        {isUserAuthenticated ? (
+          <ActionButton bg="surface" border="0px" disabled={disableButton}>
             <Icon
               className={styles.chatInputIconCursor}
-              name="emoji"
+              onClick={sendMessage}
+              name="send"
               size="x25"
               padding={6}
             />
-          }
-          position="top left"
-        >
-          <EmojiPicker handleEmojiClick={handleEmojiClick} />
-        </Popup>
-      )}
-      <input
-        placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-        disabled={!isUserAuthenticated}
-        value={message}
-        className={styles.textInput}
-        onChange={(e) => {
-          setMessage(e.target.value);
-        }}
-        onKeyDown={(e) => {
-          if (editMessage.msg && e.keyCode === 27) {
-            setMessage('');
-            setEditMessage({});
-          } else if (e.keyCode === 13) {
-            sendMessage();
-          }
-        }}
-      />
-      <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-      {isUserAuthenticated ? (
-        message ? (
-          <Icon
-            className={styles.chatInputIconCursor}
-            disabled={!isUserAuthenticated}
-            onClick={sendMessage}
-            name="send"
-            size="x25"
-            padding={6}
-          />
+          </ActionButton>
         ) : (
-          <Icon
-            className={styles.chatInputIconCursor}
-            disabled={!isUserAuthenticated}
-            onClick={handleClickToOpenFiles}
-            name="plus"
-            size="x25"
-            padding={6}
-          />
-        )
-      ) : (
-        <Button
-          onClick={handleLogin}
-          backgroundColor="blue"
-          color="white"
-          style={{ overflow: 'visible' }}
-        >
-          JOIN
-        </Button>
+          <Button
+            onClick={handleLogin}
+            backgroundColor="blue"
+            color="white"
+            style={{ overflow: 'visible' }}
+          >
+            JOIN
+          </Button>
+        )}
+      </Box>
+      {isUserAuthenticated && (
+        <ChatInputFormattingToolbar
+          messageRef={messageRef}
+          inputRef={inputRef}
+        />
       )}
     </Box>
   );

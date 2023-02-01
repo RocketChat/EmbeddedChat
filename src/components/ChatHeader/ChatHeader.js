@@ -9,6 +9,7 @@ import {
   useUserStore,
   useMessageStore,
   useMemberStore,
+  useSearchMessageStore,
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 
@@ -52,6 +53,8 @@ const ChatHeader = ({
   const setFilter = useMessageStore((state) => state.setFilter);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
+  const showMembers = useMemberStore((state) => state.showMembers);
+  const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
 
   const handleLogout = async () => {
     const res = await RCInstance.logout();
@@ -82,6 +85,12 @@ const ChatHeader = ({
     const { members } = await RCInstance.getChannelMembers();
     setMembersHandler(members);
     toggleShowMembers();
+    setShowSearch(false);
+  };
+
+  const showSearchMessage = async () => {
+    setShowSearch(true);
+    if (showMembers) toggleShowMembers();
   };
 
   useEffect(() => {
@@ -142,6 +151,15 @@ const ChatHeader = ({
           <Box alignItems="center" display="flex">
             <Icon mie="x4" name="pin" size="x16" />
             Pinned
+          </Box>
+        ),
+      },
+      search: {
+        action: showSearchMessage,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="magnifier" size="x16" />
+            Search
           </Box>
         ),
       },
