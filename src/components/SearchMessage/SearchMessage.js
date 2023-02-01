@@ -1,31 +1,38 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
-import { Box, Icon, ActionButton, Message, MessageReactions, MessageDivider, Button } from '@rocket.chat/fuselage';
+import {
+  Box,
+  Icon,
+  ActionButton,
+  Message,
+  MessageReactions,
+  MessageDivider,
+  Button,
+} from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
-import {Markdown} from '../Markdown/index' 
+import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 
 const Search = () => {
-
   const { RCInstance } = useContext(RCContext);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
-  const toggleShowSearch = ()=> {
+  const toggleShowSearch = () => {
     setShowSearch(false);
-  }
+  };
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
 
-  const searchMessages = async() => {
+  const searchMessages = async () => {
     const { messages } = await RCInstance.getSearchMessages(text);
     setMessageList(messages);
-  }
+  };
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -52,14 +59,14 @@ const Search = () => {
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e)=> {
-            if (e.keyCode === 13) 
-              searchMessages();
-            }
-          }
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) searchMessages();
+          }}
           className={classes.textInput}
         />
-        <Button small onClick={searchMessages}>Enter</Button>
+        <Button small onClick={searchMessages}>
+          Enter
+        </Button>
       </Box>
       {messageList &&
         messageList.map((msg, index, arr) => {
