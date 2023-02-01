@@ -25,7 +25,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const handleLogin = async (acsCode) => {
     try {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
-
       if (res === undefined) {
         dispatchToastMessage({
           type: 'error',
@@ -43,7 +42,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
             position: toastPosition,
           });
         }
-
         if (res.status === 'success') {
           setUserAvatarUrl(res.me.avatarUrl);
           setAuthenticatedUserUsername(res.me.username);
