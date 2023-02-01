@@ -22,10 +22,16 @@ export const RCComponent = ({
   anonymousMode = false,
   headerColor = '#fff',
   toastBarPosition = 'bottom-end',
+  showAvatar = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
-  setToastbarPosition(toastBarPosition);
+  const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+
+  useEffect(() => {
+    setToastbarPosition(toastBarPosition);
+    setShowAvatar(showAvatar);
+  }, []);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -127,4 +133,5 @@ RCComponent.propTypes = {
   anonymousMode: PropTypes.bool,
   headerColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
+  showAvatar: PropTypes.bool,
 };
