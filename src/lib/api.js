@@ -239,7 +239,7 @@ export default class RocketChatInstance {
   async sendMessage(message) {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
-        body: `{"message": { "rid": "${this.rid}", "msg": "${message}" }}`,
+        body: JSON.stringify({ message: { rid: this.rid, msg: message } }),
         headers: {
           'Content-Type': 'application/json',
           'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
@@ -412,6 +412,23 @@ export default class RocketChatInstance {
     }
   }
 
+  async reportMessage(messageId, description) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/chat.reportMessage`, {
+        body: `{"messageId": "${messageId}", "description": "${description}"}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   async sendAttachment(e) {
     try {
       const form = new FormData();
@@ -451,6 +468,25 @@ export default class RocketChatInstance {
     try {
       const response = await fetch(
         `${this.host}/api/v1/channels.members?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get('rc_token'),
+            'X-User-Id': Cookies.get('rc_uid'),
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async getSearchMessages(text) {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
         {
           headers: {
             'Content-Type': 'application/json',

@@ -27,6 +27,8 @@ const useUserStore = create((set) => ({
   isUserAuthenticated: false,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
+  showAvatar: false,
+  setShowAvatar: (showAvatar) => set(() => ({ showAvatar })),
 }));
 
 export default useUserStore;

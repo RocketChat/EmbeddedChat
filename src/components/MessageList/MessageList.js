@@ -9,26 +9,30 @@ import {
   MessageReactions,
   MessageToolbox,
   MessageDivider,
+  Avatar,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
 import { EmojiPicker } from '../EmojiPicker/index';
-import { Markdown } from '../Markdown/index';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
   useToastStore,
   useUserStore,
   useMemberStore,
+  useSearchMessageStore,
 } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import RoomMembers from '../RoomMembers/RoomMember';
+import MessageReportWindow from '../ReportMessage/MessageReportWindow';
+import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
+import SearchMessage from '../SearchMessage/SearchMessage';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -40,6 +44,7 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
+  const showSearch = useSearchMessageStore((state) => state.showSearch);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -48,6 +53,16 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
+  const showAvatar = useUserStore((state) => state.showAvatar);
+
+  const showReportMessage = useMessageStore((state) => state.showReportMessage);
+
+  const [messageToReport, setMessageToReport, toggletoggleShowReportMessage] =
+    useMessageStore((state) => [
+      state.messageToReport,
+      state.setMessageToReport,
+      state.toggleShowReportMessage,
+    ]);
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -115,6 +130,12 @@ const MessageList = ({ messages, handleGoBack }) => {
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
+  const getUserAvatarUrl = (username) => {
+    const host = RCInstance.getHost();
+    const URL = `${host}/avatar/${username}`;
+    return URL;
+  };
+
   return (
     <>
       {messages &&
@@ -135,49 +156,65 @@ const MessageList = ({ messages, handleGoBack }) => {
                       {format(new Date(msg.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   )}
-                  {!sequential && <MessageHeader msg={msg} />}
-                  {!msg.t ? (
-                    <>
-                      <Message.Body>
-                        {msg.attachments && msg.attachments.length > 0 ? (
-                          <Attachments attachments={msg.attachments} />
-                        ) : (
-                          <Markdown body={msg.msg} />
-                        )}
-                      </Message.Body>
-                      <MessageReactions>
-                        {msg.reactions &&
-                          serializeReactions(msg.reactions).map((reaction) => (
-                            <MessageReactions.Reaction
-                              key={reaction.name}
-                              mine={isSameUser(
-                                reaction,
-                                authenticatedUserUsername
-                              )}
-                              onClick={() =>
-                                handleEmojiClick(
-                                  reaction,
-                                  msg,
-                                  !isSameUser(
-                                    reaction,
-                                    authenticatedUserUsername
-                                  )
+                  <Box display="flex">
+                    {showAvatar && (
+                      <Box margin="3px">
+                        <Avatar
+                          url={getUserAvatarUrl(msg.u.username)}
+                          size="x36"
+                          alt="avatar"
+                        />
+                      </Box>
+                    )}
+                    <Box margin="5px">
+                      {!sequential && <MessageHeader msg={msg} />}
+                      {!msg.t ? (
+                        <>
+                          <Message.Body>
+                            {msg.attachments && msg.attachments.length > 0 ? (
+                              <Attachments attachments={msg.attachments} />
+                            ) : (
+                              <Markdown body={msg} />
+                            )}
+                          </Message.Body>
+
+                          <MessageReactions>
+                            {msg.reactions &&
+                              serializeReactions(msg.reactions).map(
+                                (reaction) => (
+                                  <MessageReactions.Reaction
+                                    key={reaction.name}
+                                    mine={isSameUser(
+                                      reaction,
+                                      authenticatedUserUsername
+                                    )}
+                                    onClick={() =>
+                                      handleEmojiClick(
+                                        reaction,
+                                        msg,
+                                        !isSameUser(
+                                          reaction,
+                                          authenticatedUserUsername
+                                        )
+                                      )
+                                    }
+                                  >
+                                    <Markdown body={reaction.name} />
+                                    <p>{reaction.count}</p>
+                                  </MessageReactions.Reaction>
                                 )
-                              }
-                            >
-                              <Markdown body={reaction.name} />
-                              <p>{reaction.count}</p>
-                            </MessageReactions.Reaction>
-                          ))}
-                      </MessageReactions>
-                    </>
-                  ) : (
-                    <>
-                      {msg.attachments && (
-                        <Attachments attachments={msg.attachments} />
+                              )}
+                          </MessageReactions>
+                        </>
+                      ) : (
+                        <>
+                          {msg.attachments && (
+                            <Attachments attachments={msg.attachments} />
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
+                    </Box>
+                  </Box>
                 </Message.Container>
                 {!msg.t ? (
                   <MessageToolbox.Wrapper>
@@ -226,6 +263,14 @@ const MessageList = ({ messages, handleGoBack }) => {
                           />
                         </>
                       )}
+                      <MessageToolbox.Item
+                        icon="report"
+                        color="danger"
+                        onClick={() => {
+                          setMessageToReport(msg._id);
+                          toggletoggleShowReportMessage();
+                        }}
+                      />
                     </MessageToolbox>
                   </MessageToolbox.Wrapper>
                 ) : (
@@ -238,12 +283,14 @@ const MessageList = ({ messages, handleGoBack }) => {
       {filtered && (
         <Box>
           <Button small onClick={handleGoBack}>
-            <Icon mie="x4" name="back" size="x20" />
+            <Icon mie="x4" name="back" size="x20" color="danger" />
             <p style={{ display: 'inline' }}>Go Back</p>
           </Button>
         </Box>
       )}
       {showMembers && <RoomMembers members={members} />}
+      {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
+      {showSearch && <SearchMessage />}
     </>
   );
 };

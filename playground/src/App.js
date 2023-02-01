@@ -22,6 +22,7 @@ function App() {
           headerColor="white"
           toastBarPosition="bottom-end"
           showRoles={true}
+          showAvatar={false}
         />
       )}
     </div>
