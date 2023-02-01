@@ -7,7 +7,7 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore, useRolesStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 
-const ChatBody = ({ height, anonymousMode }) => {
+const ChatBody = ({ height, anonymousMode, showRoles }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
 
@@ -23,13 +23,15 @@ const ChatBody = ({ height, anonymousMode }) => {
   const getMessagesAndRoles = useCallback(async (anonymousMode) => {
     const { messages } = await RCInstance.getMessages(anonymousMode);
     setMessages(messages);
-    const { roles } = await RCInstance.getChannelRoles();
-    // convert roles array from api into object for better search
-    const rolesObj = roles.reduce(
-      (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-      {}
-    );
-    setRoles(rolesObj);
+    if (showRoles) {
+      const { roles } = await RCInstance.getChannelRoles();
+      // convert roles array from api into object for better search
+      const rolesObj = roles.reduce(
+        (obj, item) => Object.assign(obj, { [item.u.username]: item }),
+        {}
+      );
+      setRoles(rolesObj);
+    }
   }, []);
 
   const handleGoBack = async () => {
@@ -71,4 +73,5 @@ export default ChatBody;
 ChatBody.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
+  showRoles: PropTypes.bool,
 };

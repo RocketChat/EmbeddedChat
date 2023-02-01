@@ -20,7 +20,8 @@ function App() {
           channelName="general"
           anonymousMode={true}
           headerColor="white"
-          toastBarPosition='bottom-end'
+          toastBarPosition="bottom-end"
+          showRoles={true}
         />
       )}
     </div>

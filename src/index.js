@@ -22,6 +22,7 @@ export const RCComponent = ({
   anonymousMode = false,
   headerColor = '#fff',
   toastBarPosition = 'bottom-end',
+  showRoles = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
@@ -102,6 +103,7 @@ export const RCComponent = ({
             <ChatBody
               height={!fullScreen ? height : '83vh'}
               anonymousMode={anonymousMode}
+              showRoles={showRoles}
             />
           ) : (
             <Home height={!fullScreen ? height : '83vh'} />
@@ -126,4 +128,5 @@ RCComponent.propTypes = {
   anonymousMode: PropTypes.bool,
   headerColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
+  showRoles: PropTypes.bool,
 };
