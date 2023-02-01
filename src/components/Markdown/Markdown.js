@@ -1,25 +1,17 @@
 import React from 'react';
 import './Markdown.css';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 import { Box } from '@rocket.chat/fuselage';
-import EmojiOne from 'emoji-toolkit';
 import PropTypes from 'prop-types';
+import { Markup } from '../Markup/index';
 
-function emojify(message) {
-  return EmojiOne.toImage(message);
-}
-
-const Markdown = (props) => (
-  <Box
-    dangerouslySetInnerHTML={{
-      __html: emojify(DOMPurify.sanitize(marked.parse(props.body))),
-    }}
-  />
+const Markdown = ({ body }) => (
+  <Box>
+    <Markup tokens={body.md} />
+  </Box>
 );
 
 export default Markdown;
 
 Markdown.propTypes = {
-  body: PropTypes.string,
+  body: PropTypes.any,
 };
