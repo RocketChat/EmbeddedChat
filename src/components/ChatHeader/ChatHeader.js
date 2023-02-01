@@ -90,8 +90,7 @@ const ChatHeader = ({
 
   const showSearchMessage = async () => {
     setShowSearch(true);
-    if(showMembers)
-      toggleShowMembers();
+    if (showMembers) toggleShowMembers();
   };
 
   useEffect(() => {
