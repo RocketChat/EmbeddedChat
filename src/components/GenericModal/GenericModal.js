@@ -1,4 +1,4 @@
-import { Button, Modal, Icon, ModalBackdrop, Box } from '@rocket.chat/fuselage';
+import { Modal, Icon, ModalBackdrop } from '@rocket.chat/fuselage';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classes from './Generic.module.css';
@@ -25,18 +25,7 @@ const renderIcon = (icon, variant) => {
   return icon;
 };
 
-const GenericModal = ({
-  variant = 'info',
-  children,
-  cancelText,
-  confirmText,
-  title,
-  icon,
-  onCancel,
-  onClose = onCancel,
-  onConfirm,
-  confirmDisabled,
-}) => (
+const GenericModal = ({ variant = 'info', children, title, icon, onClose }) => (
   <ModalBackdrop>
     <Modal>
       <Modal.Header>
@@ -49,18 +38,6 @@ const GenericModal = ({
         />
       </Modal.Header>
       <Modal.Content>{children}</Modal.Content>
-      <Modal.Footer justifyContent="space-between">
-        <Box className={classes.ModalFooter}>
-          {onCancel && (
-            <Button secondary onClick={onCancel}>
-              {cancelText ?? 'Cancel'}
-            </Button>
-          )}
-          <Button primary onClick={onConfirm} disabled={confirmDisabled}>
-            {confirmText ?? 'Ok'}
-          </Button>
-        </Box>
-      </Modal.Footer>
     </Modal>
   </ModalBackdrop>
 );
@@ -68,14 +45,9 @@ const GenericModal = ({
 GenericModal.propTypes = {
   variant: PropTypes.string,
   children: PropTypes.object.isRequired,
-  cancelText: PropTypes.any,
-  confirmText: PropTypes.any,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   icon: PropTypes.any,
-  confirmDisabled: PropTypes.bool,
-  onCancel: PropTypes.func,
   onClose: PropTypes.func,
-  onConfirm: PropTypes.func,
 };
 
 export default GenericModal;

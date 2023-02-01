@@ -8,7 +8,6 @@ import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
-import { GenericModal } from '../GenericModal/index';
 
 const ChatBody = ({ height, anonymousMode, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
