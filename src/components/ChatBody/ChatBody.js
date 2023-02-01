@@ -57,20 +57,6 @@ const ChatBody = ({ height, anonymousMode, GOOGLE_CLIENT_ID }) => {
     >
       <MessageList messages={messages} handleGoBack={handleGoBack} />
       <TotpModal handleLogin={handleLogin} />
-      <GenericModal
-        variant="info"
-        confirmText="Report!"
-        cancelText="Cancel"
-        title="Report_this_message_question_mark"
-        icon="brush"
-        onCancel={() => {}}
-        onClose={() => {}}
-        onConfirm={() => {}}
-      >
-        <Box>
-          <p>Hello</p>
-        </Box>
-      </GenericModal>
     </Box>
   );
 };

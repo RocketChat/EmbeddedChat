@@ -1,8 +1,8 @@
-import { Button, PasswordInput, Box, Tile, Flex } from '@rocket.chat/fuselage';
+import { PasswordInput, Box } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { totpModalStore } from '../../store';
-import styles from './TwoFactorTotpModal.module.css';
+import { GenericModal } from '../GenericModal';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
@@ -23,27 +23,25 @@ export default function TotpModal({ handleLogin }) {
   };
   return isModalOpen ? (
     <>
-      <Box className={styles.modalcontainer}>
-        <Tile elevation="2" margin={25}>
-          <form onSubmit={handleSubmit}>
-            <Box>Enter TOTP</Box>
-            <PasswordInput
-              w="125px"
-              fontScale="h4"
-              onChange={handleEdit}
-              placeholder="123456"
-            />
-            <Box className={styles.actionButton}>
-              <Button margin="5px 1px 1px" onClick={handleSubmit} primary>
-                Submit
-              </Button>
-              <Button margin="5px 1px 1px 10px" onClick={handleClose}>
-                Close
-              </Button>
-            </Box>
-          </form>
-        </Tile>
-      </Box>
+      <GenericModal
+        variant="info"
+        confirmText="Submit"
+        cancelText="Cancel"
+        title="Enter TOTP"
+        icon="key"
+        onCancel={handleClose}
+        onClose={handleClose}
+        onConfirm={handleSubmit}
+      >
+        <Box margin="1px 100px">
+          <PasswordInput
+            w="300px"
+            fontScale="h3"
+            onChange={handleEdit}
+            placeholder="123456"
+          />
+        </Box>
+      </GenericModal>
     </>
   ) : null;
 }
