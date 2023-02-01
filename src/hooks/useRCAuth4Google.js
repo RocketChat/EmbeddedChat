@@ -1,16 +1,12 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../context/RCInstance';
 import { useGoogleLogin } from './useGoogleLogin';
 import { useToastStore, useUserStore, totpModalStore } from '../store';
 
 export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
-  const [userOrEmail, setUserOrEmail] = useState(null);
-
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
-
   const { RCInstance } = useContext(RCContext);
-
   const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const setAuthenticatedUserUsername = useUserStore(
@@ -34,7 +30,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
         });
       } else {
         if (res.error === 'totp-required') {
-          setUserOrEmail(res.details.emailOrUsername);
           setIsModalOpen(true);
           dispatchToastMessage({
             type: 'info',
@@ -81,6 +76,5 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   return {
     handleLogin,
     handleLogout,
-    userOrEmail,
   };
 };

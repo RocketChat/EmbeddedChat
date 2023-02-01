@@ -1,8 +1,9 @@
-import { PasswordInput, Box } from '@rocket.chat/fuselage';
+import { PasswordInput, Box, Modal, Button } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { totpModalStore } from '../../store';
 import { GenericModal } from '../GenericModal';
+import classes from './TwoFactorTotpModal.module.css';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
@@ -25,21 +26,29 @@ export default function TotpModal({ handleLogin }) {
     <>
       <GenericModal
         variant="info"
-        confirmText="Submit"
-        cancelText="Cancel"
         title="Enter TOTP"
         icon="key"
-        onCancel={handleClose}
         onClose={handleClose}
-        onConfirm={handleSubmit}
       >
-        <Box margin="1px 100px">
-          <PasswordInput
-            w="300px"
-            fontScale="h3"
-            onChange={handleEdit}
-            placeholder="123456"
-          />
+        <Box>
+          <Box margin="1px 110px">
+            <PasswordInput
+              w="270px"
+              fontScale="h3"
+              onChange={handleEdit}
+              placeholder="123456"
+            />
+          </Box>
+          <Modal.Footer>
+            <Box className={classes.Footer}>
+              <Button secondary onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button primary onClick={handleSubmit}>
+                Submit
+              </Button>
+            </Box>
+          </Modal.Footer>
         </Box>
       </GenericModal>
     </>
