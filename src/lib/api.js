@@ -29,22 +29,42 @@ export default class RocketChatInstance {
     Cookies.set(RC_USER_ID_COOKIE, cookies.rc_uid || '');
   }
 
-  async googleSSOLogin(signIn) {
+  async googleSSOLogin(signIn, acsCode) {
     const tokens = await signIn();
+    let acsPayload = null;
+
+    if (typeof acsCode === 'string') {
+      acsPayload = acsCode;
+    }
+
+    const payload = acsCode
+      ? JSON.stringify({
+          serviceName: 'google',
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          totp: {
+            code: acsPayload,
+          },
+        })
+      : JSON.stringify({
+          serviceName: 'google',
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          scope: 'profile',
+        });
+
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          serviceName: 'google',
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-        }),
+        body: payload,
       });
       const response = await req.json();
+
       if (response.status === 'success') {
         this.setCookies({
           rc_token: response.data.authToken,
@@ -57,6 +77,10 @@ export default class RocketChatInstance {
           );
         }
         return { status: response.status, me: response.data.me };
+      }
+
+      if (response.error === 'totp-required') {
+        return response;
       }
     } catch (err) {
       console.error(err.message);
