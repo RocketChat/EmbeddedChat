@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Icon, Message } from '@rocket.chat/fuselage';
-import { useRolesStore } from '../../store';
+import { useUserStore } from '../../store';
 
 const MessageHeader = ({ msg }) => {
-  const roles = useRolesStore((state) => state.roles);
+  const roles = useUserStore((state) => state.roles);
 
   const userActions = () => {
     switch (msg.t) {

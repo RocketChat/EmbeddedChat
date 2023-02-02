@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useRolesStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 
 const ChatBody = ({ height, anonymousMode, showRoles }) => {
@@ -14,7 +14,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
 
-  const setRoles = useRolesStore((state) => state.setRoles);
+  const setRoles = useUserStore((state) => state.setRoles);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
