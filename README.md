@@ -56,6 +56,7 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | channelName      | the fallback channel name to be present on the chat header                                                                                  |
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
+| showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
 
 ## Setting up Authentication
 
