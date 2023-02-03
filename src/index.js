@@ -22,6 +22,7 @@ export const RCComponent = ({
   anonymousMode = false,
   headerColor = '#fff',
   toastBarPosition = 'bottom-end',
+  showRoles = false,
   showAvatar = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
@@ -108,6 +109,7 @@ export const RCComponent = ({
             <ChatBody
               height={!fullScreen ? height : '83vh'}
               anonymousMode={anonymousMode}
+              showRoles={showRoles}
               GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
             />
           ) : (
@@ -133,5 +135,6 @@ RCComponent.propTypes = {
   anonymousMode: PropTypes.bool,
   headerColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
+  showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
 };

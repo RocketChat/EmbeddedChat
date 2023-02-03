@@ -21,6 +21,7 @@ function App() {
           anonymousMode={true}
           headerColor="white"
           toastBarPosition="bottom-end"
+          showRoles={true}
           showAvatar={false}
         />
       )}
