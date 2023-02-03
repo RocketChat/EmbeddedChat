@@ -87,7 +87,7 @@ export default class RocketChatInstance {
     }
   }
 
-  async login(user, password) {
+  async login(userOrEmail, password) {
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
         body: `{ "user": "${user}", "password": "${password}" }`,
