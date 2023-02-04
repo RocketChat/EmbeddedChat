@@ -1,7 +1,7 @@
 import create from 'zustand';
 
 const loginModalStore = create((set) => ({
-  isLoginModalOpen: true,
+  isLoginModalOpen: false,
   setIsLoginModalOpen: (isLoginModalOpen) => set(() => ({ isLoginModalOpen })),
 }));
 
