@@ -3,8 +3,6 @@ import {
   RC_LOCAL_USER_AVATAR_URL,
   RC_LOCAL_USER_ID,
   RC_LOCAL_USER_NAME,
-  RC_LOCAL_USER_PASSWORD,
-  RC_LOCAL_USER_EMAILORUSER,
 } from '../lib/constant';
 
 const useUserStore = create((set) => ({
@@ -18,16 +16,6 @@ const useUserStore = create((set) => ({
     localStorage.setItem(RC_LOCAL_USER_NAME, username);
     set({ username });
   },
-  // password: localStorage.getItem(RC_LOCAL_USER_PASSWORD) || '',
-  // setPassword: (password) => {
-  //   localStorage.setItem(RC_LOCAL_USER_PASSWORD, password);
-  //   set({ password });
-  // },
-  // emailoruser: localStorage.getItem(RC_LOCAL_USER_EMAILORUSER) || '',
-  // setEmailorUser: (emailoruser) => {
-  //   localStorage.setItem(RC_LOCAL_USER_EMAILORUSER, emailoruser);
-  //   set({ emailoruser });
-  // },
   avatarUrl: localStorage.getItem(RC_LOCAL_USER_AVATAR_URL) || '',
   setUserAvatarUrl: (avatarUrl) =>
     set(() => {
