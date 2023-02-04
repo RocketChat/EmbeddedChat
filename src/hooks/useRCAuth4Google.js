@@ -18,7 +18,7 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const toastPosition = useToastStore((state) => state.position);
   const dispatchToastMessage = useToastBarDispatch();
 
-  const handleLogin = async (acsCode) => {
+  const handleGoogleLogin = async (acsCode) => {
     try {
       const res = await RCInstance.googleSSOLogin(signIn, acsCode);
       if (res === undefined) {
@@ -74,7 +74,7 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   };
 
   return {
-    handleLogin,
+    handleGoogleLogin,
     handleLogout,
   };
 };
