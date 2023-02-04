@@ -1,20 +1,19 @@
 import {
   PasswordInput,
   Box,
-  InputBox,
   Button,
   Modal,
-  Label,
-  Form,
   Field,
-  FieldGroup,
   TextInput,
+  Icon,
+  Divider,
 } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
-import classes from './Login.css';
+import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+// import classes from './Login.css';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -23,17 +22,13 @@ export default function LoginForm() {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
-  const { handleLogin } = useRCAuth(userOrEmail, password);
+  const { handleLogin } = useRCAuth();
 
   const handleSubmit = () => {
-    // console.log(`login ${userOrEmail} and ${password}`);
-    setIsLoginModalOpen(false);
-    console.log(`login modal from handle submit  ${isLoginModalOpen}`);
-    handleLogin();
+    handleLogin(userOrEmail, password);
   };
   const handleClose = () => {
     setIsLoginModalOpen(false);
-    console.log(`login modal from handle close  ${isLoginModalOpen}`);
   };
 
   const handleEdituserOrEmail = (e) => {
@@ -42,7 +37,12 @@ export default function LoginForm() {
   const handleEditPassword = (e) => {
     setpassword(e.target.value);
   };
+  const { handleGoogleLogin } = useRCAuth4Google();
 
+  const handleGooglewithLogin = () => {
+    setIsLoginModalOpen(false);
+    handleGoogleLogin();
+  };
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -51,34 +51,35 @@ export default function LoginForm() {
         icon="key"
         onClose={handleClose}
       >
-        <Form
-        // onSubmit={ handle submit }
-        >
-          <FieldGroup>
-            <Field>
-              <Field.Label> emailOrUsername</Field.Label>
-              <Field.Row>
-                <TextInput
-                  onChange={() => {
-                    console.log('change input');
-                  }}
-                  placeholder="example@example.com"
-                />
-              </Field.Row>
-            </Field>
+        <Box>
+          <Field>
+            <Field.Label> Email or username</Field.Label>
+            <Field.Row>
+              <TextInput
+                onChange={handleEdituserOrEmail}
+                placeholder="example@example.com"
+              />
+            </Field.Row>
+          </Field>
 
-            <Field>
-              <Field.Label>password</Field.Label>
-              <Field.Row>
-                <PasswordInput
-                  onChange={() => {
-                    console.log('enter password here');
-                  }}
-                />
-              </Field.Row>
-            </Field>
-          </FieldGroup>
-        </Form>
+          <Field>
+            <Field.Label>Password</Field.Label>
+            <Field.Row>
+              <PasswordInput onChange={handleEditPassword} />
+            </Field.Row>
+          </Field>
+          <Box marginWidth="25px 70px 25px 70px">
+            <Button primary onClick={handleSubmit}>
+              Login
+            </Button>
+          </Box>
+
+          <Modal.Footer alignItems="center">
+            <Button secondary onClick={handleGooglewithLogin}>
+              <Icon name="google" /> Login with Google
+            </Button>
+          </Modal.Footer>
+        </Box>
       </GenericModal>
     </>
   ) : null;
