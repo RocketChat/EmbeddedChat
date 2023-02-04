@@ -87,10 +87,16 @@ export default class RocketChatInstance {
     }
   }
 
-  async login(userOrEmail, password) {
+  async login(userOrEmail, password, code) {
+    let reqBody;
+    if (!code) {
+      reqBody = `{ "user": "${userOrEmail}", "password": "${password}"}`;
+    } else {
+      reqBody = `{"user": "${userOrEmail}","password": "${password}","code": "${code}"}`;
+    }
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
-        body: `{ "user": "${user}", "password": "${password}" }`,
+        body: reqBody,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -109,6 +115,9 @@ export default class RocketChatInstance {
           );
         }
         return { status: response.status, me: response.data.me };
+      }
+      if (response.status === 'error') {
+        return response;
       }
     } catch (error) {
       console.error(error.message);
