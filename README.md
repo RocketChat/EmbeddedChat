@@ -35,6 +35,7 @@ and use it,
   channelName="Customer Service"
   anonymousMode={false}
   showAvatar={false}
+  showRoles={false}
 />
 ```
 
@@ -54,8 +55,8 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | roomId           | the public room's id that you want to subscribe to                                                                                          |
 | channelName      | the fallback channel name to be present on the chat header                                                                                  |
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
-| showAvatar       | show the user's avatar in the chat component, defaults to false                                                      |
-
+| showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
+| showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
 
 ## Setting up Authentication
 
@@ -76,4 +77,3 @@ npm run dev # at the root folder --> EMBEDDEDCHAT
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
-

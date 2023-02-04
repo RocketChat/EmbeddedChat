@@ -1,17 +1,16 @@
 import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
-import { useGoogleLogin } from '../../hooks/useGoogleLogin';
 import { useToastStore, useUserStore, useMessageStore } from '../../store';
+import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
-  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
+const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+  const { handleLogin } = useRCAuth4Google();
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
 
@@ -27,11 +26,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     (state) => state.setIsUserAuthenticated
   );
 
-  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const toastPosition = useToastStore((state) => state.position);
-  const setAuthenticatedUserUsername = useUserStore(
-    (state) => state.setUsername
-  );
 
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -72,26 +67,6 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
-    }
-  };
-
-  const handleLogin = async () => {
-    const res = await RCInstance.googleSSOLogin(signIn);
-    if (res.status === 'success') {
-      setUserAvatarUrl(res.me.avatarUrl);
-      setAuthenticatedUserUsername(res.me.username);
-      setIsUserAuthenticated(true);
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Successfully logged in',
-        position: toastPosition,
-      });
-    } else {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Something wrong happened',
-        position: toastPosition,
-      });
     }
   };
 
@@ -165,7 +140,3 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 };
 
 export default ChatInput;
-
-ChatInput.propTypes = {
-  GOOGLE_CLIENT_ID: PropTypes.string,
-};
