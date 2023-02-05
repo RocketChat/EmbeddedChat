@@ -6,7 +6,6 @@ import {
   Field,
   TextInput,
   Icon,
-  Divider,
 } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import { GenericModal } from '../GenericModal';
@@ -69,7 +68,7 @@ export default function LoginForm() {
             </Field.Row>
           </Field>
           <Modal.Footer alignItems="center">
-          <Box className={classes.Footer}>
+            <Box className={classes.Footer}>
               <Button
                 primary
                 onClick={handleSubmit}
@@ -78,9 +77,9 @@ export default function LoginForm() {
                 Login
               </Button>
               <Box className={classes.Seperator}>
-                <hr className={classes.darkLine}></hr>
+                <hr className={classes.darkLine} />
                 OR
-                <hr className={classes.darkLine}></hr>
+                <hr className={classes.darkLine} />
               </Box>
               <Button
                 secondary
