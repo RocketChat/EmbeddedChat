@@ -1,20 +1,45 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import PreviewInlineElements from './elements/PreviewInlineElements';
 import CodeBlock from './elements/CodeBlock';
 import BigEmoji from './elements/BigEmoji';
+import HeadingBlock from './blocks/HeadingBlock';
+import OrderedListBlock from './blocks/OrderedListBlock';
+import ParagraphBlock from './blocks/ParagraphBlock';
+import UnOrderedListBlock from './blocks/UnOrderedListBlock';
+import QuoteBlock from './blocks/QuoteBlock';
 
 const Markup = ({ tokens }) =>
   tokens.map((token, index) => {
     switch (token.type) {
       case 'PARAGRAPH':
-        return <PreviewInlineElements key={index} contents={token.value} />;
+        return <ParagraphBlock key={index} contents={token.value} />;
 
       case 'CODE':
         return <CodeBlock key={index} lines={token.value} />;
 
       case 'BIG_EMOJI':
         return <BigEmoji key={index} contents={token.value} />;
+
+      case 'HEADING':
+        return (
+          <HeadingBlock
+            key={index}
+            contents={token.value}
+            level={token.value}
+          />
+        );
+
+      case 'UNORDERED_LIST':
+        return <UnOrderedListBlock key={index} items={token.value} />;
+
+      case 'ORDERED_LIST':
+        return <OrderedListBlock key={index} items={token.value} />;
+
+      case 'QUOTE':
+        return <QuoteBlock key={index} contents={token.value} />;
+
+      case 'LINE_BREAK':
+        return <br key={index} />;
 
       default:
         return null;

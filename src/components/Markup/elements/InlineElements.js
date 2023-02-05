@@ -5,8 +5,9 @@ import StrikeSpan from './StrikeSpan';
 import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
+import ChannelMention from '../mentions/ChannelMention';
 
-const PreviewInlineElements = ({ contents }) =>
+const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
     switch (content.type) {
       case 'BOLD':
@@ -24,6 +25,9 @@ const PreviewInlineElements = ({ contents }) =>
       case 'INLINE_CODE':
         return <CodeElement key={index} contents={content.value} />;
 
+      case 'MENTION_CHANNEL':
+        return <ChannelMention key={index} mention={content.value.value} />;
+
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;
 
@@ -32,4 +36,4 @@ const PreviewInlineElements = ({ contents }) =>
     }
   });
 
-export default PreviewInlineElements;
+export default InlineElements;

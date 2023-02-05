@@ -172,7 +172,10 @@ const MessageList = ({ messages, handleGoBack }) => {
                         <>
                           <Message.Body>
                             {msg.attachments && msg.attachments.length > 0 ? (
-                              <Attachments attachments={msg.attachments} />
+                              <>
+                                <Markdown body={msg} />
+                                <Attachments attachments={msg.attachments} />
+                              </>
                             ) : (
                               <Markdown body={msg} />
                             )}
