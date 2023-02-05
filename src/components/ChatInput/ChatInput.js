@@ -140,8 +140,7 @@ const ChatInput = () => {
         ) : (
           <Button
             onClick={openLoginModal}
-            backgroundColor="blue"
-            color="white"
+            primary
             style={{ overflow: 'visible' }}
           >
             JOIN

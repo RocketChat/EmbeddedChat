@@ -61,6 +61,8 @@ export const useRCAuth = () => {
           setAuthenticatedUserUsername(res.me.username);
           setIsUserAuthenticated(true);
           setIsModalOpen(false);
+          setEmailorUser(null);
+          setPassword(null);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',
