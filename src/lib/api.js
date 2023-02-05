@@ -278,6 +278,25 @@ export default class RocketChatInstance {
     }
   }
 
+  async getChannelRoles() {
+    try {
+      const roles = await fetch(
+        `${this.host}/api/v1/channels.roles?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+          },
+          method: 'GET',
+        }
+      );
+      return await roles.json();
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   async sendMessage(message) {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
