@@ -9,12 +9,14 @@ import {
   MessageReactions,
   MessageToolbox,
   MessageDivider,
+  MessageEmoji,
   Avatar,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
+import emojione from 'emoji-toolkit';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import {
@@ -173,11 +175,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                           <Message.Body>
                             {msg.attachments && msg.attachments.length > 0 ? (
                               <>
-                                <Markdown body={msg} />
+                                <Markdown body={msg} isReaction={false} />
                                 <Attachments attachments={msg.attachments} />
                               </>
                             ) : (
-                              <Markdown body={msg} />
+                              <Markdown body={msg} isReaction={false} />
                             )}
                           </Message.Body>
 
@@ -202,7 +204,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                                       )
                                     }
                                   >
-                                    <Markdown body={reaction.name} />
+                                    <Markdown body={reaction.name} isReaction />
                                     <p>{reaction.count}</p>
                                   </MessageReactions.Reaction>
                                 )
