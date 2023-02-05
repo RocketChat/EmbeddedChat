@@ -8,6 +8,8 @@ import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import { useRCAuth } from '../../hooks/useRCAuth';
+import LoginForm from '../auth/LoginForm';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
@@ -17,7 +19,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
 
-  const { handleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
+  const { handleGoogleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
+  const { handleLogin } = useRCAuth();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -67,7 +70,11 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       height={height}
     >
       <MessageList messages={messages} handleGoBack={handleGoBack} />
-      <TotpModal handleLogin={handleLogin} />
+      <TotpModal
+        handleGoogleLogin={handleGoogleLogin}
+        handleLogin={handleLogin}
+      />
+      <LoginForm />
     </Box>
   );
 };
