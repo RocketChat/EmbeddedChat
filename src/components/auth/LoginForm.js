@@ -13,7 +13,7 @@ import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
-// import classes from './Login.css';
+import classes from './Login.module.css';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -68,16 +68,28 @@ export default function LoginForm() {
               <PasswordInput onChange={handleEditPassword} />
             </Field.Row>
           </Field>
-          <Box marginWidth="25px 70px 25px 70px">
-            <Button primary onClick={handleSubmit}>
-              Login
-            </Button>
-          </Box>
-
           <Modal.Footer alignItems="center">
-            <Button secondary onClick={handleGooglewithLogin}>
-              <Icon name="google" /> Login with Google
-            </Button>
+          <Box className={classes.Footer}>
+              <Button
+                primary
+                onClick={handleSubmit}
+                margin="10px 10px 10px 10px"
+              >
+                Login
+              </Button>
+              <Box className={classes.Seperator}>
+                <hr className={classes.darkLine}></hr>
+                OR
+                <hr className={classes.darkLine}></hr>
+              </Box>
+              <Button
+                secondary
+                onClick={handleGooglewithLogin}
+                margin="10px 10px 10px 10px"
+              >
+                <Icon name="google" /> Login with Google
+              </Button>
+            </Box>
           </Modal.Footer>
         </Box>
       </GenericModal>
