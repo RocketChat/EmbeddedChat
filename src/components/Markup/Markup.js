@@ -25,7 +25,7 @@ const Markup = ({ tokens }) =>
           <HeadingBlock
             key={index}
             contents={token.value}
-            level={token.value}
+            level={token.level}
           />
         );
 
