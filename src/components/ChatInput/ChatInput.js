@@ -3,16 +3,22 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
-import { useToastStore, useUserStore, useMessageStore } from '../../store';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import {
+  useToastStore,
+  useUserStore,
+  useMessageStore,
+  loginModalStore,
+} from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
-  const { handleLogin } = useRCAuth4Google();
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
+  const setIsLoginModalOpen = loginModalStore(
+    (state) => state.setIsLoginModalOpen
+  );
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -29,6 +35,10 @@ const ChatInput = () => {
   const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
 
   const sendMessage = async () => {
     messageRef.current.style.height = '38px';
@@ -128,9 +138,12 @@ const ChatInput = () => {
             />
           </ActionButton>
         ) : (
-          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-            Sign In with Google
+          <Button
+            onClick={openLoginModal}
+            primary
+            style={{ overflow: 'visible' }}
+          >
+            JOIN
           </Button>
         )}
       </Box>

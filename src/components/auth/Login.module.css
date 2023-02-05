@@ -1,0 +1,27 @@
+.top {
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.Footer {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+}
+
+.darkLine {
+  width: 45%;
+  color: rgb(131, 131, 131);
+  height: 1px;
+}
+
+.Seperator {
+  display: flex;
+}

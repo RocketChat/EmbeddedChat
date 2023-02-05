@@ -87,6 +87,43 @@ export default class RocketChatInstance {
     }
   }
 
+  async login(userOrEmail, password, code) {
+    let reqBody;
+    if (!code) {
+      reqBody = `{ "user": "${userOrEmail}", "password": "${password}"}`;
+    } else {
+      reqBody = `{"user": "${userOrEmail}","password": "${password}","code": "${code}"}`;
+    }
+    try {
+      const req = await fetch(`${this.host}/api/v1/login`, {
+        body: reqBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
+      const response = await req.json();
+      if (response.status === 'success') {
+        this.setCookies({
+          rc_token: response.data.authToken,
+          rc_uid: response.data.userId,
+        });
+        if (!response.data.me.username) {
+          await this.updateUserUsername(
+            response.data.userId,
+            response.data.me.name
+          );
+        }
+        return { status: response.status, me: response.data.me };
+      }
+      if (response.status === 'error') {
+        return response;
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   async logout() {
     try {
       const response = await fetch(`${this.host}/api/v1/logout`, {
