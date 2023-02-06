@@ -6,6 +6,7 @@ import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
+import ColorElement from './ColorElement';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -30,6 +31,9 @@ const InlineElements = ({ contents }) =>
 
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;
+
+      case 'COLOR':
+        return <ColorElement key={index} {...content.value} />;
 
       default:
         return null;
