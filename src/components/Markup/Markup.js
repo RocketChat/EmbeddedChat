@@ -7,6 +7,7 @@ import OrderedListBlock from './blocks/OrderedListBlock';
 import ParagraphBlock from './blocks/ParagraphBlock';
 import UnOrderedListBlock from './blocks/UnOrderedListBlock';
 import QuoteBlock from './blocks/QuoteBlock';
+import TaskListBlock from './blocks/TaskListBlock';
 
 const Markup = ({ tokens }) =>
   tokens.map((token, index) => {
@@ -34,6 +35,9 @@ const Markup = ({ tokens }) =>
 
       case 'ORDERED_LIST':
         return <OrderedListBlock key={index} items={token.value} />;
+
+      case 'TASKS':
+        return <TaskListBlock key={index} tasks={token.value} />;
 
       case 'QUOTE':
         return <QuoteBlock key={index} contents={token.value} />;

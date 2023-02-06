@@ -146,9 +146,6 @@ const MessageList = ({ messages, handleGoBack }) => {
           const newDay = isMessageNewDay(msg, prev);
           const sequential = isMessageSequential(msg, prev, 300);
 
-          const next = arr[index - 1];
-
-          if (next && !next.msg) return <></>;
           return (
             msg && (
               <Message key={msg._id} isEditing={editMessage.id === msg._id}>
