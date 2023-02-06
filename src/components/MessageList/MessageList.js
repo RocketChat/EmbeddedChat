@@ -9,14 +9,12 @@ import {
   MessageReactions,
   MessageToolbox,
   MessageDivider,
-  MessageEmoji,
   Avatar,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
-import emojione from 'emoji-toolkit';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
 import {
