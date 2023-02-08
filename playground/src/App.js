@@ -14,6 +14,8 @@ function App() {
           host={process.env.REACT_APP_RC_HOST}
           roomId={process.env.REACT_APP_RC_ROOM_ID}
           GOOGLE_CLIENT_ID={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          FACEBOOK_APP_ID={process.env.REACT_APP_FACEBOOK_APP_ID}
+          FACEBOOK_APP_SECRET={process.env.REACT_APP_FACEBOOK_APP_SECRET}
           isClosable={true}
           setClosableState={setClosable}
           moreOpts={true}

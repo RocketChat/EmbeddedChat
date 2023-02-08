@@ -16,6 +16,8 @@ export const RCComponent = ({
   width = '100%',
   height = '30vh',
   GOOGLE_CLIENT_ID,
+  FACEBOOK_APP_ID,
+  FACEBOOK_APP_SECRET,
   host = 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,
@@ -92,6 +94,29 @@ export const RCComponent = ({
     }
   }, []);
 
+  useEffect(() => {
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: `${FACEBOOK_APP_ID}`,
+        cookie: true,
+        xfbml: true,
+        version: 'v9.0',
+      });
+      window.FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+      const fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      const js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+  }, []);
+
   return (
     <ToastBarProvider>
       <RCInstanceProvider value={{ RCInstance }}>
@@ -129,6 +154,8 @@ RCComponent.propTypes = {
   setClosableState: PropTypes.func,
   moreOpts: PropTypes.bool,
   GOOGLE_CLIENT_ID: PropTypes.string,
+  FACEBOOK_APP_ID: PropTypes.string,
+  FACEBOOK_APP_SECRET: PropTypes.string,
   host: PropTypes.string,
   roomId: PropTypes.string,
   channelName: PropTypes.string,
