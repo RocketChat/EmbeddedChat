@@ -124,6 +124,43 @@ export default class RocketChatInstance {
     }
   }
 
+  async FacebookLogin(accessToken, secret) {
+    try {
+      const req = await fetch(`${this.host}/api/v1/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: `{
+          serviceName: 'facebook',
+          accessToken: ${accessToken},
+          secret: ${secret},
+          expiresIn: 200,
+        }`,
+      });
+      const response = await req.json();
+      if (response.status === 'success') {
+        this.setCookies({
+          rc_token: response.data.authToken,
+          rc_uid: response.data.userId,
+        });
+        if (!response.data.me.username) {
+          await this.updateUserUsername(
+            response.data.userId,
+            response.data.me.name
+          );
+        }
+        return { status: response.status, me: response.data.me };
+      }
+
+      // if (response.error === 'totp-required') {
+      //   return response;
+      // }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   async logout() {
     try {
       const response = await fetch(`${this.host}/api/v1/logout`, {
