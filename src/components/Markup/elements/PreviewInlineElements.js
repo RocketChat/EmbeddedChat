@@ -5,6 +5,7 @@ import StrikeSpan from './StrikeSpan';
 import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
+import LinkSpan from './LinkSpan';
 
 const PreviewInlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -27,6 +28,18 @@ const PreviewInlineElements = ({ contents }) =>
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;
 
+      case 'LINK':
+        return (
+          <LinkSpan
+              key={index}
+              href={content.value.src.value}
+              label={
+                Array.isArray(content.value.label)
+                  ? content.value.label
+                  : [content.value.label]
+              }
+            />
+        );
       default:
         return null;
     }
