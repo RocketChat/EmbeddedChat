@@ -9,6 +9,7 @@ import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
+import { useRCAuth4Facebook } from '../../hooks/useRCAuth4Facebook';
 import LoginForm from '../auth/LoginForm';
 
 const ChatBody = ({
@@ -27,6 +28,7 @@ const ChatBody = ({
   const setRoles = useUserStore((state) => state.setRoles);
 
   const { handleGoogleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
+  const { handleFacebookLogin } = useRCAuth4Facebook();
   const { handleLogin } = useRCAuth();
 
   const isUserAuthenticated = useUserStore(
@@ -80,6 +82,9 @@ const ChatBody = ({
       <TotpModal
         handleGoogleLogin={handleGoogleLogin}
         handleLogin={handleLogin}
+        handleFacebookLogin={handleFacebookLogin}
+        FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
+        FACEBOOK_APP_ID={FACEBOOK_APP_ID}
       />
       <LoginForm
         FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}

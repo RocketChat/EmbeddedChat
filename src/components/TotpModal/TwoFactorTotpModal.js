@@ -5,7 +5,13 @@ import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../GenericModal';
 import classes from './TwoFactorTotpModal.module.css';
 
-export default function TotpModal({ handleGoogleLogin, handleLogin }) {
+export default function TotpModal({
+  handleGoogleLogin,
+  handleLogin,
+  handleFacebookLogin,
+  FACEBOOK_APP_SECRET,
+  FACEBOOK_APP_ID,
+}) {
   const [accessCode, setAccessCode] = useState(null);
   const isModalOpen = totpModalStore((state) => state.isModalOpen);
   const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
@@ -17,6 +23,11 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
 
     if (password !== null && emailoruser !== null) {
       handleLogin(emailoruser, password, accessCode);
+    } else if (
+      FACEBOOK_APP_ID !== undefined &&
+      FACEBOOK_APP_SECRET !== undefined
+    ) {
+      handleFacebookLogin(accessCode);
     } else {
       handleGoogleLogin(accessCode);
     }
@@ -65,4 +76,7 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
 TotpModal.propTypes = {
   handleGoogleLogin: PropTypes.func,
   handleLogin: PropTypes.func,
+  handleFacebookLogin: PropTypes.func,
+  FACEBOOK_APP_SECRET: PropTypes.string,
+  FACEBOOK_APP_ID: PropTypes.string,
 };
