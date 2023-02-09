@@ -16,7 +16,7 @@ export const useRCAuth4Facebook = () => {
   const toastPosition = useToastStore((state) => state.position);
   const dispatchToastMessage = useToastBarDispatch();
 
-  const handleFacebookLogin = async () => {
+  const handleFacebookLogin = async (accessCode) => {
     let facebookAccessToken;
     window.FB.getLoginStatus((response) => {
       if (response.status === 'connected') {
@@ -28,7 +28,11 @@ export const useRCAuth4Facebook = () => {
             if (response.authResponse) {
               facebookAccessToken = response.authResponse.accessToken;
             } else {
-              console.log('User cancelled login or did not fully authorize.');
+              dispatchToastMessage({
+                type: 'error',
+                message: 'cancelled login or did not fully authorize.',
+                position: toastPosition,
+              });
             }
           },
           { scope: 'public_profile,email' }
@@ -36,7 +40,33 @@ export const useRCAuth4Facebook = () => {
       }
     });
     try {
-      const res = await RCInstance.FacebookLogin(facebookAccessToken);
+      const res = await RCInstance.FacebookLogin(
+        facebookAccessToken,
+        accessCode
+      );
+
+      if (res.error === 'totp-required') {
+        setIsModalOpen(true);
+        dispatchToastMessage({
+          type: 'info',
+          message: 'Please Open your authentication app and enter the code.',
+          position: toastPosition,
+        });
+      } else if (res.error === 'totp-invalid') {
+        dispatchToastMessage({
+          type: 'error',
+          message:
+            'Something went wrong. Please check your TOTP and try again.',
+          position: toastPosition,
+        });
+      } else if (res.status === 'error') {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Something wrong happened',
+          position: toastPosition,
+        });
+      }
+
       if (res.status === 'success') {
         setUserAvatarUrl(res.me.avatarUrl);
         setAuthenticatedUserUsername(res.me.username);
@@ -45,12 +75,6 @@ export const useRCAuth4Facebook = () => {
         dispatchToastMessage({
           type: 'success',
           message: 'Successfully logged in',
-          position: toastPosition,
-        });
-      } else if (res.status === 'error') {
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Something wrong happened',
           position: toastPosition,
         });
       }

@@ -125,19 +125,33 @@ export default class RocketChatInstance {
     }
   }
 
-  async FacebookLogin(facebookAccessToken) {
+  async FacebookLogin(facebookAccessToken, accessCode) {
+    let reqBody;
+    if (!accessCode) {
+      reqBody = JSON.stringify({
+        serviceName: 'facebook',
+        accessToken: facebookAccessToken,
+        secret: this.FACEBOOK_APP_SECRET,
+        expiresIn: 3600,
+      });
+    } else {
+      reqBody = JSON.stringify({
+        serviceName: 'facebook',
+        accessToken: facebookAccessToken,
+        secret: this.FACEBOOK_APP_SECRET,
+        expiresIn: 3600,
+        totp: {
+          code: accessCode,
+        },
+      });
+    }
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          serviceName: 'facebook',
-          accessToken: facebookAccessToken,
-          secret: this.FACEBOOK_APP_SECRET,
-          expiresIn: 3600,
-        }),
+        body: reqBody,
       });
       const response = await req.json();
       if (response.status === 'success') {
@@ -154,9 +168,9 @@ export default class RocketChatInstance {
         return { status: response.status, me: response.data.me };
       }
 
-      // if (response.error === 'totp-required') {
-      //   return response;
-      // }
+      if (response.error) {
+        return response;
+      }
     } catch (error) {
       console.error(error.message);
     }
