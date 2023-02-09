@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../GenericModal';
 import classes from './TwoFactorTotpModal.module.css';
-import { useRCAuth } from '../../hooks/useRCAuth';
 
 export default function TotpModal({ handleGoogleLogin, handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
@@ -17,9 +16,6 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
     e.preventDefault();
 
     if (password !== null && emailoruser !== null) {
-      console.log(
-        ` password ${password} emailusername ${emailoruser} code  ${accessCode}`
-      );
       handleLogin(emailoruser, password, accessCode);
     } else {
       handleGoogleLogin(accessCode);
