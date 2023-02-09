@@ -3,9 +3,10 @@ import Cookies from 'js-cookie';
 import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './constant';
 
 export default class RocketChatInstance {
-  constructor(host, rid) {
+  constructor(host, rid, FACEBOOK_APP_SECRET) {
     this.host = host;
     this.rid = rid;
+    this.FACEBOOK_APP_SECRET = FACEBOOK_APP_SECRET;
     this.rcClient = new Rocketchat({
       protocol: 'ddp',
       host: this.host,
@@ -124,19 +125,19 @@ export default class RocketChatInstance {
     }
   }
 
-  async FacebookLogin(accessToken, secret) {
+  async FacebookLogin(facebookAccessToken) {
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: `{
+        body: JSON.stringify({
           serviceName: 'facebook',
-          accessToken: ${accessToken},
-          secret: ${secret},
-          expiresIn: 200,
-        }`,
+          accessToken: facebookAccessToken,
+          secret: this.FACEBOOK_APP_SECRET,
+          expiresIn: 3600,
+        }),
       });
       const response = await req.json();
       if (response.status === 'success') {
