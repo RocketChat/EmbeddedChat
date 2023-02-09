@@ -35,6 +35,9 @@ const useUserStore = create((set) => ({
   setShowAvatar: (showAvatar) => set(() => ({ showAvatar })),
   roles: {},
   setRoles: (roles) => set((state) => ({ ...state, roles })),
+  facebookAccessToken: null,
+  setfacebookAccessToken: (facebookAccessToken) =>
+    set(() => ({ facebookAccessToken })),
 }));
 
 export default useUserStore;

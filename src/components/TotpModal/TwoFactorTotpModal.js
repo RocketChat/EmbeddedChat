@@ -17,16 +17,16 @@ export default function TotpModal({
   const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
   const password = useUserStore((state) => state.password);
   const emailoruser = useUserStore((state) => state.emailoruser);
-
+  const facebookAccessToken = useUserStore(
+    (state) => state.facebookAccessToken
+  );
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (password !== null && emailoruser !== null) {
       handleLogin(emailoruser, password, accessCode);
-    } else if (
-      FACEBOOK_APP_ID !== undefined &&
-      FACEBOOK_APP_SECRET !== undefined
-    ) {
+    } else if (facebookAccessToken !== null) {
+      console.log(facebookAccessToken);
       handleFacebookLogin(accessCode);
     } else {
       handleGoogleLogin(accessCode);

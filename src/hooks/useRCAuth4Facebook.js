@@ -13,6 +13,9 @@ export const useRCAuth4Facebook = () => {
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
+  const setfacebookAccessToken = useUserStore(
+    (state) => state.setfacebookAccessToken
+  );
   const toastPosition = useToastStore((state) => state.position);
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -39,6 +42,9 @@ export const useRCAuth4Facebook = () => {
         );
       }
     });
+    setfacebookAccessToken(facebookAccessToken);
+    console.log(facebookAccessToken);
+
     try {
       const res = await RCInstance.FacebookLogin(
         facebookAccessToken,
@@ -72,6 +78,7 @@ export const useRCAuth4Facebook = () => {
         setAuthenticatedUserUsername(res.me.username);
         setIsUserAuthenticated(true);
         setIsModalOpen(false);
+        setfacebookAccessToken(null);
         dispatchToastMessage({
           type: 'success',
           message: 'Successfully logged in',
