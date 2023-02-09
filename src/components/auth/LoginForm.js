@@ -7,14 +7,15 @@ import {
   TextInput,
   Icon,
 } from '@rocket.chat/fuselage';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import { useRCAuth4Facebook } from '../../hooks/useRCAuth4Facebook';
 import classes from './Login.module.css';
 
-export default function LoginForm() {
+export default function LoginForm(FACEBOOK_APP_ID, FACEBOOK_APP_SECRET) {
   const [userOrEmail, setuserOrEmail] = useState(null);
   const [password, setpassword] = useState(null);
   const isLoginModalOpen = loginModalStore((state) => state.isLoginModalOpen);
@@ -36,12 +37,19 @@ export default function LoginForm() {
   const handleEditPassword = (e) => {
     setpassword(e.target.value);
   };
-  const { handleGoogleLogin } = useRCAuth4Google();
 
-  const handleGooglewithLogin = () => {
+  const { handleGoogleLogin } = useRCAuth4Google();
+  const { handleFacebookLogin } = useRCAuth4Facebook();
+
+  const handleLoginwithGoogle = () => {
     setIsLoginModalOpen(false);
     handleGoogleLogin();
   };
+  const handleLoginwithFacebook = () => {
+    handleFacebookLogin();
+    setIsLoginModalOpen(false);
+  };
+
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -83,11 +91,20 @@ export default function LoginForm() {
               </Box>
               <Button
                 secondary
-                onClick={handleGooglewithLogin}
+                onClick={handleLoginwithGoogle}
                 margin="10px 10px 10px 10px"
               >
                 <Icon name="google" /> Login with Google
               </Button>
+              {FACEBOOK_APP_ID && FACEBOOK_APP_SECRET ? (
+                <Button
+                  secondary
+                  onClick={handleLoginwithFacebook}
+                  margin="10px 10px 10px 10px"
+                >
+                  <Icon name="facebook" /> Login with Facebook
+                </Button>
+              ) : null}
             </Box>
           </Modal.Footer>
         </Box>

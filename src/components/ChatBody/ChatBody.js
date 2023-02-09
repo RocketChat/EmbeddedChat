@@ -11,7 +11,14 @@ import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 
-const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
+const ChatBody = ({
+  height,
+  anonymousMode,
+  showRoles,
+  GOOGLE_CLIENT_ID,
+  FACEBOOK_APP_ID,
+  FACEBOOK_APP_SECRET,
+}) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
 
@@ -74,7 +81,10 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         handleGoogleLogin={handleGoogleLogin}
         handleLogin={handleLogin}
       />
-      <LoginForm />
+      <LoginForm
+        FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
+        FACEBOOK_APP_ID={FACEBOOK_APP_ID}
+      />
     </Box>
   );
 };
@@ -86,4 +96,6 @@ ChatBody.propTypes = {
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
   GOOGLE_CLIENT_ID: PropTypes.string,
+  FACEBOOK_APP_ID: PropTypes.string,
+  FACEBOOK_APP_SECRET: PropTypes.string,
 };
