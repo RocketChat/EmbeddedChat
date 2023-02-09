@@ -30,6 +30,8 @@ and use it,
   width="100%"
   height="40vh"
   GOOGLE_CLIENT_ID={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+  FACEBOOK_APP_ID={process.env.REACT_APP_FACEBOOK_APP_ID}
+  FACEBOOK_APP_SECRET{process.env.REACT_APP_FACEBOOK_APP_SECRET}
   host={'http://localhost:3000'}
   roomId={'GENERAL'}
   channelName="Customer Service"
@@ -51,16 +53,29 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | width            | `width` of the component                                                                                                                    |
 | height           | `height` of the component (based on the `ChatBody`)                                                                                         |
 | host             | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)                                                          |
-| GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console                                                 |
+| GOOGLE_CLIENT_ID | The Google client ID you will receive after creating a project in Google console                                   |
+| FACEBOOK_APP_ID  | The Facebook App ID you will receive after setting up Facebook OAuth |
+| FACEBOOK_APP_SECRET|  The Facebook App Secret you will receive after setting up Facebook OAuth |
 | roomId           | the public room's id that you want to subscribe to                                                                                          |
 | channelName      | the fallback channel name to be present on the chat header                                                                                  |
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
 | showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
 
-## Setting up Authentication
+## To setup OAuth for EmbeddedChat, follow these steps:
 
-Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
+Google OAuth: Visit this [link](https://docs.rocket.chat/use-rocket.chat/rocket.chat-workspace-administration/settings/oauth/google-oauth-setup) for instructions on how to receive the `GOOGLE_CLIENT_ID` and set up Google SSO for EmbeddedChat.
+
+Facebook OAuth: Visit this [link](https://docs.rocket.chat/use-rocket.chat/rocket.chat-workspace-administration/settings/oauth/facebook-oauth-setup) for instructions on how to receive the `FACEBOOK_APP_ID` and `FACEBOOK_APP_SECRET` as well as to set up Facebook OAuth for EmbeddedChat.
+
+> **Development with Facebook OAuth:**  When using Facebook OAuth in a development environment, it is important to note that Facebook does not allow HTTP connections. As a result, you must use HTTPS when testing Facebook OAuth in a development environment.
+
+To ensure HTTPS is enabled for your development environment, add the following line to your package.json file:
+
+```
+"dev": "HTTPS=true concurrently \" npm run watch \" \" npm run start --prefix playground \"",
+
+```
 
 ## Development
 
