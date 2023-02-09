@@ -42,7 +42,7 @@ export const RCComponent = ({
     );
   }
 
-  const RCInstance = new RocketChatInstance(host, roomId);
+  const RCInstance = new RocketChatInstance(host, roomId, FACEBOOK_APP_SECRET);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -102,15 +102,16 @@ export const RCComponent = ({
         xfbml: true,
         version: 'v9.0',
       });
-      window.FB.AppEvents.logPageView();
     };
 
     (function (d, s, id) {
+      let js;
       const fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
         return;
       }
-      const js = d.createElement(s);
+      // eslint-disable-next-line prefer-const
+      js = d.createElement(s);
       js.id = id;
       js.src = 'https://connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
@@ -136,6 +137,8 @@ export const RCComponent = ({
               anonymousMode={anonymousMode}
               showRoles={showRoles}
               GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
+              FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
+              FACEBOOK_APP_ID={FACEBOOK_APP_ID}
             />
           ) : (
             <Home height={!fullScreen ? height : '83vh'} />
