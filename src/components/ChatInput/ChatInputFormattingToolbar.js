@@ -7,6 +7,7 @@ import { EmojiPicker } from '../EmojiPicker/index';
 import { useUserStore } from '../../store';
 import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
+import AudioMessageRecorder from './AudioMessageRecorder';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const isUserAuthenticated = useUserStore(
@@ -82,6 +83,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           <Icon name={item.name} size="x20" />
         </ActionButton>
       ))}
+      <AudioMessageRecorder />
       <Icon
         className={styles.chatInputIconCursor}
         disabled={!isUserAuthenticated}
