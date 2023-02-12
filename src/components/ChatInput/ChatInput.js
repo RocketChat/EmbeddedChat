@@ -3,16 +3,22 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
-import { useToastStore, useUserStore, useMessageStore } from '../../store';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import {
+  useToastStore,
+  useUserStore,
+  useMessageStore,
+  loginModalStore,
+} from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
-  const { handleLogin } = useRCAuth4Google();
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
+  const setIsLoginModalOpen = loginModalStore(
+    (state) => state.setIsLoginModalOpen
+  );
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -29,6 +35,10 @@ const ChatInput = () => {
   const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
 
   const sendMessage = async () => {
     messageRef.current.style.height = '38px';
@@ -95,12 +105,17 @@ const ChatInput = () => {
             messageRef.current.value = e.target.value;
             setDisableButton(!messageRef.current.value.length);
             e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150)
-              e.target.style.height = `${e.target.scrollHeight - 10}px`;
-            else e.target.style.height = '129px';
+            if (e.target.scrollHeight <= 150) {
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            } else {
+              e.target.style.height = '150px';
+            }
           }}
           onKeyDown={(e) => {
-            if (editMessage.msg && e.keyCode === 27) {
+            if (e.ctrlKey && e.keyCode === 13) {
+              // Insert line break in text input field
+              messageRef.current.value += '\n';
+            } else if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
@@ -123,9 +138,12 @@ const ChatInput = () => {
             />
           </ActionButton>
         ) : (
-          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-            Sign In with Google
+          <Button
+            onClick={openLoginModal}
+            primary
+            style={{ overflow: 'visible' }}
+          >
+            JOIN
           </Button>
         )}
       </Box>
