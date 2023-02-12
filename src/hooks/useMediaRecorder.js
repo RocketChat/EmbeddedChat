@@ -28,7 +28,6 @@ export function useMediaRecorder({ constraints, onStop }) {
       audioChunks.current.push(event.data);
     });
     _recorder.addEventListener('stop', () => {
-      // setBlob(audioChunks.current);
       onStop && onStop(audioChunks.current);
     });
   }

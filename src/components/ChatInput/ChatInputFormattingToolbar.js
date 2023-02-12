@@ -56,8 +56,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     input.selectionEnd = input.selectionStart + selectedText.length;
   };
 
-  console.log(isRecordingMessage);
-
   return (
     <Box bg="neutral-500" className={styles.chatFormat}>
       {isUserAuthenticated && (

@@ -54,7 +54,3 @@
 .textInput::placeholder {
   padding-left: 5px;
 }
-
-button:disabled {
-  color: #919297;
-}

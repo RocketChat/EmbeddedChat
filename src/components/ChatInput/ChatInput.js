@@ -97,8 +97,6 @@ const ChatInput = () => {
     }
   }, [editMessage]);
 
-  console.log(isRecordingMessage);
-
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
