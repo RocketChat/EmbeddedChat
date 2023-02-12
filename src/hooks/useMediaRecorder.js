@@ -16,19 +16,19 @@ function useUserMedia(constraints) {
 export function useMediaRecorder({ constraints, onStop }) {
   const [recorder, setRecorder] = useState();
   const { getStream } = useUserMedia(constraints);
-  const audioChunks = useRef([]);
+  const chunks = useRef([]);
 
   async function start() {
     const stream = await getStream(constraints, true);
-    audioChunks.current = [];
+    chunks.current = [];
     const _recorder = new MediaRecorder(stream);
     _recorder.start();
     setRecorder(_recorder);
     _recorder.addEventListener('dataavailable', (event) => {
-      audioChunks.current.push(event.data);
+      chunks.current.push(event.data);
     });
     _recorder.addEventListener('stop', () => {
-      onStop && onStop(audioChunks.current);
+      onStop && onStop(chunks.current);
     });
   }
 

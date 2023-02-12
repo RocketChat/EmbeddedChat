@@ -83,7 +83,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       {formatter.map((item, index) => (
         <ActionButton
           disabled={isRecordingMessage}
-          success={isRecordingMessage}
           bg="neutral-500"
           border="0px"
           onClick={() => {
@@ -91,12 +90,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           }}
           key={index}
         >
-          <Icon
-            disabled={isRecordingMessage}
-            success={isRecordingMessage}
-            name={item.name}
-            size="x20"
-          />
+          <Icon disabled={isRecordingMessage} name={item.name} size="x20" />
         </ActionButton>
       ))}
       <AudioMessageRecorder />

@@ -66,8 +66,8 @@ const AudioMessageRecorder = () => {
 
   const handleCancelRecordButton = async () => {
     toogleRecordingMessage();
-    setIsRecorded(false);
     await stopRecording();
+    setIsRecorded(false);
   };
 
   const handleStopRecordButton = async () => {
@@ -116,6 +116,9 @@ const AudioMessageRecorder = () => {
     if (isRecorded && file) {
       sendRecording();
       setIsRecorded(false);
+    }
+    if (file) {
+      setFile(null);
     }
   }, [isRecorded, file]);
 
