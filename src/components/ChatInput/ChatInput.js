@@ -20,10 +20,13 @@ const ChatInput = () => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({
-    editMessage: state.editMessage,
-    setEditMessage: state.setEditMessage,
-  }));
+  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
+    (state) => ({
+      editMessage: state.editMessage,
+      setEditMessage: state.setEditMessage,
+      isRecordingMessage: state.isRecordingMessage,
+    })
+  );
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -94,12 +97,14 @@ const ChatInput = () => {
     }
   }, [editMessage]);
 
+  console.log(isRecordingMessage);
+
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
         <textarea
+          disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-          disabled={!isUserAuthenticated}
           className={styles.textInput}
           onChange={(e) => {
             messageRef.current.value = e.target.value;
@@ -128,7 +133,11 @@ const ChatInput = () => {
         />
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
-          <ActionButton bg="surface" border="0px" disabled={disableButton}>
+          <ActionButton
+            bg="surface"
+            border="0px"
+            disabled={disableButton || isRecordingMessage}
+          >
             <Icon
               className={styles.chatInputIconCursor}
               onClick={sendMessage}

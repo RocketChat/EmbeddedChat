@@ -3,8 +3,13 @@ import { Icon, ActionButton, Box } from '@rocket.chat/fuselage';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
+import useMessageStore from '../../store/messageStore';
 
 const AudioMessageRecorder = () => {
+  const toogleRecordingMessage = useMessageStore(
+    (state) => state.toogleRecordingMessage
+  );
+
   const { RCInstance } = useContext(RCContext);
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
@@ -37,6 +42,7 @@ const AudioMessageRecorder = () => {
     setRecordState('recording');
     try {
       start();
+      toogleRecordingMessage();
       const startTime = new Date();
       setRecordingInterval(
         setInterval(() => {
@@ -59,11 +65,13 @@ const AudioMessageRecorder = () => {
   };
 
   const handleCancelRecordButton = async () => {
+    toogleRecordingMessage();
     setIsRecorded(false);
     await stopRecording();
   };
 
   const handleStopRecordButton = async () => {
+    toogleRecordingMessage();
     setIsRecorded(true);
     await stopRecording();
   };
@@ -118,7 +126,12 @@ const AudioMessageRecorder = () => {
         border="0px"
         onClick={handleRecordButtonClick}
       >
-        <Icon name="mic" size="x20" />
+        <Icon
+          borderInlineStart="1px solid #989393"
+          padding={6}
+          name="mic"
+          size="x20"
+        />
       </ActionButton>
     );
   }
@@ -132,13 +145,16 @@ const AudioMessageRecorder = () => {
             border="0px"
             onClick={handleCancelRecordButton}
           >
-            <Icon name="circle-cross" size="x20" />
+            <Icon
+              borderInlineStart="1px solid #989393"
+              padding={6}
+              name="circle-cross"
+              size="x20"
+            />
           </ActionButton>
-          <Box color="default">
+          <Box color="default" className={styles.record}>
             <span className={styles.audioDot} />
-            <span className="rc-message-box__audio-message-timer-text">
-              {time}
-            </span>
+            <span className={styles.timer}>{time}</span>
           </Box>
           <ActionButton
             bg="neutral-500"

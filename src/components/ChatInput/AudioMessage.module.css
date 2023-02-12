@@ -1,13 +1,23 @@
 .audioDot {
-  flex: 0 0 auto;
 
   width: 0.5rem;
   height: 0.5rem;
 
   border-radius: 50%;
   background-color: red;
+  margin: auto;
+  margin-right: 8px;
 }
 
 .audioBox {
   display: flex;
+}
+
+.timer {
+  margin: auto;
+}
+
+.record {
+  display: flex;
+  margin: auto;
 }
