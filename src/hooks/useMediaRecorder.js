@@ -17,6 +17,7 @@ export function useMediaRecorder({ constraints, onStop }) {
   const [recorder, setRecorder] = useState();
   const { getStream } = useUserMedia(constraints);
   const audioChunks = useRef([]);
+
   async function start() {
     const stream = await getStream(constraints, true);
     audioChunks.current = [];
@@ -27,14 +28,17 @@ export function useMediaRecorder({ constraints, onStop }) {
       audioChunks.current.push(event.data);
     });
     _recorder.addEventListener('stop', () => {
+      // setBlob(audioChunks.current);
       onStop && onStop(audioChunks.current);
     });
   }
+
   async function stop() {
     if (recorder) {
       recorder.stop();
       (await getStream()).getTracks().forEach((track) => track.stop());
     }
   }
-  return { start, stop };
+
+  return [start, stop];
 }

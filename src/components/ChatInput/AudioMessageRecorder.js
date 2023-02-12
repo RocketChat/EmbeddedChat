@@ -1,23 +1,37 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Icon, ActionButton, Box } from '@rocket.chat/fuselage';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
+import RCContext from '../../context/RCInstance';
 
 const AudioMessageRecorder = () => {
+  const { RCInstance } = useContext(RCContext);
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
-  const [isMicrophoneDenied, setIsMicrophoneDenied] = useState(false);
+  const [file, setFile] = useState(null);
+  const [isRecorded, setIsRecorded] = useState(false);
 
-  const { start, stop } = useMediaRecorder({
+  const onStop = (audioChunks) => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+    const fileName = 'Audio record.mp3';
+    setFile(new File([audioBlob], fileName, { type: 'audio/mpeg' }));
+  };
+
+  const [start, stop] = useMediaRecorder({
     constraints: { audio: true, video: false },
-    onStop: (audioChunks) => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-      const fileName = 'Audio record.mp3';
-      const file = new File([audioBlob], fileName, { type: 'audio/mpeg' });
-      console.log(file);
-    },
+    onStop,
   });
+
+  const stopRecording = async () => {
+    stop();
+    if (recordingInterval) {
+      clearInterval(recordingInterval);
+    }
+    setRecordingInterval(null);
+    setTime('00:00');
+    setRecordState('idle');
+  };
 
   const handleRecordButtonClick = () => {
     setRecordState('recording');
@@ -44,24 +58,22 @@ const AudioMessageRecorder = () => {
     }
   };
 
-  const handleCancelRecordButton = () => {
-    stop();
+  const handleCancelRecordButton = async () => {
+    setIsRecorded(false);
+    await stopRecording();
   };
 
-  const handleStopRecordButton = () => {
-    stop();
+  const handleStopRecordButton = async () => {
+    setIsRecorded(true);
+    await stopRecording();
   };
 
   const handleMount = useCallback(async () => {
     if (navigator.permissions) {
       try {
-        const permissionStatus = await navigator.permissions.query({
+        await navigator.permissions.query({
           name: 'microphone',
         });
-        setIsMicrophoneDenied(permissionStatus.state === 'denied');
-        permissionStatus.onchange = () => {
-          setIsMicrophoneDenied(permissionStatus.state === 'denied');
-        };
         return;
       } catch (error) {
         console.warn(error);
@@ -69,7 +81,6 @@ const AudioMessageRecorder = () => {
     }
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      setIsMicrophoneDenied(true);
       return;
     }
 
@@ -79,7 +90,6 @@ const AudioMessageRecorder = () => {
           ({ kind }) => kind === 'audioinput'
         )
       ) {
-        setIsMicrophoneDenied(true);
         return;
       }
     } catch (error) {
@@ -87,19 +97,19 @@ const AudioMessageRecorder = () => {
     }
   });
 
-  const handleUnmount = useCallback(async () => {
-    if (state === 'recording') {
-      setIsMicrophoneDenied(true);
-    }
-  });
-
   useEffect(() => {
     handleMount();
+  }, [handleMount]);
 
-    return () => {
-      handleUnmount();
+  useEffect(() => {
+    const sendRecording = async () => {
+      await RCInstance.sendAttachment(file);
     };
-  }, [handleMount, handleUnmount]);
+    if (isRecorded && file) {
+      sendRecording();
+      setIsRecorded(false);
+    }
+  }, [isRecorded, file]);
 
   if (state === 'idle') {
     return (

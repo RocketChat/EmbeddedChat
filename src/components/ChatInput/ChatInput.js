@@ -85,7 +85,7 @@ const ChatInput = () => {
     if (!fileObj) {
       return;
     }
-    await RCInstance.sendAttachment(event.target);
+    await RCInstance.sendAttachment(event.target.files[0]);
   };
 
   useEffect(() => {
