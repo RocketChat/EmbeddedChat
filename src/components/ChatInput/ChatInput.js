@@ -112,7 +112,7 @@ const ChatInput = () => {
             }
           }}
           onKeyDown={(e) => {
-            if (e.ctrlKey && e.keyCode === 13) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
               // Insert line break in text input field
               messageRef.current.value += '\n';
             } else if (editMessage.msg && e.keyCode === 27) {

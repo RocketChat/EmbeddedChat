@@ -31,14 +31,14 @@ const PreviewInlineElements = ({ contents }) =>
       case 'LINK':
         return (
           <LinkSpan
-              key={index}
-              href={content.value.src.value}
-              label={
-                Array.isArray(content.value.label)
-                  ? content.value.label
-                  : [content.value.label]
-              }
-            />
+            key={index}
+            href={content.value.src.value}
+            label={
+              Array.isArray(content.value.label)
+                ? content.value.label
+                : [content.value.label]
+            }
+          />
         );
       default:
         return null;
