@@ -7,6 +7,7 @@ import CodeElement from './CodeElement';
 import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
+import LinkSpan from './LinkSpan';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -35,6 +36,18 @@ const InlineElements = ({ contents }) =>
       case 'COLOR':
         return <ColorElement key={index} {...content.value} />;
 
+      case 'LINK':
+        return (
+          <LinkSpan
+            key={index}
+            href={content.value.src.value}
+            label={
+              Array.isArray(content.value.label)
+                ? content.value.label
+                : [content.value.label]
+            }
+          />
+        );
       default:
         return null;
     }
