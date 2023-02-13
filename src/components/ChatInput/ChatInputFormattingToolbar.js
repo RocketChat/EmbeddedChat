@@ -4,13 +4,18 @@ import Popup from 'reactjs-popup';
 import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
 import he from 'he';
 import { EmojiPicker } from '../EmojiPicker/index';
-import { useUserStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
+import AudioMessageRecorder from './AudioMessageRecorder';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
+  );
+
+  const isRecordingMessage = useMessageStore(
+    (state) => state.isRecordingMessage
   );
 
   const handleClickToOpenFiles = () => {
@@ -55,15 +60,20 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     <Box bg="neutral-500" className={styles.chatFormat}>
       {isUserAuthenticated && (
         <Popup
-          disabled={!isUserAuthenticated}
+          disabled={isRecordingMessage}
           trigger={
-            <Icon
-              borderInlineEnd="1px solid #989393"
-              className={styles.chatInputIconCursor}
-              name="emoji"
-              size="x20"
-              padding={6}
-            />
+            <ActionButton
+              bg="neutral-500"
+              border="0px"
+              disabled={isRecordingMessage}
+            >
+              <Icon
+                borderInlineEnd="1px solid #989393"
+                name="emoji"
+                size="x20"
+                padding={6}
+              />
+            </ActionButton>
           }
           position="top left"
         >
@@ -72,6 +82,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       )}
       {formatter.map((item, index) => (
         <ActionButton
+          disabled={isRecordingMessage}
           bg="neutral-500"
           border="0px"
           onClick={() => {
@@ -79,17 +90,18 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           }}
           key={index}
         >
-          <Icon name={item.name} size="x20" />
+          <Icon disabled={isRecordingMessage} name={item.name} size="x20" />
         </ActionButton>
       ))}
-      <Icon
-        className={styles.chatInputIconCursor}
-        disabled={!isUserAuthenticated}
-        name="plus"
-        size="x20"
-        padding={6}
+      <AudioMessageRecorder />
+      <ActionButton
+        bg="neutral-500"
+        border="0px"
+        disabled={isRecordingMessage}
         onClick={handleClickToOpenFiles}
-      />
+      >
+        <Icon name="plus" size="x20" padding={6} />
+      </ActionButton>
     </Box>
   );
 };

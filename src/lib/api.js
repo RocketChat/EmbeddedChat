@@ -490,10 +490,9 @@ export default class RocketChatInstance {
     }
   }
 
-  async sendAttachment(e) {
+  async sendAttachment(file) {
     try {
       const form = new FormData();
-      const file = e.files[0];
       form.append('file', file, file.name);
       const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: 'POST',
