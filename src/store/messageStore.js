@@ -6,6 +6,7 @@ const useMessageStore = create((set) => ({
   editMessage: {},
   messageToReport: NaN,
   showReportMessage: false,
+  isRecordingMessage: false,
   setFilter: (filter) => set((state) => ({ ...state, filtered: filter })),
   setMessages: (messages) => set((state) => ({ ...state, messages })),
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
@@ -13,6 +14,12 @@ const useMessageStore = create((set) => ({
     set((state) => ({ ...state, messageToReport: messageId })),
   toggleShowReportMessage: () => {
     set((state) => ({ ...state, showReportMessage: !state.showReportMessage }));
+  },
+  toogleRecordingMessage: () => {
+    set((state) => ({
+      ...state,
+      isRecordingMessage: !state.isRecordingMessage,
+    }));
   },
 }));
 
