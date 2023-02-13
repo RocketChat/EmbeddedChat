@@ -18,6 +18,7 @@
         "no-unused-vars" : "warn",
         "no-console": "off",
         "no-underscore-dangle": "off",
+        "no-unused-expressions": "off",
         "react/function-component-definition" : "off",
         "react/require-default-props" : "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
