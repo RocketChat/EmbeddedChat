@@ -7,7 +7,7 @@ import {
   TextInput,
   Icon,
 } from '@rocket.chat/fuselage';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
@@ -15,7 +15,7 @@ import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth4Facebook } from '../../hooks/useRCAuth4Facebook';
 import classes from './Login.module.css';
 
-export default function LoginForm(FACEBOOK_APP_ID, FACEBOOK_APP_SECRET) {
+export default function LoginForm(FACEBOOK_APP_ID) {
   const [userOrEmail, setuserOrEmail] = useState(null);
   const [password, setpassword] = useState(null);
   const isLoginModalOpen = loginModalStore((state) => state.isLoginModalOpen);
@@ -96,7 +96,7 @@ export default function LoginForm(FACEBOOK_APP_ID, FACEBOOK_APP_SECRET) {
               >
                 <Icon name="google" /> Login with Google
               </Button>
-              {FACEBOOK_APP_ID && FACEBOOK_APP_SECRET ? (
+              {FACEBOOK_APP_ID ? (
                 <Button
                   secondary
                   onClick={handleLoginwithFacebook}

@@ -137,7 +137,6 @@ export const RCComponent = ({
               anonymousMode={anonymousMode}
               showRoles={showRoles}
               GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
-              FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
               FACEBOOK_APP_ID={FACEBOOK_APP_ID}
             />
           ) : (

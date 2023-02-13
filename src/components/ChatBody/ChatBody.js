@@ -18,7 +18,6 @@ const ChatBody = ({
   showRoles,
   GOOGLE_CLIENT_ID,
   FACEBOOK_APP_ID,
-  FACEBOOK_APP_SECRET,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
@@ -83,13 +82,8 @@ const ChatBody = ({
         handleGoogleLogin={handleGoogleLogin}
         handleLogin={handleLogin}
         handleFacebookLogin={handleFacebookLogin}
-        FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
-        FACEBOOK_APP_ID={FACEBOOK_APP_ID}
       />
-      <LoginForm
-        FACEBOOK_APP_SECRET={FACEBOOK_APP_SECRET}
-        FACEBOOK_APP_ID={FACEBOOK_APP_ID}
-      />
+      <LoginForm FACEBOOK_APP_ID={FACEBOOK_APP_ID} />
     </Box>
   );
 };
@@ -102,5 +96,4 @@ ChatBody.propTypes = {
   showRoles: PropTypes.bool,
   GOOGLE_CLIENT_ID: PropTypes.string,
   FACEBOOK_APP_ID: PropTypes.string,
-  FACEBOOK_APP_SECRET: PropTypes.string,
 };
