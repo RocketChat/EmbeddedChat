@@ -5,10 +5,13 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
+  - name: Initialize playground App
+    command: |
+      cd playground
+      npm i
+      npm run start
+
   - name: Initialize EMBEDDEDCHAT App
     command: |
       npm i
-      cd playground
-      npm i
-      cd .. 
       npm run dev
