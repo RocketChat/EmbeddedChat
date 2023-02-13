@@ -9,8 +9,6 @@ export default function TotpModal({
   handleGoogleLogin,
   handleLogin,
   handleFacebookLogin,
-  FACEBOOK_APP_SECRET,
-  FACEBOOK_APP_ID,
 }) {
   const [accessCode, setAccessCode] = useState(null);
   const isModalOpen = totpModalStore((state) => state.isModalOpen);
@@ -26,7 +24,6 @@ export default function TotpModal({
     if (password !== null && emailoruser !== null) {
       handleLogin(emailoruser, password, accessCode);
     } else if (facebookAccessToken !== null) {
-      console.log(facebookAccessToken);
       handleFacebookLogin(accessCode);
     } else {
       handleGoogleLogin(accessCode);
@@ -77,6 +74,4 @@ TotpModal.propTypes = {
   handleGoogleLogin: PropTypes.func,
   handleLogin: PropTypes.func,
   handleFacebookLogin: PropTypes.func,
-  FACEBOOK_APP_SECRET: PropTypes.string,
-  FACEBOOK_APP_ID: PropTypes.string,
 };
