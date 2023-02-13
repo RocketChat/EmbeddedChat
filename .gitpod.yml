@@ -6,12 +6,13 @@
 
 tasks:
   - name: Initialize playground App
-    command: |
+    init: |
       cd playground
-      npm i
-      npm run start
+      npm install
+    command: npm run start
 
   - name: Initialize EMBEDDEDCHAT App
-    command: |
-      npm i
-      npm run dev
+    init: |
+      npm install
+    command: npm run dev
+
