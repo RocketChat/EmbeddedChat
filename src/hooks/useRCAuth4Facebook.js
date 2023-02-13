@@ -16,20 +16,25 @@ export const useRCAuth4Facebook = () => {
   const setfacebookAccessToken = useUserStore(
     (state) => state.setfacebookAccessToken
   );
+  const facebookAccessToken = useUserStore(
+    (state) => state.facebookAccessToken
+  );
   const toastPosition = useToastStore((state) => state.position);
   const dispatchToastMessage = useToastBarDispatch();
 
+  let FBAccessToken;
   const handleFacebookLogin = async (accessCode) => {
-    let facebookAccessToken;
     window.FB.getLoginStatus((response) => {
       if (response.status === 'connected') {
-        facebookAccessToken = response.authResponse.accessToken;
+        setfacebookAccessToken(response.authResponse.accessToken);
+        FBAccessToken = response.authResponse.accessToken;
       } else {
         window.FB.login(
           // eslint-disable-next-line no-shadow
           (response) => {
             if (response.authResponse) {
-              facebookAccessToken = response.authResponse.accessToken;
+              FBAccessToken = response.authResponse.accessToken;
+              setfacebookAccessToken(response.authResponse.accessToken);
             } else {
               dispatchToastMessage({
                 type: 'error',
@@ -42,14 +47,9 @@ export const useRCAuth4Facebook = () => {
         );
       }
     });
-    setfacebookAccessToken(facebookAccessToken);
-    console.log(facebookAccessToken);
 
     try {
-      const res = await RCInstance.FacebookLogin(
-        facebookAccessToken,
-        accessCode
-      );
+      const res = await RCInstance.FacebookLogin(FBAccessToken, accessCode);
 
       if (res.error === 'totp-required') {
         setIsModalOpen(true);
