@@ -33,6 +33,7 @@ import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
+import classes from './MessageList.module.css';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -144,139 +145,150 @@ const MessageList = ({ messages, handleGoBack }) => {
           const newDay = isMessageNewDay(msg, prev);
           const sequential = isMessageSequential(msg, prev, 300);
 
-          const next = arr[index - 1];
-
-          if (next && !next.msg) return <></>;
           return (
             msg && (
-              <Message key={msg._id} isEditing={editMessage.id === msg._id}>
-                <Message.Container>
-                  {newDay && (
-                    <MessageDivider>
-                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                    </MessageDivider>
-                  )}
-                  <Box display="flex">
-                    {showAvatar && (
-                      <Box margin="3px">
-                        <Avatar
-                          url={getUserAvatarUrl(msg.u.username)}
-                          size="x36"
-                          alt="avatar"
-                        />
-                      </Box>
+              <Box className={classes.messageParentBox}>
+                <Message
+                  key={msg._id}
+                  isEditing={editMessage.id === msg._id}
+                  className={classes.messageBody}
+                >
+                  <Message.Container>
+                    {newDay && (
+                      <MessageDivider>
+                        {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                      </MessageDivider>
                     )}
-                    <Box margin="5px">
-                      {!sequential && <MessageHeader msg={msg} />}
-                      {!msg.t ? (
-                        <>
-                          <Message.Body>
-                            {msg.attachments && msg.attachments.length > 0 ? (
-                              <Attachments attachments={msg.attachments} />
-                            ) : (
-                              <Markdown body={msg} />
-                            )}
-                          </Message.Body>
-
-                          <MessageReactions>
-                            {msg.reactions &&
-                              serializeReactions(msg.reactions).map(
-                                (reaction) => (
-                                  <MessageReactions.Reaction
-                                    key={reaction.name}
-                                    mine={isSameUser(
-                                      reaction,
-                                      authenticatedUserUsername
-                                    )}
-                                    onClick={() =>
-                                      handleEmojiClick(
-                                        reaction,
-                                        msg,
-                                        !isSameUser(
-                                          reaction,
-                                          authenticatedUserUsername
-                                        )
-                                      )
-                                    }
-                                  >
-                                    <Markdown body={reaction.name} />
-                                    <p>{reaction.count}</p>
-                                  </MessageReactions.Reaction>
-                                )
+                    <Box display="flex">
+                      {showAvatar && (
+                        <Box margin="3px">
+                          <Avatar
+                            url={getUserAvatarUrl(msg.u.username)}
+                            size="x36"
+                            alt="avatar"
+                          />
+                        </Box>
+                      )}
+                      <Box margin="5px">
+                        {!sequential && <MessageHeader msg={msg} />}
+                        {!msg.t ? (
+                          <>
+                            <Message.Body>
+                              {msg.attachments && msg.attachments.length > 0 ? (
+                                <>
+                                  <Markdown body={msg} isReaction={false} />
+                                  <Attachments attachments={msg.attachments} />
+                                </>
+                              ) : (
+                                <Markdown body={msg} isReaction={false} />
                               )}
-                          </MessageReactions>
-                        </>
-                      ) : (
-                        <>
-                          {msg.attachments && (
-                            <Attachments attachments={msg.attachments} />
-                          )}
-                        </>
-                      )}
+                            </Message.Body>
+
+                            <MessageReactions>
+                              {msg.reactions &&
+                                serializeReactions(msg.reactions).map(
+                                  (reaction) => (
+                                    <MessageReactions.Reaction
+                                      key={reaction.name}
+                                      mine={isSameUser(
+                                        reaction,
+                                        authenticatedUserUsername
+                                      )}
+                                      onClick={() =>
+                                        handleEmojiClick(
+                                          reaction,
+                                          msg,
+                                          !isSameUser(
+                                            reaction,
+                                            authenticatedUserUsername
+                                          )
+                                        )
+                                      }
+                                    >
+                                      <Markdown
+                                        body={reaction.name}
+                                        isReaction
+                                      />
+                                      <p>{reaction.count}</p>
+                                    </MessageReactions.Reaction>
+                                  )
+                                )}
+                            </MessageReactions>
+                          </>
+                        ) : (
+                          <>
+                            {msg.attachments && (
+                              <Attachments attachments={msg.attachments} />
+                            )}
+                          </>
+                        )}
+                      </Box>
                     </Box>
-                  </Box>
-                </Message.Container>
-                {!msg.t ? (
-                  <MessageToolbox.Wrapper>
-                    <MessageToolbox>
-                      <MessageToolbox.Item icon="thread" />
-                      <MessageToolbox.Item
-                        icon={`${
-                          msg.starred &&
-                          msg.starred.find((u) => u._id === authenticatedUserId)
-                            ? 'star-filled'
-                            : 'star'
-                        }`}
-                        onClick={() => handleStarMessage(msg)}
-                      />
-                      <Popup
-                        trigger={
-                          <MessageToolbox.Item
-                            icon="emoji"
-                            onClick={() => console.log('saf')}
-                          />
-                        }
-                        position={isSmallScreen ? 'left top' : 'left center'}
-                      >
-                        <EmojiPicker
-                          handleEmojiClick={(_, e) =>
-                            handleEmojiClick(e, msg, true)
-                          }
+                  </Message.Container>
+                  {!msg.t ? (
+                    <MessageToolbox.Wrapper>
+                      <MessageToolbox>
+                        <MessageToolbox.Item icon="thread" />
+                        <MessageToolbox.Item
+                          icon={`${
+                            msg.starred &&
+                            msg.starred.find(
+                              (u) => u._id === authenticatedUserId
+                            )
+                              ? 'star-filled'
+                              : 'star'
+                          }`}
+                          onClick={() => handleStarMessage(msg)}
                         />
-                      </Popup>
-                      <MessageToolbox.Item
-                        icon="pin"
-                        onClick={() => handlePinMessage(msg)}
-                      />
-                      {msg.u._id === authenticatedUserId && (
-                        <>
-                          <MessageToolbox.Item
-                            icon="edit"
-                            onClick={() => {
-                              setEditMessage({ msg: msg.msg, id: msg._id });
-                            }}
+                        <Popup
+                          trigger={
+                            <MessageToolbox.Item
+                              icon="emoji"
+                              onClick={() => console.log('saf')}
+                            />
+                          }
+                          position={isSmallScreen ? 'left top' : 'left center'}
+                        >
+                          <EmojiPicker
+                            handleEmojiClick={(_, e) =>
+                              handleEmojiClick(e, msg, true)
+                            }
                           />
-                          <MessageToolbox.Item
-                            icon="trash"
-                            color="danger"
-                            onClick={() => handleDeleteMessage(msg)}
-                          />
-                        </>
-                      )}
-                      <MessageToolbox.Item
-                        icon="report"
-                        color="danger"
-                        onClick={() => {
-                          setMessageToReport(msg._id);
-                          toggletoggleShowReportMessage();
-                        }}
-                      />
-                    </MessageToolbox>
-                  </MessageToolbox.Wrapper>
-                ) : (
-                  <></>
-                )}
-              </Message>
+                        </Popup>
+                        <MessageToolbox.Item
+                          icon="pin"
+                          onClick={() => handlePinMessage(msg)}
+                        />
+                        {msg.u._id === authenticatedUserId && (
+                          <>
+                            <MessageToolbox.Item
+                              icon="edit"
+                              onClick={() => {
+                                setEditMessage({ msg: msg.msg, id: msg._id });
+                              }}
+                            />
+                            <MessageToolbox.Item
+                              icon="trash"
+                              color="danger"
+                              onClick={() => handleDeleteMessage(msg)}
+                            />
+                          </>
+                        )}
+                        <MessageToolbox.Item
+                          icon="report"
+                          color="danger"
+                          onClick={() => {
+                            setMessageToReport(msg._id);
+                            toggletoggleShowReportMessage();
+                          }}
+                        />
+                      </MessageToolbox>
+                    </MessageToolbox.Wrapper>
+                  ) : (
+                    <></>
+                  )}
+                </Message>
+              </Box>
             )
           );
         })}

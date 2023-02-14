@@ -5,8 +5,11 @@ import StrikeSpan from './StrikeSpan';
 import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
+import ChannelMention from '../mentions/ChannelMention';
+import ColorElement from './ColorElement';
+import LinkSpan from './LinkSpan';
 
-const PreviewInlineElements = ({ contents }) =>
+const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
     switch (content.type) {
       case 'BOLD':
@@ -24,12 +27,30 @@ const PreviewInlineElements = ({ contents }) =>
       case 'INLINE_CODE':
         return <CodeElement key={index} contents={content.value} />;
 
+      case 'MENTION_CHANNEL':
+        return <ChannelMention key={index} mention={content.value.value} />;
+
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;
 
+      case 'COLOR':
+        return <ColorElement key={index} {...content.value} />;
+
+      case 'LINK':
+        return (
+          <LinkSpan
+            key={index}
+            href={content.value.src.value}
+            label={
+              Array.isArray(content.value.label)
+                ? content.value.label
+                : [content.value.label]
+            }
+          />
+        );
       default:
         return null;
     }
   });
 
-export default PreviewInlineElements;
+export default InlineElements;
