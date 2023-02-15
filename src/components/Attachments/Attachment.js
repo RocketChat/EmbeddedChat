@@ -1,12 +1,14 @@
 import { Box, Icon } from '@rocket.chat/fuselage';
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import PinnedAttachment from './PinnedAttachment';
+import RCContext from '../../context/RCInstance';
 
 const Attachment = ({ attachment, host }) => {
+  const { RCInstance } = useContext(RCContext);
   if (attachment && attachment.audio_url) {
     return <AudioAttachment attachment={attachment} host={host} />;
   }
@@ -24,7 +26,7 @@ const Attachment = ({ attachment, host }) => {
       <p>{attachment?.description}</p>
       <p>
         <Icon name="file" size="x20" />
-        <a href={`http://localhost:3000${attachment.title_link}`}>
+        <a href={`${RCInstance.getHost()}${attachment.title_link}`}>
           {attachment.title}
         </a>
       </p>
