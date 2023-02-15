@@ -14,6 +14,11 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const inputRef = useRef(null);
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
+  const [members, setMembers] = useState({});
+  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [mentionIndex, setmentionIndex] = useState(-1);
+  const [startReading, setStartReading] = useState(false);
+  const [showMembersList, setshowMembersList] = useState(false);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -102,15 +107,39 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     }
     await RCInstance.sendAttachment(event.target);
   };
-
+  const getAllChannelMembers = async () => {
+    const channelMembers = await RCInstance.getChannelMembers();
+    setMembers(channelMembers.members);
+  };
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     }
   }, [editMessage]);
+  useEffect(() => {
+    getAllChannelMembers();
+  }, []);
 
   return (
     <Box m="x20" border="2px solid #ddd">
+      {showMembersList ? (
+        <div style={{ display: 'block' }}>
+          <ul style={{ listStyle: 'none' }}>
+            {filteredMembers.map((member, index) => (
+              <li
+                key={member._id}
+                style={{
+                  backgroundColor: index === mentionIndex ? '#ddd' : 'white',
+                }}
+              >
+                {member.name} @{member.username}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <></>
+      )}
       <Box className={styles.container}>
         <textarea
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
@@ -119,23 +148,95 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
           onChange={(e) => {
             messageRef.current.value = e.target.value;
             setDisableButton(!messageRef.current.value.length);
+
             e.target.style.height = 'auto';
             if (e.target.scrollHeight <= 150)
               e.target.style.height = `${e.target.scrollHeight - 10}px`;
             else e.target.style.height = '129px';
+
+            let message = messageRef.current.value;
+            if (message.length === 0) return;
+            let lastChar = message[message.length - 1];
+
+            if (lastChar === '@') {
+              setStartReading(true);
+              setFilteredMembers(members);
+              setmentionIndex(0);
+              setshowMembersList(true);
+            } else {
+              if (startReading) {
+                if (lastChar === ' ') {
+                  setStartReading(false);
+                  setFilteredMembers([]);
+                  setmentionIndex(-1);
+                  setshowMembersList(false);
+                } else {
+                  let c = message.lastIndexOf('@');
+
+                  setFilteredMembers(
+                    members.filter(
+                      (member) =>
+                        member.name
+                          .toLowerCase()
+                          .includes(message.substring(c + 1).toLowerCase()) ||
+                        member.username
+                          .toLowerCase()
+                          .includes(message.substring(c + 1).toLowerCase())
+                    )
+                  );
+
+                  setshowMembersList(true);
+                  setmentionIndex(0);
+                }
+              }
+            }
           }}
           onKeyDown={(e) => {
             if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
-            } else if (e.keyCode === 13) {
+            } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+              e.preventDefault();
               e.target.style.height = '38px';
               sendMessage();
+            }
+
+            if (e.key === 'ArrowDown') {
+              setmentionIndex(
+                mentionIndex + 1 >= filteredMembers.length
+                  ? 0
+                  : mentionIndex + 1
+              );
+            }
+            if (e.key === 'ArrowUp') {
+              setmentionIndex(
+                mentionIndex - 1 < 0
+                  ? filteredMembers.length - 1
+                  : mentionIndex - 1
+              );
+            }
+            if (filteredMembers.length > 0 && e.key === 'Enter') {
+              e.preventDefault();
+              const selectedMember = filteredMembers[mentionIndex];
+              messageRef.current.value =
+                messageRef.current.value.substring(
+                  0,
+                  messageRef.current.value.lastIndexOf('@')
+                ) +
+                '@' +
+                selectedMember.username;
+
+              setshowMembersList(false);
+
+              setStartReading(false);
+              setFilteredMembers([]);
+              setmentionIndex(-1);
             }
           }}
           ref={messageRef}
         />
+
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
           <ActionButton bg="surface" border="0px" disabled={disableButton}>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
 import {
@@ -36,6 +36,7 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
+  const [channelMembers, setChannelMembers] = useState([]);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
@@ -136,6 +137,14 @@ const MessageList = ({ messages, handleGoBack }) => {
     return URL;
   };
 
+  const getAllChannelMembers = async () => {
+    const cMembers = await RCInstance.getChannelMembers();
+    setChannelMembers(cMembers.members);
+  };
+  useEffect(() => {
+    getAllChannelMembers();
+  }, []);
+
   return (
     <>
       {messages &&
@@ -174,7 +183,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                             {msg.attachments && msg.attachments.length > 0 ? (
                               <Attachments attachments={msg.attachments} />
                             ) : (
-                              <Markdown body={msg} />
+                              <Markdown body={msg} members={channelMembers} />
                             )}
                           </Message.Body>
 

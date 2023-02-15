@@ -21,4 +21,3 @@ labels: bug
 ### Actual behavior:
 
 <!-- What actually happens with SCREENSHOT, if applicable -->
-

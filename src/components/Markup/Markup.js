@@ -4,25 +4,35 @@ import PreviewInlineElements from './elements/PreviewInlineElements';
 import CodeBlock from './elements/CodeBlock';
 import BigEmoji from './elements/BigEmoji';
 
-const Markup = ({ tokens }) =>
-  tokens.map((token, index) => {
-    switch (token.type) {
-      case 'PARAGRAPH':
-        return <PreviewInlineElements key={index} contents={token.value} />;
+const Markup = ({ tokens, members }) => {
+  return (
+    <>
+      {tokens.map((token, index) => {
+        switch (token.type) {
+          case 'PARAGRAPH':
+            return (
+              <PreviewInlineElements
+                key={index}
+                contents={token.value}
+                members={members}
+              />
+            );
 
-      case 'CODE':
-        return <CodeBlock key={index} lines={token.value} />;
+          case 'CODE':
+            return <CodeBlock key={index} lines={token.value} />;
 
-      case 'BIG_EMOJI':
-        return <BigEmoji key={index} contents={token.value} />;
+          case 'BIG_EMOJI':
+            return <BigEmoji key={index} contents={token.value} />;
 
-      default:
-        return null;
-    }
-  });
-
+          default:
+            return null;
+        }
+      })}{' '}
+    </>
+  );
+};
 export default Markup;
-
 Markup.propTypes = {
   tokens: PropTypes.arrayOf(PropTypes.object),
+  members: PropTypes.any,
 };

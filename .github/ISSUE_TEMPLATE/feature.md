@@ -6,7 +6,7 @@ labels: enhancement
 
 As an EmbedChat developer
 
-**I need to**: 
+**I need to**:
 
 **So That**:
 
@@ -15,4 +15,3 @@ As an EmbedChat developer
 - [ ] TODO 1
 - [ ] TODO 2
 - [ ] TODO 3
-
