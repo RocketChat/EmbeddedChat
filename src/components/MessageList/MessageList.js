@@ -185,7 +185,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                             <Message.Body>
                               {msg.attachments && msg.attachments.length > 0 ? (
                                 <>
-                                  <Markdown body={msg} isReaction={false} />
+                                  <Markdown body={msg} isReaction={false} members={channelMembers}/>
                                   <Attachments attachments={msg.attachments} />
                                 </>
                               ) : (
