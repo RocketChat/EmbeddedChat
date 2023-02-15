@@ -4,6 +4,9 @@
   overflow: auto;
   display: flex;
   flex-direction: column-reverse;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
 ::-webkit-scrollbar {

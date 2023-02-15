@@ -1,15 +1,17 @@
 import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
-import { useGoogleLogin } from '../../hooks/useGoogleLogin';
-import { useToastStore, useUserStore, useMessageStore } from '../../store';
+import {
+  useToastStore,
+  useUserStore,
+  useMessageStore,
+  loginModalStore,
+} from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 
-const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
-  const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
+const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
   const messageRef = useRef();
@@ -19,11 +21,17 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [startReading, setStartReading] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
+  const setIsLoginModalOpen = loginModalStore(
+    (state) => state.setIsLoginModalOpen
+  );
 
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({
-    editMessage: state.editMessage,
-    setEditMessage: state.setEditMessage,
-  }));
+  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
+    (state) => ({
+      editMessage: state.editMessage,
+      setEditMessage: state.setEditMessage,
+      isRecordingMessage: state.isRecordingMessage,
+    })
+  );
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -32,13 +40,13 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     (state) => state.setIsUserAuthenticated
   );
 
-  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const toastPosition = useToastStore((state) => state.position);
-  const setAuthenticatedUserUsername = useUserStore(
-    (state) => state.setUsername
-  );
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
 
   const sendMessage = async () => {
     messageRef.current.style.height = '38px';
@@ -80,37 +88,18 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
     }
   };
 
-  const handleLogin = async () => {
-    const res = await RCInstance.googleSSOLogin(signIn);
-    if (res.status === 'success') {
-      setUserAvatarUrl(res.me.avatarUrl);
-      setAuthenticatedUserUsername(res.me.username);
-      setIsUserAuthenticated(true);
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Successfully logged in',
-        position: toastPosition,
-      });
-    } else {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Something wrong happened',
-        position: toastPosition,
-      });
-    }
-  };
-
   const sendAttachment = async (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
-    await RCInstance.sendAttachment(event.target);
+    await RCInstance.sendAttachment(event.target.files[0]);
   };
   const getAllChannelMembers = async () => {
     const channelMembers = await RCInstance.getChannelMembers();
     setMembers(channelMembers.members);
   };
+  
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
@@ -142,8 +131,8 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
       )}
       <Box className={styles.container}>
         <textarea
+          disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-          disabled={!isUserAuthenticated}
           className={styles.textInput}
           onChange={(e) => {
             messageRef.current.value = e.target.value;
@@ -152,8 +141,7 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
             e.target.style.height = 'auto';
             if (e.target.scrollHeight <= 150)
               e.target.style.height = `${e.target.scrollHeight - 10}px`;
-            else e.target.style.height = '129px';
-
+            else e.target.style.height = '150px';
             let message = messageRef.current.value;
             if (message.length === 0) return;
             let lastChar = message[message.length - 1];
@@ -192,7 +180,10 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
             }
           }}
           onKeyDown={(e) => {
-            if (editMessage.msg && e.keyCode === 27) {
+            if (e.ctrlKey && e.keyCode === 13) {
+              // Insert line break in text input field
+              messageRef.current.value += '\n';
+            } else if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
@@ -239,7 +230,11 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
-          <ActionButton bg="surface" border="0px" disabled={disableButton}>
+          <ActionButton
+            bg="surface"
+            border="0px"
+            disabled={disableButton || isRecordingMessage}
+          >
             <Icon
               className={styles.chatInputIconCursor}
               onClick={sendMessage}
@@ -249,9 +244,12 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
             />
           </ActionButton>
         ) : (
-          <Button onClick={handleLogin} style={{ overflow: 'visible' }}>
-            <Icon name="google" size="x20" padding="0px 5px 0px 0px" />
-            Sign In with Google
+          <Button
+            onClick={openLoginModal}
+            primary
+            style={{ overflow: 'visible' }}
+          >
+            JOIN
           </Button>
         )}
       </Box>
@@ -266,7 +264,3 @@ const ChatInput = ({ GOOGLE_CLIENT_ID }) => {
 };
 
 export default ChatInput;
-
-ChatInput.propTypes = {
-  GOOGLE_CLIENT_ID: PropTypes.string,
-};

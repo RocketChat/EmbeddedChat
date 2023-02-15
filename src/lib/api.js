@@ -29,20 +29,78 @@ export default class RocketChatInstance {
     Cookies.set(RC_USER_ID_COOKIE, cookies.rc_uid || '');
   }
 
-  async googleSSOLogin(signIn) {
+  async googleSSOLogin(signIn, acsCode) {
     const tokens = await signIn();
+    let acsPayload = null;
+
+    if (typeof acsCode === 'string') {
+      acsPayload = acsCode;
+    }
+
+    const payload = acsCode
+      ? JSON.stringify({
+          serviceName: 'google',
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          totp: {
+            code: acsPayload,
+          },
+        })
+      : JSON.stringify({
+          serviceName: 'google',
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          scope: 'profile',
+        });
+
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          serviceName: 'google',
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-        }),
+        body: payload,
+      });
+      const response = await req.json();
+
+      if (response.status === 'success') {
+        this.setCookies({
+          rc_token: response.data.authToken,
+          rc_uid: response.data.userId,
+        });
+        if (!response.data.me.username) {
+          await this.updateUserUsername(
+            response.data.userId,
+            response.data.me.name
+          );
+        }
+        return { status: response.status, me: response.data.me };
+      }
+
+      if (response.error === 'totp-required') {
+        return response;
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async login(userOrEmail, password, code) {
+    let reqBody;
+    if (!code) {
+      reqBody = `{ "user": "${userOrEmail}", "password": "${password}"}`;
+    } else {
+      reqBody = `{"user": "${userOrEmail}","password": "${password}","code": "${code}"}`;
+    }
+    try {
+      const req = await fetch(`${this.host}/api/v1/login`, {
+        body: reqBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
       });
       const response = await req.json();
       if (response.status === 'success') {
@@ -58,8 +116,11 @@ export default class RocketChatInstance {
         }
         return { status: response.status, me: response.data.me };
       }
-    } catch (err) {
-      console.error(err.message);
+      if (response.status === 'error') {
+        return response;
+      }
+    } catch (error) {
+      console.error(error.message);
     }
   }
 
@@ -212,6 +273,25 @@ export default class RocketChatInstance {
         }
       );
       return await messages.json();
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  async getChannelRoles() {
+    try {
+      const roles = await fetch(
+        `${this.host}/api/v1/channels.roles?roomId=${this.rid}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+          },
+          method: 'GET',
+        }
+      );
+      return await roles.json();
     } catch (err) {
       console.log(err.message);
     }
@@ -410,10 +490,9 @@ export default class RocketChatInstance {
     }
   }
 
-  async sendAttachment(e) {
+  async sendAttachment(file) {
     try {
       const form = new FormData();
-      const file = e.files[0];
       form.append('file', file, file.name);
       const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: 'POST',

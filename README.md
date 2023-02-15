@@ -35,6 +35,7 @@ and use it,
   channelName="Customer Service"
   anonymousMode={false}
   showAvatar={false}
+  showRoles={false}
 />
 ```
 
@@ -55,12 +56,11 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | channelName      | the fallback channel name to be present on the chat header                                                                                  |
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
+| showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
 
 ## Setting up Authentication
 
 Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
-
-> Note: You need to disable TOTP for this to work!
 
 ## Development
 

@@ -27,8 +27,14 @@ const useUserStore = create((set) => ({
   isUserAuthenticated: false,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
+  password: null,
+  setPassword: (password) => set(() => ({ password })),
+  emailoruser: null,
+  setEmailorUser: (emailoruser) => set(() => ({ emailoruser })),
   showAvatar: false,
   setShowAvatar: (showAvatar) => set(() => ({ showAvatar })),
+  roles: {},
+  setRoles: (roles) => set((state) => ({ ...state, roles })),
 }));
 
 export default useUserStore;
