@@ -13,13 +13,19 @@ const Markup = ({ tokens, members }) =>
   tokens.map((token, index) => {
     switch (token.type) {
       case 'PARAGRAPH':
-        return <ParagraphBlock key={index} contents={token.value} members = {members}/>;
+        return (
+          <ParagraphBlock
+            key={index}
+            contents={token.value}
+            members={members}
+          />
+        );
 
-          case 'CODE':
-            return <CodeBlock key={index} lines={token.value} />;
+      case 'CODE':
+        return <CodeBlock key={index} lines={token.value} />;
 
-          case 'BIG_EMOJI':
-            return <BigEmoji key={index} contents={token.value} />;
+      case 'BIG_EMOJI':
+        return <BigEmoji key={index} contents={token.value} />;
 
       case 'HEADING':
         return (

@@ -99,7 +99,7 @@ const ChatInput = () => {
     const channelMembers = await RCInstance.getChannelMembers();
     setMembers(channelMembers.members);
   };
-  
+
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;

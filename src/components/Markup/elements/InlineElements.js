@@ -11,7 +11,7 @@ import LinkSpan from './LinkSpan';
 import PropTypes from 'prop-types';
 import Mention from './Mention';
 
-const InlineElements = ({ contents, members}) =>
+const InlineElements = ({ contents, members }) =>
   contents.map((content, index) => {
     switch (content.type) {
       case 'BOLD':
@@ -31,10 +31,11 @@ const InlineElements = ({ contents, members}) =>
 
       case 'MENTION_CHANNEL':
         return <ChannelMention key={index} mention={content.value.value} />;
-      
+
       case 'MENTION_USER':
-        return <Mention key={index} contents={content.value} members={members} />
-          
+        return (
+          <Mention key={index} contents={content.value} members={members} />
+        );
 
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;

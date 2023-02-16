@@ -185,11 +185,19 @@ const MessageList = ({ messages, handleGoBack }) => {
                             <Message.Body>
                               {msg.attachments && msg.attachments.length > 0 ? (
                                 <>
-                                  <Markdown body={msg} isReaction={false} members={channelMembers}/>
+                                  <Markdown
+                                    body={msg}
+                                    isReaction={false}
+                                    members={channelMembers}
+                                  />
                                   <Attachments attachments={msg.attachments} />
                                 </>
                               ) : (
-                                <Markdown body={msg} isReaction={false} members={channelMembers} />
+                                <Markdown
+                                  body={msg}
+                                  isReaction={false}
+                                  members={channelMembers}
+                                />
                               )}
                             </Message.Body>
 

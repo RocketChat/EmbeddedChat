@@ -4,7 +4,7 @@ import InlineElements from '../elements/InlineElements';
 
 const ParagraphBlock = ({ contents, members }) => (
   <p>
-    <InlineElements contents={contents} members = {members}/>
+    <InlineElements contents={contents} members={members} />
   </p>
 );
 
