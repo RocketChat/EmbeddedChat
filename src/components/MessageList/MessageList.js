@@ -147,9 +147,8 @@ const MessageList = ({ messages, handleGoBack }) => {
 
           return (
             msg && (
-              <Box className={classes.messageParentBox}>
+              <Box className={classes.messageParentBox} key={msg._id}>
                 <Message
-                  key={msg._id}
                   isEditing={editMessage.id === msg._id}
                   className={classes.messageBody}
                 >
