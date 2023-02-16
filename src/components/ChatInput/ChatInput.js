@@ -124,6 +124,22 @@ const ChatInput = () => {
                 {member.name} @{member.username}
               </li>
             ))}
+             <li
+                key="all"
+                style={{
+                  backgroundColor: mentionIndex === filteredMembers.length ? '#ddd' : 'white',
+                }}
+              >
+                all
+              </li>
+              <li
+                key="everyone"
+                style={{
+                  backgroundColor: mentionIndex === filteredMembers.length + 1 ? '#ddd' : 'white',
+                }}
+              >
+                everyone
+              </li>
           </ul>
         </div>
       ) : (
@@ -195,7 +211,7 @@ const ChatInput = () => {
 
             if (e.key === 'ArrowDown') {
               setmentionIndex(
-                mentionIndex + 1 >= filteredMembers.length
+                mentionIndex + 1 >= filteredMembers.length + 2
                   ? 0
                   : mentionIndex + 1
               );
@@ -203,20 +219,26 @@ const ChatInput = () => {
             if (e.key === 'ArrowUp') {
               setmentionIndex(
                 mentionIndex - 1 < 0
-                  ? filteredMembers.length - 1
+                  ? filteredMembers.length + 1
                   : mentionIndex - 1
               );
             }
-            if (filteredMembers.length > 0 && e.key === 'Enter') {
+            if (showMembersList && e.key === 'Enter') {
               e.preventDefault();
-              const selectedMember = filteredMembers[mentionIndex];
+              let selectedMember = null;
+              if(mentionIndex === filteredMembers.length)
+                selectedMember = "all"
+              else if(mentionIndex === filteredMembers.length + 1)
+                selectedMember = "everyone"
+              else
+                selectedMember = filteredMembers[mentionIndex].username;
               messageRef.current.value =
                 messageRef.current.value.substring(
                   0,
                   messageRef.current.value.lastIndexOf('@')
                 ) +
                 '@' +
-                selectedMember.username;
+                selectedMember;
 
               setshowMembersList(false);
 

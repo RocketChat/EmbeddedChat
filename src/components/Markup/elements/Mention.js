@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 const Mention = ({ contents, members }) => {
   const hasMember = (user) => {
+    if(user === "all" || user == "everyone")
+       return true;
     var found = false;
     Object.keys(members).forEach((ele) => {
       if (members[ele].username === user) {
