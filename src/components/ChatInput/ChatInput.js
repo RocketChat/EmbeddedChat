@@ -1,4 +1,11 @@
-import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
+import {
+  Box,
+  Button,
+  Icon,
+  ActionButton,
+  Menu,
+  AnimatedVisibility,
+} from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
@@ -106,8 +113,13 @@ const ChatInput = () => {
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
-        <Button onClick={toggleInputFormattingToolbar} square height={48}>
-          +
+        <Button
+          onClick={toggleInputFormattingToolbar}
+          elevation="2"
+          square
+          height={48}
+        >
+          <Icon mie="x4" name="burger" size="x20" />
         </Button>
         <textarea
           disabled={!isUserAuthenticated || isRecordingMessage}
@@ -163,14 +175,23 @@ const ChatInput = () => {
           </Button>
         )}
       </Box>
-      {showInputFormattingToolbar
-        ? isUserAuthenticated && (
+      {showInputFormattingToolbar ? (
+        isUserAuthenticated && (
+          <AnimatedVisibility visibility="visible">
             <ChatInputFormattingToolbar
               messageRef={messageRef}
               inputRef={inputRef}
             />
-          )
-        : ''}
+          </AnimatedVisibility>
+        )
+      ) : (
+        <AnimatedVisibility visibility="hidden">
+          <ChatInputFormattingToolbar
+            messageRef={messageRef}
+            inputRef={inputRef}
+          />
+        </AnimatedVisibility>
+      )}
     </Box>
   );
 };
