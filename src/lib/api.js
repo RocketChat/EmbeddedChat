@@ -229,15 +229,25 @@ export default class RocketChatInstance {
   }
 
   async realtime(callback) {
+    let subscriptionId;
     try {
       await this.rcClient.connect();
       await this.rcClient.resume({ token: Cookies.get(RC_USER_TOKEN_COOKIE) });
-      await this.rcClient.subscribe('stream-room-messages', this.rid);
-      await this.rcClient.onMessage((data) => {
+      subscriptionId = await this.rcClient.subscribe(
+        'stream-room-messages',
+        this.rid
+      );
+
+      const messageHandler = (data) => {
+        this.rcClient.unsubscribe(subscriptionId);
         callback(data);
-      });
+      };
+
+      await this.rcClient.onMessage(messageHandler);
+
       await this.rcClient.subscribeRoom(this.rid);
-      await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
+
+      const streamDataHandler = (ddpMessage) => {
         const [roomId, event] = ddpMessage.fields.eventName.split('/');
 
         if (roomId !== this.rid) {
@@ -247,7 +257,9 @@ export default class RocketChatInstance {
         if (event === 'deleteMessage') {
           callback(ddpMessage);
         }
-      });
+      };
+
+      await this.rcClient.onStreamData('stream-notify-room', streamDataHandler);
     } catch (err) {
       await this.close();
     }
@@ -298,6 +310,7 @@ export default class RocketChatInstance {
   }
 
   async sendMessage(message) {
+    console.log('send message ');
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
         body: JSON.stringify({ message: { rid: this.rid, msg: message } }),
@@ -315,6 +328,7 @@ export default class RocketChatInstance {
   }
 
   async deleteMessage(msgId) {
+    console.log('delte message ');
     try {
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
         body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
