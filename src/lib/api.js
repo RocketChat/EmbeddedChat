@@ -310,7 +310,6 @@ export default class RocketChatInstance {
   }
 
   async sendMessage(message) {
-    console.log('send message ');
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
         body: JSON.stringify({ message: { rid: this.rid, msg: message } }),
@@ -328,7 +327,6 @@ export default class RocketChatInstance {
   }
 
   async deleteMessage(msgId) {
-    console.log('delte message ');
     try {
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
         body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
