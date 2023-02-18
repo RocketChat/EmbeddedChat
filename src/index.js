@@ -28,38 +28,15 @@ export const RCComponent = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-
-  useEffect(() => {
-    setToastbarPosition(toastBarPosition);
-    setShowAvatar(showAvatar);
-  }, []);
-
-  if (isClosable && !setClosableState) {
-    throw Error(
-      'Please provide a setClosableState to props when isClosable = true'
-    );
-  }
-
-  const RCInstance = new RocketChatInstance(host, roomId);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-
-  useEffect(() => {
-    const cookiesPresent =
-      Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
-    if (cookiesPresent) {
-      setIsUserAuthenticated(true);
-    }
-  }, []);
-
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const authenticatedUserAvatarUrl = useUserStore((state) => state.avatarUrl);
   const authenticatedUserId = useUserStore((state) => state.userId);
-
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
   );
@@ -68,18 +45,23 @@ export const RCComponent = ({
   );
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
 
+  const RCInstance = new RocketChatInstance(host, roomId);
+
   useEffect(() => {
-    async function getUserEssentials() {
-      const res = await RCInstance.me();
-      setAuthenticatedUserAvatarUrl(res.avatarUrl);
-      setAuthenticatedUserUsername(res.username);
-      setAuthenticatedUserId(res.userId);
-    }
+    setToastbarPosition(toastBarPosition);
+    setShowAvatar(showAvatar);
 
     const cookiesPresent =
       Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
     if (cookiesPresent) {
       setIsUserAuthenticated(true);
+    }
+
+    async function getUserEssentials() {
+      const res = await RCInstance.me();
+      setAuthenticatedUserAvatarUrl(res.avatarUrl);
+      setAuthenticatedUserUsername(res.username);
+      setAuthenticatedUserId(res.userId);
     }
 
     const currentUserId = Cookies.get(RC_USER_ID_COOKIE);
@@ -90,7 +72,25 @@ export const RCComponent = ({
     ) {
       getUserEssentials();
     }
-  }, []);
+  }, [
+    toastBarPosition,
+    showAvatar,
+    setIsUserAuthenticated,
+    setToastbarPosition,
+    setShowAvatar,
+    authenticatedUserUsername,
+    authenticatedUserAvatarUrl,
+    authenticatedUserId,
+    setAuthenticatedUserUsername,
+    setAuthenticatedUserAvatarUrl,
+    setAuthenticatedUserId,
+  ]);
+
+  if (isClosable && !setClosableState) {
+    throw Error(
+      'Please provide a setClosableState to props when isClosable = true'
+    );
+  }
 
   return (
     <ToastBarProvider>
