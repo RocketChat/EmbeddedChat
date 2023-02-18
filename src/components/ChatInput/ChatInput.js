@@ -108,17 +108,12 @@ const ChatInput = () => {
             messageRef.current.value = e.target.value;
             setDisableButton(!messageRef.current.value.length);
             e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150) {
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            } else {
-              e.target.style.height = '150px';
-            }
+            if (e.target.scrollHeight <= 150)
+              e.target.style.height = `${e.target.scrollHeight - 10}px`;
+            else e.target.style.height = '129px';
           }}
           onKeyDown={(e) => {
-            if (e.ctrlKey && e.keyCode === 13) {
-              // Insert line break in text input field
-              messageRef.current.value += '\n';
-            } else if (editMessage.msg && e.keyCode === 27) {
+            if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
