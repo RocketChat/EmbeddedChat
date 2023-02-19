@@ -18,6 +18,7 @@
         "no-unused-vars" : "warn",
         "no-console": "off",
         "no-underscore-dangle": "off",
+        "no-unused-expressions": "off",
         "react/function-component-definition" : "off",
         "react/require-default-props" : "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -36,6 +37,7 @@
         "no-restricted-exports": "off",
         "react/destructuring-assignment": "off",
         "react/jsx-no-useless-fragment": "off",
+        "react/jsx-props-no-spreading": "off",
         "import/no-cycle": 0
     }
 }

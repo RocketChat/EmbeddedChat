@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
 import StrikeSpan from './StrikeSpan';
 import ItalicSpan from './ItalicSpan';
@@ -66,3 +67,8 @@ const LinkSpan = ({ href, label }) => {
 };
 
 export default LinkSpan;
+
+LinkSpan.propTypes = {
+  href: PropTypes.string,
+  label: PropTypes.string,
+};

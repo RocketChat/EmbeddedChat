@@ -24,9 +24,7 @@ const Attachment = ({ attachment, host }) => {
       <p>{attachment?.description}</p>
       <p>
         <Icon name="file" size="x20" />
-        <a href={`http://localhost:3000${attachment.title_link}`}>
-          {attachment.title}
-        </a>
+        <a href={`${host}${attachment.title_link}`}>{attachment.title}</a>
       </p>
     </Box>
   );
