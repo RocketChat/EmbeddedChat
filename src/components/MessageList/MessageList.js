@@ -23,6 +23,7 @@ import {
   useUserStore,
   useMemberStore,
   useSearchMessageStore,
+  useChannelStore,
 } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
@@ -33,7 +34,10 @@ import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
+
+import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
+
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
@@ -46,6 +50,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
   const showSearch = useSearchMessageStore((state) => state.showSearch);
+  const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -303,6 +308,7 @@ const MessageList = ({ messages, handleGoBack }) => {
       {showMembers && <RoomMembers members={members} />}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
+      {showChannelinfo && <Roominfo />}
     </>
   );
 };
