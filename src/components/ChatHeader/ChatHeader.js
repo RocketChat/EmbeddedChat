@@ -224,7 +224,7 @@ const ChatHeader = ({
       </Box>
       <Box display="flex" alignItems="center">
         {avatarUrl && (
-          <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
+          <img width="20px" height="20px" src={avatarUrl} alt="avatar" style={{marginRight:"15px", borderRadius:"10px"}} />
         )}
         {fullScreen ? (
           <Menu
