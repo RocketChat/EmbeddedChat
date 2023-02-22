@@ -1,56 +1,67 @@
 import React from 'react';
 import PlainSpan from './PlainSpan';
-import ItalicSpan from './ItalicSpan';
-import StrikeSpan from './StrikeSpan';
-import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
+import PropTypes from 'prop-types';
 
-const InlineElements = ({ contents }) =>
-  contents.map((content, index) => {
-    switch (content.type) {
-      case 'BOLD':
-        return <BoldSpan key={index} contents={content.value} />;
+const InlineElements = ({ contents, classes }) => {
 
-      case 'PLAIN_TEXT':
-        return <PlainSpan key={index} contents={content.value} />;
+  const helperFunc = (contentsArr, initialClass) => {
+    return <>
+      {contentsArr.map((content, index) => {
+        let classProps = initialClass;
+        switch (content.type) {
+          case 'BOLD': classProps = { ...classProps, bold: true};
+            break;
+          case 'STRIKE': classProps = {  ...classProps, strike: true };
+            break;
+          case 'ITALIC': classProps = {  ...classProps, italics: true };
+            break;
+          case 'PLAIN_TEXT':
+            return <PlainSpan contents={content.value} classes={classProps} />;
+          case 'INLINE_CODE':
+            return <CodeElement key={index} contents={content.value} classes={classProps} />;
+          case 'MENTION_CHANNEL':
+            return <ChannelMention key={index} mention={content.value.value} classes={classProps} />;
+          case 'EMOJI':
+            return <Emoji key={index} emoji={content} />;
+          case 'COLOR':
+            return <ColorElement key={index} {...content.value} classes={classProps} />;
+          case 'LINK':
+            return (
+              <LinkSpan
+                key={index}
+                href={content.value.src.value}
+                label={
+                  Array.isArray(content.value.label)
+                    ? content.value.label
+                    : [content.value.label]
+                }
+                classes={classProps} 
+              />
+            );
+          default:
+            break;
+        }
+        return helperFunc(content.value, classProps);
+      }
+      )}
+    </>
+  }
 
-      case 'STRIKE':
-        return <StrikeSpan key={index} contents={content.value} />;
-
-      case 'ITALIC':
-        return <ItalicSpan key={index} contents={content.value} />;
-
-      case 'INLINE_CODE':
-        return <CodeElement key={index} contents={content.value} />;
-
-      case 'MENTION_CHANNEL':
-        return <ChannelMention key={index} mention={content.value.value} />;
-
-      case 'EMOJI':
-        return <Emoji key={index} emoji={content} />;
-
-      case 'COLOR':
-        return <ColorElement key={index} {...content.value} />;
-
-      case 'LINK':
-        return (
-          <LinkSpan
-            key={index}
-            href={content.value.src.value}
-            label={
-              Array.isArray(content.value.label)
-                ? content.value.label
-                : [content.value.label]
-            }
-          />
-        );
-      default:
-        return null;
-    }
-  });
+  return (
+    <>
+      {helperFunc(contents, classes)}
+    </>
+  )
+};
 
 export default InlineElements;
+
+InlineElements.propTypes = {
+  contents: PropTypes.any,
+  classes: PropTypes.object,
+};
