@@ -107,7 +107,7 @@ export const RCComponent = ({
           />
           {isUserAuthenticated || anonymousMode ? (
             <ChatBody
-              height={!fullScreen ? height : '80vh'}
+              height={!fullScreen ? height : '83vh'}
               anonymousMode={anonymousMode}
               showRoles={showRoles}
               GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
