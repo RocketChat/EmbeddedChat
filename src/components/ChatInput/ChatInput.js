@@ -10,17 +10,26 @@ import {
   loginModalStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
+import MembersList from '../Mentions/MembersList';
+import mentionmemberStore from '../../store/mentionmemberStore';
+import { searchToMentionUser } from '../../lib/searchToMentionUser';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
-  const [members, setMembers] = useState({});
+  // const [members, setMembers] = useState({});
+  const roomMembers = mentionmemberStore((state) => state.roomMembers);
+  const setRoomMembers = mentionmemberStore((state) => state.setRoomMembers);
+  
   const [filteredMembers, setFilteredMembers] = useState([]);
+  // const filteredMembers = mentionmemberStore((state) => state.filteredMembers);
+  // const setFilteredMembers = mentionmemberStore((state) => state.setFilteredMembers);
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [startReading, setStartReading] = useState(false);
-  const [showMembersList, setshowMembersList] = useState(false);
+  const showMembersList = mentionmemberStore((state) => state.showMembersList);
+  const setshowMembersList = mentionmemberStore((state) => state.toggleShowMembers);
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
@@ -97,8 +106,9 @@ const ChatInput = () => {
   };
   const getAllChannelMembers = async () => {
     const channelMembers = await RCInstance.getChannelMembers();
-    setMembers(channelMembers.members);
+    setRoomMembers(channelMembers.members);
   };
+ 
 
   useEffect(() => {
     if (editMessage.msg) {
@@ -112,36 +122,7 @@ const ChatInput = () => {
   return (
     <Box m="x20" border="2px solid #ddd">
       {showMembersList ? (
-        <div style={{ display: 'block' }}>
-          <ul style={{ listStyle: 'none' }}>
-            {filteredMembers.map((member, index) => (
-              <li
-                key={member._id}
-                style={{
-                  backgroundColor: index === mentionIndex ? '#ddd' : 'white',
-                }}
-              >
-                {member.name} @{member.username}
-              </li>
-            ))}
-             <li
-                key="all"
-                style={{
-                  backgroundColor: mentionIndex === filteredMembers.length ? '#ddd' : 'white',
-                }}
-              >
-                all
-              </li>
-              <li
-                key="everyone"
-                style={{
-                  backgroundColor: mentionIndex === filteredMembers.length + 1 ? '#ddd' : 'white',
-                }}
-              >
-                everyone
-              </li>
-          </ul>
-        </div>
+        <MembersList mentionIndex = {mentionIndex} filteredMembers = {filteredMembers}/>
       ) : (
         <></>
       )}
@@ -158,42 +139,8 @@ const ChatInput = () => {
             if (e.target.scrollHeight <= 150)
               e.target.style.height = `${e.target.scrollHeight - 10}px`;
             else e.target.style.height = '150px';
-            let message = messageRef.current.value;
-            if (message.length === 0) return;
-            let lastChar = message[message.length - 1];
 
-            if (lastChar === '@') {
-              setStartReading(true);
-              setFilteredMembers(members);
-              setmentionIndex(0);
-              setshowMembersList(true);
-            } else {
-              if (startReading) {
-                if (lastChar === ' ') {
-                  setStartReading(false);
-                  setFilteredMembers([]);
-                  setmentionIndex(-1);
-                  setshowMembersList(false);
-                } else {
-                  let c = message.lastIndexOf('@');
-
-                  setFilteredMembers(
-                    members.filter(
-                      (member) =>
-                        member.name
-                          .toLowerCase()
-                          .includes(message.substring(c + 1).toLowerCase()) ||
-                        member.username
-                          .toLowerCase()
-                          .includes(message.substring(c + 1).toLowerCase())
-                    )
-                  );
-
-                  setshowMembersList(true);
-                  setmentionIndex(0);
-                }
-              }
-            }
+            searchToMentionUser(messageRef.current.value, roomMembers, startReading, setStartReading, setFilteredMembers, setmentionIndex, setshowMembersList);
           }}
           onKeyDown={(e) => {
             if (e.ctrlKey && e.keyCode === 13) {

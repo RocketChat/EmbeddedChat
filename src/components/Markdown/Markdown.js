@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { Markup } from '../Markup/index';
 
-const Markdown = ({ body, isReaction = false, members }) => {
+const Markdown = ({ body, isReaction = false}) => {
   if (isReaction) {
     return (
       <MessageEmoji>
@@ -22,7 +22,7 @@ const Markdown = ({ body, isReaction = false, members }) => {
 
   return (
     <Box>
-      <Markup tokens={body.md} members={members} />
+      <Markup tokens={body.md}/>
     </Box>
   );
 };
@@ -31,5 +31,4 @@ export default Markdown;
 Markdown.propTypes = {
   body: PropTypes.any,
   isReaction: PropTypes.bool,
-  members: PropTypes.any,
 };

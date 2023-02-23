@@ -9,7 +9,7 @@ import UnOrderedListBlock from './blocks/UnOrderedListBlock';
 import QuoteBlock from './blocks/QuoteBlock';
 import TaskListBlock from './blocks/TaskListBlock';
 
-const Markup = ({ tokens, members }) =>
+const Markup = ({ tokens}) =>
   tokens.map((token, index) => {
     switch (token.type) {
       case 'PARAGRAPH':
@@ -17,7 +17,6 @@ const Markup = ({ tokens, members }) =>
           <ParagraphBlock
             key={index}
             contents={token.value}
-            members={members}
           />
         );
 
@@ -59,5 +58,4 @@ const Markup = ({ tokens, members }) =>
 export default Markup;
 Markup.propTypes = {
   tokens: PropTypes.arrayOf(PropTypes.object),
-  members: PropTypes.any,
 };

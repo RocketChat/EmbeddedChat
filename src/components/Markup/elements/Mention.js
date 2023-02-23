@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import mentionmemberStore from '../../../store/mentionmemberStore';
 
-const Mention = ({ contents, members }) => {
+const Mention = ({ contents}) => {
+  const members = mentionmemberStore((state) => state.roomMembers);
   const hasMember = (user) => {
     if(user === "all" || user == "everyone")
        return true;
@@ -20,7 +22,7 @@ const Mention = ({ contents, members }) => {
           {contents.value}
         </span>
       ) : (
-        contents.value
+        "@" + contents.value
       )}
     </>
   );
@@ -30,5 +32,4 @@ export default Mention;
 
 Mention.propTypes = {
   contents: PropTypes.any,
-  members: PropTypes.any,
 };

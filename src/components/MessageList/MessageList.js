@@ -37,7 +37,6 @@ import classes from './MessageList.module.css';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
-  const [channelMembers, setChannelMembers] = useState([]);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
@@ -138,14 +137,6 @@ const MessageList = ({ messages, handleGoBack }) => {
     return URL;
   };
 
-  const getAllChannelMembers = async () => {
-    const cMembers = await RCInstance.getChannelMembers();
-    setChannelMembers(cMembers.members);
-  };
-  useEffect(() => {
-    getAllChannelMembers();
-  }, []);
-
   return (
     <>
       {messages &&
@@ -188,7 +179,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                                   <Markdown
                                     body={msg}
                                     isReaction={false}
-                                    members={channelMembers}
+                                    
                                   />
                                   <Attachments attachments={msg.attachments} />
                                 </>
@@ -196,7 +187,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                                 <Markdown
                                   body={msg}
                                   isReaction={false}
-                                  members={channelMembers}
+                                 
                                 />
                               )}
                             </Message.Body>
