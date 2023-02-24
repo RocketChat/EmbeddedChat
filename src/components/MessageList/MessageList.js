@@ -38,7 +38,6 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
 
-
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
