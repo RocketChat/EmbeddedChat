@@ -25,7 +25,8 @@
   border: none;
   outline: none;
   resize: none;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-size: 15px;
   font-family: var(
     --rcx-font-family-sans,

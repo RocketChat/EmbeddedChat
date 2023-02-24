@@ -45,8 +45,9 @@ const ChatInput = () => {
 
   const sendMessage = async () => {
     messageRef.current.style.height = '38px';
-    const message = messageRef.current.value;
+    const message = messageRef.current.value.trimEnd();
     if (!message.length || !isUserAuthenticated) {
+      messageRef.current.value = '';
       if (editMessage.msg) {
         setEditMessage({});
       }
@@ -115,7 +116,7 @@ const ChatInput = () => {
             }
           }}
           onKeyDown={(e) => {
-            if (e.ctrlKey && e.keyCode === 13) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
               // Insert line break in text input field
               messageRef.current.value += '\n';
             } else if (editMessage.msg && e.keyCode === 27) {
