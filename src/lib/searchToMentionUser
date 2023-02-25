@@ -1,5 +1,5 @@
  export const searchToMentionUser = (message, roomMembers, startReading, setStartReading, setFilteredMembers, setmentionIndex, setshowMembersList) => {
-    // let message = messageRef.current.value;
+    
             if (message.length === 0) return;
             let lastChar = message[message.length - 1];
 

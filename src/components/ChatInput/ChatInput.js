@@ -19,13 +19,12 @@ const ChatInput = () => {
   const inputRef = useRef(null);
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
-  // const [members, setMembers] = useState({});
+
   const roomMembers = mentionmemberStore((state) => state.roomMembers);
   const setRoomMembers = mentionmemberStore((state) => state.setRoomMembers);
   
   const [filteredMembers, setFilteredMembers] = useState([]);
-  // const filteredMembers = mentionmemberStore((state) => state.filteredMembers);
-  // const setFilteredMembers = mentionmemberStore((state) => state.setFilteredMembers);
+  
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [startReading, setStartReading] = useState(false);
   const showMembersList = mentionmemberStore((state) => state.showMembersList);
