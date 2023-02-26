@@ -65,6 +65,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       style={{
         borderLeft: '1px solid #b1b1b1',
         borderRight: '1px solid #b1b1b1',
+        paddingTop: '70px',
       }}
       className={styles.container}
       height={height}
