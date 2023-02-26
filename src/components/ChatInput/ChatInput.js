@@ -1,4 +1,10 @@
-import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
+import {
+  Box,
+  Button,
+  Icon,
+  ActionButton,
+  AnimatedVisibility,
+} from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
@@ -16,6 +22,8 @@ const ChatInput = () => {
   const inputRef = useRef(null);
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
+  const [showInputFormattingToolbar, setShowInputFormattingToolbar] =
+    useState(true);
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
@@ -97,9 +105,21 @@ const ChatInput = () => {
     }
   }, [editMessage]);
 
+  const toggleInputFormattingToolbar = () => {
+    setShowInputFormattingToolbar(!showInputFormattingToolbar);
+  };
+
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
+        <Button
+          onClick={toggleInputFormattingToolbar}
+          elevation="2"
+          square
+          height={48}
+        >
+          <Icon mie="x4" name="burger" size="x20" />
+        </Button>
         <textarea
           disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
@@ -154,11 +174,22 @@ const ChatInput = () => {
           </Button>
         )}
       </Box>
-      {isUserAuthenticated && (
-        <ChatInputFormattingToolbar
-          messageRef={messageRef}
-          inputRef={inputRef}
-        />
+      {showInputFormattingToolbar ? (
+        isUserAuthenticated && (
+          <AnimatedVisibility visibility="visible">
+            <ChatInputFormattingToolbar
+              messageRef={messageRef}
+              inputRef={inputRef}
+            />
+          </AnimatedVisibility>
+        )
+      ) : (
+        <AnimatedVisibility visibility="hidden">
+          <ChatInputFormattingToolbar
+            messageRef={messageRef}
+            inputRef={inputRef}
+          />
+        </AnimatedVisibility>
       )}
     </Box>
   );
