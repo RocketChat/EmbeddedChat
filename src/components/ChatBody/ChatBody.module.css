@@ -9,6 +9,21 @@
   position: relative;
 }
 
+.drag-component {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-weight: 900;
+  font-size: xxx-large;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
