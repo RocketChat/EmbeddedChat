@@ -115,6 +115,10 @@ const ChatInput = () => {
             }
           }}
           onKeyDown={(e) => {
+            if (e.shiftKey && e.keyCode === 13) {
+              // new line with shift enter. do nothing.
+              return;
+            }
             if (e.ctrlKey && e.keyCode === 13) {
               // Insert line break in text input field
               messageRef.current.value += '\n';
