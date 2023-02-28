@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { Markup } from '../Markup/index';
 
-const Markdown = ({ body, isReaction = false}) => {
+const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
     return (
       <MessageEmoji>
@@ -22,7 +22,7 @@ const Markdown = ({ body, isReaction = false}) => {
 
   return (
     <Box>
-      <Markup tokens={body.md}/>
+      <Markup tokens={body.md} />
     </Box>
   );
 };

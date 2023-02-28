@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import InlineElements from '../elements/InlineElements';
 
-const ParagraphBlock = ({ contents}) => (
+const ParagraphBlock = ({ contents }) => (
   <p>
-    <InlineElements contents={contents}/>
+    <InlineElements contents={contents} />
   </p>
 );
 

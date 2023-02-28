@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mentionmemberStore from '../../../store/mentionmemberStore';
 
-const Mention = ({ contents}) => {
+const Mention = ({ contents }) => {
   const members = mentionmemberStore((state) => state.roomMembers);
   const hasMember = (user) => {
-    if(user === "all" || user == "everyone")
-       return true;
+    if (user === 'all' || user == 'everyone') return true;
     var found = false;
     Object.keys(members).forEach((ele) => {
       if (members[ele].username === user) {
@@ -22,7 +21,7 @@ const Mention = ({ contents}) => {
           {contents.value}
         </span>
       ) : (
-        "@" + contents.value
+        '@' + contents.value
       )}
     </>
   );

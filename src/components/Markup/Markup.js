@@ -9,16 +9,11 @@ import UnOrderedListBlock from './blocks/UnOrderedListBlock';
 import QuoteBlock from './blocks/QuoteBlock';
 import TaskListBlock from './blocks/TaskListBlock';
 
-const Markup = ({ tokens}) =>
+const Markup = ({ tokens }) =>
   tokens.map((token, index) => {
     switch (token.type) {
       case 'PARAGRAPH':
-        return (
-          <ParagraphBlock
-            key={index}
-            contents={token.value}
-          />
-        );
+        return <ParagraphBlock key={index} contents={token.value} />;
 
       case 'CODE':
         return <CodeBlock key={index} lines={token.value} />;

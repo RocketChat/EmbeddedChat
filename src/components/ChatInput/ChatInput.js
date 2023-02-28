@@ -22,13 +22,15 @@ const ChatInput = () => {
 
   const roomMembers = mentionmemberStore((state) => state.roomMembers);
   const setRoomMembers = mentionmemberStore((state) => state.setRoomMembers);
-  
+
   const [filteredMembers, setFilteredMembers] = useState([]);
-  
+
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [startReading, setStartReading] = useState(false);
   const showMembersList = mentionmemberStore((state) => state.showMembersList);
-  const setshowMembersList = mentionmemberStore((state) => state.toggleShowMembers);
+  const setshowMembersList = mentionmemberStore(
+    (state) => state.toggleShowMembers
+  );
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
@@ -107,7 +109,6 @@ const ChatInput = () => {
     const channelMembers = await RCInstance.getChannelMembers();
     setRoomMembers(channelMembers.members);
   };
- 
 
   useEffect(() => {
     if (editMessage.msg) {
@@ -121,7 +122,10 @@ const ChatInput = () => {
   return (
     <Box m="x20" border="2px solid #ddd">
       {showMembersList ? (
-        <MembersList mentionIndex = {mentionIndex} filteredMembers = {filteredMembers}/>
+        <MembersList
+          mentionIndex={mentionIndex}
+          filteredMembers={filteredMembers}
+        />
       ) : (
         <></>
       )}
@@ -139,7 +143,15 @@ const ChatInput = () => {
               e.target.style.height = `${e.target.scrollHeight - 10}px`;
             else e.target.style.height = '150px';
 
-            searchToMentionUser(messageRef.current.value, roomMembers, startReading, setStartReading, setFilteredMembers, setmentionIndex, setshowMembersList);
+            searchToMentionUser(
+              messageRef.current.value,
+              roomMembers,
+              startReading,
+              setStartReading,
+              setFilteredMembers,
+              setmentionIndex,
+              setshowMembersList
+            );
           }}
           onKeyDown={(e) => {
             if (e.ctrlKey && e.keyCode === 13) {
@@ -172,12 +184,11 @@ const ChatInput = () => {
             if (showMembersList && e.key === 'Enter') {
               e.preventDefault();
               let selectedMember = null;
-              if(mentionIndex === filteredMembers.length)
-                selectedMember = "all"
-              else if(mentionIndex === filteredMembers.length + 1)
-                selectedMember = "everyone"
-              else
-                selectedMember = filteredMembers[mentionIndex].username;
+              if (mentionIndex === filteredMembers.length)
+                selectedMember = 'all';
+              else if (mentionIndex === filteredMembers.length + 1)
+                selectedMember = 'everyone';
+              else selectedMember = filteredMembers[mentionIndex].username;
               messageRef.current.value =
                 messageRef.current.value.substring(
                   0,
