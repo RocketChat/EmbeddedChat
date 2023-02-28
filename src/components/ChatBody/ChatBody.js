@@ -103,20 +103,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       {onDrag ? (
         <Box
           onDrop={(e) => handleDragDrop(e)}
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            display: 'flex',
-            zIndex: '50',
-            background: 'rgba(0, 0, 0, 0.5)',
-            color: 'white',
-            fontWeight: '900',
-            fontSize: 'xxx-large',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          className={styles.drag_component}
         >
           DRAG AND DROP AREA
         </Box>
