@@ -10,12 +10,27 @@ import {
   loginModalStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
+import MembersList from '../Mentions/MembersList';
+import mentionmemberStore from '../../store/mentionmemberStore';
+import { searchToMentionUser } from '../../lib/searchToMentionUser';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
+
+  const roomMembers = mentionmemberStore((state) => state.roomMembers);
+  const setRoomMembers = mentionmemberStore((state) => state.setRoomMembers);
+
+  const [filteredMembers, setFilteredMembers] = useState([]);
+
+  const [mentionIndex, setmentionIndex] = useState(-1);
+  const [startReading, setStartReading] = useState(false);
+  const showMembersList = mentionmemberStore((state) => state.showMembersList);
+  const setshowMembersList = mentionmemberStore(
+    (state) => state.toggleShowMembers
+  );
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
@@ -90,15 +105,30 @@ const ChatInput = () => {
     }
     await RCInstance.sendAttachment(event.target.files[0]);
   };
+  const getAllChannelMembers = async () => {
+    const channelMembers = await RCInstance.getChannelMembers();
+    setRoomMembers(channelMembers.members);
+  };
 
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     }
   }, [editMessage]);
+  useEffect(() => {
+    getAllChannelMembers();
+  }, []);
 
   return (
     <Box m="x20" border="2px solid #ddd">
+      {showMembersList ? (
+        <MembersList
+          mentionIndex={mentionIndex}
+          filteredMembers={filteredMembers}
+        />
+      ) : (
+        <></>
+      )}
       <Box className={styles.container}>
         <textarea
           disabled={!isUserAuthenticated || isRecordingMessage}
@@ -107,12 +137,21 @@ const ChatInput = () => {
           onChange={(e) => {
             messageRef.current.value = e.target.value;
             setDisableButton(!messageRef.current.value.length);
+
             e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150) {
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            } else {
-              e.target.style.height = '150px';
-            }
+            if (e.target.scrollHeight <= 150)
+              e.target.style.height = `${e.target.scrollHeight - 10}px`;
+            else e.target.style.height = '150px';
+
+            searchToMentionUser(
+              messageRef.current.value,
+              roomMembers,
+              startReading,
+              setStartReading,
+              setFilteredMembers,
+              setmentionIndex,
+              setshowMembersList
+            );
           }}
           onKeyDown={(e) => {
             if (e.ctrlKey && e.keyCode === 13) {
@@ -122,13 +161,52 @@ const ChatInput = () => {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
-            } else if (e.keyCode === 13) {
+            } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+              e.preventDefault();
               e.target.style.height = '38px';
               sendMessage();
+            }
+
+            if (e.key === 'ArrowDown') {
+              setmentionIndex(
+                mentionIndex + 1 >= filteredMembers.length + 2
+                  ? 0
+                  : mentionIndex + 1
+              );
+            }
+            if (e.key === 'ArrowUp') {
+              setmentionIndex(
+                mentionIndex - 1 < 0
+                  ? filteredMembers.length + 1
+                  : mentionIndex - 1
+              );
+            }
+            if (showMembersList && e.key === 'Enter') {
+              e.preventDefault();
+              let selectedMember = null;
+              if (mentionIndex === filteredMembers.length)
+                selectedMember = 'all';
+              else if (mentionIndex === filteredMembers.length + 1)
+                selectedMember = 'everyone';
+              else selectedMember = filteredMembers[mentionIndex].username;
+              messageRef.current.value =
+                messageRef.current.value.substring(
+                  0,
+                  messageRef.current.value.lastIndexOf('@')
+                ) +
+                '@' +
+                selectedMember;
+
+              setshowMembersList(false);
+
+              setStartReading(false);
+              setFilteredMembers([]);
+              setmentionIndex(-1);
             }
           }}
           ref={messageRef}
         />
+
         <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
         {isUserAuthenticated ? (
           <ActionButton
