@@ -105,7 +105,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
           onDrop={(e) => handleDragDrop(e)}
           className={styles.drag_component}
         >
-          DRAG AND DROP AREA
+          Drop to upload file
         </Box>
       ) : null}
       <MessageList messages={messages} handleGoBack={handleGoBack} />
