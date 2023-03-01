@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { Box } from '@rocket.chat/fuselage';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
@@ -10,6 +10,7 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
+import RocketChatInstance from '../../lib/api';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
@@ -60,6 +61,32 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     return () => RCInstance.close();
   }, [isUserAuthenticated, getMessagesAndRoles]);
 
+  const [onDrag, setOnDrag] = useState(false);
+  const [leaveCount, setLeaveCount] = useState(0);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = () => {
+    setOnDrag(true);
+  };
+  const handleDragLeave = () => {
+    if (leaveCount % 2 === 1) {
+      setOnDrag(false);
+      setLeaveCount(leaveCount + 1);
+    } else {
+      setLeaveCount(leaveCount + 1);
+    }
+  };
+
+  const handleDragDrop = (e) => {
+    e.preventDefault();
+    setOnDrag(false);
+    setLeaveCount(0);
+    RCInstance.sendAttachment(e.dataTransfer.files[0]);
+  };
+
   return (
     <Box
       style={{
@@ -67,9 +94,20 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         borderRight: '1px solid #b1b1b1',
         paddingTop: '70px',
       }}
+      onDragOver={(e) => handleDrag(e)}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
       className={styles.container}
       height={height}
     >
+      {onDrag ? (
+        <Box
+          onDrop={(e) => handleDragDrop(e)}
+          className={styles.drag_component}
+        >
+          Drop to upload file
+        </Box>
+      ) : null}
       <MessageList messages={messages} handleGoBack={handleGoBack} />
       <TotpModal
         handleGoogleLogin={handleGoogleLogin}
