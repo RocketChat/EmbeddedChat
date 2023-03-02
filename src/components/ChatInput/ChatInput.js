@@ -10,6 +10,7 @@ import {
   loginModalStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
@@ -38,6 +39,9 @@ const ChatInput = () => {
   const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -83,12 +87,15 @@ const ChatInput = () => {
     }
   };
 
-  const sendAttachment = async (event) => {
+  const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
-    await RCInstance.sendAttachment(event.target.files[0]);
+
+    setData(event.target.files[0]);
+    toggle();
+    // await RCInstance.sendAttachment(event.target.files[0]);
   };
 
   useEffect(() => {
