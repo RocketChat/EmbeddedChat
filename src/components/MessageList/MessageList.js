@@ -148,7 +148,7 @@ const MessageList = ({ messages, handleGoBack }) => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
           const sequential = isMessageSequential(msg, prev, 300);
-
+        
           return (
             msg && (
               <Box className={classes.messageParentBox} key={msg._id}>
