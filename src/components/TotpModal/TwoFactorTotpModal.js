@@ -16,9 +16,6 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
     e.preventDefault();
 
     if (password !== null && emailoruser !== null) {
-      console.log(
-        ` password ${password} emailusername ${emailoruser} code  ${accessCode}`
-      );
       handleLogin(emailoruser, password, accessCode);
     } else {
       handleGoogleLogin(accessCode);
