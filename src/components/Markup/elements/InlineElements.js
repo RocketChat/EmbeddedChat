@@ -8,6 +8,8 @@ import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
+import PropTypes from 'prop-types';
+import Mention from './Mention';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -29,6 +31,9 @@ const InlineElements = ({ contents }) =>
 
       case 'MENTION_CHANNEL':
         return <ChannelMention key={index} mention={content.value.value} />;
+
+      case 'MENTION_USER':
+        return <Mention key={index} contents={content.value} />;
 
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;
@@ -54,3 +59,7 @@ const InlineElements = ({ contents }) =>
   });
 
 export default InlineElements;
+
+InlineElements.propTypes = {
+  contents: PropTypes.any,
+};

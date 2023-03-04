@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
 import {
@@ -37,7 +37,6 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 
 import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
-
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
