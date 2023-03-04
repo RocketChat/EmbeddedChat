@@ -1,6 +1,10 @@
-.container {
-  position: sticky;
+.containerParent {
+  z-index: 1;
   bottom: 0;
+  position: sticky;
+}
+
+.container {
   display: flex;
   align-items: center;
   justify-content: center;

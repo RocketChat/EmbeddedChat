@@ -26,9 +26,9 @@ export const RCComponent = ({
   showAvatar = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
+  const [nonBodyHeight, setNonBodyHeight] = useState(0);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
@@ -95,7 +95,7 @@ export const RCComponent = ({
   return (
     <ToastBarProvider>
       <RCInstanceProvider value={{ RCInstance }}>
-        <Box width={width}>
+        <Box width={width} overflowX={'hidden'} overflowY={'hidden'}>
           <ChatHeader
             channelName={channelName}
             isClosable={isClosable}
@@ -107,13 +107,13 @@ export const RCComponent = ({
           />
           {isUserAuthenticated || anonymousMode ? (
             <ChatBody
-              height={!fullScreen ? height : '83vh'}
+              height={!fullScreen ? height : '80vh'}
               anonymousMode={anonymousMode}
               showRoles={showRoles}
               GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
             />
           ) : (
-            <Home height={!fullScreen ? height : '83vh'} />
+            <Home height={!fullScreen ? height : '80vh'} />
           )}
           <ChatInput />
         </Box>

@@ -118,7 +118,7 @@ const ChatInput = () => {
   };
 
   return (
-    <Box m="x20" border="2px solid #ddd">
+    <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
       <Box className={styles.container}>
         <textarea
           rows={1}
