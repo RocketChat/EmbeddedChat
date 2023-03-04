@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { Box } from '@rocket.chat/fuselage';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
 import RCContext from '../../context/RCInstance';
@@ -16,6 +16,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const messages = useMessageStore((state) => state.messages);
 
   const setMessages = useMessageStore((state) => state.setMessages);
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
 
@@ -54,14 +56,47 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
   useEffect(() => {
     if (isUserAuthenticated) {
-      RCInstance.realtime(() => getMessagesAndRoles());
+      RCInstance.connect().then(() => {
+        RCInstance.addMessageListener(upsertMessage);
+        RCInstance.addMessageDeleteListener(removeMessage);
+      });
       getMessagesAndRoles();
     } else {
       getMessagesAndRoles(anonymousMode);
     }
 
-    return () => RCInstance.close();
-  }, [isUserAuthenticated, getMessagesAndRoles, RCInstance]);
+    return () => {
+      RCInstance.close();
+      RCInstance.removeMessageListener(upsertMessage);
+      RCInstance.removeMessageDeleteListener(removeMessage);
+    };
+  }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
+
+  const [onDrag, setOnDrag] = useState(false);
+  const [leaveCount, setLeaveCount] = useState(0);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = () => {
+    setOnDrag(true);
+  };
+  const handleDragLeave = () => {
+    if (leaveCount % 2 === 1) {
+      setOnDrag(false);
+      setLeaveCount(leaveCount + 1);
+    } else {
+      setLeaveCount(leaveCount + 1);
+    }
+  };
+
+  const handleDragDrop = (e) => {
+    e.preventDefault();
+    setOnDrag(false);
+    setLeaveCount(0);
+    RCInstance.sendAttachment(e.dataTransfer.files[0]);
+  };
 
   return (
     <Box
@@ -70,9 +105,20 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         borderRight: '1px solid #b1b1b1',
         paddingTop: '70px',
       }}
+      onDragOver={(e) => handleDrag(e)}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
       className={styles.container}
       height={height}
     >
+      {onDrag ? (
+        <Box
+          onDrop={(e) => handleDragDrop(e)}
+          className={styles.drag_component}
+        >
+          Drop to upload file
+        </Box>
+      ) : null}
       <MessageList messages={messages} handleGoBack={handleGoBack} />
       <TotpModal
         handleGoogleLogin={handleGoogleLogin}
