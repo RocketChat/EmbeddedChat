@@ -21,6 +21,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
 
@@ -56,14 +58,21 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
   useEffect(() => {
     if (isUserAuthenticated) {
-      RCInstance.realtime(() => getMessagesAndRoles());
+      RCInstance.connect().then(() => {
+        RCInstance.addMessageListener(upsertMessage);
+        RCInstance.addMessageDeleteListener(removeMessage);
+      });
       getMessagesAndRoles();
     } else {
       getMessagesAndRoles(anonymousMode);
     }
 
-    return () => RCInstance.close();
-  }, [isUserAuthenticated, getMessagesAndRoles]);
+    return () => {
+      RCInstance.close();
+      RCInstance.removeMessageListener(upsertMessage);
+      RCInstance.removeMessageDeleteListener(removeMessage);
+    };
+  }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
 
   const [onDrag, setOnDrag] = useState(false);
   const [leaveCount, setLeaveCount] = useState(0);
