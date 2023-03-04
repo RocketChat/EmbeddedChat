@@ -106,8 +106,15 @@ const ChatInput = () => {
     await RCInstance.sendAttachment(event.target.files[0]);
   };
   const getAllChannelMembers = async () => {
-    const channelMembers = await RCInstance.getChannelMembers();
-    setRoomMembers(channelMembers.members);
+    if (!isUserAuthenticated) {
+      return;
+    }
+    try {
+      const channelMembers = await RCInstance.getChannelMembers();
+      setRoomMembers(channelMembers.members);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -193,13 +200,10 @@ const ChatInput = () => {
               else if (mentionIndex === filteredMembers.length + 1)
                 selectedMember = 'everyone';
               else selectedMember = filteredMembers[mentionIndex].username;
-              messageRef.current.value =
-                messageRef.current.value.substring(
-                  0,
-                  messageRef.current.value.lastIndexOf('@')
-                ) +
-                '@' +
-                selectedMember;
+              messageRef.current.value = `${messageRef.current.value.substring(
+                0,
+                messageRef.current.value.lastIndexOf('@')
+              )}@${selectedMember}`;
 
               setshowMembersList(false);
 
