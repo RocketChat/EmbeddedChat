@@ -44,7 +44,7 @@ const ChatInput = () => {
   };
 
   const sendMessage = async () => {
-    messageRef.current.style.height = '38px';
+    messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trimEnd();
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
@@ -98,32 +98,44 @@ const ChatInput = () => {
     }
   }, [editMessage]);
 
+  const handleMessageEdit = (e) => {
+    console.log(e);
+    messageRef.current.value = e.target.value;
+    if (e.code === 'Enter') {
+      messageRef.current.value += '\n';
+    }
+
+    setDisableButton(!messageRef.current.value.length);
+    e.target.style.height = 'auto';
+    if (e.target.scrollHeight <= 150) {
+      console.log(e.target.style.height, e.target.scrollHeight);
+      e.target.style.boxSizing = 'border-box';
+      e.target.style.height = `${e.target.scrollHeight}px`;
+      console.log(e.target.style.height, e.target.scrollHeight);
+    } else {
+      e.target.style.height = '150px';
+    }
+  };
+
   return (
     <Box m="x20" border="2px solid #ddd">
       <Box className={styles.container}>
         <textarea
+          rows={1}
           disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           className={styles.textInput}
-          onChange={(e) => {
-            messageRef.current.value = e.target.value;
-            setDisableButton(!messageRef.current.value.length);
-            e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150) {
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            } else {
-              e.target.style.height = '150px';
-            }
-          }}
+          onChange={handleMessageEdit}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
               // Insert line break in text input field
-              messageRef.current.value += '\n';
+              handleMessageEdit(e);
             } else if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
               setEditMessage({});
             } else if (e.keyCode === 13) {
+              e.preventDefault();
               e.target.style.height = '38px';
               sendMessage();
             }
