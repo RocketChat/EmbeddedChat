@@ -34,6 +34,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         return;
       }
       const { messages } = await RCInstance.getMessages(anonymousMode);
+      console.log(messages);
       setMessages(messages);
       if (!isUserAuthenticated) {
         // fetch roles only when user is authenticated
@@ -111,7 +112,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       style={{
         borderLeft: '1px solid #b1b1b1',
         borderRight: '1px solid #b1b1b1',
-        paddingTop: '70px',
+        paddingTop: '110px',
       }}
       onDragOver={(e) => handleDrag(e)}
       onDragEnter={handleDragEnter}
