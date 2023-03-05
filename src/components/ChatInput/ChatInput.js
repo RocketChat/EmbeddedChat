@@ -98,24 +98,6 @@ const ChatInput = () => {
     }
   }, [editMessage]);
 
-  const handleMessageEdit = (e) => {
-    messageRef.current.value = e.target.value;
-    if (e.code === 'Enter') {
-      messageRef.current.value += '\n';
-    }
-
-    setDisableButton(!messageRef.current.value.length);
-    e.target.style.height = 'auto';
-    if (e.target.scrollHeight <= 150) {
-      console.log(e.target.style.height, e.target.scrollHeight);
-      e.target.style.boxSizing = 'border-box';
-      e.target.style.height = `${e.target.scrollHeight}px`;
-      console.log(e.target.style.height, e.target.scrollHeight);
-    } else {
-      e.target.style.height = '150px';
-    }
-  };
-
   return (
     <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
       <Box className={styles.container}>
@@ -124,11 +106,35 @@ const ChatInput = () => {
           disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           className={styles.textInput}
-          onChange={handleMessageEdit}
+          onChange={(e) => {
+            messageRef.current.value = e.target.value;
+            if (e.code === 'Enter') {
+              messageRef.current.value += '\n';
+            }
+
+            setDisableButton(!messageRef.current.value.length);
+            e.target.style.height = 'auto';
+            if (e.target.scrollHeight <= 150) {
+              console.log(e.target.style.height, e.target.scrollHeight);
+              e.target.style.boxSizing = 'border-box';
+              e.target.style.height = `${e.target.scrollHeight}px`;
+              console.log(e.target.style.height, e.target.scrollHeight);
+            } else {
+              e.target.style.height = '150px';
+            }
+          }}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-              // Insert line break in text input field
-              handleMessageEdit(e);
+              messageRef.current.value += '\n';
+              e.target.style.height = 'auto';
+              if (e.target.scrollHeight <= 150) {
+                console.log(e.target.style.height, e.target.scrollHeight);
+                e.target.style.boxSizing = 'border-box';
+                e.target.style.height = `${e.target.scrollHeight}px`;
+                console.log(e.target.style.height, e.target.scrollHeight);
+              } else {
+                e.target.style.height = '150px';
+              }
             } else if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
