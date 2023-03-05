@@ -99,7 +99,6 @@ const ChatInput = () => {
   }, [editMessage]);
 
   const handleMessageEdit = (e) => {
-    console.log(e);
     messageRef.current.value = e.target.value;
     if (e.code === 'Enter') {
       messageRef.current.value += '\n';

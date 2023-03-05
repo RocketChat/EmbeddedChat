@@ -95,7 +95,12 @@ export const RCComponent = ({
   return (
     <ToastBarProvider>
       <RCInstanceProvider value={{ RCInstance }}>
-        <Box width={width} overflowX={'hidden'} overflowY={'hidden'}>
+        <Box
+          width={width}
+          overflowX={'hidden'}
+          overflowY={'hidden'}
+          maxHeight={'100vh'}
+        >
           <ChatHeader
             channelName={channelName}
             isClosable={isClosable}
