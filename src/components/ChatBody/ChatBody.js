@@ -29,16 +29,27 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   );
 
   const getMessagesAndRoles = useCallback(async (anonymousMode) => {
-    const { messages } = await RCInstance.getMessages(anonymousMode);
-    setMessages(messages);
-    if (showRoles) {
-      const { roles } = await RCInstance.getChannelRoles();
-      // convert roles array from api into object for better search
-      const rolesObj = roles.reduce(
-        (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-        {}
-      );
-      setRoles(rolesObj);
+    try {
+      if (!isUserAuthenticated && !anonymousMode) {
+        return;
+      }
+      const { messages } = await RCInstance.getMessages(anonymousMode);
+      setMessages(messages);
+      if (!isUserAuthenticated) {
+        // fetch roles only when user is authenticated
+        return;
+      }
+      if (showRoles) {
+        const { roles } = await RCInstance.getChannelRoles();
+        // convert roles array from api into object for better search
+        const rolesObj = roles.reduce(
+          (obj, item) => Object.assign(obj, { [item.u.username]: item }),
+          {}
+        );
+        setRoles(rolesObj);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, []);
 
