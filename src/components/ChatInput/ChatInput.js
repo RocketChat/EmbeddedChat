@@ -13,10 +13,12 @@ import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
+import TypingUsers from '../TypingUsers';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+  const typingRef = useRef();
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
 
@@ -119,130 +121,167 @@ const ChatInput = () => {
     getAllChannelMembers();
   }, []);
 
+  const username = useUserStore((state) => state.username);
+  const timerRef = useRef();
+  const sendTypingStart = async () => {
+    try {
+      if (typingRef.current && messageRef.current.value?.length) {
+        // 15 seconds has not been passed since last send.
+        return;
+      }
+      if (messageRef.current.value?.length) {
+        typingRef.current = true;
+        timerRef.current = setTimeout(() => {
+          typingRef.current = false;
+        }, [15000]);
+        await RCInstance.sendTypingStatus(username, true);
+      } else {
+        clearTimeout(timerRef.current);
+        typingRef.current = false;
+        await RCInstance.sendTypingStatus(username, false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const sendTypingStop = async () => {
+    try {
+      typingRef.current = false;
+      await RCInstance.sendTypingStatus(username, false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <Box m="x20" border="2px solid #ddd">
-      {showMembersList ? (
-        <MembersList
-          mentionIndex={mentionIndex}
-          filteredMembers={filteredMembers}
-        />
-      ) : (
-        <></>
-      )}
-      <Box className={styles.container}>
-        <textarea
-          disabled={!isUserAuthenticated || isRecordingMessage}
-          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-          className={styles.textInput}
-          onChange={(e) => {
-            messageRef.current.value = e.target.value;
-            setDisableButton(!messageRef.current.value.length);
+    <>
+      <Box marginInlineStart="x20">
+        <TypingUsers />
+      </Box>
+      <Box m="x20" border="2px solid #ddd">
+        {showMembersList ? (
+          <MembersList
+            mentionIndex={mentionIndex}
+            filteredMembers={filteredMembers}
+          />
+        ) : (
+          <></>
+        )}
+        <Box className={styles.container}>
+          <textarea
+            disabled={!isUserAuthenticated || isRecordingMessage}
+            placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+            className={styles.textInput}
+            onChange={(e) => {
+              messageRef.current.value = e.target.value;
+              setDisableButton(!messageRef.current.value.length);
 
-            e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150)
-              e.target.style.height = `${e.target.scrollHeight - 10}px`;
-            else e.target.style.height = '150px';
+              e.target.style.height = 'auto';
+              if (e.target.scrollHeight <= 150)
+                e.target.style.height = `${e.target.scrollHeight - 10}px`;
+              else e.target.style.height = '150px';
 
-            searchToMentionUser(
-              messageRef.current.value,
-              roomMembers,
-              startReading,
-              setStartReading,
-              setFilteredMembers,
-              setmentionIndex,
-              setshowMembersList
-            );
-          }}
-          onKeyDown={(e) => {
-            if (e.shiftKey && e.keyCode === 13) {
-              // new line with shift enter. do nothing.
-              return;
-            }
-            if (e.ctrlKey && e.keyCode === 13) {
-              // Insert line break in text input field
-              messageRef.current.value += '\n';
-            } else if (editMessage.msg && e.keyCode === 27) {
-              messageRef.current.value = '';
-              setDisableButton(true);
-              setEditMessage({});
-            } else if (filteredMembers.length === 0 && e.keyCode === 13) {
-              e.preventDefault();
-              e.target.style.height = '38px';
-              sendMessage();
-            }
-
-            if (e.key === 'ArrowDown') {
-              setmentionIndex(
-                mentionIndex + 1 >= filteredMembers.length + 2
-                  ? 0
-                  : mentionIndex + 1
+              searchToMentionUser(
+                messageRef.current.value,
+                roomMembers,
+                startReading,
+                setStartReading,
+                setFilteredMembers,
+                setmentionIndex,
+                setshowMembersList
               );
-            }
-            if (e.key === 'ArrowUp') {
-              setmentionIndex(
-                mentionIndex - 1 < 0
-                  ? filteredMembers.length + 1
-                  : mentionIndex - 1
-              );
-            }
-            if (showMembersList && e.key === 'Enter') {
-              e.preventDefault();
-              let selectedMember = null;
-              if (mentionIndex === filteredMembers.length)
-                selectedMember = 'all';
-              else if (mentionIndex === filteredMembers.length + 1)
-                selectedMember = 'everyone';
-              else selectedMember = filteredMembers[mentionIndex].username;
-              messageRef.current.value =
-                messageRef.current.value.substring(
+              sendTypingStart();
+            }}
+            onBlur={sendTypingStop}
+            onKeyDown={(e) => {
+              if (e.shiftKey && e.keyCode === 13) {
+                // new line with shift enter. do nothing.
+                return;
+              }
+              if (e.ctrlKey && e.keyCode === 13) {
+                // Insert line break in text input field
+                messageRef.current.value += '\n';
+              } else if (editMessage.msg && e.keyCode === 27) {
+                messageRef.current.value = '';
+                setDisableButton(true);
+                setEditMessage({});
+              } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+                e.preventDefault();
+                e.target.style.height = '38px';
+                sendMessage();
+              }
+
+              if (e.key === 'ArrowDown') {
+                setmentionIndex(
+                  mentionIndex + 1 >= filteredMembers.length + 2
+                    ? 0
+                    : mentionIndex + 1
+                );
+              }
+              if (e.key === 'ArrowUp') {
+                setmentionIndex(
+                  mentionIndex - 1 < 0
+                    ? filteredMembers.length + 1
+                    : mentionIndex - 1
+                );
+              }
+              if (showMembersList && e.key === 'Enter') {
+                e.preventDefault();
+                let selectedMember = null;
+                if (mentionIndex === filteredMembers.length)
+                  selectedMember = 'all';
+                else if (mentionIndex === filteredMembers.length + 1)
+                  selectedMember = 'everyone';
+                else selectedMember = filteredMembers[mentionIndex].username;
+                messageRef.current.value = `${messageRef.current.value.substring(
                   0,
                   messageRef.current.value.lastIndexOf('@')
-                ) +
-                '@' +
-                selectedMember;
+                )}@${selectedMember}`;
 
-              setshowMembersList(false);
+                setshowMembersList(false);
 
-              setStartReading(false);
-              setFilteredMembers([]);
-              setmentionIndex(-1);
-            }
-          }}
-          ref={messageRef}
-        />
+                setStartReading(false);
+                setFilteredMembers([]);
+                setmentionIndex(-1);
+              }
+            }}
+            ref={messageRef}
+          />
 
-        <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-        {isUserAuthenticated ? (
-          <ActionButton
-            bg="surface"
-            border="0px"
-            disabled={disableButton || isRecordingMessage}
-          >
-            <Icon
-              className={styles.chatInputIconCursor}
-              onClick={sendMessage}
-              name="send"
-              size="x25"
-              padding={6}
-            />
-          </ActionButton>
-        ) : (
-          <Button
-            onClick={openLoginModal}
-            primary
-            style={{ overflow: 'visible' }}
-          >
-            JOIN
-          </Button>
+          <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+          {isUserAuthenticated ? (
+            <ActionButton
+              bg="surface"
+              border="0px"
+              disabled={disableButton || isRecordingMessage}
+            >
+              <Icon
+                className={styles.chatInputIconCursor}
+                onClick={sendMessage}
+                name="send"
+                size="x25"
+                padding={6}
+              />
+            </ActionButton>
+          ) : (
+            <Button
+              onClick={openLoginModal}
+              primary
+              style={{ overflow: 'visible' }}
+            >
+              JOIN
+            </Button>
+          )}
+        </Box>
+        {isUserAuthenticated && (
+          <ChatInputFormattingToolbar
+            messageRef={messageRef}
+            inputRef={inputRef}
+          />
         )}
       </Box>
-      {isUserAuthenticated && (
-        <ChatInputFormattingToolbar
-          messageRef={messageRef}
-          inputRef={inputRef}
-        />
-      )}
-    </Box>
+    </>
   );
 };
 

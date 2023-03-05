@@ -5,8 +5,8 @@ import mentionmemberStore from '../../../store/mentionmemberStore';
 const Mention = ({ contents }) => {
   const members = mentionmemberStore((state) => state.roomMembers);
   const hasMember = (user) => {
-    if (user === 'all' || user == 'everyone') return true;
-    var found = false;
+    if (user === 'all' || user === 'everyone') return true;
+    let found = false;
     Object.keys(members).forEach((ele) => {
       if (members[ele].username === user) {
         found = true;
@@ -21,7 +21,7 @@ const Mention = ({ contents }) => {
           {contents.value}
         </span>
       ) : (
-        '@' + contents.value
+        `@${contents.value}`
       )}
     </>
   );

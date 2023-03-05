@@ -40,7 +40,12 @@ export const RCComponent = ({
     );
   }
 
-  const RCInstance = new RocketChatInstance(host, roomId);
+  const [RCInstance, setRCInstance] = useState(
+    new RocketChatInstance(host, roomId)
+  );
+  useEffect(() => {
+    setRCInstance(new RocketChatInstance(host, roomId));
+  }, [roomId, host]);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
