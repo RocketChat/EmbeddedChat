@@ -11,6 +11,8 @@ export default class RocketChatInstance {
       host: this.host,
       useSsl: !/http:\/\//.test(host),
     });
+    this.onMessageCallbacks = [];
+    this.onMessageDeleteCallbacks = [];
   }
 
   getCookies() {
@@ -139,6 +141,67 @@ export default class RocketChatInstance {
     } catch (err) {
       console.error(err.message);
     }
+  }
+
+  /**
+   * All subscriptions are implemented here.
+   * TODO: Add logic to call thread message event listeners. To be done after thread implementation
+   */
+  async connect() {
+    try {
+      await this.close(); // before connection, all previous subscriptions should be cancelled
+      await this.rcClient.connect();
+      await this.rcClient.resume({ token: Cookies.get(RC_USER_TOKEN_COOKIE) });
+      await this.rcClient.subscribe('stream-room-messages', this.rid);
+      await this.rcClient.onMessage((data) => {
+        this.onMessageCallbacks.map((callback) => callback(data));
+      });
+      await this.rcClient.subscribeRoom(this.rid);
+      await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
+        const [roomId, event] = ddpMessage.fields.eventName.split('/');
+
+        if (roomId !== this.rid) {
+          return;
+        }
+
+        if (event === 'deleteMessage') {
+          const messageId = ddpMessage.fields.args[0]?._id;
+          this.onMessageDeleteCallbacks.map((callback) => callback(messageId));
+        }
+      });
+    } catch (err) {
+      await this.close();
+    }
+  }
+
+  async addMessageListener(callback) {
+    const idx = this.onMessageCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onMessageCallbacks[idx] = callback;
+    } else {
+      this.onMessageCallbacks.push(callback);
+    }
+  }
+
+  async removeMessageListener(callback) {
+    this.onMessageCallbacks = this.onMessageCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addMessageDeleteListener(callback) {
+    const idx = this.onMessageDeleteCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onMessageDeleteCallbacks[idx] = callback;
+    } else {
+      this.onMessageDeleteCallbacks.push(callback);
+    }
+  }
+
+  async removeMessageDeleteListener(callback) {
+    this.onMessageDeleteCallbacks = this.onMessageDeleteCallbacks.filter(
+      (c) => c !== callback
+    );
   }
 
   async updateUserNameThroughSuggestion(userid) {

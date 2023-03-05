@@ -7,10 +7,18 @@ export const searchToMentionUser = (
   setmentionIndex,
   setshowMembersList
 ) => {
-  if (message.length === 0) return;
+
   const lastChar = message[message.length - 1];
+  if (message.length === 0) {
+    setshowMembersList(false);
+    setStartReading(false);
+    setFilteredMembers([]);
+    setmentionIndex(-1);
+    return;
+  }
 
   if (lastChar === '@') {
+    if (message.length > 1 && message[message.length - 2] !== ' ') return;
     setStartReading(true);
     setFilteredMembers(roomMembers);
     setmentionIndex(0);

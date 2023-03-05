@@ -72,9 +72,13 @@ export const RCComponent = ({
   useEffect(() => {
     async function getUserEssentials() {
       const res = await RCInstance.me();
-      setAuthenticatedUserAvatarUrl(res.avatarUrl);
-      setAuthenticatedUserUsername(res.username);
-      setAuthenticatedUserId(res.userId);
+      if (res.status === 'error') {
+        setIsUserAuthenticated(false);
+      } else {
+        setAuthenticatedUserAvatarUrl(res.avatarUrl);
+        setAuthenticatedUserUsername(res.username);
+        setAuthenticatedUserId(res.userId);
+      }
     }
 
     const cookiesPresent =
