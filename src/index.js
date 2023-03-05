@@ -105,7 +105,7 @@ export const RCComponent = ({
     ) {
       getUserEssentials();
     }
-  }, []);
+  }, [RCInstance]);
 
   return (
     <ToastBarProvider>
