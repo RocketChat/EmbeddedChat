@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
 import ItalicSpan from './ItalicSpan';
 import StrikeSpan from './StrikeSpan';
@@ -8,7 +9,6 @@ import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
-import PropTypes from 'prop-types';
 import Mention from './Mention';
 
 const InlineElements = ({ contents }) =>

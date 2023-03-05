@@ -10,13 +10,14 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
-import RocketChatInstance from '../../lib/api';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
 
   const setMessages = useMessageStore((state) => state.setMessages);
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
 
@@ -28,16 +29,27 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   );
 
   const getMessagesAndRoles = useCallback(async (anonymousMode) => {
-    const { messages } = await RCInstance.getMessages(anonymousMode);
-    setMessages(messages);
-    if (showRoles) {
-      const { roles } = await RCInstance.getChannelRoles();
-      // convert roles array from api into object for better search
-      const rolesObj = roles.reduce(
-        (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-        {}
-      );
-      setRoles(rolesObj);
+    try {
+      if (!isUserAuthenticated && !anonymousMode) {
+        return;
+      }
+      const { messages } = await RCInstance.getMessages(anonymousMode);
+      setMessages(messages);
+      if (!isUserAuthenticated) {
+        // fetch roles only when user is authenticated
+        return;
+      }
+      if (showRoles) {
+        const { roles } = await RCInstance.getChannelRoles();
+        // convert roles array from api into object for better search
+        const rolesObj = roles.reduce(
+          (obj, item) => Object.assign(obj, { [item.u.username]: item }),
+          {}
+        );
+        setRoles(rolesObj);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, []);
 
@@ -52,14 +64,21 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
   useEffect(() => {
     if (isUserAuthenticated) {
-      RCInstance.realtime(() => getMessagesAndRoles());
+      RCInstance.connect().then(() => {
+        RCInstance.addMessageListener(upsertMessage);
+        RCInstance.addMessageDeleteListener(removeMessage);
+      });
       getMessagesAndRoles();
     } else {
       getMessagesAndRoles(anonymousMode);
     }
 
-    return () => RCInstance.close();
-  }, [isUserAuthenticated, getMessagesAndRoles]);
+    return () => {
+      RCInstance.close();
+      RCInstance.removeMessageListener(upsertMessage);
+      RCInstance.removeMessageDeleteListener(removeMessage);
+    };
+  }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
 
   const [onDrag, setOnDrag] = useState(false);
   const [leaveCount, setLeaveCount] = useState(0);
