@@ -12,6 +12,7 @@
 }
 
 .container {
+  margin-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +20,7 @@
 }
 
 .textInput {
-  width: 65%;
+  width: 90%;
   height: 2.5rem;
   border: none;
   outline: none;
@@ -40,6 +41,26 @@
 
 .close:hover {
   background: #bbb;
+}
+
+.label_checkbox {
+  margin-left: 5px !important;
+}
+
+.checkBox {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.selectUser {
+  padding: 10px;
+  margin: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.selectUser:hover {
+  background: #f0eded;
 }
 
 @media (max-width: 550px) {

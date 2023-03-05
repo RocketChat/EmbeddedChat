@@ -9,6 +9,7 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
+  usePruneMessageStore,
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
@@ -53,6 +54,8 @@ const ChatHeader = ({
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
+  const togglePrune = usePruneMessageStore((state) => state.toggle);
+  const showPrune = usePruneMessageStore((state) => state.open);
 
   const { handleLogout } = useRCAuth4Google();
   const showStarredMessage = async () => {
@@ -77,6 +80,10 @@ const ChatHeader = ({
   const showSearchMessage = async () => {
     setShowSearch(true);
     if (showMembers) toggleShowMembers();
+  };
+
+  const showPruneMessage = async () => {
+    togglePrune();
   };
 
   const showChannelinformation = async () => {
@@ -152,6 +159,16 @@ const ChatHeader = ({
           <Box alignItems="center" display="flex">
             <Icon mie="x4" name="magnifier" size="x16" />
             Search
+          </Box>
+        ),
+      },
+
+      prune: {
+        action: showPruneMessage,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="eraser" size="x16" />
+            Prune
           </Box>
         ),
       },

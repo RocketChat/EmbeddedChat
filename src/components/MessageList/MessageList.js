@@ -24,6 +24,7 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
+  usePruneMessageStore,
 } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Attachments } from '../Attachments';
@@ -34,7 +35,7 @@ import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
-
+import PruneMessage from '../PruneMessage/PruneMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
 
@@ -49,6 +50,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
   const showSearch = useSearchMessageStore((state) => state.showSearch);
+  const showPrune = usePruneMessageStore((state) => state.open);
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
@@ -307,6 +309,7 @@ const MessageList = ({ messages, handleGoBack }) => {
       {showMembers && <RoomMembers members={members} />}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
+      {showPrune && <PruneMessage />}
       {showChannelinfo && <Roominfo />}
     </>
   );
