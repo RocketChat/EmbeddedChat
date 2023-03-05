@@ -1,6 +1,10 @@
-.container {
+.containerParent {
+  z-index: 1;
+  bottom: 20px;
   position: sticky;
-  bottom: 0;
+}
+
+.container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,12 +24,13 @@
 }
 
 .textInput {
-  padding: 12px 12px 0px 12px;
+  padding: 12px 12px 12px 12px;
   width: 100%;
   border: none;
   outline: none;
   resize: none;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-size: 15px;
   font-family: var(
     --rcx-font-family-sans,

@@ -59,9 +59,10 @@ const ChatInput = () => {
   };
 
   const sendMessage = async () => {
-    messageRef.current.style.height = '38px';
-    const message = messageRef.current.value;
+    messageRef.current.style.height = '44px';
+    const message = messageRef.current.value.trimEnd();
     if (!message.length || !isUserAuthenticated) {
+      messageRef.current.value = '';
       if (editMessage.msg) {
         setEditMessage({});
       }
@@ -120,7 +121,7 @@ const ChatInput = () => {
   }, []);
 
   return (
-    <Box m="x20" border="2px solid #ddd">
+    <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
       {showMembersList ? (
         <MembersList
           mentionIndex={mentionIndex}
@@ -131,18 +132,25 @@ const ChatInput = () => {
       )}
       <Box className={styles.container}>
         <textarea
+          rows={1}
           disabled={!isUserAuthenticated || isRecordingMessage}
           placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
           className={styles.textInput}
           onChange={(e) => {
             messageRef.current.value = e.target.value;
+            if (e.code === 'Enter') {
+              messageRef.current.value += '\n';
+            }
+
             setDisableButton(!messageRef.current.value.length);
 
             e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150)
-              e.target.style.height = `${e.target.scrollHeight - 10}px`;
-            else e.target.style.height = '150px';
-
+            if (e.target.scrollHeight <= 150) {
+              e.target.style.boxSizing = 'border-box';
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            } else {
+              e.target.style.height = '150px';
+            }
             searchToMentionUser(
               messageRef.current.value,
               roomMembers,
@@ -154,13 +162,17 @@ const ChatInput = () => {
             );
           }}
           onKeyDown={(e) => {
-            if (e.shiftKey && e.keyCode === 13) {
-              // new line with shift enter. do nothing.
-              return;
-            }
-            if (e.ctrlKey && e.keyCode === 13) {
-              // Insert line break in text input field
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
               messageRef.current.value += '\n';
+              e.target.style.height = 'auto';
+              if (e.target.scrollHeight <= 150) {
+                console.log(e.target.style.height, e.target.scrollHeight);
+                e.target.style.boxSizing = 'border-box';
+                e.target.style.height = `${e.target.scrollHeight}px`;
+                console.log(e.target.style.height, e.target.scrollHeight);
+              } else {
+                e.target.style.height = '150px';
+              }
             } else if (editMessage.msg && e.keyCode === 27) {
               messageRef.current.value = '';
               setDisableButton(true);
