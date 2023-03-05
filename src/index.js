@@ -41,11 +41,17 @@ export const RCComponent = ({
   }
 
   const [RCInstance, setRCInstance] = useState(
-    new RocketChatInstance(host, roomId)
+    () => new RocketChatInstance(host, roomId)
   );
+
   useEffect(() => {
-    setRCInstance(new RocketChatInstance(host, roomId));
+    if (RCInstance.rcClient.loggedIn) {
+      RCInstance.close();
+      const newRCInstance = new RocketChatInstance(host, roomId);
+      setRCInstance(newRCInstance);
+    }
   }, [roomId, host]);
+
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -99,7 +105,7 @@ export const RCComponent = ({
     ) {
       getUserEssentials();
     }
-  }, []);
+  }, [RCInstance]);
 
   return (
     <ToastBarProvider>
