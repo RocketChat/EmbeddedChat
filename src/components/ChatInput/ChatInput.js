@@ -106,8 +106,15 @@ const ChatInput = () => {
     await RCInstance.sendAttachment(event.target.files[0]);
   };
   const getAllChannelMembers = async () => {
-    const channelMembers = await RCInstance.getChannelMembers();
-    setRoomMembers(channelMembers.members);
+    if (!isUserAuthenticated) {
+      return;
+    }
+    try {
+      const channelMembers = await RCInstance.getChannelMembers();
+      setRoomMembers(channelMembers.members);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import mentionmemberStore from '../../../store/mentionmemberStore';
+import useMentionMemberStore from '../../../store/mentionmemberStore';
 
 const Mention = ({ contents }) => {
-  const members = mentionmemberStore((state) => state.roomMembers);
+  const members = useMentionMemberStore((state) => state.roomMembers || []);
   const hasMember = (user) => {
     if (user === 'all' || user === 'everyone') return true;
     let found = false;
