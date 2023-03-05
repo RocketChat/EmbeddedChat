@@ -56,7 +56,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       RCInstance.connect().then(() => {
         RCInstance.addMessageListener(upsertMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
-        RCInstance.addTypingStatusListener(console.log);
       });
       getMessagesAndRoles();
     } else {
@@ -67,7 +66,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       RCInstance.close();
       RCInstance.removeMessageListener(upsertMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
-      RCInstance.removeTypingStatusListener(console.log);
     };
   }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
 
