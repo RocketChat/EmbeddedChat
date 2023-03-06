@@ -10,6 +10,7 @@ import {
   loginModalStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
@@ -42,6 +43,9 @@ const ChatInput = () => {
       isRecordingMessage: state.isRecordingMessage,
     })
   );
+
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -98,12 +102,13 @@ const ChatInput = () => {
     }
   };
 
-  const sendAttachment = async (event) => {
+  const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
-    await RCInstance.sendAttachment(event.target.files[0]);
+    toggle();
+    setData(event.target.files[0]);
   };
   const getAllChannelMembers = async () => {
     try {

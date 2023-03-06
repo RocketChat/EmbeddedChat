@@ -10,10 +10,15 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
+import RocketChatInstance from '../../lib/api';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
+
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
@@ -106,7 +111,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     e.preventDefault();
     setOnDrag(false);
     setLeaveCount(0);
-    RCInstance.sendAttachment(e.dataTransfer.files[0]);
+
+    toggle();
+    setData(e.dataTransfer.files[0]);
   };
 
   return (
