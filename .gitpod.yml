@@ -5,12 +5,6 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - name: Initialize playground App
-    init: |
-      cd playground
-      npm install
-    command: npm run start
-
   - name: Initialize EMBEDDEDCHAT App
     init: |
       npm install
