@@ -11,7 +11,6 @@ import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
-import RocketChatInstance from '../../lib/api';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
