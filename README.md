@@ -64,7 +64,7 @@ Follow this [documentation](https://docs.rocket.chat/guides/administration/admin
 
 ## Development
 
-<u>Local Setup</u>
+<h3>Local Setup</h3>
 
 ```bash
 npm i
@@ -76,7 +76,7 @@ npm run dev # at the root folder --> EMBEDDEDCHAT
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
 
-<u>Gitpod Setup</u>
+<h3>Gitpod Setup</h3>
 
 Make a `.env` file in the playground directory following the `.env[example]` file.
 
