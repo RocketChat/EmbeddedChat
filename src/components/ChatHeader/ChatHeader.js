@@ -1,15 +1,14 @@
 import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
-  useToastStore,
   useUserStore,
   useMessageStore,
   useMemberStore,
   useSearchMessageStore,
+  useChannelStore,
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
@@ -35,20 +34,19 @@ const ChatHeader = ({
     ? lighten(headerColor, 0.3)
     : darken(headerColor, 0.3);
 
-  const [channelInfo, setChannelInfo] = useState({});
+  const channelInfo = useChannelStore((state) => state.channelInfo);
+  const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
+  const setShowChannelinfo = useChannelStore(
+    (state) => state.setShowChannelinfo
+  );
+
   const { RCInstance } = useContext(RCContext);
-  const dispatchToastMessage = useToastBarDispatch();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
-  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
-  const toastPosition = useToastStore((state) => state.position);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
@@ -81,6 +79,12 @@ const ChatHeader = ({
     if (showMembers) toggleShowMembers();
   };
 
+  const showChannelinformation = async () => {
+    setShowChannelinfo(true);
+    setShowSearch(false);
+    if (showMembers) toggleShowMembers();
+  };
+
   useEffect(() => {
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
@@ -91,7 +95,7 @@ const ChatHeader = ({
     if (isUserAuthenticated) {
       getChannelInfo();
     }
-  }, [isUserAuthenticated]);
+  }, [isUserAuthenticated, RCInstance]);
 
   const menuOptions = () => ({
     ...(fullScreen && {
@@ -148,6 +152,15 @@ const ChatHeader = ({
           <Box alignItems="center" display="flex">
             <Icon mie="x4" name="magnifier" size="x16" />
             Search
+          </Box>
+        ),
+      },
+      roominfo: {
+        action: showChannelinformation,
+        label: (
+          <Box alignItems="center" display="flex">
+            <Icon mie="x4" name="info" size="x16" />
+            Room Information
           </Box>
         ),
       },
