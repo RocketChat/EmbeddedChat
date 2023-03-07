@@ -456,6 +456,23 @@ export default class RocketChatInstance {
     }
   }
 
+  async cleanHistory(data) {
+    try {
+      const response = await fetch(`${this.host}/api/v1/rooms.cleanHistory`, {
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+        method: 'POST',
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   async updateMessage(msgId, text) {
     try {
       const response = await fetch(`${this.host}/api/v1/chat.update`, {
