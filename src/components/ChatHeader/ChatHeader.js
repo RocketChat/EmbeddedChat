@@ -102,7 +102,7 @@ const ChatHeader = ({
     if (isUserAuthenticated) {
       getChannelInfo();
     }
-  }, [isUserAuthenticated]);
+  }, [isUserAuthenticated, RCInstance]);
 
   const menuOptions = () => ({
     ...(fullScreen && {

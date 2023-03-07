@@ -10,10 +10,14 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
+
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
@@ -28,31 +32,33 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     (state) => state.isUserAuthenticated
   );
 
-  const getMessagesAndRoles = useCallback(async (anonymousMode) => {
-    try {
-      if (!isUserAuthenticated && !anonymousMode) {
-        return;
+  const getMessagesAndRoles = useCallback(
+    async (anonymousMode) => {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { messages } = await RCInstance.getMessages(anonymousMode);
+        setMessages(messages);
+        if (!isUserAuthenticated) {
+          // fetch roles only when user is authenticated
+          return;
+        }
+        if (showRoles) {
+          const { roles } = await RCInstance.getChannelRoles();
+          // convert roles array from api into object for better search
+          const rolesObj = roles.reduce(
+            (obj, item) => Object.assign(obj, { [item.u.username]: item }),
+            {}
+          );
+          setRoles(rolesObj);
+        }
+      } catch (e) {
+        console.error(e);
       }
-      const { messages } = await RCInstance.getMessages(anonymousMode);
-      console.log(messages);
-      setMessages(messages);
-      if (!isUserAuthenticated) {
-        // fetch roles only when user is authenticated
-        return;
-      }
-      if (showRoles) {
-        const { roles } = await RCInstance.getChannelRoles();
-        // convert roles array from api into object for better search
-        const rolesObj = roles.reduce(
-          (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-          {}
-        );
-        setRoles(rolesObj);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
+    },
+    [RCInstance]
+  );
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
@@ -104,7 +110,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     e.preventDefault();
     setOnDrag(false);
     setLeaveCount(0);
-    RCInstance.sendAttachment(e.dataTransfer.files[0]);
+
+    toggle();
+    setData(e.dataTransfer.files[0]);
   };
 
   return (
