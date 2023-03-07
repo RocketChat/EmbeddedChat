@@ -79,7 +79,7 @@ To ensure HTTPS is enabled for your development environment, add the following l
 
 ## Development
 
-For development,
+<h3>Local Setup</h3>
 
 ```bash
 npm i
@@ -90,3 +90,14 @@ npm run dev # at the root folder --> EMBEDDEDCHAT
 
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
+<h3>Gitpod Setup</h3>
+
+Make a `.env` file in the playground directory following the `.env[example]` file.
+
+<a href="https://gitpod.io/#https://github.com/RocketChat/EmbeddedChat">
+  <img
+    src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod"
+    alt="Contribute with Gitpod"
+  />
+</a>

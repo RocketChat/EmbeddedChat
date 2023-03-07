@@ -90,7 +90,7 @@ const Search = () => {
                   )}
                 </Message.Header>
                 <Message.Body>
-                  <Markdown body={msg.msg} />
+                  <Markdown body={msg} />
                 </Message.Body>
                 <MessageReactions>
                   {msg.reactions &&

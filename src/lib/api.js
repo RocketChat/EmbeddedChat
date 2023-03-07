@@ -1,7 +1,10 @@
 import { Rocketchat } from '@rocket.chat/sdk';
 import Cookies from 'js-cookie';
 import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './constant';
+import cloneArray from './cloneArray';
 
+// mutliple typing status can come at the same time they should be processed in order.
+let typingHandlerLock = 0;
 export default class RocketChatInstance {
   constructor(host, rid, FACEBOOK_APP_SECRET) {
     this.host = host;
@@ -11,7 +14,12 @@ export default class RocketChatInstance {
       protocol: 'ddp',
       host: this.host,
       useSsl: !/http:\/\//.test(host),
+      reopen: 20000,
     });
+    this.onMessageCallbacks = [];
+    this.onMessageDeleteCallbacks = [];
+    this.onTypingStatusCallbacks = [];
+    this.typingUsers = [];
   }
 
   getCookies() {
@@ -193,6 +201,110 @@ export default class RocketChatInstance {
     }
   }
 
+  /**
+   * All subscriptions are implemented here.
+   * TODO: Add logic to call thread message event listeners. To be done after thread implementation
+   */
+  async connect() {
+    try {
+      await this.close(); // before connection, all previous subscriptions should be cancelled
+      await this.rcClient.connect();
+      await this.rcClient.resume({ token: Cookies.get(RC_USER_TOKEN_COOKIE) });
+      await this.rcClient.subscribe('stream-room-messages', this.rid);
+      await this.rcClient.onMessage((data) => {
+        this.onMessageCallbacks.map((callback) => callback(data));
+      });
+      await this.rcClient.subscribeRoom(this.rid);
+      await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
+        const [roomId, event] = ddpMessage.fields.eventName.split('/');
+
+        if (roomId !== this.rid) {
+          return;
+        }
+
+        if (event === 'typing') {
+          const typingUser = ddpMessage.fields.args[0];
+          const isTyping = ddpMessage.fields.args[1];
+          this.handleTypingEvent({ typingUser, isTyping });
+        }
+        if (event === 'deleteMessage') {
+          const messageId = ddpMessage.fields.args[0]?._id;
+          this.onMessageDeleteCallbacks.map((callback) => callback(messageId));
+        }
+      });
+    } catch (err) {
+      await this.close();
+    }
+  }
+
+  async addMessageListener(callback) {
+    const idx = this.onMessageCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onMessageCallbacks[idx] = callback;
+    } else {
+      this.onMessageCallbacks.push(callback);
+    }
+  }
+
+  async removeMessageListener(callback) {
+    this.onMessageCallbacks = this.onMessageCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addMessageDeleteListener(callback) {
+    const idx = this.onMessageDeleteCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onMessageDeleteCallbacks[idx] = callback;
+    } else {
+      this.onMessageDeleteCallbacks.push(callback);
+    }
+  }
+
+  async removeMessageDeleteListener(callback) {
+    this.onMessageDeleteCallbacks = this.onMessageDeleteCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addTypingStatusListener(callback) {
+    const idx = this.onTypingStatusCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onTypingStatusCallbacks[idx] = callback;
+    } else {
+      this.onTypingStatusCallbacks.push(callback);
+    }
+  }
+
+  async removeTypingStatusListener(callback) {
+    this.onTypingStatusCallbacks = this.onTypingStatusCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  handleTypingEvent({ typingUser, isTyping }) {
+    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
+    setTimeout(() => {
+      typingHandlerLock = 0;
+    }, 2000);
+    // eslint-disable-next-line no-empty
+    while (typingHandlerLock) {}
+    typingHandlerLock = 1;
+    // move user to front if typing else remove it.
+    const idx = this.typingUsers.indexOf(typingUser);
+    if (idx !== -1) {
+      this.typingUsers.splice(idx, 1);
+    }
+    if (isTyping) {
+      this.typingUsers.unshift(typingUser);
+    }
+    typingHandlerLock = 0;
+    const newTypingStatus = cloneArray(this.typingUsers);
+    this.onTypingStatusCallbacks.forEach((callback) =>
+      callback(newTypingStatus)
+    );
+  }
+
   async updateUserNameThroughSuggestion(userid) {
     try {
       const response = await fetch(
@@ -346,6 +458,19 @@ export default class RocketChatInstance {
       return await roles.json();
     } catch (err) {
       console.log(err.message);
+    }
+  }
+
+  async sendTypingStatus(username, typing) {
+    try {
+      this.rcClient.methodCall(
+        'stream-notify-room',
+        `${this.rid}/user-activity`,
+        username,
+        typing ? ['user-typing'] : []
+      );
+    } catch (err) {
+      console.error(err.message);
     }
   }
 
@@ -542,11 +667,14 @@ export default class RocketChatInstance {
     }
   }
 
-  async sendAttachment(e) {
+  async sendAttachment(file, fileName, fileDescription = '') {
     try {
       const form = new FormData();
-      const file = e.files[0];
-      form.append('file', file, file.name);
+      form.append('file', file, fileName);
+      form.append(
+        'description',
+        fileDescription.length !== 0 ? fileDescription : ''
+      );
       const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: 'POST',
         body: form,
