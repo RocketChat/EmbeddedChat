@@ -51,7 +51,6 @@ const Markup = ({ tokens }) =>
   });
 
 export default Markup;
-
 Markup.propTypes = {
   tokens: PropTypes.arrayOf(PropTypes.object),
 };

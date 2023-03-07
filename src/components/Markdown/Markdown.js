@@ -26,7 +26,6 @@ const Markdown = ({ body, isReaction = false }) => {
     </Box>
   );
 };
-
 export default Markdown;
 
 Markdown.propTypes = {
