@@ -38,13 +38,13 @@ const ChatInput = () => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
-    (state) => ({
+  const { editMessage, setEditMessage, isRecordingMessage, threadId } =
+    useMessageStore((state) => ({
       editMessage: state.editMessage,
       setEditMessage: state.setEditMessage,
       isRecordingMessage: state.isRecordingMessage,
-    })
-  );
+      threadId: state.threadMainMessage?._id,
+    }));
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
@@ -75,7 +75,7 @@ const ChatInput = () => {
     }
 
     if (!editMessage.msg) {
-      const res = await RCInstance.sendMessage(message);
+      const res = await RCInstance.sendMessage(message, threadId);
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);

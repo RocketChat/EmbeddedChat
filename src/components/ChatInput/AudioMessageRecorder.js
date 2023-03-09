@@ -16,7 +16,7 @@ const AudioMessageRecorder = () => {
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-
+  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
   const onStop = (audioChunks) => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
     const fileName = 'Audio record.mp3';
@@ -111,7 +111,7 @@ const AudioMessageRecorder = () => {
 
   useEffect(() => {
     const sendRecording = async () => {
-      await RCInstance.sendAttachment(file);
+      await RCInstance.sendAttachment(file, undefined, undefined, threadId);
     };
     if (isRecorded && file) {
       sendRecording();
