@@ -7,7 +7,7 @@ import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
 
 function AttachmentWindow() {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
@@ -26,7 +26,12 @@ function AttachmentWindow() {
   };
 
   const submit = async () => {
-    await RCInstance.sendAttachment(data, fileName, fileDescription, threadId);
+    await RCInstance.sendAttachment(
+      data,
+      fileName,
+      fileDescription,
+      ECOptions?.enableThreads ? threadId : undefined
+    );
     toggle();
     setData(null);
   };

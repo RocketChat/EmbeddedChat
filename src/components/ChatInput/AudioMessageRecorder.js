@@ -10,7 +10,7 @@ const AudioMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
@@ -111,7 +111,12 @@ const AudioMessageRecorder = () => {
 
   useEffect(() => {
     const sendRecording = async () => {
-      await RCInstance.sendAttachment(file, undefined, undefined, threadId);
+      await RCInstance.sendAttachment(
+        file,
+        undefined,
+        undefined,
+        ECOptions.enableThreads ? threadId : undefined
+      );
     };
     if (isRecorded && file) {
       sendRecording();

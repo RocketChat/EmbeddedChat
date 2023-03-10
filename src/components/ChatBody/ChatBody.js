@@ -14,7 +14,7 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
 
@@ -46,13 +46,18 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
         }
-        const { messages } = await RCInstance.getMessages(anonymousMode, {
-          query: {
-            tmid: {
-              $exists: false,
-            },
-          },
-        });
+        const { messages } = await RCInstance.getMessages(
+          anonymousMode,
+          ECOptions?.enableThreads
+            ? {
+                query: {
+                  tmid: {
+                    $exists: false,
+                  },
+                },
+              }
+            : undefined
+        );
         setMessages(messages);
         if (!isUserAuthenticated) {
           // fetch roles only when user is authenticated
@@ -71,7 +76,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         console.error(e);
       }
     },
-    [RCInstance]
+    [RCInstance, ECOptions?.enableThreads]
   );
 
   const handleGoBack = async () => {
@@ -100,15 +105,22 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   }, [isThreadOpen, isUserAuthenticated, RCInstance, threadMainMessage]);
 
   useEffect(() => {
-    if (isThreadOpen) {
+    if (isThreadOpen && ECOptions.enableThreads) {
       getThreadMessages();
     }
-  }, [getThreadMessages, isThreadOpen]);
+  }, [getThreadMessages, isThreadOpen, ECOptions?.enableThreads]);
+
+  const addMessage = useCallback(
+    (message) => {
+      upsertMessage(message, ECOptions?.enableThreads);
+    },
+    [upsertMessage, ECOptions?.enableThreads]
+  );
 
   useEffect(() => {
     if (isUserAuthenticated) {
       RCInstance.connect().then(() => {
-        RCInstance.addMessageListener(upsertMessage);
+        RCInstance.addMessageListener(addMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
       });
       getMessagesAndRoles();
@@ -118,10 +130,10 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
     return () => {
       RCInstance.close();
-      RCInstance.removeMessageListener(upsertMessage);
+      RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
     };
-  }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
+  }, [isUserAuthenticated, getMessagesAndRoles, addMessage, removeMessage]);
 
   const [onDrag, setOnDrag] = useState(false);
   const [leaveCount, setLeaveCount] = useState(0);

@@ -23,6 +23,7 @@ function App() {
           toastBarPosition="bottom-end"
           showRoles={true}
           showAvatar={false}
+          enableThreads
         />
       )}
     </div>

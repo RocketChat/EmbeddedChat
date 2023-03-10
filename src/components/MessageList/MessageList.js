@@ -42,7 +42,7 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
 
 const MessageList = ({ messages, handleGoBack }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
@@ -235,7 +235,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                             )}
                           </>
                         )}
-                        {msg.tcount ? (
+                        {msg.tcount && ECOptions.enableThreads ? (
                           <MessageMetrics>
                             <MessageMetricsReply
                               onClick={handleOpenThread(msg)}

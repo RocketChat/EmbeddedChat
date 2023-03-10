@@ -14,8 +14,8 @@ const useMessageStore = create((set, get) => ({
   threadMainMessage: null,
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (messages) => set(() => ({ messages })),
-  upsertMessage: (message) => {
-    if (message.tmid) {
+  upsertMessage: (message, enableThreads = false) => {
+    if (message.tmid && enableThreads) {
       if (get().threadMainMessage?._id === message.tmid) {
         set((state) => ({
           threadMessages: upsertMessage(state.threadMessages, message),
