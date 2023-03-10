@@ -10,13 +10,16 @@ import {
   loginModalStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
+import TypingUsers from '../TypingUsers';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
   const inputRef = useRef(null);
+  const typingRef = useRef();
   const messageRef = useRef();
   const [disableButton, setDisableButton] = useState(true);
 
@@ -42,6 +45,9 @@ const ChatInput = () => {
       isRecordingMessage: state.isRecordingMessage,
     })
   );
+
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -99,16 +105,21 @@ const ChatInput = () => {
     }
   };
 
-  const sendAttachment = async (event) => {
+  const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
-    await RCInstance.sendAttachment(event.target.files[0]);
+    toggle();
+    setData(event.target.files[0]);
   };
   const getAllChannelMembers = async () => {
-    const channelMembers = await RCInstance.getChannelMembers();
-    setRoomMembers(channelMembers.members);
+    try {
+      const channelMembers = await RCInstance.getChannelMembers();
+      setRoomMembers(channelMembers.members);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -120,29 +131,66 @@ const ChatInput = () => {
     getAllChannelMembers();
   }, []);
 
+  const username = useUserStore((state) => state.username);
+  const timerRef = useRef();
+  const sendTypingStart = async () => {
+    try {
+      if (typingRef.current && messageRef.current.value?.length) {
+        // 15 seconds has not been passed since last send.
+        return;
+      }
+      if (messageRef.current.value?.length) {
+        typingRef.current = true;
+        timerRef.current = setTimeout(() => {
+          typingRef.current = false;
+        }, [15000]);
+        await RCInstance.sendTypingStatus(username, true);
+      } else {
+        clearTimeout(timerRef.current);
+        typingRef.current = false;
+        await RCInstance.sendTypingStatus(username, false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const sendTypingStop = async () => {
+    try {
+      typingRef.current = false;
+      await RCInstance.sendTypingStatus(username, false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
-      {showMembersList ? (
-        <MembersList
-          mentionIndex={mentionIndex}
-          filteredMembers={filteredMembers}
-        />
-      ) : (
-        <></>
-      )}
-      <Box className={styles.container}>
-        <textarea
+    <>
+      <Box marginInlineStart="x20">
+        <TypingUsers />
+      </Box>
+      <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
+        {showMembersList ? (
+          <MembersList
+            mentionIndex={mentionIndex}
+            filteredMembers={filteredMembers}
+          />
+        ) : (
+          <></>
+        )}
+        <Box className={styles.container}>
+          <textarea
           rows={1}
-          disabled={!isUserAuthenticated || isRecordingMessage}
-          placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-          className={styles.textInput}
-          onChange={(e) => {
-            messageRef.current.value = e.target.value;
+            disabled={!isUserAuthenticated || isRecordingMessage}
+            placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+            className={styles.textInput}
+            onChange={(e) => {
+              messageRef.current.value = e.target.value;
             if (e.code === 'Enter') {
               messageRef.current.value += '\n';
             }
 
-            setDisableButton(!messageRef.current.value.length);
+              setDisableButton(!messageRef.current.value.length);
 
             e.target.style.height = 'auto';
             if (e.target.scrollHeight <= 150) {
@@ -183,78 +231,76 @@ const ChatInput = () => {
               sendMessage();
             }
 
-            if (e.key === 'ArrowDown') {
-              setmentionIndex(
-                mentionIndex + 1 >= filteredMembers.length + 2
-                  ? 0
-                  : mentionIndex + 1
-              );
-            }
-            if (e.key === 'ArrowUp') {
-              setmentionIndex(
-                mentionIndex - 1 < 0
-                  ? filteredMembers.length + 1
-                  : mentionIndex - 1
-              );
-            }
-            if (showMembersList && e.key === 'Enter') {
-              e.preventDefault();
-              let selectedMember = null;
-              if (mentionIndex === filteredMembers.length)
-                selectedMember = 'all';
-              else if (mentionIndex === filteredMembers.length + 1)
-                selectedMember = 'everyone';
-              else selectedMember = filteredMembers[mentionIndex].username;
-              messageRef.current.value =
-                messageRef.current.value.substring(
+              if (e.key === 'ArrowDown') {
+                setmentionIndex(
+                  mentionIndex + 1 >= filteredMembers.length + 2
+                    ? 0
+                    : mentionIndex + 1
+                );
+              }
+              if (e.key === 'ArrowUp') {
+                setmentionIndex(
+                  mentionIndex - 1 < 0
+                    ? filteredMembers.length + 1
+                    : mentionIndex - 1
+                );
+              }
+              if (showMembersList && e.key === 'Enter') {
+                e.preventDefault();
+                let selectedMember = null;
+                if (mentionIndex === filteredMembers.length)
+                  selectedMember = 'all';
+                else if (mentionIndex === filteredMembers.length + 1)
+                  selectedMember = 'everyone';
+                else selectedMember = filteredMembers[mentionIndex].username;
+                messageRef.current.value = `${messageRef.current.value.substring(
                   0,
                   messageRef.current.value.lastIndexOf('@')
-                ) +
-                '@' +
-                selectedMember;
+                )}@${selectedMember}`;
 
-              setshowMembersList(false);
+                setshowMembersList(false);
 
-              setStartReading(false);
-              setFilteredMembers([]);
-              setmentionIndex(-1);
-            }
-          }}
-          ref={messageRef}
-        />
+                setStartReading(false);
+                setFilteredMembers([]);
+                setmentionIndex(-1);
+              }
+            }}
+            ref={messageRef}
+          />
 
-        <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-        {isUserAuthenticated ? (
-          <ActionButton
-            bg="surface"
-            border="0px"
-            disabled={disableButton || isRecordingMessage}
-          >
-            <Icon
-              className={styles.chatInputIconCursor}
-              onClick={sendMessage}
-              name="send"
-              size="x25"
-              padding={6}
-            />
-          </ActionButton>
-        ) : (
-          <Button
-            onClick={openLoginModal}
-            primary
-            style={{ overflow: 'visible' }}
-          >
-            JOIN
-          </Button>
+          <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+          {isUserAuthenticated ? (
+            <ActionButton
+              bg="surface"
+              border="0px"
+              disabled={disableButton || isRecordingMessage}
+            >
+              <Icon
+                className={styles.chatInputIconCursor}
+                onClick={sendMessage}
+                name="send"
+                size="x25"
+                padding={6}
+              />
+            </ActionButton>
+          ) : (
+            <Button
+              onClick={openLoginModal}
+              primary
+              style={{ overflow: 'visible' }}
+            >
+              JOIN
+            </Button>
+          )}
+        </Box>
+        {isUserAuthenticated && (
+          <ChatInputFormattingToolbar
+            messageRef={messageRef}
+            inputRef={inputRef}
+          />
         )}
       </Box>
-      {isUserAuthenticated && (
-        <ChatInputFormattingToolbar
-          messageRef={messageRef}
-          inputRef={inputRef}
-        />
-      )}
-    </Box>
+    </>
   );
 };
 

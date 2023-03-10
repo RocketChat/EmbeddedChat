@@ -8,6 +8,8 @@ import RocketChatInstance from './lib/api';
 import { RCInstanceProvider } from './context/RCInstance';
 import { useToastStore, useUserStore } from './store';
 import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './lib/constant';
+import AttachmentWindow from './components/Attachments/AttachmentWindow';
+import useAttachmentWindowStore from './store/attachmentwindow';
 
 export const RCComponent = ({
   isClosable = false,
@@ -39,7 +41,18 @@ export const RCComponent = ({
     );
   }
 
-  const RCInstance = new RocketChatInstance(host, roomId);
+  const [RCInstance, setRCInstance] = useState(
+    () => new RocketChatInstance(host, roomId)
+  );
+
+  useEffect(() => {
+    if (RCInstance.rcClient.loggedIn) {
+      RCInstance.close();
+      const newRCInstance = new RocketChatInstance(host, roomId);
+      setRCInstance(newRCInstance);
+    }
+  }, [roomId, host]);
+
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -70,9 +83,13 @@ export const RCComponent = ({
   useEffect(() => {
     async function getUserEssentials() {
       const res = await RCInstance.me();
-      setAuthenticatedUserAvatarUrl(res.avatarUrl);
-      setAuthenticatedUserUsername(res.username);
-      setAuthenticatedUserId(res.userId);
+      if (res.status === 'error') {
+        setIsUserAuthenticated(false);
+      } else {
+        setAuthenticatedUserAvatarUrl(res.avatarUrl);
+        setAuthenticatedUserUsername(res.username);
+        setAuthenticatedUserId(res.userId);
+      }
     }
 
     const cookiesPresent =
@@ -89,11 +106,14 @@ export const RCComponent = ({
     ) {
       getUserEssentials();
     }
-  }, []);
+  }, [RCInstance]);
+
+  const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
   return (
     <ToastBarProvider>
       <RCInstanceProvider value={{ RCInstance }}>
+        {attachmentWindowOpen ? <AttachmentWindow /> : null}
         <Box
           width={width}
           overflowX={'hidden'}
