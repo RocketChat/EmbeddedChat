@@ -80,6 +80,7 @@ export const RCComponent = ({
     (state) => state.setUserAvatarUrl
   );
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
+  const setAuthenticatedName = useUserStore((state) => state.setName);
 
   useEffect(() => {
     async function getUserEssentials() {
@@ -89,7 +90,8 @@ export const RCComponent = ({
       } else {
         setAuthenticatedUserAvatarUrl(res.avatarUrl);
         setAuthenticatedUserUsername(res.username);
-        setAuthenticatedUserId(res.userId);
+        setAuthenticatedUserId(res._id);
+        setAuthenticatedName(res.name);
       }
     }
 

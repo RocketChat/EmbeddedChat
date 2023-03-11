@@ -422,10 +422,24 @@ export default class RocketChatInstance {
     }
   }
 
+  /**
+   * @param {*} message should be a string or an rc message object
+   * Refer https://developer.rocket.chat/reference/api/schema-definition/message#message-object
+   */
   async sendMessage(message) {
+    const messageObj =
+      typeof message === 'string'
+        ? {
+            rid: this.rid,
+            msg: message,
+          }
+        : {
+            ...message,
+            rid: this.rid,
+          };
     try {
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
-        body: JSON.stringify({ message: { rid: this.rid, msg: message } }),
+        body: JSON.stringify({ message: messageObj }),
         headers: {
           'Content-Type': 'application/json',
           'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),

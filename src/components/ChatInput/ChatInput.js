@@ -15,6 +15,7 @@ import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
+import createPendingMessage from '../../lib/createPendingMessage';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
@@ -38,16 +39,28 @@ const ChatInput = () => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
-    (state) => ({
-      editMessage: state.editMessage,
-      setEditMessage: state.setEditMessage,
-      isRecordingMessage: state.isRecordingMessage,
-    })
-  );
+  const {
+    editMessage,
+    setEditMessage,
+    isRecordingMessage,
+    upsertMessage,
+    replaceMessage,
+  } = useMessageStore((state) => ({
+    editMessage: state.editMessage,
+    setEditMessage: state.setEditMessage,
+    isRecordingMessage: state.isRecordingMessage,
+    upsertMessage: state.upsertMessage,
+    replaceMessage: state.replaceMessage,
+  }));
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
+
+  const user = useUserStore((state) => ({
+    _id: state.userId,
+    username: state.username,
+    name: state.name,
+  }));
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -75,7 +88,14 @@ const ChatInput = () => {
     }
 
     if (!editMessage.msg) {
-      const res = await RCInstance.sendMessage(message);
+      messageRef.current.value = '';
+      const pendingMessage = createPendingMessage(message, user);
+      upsertMessage(pendingMessage);
+      const res = await RCInstance.sendMessage({
+        msg: pendingMessage.msg,
+        _id: pendingMessage._id,
+      });
+
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
@@ -84,8 +104,9 @@ const ChatInput = () => {
           message: 'Error sending message, login again',
           position: toastPosition,
         });
+      } else {
+        replaceMessage(pendingMessage._id, res.message);
       }
-      messageRef.current.value = '';
       setDisableButton(true);
     } else {
       const res = await RCInstance.updateMessage(editMessage.id, message);
@@ -263,11 +284,11 @@ const ChatInput = () => {
             <ActionButton
               bg="surface"
               border="0px"
+              onClick={sendMessage}
               disabled={disableButton || isRecordingMessage}
             >
               <Icon
                 className={styles.chatInputIconCursor}
-                onClick={sendMessage}
                 name="send"
                 size="x25"
                 padding={6}

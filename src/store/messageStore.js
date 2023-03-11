@@ -51,6 +51,13 @@ const useMessageStore = create((set) => ({
     set((state) => ({
       messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
     })),
+  replaceMessage: (oldMessageId, newMessage) =>
+    set((state) => {
+      const idx = state.messages.findIndex((m) => m._id === oldMessageId);
+      if (idx !== -1) {
+        return [...state.messages].splice(idx, idx, newMessage);
+      }
+    }),
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
