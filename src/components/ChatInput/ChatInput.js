@@ -1,6 +1,7 @@
 import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import emojione from 'emoji-toolkit';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
 import {
@@ -163,6 +164,17 @@ const ChatInput = () => {
     }
   };
 
+  const parseEmoji = (text) => {
+    const regx = /:([^:]*):/g;
+    const regx_data = text.match(regx);
+    if (regx_data) {
+      const result = regx_data[regx_data.length - 1];
+      const d = emojione.shortnameToUnicode(result);
+      if (d !== undefined) text = text.replace(result, d);
+    }
+    return text;
+  };
+
   return (
     <>
       <Box marginInlineStart="x20">
@@ -183,7 +195,8 @@ const ChatInput = () => {
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
             onChange={(e) => {
-              messageRef.current.value = e.target.value;
+              messageRef.current.value = parseEmoji(e.target.value);
+
               setDisableButton(!messageRef.current.value.length);
 
               e.target.style.height = 'auto';

@@ -100,5 +100,8 @@ dist
 # DynamoDB Local files
 .dynamodb/
 
-# TernJS port file
+# ternjs port file
 .tern-port
+
+# pnpm-lock files
+pnpm-lock.yaml
