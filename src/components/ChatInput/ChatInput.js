@@ -15,6 +15,7 @@ import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInput = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -186,7 +187,8 @@ const ChatInput = () => {
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
             onChange={(e) => {
-              messageRef.current.value = e.target.value;
+              messageRef.current.value = parseEmoji(e.target.value);
+
               setDisableButton(!messageRef.current.value.length);
 
               e.target.style.height = 'auto';
