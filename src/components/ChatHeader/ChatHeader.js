@@ -12,6 +12,7 @@ import {
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import { ThreadHeader } from '../ThreadHeader';
 
 const ChatHeader = ({
   isClosable,
@@ -49,6 +50,9 @@ const ChatHeader = ({
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
+  const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const closeThread = useMessageStore((state) => state.closeThread);
+  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
@@ -185,85 +189,95 @@ const ChatHeader = ({
       p={10}
       backgroundColor={computedHeaderBackgroundColor}
     >
-      <Box display="flex">
-        <Icon
-          color={computedHeaderTextColor}
-          name="hash"
-          size={fullScreen ? 'x40' : 'x30'}
-        />
-        <Box margin="0 1rem">
-          {isUserAuthenticated ? (
-            <>
-              <h2
-                className={styles.nospace}
-                style={{ color: computedHeaderTextColor }}
-              >
-                {channelInfo.name || channelName || 'channelName'}
-              </h2>
-              {fullScreen && (
-                <p
-                  className={styles.nospace}
-                  style={{
-                    color: computedHeaderDescriptionColor,
-                    fontSize: 14,
-                  }}
-                >
-                  {channelInfo.description || ''}
-                </p>
-              )}
-            </>
-          ) : (
-            <h2
-              style={{ color: computedHeaderTextColor }}
-              className={styles.nospace}
-            >
-              {channelName || 'Login to chat'}
-            </h2>
-          )}
-        </Box>
-      </Box>
-      <Box display="flex" alignItems="center">
-        {avatarUrl && (
-          <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
-        )}
-        {fullScreen ? (
-          <Menu
-            margin="0 4px"
-            display="inline"
-            className={computedIconClassName}
-            options={menuOptions()}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Box display="flex">
+          <Icon
+            color={computedHeaderTextColor}
+            name="hash"
+            size={fullScreen ? 'x40' : 'x30'}
           />
-        ) : (
-          <>
+          <Box margin="0 1rem">
+            {isUserAuthenticated ? (
+              <>
+                <h2
+                  className={styles.nospace}
+                  style={{ color: computedHeaderTextColor }}
+                >
+                  {channelInfo.name || channelName || 'channelName'}
+                </h2>
+                {fullScreen && (
+                  <p
+                    className={styles.nospace}
+                    style={{
+                      color: computedHeaderDescriptionColor,
+                      fontSize: 14,
+                    }}
+                  >
+                    {channelInfo.description || ''}
+                  </p>
+                )}
+              </>
+            ) : (
+              <h2
+                style={{ color: computedHeaderTextColor }}
+                className={styles.nospace}
+              >
+                {channelName || 'Login to chat'}
+              </h2>
+            )}
+          </Box>
+        </Box>
+        <Box display="flex" alignItems="center">
+          {avatarUrl && (
+            <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
+          )}
+          {fullScreen ? (
+            <Menu
+              margin="0 4px"
+              display="inline"
+              className={computedIconClassName}
+              options={menuOptions()}
+            />
+          ) : (
+            <>
+              <ActionButton
+                onClick={() => {
+                  setFullScreen((prev) => !prev);
+                }}
+                ghost
+                display="inline"
+                square
+                small
+              >
+                <Icon name="computer" size="x20" />
+              </ActionButton>
+              <Menu margin="0 4px" display="inline" options={menuOptions()} />
+            </>
+          )}
+          {isClosable && (
             <ActionButton
               onClick={() => {
-                setFullScreen((prev) => !prev);
+                setClosableState((prev) => !prev);
               }}
               ghost
               display="inline"
               square
               small
+              className={computedIconClassName}
             >
-              <Icon name="computer" size="x20" />
+              <Icon name="cross" size="x20" />
             </ActionButton>
-            <Menu margin="0 4px" display="inline" options={menuOptions()} />
-          </>
-        )}
-        {isClosable && (
-          <ActionButton
-            onClick={() => {
-              setClosableState((prev) => !prev);
-            }}
-            ghost
-            display="inline"
-            square
-            small
-            className={computedIconClassName}
-          >
-            <Icon name="cross" size="x20" />
-          </ActionButton>
-        )}
+          )}
+        </Box>
       </Box>
+      {isThreadOpen && (
+        <ThreadHeader title={threadTitle} handleClose={closeThread} />
+      )}
     </Box>
   );
 };

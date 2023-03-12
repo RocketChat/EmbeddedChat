@@ -1,5 +1,5 @@
 import { Box } from '@rocket.chat/fuselage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
@@ -26,6 +26,7 @@ export const RCComponent = ({
   toastBarPosition = 'bottom-end',
   showRoles = false,
   showAvatar = false,
+  enableThreads = false,
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
@@ -113,9 +114,16 @@ export const RCComponent = ({
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
+  const ECOptions = useMemo(
+    () => ({
+      enableThreads,
+    }),
+    [enableThreads]
+  );
+
   return (
     <ToastBarProvider>
-      <RCInstanceProvider value={{ RCInstance }}>
+      <RCInstanceProvider value={{ RCInstance, ECOptions }}>
         {attachmentWindowOpen ? <AttachmentWindow /> : null}
         <Box width={width}>
           <ChatHeader
@@ -159,4 +167,5 @@ RCComponent.propTypes = {
   toastBarPosition: PropTypes.string,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
+  enableThreads: PropTypes.bool,
 };

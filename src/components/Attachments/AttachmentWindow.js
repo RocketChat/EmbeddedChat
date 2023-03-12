@@ -4,9 +4,10 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ValidateComponent from './AttachmentWindow/validateComponent';
 import RCContext from '../../context/RCInstance';
 import styles from './AttachmentWindow.module.css';
+import { useMessageStore } from '../../store';
 
 function AttachmentWindow() {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
@@ -15,6 +16,7 @@ function AttachmentWindow() {
   const [fileName, setFileName] = useState(data.name);
   const [fileDescription, setFileDescription] = useState('');
 
+  const threadId = useMessageStore((state) => state.threadMainMessage?._id);
   const handleFileName = (e) => {
     setFileName(e.target.value);
   };
@@ -24,7 +26,12 @@ function AttachmentWindow() {
   };
 
   const submit = async () => {
-    await RCInstance.sendAttachment(data, fileName, fileDescription);
+    await RCInstance.sendAttachment(
+      data,
+      fileName,
+      fileDescription,
+      ECOptions?.enableThreads ? threadId : undefined
+    );
     toggle();
     setData(null);
   };

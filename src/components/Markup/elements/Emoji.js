@@ -13,9 +13,16 @@ const Emoji = ({ big = false, emoji }) => {
   );
 
   return (
-    <MessageEmoji big={big}>
-      <Box dangerouslySetInnerHTML={{ __html: emojione.toImage(fallback) }} />
-    </MessageEmoji>
+    <span
+      className={`${!big ? 'joypixels' : 'joypixels_BigEmoji'} emojione`}
+      dangerouslySetInnerHTML={{
+        __html: big
+          ? emojione
+              .toImage(fallback)
+              .replace('joypixels', 'joypixels_BigEmoji')
+          : emojione.toImage(fallback),
+      }}
+    />
   );
 };
 
