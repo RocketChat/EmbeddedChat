@@ -275,14 +275,6 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
           )
         );
       })}
-      {filtered && (
-        <Box>
-          <Button small onClick={handleGoBack}>
-            <Icon mie="x4" name="back" size="x20" color="danger" />
-            <p style={{ display: 'inline' }}>Go Back</p>
-          </Button>
-        </Box>
-      )}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
     </>
   );
