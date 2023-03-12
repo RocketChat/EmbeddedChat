@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Icon, Message } from '@rocket.chat/fuselage';
 import { useUserStore } from '../../store';
+import ThemeContext from '../../context/ThemeContext';
 
 const MessageHeader = ({ msg }) => {
   const roles = useUserStore((state) => state.roles);
-
+  const { secondaryColor } = useContext(ThemeContext);
+  const computedTextColor = secondaryColor;
   const userActions = () => {
     switch (msg.t) {
       case 'ul':
@@ -31,7 +33,9 @@ const MessageHeader = ({ msg }) => {
   if (!msg.t) {
     return (
       <Message.Header>
-        <Message.Name style={{ color: 'white' }}>{msg.u?.name}</Message.Name>
+        <Message.Name style={{ color: `${computedTextColor}` }}>
+          {msg.u?.name}
+        </Message.Name>
         <Message.Username>@{msg.u.username}</Message.Username>
         {userRoles
           ? userRoles.map((role, index) => (
