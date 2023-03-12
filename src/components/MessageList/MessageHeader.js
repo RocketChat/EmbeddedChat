@@ -31,7 +31,7 @@ const MessageHeader = ({ msg }) => {
   if (!msg.t) {
     return (
       <Message.Header>
-        <Message.Name>{msg.u?.name}</Message.Name>
+        <Message.Name style={{ color: 'white' }}>{msg.u?.name}</Message.Name>
         <Message.Username>@{msg.u.username}</Message.Username>
         {userRoles
           ? userRoles.map((role, index) => (

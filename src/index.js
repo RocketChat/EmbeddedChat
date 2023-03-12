@@ -10,6 +10,7 @@ import { useToastStore, useUserStore } from './store';
 import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './lib/constant';
 import AttachmentWindow from './components/Attachments/AttachmentWindow';
 import useAttachmentWindowStore from './store/attachmentwindow';
+import ThemeContextProvider from './Theme/ThemeProvider';
 
 export const RCComponent = ({
   isClosable = false,
@@ -22,7 +23,8 @@ export const RCComponent = ({
   roomId = 'GENERAL',
   channelName,
   anonymousMode = false,
-  headerColor = '#fff',
+  primaryColor = '#fff',
+  secondaryColor = '#fff',
   toastBarPosition = 'bottom-end',
   showRoles = false,
   showAvatar = false,
@@ -112,33 +114,37 @@ export const RCComponent = ({
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
   return (
-    <ToastBarProvider>
-      <RCInstanceProvider value={{ RCInstance }}>
-        {attachmentWindowOpen ? <AttachmentWindow /> : null}
-        <Box width={width}>
-          <ChatHeader
-            channelName={channelName}
-            isClosable={isClosable}
-            setClosableState={setClosableState}
-            moreOpts={moreOpts}
-            fullScreen={fullScreen}
-            setFullScreen={setFullScreen}
-            headerColor={headerColor}
-          />
-          {isUserAuthenticated || anonymousMode ? (
-            <ChatBody
-              height={!fullScreen ? height : '83vh'}
-              anonymousMode={anonymousMode}
-              showRoles={showRoles}
-              GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
+    <ThemeContextProvider
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+    >
+      <ToastBarProvider>
+        <RCInstanceProvider value={{ RCInstance }}>
+          {attachmentWindowOpen ? <AttachmentWindow /> : null}
+          <Box width={width}>
+            <ChatHeader
+              channelName={channelName}
+              isClosable={isClosable}
+              setClosableState={setClosableState}
+              moreOpts={moreOpts}
+              fullScreen={fullScreen}
+              setFullScreen={setFullScreen}
             />
-          ) : (
-            <Home height={!fullScreen ? height : '83vh'} />
-          )}
-          <ChatInput />
-        </Box>
-      </RCInstanceProvider>
-    </ToastBarProvider>
+            {isUserAuthenticated || anonymousMode ? (
+              <ChatBody
+                height={!fullScreen ? height : '83vh'}
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
+                GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
+              />
+            ) : (
+              <Home height={!fullScreen ? height : '83vh'} />
+            )}
+            <ChatInput />
+          </Box>
+        </RCInstanceProvider>
+      </ToastBarProvider>
+    </ThemeContextProvider>
   );
 };
 
@@ -153,7 +159,8 @@ RCComponent.propTypes = {
   roomId: PropTypes.string,
   channelName: PropTypes.string,
   anonymousMode: PropTypes.bool,
-  headerColor: PropTypes.string,
+  primaryColor: PropTypes.string,
+  secondaryColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,

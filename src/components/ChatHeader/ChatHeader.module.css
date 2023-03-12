@@ -6,7 +6,7 @@
   align-items: center;
   width: 100%;
   z-index: 100;
-  background-color: #fff;
+  border-radius: 0px 0px 10px 10px;
 }
 
 .nospace {
@@ -28,4 +28,13 @@
 
 .icon_dark_mode:hover > i {
   color: #000;
+}
+.shadow_light_mode{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Light mode shadow */
+}
+.shadow_dark_mode{
+
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
+  
 }

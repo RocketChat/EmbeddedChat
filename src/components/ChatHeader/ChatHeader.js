@@ -12,6 +12,7 @@ import {
 } from '../../store';
 import { darken, isDark, lighten } from '../../lib/color';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import ThemeContext from '../../context/ThemeContext';
 
 const ChatHeader = ({
   isClosable,
@@ -20,20 +21,20 @@ const ChatHeader = ({
   fullScreen,
   setFullScreen,
   channelName,
-  headerColor,
 }) => {
-  const computedHeaderTextColor = isDark(headerColor) ? 'white' : 'black';
-  const computedHeaderBackgroundColor = headerColor;
-  const computedHeaderDescriptionColor = isDark(headerColor)
-    ? 'whitesmoke'
-    : 'rgba(0, 0, 0, 0.5)';
-  const computedIconClassName = isDark(headerColor)
+  const { primaryColor, secondaryColor } = useContext(ThemeContext);
+  const computedHeaderTextColor = secondaryColor;
+  const computedHeaderBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.2)
+    : darken(primaryColor, 0.2);
+  const computedHeaderDescriptionColor = secondaryColor;
+  const computedIconClassName = isDark(primaryColor)
     ? styles.icon_light_mode
     : styles.icon_dark_mode;
-  const computedBorderColor = isDark(headerColor)
-    ? lighten(headerColor, 0.3)
-    : darken(headerColor, 0.3);
 
+  const computedShadowColor = isDark(primaryColor)
+    ? styles.shadow_dark_mode
+    : styles.shadow_light_mode;
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(
@@ -180,8 +181,7 @@ const ChatHeader = ({
 
   return (
     <Box
-      className={styles.container}
-      border={`1px solid ${computedBorderColor}`}
+      className={`${styles.container} ${computedShadowColor}`}
       p={10}
       backgroundColor={computedHeaderBackgroundColor}
     >
@@ -243,10 +243,16 @@ const ChatHeader = ({
               display="inline"
               square
               small
+              className={computedIconClassName}
             >
               <Icon name="computer" size="x20" />
             </ActionButton>
-            <Menu margin="0 4px" display="inline" options={menuOptions()} />
+            <Menu
+              margin="0 4px"
+              display="inline"
+              options={menuOptions()}
+              className={computedIconClassName}
+            />
           </>
         )}
         {isClosable && (
@@ -277,5 +283,4 @@ ChatHeader.propTypes = {
   setFullScreen: PropTypes.func,
   moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
-  headerColor: PropTypes.string,
 };

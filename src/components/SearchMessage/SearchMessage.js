@@ -14,9 +14,13 @@ import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
+import ThemeContext from '../../context/ThemeContext';
+import { lighten } from '../../lib/color';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
+  const { primaryColor } = useContext(ThemeContext);
+  const computedBackgroundColor = lighten(primaryColor, 0.3);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
@@ -38,7 +42,11 @@ const Search = () => {
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box className={classes.searchBar} p="x16">
+    <Box
+      className={classes.searchBar}
+      p="x16"
+      backgroundColor={computedBackgroundColor}
+    >
       <Box display="flex" is="h3">
         <Icon name="magnifier" size="x24" padding="0px 20px 20px 0px" />
         <Box width="80%" style={{ color: '#4a4a4a' }}>

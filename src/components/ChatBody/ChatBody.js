@@ -118,8 +118,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   return (
     <Box
       style={{
-        borderLeft: '1px solid #b1b1b1',
-        borderRight: '1px solid #b1b1b1',
         paddingTop: '70px',
       }}
       onDragOver={(e) => handleDrag(e)}

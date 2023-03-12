@@ -3,6 +3,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
+import ThemeContext from '../../context/ThemeContext';
 import {
   useToastStore,
   useUserStore,
@@ -15,9 +16,19 @@ import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
+import { isDark, lighten } from '../../lib/color';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
+
+  const { primaryColor, secondaryColor } = useContext(ThemeContext);
+  const computedBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.2)
+    : darken(primaryColor, 0.2);
+  const computedPlaceholder = isDark(primaryColor)
+    ? styles.textInput_dark
+    : styles.textInput_light;
+  const computedInputTextColor = secondaryColor;
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();
@@ -162,7 +173,6 @@ const ChatInput = () => {
       console.error(e);
     }
   };
-
   return (
     <>
       <Box marginInlineStart="x20">
@@ -181,7 +191,11 @@ const ChatInput = () => {
           <textarea
             disabled={!isUserAuthenticated || isRecordingMessage}
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-            className={styles.textInput}
+            className={`${styles.textInput} ${computedPlaceholder}`}
+            style={{
+              backgroundColor: computedBackgroundColor,
+              color: `${computedInputTextColor}`,
+            }}
             onChange={(e) => {
               messageRef.current.value = e.target.value;
               setDisableButton(!messageRef.current.value.length);

@@ -19,7 +19,8 @@ function App() {
           moreOpts={true}
           channelName="general"
           anonymousMode={true}
-          headerColor="white"
+          primaryColor="#0077b6"
+          secondaryColor='#fff'
           toastBarPosition="bottom-end"
           showRoles={true}
           showAvatar={false}

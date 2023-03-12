@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
+import ThemeContext from '../../context/ThemeContext';
+import { lighten } from '../../lib/color';
 
 const RoomMembers = ({ members }) => {
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
-
+  const { primaryColor } = useContext(ThemeContext);
+  const computedBackgroundColor = lighten(primaryColor, 0.3);
   return (
-    <Box className={classes.modal} p="x16">
+    <Box
+      className={classes.modal}
+      p="x16"
+      backgroundColor={computedBackgroundColor}
+    >
       <Box
         data-qa-id="RoomHeader-Members"
         display="flex"

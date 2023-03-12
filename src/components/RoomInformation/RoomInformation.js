@@ -1,11 +1,15 @@
 import React, { useContext } from 'react';
 import { Box, Icon, ActionButton, Avatar } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
+import ThemeContext from '../../context/ThemeContext';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
+import { lighten } from '../../lib/color';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
+  const { primaryColor } = useContext(ThemeContext);
+  const computedBackgroundColor = lighten(primaryColor, 0.3);
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
 
@@ -22,7 +26,11 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
   return (
-    <Box className={classes.component} p="x16">
+    <Box
+      className={classes.component}
+      p="x16"
+      backgroundColor={computedBackgroundColor}
+    >
       <Box display="flex" is="h3">
         <Icon name="info" size="x24" padding="0px 20px 20px 0px" />
         <Box width="80%" style={{ color: '#4a4a4a' }}>

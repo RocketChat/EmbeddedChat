@@ -17,6 +17,7 @@ import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import Cookies from 'js-cookie';
 import { EmojiPicker } from '../EmojiPicker/index';
 import RCContext from '../../context/RCInstance';
+import ThemeContext from '../../context/ThemeContext';
 import {
   useMessageStore,
   useToastStore,
@@ -37,12 +38,16 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 
 import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
+import { lighten } from '../../lib/color';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
+  const { primaryColor, secondaryColor } = useContext(ThemeContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-
+  const computedLightBackgroundColor = lighten(primaryColor, 0.2);
+  const computedBackgroundColor = primaryColor;
+  const computedTextColor = secondaryColor;
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -156,10 +161,15 @@ const MessageList = ({ messages, handleGoBack }) => {
                   key={msg._id}
                   isEditing={editMessage.id === msg._id}
                   className={classes.messageBody}
+                  style={{ backgroundColor: `${computedBackgroundColor}` }}
                 >
                   <Message.Container>
                     {newDay && (
-                      <MessageDivider>
+                      <MessageDivider
+                        style={{
+                          backgroundColor: `${computedBackgroundColor}`,
+                        }}
+                      >
                         {format(new Date(msg.ts), 'MMMM d, yyyy')}
                       </MessageDivider>
                     )}
@@ -177,7 +187,9 @@ const MessageList = ({ messages, handleGoBack }) => {
                         {!sequential && <MessageHeader msg={msg} />}
                         {!msg.t ? (
                           <>
-                            <Message.Body>
+                            <Message.Body
+                              style={{ color: `${computedTextColor}` }}
+                            >
                               {msg.attachments && msg.attachments.length > 0 ? (
                                 <>
                                   <Markdown body={msg} isReaction={false} />
@@ -231,8 +243,13 @@ const MessageList = ({ messages, handleGoBack }) => {
                   </Message.Container>
                   {!msg.t ? (
                     <MessageToolbox.Wrapper>
-                      <MessageToolbox>
-                        <MessageToolbox.Item icon="thread" />
+                      <MessageToolbox
+                        backgroundColor={computedLightBackgroundColor}
+                      >
+                        <MessageToolbox.Item
+                          icon="thread"
+                          style={{ color: `${computedTextColor}` }}
+                        />
                         <MessageToolbox.Item
                           icon={`${
                             msg.starred &&
@@ -243,12 +260,14 @@ const MessageList = ({ messages, handleGoBack }) => {
                               : 'star'
                           }`}
                           onClick={() => handleStarMessage(msg)}
+                          style={{ color: `${computedTextColor}` }}
                         />
                         <Popup
                           trigger={
                             <MessageToolbox.Item
                               icon="emoji"
                               onClick={() => console.log('saf')}
+                              style={{ color: `${computedTextColor}` }}
                             />
                           }
                           position={isSmallScreen ? 'left top' : 'left center'}
@@ -262,6 +281,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                         <MessageToolbox.Item
                           icon="pin"
                           onClick={() => handlePinMessage(msg)}
+                          style={{ color: `${computedTextColor}` }}
                         />
                         {msg.u._id === authenticatedUserId && (
                           <>
@@ -270,6 +290,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                               onClick={() => {
                                 setEditMessage({ msg: msg.msg, id: msg._id });
                               }}
+                              style={{ color: `${computedTextColor}` }}
                             />
                             <MessageToolbox.Item
                               icon="trash"
