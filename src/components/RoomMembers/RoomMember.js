@@ -5,12 +5,14 @@ import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
 import ThemeContext from '../../context/ThemeContext';
-import { lighten } from '../../lib/color';
+import { lighten, isDark, darken } from '../../lib/color';
 
 const RoomMembers = ({ members }) => {
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const { primaryColor } = useContext(ThemeContext);
-  const computedBackgroundColor = lighten(primaryColor, 0.3);
+  const computedBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.3)
+    : darken(primaryColor, 0.3);
   return (
     <Box
       className={classes.modal}

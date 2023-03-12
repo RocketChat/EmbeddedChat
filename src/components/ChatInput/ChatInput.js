@@ -16,7 +16,7 @@ import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
-import { isDark, lighten } from '../../lib/color';
+import { isDark, lighten, darken } from '../../lib/color';
 
 const ChatInput = () => {
   const { RCInstance } = useContext(RCContext);
@@ -28,7 +28,9 @@ const ChatInput = () => {
   const computedPlaceholder = isDark(primaryColor)
     ? styles.textInput_dark
     : styles.textInput_light;
+  console.log(computedBackgroundColor);
   const computedInputTextColor = secondaryColor;
+
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();

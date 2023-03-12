@@ -38,14 +38,16 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 
 import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
-import { lighten } from '../../lib/color';
+import { darken, isDark, lighten } from '../../lib/color';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const { RCInstance } = useContext(RCContext);
   const { primaryColor, secondaryColor } = useContext(ThemeContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const computedLightBackgroundColor = lighten(primaryColor, 0.2);
+  const computedLightBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.2)
+    : darken(primaryColor, 0.2);
   const computedBackgroundColor = primaryColor;
   const computedTextColor = secondaryColor;
   const isSmallScreen = useMediaQuery('(max-width: 992px)');

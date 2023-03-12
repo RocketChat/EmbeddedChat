@@ -19,7 +19,7 @@ const ThemeContextProvider = (props) => {
     setSecondaryColor(newSecondaryColor);
   };
 
-  useEffect(() => {
+  useMemo(() => {
     updateTheme(primaryColor, secondaryColor);
   }, [primaryColor, secondaryColor]);
 

@@ -15,12 +15,14 @@ import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import ThemeContext from '../../context/ThemeContext';
-import { lighten } from '../../lib/color';
+import { lighten, isDark, darken } from '../../lib/color';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
   const { primaryColor } = useContext(ThemeContext);
-  const computedBackgroundColor = lighten(primaryColor, 0.3);
+  const computedBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.3)
+    : darken(primaryColor, 0.3);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 

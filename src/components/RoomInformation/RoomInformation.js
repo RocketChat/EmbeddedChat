@@ -4,12 +4,14 @@ import RCContext from '../../context/RCInstance';
 import ThemeContext from '../../context/ThemeContext';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
-import { lighten } from '../../lib/color';
+import { darken, isDark, lighten } from '../../lib/color';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
   const { primaryColor } = useContext(ThemeContext);
-  const computedBackgroundColor = lighten(primaryColor, 0.3);
+  const computedBackgroundColor = isDark(primaryColor)
+    ? lighten(primaryColor, 0.3)
+    : darken(primaryColor, 0.3);
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
 
