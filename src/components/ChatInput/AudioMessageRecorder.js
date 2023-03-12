@@ -10,13 +10,13 @@ const AudioMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-
+  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
   const onStop = (audioChunks) => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
     const fileName = 'Audio record.mp3';
@@ -111,7 +111,12 @@ const AudioMessageRecorder = () => {
 
   useEffect(() => {
     const sendRecording = async () => {
-      await RCInstance.sendAttachment(file);
+      await RCInstance.sendAttachment(
+        file,
+        undefined,
+        undefined,
+        ECOptions.enableThreads ? threadId : undefined
+      );
     };
     if (isRecorded && file) {
       sendRecording();

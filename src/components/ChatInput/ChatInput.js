@@ -17,7 +17,7 @@ import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
 
 const ChatInput = () => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();
@@ -38,13 +38,13 @@ const ChatInput = () => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
-    (state) => ({
+  const { editMessage, setEditMessage, isRecordingMessage, threadId } =
+    useMessageStore((state) => ({
       editMessage: state.editMessage,
       setEditMessage: state.setEditMessage,
       isRecordingMessage: state.isRecordingMessage,
-    })
-  );
+      threadId: state.threadMainMessage?._id,
+    }));
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
@@ -75,7 +75,10 @@ const ChatInput = () => {
     }
 
     if (!editMessage.msg) {
-      const res = await RCInstance.sendMessage(message);
+      const res = await RCInstance.sendMessage(
+        message,
+        ECOptions.enableThreads ? threadId : undefined
+      );
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
