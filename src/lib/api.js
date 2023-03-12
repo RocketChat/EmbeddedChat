@@ -638,6 +638,23 @@ export default class RocketChatInstance {
     }
   }
 
+  async findOrCreateInvite() {
+    try {
+      const response = await fetch(`${this.host}/api/v1/findOrCreateInvite`, {
+        method: 'POST',
+        body: JSON.stringify({ rid: this.rid, days: 1, maxUses: 10 }),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+          'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+        },
+      });
+      return await response.json();
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   async sendAttachment(
     file,
     fileName,
