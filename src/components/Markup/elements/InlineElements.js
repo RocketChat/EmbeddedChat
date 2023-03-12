@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
-import ItalicSpan from './ItalicSpan';
-import StrikeSpan from './StrikeSpan';
-import BoldSpan from './BoldSpan';
 import CodeElement from './CodeElement';
 import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
@@ -11,55 +8,93 @@ import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
 import Mention from './Mention';
 
-const InlineElements = ({ contents }) =>
-  contents.map((content, index) => {
-    switch (content.type) {
-      case 'BOLD':
-        return <BoldSpan key={index} contents={content.value} />;
+const InlineElements = ({ contents, classes }) => {
+  const helperFunc = (contentsArr, initialClass) => {
+    return (
+      <>
+        {contentsArr.map((content, index) => {
+          let classProps = initialClass;
 
-      case 'PLAIN_TEXT':
-        return <PlainSpan key={index} contents={content.value} />;
+          switch (content.type) {
+            case 'BOLD':
+              classProps = { ...classProps, bold: true };
+              break;
 
-      case 'STRIKE':
-        return <StrikeSpan key={index} contents={content.value} />;
+            case 'STRIKE':
+              classProps = { ...classProps, strike: true };
+              break;
 
-      case 'ITALIC':
-        return <ItalicSpan key={index} contents={content.value} />;
+            case 'ITALIC':
+              classProps = { ...classProps, italics: true };
+              break;
 
-      case 'INLINE_CODE':
-        return <CodeElement key={index} contents={content.value} />;
+            case 'PLAIN_TEXT':
+              return (
+                <PlainSpan contents={content.value} classes={classProps} />
+              );
 
-      case 'MENTION_CHANNEL':
-        return <ChannelMention key={index} mention={content.value.value} />;
+            case 'INLINE_CODE':
+              return (
+                <CodeElement
+                  key={index}
+                  contents={content.value}
+                  classes={classProps}
+                />
+              );
 
-      case 'MENTION_USER':
-        return <Mention key={index} contents={content.value} />;
+            case 'MENTION_CHANNEL':
+              return (
+                <ChannelMention
+                  key={index}
+                  mention={content.value.value}
+                  classes={classProps}
+                />
+              );
 
-      case 'EMOJI':
-        return <Emoji key={index} emoji={content} />;
+            case 'MENTION_USER':
+              return <Mention key={index} contents={content.value} />;
 
-      case 'COLOR':
-        return <ColorElement key={index} {...content.value} />;
+            case 'EMOJI':
+              return <Emoji key={index} emoji={content} />;
 
-      case 'LINK':
-        return (
-          <LinkSpan
-            key={index}
-            href={content.value.src.value}
-            label={
-              Array.isArray(content.value.label)
-                ? content.value.label
-                : [content.value.label]
-            }
-          />
-        );
-      default:
-        return null;
-    }
-  });
+            case 'COLOR':
+              return (
+                <ColorElement
+                  key={index}
+                  {...content.value}
+                  classes={classProps}
+                />
+              );
+
+            case 'LINK':
+              return (
+                <LinkSpan
+                  key={index}
+                  href={content.value.src.value}
+                  label={
+                    Array.isArray(content.value.label)
+                      ? content.value.label
+                      : [content.value.label]
+                  }
+                  classes={classProps}
+                />
+              );
+
+            default:
+              break;
+          }
+          return helperFunc(content.value, classProps);
+        })}
+      </>
+    );
+  };
+
+  return <>{helperFunc(contents, classes)}</>;
+};
 
 export default InlineElements;
 
 InlineElements.propTypes = {
   contents: PropTypes.any,
+  classes: PropTypes.object,
 };
