@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, formatDistance } from 'date-fns';
 import {
   Box,
   Button,
@@ -10,6 +10,9 @@ import {
   MessageToolbox,
   MessageDivider,
   Avatar,
+  MessageMetricsItem,
+  MessageMetrics,
+  MessageMetricsReply,
 } from '@rocket.chat/fuselage';
 import Popup from 'reactjs-popup';
 import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
@@ -39,7 +42,7 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import classes from './MessageList.module.css';
 
 const MessageList = ({ messages, handleGoBack }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
 
@@ -68,6 +71,8 @@ const MessageList = ({ messages, handleGoBack }) => {
       state.setMessageToReport,
       state.toggleShowReportMessage,
     ]);
+
+  const openThread = useMessageStore((state) => state.openThread);
 
   const handleStarMessage = async (message) => {
     const isStarred =
@@ -130,6 +135,10 @@ const MessageList = ({ messages, handleGoBack }) => {
 
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.name, msg._id, canReact);
+  };
+
+  const handleOpenThread = (message) => async () => {
+    openThread(message);
   };
 
   const isMessageNewDay = (current, previous) =>
@@ -226,13 +235,49 @@ const MessageList = ({ messages, handleGoBack }) => {
                             )}
                           </>
                         )}
+                        {msg.tcount && ECOptions.enableThreads ? (
+                          <MessageMetrics>
+                            <MessageMetricsReply
+                              onClick={handleOpenThread(msg)}
+                            >
+                              Reply
+                            </MessageMetricsReply>
+                            <MessageMetricsItem title="Replies">
+                              <MessageMetricsItem.Icon name="thread" />
+                              <MessageMetricsItem.Label>
+                                {msg.tcount}
+                              </MessageMetricsItem.Label>
+                            </MessageMetricsItem>
+                            {!!msg.tcount && (
+                              <MessageMetricsItem title="Participants">
+                                <MessageMetricsItem.Icon name="user" />
+                                <MessageMetricsItem.Label>
+                                  {msg.replies.length}
+                                </MessageMetricsItem.Label>
+                              </MessageMetricsItem>
+                            )}
+                            <MessageMetricsItem
+                              title={new Date(msg.tlm).toLocaleString()}
+                            >
+                              <MessageMetricsItem.Icon name="clock" />
+                              <MessageMetricsItem.Label>
+                                {formatDistance(new Date(msg.tlm), new Date(), {
+                                  addSuffix: true,
+                                })}
+                              </MessageMetricsItem.Label>
+                            </MessageMetricsItem>
+                          </MessageMetrics>
+                        ) : null}
                       </Box>
                     </Box>
                   </Message.Container>
                   {!msg.t ? (
                     <MessageToolbox.Wrapper>
                       <MessageToolbox>
-                        <MessageToolbox.Item icon="thread" />
+                        <MessageToolbox.Item
+                          icon="thread"
+                          onClick={handleOpenThread(msg)}
+                        />
                         <MessageToolbox.Item
                           icon={`${
                             msg.starred &&

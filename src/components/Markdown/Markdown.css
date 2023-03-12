@@ -15,6 +15,21 @@ code {
 }
 
 .joypixels {
-  height: 20px;
-  width: 20px;
+  height: 1.5rem;
+  width: 1.5rem;
+  image-rendering: pixelated;
+}
+
+.joypixels_BigEmoji {
+  height: 2.75rem;
+  width: 2.75rem;
+  image-rendering: pixelated;
+}
+
+.emojione {
+  margin: 0 0.15em;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: inherit;
+  line-height: normal;
 }

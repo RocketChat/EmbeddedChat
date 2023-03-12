@@ -3,7 +3,7 @@ import React from 'react';
 import InlineElements from '../elements/InlineElements';
 
 const ParagraphBlock = ({ contents }) => (
-  <p>
+  <p style={{ display: 'flex' }}>
     <InlineElements contents={contents} />
   </p>
 );

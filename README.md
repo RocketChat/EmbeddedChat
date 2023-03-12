@@ -57,6 +57,7 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
 | showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
+| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                             |
 
 ## Setting up Authentication
 

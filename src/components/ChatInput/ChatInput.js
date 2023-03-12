@@ -15,9 +15,10 @@ import MembersList from '../Mentions/MembersList';
 import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInput = () => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();
@@ -38,13 +39,13 @@ const ChatInput = () => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const { editMessage, setEditMessage, isRecordingMessage } = useMessageStore(
-    (state) => ({
+  const { editMessage, setEditMessage, isRecordingMessage, threadId } =
+    useMessageStore((state) => ({
       editMessage: state.editMessage,
       setEditMessage: state.setEditMessage,
       isRecordingMessage: state.isRecordingMessage,
-    })
-  );
+      threadId: state.threadMainMessage?._id,
+    }));
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
@@ -76,7 +77,10 @@ const ChatInput = () => {
     }
 
     if (!editMessage.msg) {
-      const res = await RCInstance.sendMessage(message);
+      const res = await RCInstance.sendMessage(
+        message,
+        ECOptions.enableThreads ? threadId : undefined
+      );
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
@@ -185,7 +189,8 @@ const ChatInput = () => {
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
             onChange={(e) => {
-              messageRef.current.value = e.target.value;
+              messageRef.current.value = parseEmoji(e.target.value);
+
             if (e.code === 'Enter') {
               messageRef.current.value += '\n';
             }
