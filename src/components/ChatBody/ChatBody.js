@@ -11,19 +11,27 @@ import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
+import ThreadMessageList from '../Thread/ThreadMessageList';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
+  const threadMessages = useMessageStore((state) => state.threadMessages);
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
+  const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
+
+  const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
+    state.isThreadOpen,
+    state.threadMainMessage,
+  ]);
 
   const { handleGoogleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
   const { handleLogin } = useRCAuth();
@@ -38,7 +46,18 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
         }
-        const { messages } = await RCInstance.getMessages(anonymousMode);
+        const { messages } = await RCInstance.getMessages(
+          anonymousMode,
+          ECOptions?.enableThreads
+            ? {
+                query: {
+                  tmid: {
+                    $exists: false,
+                  },
+                },
+              }
+            : undefined
+        );
         setMessages(messages);
         if (!isUserAuthenticated) {
           // fetch roles only when user is authenticated
@@ -57,7 +76,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         console.error(e);
       }
     },
-    [RCInstance]
+    [RCInstance, ECOptions?.enableThreads]
   );
 
   const handleGoBack = async () => {
@@ -69,10 +88,39 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     setFilter(false);
   };
 
+  const getThreadMessages = useCallback(async () => {
+    if (isUserAuthenticated) {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { messages } = await RCInstance.getThreadMessages(
+          threadMainMessage._id
+        );
+        setThreadMessages(messages);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isThreadOpen, isUserAuthenticated, RCInstance, threadMainMessage]);
+
+  useEffect(() => {
+    if (isThreadOpen && ECOptions.enableThreads) {
+      getThreadMessages();
+    }
+  }, [getThreadMessages, isThreadOpen, ECOptions?.enableThreads]);
+
+  const addMessage = useCallback(
+    (message) => {
+      upsertMessage(message, ECOptions?.enableThreads);
+    },
+    [upsertMessage, ECOptions?.enableThreads]
+  );
+
   useEffect(() => {
     if (isUserAuthenticated) {
       RCInstance.connect().then(() => {
-        RCInstance.addMessageListener(upsertMessage);
+        RCInstance.addMessageListener(addMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
       });
       getMessagesAndRoles();
@@ -82,10 +130,10 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
     return () => {
       RCInstance.close();
-      RCInstance.removeMessageListener(upsertMessage);
+      RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
     };
-  }, [isUserAuthenticated, getMessagesAndRoles, upsertMessage, removeMessage]);
+  }, [isUserAuthenticated, getMessagesAndRoles, addMessage, removeMessage]);
 
   const [onDrag, setOnDrag] = useState(false);
   const [leaveCount, setLeaveCount] = useState(0);
@@ -136,7 +184,14 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
           Drop to upload file
         </Box>
       ) : null}
-      <MessageList messages={messages} handleGoBack={handleGoBack} />
+      {isThreadOpen ? (
+        <ThreadMessageList
+          threadMainMessage={threadMainMessage}
+          threadMessages={threadMessages}
+        />
+      ) : (
+        <MessageList messages={messages} handleGoBack={handleGoBack} />
+      )}
       <TotpModal
         handleGoogleLogin={handleGoogleLogin}
         handleLogin={handleLogin}
