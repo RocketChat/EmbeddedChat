@@ -24,7 +24,7 @@ export const RCComponent = ({
   channelName,
   anonymousMode = false,
   primaryColor = '#fff',
-  secondaryColor = '#fff',
+  secondaryColor = '#000',
   toastBarPosition = 'bottom-end',
   showRoles = false,
   showAvatar = false,
