@@ -186,7 +186,11 @@ const MessageList = ({ messages, handleGoBack }) => {
                         {!sequential && <MessageHeader msg={msg} />}
                         {!msg.t ? (
                           <>
-                            <Message.Body>
+                            <Message.Body
+                              className={
+                                msg.isPending ? classes.PendingMessageBody : ''
+                              }
+                            >
                               {msg.attachments && msg.attachments.length > 0 ? (
                                 <>
                                   <Markdown body={msg} isReaction={false} />
