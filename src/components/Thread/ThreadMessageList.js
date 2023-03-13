@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
-  Button,
-  Icon,
   Message,
   MessageReactions,
   MessageToolbox,
@@ -36,7 +34,6 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
   const isSmallScreen = useMediaQuery('(max-width: 992px)');
   const dispatchToastMessage = useToastBarDispatch();
 
-  const filtered = useMessageStore((state) => state.filtered);
   const toastPosition = useToastStore((state) => state.position);
 
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
