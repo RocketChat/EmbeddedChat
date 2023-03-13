@@ -235,7 +235,7 @@ const MessageList = ({ messages, handleGoBack }) => {
                             )}
                           </>
                         )}
-                        {msg.tcount && ECOptions.enableThreads ? (
+                        {!msg.t && msg.tcount && ECOptions.enableThreads ? (
                           <MessageMetrics>
                             <MessageMetricsReply
                               onClick={handleOpenThread(msg)}

@@ -58,7 +58,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
               }
             : undefined
         );
-        setMessages(messages);
+        if (messages) {
+          setMessages(messages.filter((message) => message._hidden !== true));
+        }
         if (!isUserAuthenticated) {
           // fetch roles only when user is authenticated
           return;
