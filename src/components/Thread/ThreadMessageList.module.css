@@ -1,3 +1,7 @@
 .messageParentBox > .messageBody {
   padding-block: 0.25rem;
 }
+
+.PendingMessageBody {
+  opacity: 0.4 !important;
+}
