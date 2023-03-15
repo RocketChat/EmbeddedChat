@@ -257,10 +257,12 @@ const Message = ({
                   }
                 />
               </Popup>
-              <MessageToolbox.Item
-                icon="pin"
-                onClick={() => handlePinMessage(message)}
-              />
+              {variant !== 'thread' && (
+                <MessageToolbox.Item
+                  icon="pin"
+                  onClick={() => handlePinMessage(message)}
+                />
+              )}
               {message.u._id === authenticatedUserId && (
                 <>
                   <MessageToolbox.Item
