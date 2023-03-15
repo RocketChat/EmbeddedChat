@@ -1,10 +1,6 @@
 .container {
   position: absolute;
   top: 0;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
   z-index: 100;
   background-color: #fff;
