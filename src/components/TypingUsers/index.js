@@ -8,7 +8,6 @@ export default function TypingUsers() {
 
   useEffect(() => {
     RCInstance?.addTypingStatusListener((t) => {
-      console.log(t);
       setTypingUsers(t);
     });
     return () => RCInstance?.removeTypingStatusListener(setTypingUsers);
