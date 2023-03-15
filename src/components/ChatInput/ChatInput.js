@@ -210,57 +210,57 @@ const ChatInput = () => {
         )}
         <Box className={styles.container}>
           <textarea
-          rows={1}
+            rows={1}
             disabled={!isUserAuthenticated || isRecordingMessage}
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
             onChange={(e) => {
               messageRef.current.value = parseEmoji(e.target.value);
 
-            if (e.code === 'Enter') {
-              messageRef.current.value += '\n';
-            }
+              if (e.code === 'Enter') {
+                messageRef.current.value += '\n';
+              }
 
               setDisableButton(!messageRef.current.value.length);
 
-            e.target.style.height = 'auto';
-            if (e.target.scrollHeight <= 150) {
-              e.target.style.boxSizing = 'border-box';
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            } else {
-              e.target.style.height = '150px';
-            }
-            searchToMentionUser(
-              messageRef.current.value,
-              roomMembers,
-              startReading,
-              setStartReading,
-              setFilteredMembers,
-              setmentionIndex,
-              setshowMembersList
-            );
-          }}
-          onKeyDown={(e) => {
-            if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-              messageRef.current.value += '\n';
               e.target.style.height = 'auto';
               if (e.target.scrollHeight <= 150) {
-                console.log(e.target.style.height, e.target.scrollHeight);
                 e.target.style.boxSizing = 'border-box';
                 e.target.style.height = `${e.target.scrollHeight}px`;
-                console.log(e.target.style.height, e.target.scrollHeight);
               } else {
                 e.target.style.height = '150px';
               }
-            } else if (editMessage.msg && e.keyCode === 27) {
-              messageRef.current.value = '';
-              setDisableButton(true);
-              setEditMessage({});
-            } else if (filteredMembers.length === 0 && e.keyCode === 13) {
-              e.preventDefault();
-              e.target.style.height = '38px';
-              sendMessage();
-            }
+              searchToMentionUser(
+                messageRef.current.value,
+                roomMembers,
+                startReading,
+                setStartReading,
+                setFilteredMembers,
+                setmentionIndex,
+                setshowMembersList
+              );
+            }}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+                messageRef.current.value += '\n';
+                e.target.style.height = 'auto';
+                if (e.target.scrollHeight <= 150) {
+                  console.log(e.target.style.height, e.target.scrollHeight);
+                  e.target.style.boxSizing = 'border-box';
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                  console.log(e.target.style.height, e.target.scrollHeight);
+                } else {
+                  e.target.style.height = '150px';
+                }
+              } else if (editMessage.msg && e.keyCode === 27) {
+                messageRef.current.value = '';
+                setDisableButton(true);
+                setEditMessage({});
+              } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+                e.preventDefault();
+                e.target.style.height = '38px';
+                sendMessage();
+              }
 
               if (e.key === 'ArrowDown') {
                 setmentionIndex(

@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Box } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
+import { useUserStore } from '../../store';
 
 export default function TypingUsers() {
   const { RCInstance } = useContext(RCContext);
+  const currentUserName = useUserStore((state) => state.username);
   const [typingUsers, setTypingUsers] = useState([]);
 
   useEffect(() => {
-    RCInstance?.addTypingStatusListener(setTypingUsers);
+    RCInstance?.addTypingStatusListener((t) => {
+      setTypingUsers((t || []).filter((u) => u !== currentUserName));
+    });
     return () => RCInstance?.removeTypingStatusListener(setTypingUsers);
-  }, [RCInstance, setTypingUsers]);
+  }, [RCInstance, setTypingUsers, currentUserName]);
 
   const typingStatusMessage = useMemo(() => {
     if (typingUsers.length === 0) return '';
