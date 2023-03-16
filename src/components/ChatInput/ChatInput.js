@@ -239,16 +239,21 @@ const ChatInput = () => {
                 setmentionIndex,
                 setshowMembersList
               );
+              sendTypingStart();
             }}
+            onBlur={sendTypingStop}
             onKeyDown={(e) => {
+              if (e.shiftKey && e.keyCode === 13) {
+                // new line with shift enter. do nothing.
+                return;
+              }
               if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+                // Insert line break in text input field
                 messageRef.current.value += '\n';
                 e.target.style.height = 'auto';
                 if (e.target.scrollHeight <= 150) {
-                  console.log(e.target.style.height, e.target.scrollHeight);
                   e.target.style.boxSizing = 'border-box';
                   e.target.style.height = `${e.target.scrollHeight}px`;
-                  console.log(e.target.style.height, e.target.scrollHeight);
                 } else {
                   e.target.style.height = '150px';
                 }

@@ -4,19 +4,19 @@ import { format } from 'date-fns';
 import { Icon, Message } from '@rocket.chat/fuselage';
 import { useUserStore } from '../../store';
 
-const MessageHeader = ({ msg }) => {
+const MessageHeader = ({ message }) => {
   const roles = useUserStore((state) => state.roles);
 
   const userActions = () => {
-    switch (msg.t) {
+    switch (message.t) {
       case 'ul':
         return 'left the channel';
       case 'uj':
         return 'joined the channel';
       case 'ru':
-        return `removed @${msg.msg}`;
+        return `removed @${message.message}`;
       case 'au':
-        return `added @${msg.msg}`;
+        return `added @${message.message}`;
       case 'message_pinned':
         return 'Pinned a message:';
       case 'rm':
@@ -26,13 +26,15 @@ const MessageHeader = ({ msg }) => {
     }
   };
 
-  const userRoles = roles[msg.u.username] ? roles[msg.u.username].roles : null;
+  const userRoles = roles[message.u.username]
+    ? roles[message.u.username].roles
+    : null;
 
-  if (!msg.t) {
+  if (!message.t) {
     return (
       <Message.Header>
-        <Message.Name>{msg.u?.name}</Message.Name>
-        <Message.Username>@{msg.u.username}</Message.Username>
+        <Message.Name>{message.u?.name}</Message.Name>
+        <Message.Username>@{message.u.username}</Message.Username>
         {userRoles
           ? userRoles.map((role, index) => (
               <Message.Role key={index}>
@@ -41,21 +43,23 @@ const MessageHeader = ({ msg }) => {
             ))
           : null}
         <Message.Timestamp>
-          {format(new Date(msg.ts), 'h:mm a')}
+          {format(new Date(message.ts), 'h:mm a')}
         </Message.Timestamp>
-        {msg.editedAt && <Icon mie="x4" opacity={0.5} name="edit" size="x16" />}
+        {message.editedAt && (
+          <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+        )}
       </Message.Header>
     );
   }
 
   return (
     <Message.Header>
-      <Message.Name>@{msg.u.username} </Message.Name>
+      <Message.Name>@{message.u.username} </Message.Name>
       <Message.Username style={{ marginLeft: '2px' }}>
         {userActions()}
       </Message.Username>
       <Message.Timestamp>
-        {format(new Date(msg.ts), 'h:mm a')}
+        {format(new Date(message.ts), 'h:mm a')}
       </Message.Timestamp>
     </Message.Header>
   );
@@ -64,5 +68,5 @@ const MessageHeader = ({ msg }) => {
 export default MessageHeader;
 
 MessageHeader.propTypes = {
-  msg: PropTypes.any,
+  message: PropTypes.any,
 };

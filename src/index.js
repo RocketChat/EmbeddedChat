@@ -126,9 +126,9 @@ export const RCComponent = ({
         {attachmentWindowOpen ? <AttachmentWindow /> : null}
         <Box
           width={width}
-          overflowX={'hidden'}
-          overflowY={'hidden'}
-          maxHeight={'100vh'}
+          overflowX="hidden"
+          overflowY="hidden"
+          maxHeight="100vh"
         >
           <ChatHeader
             channelName={channelName}
