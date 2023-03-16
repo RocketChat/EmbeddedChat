@@ -162,12 +162,22 @@ export default class RocketChatInstance {
       await this.rcClient.onMessage((data) => {
         this.onMessageCallbacks.map((callback) => callback(data));
       });
+      await this.rcClient.subscribe(
+        'stream-notify-room',
+        `${this.rid}/user-activity`
+      );
       await this.rcClient.subscribeRoom(this.rid);
       await this.rcClient.onStreamData('stream-notify-room', (ddpMessage) => {
         const [roomId, event] = ddpMessage.fields.eventName.split('/');
 
         if (roomId !== this.rid) {
           return;
+        }
+
+        if (event === 'user-activity') {
+          const typingUser = ddpMessage.fields.args[0];
+          const isTyping = ddpMessage.fields.args[1]?.includes('user-typing');
+          this.handleTypingEvent({ typingUser, isTyping });
         }
 
         if (event === 'typing') {

@@ -25,6 +25,7 @@ import classes from './Message.module.css';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
+import UrlPreview from '../UrlPreview';
 
 const Message = ({
   message,
@@ -190,6 +191,9 @@ const Message = ({
                   )}
                 </>
               )}
+              {message.urls &&
+                !!message.urls.length &&
+                message.urls.map((url) => <UrlPreview key={url} url={url} />)}
               {message.tcount && variant !== 'thread' ? (
                 <MessageMetrics>
                   <MessageMetricsReply onClick={handleOpenThread(message)}>
