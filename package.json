@@ -72,6 +72,7 @@
     "schedule": "^0.4.0"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^6.0.2",
     "@rocket.chat/fuselage": "^0.31.12",
     "@rocket.chat/fuselage-hooks": "^0.31.12",
     "@rocket.chat/fuselage-polyfills": "^0.31.12",
