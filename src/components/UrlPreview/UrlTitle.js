@@ -7,7 +7,7 @@ const UrlTitle = ({ url }) => {
   const title =
     url &&
     url.meta &&
-    (url.meta.oembedTitle || url.meta.ogTitle || url.meta.title);
+    (url.meta.oembedTitle || url.meta.ogTitle || url.meta.pageTitle);
   if (!title) return null;
   return (
     <Box

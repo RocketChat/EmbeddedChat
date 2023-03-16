@@ -11,7 +11,7 @@ const UrlPreview = ({ url }) => {
   const isTitleAvailable =
     url &&
     url.meta &&
-    (url.meta.title || url.meta.ogTitle || url.meta.oembedTitle);
+    (url.meta.pageTitle || url.meta.ogTitle || url.meta.oembedTitle);
   if (!isTitleAvailable) return null;
   return (
     <>
