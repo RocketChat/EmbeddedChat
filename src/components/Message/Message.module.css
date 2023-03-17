@@ -3,4 +3,5 @@
 }
 .PendingMessageBody {
   opacity: 0.4 !important;
+  white-space: pre-line;
 }
