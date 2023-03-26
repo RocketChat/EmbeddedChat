@@ -125,6 +125,8 @@ export const RCComponent = ({
       <RCInstanceProvider value={{ RCInstance, ECOptions }}>
         {attachmentWindowOpen ? <AttachmentWindow /> : null}
         <Box
+          display="flex"
+          flexDirection="column"
           width={width}
           overflowX="hidden"
           overflowY="hidden"
