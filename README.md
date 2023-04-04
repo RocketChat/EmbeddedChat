@@ -7,8 +7,8 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 ![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
 
 <div align='center' width='100%'>
-<a href="https://www.middlewarehq.com/">
-<img src="https://open-source-assets.middlewarehq.com/svgs/RocketChat-EmbeddedChat-contributor-metrics-dark-widget.svg?metrics=true"></img>
+<a href="https://github.com/monoclehq">
+<img src="https://open-source-assets.middlewarehq.com/svgs/RocketChat-EmbeddedChat-contributor-metrics-dark-widget.svg?caching=true"></img>
 </a>
 </div>
 
