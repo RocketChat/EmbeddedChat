@@ -18,25 +18,33 @@ async function printResult(result) {
 	window.document.getElementById("output").innerHTML = "\n" + JSON.stringify(result, null, 2);
 }
 
+const msgListener = msg => {
+	const idx = messages.findIndex(m => m._id === msg._id);
+	if (idx === -1) {
+		messages.push(msg)
+	} else {
+		messages[idx] = msg;
+	}
+	const feedEl = document.getElementById("msgs");
+	feedEl.value = messages.map(m => `[${new Date(m.ts)}]: ${m?.msg}`).join('\n');
+}
+
 const onConfigChange = async (e) => {
 	const host = document.getElementById('hostUrl').value;
 	const roomId = document.getElementById('roomId').value;
 	await api.close()
 	api = new EmbeddedChatApi(host, roomId);
-	api.connect()
-		.then(() => {
-			api.auth.onAuthChange(showAuth);
-			api.addMessageListener(msg => {
-				const idx = messages.findIndex(m => m._id === msg._id);
-				if (idx === -1) {
-					messages.push(msg)
-				} else {
-					messages[idx] = msg;
-				}
-				const feedEl = document.getElementById("msgs");
-				feedEl.value = messages.map(m => `[${new Date(m.ts)}]: ${m?.msg}`).join('\n');
-			})
-		})
+	api.auth.onAuthChange((user) => {
+		showAuth(user)
+		if (user) {
+			api.connect()
+				.then(() => {
+					api.addMessageListener(msgListener);
+				})
+		} else {
+			api.removeMessageListener(msgListener);
+		}
+	})
 }
 
 const showAuth = async (e) => {
