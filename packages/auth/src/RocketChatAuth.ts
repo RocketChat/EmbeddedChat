@@ -159,7 +159,7 @@ class RocketChatAuth {
 	 */
 	async logout() {
 		try {
-      await this.api.post(`/api/v1/logout`, {
+      await this.api.post(`/api/v1/logout`, undefined, {
         headers: {
           'X-Auth-Token': this.currentUser.authToken,
           'X-User-Id': this.currentUser.userId,

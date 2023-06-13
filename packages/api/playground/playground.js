@@ -25,6 +25,7 @@ const onConfigChange = async (e) => {
 	api = new EmbeddedChatApi(host, roomId);
 	api.connect()
 		.then(() => {
+			api.auth.onAuthChange(showAuth);
 			api.addMessageListener(msg => {
 				const idx = messages.findIndex(m => m._id === msg._id);
 				if (idx === -1) {
@@ -65,7 +66,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	hostInput.addEventListener("change", onConfigChange)
 	hostInput.addEventListener("change", onConfigChange)
 	onConfigChange();
-	api.auth.onAuthChange(showAuth);
 	
 	document.getElementById("logoutBtn").addEventListener("click", () => api.auth.logout())
 	document.getElementById("call-api").addEventListener("click", callApi)
