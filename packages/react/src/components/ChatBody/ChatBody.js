@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-import { Box } from '@rocket.chat/fuselage';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatBody.module.css';
@@ -8,6 +7,7 @@ import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
+import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 import useAttachmentWindowStore from '../../store/attachmentwindow';

@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Box,
   Message as RCMessage,
   MessageReactions,
   MessageToolbox,
@@ -25,6 +24,7 @@ import classes from './Message.module.css';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
+import { Box } from '../Box';
 
 const Message = ({
   message,
@@ -134,9 +134,13 @@ const Message = ({
               {format(new Date(message.ts), 'MMMM d, yyyy')}
             </MessageDivider>
           )}
-          <Box display="flex">
+          <Box
+            style={{
+              display: 'flex',
+            }}
+          >
             {showAvatar && (
-              <Box margin="3px">
+              <Box style={{ margin: '3px' }}>
                 <Avatar
                   url={getUserAvatarUrl(message.u.username)}
                   size="x36"
@@ -144,7 +148,11 @@ const Message = ({
                 />
               </Box>
             )}
-            <Box margin="5px">
+            <Box
+              style={{
+                margin: '5px',
+              }}
+            >
               {!sequential && <MessageHeader message={message} />}
               {!message.t ? (
                 <>
