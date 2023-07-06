@@ -1,11 +1,11 @@
 import {
   PasswordInput,
-  Box,
   Button,
   Modal,
   Field,
   TextInput,
   Icon,
+  Box,
 } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import { GenericModal } from '../GenericModal';

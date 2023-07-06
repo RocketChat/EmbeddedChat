@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ThemeProvider } from '@emotion/react';
+import { css, ThemeProvider } from '@emotion/react';
 import Cookies from 'js-cookie';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatBody, ChatHeader, ChatInput, Home } from './components';
@@ -32,7 +32,6 @@ export const RCComponent = ({
   enableThreads = false,
   theme = null,
 }) => {
-  console.log('hello');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
@@ -131,12 +130,13 @@ export const RCComponent = ({
         <RCInstanceProvider value={{ RCInstance, ECOptions }}>
           {attachmentWindowOpen ? <AttachmentWindow /> : null}
           <Box
-            display="flex"
-            flexDirection="column"
-            width={width}
-            overflowX="hidden"
-            overflowY="hidden"
-            maxHeight="100vh"
+            css={css`
+              display: flex;
+              flex-direction: column;
+              width: ${width};
+              overflow: hidden;
+              max-height: 100vh;
+            `}
           >
             <ChatHeader
               channelName={channelName}

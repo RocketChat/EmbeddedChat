@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const Box = ({ children, className = '', style = {} }) => {
+const Box = ({ children, className = '', style = {}, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Box');
   const classNameBox = css`
     margin: 0;
@@ -22,6 +22,7 @@ const Box = ({ children, className = '', style = {} }) => {
       css={classNameBox}
       className={`ec-box ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
+      {...props}
     >
       {children}
     </div>

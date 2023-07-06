@@ -1,7 +1,8 @@
-import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
+import { ActionButton, Icon, Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from './ChatHeader.module.css';
+import { css } from '@emotion/react';
+import stylesSheet from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
   useUserStore,
@@ -10,9 +11,10 @@ import {
   useSearchMessageStore,
   useChannelStore,
 } from '../../store';
-import { darken, isDark, lighten } from '../../lib/color';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { ThreadHeader } from '../ThreadHeader';
+import { Box } from '../Box';
+import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const ChatHeader = ({
   isClosable,
@@ -21,20 +23,10 @@ const ChatHeader = ({
   fullScreen,
   setFullScreen,
   channelName,
-  headerColor,
+  className = '',
+  styles = {},
 }) => {
-  const computedHeaderTextColor = isDark(headerColor) ? 'white' : 'black';
-  const computedHeaderBackgroundColor = headerColor;
-  const computedHeaderDescriptionColor = isDark(headerColor)
-    ? 'whitesmoke'
-    : 'rgba(0, 0, 0, 0.5)';
-  const computedIconClassName = isDark(headerColor)
-    ? styles.icon_light_mode
-    : styles.icon_dark_mode;
-  const computedBorderColor = isDark(headerColor)
-    ? lighten(headerColor, 0.3)
-    : darken(headerColor, 0.3);
-
+  const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(
@@ -106,7 +98,7 @@ const ChatHeader = ({
       minimize: {
         action: () => setFullScreen((prev) => !prev),
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="mobile" size="x16" />
             Minimize
           </Box>
@@ -117,7 +109,7 @@ const ChatHeader = ({
       threads: {
         action: function noRefCheck() {},
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="thread" size="x16" />
             Threads
           </Box>
@@ -126,7 +118,7 @@ const ChatHeader = ({
       members: {
         action: showChannelMembers,
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="members" size="x16" />
             Members
           </Box>
@@ -135,7 +127,7 @@ const ChatHeader = ({
       starred: {
         action: showStarredMessage,
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="star" size="x16" />
             Starred
           </Box>
@@ -144,7 +136,7 @@ const ChatHeader = ({
       pinned: {
         action: showPinnedMessage,
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="pin" size="x16" />
             Pinned
           </Box>
@@ -153,7 +145,7 @@ const ChatHeader = ({
       search: {
         action: showSearchMessage,
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="magnifier" size="x16" />
             Search
           </Box>
@@ -162,7 +154,7 @@ const ChatHeader = ({
       roominfo: {
         action: showChannelinformation,
         label: (
-          <Box alignItems="center" display="flex">
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
             <Icon mie="x4" name="info" size="x16" />
             Room Information
           </Box>
@@ -173,7 +165,7 @@ const ChatHeader = ({
       logout: {
         action: handleLogout,
         label: (
-          <Box alignItems="center" display="flex" color="danger">
+          <Box style={{ alignItems: 'center', display: 'flex' }} color="danger">
             <Icon mie="x4" name="reply-directly" size="x16" />
             Logout
           </Box>
@@ -184,39 +176,49 @@ const ChatHeader = ({
 
   return (
     <Box
-      className={styles.container}
-      border={`1px solid ${computedBorderColor}`}
-      p={10}
-      backgroundColor={computedHeaderBackgroundColor}
+      css={css`
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        padding: 0.75rem;
+        border: 1px solid rgba(0, 0, 0, 0.5);
+      `}
+      className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
+      style={{ ...styleOverrides, ...styles }}
     >
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        width="100%"
+        css={css`
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+        `}
       >
-        <Box display="flex">
-          <Icon
-            color={computedHeaderTextColor}
-            name="hash"
-            size={fullScreen ? 'x40' : 'x30'}
-          />
-          <Box margin="0 1rem">
+        <Box
+          css={css`
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+          `}
+        >
+          <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
+          <Box
+            css={css`
+              margin: 0 1rem;
+            `}
+          >
             {isUserAuthenticated ? (
               <>
                 <h2
-                  className={styles.nospace}
-                  style={{ color: computedHeaderTextColor }}
+                  className={`ec-chat-header--channelName ${stylesSheet.nospace}`}
                 >
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
-                    className={styles.nospace}
-                    style={{
-                      color: computedHeaderDescriptionColor,
-                      fontSize: 14,
-                    }}
+                    className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                    style={{ fontSize: 14 }}
                   >
                     {channelInfo.description || ''}
                   </p>
@@ -224,25 +226,25 @@ const ChatHeader = ({
               </>
             ) : (
               <h2
-                style={{ color: computedHeaderTextColor }}
-                className={styles.nospace}
+                className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
               >
                 {channelName || 'Login to chat'}
               </h2>
             )}
           </Box>
         </Box>
-        <Box display="flex" alignItems="center">
+        <Box
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 0.125em;
+          `}
+        >
           {avatarUrl && (
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-            <Menu
-              margin="0 4px"
-              display="inline"
-              className={computedIconClassName}
-              options={menuOptions()}
-            />
+            <Menu margin="0 4px" display="inline" options={menuOptions()} />
           ) : (
             <>
               <ActionButton
@@ -268,7 +270,6 @@ const ChatHeader = ({
               display="inline"
               square
               small
-              className={computedIconClassName}
             >
               <Icon name="cross" size="x20" />
             </ActionButton>
@@ -291,5 +292,6 @@ ChatHeader.propTypes = {
   setFullScreen: PropTypes.func,
   moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
-  headerColor: PropTypes.string,
+  className: PropTypes.string,
+  styles: PropTypes.object,
 };
