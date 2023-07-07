@@ -13,7 +13,6 @@ const env = process.env.NODE_ENV;
 export default [
   {
     input: 'src/index.js',
-    external: ['@embeddedchat/api'],
     output: [
       {
         file: packageJson.main,
