@@ -1,0 +1,18 @@
+.close {
+  cursor: pointer;
+  padding: 12px 16px;
+}
+
+.close:hover {
+  background: #bbb;
+}
+
+.textArea {
+  width: 100%;
+  padding: 0.5rem 0.9rem;
+}
+
+.reportWindowFooter {
+  display: flex;
+  justify-content: space-around;
+}
