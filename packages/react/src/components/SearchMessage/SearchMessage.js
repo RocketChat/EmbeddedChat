@@ -1,19 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
-  Box,
   Icon,
   ActionButton,
   Message,
   MessageReactions,
   MessageDivider,
-  Button,
 } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
+import { Button } from '../Button';
+import { Box } from '../Box';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -38,23 +38,31 @@ const Search = () => {
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box className={classes.searchBar} p="x16">
-      <Box display="flex" is="h3">
-        <Icon name="magnifier" size="x24" padding="0px 20px 20px 0px" />
-        <Box width="80%" style={{ color: '#4a4a4a' }}>
-          Search Messages
-        </Box>
-        <ActionButton
-          onClick={toggleShowSearch}
-          ghost
-          display="inline"
-          square
-          small
-        >
-          <Icon name="cross" size="x20" />
-        </ActionButton>
+    <Box className={classes.searchBar} style={{ padding: '1rem' }}>
+      <Box
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '0.5rem',
+          marginBottom: '0.25rem',
+        }}
+      >
+        <h3 style={{ display: 'contents' }}>
+          <Icon name="magnifier" size="x24" />
+          <Box style={{ color: '#4a4a4a', width: '80%' }}>Search Messages</Box>
+          <ActionButton
+            onClick={toggleShowSearch}
+            ghost
+            display="inline"
+            square
+            small
+          >
+            <Icon name="cross" size="x20" />
+          </ActionButton>
+        </h3>
       </Box>
-      <Box className={classes.container} border="2px solid #ddd">
+      <Box className={classes.container} style={{ border: '2px solid #ddd' }}>
         <Icon name="magnifier" size="x24" padding={6} />
         <input
           placeholder="Search Message"
@@ -64,7 +72,7 @@ const Search = () => {
           }}
           className={classes.textInput}
         />
-        <Button small onClick={searchMessages}>
+        <Button size="small" onClick={searchMessages}>
           Enter
         </Button>
       </Box>

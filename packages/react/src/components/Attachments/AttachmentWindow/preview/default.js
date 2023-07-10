@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Icon } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
+import { Box } from '../../../Box';
 
 function PreviewDefault({ data }) {
   return (
