@@ -54,10 +54,10 @@ const DefaultTheme = {
       contrastText: 'rgba(0, 0, 0, 0.87)',
     },
     secondary: {
-      main: '#9c27b0',
-      light: '#ba68c8',
-      dark: '#7b1fa2',
-      contrastText: '#fff',
+      main: '#e4e7ea',
+      light: '#b6b9bd',
+      dark: '#eceef0',
+      contrastText: '#1f2329',
     },
     info: {
       main: '#0288d1',

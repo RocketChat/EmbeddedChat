@@ -1,4 +1,4 @@
-import { Box, Button, Icon, ActionButton } from '@rocket.chat/fuselage';
+import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import styles from './ChatInput.module.css';
@@ -17,6 +17,7 @@ import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
+import { Button } from '../Button';
 
 const ChatInput = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -322,7 +323,7 @@ const ChatInput = () => {
           ) : (
             <Button
               onClick={openLoginModal}
-              primary
+              color="primary"
               style={{ overflow: 'visible' }}
             >
               JOIN

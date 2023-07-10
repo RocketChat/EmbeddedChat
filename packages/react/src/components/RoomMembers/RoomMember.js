@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Icon, ActionButton, Button } from '@rocket.chat/fuselage';
+import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './inviteMembers/InviteMembers';
+import { Button } from '../Button';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);

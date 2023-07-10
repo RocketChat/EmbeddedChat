@@ -7,13 +7,13 @@ import {
   Message,
   MessageReactions,
   MessageDivider,
-  Button,
 } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
+import { Button } from '../Button';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -64,7 +64,7 @@ const Search = () => {
           }}
           className={classes.textInput}
         />
-        <Button small onClick={searchMessages}>
+        <Button size="small" onClick={searchMessages}>
           Enter
         </Button>
       </Box>

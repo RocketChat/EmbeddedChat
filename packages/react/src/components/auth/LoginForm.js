@@ -1,6 +1,5 @@
 import {
   PasswordInput,
-  Button,
   Modal,
   Field,
   TextInput,
@@ -13,6 +12,7 @@ import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import classes from './Login.module.css';
+import { Button } from '../Button';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -70,9 +70,11 @@ export default function LoginForm() {
           <Modal.Footer alignItems="center">
             <Box className={classes.Footer}>
               <Button
-                primary
+                color="primary"
                 onClick={handleSubmit}
-                margin="10px 10px 10px 10px"
+                style={{
+                  margin: '10px',
+                }}
               >
                 Login
               </Button>
@@ -82,9 +84,9 @@ export default function LoginForm() {
                 <hr className={classes.darkLine} />
               </Box>
               <Button
-                secondary
+                color="secondary"
                 onClick={handleGooglewithLogin}
-                margin="10px 10px 10px 10px"
+                style={{ margin: '10px' }}
               >
                 <Icon name="google" /> Login with Google
               </Button>

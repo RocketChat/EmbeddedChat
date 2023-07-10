@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
-import { Box, Button, Icon } from '@rocket.chat/fuselage';
+import { Box, Icon } from '@rocket.chat/fuselage';
 import {
   useMessageStore,
   useMemberStore,
@@ -15,6 +15,7 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Message } from '../Message';
+import { Button } from '../Button';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -51,7 +52,7 @@ const MessageList = ({ messages, handleGoBack }) => {
         })}
       {filtered && (
         <Box>
-          <Button small onClick={handleGoBack}>
+          <Button size="small" onClick={handleGoBack}>
             <Icon mie="x4" name="back" size="x20" color="danger" />
             <p style={{ display: 'inline' }}>Go Back</p>
           </Button>
