@@ -1,10 +1,11 @@
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Icon } from '@rocket.chat/fuselage';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import PinnedAttachment from './PinnedAttachment';
+import { Box } from '../Box';
 
 const Attachment = ({ attachment, host }) => {
   if (attachment && attachment.audio_url) {

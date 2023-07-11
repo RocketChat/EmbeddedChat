@@ -1,4 +1,4 @@
-import { Modal, Box, Icon, ActionButton } from '@rocket.chat/fuselage';
+import { Modal, Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useContext } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import PropTypes from 'prop-types';
@@ -6,6 +6,7 @@ import classes from './MessageReporter.module.css';
 import { useMessageStore, useToastStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
+import { Box } from '../Box';
 
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Icon, ActionButton, Box } from '@rocket.chat/fuselage';
+import { Icon, ActionButton } from '@rocket.chat/fuselage';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
+import { Box } from '../Box';
 
 const AudioMessageRecorder = () => {
   const toogleRecordingMessage = useMessageStore(
@@ -160,7 +161,7 @@ const AudioMessageRecorder = () => {
               size="x20"
             />
           </ActionButton>
-          <Box color="default" className={styles.record}>
+          <Box className={styles.record}>
             <span className={styles.audioDot} />
             <span className={styles.timer}>{time}</span>
           </Box>

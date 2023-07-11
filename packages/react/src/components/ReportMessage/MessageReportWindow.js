@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ModalBackdrop, TextAreaInput, Box } from '@rocket.chat/fuselage';
+import { ModalBackdrop, TextAreaInput } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
 import ReportWindowButtons from './ReportWindowButtons';
 import classes from './MessageReporter.module.css';
 import { useMessageStore } from '../../store';
+import { Box } from '../Box';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
