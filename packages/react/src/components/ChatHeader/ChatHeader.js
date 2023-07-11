@@ -179,7 +179,7 @@ const ChatHeader = ({
       css={css`
         display: flex;
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         padding: 0.75rem;
         border: 1px solid rgba(0, 0, 0, 0.5);
       `}

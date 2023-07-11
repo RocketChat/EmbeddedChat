@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Icon, ActionButton, Avatar } from '@rocket.chat/fuselage';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
@@ -22,32 +23,60 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
   return (
-    <Box className={classes.component} p="x16">
-      <Box display="flex" is="h3">
-        <Icon name="info" size="x24" padding="0px 20px 20px 0px" />
-        <Box width="80%" style={{ color: '#4a4a4a' }}>
-          Room Information
-        </Box>
-        <ActionButton
-          onClick={toggleshowRoominfo}
-          ghost
-          display="inline"
-          square
-          small
-        >
-          <Icon name="cross" size="x20" />
-        </ActionButton>
+    <Box className={classes.component} style={{ padding: '16px' }}>
+      <Box
+        css={css`
+          display: flex;
+        `}
+      >
+        <h3 style={{ display: 'contents' }}>
+          <Icon name="info" size="x24" padding="0px 20px 20px 0px" />
+          <Box
+            css={css`
+              width: 100%;
+              color: #4a4a4a;
+            `}
+          >
+            Room Information
+          </Box>
+          <ActionButton
+            onClick={toggleshowRoominfo}
+            ghost
+            display="inline"
+            square
+            small
+          >
+            <Icon name="cross" size="x20" />
+          </ActionButton>
+        </h3>
       </Box>
 
       <Avatar size="x332" url={getChannelAvatarURL(channelInfo.name)} />
-      <Box m="x16">
-        <Box marginBlock="x16" fontScale="h3">
+      <Box
+        css={css`
+          margin: 16px;
+        `}
+      >
+        <Box
+          css={css`
+            margin-block: 16px;
+            font-size: 1.25rem;
+          `}
+        >
           # {channelInfo.name}
         </Box>
-        <Box marginBlock="x5" fontScale="p1">
+        <Box
+          css={css`
+            margin-block: 5px;
+          `}
+        >
           Description
         </Box>
-        <Box fontScale="p1" opacity={0.5}>
+        <Box
+          css={css`
+            opacity: 0.5rem;
+          `}
+        >
           {channelInfo.description}
         </Box>
       </Box>

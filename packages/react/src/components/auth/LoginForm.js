@@ -4,7 +4,6 @@ import {
   Field,
   TextInput,
   Icon,
-  Box,
 } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import { GenericModal } from '../GenericModal';
@@ -13,6 +12,7 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import classes from './Login.module.css';
 import { Button } from '../Button';
+import { Box } from '../Box';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);

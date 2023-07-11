@@ -1,15 +1,15 @@
 import React from 'react';
-import { Box } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
+import { Box } from '../Box';
 
 const PinnedAttachment = ({ attachment }) => (
-  <Box borderInlineStart="1px solid currentColor" p="x16">
-    <Box withTruncatedText fontScale="p2m" mi={2}>
-      {attachment?.author_name}
-    </Box>
-    <Box mbe={4} mi={2} fontScale="p2" color="default">
-      {attachment?.text}
-    </Box>
+  <Box
+    style={{
+      borderInlineStart: '1px solid currentColor',
+    }}
+  >
+    <Box>{attachment?.author_name}</Box>
+    <Box>{attachment?.text}</Box>
   </Box>
 );
 
