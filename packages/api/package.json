@@ -1,0 +1,28 @@
+{
+	"name": "@embeddedchat/api",
+	"version": "1.0.0",
+	"description": "The api package for embeddedchat",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"typings": "dist/index.d.ts",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"refresh-auth": "cd ../auth && yarn build && cd ../api && yarn remove @embeddedchat/auth && yarn add ./packages/auth",
+		"build": "rollup -c",
+		"dev": "yarn parcel playground/index.html"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"rollup": "^3.23.0",
+		"rollup-plugin-dts": "^5.3.0",
+		"rollup-plugin-esbuild": "^5.0.0",
+		"rollup-plugin-serve": "^2.0.2"
+	},
+	"dependencies": {
+		"@embeddedchat/auth": "./packages/auth",
+		"@rocket.chat/sdk": "^1.0.0-alpha.42",
+		"axios": "^1.4.0"
+	}
+}
