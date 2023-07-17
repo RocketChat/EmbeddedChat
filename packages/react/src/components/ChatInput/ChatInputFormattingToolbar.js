@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Popup from 'reactjs-popup';
-import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
+import { Icon, ActionButton } from '@rocket.chat/fuselage';
 import he from 'he';
+import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
 import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
+import { Box } from '../Box';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const isUserAuthenticated = useUserStore(
@@ -57,13 +59,18 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   };
 
   return (
-    <Box bg="neutral-500" className={styles.chatFormat}>
+    <Box
+      css={css`
+        background-color: #cbced1;
+      `}
+      className={styles.chatFormat}
+    >
       {isUserAuthenticated && (
         <Popup
           disabled={isRecordingMessage}
           trigger={
             <ActionButton
-              bg="neutral-500"
+              style={{ backgroundColor: '#cbced1' }}
               border="0px"
               disabled={isRecordingMessage}
             >
@@ -83,7 +90,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       {formatter.map((item, index) => (
         <ActionButton
           disabled={isRecordingMessage}
-          bg="neutral-500"
+          style={{ backgroundColor: '#cbced1' }}
           border="0px"
           onClick={() => {
             wrapSelection(item.pattern);
@@ -95,7 +102,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       ))}
       <AudioMessageRecorder />
       <ActionButton
-        bg="neutral-500"
+        style={{ backgroundColor: '#cbced1' }}
         border="0px"
         disabled={isRecordingMessage}
         onClick={handleClickToOpenFiles}

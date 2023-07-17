@@ -1,15 +1,18 @@
-import { Box } from '@rocket.chat/fuselage';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Box } from '../Box';
 import styles from './Home.module.css';
 
 const Home = ({ height }) => (
   <Box
-    height={height}
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-    flexDirection="column"
+    css={css`
+      height: ${height};
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    `}
   >
     <h2 style={{ display: 'inline' }}>EmbeddedChat | Home</h2>
     <p>

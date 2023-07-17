@@ -1,10 +1,11 @@
-import { PasswordInput, Box, Modal } from '@rocket.chat/fuselage';
+import { PasswordInput, Modal } from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../GenericModal';
 import classes from './TwoFactorTotpModal.module.css';
 import { Button } from '../Button';
+import { Box } from '../Box';
 
 export default function TotpModal({ handleGoogleLogin, handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
@@ -39,7 +40,7 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
         onClose={handleClose}
       >
         <Box>
-          <Box margin="1px 110px">
+          <Box style={{ margin: '1px 110px' }}>
             <PasswordInput
               w="270px"
               fontScale="h3"

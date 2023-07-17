@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
-import { Box, Icon } from '@rocket.chat/fuselage';
+import { Icon } from '@rocket.chat/fuselage';
 import {
   useMessageStore,
   useMemberStore,
@@ -16,6 +16,7 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Message } from '../Message';
 import { Button } from '../Button';
+import { Box } from '../Box';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);

@@ -1,7 +1,7 @@
 import React from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import PropTypes from 'prop-types';
-import { Box } from '@rocket.chat/fuselage';
+import { Box } from '../Box';
 
 const CustomEmojiPicker = ({ handleEmojiClick }) => (
   <Box>

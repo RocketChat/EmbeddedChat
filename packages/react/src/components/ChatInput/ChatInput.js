@@ -1,6 +1,7 @@
-import { Box, Icon, ActionButton } from '@rocket.chat/fuselage';
+import { Icon, ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
+import { css } from '@emotion/react';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
 import {
@@ -18,6 +19,7 @@ import TypingUsers from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../Button';
+import { Box } from '../Box';
 
 const ChatInput = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -197,10 +199,20 @@ const ChatInput = () => {
 
   return (
     <>
-      <Box marginInlineStart="x20">
+      <Box
+        css={css`
+          margin-inline-start: 20px;
+        `}
+      >
         <TypingUsers />
       </Box>
-      <Box m="x20" border="2px solid #ddd" className={styles.containerParent}>
+      <Box
+        css={css`
+          margin: 20px;
+          border: 2px solid #ddd;
+        `}
+        className={styles.containerParent}
+      >
         {showMembersList ? (
           <MembersList
             mentionIndex={mentionIndex}

@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { Box } from '@rocket.chat/fuselage';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ValidateComponent from './AttachmentWindow/validateComponent';
 import RCContext from '../../context/RCInstance';
 import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
+import { Box } from '../Box';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);

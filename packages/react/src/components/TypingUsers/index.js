@@ -1,7 +1,8 @@
+import { css } from '@emotion/react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Box } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
+import { Box } from '../Box';
 
 export default function TypingUsers() {
   const { RCInstance } = useContext(RCContext);
@@ -45,12 +46,13 @@ export default function TypingUsers() {
 
   return (
     <Box
-      h="24px"
-      fontSize="0.75rem"
-      marginBlockEnd="-24px"
-      marginInlineStart="0.25rem"
-      color="annotation"
-      zIndex="100"
+      css={css`
+        height: 24px;
+        font-size: 0.75rem;
+        margin-block-end: -24px;
+        margin-inline-start: 0.25rem;
+        z-index: 100;
+      `}
     >
       {typingStatusMessage}
     </Box>
