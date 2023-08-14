@@ -63,7 +63,9 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
 | showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
-| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                             |
+| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                                |
+| headerColor    |  sets the background color of the chat header, providing visual customization.|
+| toastBarPosition     |  defines where the toast bar appears in the chat interface, allowing you to control its position for better user experience.|
 
 ## Setting up Authentication
 
@@ -93,3 +95,9 @@ Make a `.env` file in the playground directory following the `.env[example]` fil
     alt="Contribute with Gitpod"
   />
 </a>
+
+## Wiki and FAQs
+Check out our [Wiki](https://github.com/RocketChat/EmbeddedChat/wiki) and [FAQ](https://github.com/RocketChat/EmbeddedChat/wiki/FAQs) page for in-depth guides and answers to common questions. Whether you're a newbie or an expert, you'll find valuable insights to enhance your experience.
+
+## Understanding the Internals
+For those of you who love diving into the technical details, we have a [Roots of EmbeddedChat wiki](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) that delves into the project's internals. Gain a deeper understanding of how everything works behind the scenes and unlock the full potential of the project.
