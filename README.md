@@ -1,4 +1,7 @@
-# EmbeddedChat
+<h1 align='center'>Embedded chat: A staple in excellent customer service</h1>
+
+![image](https://github.com/coderboy-yash/EmbeddedChat/assets/109899959/b2961a35-4300-48df-b674-8a128c73e838)
+
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
