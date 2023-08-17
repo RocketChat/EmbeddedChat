@@ -1,4 +1,7 @@
-# EmbeddedChat
+<h1 align='center'>Embedded chat: A staple in excellent customer service</h1>
+
+![image](https://github.com/coderboy-yash/EmbeddedChat/assets/109899959/b2961a35-4300-48df-b674-8a128c73e838)
+
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
@@ -11,6 +14,14 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 <img src="https://open-source-assets.middlewarehq.com/svgs/RocketChat-EmbeddedChat-contributor-metrics-dark-widget.svg?caching=true"></img>
 </a>
 </div>
+
+## Wiki and FAQs
+Check out our [Wiki](https://github.com/RocketChat/EmbeddedChat/wiki) and [FAQ](https://github.com/RocketChat/EmbeddedChat/wiki/FAQs) page for in-depth guides and answers to common questions. Whether you're a newbie or an expert, you'll find valuable insights to enhance your experience.
+
+![image](https://github.com/coderboy-yash/EmbeddedChat/assets/109899959/af6ea4b4-8499-4f9d-aa83-56c2cf8123c8)
+
+## Understanding the Internals
+For those of you who love diving into the technical details, we have a [Roots of EmbeddedChat wiki](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) that delves into the project's internals. Gain a deeper understanding of how everything works behind the scenes and unlock the full potential of the project.
 
 ## Installation
 
@@ -63,7 +74,9 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | anonymousMode    | if the user can see the chat without logging in                                                                                             |
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
 | showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
-| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                             |
+| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                                |
+| headerColor    |  sets the background color of the chat header, providing visual customization.|
+| toastBarPosition     |  defines where the toast bar appears in the chat interface, allowing you to control its position for better user experience.|
 
 ## Setting up Authentication
 
@@ -80,12 +93,48 @@ npm run dev # at the root folder --> EMBEDDEDCHAT
 
 ```
 
+
+
 It will open up a playground react app at `http://localhost:4000`.
 Make a `.env` file in the playground directory following the `.env[example]` file.
+### Setup for `Windows` user
+
+Above command might not work if you are a `Windows`user because in package.json the scripts are written according to Linux environment so do these steps :-
+```bash
+step 1:- clone the forked repo in your vs code
+step 2:- go to EmbeddedChat -> package.json
+         change 
+                "scripts":{
+                 "build": "NODE_ENV=development rollup -c --context=window",
+            "build:prod": "NODE_ENV=production rollup -c --context=window",
+         } 
+         to ------>
+                "scripts":{
+                    "build": "set NODE_ENV=development && rollup -c --context=window",
+               "build:prod": "set NODE_ENV=production && rollup -c --context=window",
+                
+                }
+step 3:- go to embeddedChat -> playground->package.json
+         change 
+                "scripts":{
+                 "start": "PORT=4000 node ../node_modules/react-scripts/bin/react-scripts.js start",
+         }
+         to ------>
+                "scripts":{
+                 "start": " set PORT=4000 && node ../node_modules/react-scripts/bin/react-scripts.js start",
+                }
+
+
+         
+```
+### note
+if `npm i` gives error try `npm i --legacy-peer`and error might be solved.
 
 <h3>Gitpod Setup</h3>
 
 Make a `.env` file in the playground directory following the `.env[example]` file.
+
+
 
 <a href="https://gitpod.io/#https://github.com/RocketChat/EmbeddedChat">
   <img
