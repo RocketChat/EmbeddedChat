@@ -13,6 +13,7 @@ import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './lib/constant';
 import AttachmentWindow from './components/Attachments/AttachmentWindow';
 import useAttachmentWindowStore from './store/attachmentwindow';
 import DefaultTheme from './theme/DefaultTheme';
+import '@rocket.chat/icons/dist/rocketchat.css';
 
 export const RCComponent = ({
   isClosable = false,

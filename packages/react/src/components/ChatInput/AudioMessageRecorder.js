@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Icon, ActionButton } from '@rocket.chat/fuselage';
+import { ActionButton } from '@rocket.chat/fuselage';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
 
 const AudioMessageRecorder = () => {
   const toogleRecordingMessage = useMessageStore(
@@ -99,7 +100,7 @@ const AudioMessageRecorder = () => {
           ({ kind }) => kind === 'audioinput'
         )
       ) {
-        return;
+        return null;
       }
     } catch (error) {
       console.warn(error);
@@ -136,10 +137,12 @@ const AudioMessageRecorder = () => {
         onClick={handleRecordButtonClick}
       >
         <Icon
-          borderInlineStart="1px solid #989393"
-          padding={6}
+          style={{
+            borderInlineStart: '1px solid #989393',
+            padding: '0.5rem',
+          }}
+          size="1.25rem"
           name="mic"
-          size="x20"
         />
       </ActionButton>
     );
@@ -155,10 +158,12 @@ const AudioMessageRecorder = () => {
             onClick={handleCancelRecordButton}
           >
             <Icon
-              borderInlineStart="1px solid #989393"
-              padding={6}
+              style={{
+                borderInlineStart: '1px solid #989393',
+                padding: '0.5rem',
+              }}
+              size="1.25rem"
               name="circle-cross"
-              size="x20"
             />
           </ActionButton>
           <Box className={styles.record}>
@@ -170,7 +175,7 @@ const AudioMessageRecorder = () => {
             border="0px"
             onClick={handleStopRecordButton}
           >
-            <Icon name="circle-check" size="x20" />
+            <Icon name="circle-check" size="1.25rem" />
           </ActionButton>
         </>
       )}

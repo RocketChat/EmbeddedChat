@@ -1,26 +1,31 @@
-import axios, { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 import loginWithPassword from "./loginWithPassword";
 import loginWithOAuthService from "./loginWithOAuthService";
 import loginWithOAuthServiceToken from "./loginWithOAuthServiceToken";
 import loginWithResumeToken from "./loginWithResumeToken";
+import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
+import { Api } from "./Api";
 
 class RocketChatAuth {
 	host: string;
-	api: Axios;
+	api: Api;
 	currentUser: any;
 	lastFetched: Date;
 	authListeners: ((user: object | null) => void )[] = [];
-	constructor(host: string) {
+	deleteToken: () => Promise<void>;
+	saveToken: (token: string) => Promise<void>;
+	getToken: () => Promise<string>;
+	constructor({ host, saveToken, getToken, deleteToken, autoLogin = true }: IRocketChatAuthOptions) {
 		this.host = host;
-		this.api = axios.create({
-			baseURL: host,
-			headers: {
-				"Content-Type": "application/json"
-			}
-		});
+		this.api = new Api(host);
 		this.lastFetched = new Date(0);
 		this.currentUser = null;
-		this.load();
+		this.getToken = getToken;
+		this.saveToken = saveToken;
+		this.deleteToken = deleteToken;
+		if (autoLogin) {
+			this.load();
+		}
 	}
 
 	/**
@@ -63,9 +68,12 @@ class RocketChatAuth {
 	 * @param oauthService
 	 */
 	async loginWithOAuthService(oauthService: any) {
-		const response = await loginWithOAuthService({
-			api: this.api
-		}, oauthService);
+		const response = await loginWithOAuthService(
+			{
+				api: this.api,
+			},
+			oauthService
+		);
 	}
 
 	/**
@@ -74,10 +82,12 @@ class RocketChatAuth {
 	 * @returns 
 	 */
 	async loginWithOAuthServiceToken(credentials: { [key: string]: string; service: string; access_token: string; }) {
-		const response = await loginWithOAuthServiceToken({
-			api: this.api,
-		},
-		credentials)
+		const response = await loginWithOAuthServiceToken(
+			{
+				api: this.api,
+			},
+			credentials
+		);
 		this.setUser(response.data)
 		return this.currentUser;
 	}
@@ -127,17 +137,15 @@ class RocketChatAuth {
 	async setUser(user: object) {
 		this.lastFetched = new Date();
 		this.currentUser = user;
-		this.save()
+		await this.save()
 	}
 
-	/**
-	 * Save current user to localStorage
-	 */
-	save() {
-		localStorage.setItem("ec_user", JSON.stringify({
-			user: this.currentUser,
-			lastFetched: this.lastFetched
-		}))
+	async save() {
+		// localStorage.setItem("ec_user", JSON.stringify({
+		// 	user: this.currentUser,
+		// 	lastFetched: this.lastFetched
+		// }))
+		await this.saveToken(this.currentUser.authToken)
 		this.notifyAuthListeners();
 	}
 
@@ -145,13 +153,15 @@ class RocketChatAuth {
 	 * Load current user from localStorage
 	 */
 	async load() {
-		const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
+		// const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
+		const token = await this.getToken();
+		const user = await this.loginWithResumeToken(token);
 		if (user) {
-			this.lastFetched = new Date(lastFetched);
+			this.lastFetched = new Date();
 			this.setUser(user);
 			await this.getCurrentUser(); // refresh the token if needed
 		}
-		this.notifyAuthListeners()
+		this.notifyAuthListeners();
 	}
 
 	/**
@@ -167,8 +177,10 @@ class RocketChatAuth {
       });
     } catch (err) {
       console.error(err);
-    }
-		localStorage.removeItem("ec_user");
+    } finally {
+			await this.deleteToken();
+		}
+		// localStorage.removeItem("ec_user");
 		this.lastFetched = new Date(0);
 		this.currentUser = null;
 		this.notifyAuthListeners();
