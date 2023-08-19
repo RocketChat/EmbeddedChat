@@ -1,18 +1,13 @@
-import {
-  PasswordInput,
-  Modal,
-  Field,
-  TextInput,
-  Icon,
-} from '@rocket.chat/fuselage';
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
-import classes from './Login.module.css';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Input } from '../Input';
+import { Icon } from '../Icon';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -42,6 +37,46 @@ export default function LoginForm() {
     setIsLoginModalOpen(false);
     handleGoogleLogin();
   };
+  const separatorCss = css`
+    width: 45%;
+    background-color: rgb(131, 131, 131);
+    height: 1px;
+    border: none;
+  `;
+  const fieldCSS = css`
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    flex-shrink: 0;
+    width: 100%;
+  `;
+
+  const fieldLabel = css`
+    flex: 1 1 0;
+    align-self: flex-start;
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
+    margin-block: 0.125rem;
+    letter-spacing: 0rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    color: #2f343d;
+  `;
+
+  const fieldRow = css`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+    -webkit-margin-before: 0.25rem;
+    margin-block-start: 0.25rem;
+    margin-bottom: 0.125rem;
+    -webkit-margin-after: 0.125rem;
+    margin-block-end: 0.125rem;
+  `;
+
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -51,47 +86,59 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          <Field>
-            <Field.Label> Email or username</Field.Label>
-            <Field.Row>
-              <TextInput
+          <Box css={fieldCSS}>
+            <Box css={fieldLabel}> Email or username</Box>
+            <Box css={fieldRow}>
+              <Input
+                type="text"
                 onChange={handleEdituserOrEmail}
                 placeholder="example@example.com"
               />
-            </Field.Row>
-          </Field>
-
-          <Field>
-            <Field.Label>Password</Field.Label>
-            <Field.Row>
-              <PasswordInput onChange={handleEditPassword} />
-            </Field.Row>
-          </Field>
-          <Modal.Footer alignItems="center">
-            <Box className={classes.Footer}>
-              <Button
-                color="primary"
-                onClick={handleSubmit}
-                style={{
-                  margin: '10px',
-                }}
-              >
-                Login
-              </Button>
-              <Box className={classes.Seperator}>
-                <hr className={classes.darkLine} />
-                OR
-                <hr className={classes.darkLine} />
-              </Box>
-              <Button
-                color="secondary"
-                onClick={handleGooglewithLogin}
-                style={{ margin: '10px' }}
-              >
-                <Icon name="google" /> Login with Google
-              </Button>
             </Box>
-          </Modal.Footer>
+          </Box>
+
+          <Box css={fieldCSS}>
+            <Box css={fieldLabel}>Password</Box>
+            <Box css={fieldRow}>
+              <Input type="password" onChange={handleEditPassword} />
+            </Box>
+          </Box>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Button
+              color="primary"
+              onClick={handleSubmit}
+              style={{
+                margin: '10px',
+              }}
+            >
+              Login
+            </Button>
+            <Box
+              css={css`
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+              `}
+            >
+              <hr css={separatorCss} />
+              <span>OR</span>
+              <hr css={separatorCss} />
+            </Box>
+            <Button
+              color="secondary"
+              onClick={handleGooglewithLogin}
+              style={{ margin: '10px' }}
+            >
+              <Icon name="google" /> Login with Google
+            </Button>
+          </Box>
         </Box>
       </GenericModal>
     </>

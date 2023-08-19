@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Popup from 'reactjs-popup';
-import { Icon, ActionButton } from '@rocket.chat/fuselage';
+import { ActionButton } from '@rocket.chat/fuselage';
 import he from 'he';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
@@ -10,6 +10,7 @@ import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const isUserAuthenticated = useUserStore(
@@ -75,10 +76,12 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               disabled={isRecordingMessage}
             >
               <Icon
-                borderInlineEnd="1px solid #989393"
                 name="emoji"
-                size="x20"
-                padding={6}
+                size="1.25rem"
+                style={{
+                  borderInlineEnd: '1px solid #989393',
+                  padding: '0.5em',
+                }}
               />
             </ActionButton>
           }
@@ -97,7 +100,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           }}
           key={index}
         >
-          <Icon disabled={isRecordingMessage} name={item.name} size="x20" />
+          <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
         </ActionButton>
       ))}
       <AudioMessageRecorder />
@@ -107,7 +110,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         disabled={isRecordingMessage}
         onClick={handleClickToOpenFiles}
       >
-        <Icon name="plus" size="x20" padding={6} />
+        <Icon name="plus" size="1.25rem" style={{ padding: '0.5em' }} />
       </ActionButton>
     </Box>
   );
