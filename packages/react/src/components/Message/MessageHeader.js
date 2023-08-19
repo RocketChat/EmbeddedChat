@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { Icon, Message } from '@rocket.chat/fuselage';
+import { Message } from '@rocket.chat/fuselage';
 import { useUserStore } from '../../store';
+import { Icon } from '../Icon';
 
 const MessageHeader = ({ message }) => {
   const roles = useUserStore((state) => state.roles);
@@ -14,9 +15,9 @@ const MessageHeader = ({ message }) => {
       case 'uj':
         return 'joined the channel';
       case 'ru':
-        return `removed @${message.message}`;
+        return `removed @${message.message || message.msg}`;
       case 'au':
-        return `added @${message.message}`;
+        return `added @${message.message || message.msg}`;
       case 'message_pinned':
         return 'Pinned a message:';
       case 'rm':
@@ -46,7 +47,11 @@ const MessageHeader = ({ message }) => {
           {format(new Date(message.ts), 'h:mm a')}
         </Message.Timestamp>
         {message.editedAt && (
-          <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+          <Icon
+            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+            name="edit"
+            size="1em"
+          />
         )}
       </Message.Header>
     );

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { ModalBackdrop, TextAreaInput } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
 import ReportWindowButtons from './ReportWindowButtons';
 import classes from './MessageReporter.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
+import { ModalBackdrop } from '../Modal';
+import { Input } from '../Input';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
@@ -21,11 +22,17 @@ const MessageReportWindow = ({ messageId }) => {
         reportDescription={reportDescription}
         messageId={messageId}
       >
-        <Box>
-          <Box>{JSON.stringify(messageText)}</Box>
-          <TextAreaInput
-            className={classes.textArea}
-            TextAreaInput
+        <Box>{JSON.stringify(messageText)}</Box>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '0.125rem',
+          }}
+        >
+          <Input
+            textArea
+            style={{ width: '90%' }}
             placeholder="Why do you want to report this message?"
             onChange={(e) => {
               setDescription(e.target.value);

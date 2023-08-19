@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Message as RCMessage,
@@ -25,6 +25,7 @@ import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import { Box } from '../Box';
+import { UiKitComponent, UiKitModal, kitContext, UiKitMessage } from '../uiKit';
 
 const Message = ({
   message,
@@ -119,6 +120,27 @@ const Message = ({
     const URL = `${host}/avatar/${username}`;
     return URL;
   };
+  const context = useMemo(
+    () => ({
+      action: async ({ actionId, value, blockId, appId }) => {
+        await RCInstance?.triggerBlockAction({
+          blockId,
+          actionId,
+          value,
+          mid: message._id,
+          rid: RCInstance.rid,
+          appId,
+          container: {
+            type: 'message',
+            id: message._id,
+          },
+        });
+      },
+      appId: message.blocks && message.blocks[0] && message.blocks[0].appId,
+      rid: RCInstance.rid,
+    }),
+    []
+  );
 
   return (
     <Box className={classes.messageParentBox} key={message._id}>
@@ -168,6 +190,14 @@ const Message = ({
                       </>
                     ) : (
                       <Markdown body={message} isReaction={false} />
+                    )}
+                    {message.blocks && (
+                      <kitContext.Provider value={context} mid={message.mid}>
+                        <UiKitComponent
+                          render={UiKitMessage}
+                          blocks={message.blocks}
+                        />
+                      </kitContext.Provider>
                     )}
                   </RCMessage.Body>
 

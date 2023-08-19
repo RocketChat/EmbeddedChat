@@ -2,7 +2,7 @@ import { RCComponent } from '..';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat',
+  title: 'EmbeddedChat/Managed',
   component: RCComponent,
 };
 
@@ -22,5 +22,8 @@ export const Simple = {
     showRoles: true,
     showAvatar: false,
     enableThreads: true,
+    auth: {
+      flow: 'MANAGED',
+    },
   },
 };

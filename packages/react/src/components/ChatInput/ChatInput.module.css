@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
+  flex-direction: row;
 }
 
 .chatFormat {

@@ -1,4 +1,4 @@
-import { ActionButton, Icon, Menu } from '@rocket.chat/fuselage';
+import { Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
@@ -11,10 +11,11 @@ import {
   useSearchMessageStore,
   useChannelStore,
 } from '../../store';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { ThreadHeader } from '../ThreadHeader';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const ChatHeader = ({
   isClosable,
@@ -38,6 +39,9 @@ const ChatHeader = ({
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setMessages = useMessageStore((state) => state.setMessages);
@@ -50,7 +54,16 @@ const ChatHeader = ({
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
 
-  const { handleLogout } = useRCAuth4Google();
+  const handleLogout = async () => {
+    try {
+      await RCInstance.logout();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUserAuthenticated(false);
+    }
+  };
+
   const showStarredMessage = async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);
@@ -99,7 +112,11 @@ const ChatHeader = ({
         action: () => setFullScreen((prev) => !prev),
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="mobile" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="mobile"
+              size="1em"
+            />
             Minimize
           </Box>
         ),
@@ -110,7 +127,11 @@ const ChatHeader = ({
         action: function noRefCheck() {},
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="thread" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="thread"
+              size="1em"
+            />
             Threads
           </Box>
         ),
@@ -119,7 +140,11 @@ const ChatHeader = ({
         action: showChannelMembers,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="members" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="members"
+              size="1em"
+            />
             Members
           </Box>
         ),
@@ -128,7 +153,11 @@ const ChatHeader = ({
         action: showStarredMessage,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="star" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="star"
+              size="1em"
+            />
             Starred
           </Box>
         ),
@@ -137,7 +166,7 @@ const ChatHeader = ({
         action: showPinnedMessage,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="pin" size="x16" />
+            <Icon style={{ marginInlineEnd: '0.4rem' }} name="pin" size="1em" />
             Pinned
           </Box>
         ),
@@ -146,7 +175,11 @@ const ChatHeader = ({
         action: showSearchMessage,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="magnifier" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="magnifier"
+              size="1em"
+            />
             Search
           </Box>
         ),
@@ -155,7 +188,11 @@ const ChatHeader = ({
         action: showChannelinformation,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon mie="x4" name="info" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="info"
+              size="1em"
+            />
             Room Information
           </Box>
         ),
@@ -166,7 +203,11 @@ const ChatHeader = ({
         action: handleLogout,
         label: (
           <Box style={{ alignItems: 'center', display: 'flex' }} color="danger">
-            <Icon mie="x4" name="reply-directly" size="x16" />
+            <Icon
+              style={{ marginInlineEnd: '0.4rem' }}
+              name="reply-directly"
+              size="1em"
+            />
             Logout
           </Box>
         ),
@@ -200,9 +241,10 @@ const ChatHeader = ({
             display: flex;
             flex-direction: row;
             gap: 0.5rem;
+            align-items: center;
           `}
         >
-          <Icon name="hash" size={fullScreen ? 'x40' : 'x30'} />
+          <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
           <Box
             css={css`
               margin: 0 1rem;
@@ -256,7 +298,7 @@ const ChatHeader = ({
                 square
                 small
               >
-                <Icon name="computer" size="x20" />
+                <Icon name="computer" size="1.25rem" />
               </ActionButton>
               <Menu margin="0 4px" display="inline" options={menuOptions()} />
             </>
@@ -271,7 +313,7 @@ const ChatHeader = ({
               square
               small
             >
-              <Icon name="cross" size="x20" />
+              <Icon name="cross" size="1.25rem" />
             </ActionButton>
           )}
         </Box>

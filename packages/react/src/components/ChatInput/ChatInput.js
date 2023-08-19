@@ -1,5 +1,10 @@
-import { Icon, ActionButton } from '@rocket.chat/fuselage';
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { css } from '@emotion/react';
 import styles from './ChatInput.module.css';
@@ -20,9 +25,40 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
+import { CommandsList } from '../CommandList';
+import { ActionButton } from '../ActionButton';
+import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const ChatInput = () => {
+  const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const [commands, setCommands] = useState([]);
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
+
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      RCInstance.getCommandsList()
+        .then((data) => setCommands(data.commands || []))
+        .catch(console.error);
+    }
+  }, [RCInstance, isUserAuthenticated]);
+
+  const [filteredCommands, setFilteredCommands] = useState([]);
+  const getFilteredCommands = (cmd) =>
+    commands.filter((c) => c.command.startsWith(cmd.replace('/', '')));
+
+  const execCommand = async (command, params) => {
+    await RCInstance.execCommand({ command, params });
+    setFilteredCommands([]);
+  };
+
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();
@@ -68,13 +104,6 @@ const ChatInput = () => {
     name: state.name,
   }));
 
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-
   const toastPosition = useToastStore((state) => state.position);
 
   const dispatchToastMessage = useToastBarDispatch();
@@ -85,7 +114,7 @@ const ChatInput = () => {
 
   const sendMessage = async () => {
     messageRef.current.style.height = '44px';
-    const message = messageRef.current.value.trimEnd();
+    const message = messageRef.current.value.trim();
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
       if (editMessage.msg) {
@@ -95,6 +124,18 @@ const ChatInput = () => {
     }
 
     if (!editMessage.msg) {
+      if (message.startsWith('/')) {
+        // its a slash command
+        const [command, params] = message.split(/\s+/);
+        if (commands.find((c) => c.command === command.replace('/', ''))) {
+          messageRef.current.value = '';
+          setDisableButton(true);
+          setEditMessage({});
+          await execCommand(command.replace('/', ''), params);
+          return;
+        }
+      }
+
       messageRef.current.value = '';
       const pendingMessage = createPendingMessage(message, user);
       if (ECOptions.enableThreads && threadId) {
@@ -197,8 +238,34 @@ const ChatInput = () => {
     }
   };
 
+  const onCommandClick = useCallback(async (command) => {
+    const commandName = command.command;
+    const currentMessage = messageRef.current.value;
+    const tokens = (currentMessage || '').split(' ');
+    const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
+    if (firstTokenIdx !== -1) {
+      tokens[firstTokenIdx] = `/${commandName}`;
+      const newMessageString = tokens.join(' ');
+      messageRef.current.value = newMessageString;
+      setFilteredCommands([]);
+    }
+  }, []);
+
+  const showCommands = useCallback(async (e) => {
+    const cursor = e.target.selectionStart;
+    const tokens = e.target.value
+      .trim()
+      .slice(0, cursor + 1)
+      .split(/\s+/);
+    if (tokens.length === 1 && tokens[0].startsWith('/')) {
+      setFilteredCommands(getFilteredCommands(tokens[0]));
+    } else {
+      setFilteredCommands([]);
+    }
+  });
+
   return (
-    <>
+    <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box
         css={css`
           margin-inline-start: 20px;
@@ -208,7 +275,7 @@ const ChatInput = () => {
       </Box>
       <Box
         css={css`
-          margin: 20px;
+          margin-top: 20px;
           border: 2px solid #ddd;
         `}
         className={styles.containerParent}
@@ -221,7 +288,21 @@ const ChatInput = () => {
         ) : (
           <></>
         )}
-        <Box className={styles.container}>
+        {filteredCommands.length === 0 ? null : (
+          <CommandsList
+            filteredCommands={filteredCommands}
+            onCommandClick={onCommandClick}
+          />
+        )}
+        <Box
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            flex-direction: row;
+          `}
+        >
           <textarea
             rows={1}
             disabled={!isUserAuthenticated || isRecordingMessage}
@@ -254,6 +335,7 @@ const ChatInput = () => {
               );
               sendTypingStart();
             }}
+            onKeyUp={showCommands}
             onBlur={sendTypingStop}
             onKeyDown={(e) => {
               if (e.shiftKey && e.keyCode === 13) {
@@ -320,16 +402,16 @@ const ChatInput = () => {
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
           {isUserAuthenticated ? (
             <ActionButton
-              bg="surface"
-              border="0px"
+              ghost
+              size="medium"
               onClick={sendMessage}
               disabled={disableButton || isRecordingMessage}
+              style={{ padding: '0.5rem' }}
             >
               <Icon
                 className={styles.chatInputIconCursor}
                 name="send"
-                size="x25"
-                padding={6}
+                size="1.25rem"
               />
             </ActionButton>
           ) : (
@@ -349,7 +431,7 @@ const ChatInput = () => {
           />
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

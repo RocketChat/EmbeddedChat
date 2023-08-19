@@ -1,7 +1,22 @@
 import { rocketChatAuth } from '../src'
 
+async function saveToken (token) {
+	localStorage.setItem("ec_token", token);
+}
+
+async function getToken() {
+	return localStorage.getItem("ec_token");
+}
+
+async function deleteToken() {
+	localStorage.removeItem("ec_token");
+}
+
 let auth = rocketChatAuth({
-	host: "http://localhost:3000"
+	host: "http://localhost:3000",
+	getToken,
+	saveToken,
+	deleteToken,
 });
 
 async function loginWithPassword() {
@@ -37,7 +52,10 @@ window.document.body.onload = () => {
 	const hostInput = document.getElementById("hostUrl")
 	const host = hostInput.value;
 	auth = rocketChatAuth({
-		host
+		host,
+		saveToken,
+		getToken,
+		deleteToken,
 	});
 	hostInput.addEventListener("change", (e) => {
 		auth = rocketChatAuth({

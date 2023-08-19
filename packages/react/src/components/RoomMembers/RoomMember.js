@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ActionButton } from '@rocket.chat/fuselage';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
@@ -9,6 +8,8 @@ import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './inviteMembers/InviteMembers';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -25,16 +26,14 @@ const RoomMembers = ({ members }) => {
     <Box className={classes.modal} style={{ padding: '16px' }}>
       <Box style={{ display: 'flex' }}>
         <h3 style={{ display: 'contents' }}>
-          <Icon name="members" size="x24" padding="0px 20px 20px 0px" />
+          <Icon
+            name="members"
+            size="1.25rem"
+            style={{ padding: '0px 20px 20px 0px' }}
+          />
           <Box style={{ color: '#4a4a4a', width: '80%' }}>Members</Box>
-          <ActionButton
-            onClick={toggleShowMembers}
-            ghost
-            display="inline"
-            square
-            small
-          >
-            <Icon name="cross" size="x20" />
+          <ActionButton onClick={toggleShowMembers} ghost size="small">
+            <Icon name="cross" size="1.25rem" />
           </ActionButton>
         </h3>
       </Box>
@@ -51,7 +50,7 @@ const RoomMembers = ({ members }) => {
           toggleInviteView();
         }}
       >
-        <Icon size={18} name="link" /> Invite Link
+        <Icon size="1em" name="link" /> Invite Link
       </Button>
     </Box>
   );

@@ -1,12 +1,20 @@
-import { Axios } from 'axios';
+import { IRocketChatAuthOptions } from './IRocketChatAuthOptions';
 import RocketChatAuth from './RocketChatAuth';
 
 const rocketChatAuth = ({
-	host
-}: {
-	host: string;
-}) => {
-	return new RocketChatAuth(host);
+	host,
+	saveToken,
+	getToken,
+	deleteToken,
+	autoLogin,
+}: IRocketChatAuthOptions) => {
+	return new RocketChatAuth({
+		host,
+		saveToken,
+		getToken,
+		deleteToken,
+		autoLogin,
+	});
 }
 
 export {

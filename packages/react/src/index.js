@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
-import Cookies from 'js-cookie';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatBody, ChatHeader, ChatInput, Home } from './components';
 import { RCInstanceProvider } from './context/RCInstance';
 import { useToastStore, useUserStore } from './store';
-import { RC_USER_ID_COOKIE, RC_USER_TOKEN_COOKIE } from './lib/constant';
 import AttachmentWindow from './components/Attachments/AttachmentWindow';
 import useAttachmentWindowStore from './store/attachmentwindow';
 import DefaultTheme from './theme/DefaultTheme';
+import '@rocket.chat/icons/dist/rocketchat.css';
+import { deleteToken, getToken, saveToken } from './lib/auth';
 
 export const RCComponent = ({
   isClosable = false,
@@ -31,6 +31,9 @@ export const RCComponent = ({
   showAvatar = false,
   enableThreads = false,
   theme = null,
+  auth = {
+    flow: 'MANAGED',
+  },
 }) => {
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
@@ -46,17 +49,34 @@ export const RCComponent = ({
     );
   }
 
-  const [RCInstance, setRCInstance] = useState(
-    () => new EmbeddedChatApi(host, roomId)
-  );
+  const [RCInstance, setRCInstance] = useState(() => {
+    const newRCInstance = new EmbeddedChatApi(host, roomId, {
+      getToken,
+      deleteToken,
+      saveToken,
+      autoLogin: auth.flow === 'MANAGED',
+    });
+    if (auth.flow === 'TOKEN') {
+      newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
+    }
+    return newRCInstance;
+  });
 
   useEffect(() => {
-    if (RCInstance.rcClient.loggedIn) {
+    if (RCInstance.rcClient.loggedIn()) {
       RCInstance.close();
-      const newRCInstance = new EmbeddedChatApi(host, roomId);
+      const newRCInstance = new EmbeddedChatApi(host, roomId, {
+        getToken,
+        deleteToken,
+        saveToken,
+        autoLogin: auth.flow === 'MANAGED',
+      });
+      if (auth.flow === 'TOKEN') {
+        newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
+      }
       setRCInstance(newRCInstance);
     }
-  }, [roomId, host]);
+  }, [roomId, host, auth?.flow]);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -64,18 +84,6 @@ export const RCComponent = ({
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-
-  useEffect(() => {
-    const cookiesPresent =
-      Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
-    if (cookiesPresent) {
-      setIsUserAuthenticated(true);
-    }
-  }, []);
-
-  const authenticatedUserUsername = useUserStore((state) => state.username);
-  const authenticatedUserAvatarUrl = useUserStore((state) => state.avatarUrl);
-  const authenticatedUserId = useUserStore((state) => state.userId);
 
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
@@ -87,32 +95,19 @@ export const RCComponent = ({
   const setAuthenticatedName = useUserStore((state) => state.setName);
 
   useEffect(() => {
-    async function getUserEssentials() {
-      const res = await RCInstance.me();
-      if (res.status === 'error') {
-        setIsUserAuthenticated(false);
+    RCInstance.auth.onAuthChange((user) => {
+      // getUserEssentials();
+      if (user) {
+        const { me } = user;
+        setAuthenticatedUserAvatarUrl(me.avatarUrl);
+        setAuthenticatedUserUsername(me.username);
+        setAuthenticatedUserId(me._id);
+        setAuthenticatedName(me.name);
+        setIsUserAuthenticated(true);
       } else {
-        setAuthenticatedUserAvatarUrl(res.avatarUrl);
-        setAuthenticatedUserUsername(res.username);
-        setAuthenticatedUserId(res._id);
-        setAuthenticatedName(res.name);
+        setIsUserAuthenticated(false);
       }
-    }
-
-    const cookiesPresent =
-      Cookies.get(RC_USER_TOKEN_COOKIE) && Cookies.get(RC_USER_ID_COOKIE);
-    if (cookiesPresent) {
-      setIsUserAuthenticated(true);
-    }
-
-    const currentUserId = Cookies.get(RC_USER_ID_COOKIE);
-    if (
-      !authenticatedUserUsername ||
-      !authenticatedUserAvatarUrl ||
-      authenticatedUserId !== currentUserId
-    ) {
-      getUserEssentials();
-    }
+    });
   }, [RCInstance]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
@@ -120,8 +115,9 @@ export const RCComponent = ({
   const ECOptions = useMemo(
     () => ({
       enableThreads,
+      authFlow: auth.flow,
     }),
-    [enableThreads]
+    [enableThreads, auth.flow]
   );
 
   return (
@@ -182,4 +178,11 @@ RCComponent.propTypes = {
   showAvatar: PropTypes.bool,
   enableThreads: PropTypes.bool,
   theme: PropTypes.object,
+  auth: PropTypes.oneOfType([
+    PropTypes.shape({ flow: PropTypes.oneOf(['MANAGED']) }),
+    PropTypes.shape({
+      flow: PropTypes.oneOf(['TOKEN']),
+      credentials: PropTypes.object,
+    }),
+  ]),
 };

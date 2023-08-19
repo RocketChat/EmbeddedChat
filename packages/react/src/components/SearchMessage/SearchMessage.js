@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
-  Icon,
-  ActionButton,
   Message,
   MessageReactions,
   MessageDivider,
@@ -14,6 +12,8 @@ import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -23,9 +23,7 @@ const Search = () => {
   const toggleShowSearch = () => {
     setShowSearch(false);
   };
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
+
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
 
@@ -49,21 +47,15 @@ const Search = () => {
         }}
       >
         <h3 style={{ display: 'contents' }}>
-          <Icon name="magnifier" size="x24" />
+          <Icon name="magnifier" size="1.25rem" />
           <Box style={{ color: '#4a4a4a', width: '80%' }}>Search Messages</Box>
-          <ActionButton
-            onClick={toggleShowSearch}
-            ghost
-            display="inline"
-            square
-            small
-          >
+          <ActionButton onClick={toggleShowSearch} ghost size="small">
             <Icon name="cross" size="x20" />
           </ActionButton>
         </h3>
       </Box>
       <Box className={classes.container} style={{ border: '2px solid #ddd' }}>
-        <Icon name="magnifier" size="x24" padding={6} />
+        <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
@@ -94,7 +86,7 @@ const Search = () => {
                     {format(new Date(msg.ts), 'h:mm a')}
                   </Message.Timestamp>
                   {msg.editedAt && (
-                    <Icon mie="x4" opacity={0.5} name="edit" size="x16" />
+                    <Icon style={{ opacity: 0.5 }} name="edit" />
                   )}
                 </Message.Header>
                 <Message.Body>

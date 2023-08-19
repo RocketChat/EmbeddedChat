@@ -1,7 +1,8 @@
-import { Modal, Icon, ModalBackdrop } from '@rocket.chat/fuselage';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classes from './Generic.module.css';
+import { Icon } from '../Icon';
+import { Modal } from '../Modal';
 
 const iconMap = {
   danger: 'modal-warning',
@@ -9,6 +10,7 @@ const iconMap = {
   info: 'info',
   success: 'check',
 };
+
 const renderIcon = (icon, variant) => {
   if (icon === null) {
     return null;
@@ -26,20 +28,14 @@ const renderIcon = (icon, variant) => {
 };
 
 const GenericModal = ({ variant = 'info', children, title, icon, onClose }) => (
-  <ModalBackdrop>
-    <Modal>
-      <Modal.Header>
-        {renderIcon(icon, variant)}
-        <Modal.Title>{title ?? 'Are_you_sure'}</Modal.Title>
-        <Modal.Close
-          className={classes.close}
-          title="Close"
-          onClick={onClose}
-        />
-      </Modal.Header>
-      <Modal.Content>{children}</Modal.Content>
-    </Modal>
-  </ModalBackdrop>
+  <Modal>
+    <Modal.Header>
+      {renderIcon(icon, variant)}
+      <Modal.Title>{title ?? 'Are_you_sure'}</Modal.Title>
+      <Modal.Close className={classes.close} title="Close" onClick={onClose} />
+    </Modal.Header>
+    <Modal.Content>{children}</Modal.Content>
+  </Modal>
 );
 
 GenericModal.propTypes = {
