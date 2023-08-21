@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReportWindowButtons from './ReportWindowButtons';
-import classes from './MessageReporter.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { ModalBackdrop } from '../Modal';

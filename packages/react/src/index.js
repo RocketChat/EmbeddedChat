@@ -1,4 +1,3 @@
-import { Box } from '@rocket.chat/fuselage';
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
@@ -13,6 +12,7 @@ import useAttachmentWindowStore from './store/attachmentwindow';
 import DefaultTheme from './theme/DefaultTheme';
 import '@rocket.chat/icons/dist/rocketchat.css';
 import { deleteToken, getToken, saveToken } from './lib/auth';
+import { Box } from './components/Box';
 
 export const RCComponent = ({
   isClosable = false,
