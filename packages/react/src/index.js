@@ -10,11 +10,11 @@ import { useToastStore, useUserStore } from './store';
 import AttachmentWindow from './components/Attachments/AttachmentWindow';
 import useAttachmentWindowStore from './store/attachmentwindow';
 import DefaultTheme from './theme/DefaultTheme';
-import '@rocket.chat/icons/dist/rocketchat.css';
 import { deleteToken, getToken, saveToken } from './lib/auth';
 import { Box } from './components/Box';
+import useComponentOverrides from './theme/useComponentOverrides';
 
-export const RCComponent = ({
+export const EmbeddedChat = ({
   isClosable = false,
   setClosableState,
   moreOpts = false,
@@ -31,10 +31,13 @@ export const RCComponent = ({
   showAvatar = false,
   enableThreads = false,
   theme = null,
+  className = '',
+  style = {},
   auth = {
     flow: 'MANAGED',
   },
 }) => {
+  const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
@@ -133,6 +136,8 @@ export const RCComponent = ({
               overflow: hidden;
               max-height: 100vh;
             `}
+            className={`ec-embedded-chat ${className} ${classNames}`}
+            style={{ ...style, ...styleOverrides }}
           >
             <ChatHeader
               channelName={channelName}
@@ -161,7 +166,7 @@ export const RCComponent = ({
   );
 };
 
-RCComponent.propTypes = {
+EmbeddedChat.propTypes = {
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isClosable: PropTypes.bool,
@@ -185,4 +190,6 @@ RCComponent.propTypes = {
       credentials: PropTypes.object,
     }),
   ]),
+  className: PropTypes.string,
+  style: PropTypes.object,
 };

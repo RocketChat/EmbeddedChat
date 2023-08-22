@@ -77,7 +77,7 @@ const ChatHeader = ({
   };
 
   const showChannelMembers = async () => {
-    const { members } = await RCInstance.getChannelMembers();
+    const { members = [] } = await RCInstance.getChannelMembers();
     setMembersHandler(members);
     toggleShowMembers();
     setShowSearch(false);

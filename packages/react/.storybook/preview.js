@@ -1,5 +1,4 @@
 import 'normalize.css'
-import '@rocket.chat/icons/dist/rocketchat.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
