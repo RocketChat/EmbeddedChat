@@ -39,6 +39,7 @@ export const Ghost = {
     ghost: true,
     icon: 'cross',
     disabled: false,
+    color: 'primary',
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>

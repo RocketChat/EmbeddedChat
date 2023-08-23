@@ -1,11 +1,64 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { format } from 'date-fns';
-import { Message } from '@rocket.chat/fuselage';
 import { useUserStore } from '../../store';
 import { Icon } from '../Icon';
+import useComponentOverrides from '../../theme/useComponentOverrides';
+import { Box } from '../Box';
+import { appendClassNames } from '../../lib/appendClassNames';
+
+const MessageHeaderCss = css`
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-width: 1px;
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+  margin-block: 0.125rem;
+  gap: 0.125rem;
+  align-items: center;
+`;
+
+const MessageHeaderNameCss = css`
+  letter-spacing: 0rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  color: #2f343d;
+`;
+
+const MessageHeaderUsernameCss = css`
+  letter-spacing: 0rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  color: #6c727a;
+`;
+
+const MessageHeaderTimestapCss = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1rem;
+  flex-shrink: 0;
+  color: #9ea2a8;
+`;
 
 const MessageHeader = ({ message }) => {
+  const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const roles = useUserStore((state) => state.roles);
 
   const userActions = () => {
@@ -33,19 +86,39 @@ const MessageHeader = ({ message }) => {
 
   if (!message.t) {
     return (
-      <Message.Header>
-        <Message.Name>{message.u?.name}</Message.Name>
-        <Message.Username>@{message.u.username}</Message.Username>
-        {userRoles
+      <Box
+        css={MessageHeaderCss}
+        className={appendClassNames('ec-message-header', classNames)}
+        style={styleOverrides}
+      >
+        <Box
+          is="span"
+          css={MessageHeaderNameCss}
+          className={appendClassNames('ec-message-header-name')}
+        >
+          {message.u?.name}
+        </Box>
+        <Box
+          is="span"
+          css={MessageHeaderUsernameCss}
+          className={appendClassNames('ec-message-header-username')}
+        >
+          @{message.u.username}
+        </Box>
+        {/* TODO {userRoles
           ? userRoles.map((role, index) => (
               <Message.Role key={index}>
                 {role.charAt(0).toUpperCase() + role.slice(1)}
               </Message.Role>
             ))
-          : null}
-        <Message.Timestamp>
+          : null} */}
+        <Box
+          is="span"
+          css={MessageHeaderTimestapCss}
+          className={appendClassNames('ec-message-header-timestamp')}
+        >
           {format(new Date(message.ts), 'h:mm a')}
-        </Message.Timestamp>
+        </Box>
         {message.editedAt && (
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
@@ -53,20 +126,39 @@ const MessageHeader = ({ message }) => {
             size="1em"
           />
         )}
-      </Message.Header>
+      </Box>
     );
   }
 
   return (
-    <Message.Header>
-      <Message.Name>@{message.u.username} </Message.Name>
-      <Message.Username style={{ marginLeft: '2px' }}>
+    <Box
+      css={MessageHeaderCss}
+      className={appendClassNames('ec-message-header', classNames)}
+      style={styleOverrides}
+    >
+      <Box
+        is="span"
+        css={MessageHeaderNameCss}
+        className={appendClassNames('ec-message-header-name')}
+      >
+        @{message.u.username}{' '}
+      </Box>
+      <Box
+        is="span"
+        css={MessageHeaderUsernameCss}
+        className={appendClassNames('ec-message-header-username')}
+        style={{ marginLeft: '2px' }}
+      >
         {userActions()}
-      </Message.Username>
-      <Message.Timestamp>
+      </Box>
+      <Box
+        is="span"
+        css={MessageHeaderTimestapCss}
+        className={appendClassNames('ec-message-header-timestamp')}
+      >
         {format(new Date(message.ts), 'h:mm a')}
-      </Message.Timestamp>
-    </Message.Header>
+      </Box>
+    </Box>
   );
 };
 
