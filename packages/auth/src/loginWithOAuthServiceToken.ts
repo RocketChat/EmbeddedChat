@@ -1,9 +1,8 @@
-import { Axios } from "axios";
-import getAuthorizationUrl from "./getAuthorizationUrl";
+import { Api } from "./Api";
 
 const loginWithOAuthServiceToken = async (
 	config: {
-		api: Axios
+		api: Api
 	}, 
 	credentials: {
 		service: string;

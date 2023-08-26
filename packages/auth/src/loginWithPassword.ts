@@ -1,8 +1,8 @@
-import { Axios } from "axios"
+import { Api } from "./Api";
 
 const loginWithPassword = async (
 	config : {
-		api: Axios;
+		api: Api;
 	}, {
 		user,
 		password,

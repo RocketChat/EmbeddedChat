@@ -1,9 +1,8 @@
-import { Axios } from "axios";
-import getAuthorizationUrl from "./getAuthorizationUrl";
+import { Api } from "./Api";
 
 const loginWithResumeToken = async (
 	config: {
-		api: Axios
+		api: Api
 	}, 
 	credentials: {
 		resume: string

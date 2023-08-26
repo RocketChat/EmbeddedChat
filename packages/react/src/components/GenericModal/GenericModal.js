@@ -1,7 +1,8 @@
-import { Modal, Icon, ModalBackdrop } from '@rocket.chat/fuselage';
+import { Modal, ModalBackdrop } from '@rocket.chat/fuselage';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classes from './Generic.module.css';
+import { Icon } from '../Icon';
 
 const iconMap = {
   danger: 'modal-warning',

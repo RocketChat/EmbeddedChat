@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import { Box, Icon, ActionButton, Avatar } from '@rocket.chat/fuselage';
+import { ActionButton, Avatar } from '@rocket.chat/fuselage';
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
+import { Icon } from '../Icon';
+import { Box } from '../Box';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -30,7 +32,11 @@ const Roominfo = () => {
         `}
       >
         <h3 style={{ display: 'contents' }}>
-          <Icon name="info" size="x24" padding="0px 20px 20px 0px" />
+          <Icon
+            name="info"
+            size="1.25rem"
+            style={{ padding: '0px 20px 20px 0px' }}
+          />
           <Box
             css={css`
               width: 100%;
@@ -46,7 +52,7 @@ const Roominfo = () => {
             square
             small
           >
-            <Icon name="cross" size="x20" />
+            <Icon name="cross" size="1.25rem" />
           </ActionButton>
         </h3>
       </Box>
