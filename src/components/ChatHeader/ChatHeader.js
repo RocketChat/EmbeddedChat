@@ -1,4 +1,4 @@
-import { ActionButton, Box, Icon, Menu } from '@rocket.chat/fuselage';
+import { ActionButton, Avatar, Box, Icon, Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ChatHeader.module.css';
@@ -87,6 +87,11 @@ const ChatHeader = ({
     setShowChannelinfo(true);
     setShowSearch(false);
     if (showMembers) toggleShowMembers();
+  };
+
+  const getChannelAvatarURL = (channelname) => {
+    const host = RCInstance.getHost();
+    return `${host}/avatar/room/${channelname}`;
   };
 
   useEffect(() => {
@@ -195,33 +200,32 @@ const ChatHeader = ({
         justifyContent="space-between"
         width="100%"
       >
-        <Box display="flex">
-          <Icon
-            color={computedHeaderTextColor}
-            name="hash"
-            size={fullScreen ? 'x40' : 'x30'}
+        <Box display="flex" alignItems="center">
+          <Avatar
+            clickable={false}
+            size="x36"
+            style={{ marginRight: 10 }}
+            url={
+              `${channelInfo.avatarETag}`.startsWith('data') ||
+              `${channelInfo.avatarETag}`.startsWith(RCInstance.host)
+                ? channelInfo.avatarETag
+                : getChannelAvatarURL(
+                    `${channelInfo._id}?etag=${channelInfo.avatarETag}`
+                  )
+            }
           />
-          <Box margin="0 1rem">
+          <Icon color={computedHeaderTextColor} name="hash" size="x30" />
+          <Box marginInlineStart="x5">
             {isUserAuthenticated ? (
-              <>
-                <h2
-                  className={styles.nospace}
-                  style={{ color: computedHeaderTextColor }}
-                >
-                  {channelInfo.name || channelName || 'channelName'}
-                </h2>
-                {fullScreen && (
-                  <p
-                    className={styles.nospace}
-                    style={{
-                      color: computedHeaderDescriptionColor,
-                      fontSize: 14,
-                    }}
-                  >
-                    {channelInfo.description || ''}
-                  </p>
-                )}
-              </>
+              <h2
+                className={styles.nospace}
+                style={{
+                  marginBottom: '8px',
+                  color: computedHeaderTextColor,
+                }}
+              >
+                {channelInfo.name || channelName || 'channelName'}
+              </h2>
             ) : (
               <h2
                 style={{ color: computedHeaderTextColor }}

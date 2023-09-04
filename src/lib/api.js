@@ -453,6 +453,28 @@ export default class RocketChatInstance {
     }
   }
 
+  async changeArchivationState(archived) {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/rooms.changeArchivationState`,
+        {
+          body: JSON.stringify(
+            archived ? { rid: this.rid, action: 'archive' } : { rid: this.rid }
+          ),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+          },
+          method: 'POST',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   /**
    * @param {*} message should be a string or an rc message object
    * Refer https://developer.rocket.chat/reference/api/schema-definition/message#message-object
@@ -677,6 +699,26 @@ export default class RocketChatInstance {
       return await response.json();
     } catch (err) {
       console.log(err.message);
+    }
+  }
+
+  async saveRoomInfo(data) {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/rooms.saveRoomSettings`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+          },
+          method: 'POST',
+          body: JSON.stringify({ rid: this.rid, ...data }),
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
     }
   }
 
