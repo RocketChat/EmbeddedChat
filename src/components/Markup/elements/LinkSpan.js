@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
-import StrikeSpan from './StrikeSpan';
-import ItalicSpan from './ItalicSpan';
-import BoldSpan from './BoldSpan';
 
 const getBaseURI = () => {
   if (document.baseURI) {
@@ -26,29 +23,14 @@ const getBaseURI = () => {
 
 const isExternal = (href) => href.indexOf(getBaseURI()) !== 0;
 
-const LinkSpan = ({ href, label }) => {
+const LinkSpan = ({ href, label, classes }) => {
   const contents = React.useMemo(() => {
     const labelArray = Array.isArray(label) ? label : [label];
-
     const labelElements = labelArray.map((content, index) => {
-      switch (content.type) {
-        case 'PLAIN_TEXT':
-          return <PlainSpan key={index} contents={content.value} />;
-
-        case 'STRIKE':
-          return <StrikeSpan key={index} contents={content.value} />;
-
-        case 'ITALIC':
-          return <ItalicSpan key={index} contents={content.value} />;
-
-        case 'BOLD':
-          return <BoldSpan key={index} contents={content.value} />;
-
-        default:
-          return null;
-      }
+      return (
+        <PlainSpan contents={content.value} classes={classes} key={index} />
+      );
     });
-
     return labelElements;
   }, [label]);
 
@@ -71,4 +53,5 @@ export default LinkSpan;
 LinkSpan.propTypes = {
   href: PropTypes.string,
   label: PropTypes.string,
+  classes: PropTypes.object,
 };
