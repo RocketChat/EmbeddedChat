@@ -1,4 +1,4 @@
-import { Icon, ActionButton } from '@rocket.chat/fuselage';
+import { ActionButton } from '@rocket.chat/fuselage';
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { css } from '@emotion/react';
@@ -20,6 +20,7 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
 
 const ChatInput = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -328,8 +329,8 @@ const ChatInput = () => {
               <Icon
                 className={styles.chatInputIconCursor}
                 name="send"
-                size="x25"
-                padding={6}
+                size="1.25rem"
+                style={{ padding: '0.5rem' }}
               />
             </ActionButton>
           ) : (

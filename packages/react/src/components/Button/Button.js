@@ -4,12 +4,24 @@ import { css, useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
+const getSquareSize = (size) => {
+  if (size === 'small') {
+    return '1.25rem';
+  }
+  if (size === 'large') {
+    return '2rem';
+  }
+  return '1.5rem';
+};
+
 const Button = ({
   children,
   color = 'primary',
   className = '',
   style = {},
   size = 'medium',
+  square = false,
+  ghost = false,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
@@ -62,12 +74,33 @@ const Button = ({
     &:hover {
       filter: brightness(90%);
     }
+    &.ec-button-square {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: ${getSquareSize(size)};
+      min-width: ${getSquareSize(size)};
+      height: ${getSquareSize(size)};
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    /* &.ghost {
+      background: none;
+    }
+    &.ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+    } */
   `;
   return (
     <button
       type="button"
       css={classNameButton}
-      className={`ec-button ec-button--${size} ${className} ${classNames}`}
+      className={`ec-button ec-button--${size} ${
+        square ? `ec-button-square` : ``
+      } ${ghost ? 'ghost' : ''} ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
@@ -85,6 +118,8 @@ Button.propTypes = {
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string,
   style: PropTypes.object,
+  square: PropTypes.bool,
+  ghost: PropTypes.bool,
 };
 
 export default Button;

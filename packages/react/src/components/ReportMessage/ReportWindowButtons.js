@@ -1,4 +1,4 @@
-import { Modal, Icon, ActionButton } from '@rocket.chat/fuselage';
+import { Modal, ActionButton } from '@rocket.chat/fuselage';
 import React, { useContext } from 'react';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import { useMessageStore, useToastStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
 
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [
@@ -45,7 +46,7 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   return (
     <Modal>
       <Modal.Header>
-        <Icon name="report" size="x20" />
+        <Icon name="report" size="1.25rem" />
         <Modal.Title>Report this message?</Modal.Title>
         <ActionButton
           onClick={handleOnClose}
@@ -55,7 +56,7 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
           small
           className={classes.close}
         >
-          <Icon name="cross" size="x20" />
+          <Icon name="cross" size="1.25rem" />
         </ActionButton>
       </Modal.Header>
       <Modal.Content>{children}</Modal.Content>
