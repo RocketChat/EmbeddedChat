@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import icons from '@rocket.chat/icons';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import './rocketchat.css';
 
 const Icon = ({
   size = 'inherit',

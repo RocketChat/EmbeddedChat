@@ -1,0 +1,22 @@
+{
+	"name": "@embeddedchat/htmlembed",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"build": "vite build && node postbuild.cjs",
+		"preview": "npm run build && vite preview --port=4001"
+	},
+	"dependencies": {
+		"@embeddedchat/react": "./packages/react",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react": "^3.1.0",
+		"live-server": "^1.2.2",
+		"vite": "^4.2.0",
+		"vite-plugin-css-injected-by-js": "^3.1.0"
+	}
+}

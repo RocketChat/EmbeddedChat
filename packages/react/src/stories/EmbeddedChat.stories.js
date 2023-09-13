@@ -1,9 +1,9 @@
-import { RCComponent } from '..';
+import { EmbeddedChat } from '..';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
   title: 'EmbeddedChat/Managed',
-  component: RCComponent,
+  component: EmbeddedChat,
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
