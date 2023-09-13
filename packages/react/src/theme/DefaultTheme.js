@@ -7,6 +7,11 @@ const DefaultTheme = {
     xl: 1536,
   },
   components: {
+    ChatBody: {
+      styleOverrides: {
+        border: 'none',
+      },
+    },
     ChatInput: {
       styleOverrides: {
         fontWeight: 400,

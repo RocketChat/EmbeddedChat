@@ -20,7 +20,6 @@ export const EmbeddedChat = ({
   moreOpts = false,
   width = '100%',
   height = '50vh',
-  GOOGLE_CLIENT_ID,
   host = 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,
@@ -33,6 +32,7 @@ export const EmbeddedChat = ({
   theme = null,
   className = '',
   style = {},
+  hideHeader = false,
   auth = {
     flow: 'MANAGED',
   },
@@ -66,8 +66,7 @@ export const EmbeddedChat = ({
   });
 
   useEffect(() => {
-    if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close();
+    const reInstantiate = () => {
       const newRCInstance = new EmbeddedChatApi(host, roomId, {
         getToken,
         deleteToken,
@@ -78,6 +77,12 @@ export const EmbeddedChat = ({
         newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
       }
       setRCInstance(newRCInstance);
+    };
+
+    if (RCInstance.rcClient.loggedIn()) {
+      RCInstance.close().then(reInstantiate).catch(console.error);
+    } else {
+      reInstantiate();
     }
   }, [roomId, host, auth?.flow]);
 
@@ -101,6 +106,12 @@ export const EmbeddedChat = ({
     RCInstance.auth.onAuthChange((user) => {
       // getUserEssentials();
       if (user) {
+        RCInstance.connect()
+          .then(() => {
+            console.log(`Connected to RocketChat ${RCInstance.host}`);
+          })
+          .catch(console.error);
+        console.log('reinstantiated');
         const { me } = user;
         setAuthenticatedUserAvatarUrl(me.avatarUrl);
         setAuthenticatedUserUsername(me.username);
@@ -135,25 +146,27 @@ export const EmbeddedChat = ({
               width: ${width};
               overflow: hidden;
               max-height: 100vh;
+              height: ${height};
             `}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
           >
-            <ChatHeader
-              channelName={channelName}
-              isClosable={isClosable}
-              setClosableState={setClosableState}
-              moreOpts={moreOpts}
-              fullScreen={fullScreen}
-              setFullScreen={setFullScreen}
-              headerColor={headerColor}
-            />
+            {hideHeader ? null : (
+              <ChatHeader
+                channelName={channelName}
+                isClosable={isClosable}
+                setClosableState={setClosableState}
+                moreOpts={moreOpts}
+                fullScreen={fullScreen}
+                setFullScreen={setFullScreen}
+                headerColor={headerColor}
+              />
+            )}
             {isUserAuthenticated || anonymousMode ? (
               <ChatBody
                 height={!fullScreen ? height : '88vh'}
                 anonymousMode={anonymousMode}
                 showRoles={showRoles}
-                GOOGLE_CLIENT_ID={GOOGLE_CLIENT_ID}
               />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
@@ -167,12 +180,11 @@ export const EmbeddedChat = ({
 };
 
 EmbeddedChat.propTypes = {
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  width: PropTypes.string,
+  height: PropTypes.string,
   isClosable: PropTypes.bool,
   setClosableState: PropTypes.func,
   moreOpts: PropTypes.bool,
-  GOOGLE_CLIENT_ID: PropTypes.string,
   host: PropTypes.string,
   roomId: PropTypes.string,
   channelName: PropTypes.string,
@@ -192,4 +204,5 @@ EmbeddedChat.propTypes = {
   ]),
   className: PropTypes.string,
   style: PropTypes.object,
+  hideHeader: PropTypes.bool,
 };
