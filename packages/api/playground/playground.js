@@ -1,6 +1,19 @@
 import EmbeddedChatApi from '../src/EmbeddedChatApi';
-let api = new EmbeddedChatApi('http://localhost:3000', 'GENERAL')
 let messages = [];
+async function saveToken(token) {
+	localStorage.setItem("ec_token", token);
+}
+
+async function getToken() {
+	return localStorage.getItem("ec_token");
+}
+
+async function deleteToken() {
+	localStorage.removeItem("ec_token");
+}
+
+let api;
+
 async function loginWithPassword() {
 	const user = document.getElementById("email").value;
 	const password = document.getElementById("password").value;
@@ -33,7 +46,7 @@ const onConfigChange = async (e) => {
 	const host = document.getElementById('hostUrl').value;
 	const roomId = document.getElementById('roomId').value;
 	await api.close()
-	api = new EmbeddedChatApi(host, roomId);
+	api = new EmbeddedChatApi(host, roomId, { deleteToken, getToken, saveToken });
 	api.auth.onAuthChange((user) => {
 		showAuth(user)
 		if (user) {
@@ -70,7 +83,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	const roomInput = document.getElementById("roomId")
 	const host = hostInput.value;
 	const room = roomInput.value;
-	api = new EmbeddedChatApi(host, room);
+	api = new EmbeddedChatApi(host, room, { deleteToken, getToken, saveToken });
 	hostInput.addEventListener("change", onConfigChange)
 	hostInput.addEventListener("change", onConfigChange)
 	onConfigChange();
