@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, MessageEmoji } from '@rocket.chat/fuselage';
 import emojione from 'emoji-toolkit';
 
 const Emoji = ({ big = false, emoji }) => {

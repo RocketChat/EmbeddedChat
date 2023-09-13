@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ActionButton, Label } from '@rocket.chat/fuselage';
+import { Label } from '@rocket.chat/fuselage';
 import { css } from '@emotion/react';
 import classes from '../RoomMember.module.css';
 import useInviteStore from '../../../store/inviteStore';
 import { Box } from '../../Box';
 import { Icon } from '../../Icon';
 import { Input } from '../../Input';
+import { ActionButton } from '../../ActionButton';
 
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
@@ -32,13 +33,7 @@ const InviteMembers = ({ inviteData }) => {
           >
             Invite Members
           </Box>
-          <ActionButton
-            onClick={() => toggleInviteView()}
-            ghost
-            display="inline"
-            square
-            small
-          >
+          <ActionButton onClick={() => toggleInviteView()} ghost size="small">
             <Icon name="back" size="1.25rem" />
           </ActionButton>
         </h3>

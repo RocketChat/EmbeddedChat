@@ -12,6 +12,7 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
+import ModalBlock from '../uiKit/blocks/ModalBlock';
 
 const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -119,11 +120,41 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     [upsertMessage, ECOptions?.enableThreads]
   );
 
+  const [isModalOpen, setModalOpen] = useState();
+  const [viewData, setViewData] = useState();
+
+  const onActionTriggerResponse = useCallback((data) => {
+    if (data?.type === 'modal.open' || data?.type === 'modal.update') {
+      setViewData(data.view);
+      setModalOpen(true);
+    }
+  }, []);
+
+  const onModalClose = () => {
+    setModalOpen(false);
+    setViewData(null);
+  };
+
+  const onModalSubmit = useCallback(async (data, value) => {
+    console.log(data);
+    // const { actionId, value, blockId, appId, viewId } = data;
+    // await RCInstance?.triggerBlockAction({
+    //   rid: RCInstance.rid,
+    //   actionId,
+    //   value,
+    //   blockId,
+    //   appId,
+    //   viewId,
+    // });
+  });
+
   useEffect(() => {
     if (isUserAuthenticated) {
       RCInstance.connect().then(() => {
         RCInstance.addMessageListener(addMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
+        RCInstance.addActionTriggeredListener(onActionTriggerResponse);
+        RCInstance.addUiInteractionListener(onActionTriggerResponse);
       });
       getMessagesAndRoles();
     } else {
@@ -134,8 +165,16 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       RCInstance.close();
       RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
+      RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
+      RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
-  }, [isUserAuthenticated, getMessagesAndRoles, addMessage, removeMessage]);
+  }, [
+    isUserAuthenticated,
+    getMessagesAndRoles,
+    addMessage,
+    removeMessage,
+    onActionTriggerResponse,
+  ]);
 
   const [onDrag, setOnDrag] = useState(false);
   const [leaveCount, setLeaveCount] = useState(0);
@@ -199,6 +238,15 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         handleLogin={handleLogin}
       />
       <LoginForm />
+      {isModalOpen && (
+        <ModalBlock
+          appId={viewData.appId}
+          onClose={onModalClose}
+          onCancel={onModalClose}
+          onSubmit={onModalSubmit}
+          view={viewData}
+        />
+      )}
     </Box>
   );
 };

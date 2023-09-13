@@ -3,7 +3,13 @@ import { css, useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const Input = ({ className = '', style = {}, color = 'primary', ...props }) => {
+const Input = ({
+  className = '',
+  style = {},
+  color = 'primary',
+  textArea = false,
+  ...props
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
   const theme = useTheme();
   const InputCss = css`
@@ -39,8 +45,9 @@ const Input = ({ className = '', style = {}, color = 'primary', ...props }) => {
       box-shadow: 0px 0px 2.5px ${theme.palette[color].light || 'currentColor'};
     }
   `;
+  const InputElement = textArea ? 'textarea' : 'input';
   return (
-    <input
+    <InputElement
       css={InputCss}
       className={`ec-input ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
@@ -53,6 +60,7 @@ Input.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   color: PropTypes.string,
+  textArea: PropTypes.bool,
 };
 
 export default Input;

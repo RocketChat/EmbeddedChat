@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Popup from 'reactjs-popup';
-import { ActionButton } from '@rocket.chat/fuselage';
 import he from 'he';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
@@ -11,8 +10,13 @@ import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
+import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
+  const { classNames, styleOverrides } = useComponentOverrides(
+    'ChatInputFormattingToolbar'
+  );
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -63,26 +67,20 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     <Box
       css={css`
         background-color: #cbced1;
+        display: flex;
+        flex-direction: row;
+        gap: 0.375rem;
+        align-items: center;
       `}
-      className={styles.chatFormat}
+      className={`ec-chat-input-formatting-toolbar ${styles.chatFormat} ${classNames}`}
+      style={styleOverrides}
     >
       {isUserAuthenticated && (
         <Popup
           disabled={isRecordingMessage}
           trigger={
-            <ActionButton
-              style={{ backgroundColor: '#cbced1' }}
-              border="0px"
-              disabled={isRecordingMessage}
-            >
-              <Icon
-                name="emoji"
-                size="1.25rem"
-                style={{
-                  borderInlineEnd: '1px solid #989393',
-                  padding: '0.5em',
-                }}
-              />
+            <ActionButton square ghost disabled={isRecordingMessage}>
+              <Icon name="emoji" size="1.25rem" />
             </ActionButton>
           }
           position="top left"
@@ -92,9 +90,9 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       )}
       {formatter.map((item, index) => (
         <ActionButton
+          square
           disabled={isRecordingMessage}
-          style={{ backgroundColor: '#cbced1' }}
-          border="0px"
+          ghost
           onClick={() => {
             wrapSelection(item.pattern);
           }}
@@ -105,8 +103,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       ))}
       <AudioMessageRecorder />
       <ActionButton
-        style={{ backgroundColor: '#cbced1' }}
-        border="0px"
+        square
+        ghost
         disabled={isRecordingMessage}
         onClick={handleClickToOpenFiles}
       >

@@ -9,9 +9,9 @@ const getSquareSize = (size) => {
     return '1.25rem';
   }
   if (size === 'large') {
-    return '2rem';
+    return '2.75rem';
   }
-  return '1.5rem';
+  return '2rem';
 };
 
 const Button = ({
@@ -22,6 +22,7 @@ const Button = ({
   size = 'medium',
   square = false,
   ghost = false,
+  disabled = false,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
@@ -49,6 +50,7 @@ const Button = ({
     text-overflow: ellipsis;
     white-space: nowrap;
     border-radius: 0.25rem;
+    align-self: flex-start;
     &.ec-button--small {
       font-size: 0.75rem;
       font-weight: 700;
@@ -87,12 +89,24 @@ const Button = ({
       align-items: center;
       flex-shrink: 0;
     }
-    /* &.ghost {
+    &.disabled:not(.ghost) {
+      background: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      border: none;
+      color: ${theme?.palette?.secondary?.contrastText || '#000'};
+    }
+    &.ghost {
+      background: none;
+      color: ${theme?.palette?.text?.primary || '#1A2027'};
+      border: none;
+    }
+    &.disabled.ghost {
+      color: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      border: none;
       background: none;
     }
-    &.ghost:hover {
-      background: rgba(255, 255, 255, 0.1);
-    } */
+    &.ghost:not(.disabled):hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   `;
   return (
     <button
@@ -100,7 +114,9 @@ const Button = ({
       css={classNameButton}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
-      } ${ghost ? 'ghost' : ''} ${className} ${classNames}`}
+      } ${ghost ? 'ghost' : ''} ${
+        disabled ? 'disabled' : ''
+      } ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
@@ -120,6 +136,7 @@ Button.propTypes = {
   style: PropTypes.object,
   square: PropTypes.bool,
   ghost: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default Button;

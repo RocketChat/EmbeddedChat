@@ -33,3 +33,16 @@ export const Secondary = {
     </ThemeProvider>
   ),
 };
+
+export const Ghost = {
+  args: {
+    ghost: true,
+    icon: 'cross',
+    disabled: false,
+  },
+  render: (args) => (
+    <ThemeProvider theme={DefaultTheme}>
+      <ActionButton {...args} />
+    </ThemeProvider>
+  ),
+};

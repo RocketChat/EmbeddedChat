@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { ActionButton } from '@rocket.chat/fuselage';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const AudioMessageRecorder = () => {
   const toogleRecordingMessage = useMessageStore(
@@ -131,19 +131,8 @@ const AudioMessageRecorder = () => {
 
   if (state === 'idle') {
     return (
-      <ActionButton
-        bg="neutral-500"
-        border="0px"
-        onClick={handleRecordButtonClick}
-      >
-        <Icon
-          style={{
-            borderInlineStart: '1px solid #989393',
-            padding: '0.5rem',
-          }}
-          size="1.25rem"
-          name="mic"
-        />
+      <ActionButton ghost square onClick={handleRecordButtonClick}>
+        <Icon size="1.25rem" name="mic" />
       </ActionButton>
     );
   }
@@ -152,29 +141,14 @@ const AudioMessageRecorder = () => {
     <Box className={styles.audioBox}>
       {state === 'recording' && (
         <>
-          <ActionButton
-            bg="neutral-500"
-            border="0px"
-            onClick={handleCancelRecordButton}
-          >
-            <Icon
-              style={{
-                borderInlineStart: '1px solid #989393',
-                padding: '0.5rem',
-              }}
-              size="1.25rem"
-              name="circle-cross"
-            />
+          <ActionButton ghost onClick={handleCancelRecordButton}>
+            <Icon size="1.25rem" name="circle-cross" />
           </ActionButton>
           <Box className={styles.record}>
             <span className={styles.audioDot} />
             <span className={styles.timer}>{time}</span>
           </Box>
-          <ActionButton
-            bg="neutral-500"
-            border="0px"
-            onClick={handleStopRecordButton}
-          >
+          <ActionButton ghost onClick={handleStopRecordButton}>
             <Icon name="circle-check" size="1.25rem" />
           </ActionButton>
         </>

@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { ActionButton, Avatar } from '@rocket.chat/fuselage';
+import { Avatar } from '@rocket.chat/fuselage';
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
+import { ActionButton } from '../ActionButton';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -45,13 +46,7 @@ const Roominfo = () => {
           >
             Room Information
           </Box>
-          <ActionButton
-            onClick={toggleshowRoominfo}
-            ghost
-            display="inline"
-            square
-            small
-          >
+          <ActionButton onClick={toggleshowRoominfo} ghost size="small">
             <Icon name="cross" size="1.25rem" />
           </ActionButton>
         </h3>
