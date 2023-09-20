@@ -8,7 +8,6 @@
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"refresh-auth": "cd ../auth && yarn build && cd ../api && yarn remove @embeddedchat/auth && yarn add ./packages/auth",
 		"build": "rollup -c",
 		"dev": "yarn parcel playground/index.html"
 	},
@@ -21,8 +20,7 @@
 		"rollup-plugin-serve": "^2.0.2"
 	},
 	"dependencies": {
-		"@embeddedchat/auth": "./packages/auth",
-		"@rocket.chat/sdk": "^1.0.0-alpha.42",
-		"axios": "^1.4.0"
+		"@embeddedchat/auth": "1.0.0",
+		"@rocket.chat/sdk": "^1.0.0-alpha.42"
 	}
 }

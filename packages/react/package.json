@@ -79,8 +79,7 @@
     "storybook": "^7.0.26"
   },
   "dependencies": {
-    "@embeddedchat/api": "./packages/api",
-    "@embeddedchat/auth": "./packages/auth",
+    "@embeddedchat/api": "1.0.0",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@rocket.chat/fuselage": "^0.31.23",
     "@rocket.chat/fuselage-hooks": "^0.31.23",

@@ -154,12 +154,18 @@ class RocketChatAuth {
 	 */
 	async load() {
 		// const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
-		const token = await this.getToken();
-		const user = await this.loginWithResumeToken(token);
-		if (user) {
-			this.lastFetched = new Date();
-			this.setUser(user);
-			await this.getCurrentUser(); // refresh the token if needed
+		try {
+			const token = await this.getToken();
+			if (token) {
+				const user = await this.loginWithResumeToken(token);
+				if (user) {
+					this.lastFetched = new Date();
+					this.setUser(user);
+					await this.getCurrentUser(); // refresh the token if needed
+				}
+			}
+		} catch (e) {
+			console.log('Failed to login user on initial load. Sign in.')
 		}
 		this.notifyAuthListeners();
 	}
