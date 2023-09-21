@@ -1,30 +1,12 @@
 import React from 'react';
+import { Text } from 'react-native';
 import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
 import StrikeSpan from './StrikeSpan';
 import ItalicSpan from './ItalicSpan';
 import BoldSpan from './BoldSpan';
-
-const getBaseURI = () => {
-  if (document.baseURI) {
-    return document.baseURI;
-  }
-
-  // Should be exactly one tag:
-  //   https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-  const base = document.getElementsByTagName('base');
-
-  // Return location from BASE tag.
-  if (base.length > 0) {
-    return base[0].href;
-  }
-
-  // Else use implementation of documentURI:
-  //   http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-baseURI
-  return document.URL;
-};
-
-const isExternal = (href) => href.indexOf(getBaseURI()) !== 0;
+import { openLink } from '../../../lib/openLink';
+import styles from '../styles';
 
 const LinkSpan = ({ href, label }) => {
   const value = React.useMemo(() => {
@@ -33,16 +15,16 @@ const LinkSpan = ({ href, label }) => {
     const labelElements = labelArray.map((content, index) => {
       switch (content.type) {
         case 'PLAIN_TEXT':
-          return <PlainSpan key={index} value={content.value} />;
+          return <PlainSpan key={index} value={content.value} style={styles.link}/>;
 
         case 'STRIKE':
-          return <StrikeSpan key={index} value={content.value} />;
+          return <StrikeSpan key={index} value={content.value} style={styles.link}/>;
 
         case 'ITALIC':
-          return <ItalicSpan key={index} value={content.value} />;
+          return <ItalicSpan key={index} value={content.value} style={styles.link}/>;
 
         case 'BOLD':
-          return <BoldSpan key={index} value={content.value} />;
+          return <BoldSpan key={index} value={content.value} style={styles.link}/>;
 
         default:
           return null;
@@ -52,17 +34,10 @@ const LinkSpan = ({ href, label }) => {
     return labelElements;
   }, [label]);
 
-  if (isExternal(href)) {
-    return (
-      <a href={href} title={href} rel="noopener noreferrer" target="_blank">
-        {value}
-      </a>
-    );
-  }
   return (
-    <a href={href} title={href}>
+    <Text onPress={() => openLink(href)} style={styles.link}>
       {value}
-    </a>
+    </Text>
   );
 };
 
