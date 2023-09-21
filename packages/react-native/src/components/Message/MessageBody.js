@@ -14,7 +14,13 @@ const MessageBody = ({ style }) => {
 		return null;
 	}
 	return (
-		<Box style={[styles.container, styleOverrides]}>
+		<Box
+			style={StyleSheet.compose([
+				styles.container,
+				message.isPending && styles.pendingMessage,
+				styleOverrides,
+			])}
+		>
 			{message.attachments && message.attachments.length > 0 ? (
 				<>
 					<Markdown body={message} isReaction={false} />
@@ -30,6 +36,10 @@ const MessageBody = ({ style }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-	}
+		flexDirection: 'column',
+	},
+	pendingMessage: {
+		opacity: 0.4,
+	},
 }) 
 export default MessageBody;
