@@ -1,10 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
-import { Box } from '../../components/Box';
+import { StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { ChatInput } from '../../components/ChatInput';
 import { MessageList } from '../../components/MessageList';
 import { useRCContext } from '../../contexts/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: 'column',
+		flex: 1,
+	},
+})
 const ChatRoomView = () => {
 	const { RCInstance, ECOptions } = useRCContext();
 
@@ -33,7 +39,6 @@ const ChatRoomView = () => {
 						: undefined
 				);
 				if (messages) {
-					console.log(messages);
 					setMessages(
 						messages.filter((message) => message._hidden !== true)
 					);
@@ -45,7 +50,7 @@ const ChatRoomView = () => {
 				if (ECOptions.showRoles) {
 					const { roles } = await RCInstance.getChannelRoles();
 					// convert roles array from api into object for better search
-					const rolesObj = roles.reduce(
+					const rolesObj = roles?.reduce(
 						(obj, item) =>
 							Object.assign(obj, { [item.u.username]: item }),
 						{}
@@ -95,10 +100,12 @@ const ChatRoomView = () => {
 	]);
 
 	return (
-		<Box>
-			<MessageList />
-			<ChatInput />
-		</Box>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			style={styles.container}>
+				<MessageList />
+				<ChatInput />
+		</KeyboardAvoidingView>
 	)
 }
 

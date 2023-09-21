@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { RCInstanceProvider } from '../contexts/RCInstance';
 import { deleteToken, getToken, saveToken} from '../lib/auth';
@@ -9,12 +10,11 @@ import { LoginView } from '../views/LoginView';
 import { ChatRoomView } from '../views/ChatRoomView';
 import { FontProvider } from './FontProvider';
 import { useMemberStore, useUserStore } from '../store';
-import { Box } from './Box';
 // import PropTypes from 'prop-types';
 
 const EmbeddedChat = ({
 	width = '100%',
-	height = '200px',
+	height = '100%',
 	host = 'http://localhost:3000',
 	roomId = 'GENERAL',
 	channelName,
@@ -27,6 +27,7 @@ const EmbeddedChat = ({
 	auth = {
 		flow: 'MANAGED',
 	},
+	style = {}
 }) => {
 	const setIsUserAuthenticated = useUserStore(
 		(state) => state.setIsUserAuthenticated
@@ -135,7 +136,7 @@ const EmbeddedChat = ({
 	const RCInstanceContextValue = useMemo(() => ({ RCInstance, ECOptions }), [RCInstance, ECOptions]);
 
 	return (
-		<Box>
+		<View style={StyleSheet.compose([{ height, width }, style])}>
 			<FontProvider>
 				<RCInstanceProvider value={RCInstanceContextValue}>
 					<ThemeProvider theme={theme || DefaultTheme}>
@@ -150,7 +151,7 @@ const EmbeddedChat = ({
 					</ThemeProvider>
 				</RCInstanceProvider>
 			</FontProvider>
-		</Box>
+		</View>
 	);
 };
 

@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 import { EmbeddedChat } from "./components";
 
 const props = {
-  host: 'http://10.0.2.2:3000',
+  host: 'http://192.168.1.11:3000',
   roomId: 'GENERAL',
   GOOGLE_CLIENT_ID: '',
   isClosable: true,
@@ -19,6 +19,7 @@ const props = {
   auth: {
     flow: 'MANAGED',
   },
+  height: 400,
 };
 
 function App() {
@@ -38,7 +39,7 @@ if (Constants.expoConfig.extra.storybookEnabled === "true") {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
-    margin: 20,
+    marginTop: 50,
   },
 });
 

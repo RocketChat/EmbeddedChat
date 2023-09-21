@@ -8,7 +8,7 @@ const Box = forwardRef(
     { children = null, style = {}, ...props },
     ref
   ) => {
-    const { styleOverrides } = useComponentOverrides('Box');
+    const { styleOverrides } = useComponentOverrides('Box', style);
     const styles = css`
       margin: 0;
       padding: 0;
@@ -25,7 +25,7 @@ const Box = forwardRef(
       <View
         ref={ref}
         css={styles}
-        style={{ ...styleOverrides, ...style }}
+        style={styleOverrides}
         {...props}
       >
         {children}

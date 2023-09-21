@@ -6,12 +6,11 @@ import { colors } from '../../lib/constants';
 import { useMessageStore } from '../../store';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Message } from '../Message';
-import styles from  './styles';
 import Divider from '../Markup/elements/Divider';
 
-const MessageList = () => {
+const MessageList = ({ style }) => {
 	const messages = useMessageStore(state => state.messages);
-	const { styleOverrides } = useComponentOverrides('MessageList', styles);
+	const { styleOverrides } = useComponentOverrides('MessageList', style);
 	const theme = useTheme();
 	const renderItem = useCallback(({ item, index }) => {
 		const prev = messages[index + 1]; // since the list is reversed
@@ -40,13 +39,16 @@ const MessageList = () => {
 				inverted
 				data={messages}
 				renderItem={renderItem}
+				removeClippedSubviews
 				style={[
 					{
 						backgroundColor:
 							colors[theme.palette?.mode].backgroundColor,
+						paddingHorizontal: 10,
 					},
 					styleOverrides,
 				]}
+				maxToRenderPerBatch={20}
 				keyExtractor={(item) => item._id}
 			/>
 		</>
