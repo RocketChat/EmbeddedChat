@@ -49,7 +49,7 @@ const Avatar = ({
 		fontSize: size * 0.75,
 	}), []);
 
-	let image = !showFallback ? (
+	let image = showFallback ? (
 		<View style={avatarStyle}>
 			<Text style={charStyle}>{(name.charAt(0) || '').toUpperCase()}</Text>
 		</View>
