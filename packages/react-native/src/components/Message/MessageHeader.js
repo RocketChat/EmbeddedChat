@@ -1,33 +1,35 @@
-import React from 'react';
+/* eslint-disable react-native/no-unused-styles */
+import React, { useMemo } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { format } from 'date-fns';
 import { useMessageContext } from "../../contexts/MessageContext";
 import useComponentOverrides from "../../theme/useComponentOverrides";
 import { CustomIcon } from '../CustomIcon';
 import { sharedStyles } from '../Styles';
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		gap: 5,
-		alignItems: 'center',
-	},
-	username: {
-		flexShrink: 1,
-		fontSize: 16,
-		...sharedStyles.textSemibold
-	},
-	time: {
-		fontSize: 13,
-		marginLeft: 8,
-		...sharedStyles.textRegular
-	}
-});
+import { useTheme } from '@emotion/react';
 
 const MessageHeader = () => {
 	const { message } = useMessageContext();
 	const { styleOverrides } = useComponentOverrides('MessageHeader');
-
+	const theme = useTheme();
+	const styles = useMemo(() => StyleSheet.create({
+		container: {
+			flexDirection: 'row',
+			gap: 5,
+			alignItems: 'baseline',
+		},
+		username: {
+			flexShrink: 1,
+			fontSize: 16,
+			...sharedStyles.textSemibold
+		},
+		time: {
+			fontSize: 13,
+			marginLeft: 8,
+			...sharedStyles.textRegular,
+			color: theme.palette?.grey?.main || '#9ea2a8',
+		}
+	}), [])
 	const userActions = () => {
 		switch (message.t) {
 			case 'ul':

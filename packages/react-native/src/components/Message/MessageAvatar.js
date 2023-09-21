@@ -1,18 +1,9 @@
+/* eslint-disable react-native/no-unused-styles */
 import React, { useContext, useMemo } from "react"
 import { StyleSheet, View } from 'react-native';
 import { Avatar } from "../Avatar"
 import { useRCContext } from "../../contexts/RCInstance"
 import { MessageContext } from "../../contexts/MessageContext";
-
-const styles = StyleSheet.create({
-	container: {
-		height: 36,
-		width: 36,
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		alignItems: 'flex-start'
-	},
-});
 
 const MessageAvatar = () => {
 	const { RCInstance } = useRCContext();
@@ -23,6 +14,16 @@ const MessageAvatar = () => {
 		const small = !!message.t;
 		return { avatarUrl, small };
 	}, [message, RCInstance]);
+
+	const styles = useMemo(() => StyleSheet.create({
+		container: {
+			height: small ? 20 : 36,
+			width: 36,
+			flexDirection: 'row',
+			justifyContent: 'flex-end',
+			alignItems: 'flex-start'
+		},
+	}));
 
 	return (
 		<View style={styles.container}>

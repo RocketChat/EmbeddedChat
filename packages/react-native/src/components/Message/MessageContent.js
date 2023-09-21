@@ -20,7 +20,6 @@ const MessageContent = ({style}) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		minHeight: 20,
 		flexDirection: 'row',
 		alignItems: 'flex-start',
 	}

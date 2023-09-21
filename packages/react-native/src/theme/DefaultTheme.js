@@ -26,7 +26,7 @@ const DefaultTheme = {
       secondary: '#3E5060',
     },
     grey: {
-      main: '#E7EBF0',
+      main: '#9ea2a8',
       contrastText: '#6F7E8C',
     },
     error: {
