@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {Alert, View} from 'react-native';
 import {useTheme} from '@emotion/react';
 import { TextInput } from '../TextInput';
@@ -54,6 +54,8 @@ const ChatInput = ({ style }) => {
 		upsertMessage,
 		replaceMessage,
 		threadId,
+		isEditMessageCalled,
+		setIsEditMessageCalled
 	} = useMessageStore((state) => ({
 		editMessage: state.editMessage,
 		setEditMessage: state.setEditMessage,
@@ -61,12 +63,23 @@ const ChatInput = ({ style }) => {
 		upsertMessage: state.upsertMessage,
 		replaceMessage: state.replaceMessage,
 		threadId: state.threadMainMessage?._id,
+		isEditMessageCalled: state.isEditMessageCalled,
+		setIsEditMessageCalled: state.setIsEditMessageCalled,
 	}));
 
+	useEffect(() => {
+		if (isEditMessageCalled && editMessage?.msg) {
+			setIsEditMessageCalled(false);
+			setEditMessage(editMessage),
+			handleMessageChange(editMessage?.msg)
+		}
+	}, [isEditMessageCalled, editMessage?.msg, setEditMessage, setIsEditMessageCalled]);
+
 	const sendMessage = useCallback(async () => {
-		console.log('clicked')
 		const message = messageRef.current;
 		if (!message.length || !isUserAuthenticated) {
+
+			console.log('Editing message')
 			if (editMessage.msg) {
 				setEditMessage({});
 			}
@@ -103,7 +116,7 @@ const ChatInput = ({ style }) => {
 				}
 			} else {
 				// A message is being edited
-				const res = await RCInstance.updateMessage(editMessage.id, message);
+				const res = await RCInstance.updateMessage(editMessage._id, message);
 				if (!res.success) {
 					await RCInstance.logout();
 					setIsUserAuthenticated(false);

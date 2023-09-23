@@ -7,6 +7,7 @@ import useComponentOverrides from "../../theme/useComponentOverrides";
 import { CustomIcon } from '../CustomIcon';
 import { sharedStyles } from '../Styles';
 import { useTheme } from '@emotion/react';
+import { useUserStore } from '../../store';
 
 const MessageHeader = () => {
 	const { message } = useMessageContext();
@@ -49,6 +50,14 @@ const MessageHeader = () => {
 		}
 	};
 
+	const authenticatedUserId = useUserStore(state => state.userId);
+	const isStarred = useMemo(
+		() =>
+			message &&
+			message.starred &&
+			message.starred.find((u) => u._id === authenticatedUserId),
+		[message, authenticatedUserId]
+	);
 	if (!message.t) {
 		return (
 			<View	style={[styles.container, styleOverrides]}>
@@ -63,11 +72,19 @@ const MessageHeader = () => {
 				</Text>
 				{message.editedAt && (
 					<CustomIcon
-						style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+						style={{ opacity: 0.5 }}
 						name="edit"
-						size="24"
+						size={16}
 					/>
 				)}
+				{isStarred?
+					<CustomIcon
+						style={{ opacity: 0.5 }}
+						name="star-filled"
+						size={16}
+					/> :
+					null
+				}
 			</View>
 		);
 	}

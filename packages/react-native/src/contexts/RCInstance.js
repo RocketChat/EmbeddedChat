@@ -16,6 +16,7 @@ export const RCInstanceProvider = RCContext.Provider;
  * @property {boolean} showRoles
  * @property {boolean} showAvatar
  * @property {boolean} hideHeader
+ * @property {boolean} anonymousMode
  * 
  * @typedef {Object} RCContext
  * @property {import('@embeddedchat/api').EmbeddedChatApi} RCInstance

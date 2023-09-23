@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { ChatInput } from '../../components/ChatInput';
+import { MessageActionsSheet } from '../../components/MessageActionsSheet';
 import { MessageList } from '../../components/MessageList';
 import { useRCContext } from '../../contexts/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
@@ -76,20 +77,26 @@ const ChatRoomView = () => {
 		[upsertMessage, ECOptions?.enableThreads]
 	);
 	useEffect(() => {
-		RCInstance.auth.onAuthChange((user) => {
+		const onAuthChange = (user) => {
 			if (user) {
+				getMessagesAndRoles();
 				RCInstance.addMessageListener(addMessage);
 				RCInstance.addMessageDeleteListener(removeMessage);
-				getMessagesAndRoles();
 			} else {
+				if (ECOptions.anonymousMode) {
+					RCInstance.addMessageListener(addMessage);
+					RCInstance.addMessageDeleteListener(removeMessage);
+				}
 				getMessagesAndRoles(ECOptions.anonymousMode);
 			}
-		});
+		};
+		RCInstance.auth.onAuthChange(onAuthChange);
 
 		return () => {
 			RCInstance.close();
 			RCInstance.removeMessageListener(addMessage);
 			RCInstance.removeMessageDeleteListener(removeMessage);
+			RCInstance.auth.removeAuthListener(onAuthChange);
 		};
 	}, [
 		RCInstance,
@@ -105,6 +112,7 @@ const ChatRoomView = () => {
 			style={styles.container}>
 				<MessageList />
 				<ChatInput />
+				<MessageActionsSheet />
 		</KeyboardAvoidingView>
 	)
 }

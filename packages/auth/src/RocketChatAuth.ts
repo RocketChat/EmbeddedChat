@@ -38,6 +38,10 @@ class RocketChatAuth {
 		callback(user);
 	}
 
+	async removeAuthListener(callback: (user: object | null) => void) {
+		this.authListeners = this.authListeners.filter( cb => cb !== callback ); 
+	}
+
 	notifyAuthListeners() {
 		this.authListeners.forEach(cb => cb(this.currentUser));
 	}

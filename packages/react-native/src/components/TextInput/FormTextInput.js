@@ -66,6 +66,7 @@ const FormTextInput = ({
 	testID,
 	secureTextEntry,
 	placeholder,
+	rows,
 	...inputProps
 }) => {
 	const theme = useTheme()
@@ -113,6 +114,7 @@ const FormTextInput = ({
 					accessibilityLabel={placeholder}
 					placeholder={placeholder}
 					value={value}
+					rows={rows}
 					{...inputProps}
 				/>
 

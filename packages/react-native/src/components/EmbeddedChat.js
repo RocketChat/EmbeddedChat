@@ -10,6 +10,7 @@ import { LoginView } from '../views/LoginView';
 import { ChatRoomView } from '../views/ChatRoomView';
 import { FontProvider } from './FontProvider';
 import { useMemberStore, useUserStore } from '../store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import PropTypes from 'prop-types';
 
 const EmbeddedChat = ({
@@ -81,28 +82,32 @@ const EmbeddedChat = ({
 
 
 	useEffect(() => {
-		RCInstance.auth.onAuthChange(async (user) => {
+		const onAuthChange = async (user) => {
 			if (user) {
 				console.log('Connecting to RocketChat');
 				RCInstance.connect()
 					.then(() => {
 						console.log(`Connected to RocketChat ${RCInstance.host}`);
 					})
-					.catch('RC Connection Error',console.error);
+					.catch('RC Connection Error', console.error);
 				const { me } = user;
 				setAuthenticatedUserAvatarUrl(me.avatarUrl);
 				setAuthenticatedUserUsername(me.username);
 				setAuthenticatedUserId(me._id);
 				setAuthenticatedName(me.name);
 				setIsUserAuthenticated(true);
-				
+
 				RCInstance.getChannelMembers().then((members = []) => {
 					setMembersHandler(members);
 				});
 			} else {
 				setIsUserAuthenticated(false);
 			}
-		});
+		}
+		RCInstance.auth.onAuthChange(onAuthChange);
+		return () => {
+			RCInstance.auth.removeAuthListener(onAuthChange);
+		}
 	}, [RCInstance]);
 
 	const ECOptions = useMemo(
@@ -136,22 +141,25 @@ const EmbeddedChat = ({
 	const RCInstanceContextValue = useMemo(() => ({ RCInstance, ECOptions }), [RCInstance, ECOptions]);
 
 	return (
-		<View style={StyleSheet.compose([{ height, width }, style])}>
-			<FontProvider>
-				<RCInstanceProvider value={RCInstanceContextValue}>
-					<ThemeProvider theme={theme || DefaultTheme}>
-						<ECRouteProvider defaultName="login">
-							<ECRoute name="login">
-								<LoginView />
-							</ECRoute>
-							<ECRoute name="chat-room">
-								<ChatRoomView />
-							</ECRoute>
-						</ECRouteProvider>
-					</ThemeProvider>
-				</RCInstanceProvider>
-			</FontProvider>
-		</View>
+		<GestureHandlerRootView>
+
+			<View style={StyleSheet.compose([{ height, width }, style])}>
+				<FontProvider>
+					<RCInstanceProvider value={RCInstanceContextValue}>
+						<ThemeProvider theme={theme || DefaultTheme}>
+							<ECRouteProvider defaultName="login">
+								<ECRoute name="login">
+									<LoginView />
+								</ECRoute>
+								<ECRoute name="chat-room">
+									<ChatRoomView />
+								</ECRoute>
+							</ECRouteProvider>
+						</ThemeProvider>
+					</RCInstanceProvider>
+				</FontProvider>
+			</View>
+		</GestureHandlerRootView>
 	);
 };
 
