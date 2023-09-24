@@ -21,7 +21,8 @@
     "format": "prettier --write 'src/' --loglevel=silent",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build-icons": "node tools/icons-generator.js"
   },
   "peerDependencies": {
     "react": "^17.0.2 || ^18",
