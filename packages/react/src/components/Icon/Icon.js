@@ -11,6 +11,9 @@ const Icon = ({ size = 24, name, className = '', style = {}, ...props }) => {
   );
 
   const IconComponent = useMemo(() => svgIcons[name], [name]);
+  if (!name) {
+    return null;
+  }
   if (!IconComponent) {
     console.log(`No icon found for ${name}`);
     return null;
