@@ -3,11 +3,9 @@ import { css } from '@emotion/react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
-import { Icon } from '../Icon';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -31,18 +29,7 @@ export default function LoginForm() {
   const handleEditPassword = (e) => {
     setpassword(e.target.value);
   };
-  const { handleGoogleLogin } = useRCAuth4Google();
 
-  const handleGooglewithLogin = () => {
-    setIsLoginModalOpen(false);
-    handleGoogleLogin();
-  };
-  const separatorCss = css`
-    width: 45%;
-    background-color: rgb(131, 131, 131);
-    height: 1px;
-    border: none;
-  `;
   const fieldCSS = css`
     display: flex;
     flex-flow: column nowrap;
@@ -119,24 +106,6 @@ export default function LoginForm() {
               }}
             >
               Login
-            </Button>
-            <Box
-              css={css`
-                display: flex;
-                width: 100%;
-                flex-direction: row;
-              `}
-            >
-              <hr css={separatorCss} />
-              <span>OR</span>
-              <hr css={separatorCss} />
-            </Box>
-            <Button
-              color="secondary"
-              onClick={handleGooglewithLogin}
-              style={{ margin: '10px' }}
-            >
-              <Icon name="google" /> Login with Google
             </Button>
           </Box>
         </Box>

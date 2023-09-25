@@ -43,12 +43,14 @@ const ChatInput = () => {
   );
 
   useEffect(() => {
-    if (isUserAuthenticated) {
-      RCInstance.getCommandsList()
-        .then((data) => setCommands(data.commands || []))
-        .catch(console.error);
-    }
-  }, [RCInstance, isUserAuthenticated]);
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        RCInstance.getCommandsList()
+          .then((data) => setCommands(data.commands || []))
+          .catch(console.error);
+      }
+    });
+  }, [RCInstance]);
 
   const [filteredCommands, setFilteredCommands] = useState([]);
   const getFilteredCommands = (cmd) =>

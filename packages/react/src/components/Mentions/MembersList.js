@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function MembersList({ mentionIndex, filteredMembers }) {
+function MembersList({ mentionIndex, filteredMembers = [] }) {
   return (
     <div style={{ display: 'block' }}>
       <ul style={{ listStyle: 'none' }}>

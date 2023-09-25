@@ -1,20 +1,47 @@
 /* eslint-disable no-shadow */
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './ChatBody.module.css';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
+import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
+const ChatBody = ({ height, anonymousMode, showRoles }) => {
+  const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
+  const ChatBodyCss = css`
+    word-break: break-all;
+    overflow: scroll;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    height: 100vh;
+    max-height: 600px;
+    position: relative;
+  `;
+  const DragComponentCss = css`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-weight: 900;
+    font-size: xxx-large;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  `;
+
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
@@ -34,7 +61,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
     state.threadMainMessage,
   ]);
 
-  const { handleGoogleLogin } = useRCAuth4Google(GOOGLE_CLIENT_ID);
   const { handleLogin } = useRCAuth();
 
   const isUserAuthenticated = useUserStore(
@@ -79,7 +105,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
         console.error(e);
       }
     },
-    [RCInstance, ECOptions?.enableThreads]
+    [RCInstance, ECOptions?.enableThreads, isUserAuthenticated, anonymousMode]
   );
 
   const handleGoBack = async () => {
@@ -149,17 +175,19 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
   });
 
   useEffect(() => {
-    if (isUserAuthenticated) {
-      RCInstance.connect().then(() => {
-        RCInstance.addMessageListener(addMessage);
-        RCInstance.addMessageDeleteListener(removeMessage);
-        RCInstance.addActionTriggeredListener(onActionTriggerResponse);
-        RCInstance.addUiInteractionListener(onActionTriggerResponse);
-      });
-      getMessagesAndRoles();
-    } else {
-      getMessagesAndRoles(anonymousMode);
-    }
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        RCInstance.connect().then(() => {
+          RCInstance.addMessageListener(addMessage);
+          RCInstance.addMessageDeleteListener(removeMessage);
+          RCInstance.addActionTriggeredListener(onActionTriggerResponse);
+          RCInstance.addUiInteractionListener(onActionTriggerResponse);
+        });
+        getMessagesAndRoles();
+      } else {
+        getMessagesAndRoles(anonymousMode);
+      }
+    });
 
     return () => {
       RCInstance.close();
@@ -169,7 +197,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
   }, [
-    isUserAuthenticated,
+    RCInstance,
     getMessagesAndRoles,
     addMessage,
     removeMessage,
@@ -206,22 +234,21 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
 
   return (
     <Box
+      css={ChatBodyCss}
       style={{
         borderLeft: '1px solid #b1b1b1',
         borderRight: '1px solid #b1b1b1',
         paddingTop: '70px',
+        ...styleOverrides,
       }}
       onDragOver={(e) => handleDrag(e)}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
-      className={styles.container}
+      className={`ec-chat-body ${classNames}`}
       height={height}
     >
       {onDrag ? (
-        <Box
-          onDrop={(e) => handleDragDrop(e)}
-          className={styles.drag_component}
-        >
+        <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
           Drop to upload file
         </Box>
       ) : null}
@@ -233,10 +260,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, GOOGLE_CLIENT_ID }) => {
       ) : (
         <MessageList messages={messages} handleGoBack={handleGoBack} />
       )}
-      <TotpModal
-        handleGoogleLogin={handleGoogleLogin}
-        handleLogin={handleLogin}
-      />
+      <TotpModal handleLogin={handleLogin} />
       <LoginForm />
       {isModalOpen && (
         <ModalBlock
@@ -257,5 +281,4 @@ ChatBody.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
-  GOOGLE_CLIENT_ID: PropTypes.string,
 };

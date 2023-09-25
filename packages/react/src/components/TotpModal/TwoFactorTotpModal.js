@@ -8,7 +8,7 @@ import { Box } from '../Box';
 import { Modal } from '../Modal';
 import { Input } from '../Input';
 
-export default function TotpModal({ handleGoogleLogin, handleLogin }) {
+export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
   const isModalOpen = totpModalStore((state) => state.isModalOpen);
   const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
@@ -20,8 +20,6 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
 
     if (password !== null && emailoruser !== null) {
       handleLogin(emailoruser, password, accessCode);
-    } else {
-      handleGoogleLogin(accessCode);
     }
     setAccessCode(undefined);
   };
@@ -66,6 +64,5 @@ export default function TotpModal({ handleGoogleLogin, handleLogin }) {
 }
 
 TotpModal.propTypes = {
-  handleGoogleLogin: PropTypes.func,
   handleLogin: PropTypes.func,
 };
