@@ -161,17 +161,16 @@ class RocketChatAuth {
 		try {
 			const token = await this.getToken();
 			if (token) {
-				const user = await this.loginWithResumeToken(token);
+				const user = await this.loginWithResumeToken(token); // will notifyAuthListeners on successful login
 				if (user) {
 					this.lastFetched = new Date();
-					this.setUser(user);
 					await this.getCurrentUser(); // refresh the token if needed
 				}
 			}
 		} catch (e) {
 			console.log('Failed to login user on initial load. Sign in.')
+			this.notifyAuthListeners();
 		}
-		this.notifyAuthListeners();
 	}
 
 	/**
