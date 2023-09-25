@@ -10,7 +10,7 @@ const getSize = ({ small, large }) => {
   if (large) {
     return '1.75rem';
   }
-  return '1.25rem';
+  return '1.5rem';
 };
 
 const ActionButton = forwardRef(

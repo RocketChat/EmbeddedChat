@@ -28,7 +28,7 @@ export default [
       },
     ],
     plugins: [
-      resolve({ browser: true }),
+      resolve({ browser: true, extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
       commonjs({ include: ['node_modules/**', '../../node_modules/**'] }),
       babel({
         exclude: 'node_modules/**',

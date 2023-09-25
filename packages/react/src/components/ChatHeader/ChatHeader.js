@@ -11,7 +11,6 @@ import {
   useSearchMessageStore,
   useChannelStore,
 } from '../../store';
-import { useRCAuth4Google } from '../../hooks/useRCAuth4Google';
 import { ThreadHeader } from '../ThreadHeader';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -40,6 +39,9 @@ const ChatHeader = ({
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setIsUserAuthenticated = useUserStore(
+    (state) => state.setIsUserAuthenticated
+  );
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setMessages = useMessageStore((state) => state.setMessages);
@@ -52,7 +54,16 @@ const ChatHeader = ({
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
 
-  const { handleLogout } = useRCAuth4Google();
+  const handleLogout = async () => {
+    try {
+      await RCInstance.logout();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsUserAuthenticated(false);
+    }
+  };
+
   const showStarredMessage = async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);

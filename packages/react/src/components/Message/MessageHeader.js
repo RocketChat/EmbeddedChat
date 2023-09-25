@@ -15,9 +15,9 @@ const MessageHeader = ({ message }) => {
       case 'uj':
         return 'joined the channel';
       case 'ru':
-        return `removed @${message.message}`;
+        return `removed @${message.message || message.msg}`;
       case 'au':
-        return `added @${message.message}`;
+        return `added @${message.message || message.msg}`;
       case 'message_pinned':
         return 'Pinned a message:';
       case 'rm':

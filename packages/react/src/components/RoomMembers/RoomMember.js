@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ActionButton } from '@rocket.chat/fuselage';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
@@ -10,6 +9,7 @@ import InviteMembers from './inviteMembers/InviteMembers';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -32,13 +32,7 @@ const RoomMembers = ({ members }) => {
             style={{ padding: '0px 20px 20px 0px' }}
           />
           <Box style={{ color: '#4a4a4a', width: '80%' }}>Members</Box>
-          <ActionButton
-            onClick={toggleShowMembers}
-            ghost
-            display="inline"
-            square
-            small
-          >
+          <ActionButton onClick={toggleShowMembers} ghost size="small">
             <Icon name="cross" size="1.25rem" />
           </ActionButton>
         </h3>

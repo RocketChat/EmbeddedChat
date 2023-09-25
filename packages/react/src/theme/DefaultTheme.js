@@ -11,7 +11,6 @@ const DefaultTheme = {
       styleOverrides: {
         fontWeight: 400,
         color: 'gray',
-        border: '1px solid black',
       },
     },
     Message: {

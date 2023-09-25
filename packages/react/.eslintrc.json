@@ -52,6 +52,7 @@
     "react/jsx-props-no-spreading": "off",
     "import/no-cycle": 0,
     "import/no-extraneous-dependencies": "off",
-    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    "react/prop-types": "off"
   }
 }

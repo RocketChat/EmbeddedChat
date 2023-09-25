@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
-  ActionButton,
   Message,
   MessageReactions,
   MessageDivider,
@@ -14,6 +13,7 @@ import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { ActionButton } from '../ActionButton';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -23,9 +23,7 @@ const Search = () => {
   const toggleShowSearch = () => {
     setShowSearch(false);
   };
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
+
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
 
@@ -51,13 +49,7 @@ const Search = () => {
         <h3 style={{ display: 'contents' }}>
           <Icon name="magnifier" size="1.25rem" />
           <Box style={{ color: '#4a4a4a', width: '80%' }}>Search Messages</Box>
-          <ActionButton
-            onClick={toggleShowSearch}
-            ghost
-            display="inline"
-            square
-            small
-          >
+          <ActionButton onClick={toggleShowSearch} ghost size="small">
             <Icon name="cross" size="x20" />
           </ActionButton>
         </h3>
