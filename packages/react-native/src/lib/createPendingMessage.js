@@ -1,9 +1,8 @@
 
-import 'react-native-get-random-values';
-import { nanoid } from 'nanoid';
+import { v4 } from 'react-native-uuid/dist/v4';
 
 const createRandomId = () => {
-  return nanoid(17);
+  return v4();
 };
 
 const createPendingMessage = (
