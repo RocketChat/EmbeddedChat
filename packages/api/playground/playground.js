@@ -32,6 +32,7 @@ async function printResult(result) {
 }
 
 const msgListener = msg => {
+	console.log('Add Message', msg._id);
 	const idx = messages.findIndex(m => m._id === msg._id);
 	if (idx === -1) {
 		messages.push(msg)
@@ -48,6 +49,7 @@ const onConfigChange = async (e) => {
 	await api.close()
 	api = new EmbeddedChatApi(host, roomId, { deleteToken, getToken, saveToken });
 	api.auth.onAuthChange((user) => {
+		console.log('auth change', !!user)
 		showAuth(user)
 		if (user) {
 			api.connect()
@@ -57,6 +59,8 @@ const onConfigChange = async (e) => {
 		} else {
 			api.removeMessageListener(msgListener);
 		}
+
+		console.log(api.auth.authListeners.length);
 	})
 }
 
@@ -84,8 +88,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	const host = hostInput.value;
 	const room = roomInput.value;
 	api = new EmbeddedChatApi(host, room, { deleteToken, getToken, saveToken });
-	hostInput.addEventListener("change", onConfigChange)
-	hostInput.addEventListener("change", onConfigChange)
+	hostInput.addEventListener("change", onConfigChange);
 	onConfigChange();
 	
 	document.getElementById("logoutBtn").addEventListener("click", () => api.auth.logout())

@@ -38,6 +38,10 @@ class RocketChatAuth {
 		callback(user);
 	}
 
+	async removeAuthListener(callback: (user: object | null) => void) {
+		this.authListeners = this.authListeners.filter( cb => cb !== callback ); 
+	}
+
 	notifyAuthListeners() {
 		this.authListeners.forEach(cb => cb(this.currentUser));
 	}
@@ -154,14 +158,19 @@ class RocketChatAuth {
 	 */
 	async load() {
 		// const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
-		const token = await this.getToken();
-		const user = await this.loginWithResumeToken(token);
-		if (user) {
-			this.lastFetched = new Date();
-			this.setUser(user);
-			await this.getCurrentUser(); // refresh the token if needed
+		try {
+			const token = await this.getToken();
+			if (token) {
+				const user = await this.loginWithResumeToken(token); // will notifyAuthListeners on successful login
+				if (user) {
+					this.lastFetched = new Date();
+					await this.getCurrentUser(); // refresh the token if needed
+				}
+			}
+		} catch (e) {
+			console.log('Failed to login user on initial load. Sign in.')
+			this.notifyAuthListeners();
 		}
-		this.notifyAuthListeners();
 	}
 
 	/**

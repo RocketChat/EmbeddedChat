@@ -6,6 +6,9 @@
 	"workspaces": [
 		"packages/*"
 	],
+	"scripts": {
+		"postinstall": "cd packages/auth && yarn build && cd ../api && yarn build"
+	},
 	"devDependencies": {
 		"esbuild": "^0.17.19",
 		"lerna": "^6.6.2",

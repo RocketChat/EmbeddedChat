@@ -155,7 +155,7 @@ export default class EmbeddedChatApi {
       await this.rcClient.connect({});
       const token = (await this.auth.getCurrentUser())?.authToken;
       await this.rcClient.resume({ token });
-      await this.rcClient.subscribe('stream-room-messages', this.rid);
+      await this.rcClient.subscribeRoom(this.rid);
       await this.rcClient.onMessage((data: any) => {
         if (!data) {
           return;
@@ -174,7 +174,6 @@ export default class EmbeddedChatApi {
         'stream-notify-room',
         `${this.rid}/user-activity`
       );
-      await this.rcClient.subscribeRoom(this.rid);
       await this.rcClient.onStreamData('stream-notify-room', (ddpMessage: any) => {
         const [roomId, event] = ddpMessage.fields.eventName.split('/');
 
