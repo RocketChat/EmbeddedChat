@@ -1,10 +1,9 @@
 import { Rocketchat } from '@rocket.chat/sdk';
 import cloneArray from './cloneArray';
-import { RocketChatAuth } from '@embeddedchat/auth';
+import { IRocketChatAuthOptions, RocketChatAuth } from '@embeddedchat/auth';
 
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
-
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -12,10 +11,12 @@ export default class EmbeddedChatApi {
   onMessageCallbacks: ((message: any) => void)[]  
   onMessageDeleteCallbacks: ((messageId: string) => void)[]
   onTypingStatusCallbacks: ((users: string[]) => void)[];
+  onActionTriggeredCallbacks: ((data: any) => void)[];
+  onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
 
-  constructor(host: string, rid: string) {
+  constructor(host: string, rid: string, { getToken, saveToken, deleteToken, autoLogin }: IRocketChatAuthOptions ) {
     this.host = host;
     this.rid = rid;
     this.rcClient = new Rocketchat({
@@ -28,7 +29,15 @@ export default class EmbeddedChatApi {
     this.onMessageDeleteCallbacks = [];
     this.onTypingStatusCallbacks = [];
     this.typingUsers = [];
-    this.auth = new RocketChatAuth(this.host);
+    this.onActionTriggeredCallbacks = [];
+    this.onUiInteractionCallbacks = [];
+    this.auth = new RocketChatAuth({
+      host: this.host,
+      deleteToken,
+      getToken,
+      saveToken,
+      autoLogin,
+    });
   }
 
   setAuth(auth: RocketChatAuth) {
@@ -147,8 +156,19 @@ export default class EmbeddedChatApi {
       const token = (await this.auth.getCurrentUser())?.authToken;
       await this.rcClient.resume({ token });
       await this.rcClient.subscribe('stream-room-messages', this.rid);
-      await this.rcClient.onMessage((data) => {
-        this.onMessageCallbacks.map((callback) => callback(data));
+      await this.rcClient.onMessage((data: any) => {
+        if (!data) {
+          return;
+        }
+        const message = JSON.parse(JSON.stringify(data));
+        if( message.ts?.$date) {
+          console.log(message.ts?.$date);
+          message.ts = message.ts.$date;
+        }
+        if (!message.ts) {
+          message.ts = new Date().toISOString();
+        }
+        this.onMessageCallbacks.map((callback) => callback(message));
       });
       await this.rcClient.subscribe(
         'stream-notify-room',
@@ -176,6 +196,32 @@ export default class EmbeddedChatApi {
         if (event === 'deleteMessage') {
           const messageId = ddpMessage.fields.args[0]?._id;
           this.onMessageDeleteCallbacks.map((callback) => callback(messageId));
+        }
+      });
+      await this.rcClient.subscribeNotifyUser();
+      await this.rcClient.onStreamData('stream-notify-user', (ddpMessage: any) => {
+        const [, event] = ddpMessage.fields.eventName.split('/');
+        const args: any[] = ddpMessage.fields.args
+          ? Array.isArray(ddpMessage.fields.args)
+            ? ddpMessage.fields.args
+            : [ddpMessage.fields.args]
+          : [];
+        if (event === 'message') {
+          const data = args[0];
+          if (!data || data?.rid !== this.rid) {
+            return;
+          }
+          const message = JSON.parse(JSON.stringify(data));
+          if( message.ts?.$date) {
+            message.ts = message.ts.$date;
+          }
+          if (!message.ts) {
+            message.ts = new Date().toISOString();
+          }
+          message.renderType = 'blocks';
+          this.onMessageCallbacks.map((callback) => callback(message));
+        } else if (event === 'uiInteraction') {
+          this.onUiInteractionCallbacks.forEach((callback) => callback(args[0]));
         }
       });
     } catch (err) {
@@ -224,6 +270,40 @@ export default class EmbeddedChatApi {
 
   async removeTypingStatusListener(callback: (users: string[]) => void) {
     this.onTypingStatusCallbacks = this.onTypingStatusCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addActionTriggeredListener(callback: (data: any) => void) {
+    const idx = this.onActionTriggeredCallbacks.findIndex(
+      (c) => c === callback
+    );
+    if (idx !== -1) {
+      this.onActionTriggeredCallbacks[idx] = callback;
+    } else {
+      this.onActionTriggeredCallbacks.push(callback);
+    }
+  }
+
+  async removeActionTriggeredListener(callback: (data: any) => void) {
+    this.onActionTriggeredCallbacks = this.onActionTriggeredCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addUiInteractionListener(callback: (data: any) => void) {
+    const idx = this.onUiInteractionCallbacks.findIndex(
+      (c) => c === callback
+    );
+    if (idx !== -1) {
+      this.onUiInteractionCallbacks[idx] = callback;
+    } else {
+      this.onUiInteractionCallbacks.push(callback);
+    }
+  }
+
+  async removeUiInteractionListener(callback: (data: any) => void) {
+    this.onUiInteractionCallbacks = this.onUiInteractionCallbacks.filter(
       (c) => c !== callback
     );
   }
@@ -755,5 +835,84 @@ export default class EmbeddedChatApi {
     } catch (err) {
       console.error(err);
     }
+  }
+  async triggerBlockAction({
+    type,
+    actionId,
+    appId,
+    rid,
+    mid,
+    viewId,
+    container,
+    ...rest
+  }: any) {
+    try {
+      const { userId, authToken } = await this.auth.getCurrentUser() || {};
+
+      const triggerId = Math.random().toString(32).slice(2, 16);
+
+      const payload = rest.payload || rest;
+
+      const response = await fetch(
+        `${this.host}/api/apps/ui.interaction/${appId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': authToken,
+            'X-User-Id': userId,
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            type: 'blockAction',
+            actionId,
+            payload,
+            container,
+            mid,
+            rid,
+            triggerId,
+            viewId,
+          }),
+        }
+      );
+      const data = await response.json();
+      this.onActionTriggeredCallbacks.map((cb) => cb(data));
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async getCommandsList() {
+    const { userId, authToken } = await this.auth.getCurrentUser() || {};
+    const response = await fetch(`${this.host}/api/v1/commands.list`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': authToken,
+        'X-User-Id': userId,
+      },
+      method: 'GET',
+    });
+    const data = await response.json();
+    return data;
+  }
+
+  async execCommand({ command, params }: { command: string, params: string; }) {
+    const { userId, authToken } = await this.auth.getCurrentUser() || {};
+    const response = await fetch(`${this.host}/api/v1/commands.run`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': authToken,
+        'X-User-Id': userId,
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        command,
+        params,
+        roomId: this.rid,
+        triggerId: Math.random().toString(32).slice(2, 20),
+      }),
+    });
+    const data = await response.json();
+    return data;
   }
 }
