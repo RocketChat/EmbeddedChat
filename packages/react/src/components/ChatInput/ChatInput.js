@@ -280,7 +280,6 @@ const ChatInput = () => {
           margin-top: 20px;
           border: 2px solid #ddd;
         `}
-        className={styles.containerParent}
       >
         {showMembersList ? (
           <MembersList

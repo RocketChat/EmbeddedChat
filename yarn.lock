@@ -1913,7 +1913,6 @@
 "@embeddedchat/api@./packages/api":
   version "1.0.0"
   dependencies:
-    "@embeddedchat/auth" "./packages/auth"
     "@rocket.chat/sdk" "^1.0.0-alpha.42"
     axios "^1.4.0"
 
@@ -17535,7 +17534,7 @@ react-virtuoso@^4.3.10:
   resolved "https://registry.npmjs.org/react-virtuoso/-/react-virtuoso-4.3.10.tgz"
   integrity sha512-/LDICLCmPRDMOheCKmuHj/U7CGjLT/WtMWZGfOothhhubQeWGbR6mtGyd+uD80Yw/n3ICZtYwERQZnTM8eC0ag==
 
-"react@^17.0.2 || ^18":
+"react@^17.0.2 || ^18", react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

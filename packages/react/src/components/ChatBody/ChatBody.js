@@ -177,12 +177,10 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
-        RCInstance.connect().then(() => {
-          RCInstance.addMessageListener(addMessage);
-          RCInstance.addMessageDeleteListener(removeMessage);
-          RCInstance.addActionTriggeredListener(onActionTriggerResponse);
-          RCInstance.addUiInteractionListener(onActionTriggerResponse);
-        });
+        RCInstance.addMessageListener(addMessage);
+        RCInstance.addMessageDeleteListener(removeMessage);
+        RCInstance.addActionTriggeredListener(onActionTriggerResponse);
+        RCInstance.addUiInteractionListener(onActionTriggerResponse);
         getMessagesAndRoles();
       } else {
         getMessagesAndRoles(anonymousMode);

@@ -30,9 +30,9 @@ const Button = ({
   const classNameButton = css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.palette[color].main};
-    color: ${theme.palette[color].contrastText || 'currentColor'};
-    border-color: ${theme.palette[color].main || 'currentColor'};
+    background-color: ${theme.palette[color]?.main};
+    color: ${theme.palette[color]?.contrastText || 'currentColor'};
+    border-color: ${theme.palette[color]?.main || 'currentColor'};
     border-style: solid;
     border-width: 1px;
     font-size: 0.875rem;
@@ -96,7 +96,7 @@ const Button = ({
     }
     &.ghost {
       background: none;
-      color: ${theme?.palette?.text?.primary || '#1A2027'};
+      color: ${theme?.palette?.[color]?.main || '#1A2027'};
       border: none;
     }
     &.disabled.ghost {

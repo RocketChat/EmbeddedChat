@@ -1,23 +1,10 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Message as RCMessage,
-  MessageReactions,
-  MessageToolbox,
-  MessageDivider,
-  Avatar,
-  MessageMetricsItem,
-  MessageMetrics,
-  MessageMetricsReply,
-} from '@rocket.chat/fuselage';
-import Popup from 'reactjs-popup';
 import Cookies from 'js-cookie';
 import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
-import { format, formatDistance } from 'date-fns';
-import { useMediaQuery } from '@rocket.chat/fuselage-hooks';
-import { isSameUser, serializeReactions } from '../../lib/reaction';
+import { format } from 'date-fns';
+import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
-import { EmojiPicker } from '../EmojiPicker/index';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
@@ -25,7 +12,34 @@ import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import { Box } from '../Box';
-import { UiKitComponent, UiKitModal, kitContext, UiKitMessage } from '../uiKit';
+import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
+import useComponentOverrides from '../../theme/useComponentOverrides';
+import { appendClassNames } from '../../lib/appendClassNames';
+import { MessageContainer } from './MessageContainer';
+import { MessageBody } from './MessageBody';
+import { MessageReactions } from './MessageReactions';
+import { MessageMetrics } from './MessageMetrics';
+import { MessageToolbox } from './MessageToolbox';
+import { Avatar } from '../Avatar';
+import { MessageDivider } from './MessageDivider';
+
+const MessageCss = css`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding-top: 0.5rem;
+  -webkit-padding-before: 0.5rem;
+  padding-block-start: 0.5rem;
+  padding-bottom: 0.25rem;
+  -webkit-padding-after: 0.25rem;
+  padding-block-end: 0.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-inline: 1.25rem;
+  &:hover {
+    background: #f2f3f5;
+  }
+`;
 
 const Message = ({
   message,
@@ -33,7 +47,14 @@ const Message = ({
   sequential = false,
   newDay = false,
   showAvatar = false,
+  className = '',
+  style = {},
 }) => {
+  const { classNames, styleOverrides } = useComponentOverrides(
+    'Message',
+    [message.messageParentBox, className],
+    style
+  );
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -47,7 +68,6 @@ const Message = ({
     setEditMessage: state.setEditMessage,
   }));
   const openThread = useMessageStore((state) => state.openThread);
-  const isSmallScreen = useMediaQuery('(max-width: 992px)');
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -108,7 +128,7 @@ const Message = ({
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
-    await RCInstance.reactToMessage(e.name, msg._id, canReact);
+    await RCInstance.reactToMessage(e.names?.[0] || e.name, msg._id, canReact);
   };
 
   const handleOpenThread = (msg) => async () => {
@@ -143,42 +163,47 @@ const Message = ({
   );
 
   return (
-    <Box className={classes.messageParentBox} key={message._id}>
-      <RCMessage
-        key={message._id}
+    <>
+      {newDay ? (
+        <MessageDivider>
+          {format(new Date(message.ts), 'MMMM d, yyyy')}
+        </MessageDivider>
+      ) : null}
+      <Box
+        className={appendClassNames('ec-message', classNames)}
+        css={MessageCss}
         isEditing={editMessage.id === message._id}
-        className={classes.messageBody}
         isPending={message.isPending}
+        style={styleOverrides}
       >
-        <RCMessage.Container>
-          {newDay && (
-            <MessageDivider>
-              {format(new Date(message.ts), 'MMMM d, yyyy')}
-            </MessageDivider>
-          )}
+        <MessageContainer>
           <Box
             style={{
               display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              width: '100%',
             }}
           >
             {showAvatar && (
               <Box style={{ margin: '3px' }}>
                 <Avatar
                   url={getUserAvatarUrl(message.u.username)}
-                  size="x36"
                   alt="avatar"
                 />
               </Box>
             )}
             <Box
               style={{
-                margin: '5px',
+                marginLeft: '5px',
+                position: 'relative',
+                width: '100%',
               }}
             >
               {!sequential && <MessageHeader message={message} />}
               {!message.t ? (
                 <>
-                  <RCMessage.Body
+                  <MessageBody
                     className={
                       message.isPending ? classes.PendingMessageBody : ''
                     }
@@ -199,27 +224,13 @@ const Message = ({
                         />
                       </kitContext.Provider>
                     )}
-                  </RCMessage.Body>
+                  </MessageBody>
 
-                  <MessageReactions>
-                    {message.reactions &&
-                      serializeReactions(message.reactions).map((reaction) => (
-                        <MessageReactions.Reaction
-                          key={reaction.name}
-                          mine={isSameUser(reaction, authenticatedUserUsername)}
-                          onClick={() =>
-                            handleEmojiClick(
-                              reaction,
-                              message,
-                              !isSameUser(reaction, authenticatedUserUsername)
-                            )
-                          }
-                        >
-                          <Markdown body={reaction.name} isReaction />
-                          <p>{reaction.count}</p>
-                        </MessageReactions.Reaction>
-                      ))}
-                  </MessageReactions>
+                  <MessageReactions
+                    authenticatedUserUsername={authenticatedUserUsername}
+                    message={message}
+                    handleEmojiClick={handleEmojiClick}
+                  />
                 </>
               ) : (
                 <>
@@ -229,111 +240,40 @@ const Message = ({
                 </>
               )}
               {message.tcount && variant !== 'thread' ? (
-                <MessageMetrics>
-                  <MessageMetricsReply onClick={handleOpenThread(message)}>
-                    Reply
-                  </MessageMetricsReply>
-                  <MessageMetricsItem title="Replies">
-                    <MessageMetricsItem.Icon name="thread" />
-                    <MessageMetricsItem.Label>
-                      {message.tcount}
-                    </MessageMetricsItem.Label>
-                  </MessageMetricsItem>
-                  {!!message.tcount && (
-                    <MessageMetricsItem title="Participants">
-                      <MessageMetricsItem.Icon name="user" />
-                      <MessageMetricsItem.Label>
-                        {message.replies.length}
-                      </MessageMetricsItem.Label>
-                    </MessageMetricsItem>
-                  )}
-                  <MessageMetricsItem
-                    title={new Date(message.tlm).toLocaleString()}
-                  >
-                    <MessageMetricsItem.Icon name="clock" />
-                    <MessageMetricsItem.Label>
-                      {formatDistance(new Date(message.tlm), new Date(), {
-                        addSuffix: true,
-                      })}
-                    </MessageMetricsItem.Label>
-                  </MessageMetricsItem>
-                </MessageMetrics>
+                <MessageMetrics
+                  message={message}
+                  handleOpenThread={handleOpenThread}
+                />
               ) : null}
+              {!message.t ? (
+                <MessageToolbox
+                  message={message}
+                  authenticatedUserId={authenticatedUserId}
+                  handleDeleteMessage={handleDeleteMessage}
+                  handleOpenThread={handleOpenThread}
+                  handleStarMessage={handleStarMessage}
+                  handlePinMessage={handlePinMessage}
+                  handleEditMessage={() => {
+                    setEditMessage({
+                      message: message.message,
+                      id: message._id,
+                    });
+                  }}
+                  handleEmojiClick={handleEmojiClick}
+                  handlerReportMessage={() => {
+                    setMessageToReport(message._id);
+                    toggletoggleShowReportMessage();
+                  }}
+                  isThreadMessage={variant === 'thread'}
+                />
+              ) : (
+                <></>
+              )}
             </Box>
           </Box>
-        </RCMessage.Container>
-        {!message.t ? (
-          <MessageToolbox.Wrapper>
-            <MessageToolbox>
-              {variant !== 'thread' && (
-                <MessageToolbox.Item
-                  icon="thread"
-                  onClick={handleOpenThread(message)}
-                />
-              )}
-              <MessageToolbox.Item
-                icon={`${
-                  message.starred &&
-                  message.starred.find((u) => u._id === authenticatedUserId)
-                    ? 'star-filled'
-                    : 'star'
-                }`}
-                onClick={() => handleStarMessage(message)}
-              />
-              <Popup
-                trigger={
-                  <MessageToolbox.Item
-                    icon="emoji"
-                    onClick={() => console.log('saf')}
-                  />
-                }
-                position={isSmallScreen ? 'left top' : 'left center'}
-              >
-                <EmojiPicker
-                  handleEmojiClick={(_, e) =>
-                    handleEmojiClick(e, message, true)
-                  }
-                />
-              </Popup>
-              {variant !== 'thread' && (
-                <MessageToolbox.Item
-                  icon="pin"
-                  onClick={() => handlePinMessage(message)}
-                />
-              )}
-              {message.u._id === authenticatedUserId && (
-                <>
-                  <MessageToolbox.Item
-                    icon="edit"
-                    onClick={() => {
-                      setEditMessage({
-                        message: message.message,
-                        id: message._id,
-                      });
-                    }}
-                  />
-                  <MessageToolbox.Item
-                    icon="trash"
-                    color="danger"
-                    onClick={() => handleDeleteMessage(message)}
-                  />
-                </>
-              )}
-              <MessageToolbox.Item
-                icon="report"
-                color="danger"
-                onClick={() => {
-                  setMessageToReport(message._id);
-                  toggletoggleShowReportMessage();
-                }}
-              />
-            </MessageToolbox>
-          </MessageToolbox.Wrapper>
-        ) : (
-          <></>
-        )}
-      </RCMessage>
-    </Box>
+        </MessageContainer>
+      </Box>
+    </>
   );
 };
 
