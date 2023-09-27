@@ -64,32 +64,38 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 | showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
 | showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
 | enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                             |
-
-## Setting up Authentication
-
-Follow this [documentation](https://docs.rocket.chat/guides/administration/admin-panel/settings/oauth/google-oauth-setup) to receive the `GOOGLE_CLIENT_ID` as well as to setup Google SSO for EmbeddedChat.
-
 ## Development
 
-<h3>Local Setup</h3>
+### Local Setup
+To run the embeddedchat, you will need a *Rocket.Chat* server running (development or production). To setup Rocket.Chat dev environment follow this guide.
+[https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development](https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development)
+
+We use yarn workspaces. Install yarn if not already installed.
+
+#### Install dependencies
 
 ```bash
-npm i
-cd playground && npm i
-npm run dev # at the root folder --> EMBEDDEDCHAT
-
+yarn
 ```
 
-It will open up a playground react app at `http://localhost:4000`.
-Make a `.env` file in the playground directory following the `.env[example]` file.
+Thats all, This will install all the dependencies and will then build our auth, api and react package.
 
-<h3>Gitpod Setup</h3>
+#### Starting auth dev environment
+```bash
+cd packages/auth
+yarn dev
+```
 
-Make a `.env` file in the playground directory following the `.env[example]` file.
+#### Starting api dev environment
+```bash
+cd packages/api
+yarn dev
+```
+Api package depends on auth package. If you make any change to auth package, build the package using `yarn build` in `package/auth` directory. Then, restart the api dev environment.
 
-<a href="https://gitpod.io/#https://github.com/RocketChat/EmbeddedChat">
-  <img
-    src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod"
-    alt="Contribute with Gitpod"
-  />
-</a>
+#### Starting react dev environment
+```bash
+cd packages/react
+yarn storybook
+```
+React package depends on api package. If you make any change to api package, build the package using `yarn build` in `package/api` directory. Then, restart the react dev environment.
