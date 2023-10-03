@@ -70,6 +70,17 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 To run the embeddedchat, you will need a *Rocket.Chat* server running (development or production). To setup Rocket.Chat dev environment follow this guide.
 [https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development](https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development)
 
+#### Prerequisites
+
+Ensure you have Node.js version 16.19.0 installed. We recommend using [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) to manage your Node.js versions.
+
+To use the correct Node.js version for this project, run the following command:
+
+```bash
+nvm install
+nvm use
+``` 
+
 We use yarn workspaces. Install yarn if not already installed.
 
 #### Install dependencies
