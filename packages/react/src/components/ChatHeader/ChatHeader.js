@@ -1,7 +1,5 @@
-import { Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import stylesSheet from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
@@ -16,33 +14,20 @@ import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import { Menu } from '@rocket.chat/fuselage';
 
 const ChatHeader = ({
-  isClosable,
-  setClosableState,
-  moreOpts,
   fullScreen,
-  setFullScreen,
   channelName,
   className = '',
-  styles = {},
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const channelInfo = useChannelStore((state) => state.channelInfo);
-  const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
 
   const { RCInstance } = useContext(RCContext);
 
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-
+  const isUserAuthenticated = useUserStore((state) => state.isUserAuthenticated);
+  const setIsUserAuthenticated = useUserStore((state) => state.setIsUserAuthenticated);
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
@@ -122,97 +107,93 @@ const ChatHeader = ({
         ),
       },
     }),
-    ...(moreOpts && {
-      threads: {
-        action: function noRefCheck() {},
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="thread"
-              size="1em"
-            />
-            Threads
-          </Box>
-        ),
-      },
-      members: {
-        action: showChannelMembers,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="members"
-              size="1em"
-            />
-            Members
-          </Box>
-        ),
-      },
-      starred: {
-        action: showStarredMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="star"
-              size="1em"
-            />
-            Starred
-          </Box>
-        ),
-      },
-      pinned: {
-        action: showPinnedMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon style={{ marginInlineEnd: '0.4rem' }} name="pin" size="1em" />
-            Pinned
-          </Box>
-        ),
-      },
-      search: {
-        action: showSearchMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="magnifier"
-              size="1em"
-            />
-            Search
-          </Box>
-        ),
-      },
-      roominfo: {
-        action: showChannelinformation,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="info"
-              size="1em"
-            />
-            Room Information
-          </Box>
-        ),
-      },
-    }),
-    ...(isUserAuthenticated && {
-      logout: {
-        action: handleLogout,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }} color="danger">
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="reply-directly"
-              size="1em"
-            />
-            Logout
-          </Box>
-        ),
-      },
-    }),
+    threads: {
+      action: function noRefCheck() {},
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="thread"
+            size="1em"
+          />
+          Threads
+        </Box>
+      ),
+    },
+    members: {
+      action: showChannelMembers,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="members"
+            size="1em"
+          />
+          Members
+        </Box>
+      ),
+    },
+    starred: {
+      action: showStarredMessage,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="star"
+            size="1em"
+          />
+          Starred
+        </Box>
+      ),
+    },
+    pinned: {
+      action: showPinnedMessage,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon style={{ marginInlineEnd: '0.4rem' }} name="pin" size="1em" />
+          Pinned
+        </Box>
+      ),
+    },
+    search: {
+      action: showSearchMessage,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="magnifier"
+            size="1em"
+          />
+          Search
+        </Box>
+      ),
+    },
+    roominfo: {
+      action: showChannelinformation,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="info"
+            size="1em"
+          />
+          Room Information
+        </Box>
+      ),
+    },
+    logout: {
+      action: handleLogout,
+      label: (
+        <Box style={{ alignItems: 'center', display: 'flex' }} color="danger">
+          <Icon
+            style={{ marginInlineEnd: '0.4rem' }}
+            name="reply-directly"
+            size="1em"
+          />
+          Logout
+        </Box>
+      ),
+    },
   });
 
   return (
@@ -225,7 +206,7 @@ const ChatHeader = ({
         border: 1px solid rgba(0, 0, 0, 0.5);
       `}
       className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
-      style={{ ...styleOverrides, ...styles }}
+      style={{ ...styleOverrides }}
     >
       <Box
         css={css`
@@ -303,19 +284,6 @@ const ChatHeader = ({
               <Menu margin="0 4px" display="inline" options={menuOptions()} />
             </>
           )}
-          {isClosable && (
-            <ActionButton
-              onClick={() => {
-                setClosableState((prev) => !prev);
-              }}
-              ghost
-              display="inline"
-              square
-              small
-            >
-              <Icon name="cross" size="1.25rem" />
-            </ActionButton>
-          )}
         </Box>
       </Box>
       {isThreadOpen && (
@@ -328,12 +296,7 @@ const ChatHeader = ({
 export default ChatHeader;
 
 ChatHeader.propTypes = {
-  isClosable: PropTypes.bool,
   fullScreen: PropTypes.bool,
-  setClosableState: PropTypes.func,
-  setFullScreen: PropTypes.func,
-  moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
   className: PropTypes.string,
-  styles: PropTypes.object,
 };
