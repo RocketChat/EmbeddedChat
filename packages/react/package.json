@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "NODE_ENV=development rollup -c --context=window",
-    "build:prod": "NODE_ENV=production rollup -c --context=window",
+    "build": "NODE_ENV=production rollup -c --context=window",
     "watch": "rollup -c --watch --context=window",
     "dev": "concurrently \" npm run watch \" \" npm run start --prefix playground \"",
     "test": "run-s test:unit test:lint test:build",
