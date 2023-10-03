@@ -44,7 +44,7 @@ export const EmbeddedChat = ({
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, []);
+  }, [toastBarPosition, showAvatar]);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -65,26 +65,31 @@ export const EmbeddedChat = ({
     return newRCInstance;
   });
 
-  useEffect(() => {
-    const reInstantiate = () => {
-      const newRCInstance = new EmbeddedChatApi(host, roomId, {
-        getToken,
-        deleteToken,
-        saveToken,
-        autoLogin: auth.flow === 'MANAGED',
-      });
-      if (auth.flow === 'TOKEN') {
-        newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-      }
-      setRCInstance(newRCInstance);
-    };
+  // Define the reInstantiate function
+  const reInstantiate = () => {
+    const newRCInstance = new EmbeddedChatApi(host, roomId, {
+      getToken,
+      deleteToken,
+      saveToken,
+      autoLogin: auth.flow === 'MANAGED',
+    });
+    if (auth.flow === 'TOKEN') {
+      newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
+    }
+    setRCInstance(newRCInstance);
+  };
 
+  // Effect to handle re-instantiation of RCInstance
+  useEffect(() => {
     if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close().then(reInstantiate).catch(console.error);
+      RCInstance.close()
+        .then(reInstantiate)
+        .catch(console.error);
     } else {
       reInstantiate();
     }
   }, [roomId, host, auth?.flow]);
+
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -102,27 +107,31 @@ export const EmbeddedChat = ({
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
 
+  // Define a separate function to handle the auth change event
+  const handleAuthChange = (user) => {
+    if (user) {
+      RCInstance.connect()
+        .then(() => {
+          console.log(`Connected to RocketChat ${RCInstance.host}`);
+        })
+        .catch(console.error);
+      console.log('reinstantiated');
+      const { me } = user;
+      setAuthenticatedUserAvatarUrl(me.avatarUrl);
+      setAuthenticatedUserUsername(me.username);
+      setAuthenticatedUserId(me._id);
+      setAuthenticatedName(me.name);
+      setIsUserAuthenticated(true);
+    } else {
+      setIsUserAuthenticated(false);
+    }
+  };
+
+  // Effect to handle the auth change event
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
-      // getUserEssentials();
-      if (user) {
-        RCInstance.connect()
-          .then(() => {
-            console.log(`Connected to RocketChat ${RCInstance.host}`);
-          })
-          .catch(console.error);
-        console.log('reinstantiated');
-        const { me } = user;
-        setAuthenticatedUserAvatarUrl(me.avatarUrl);
-        setAuthenticatedUserUsername(me.username);
-        setAuthenticatedUserId(me._id);
-        setAuthenticatedName(me.name);
-        setIsUserAuthenticated(true);
-      } else {
-        setIsUserAuthenticated(false);
-      }
-    });
+    RCInstance.auth.onAuthChange(handleAuthChange);
   }, [RCInstance]);
+
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
