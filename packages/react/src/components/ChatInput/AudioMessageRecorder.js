@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import PropTypes from 'prop-types';
-import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
+import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
@@ -8,14 +7,13 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 
-const iconMap = {
-  danger: 'modal-warning',
-  warning: 'modal-warning',
-  info: 'info',
-  success: 'check',
-};
+// const iconMap = {
+//   danger: 'modal-warning',
+//   warning: 'modal-warning',
+//   info: 'info',
+//   success: 'check',
+// };
 
-// Define Emotion.sh styles for your component
 const styles = {
   audioBox: css`
     display: flex;
@@ -49,6 +47,7 @@ const AudioMessageRecorder = () => {
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
   const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
+
   const onStop = (audioChunks) => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
     const fileName = 'Audio record.mp3';

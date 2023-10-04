@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import Popup from 'reactjs-popup';
 import he from 'he';
@@ -30,14 +29,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   };
 
   const handleEmojiClick = (n) => {
-    if (n.length > 5) {
-      const flagUnifed = `&#x${n.split('-').join(';&#x')};`;
-      const flag = he.decode(flagUnifed);
-      messageRef.current.value += flag;
-      return;
-    }
-    const unified_emoji = he.decode(`&#x${n};`);
-    messageRef.current.value += unified_emoji;
+    const unifiedEmoji = n.length > 5 ? he.decode(`&#x${n.split('-').join(';&#x')};`) : he.decode(`&#x${n};`);
+    messageRef.current.value += unifiedEmoji;
   };
 
   const wrapSelection = (pattern) => {
