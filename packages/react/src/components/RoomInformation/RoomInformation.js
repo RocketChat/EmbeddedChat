@@ -1,12 +1,28 @@
 import React, { useContext } from 'react';
 import { Avatar } from '@rocket.chat/fuselage';
-import { css } from '@emotion/react';
+import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
+
+const styles = {
+  component: css`
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color: white;
+    box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+    z-index: 100;
+    padding: 16px;
+  `,
+};
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -25,8 +41,9 @@ const Roominfo = () => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
+
   return (
-    <Box className={classes.component} style={{ padding: '16px' }}>
+    <Box css={styles.component} className={classes.component}>
       <Box
         css={css`
           display: flex;
@@ -84,4 +101,5 @@ const Roominfo = () => {
     </Box>
   );
 };
+
 export default Roominfo;
