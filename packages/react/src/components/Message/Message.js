@@ -7,7 +7,6 @@ import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import classes from './Message.module.css';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
@@ -204,9 +203,12 @@ const Message = ({
               {!message.t ? (
                 <>
                   <MessageBody
-                    className={
-                      message.isPending ? classes.PendingMessageBody : ''
-                    }
+                    css={css`
+                      &.PendingMessageBody {
+                        opacity: 0.4 !important;
+                        white-space: pre-line;
+                      }
+                    `}
                   >
                     {message.attachments && message.attachments.length > 0 ? (
                       <>
