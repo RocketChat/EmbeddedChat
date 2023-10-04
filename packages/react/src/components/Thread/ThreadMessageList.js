@@ -5,6 +5,18 @@ import { useMessageStore, useUserStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
+import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
+
+const styles = {
+  messageParentBox: css`
+    .messageBody {
+      padding-block: 0.25rem;
+    }
+  `,
+  PendingMessageBody: css`
+    opacity: 0.4 !important;
+  `,
+};
 
 const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
   const showAvatar = useUserStore((state) => state.showAvatar);
@@ -28,6 +40,8 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               sequential={sequential}
               variant="thread"
               showAvatar={showAvatar}
+              css={styles.messageParentBox}
+              className={showReportMessage ? styles.PendingMessageBody : ''}
             />
           )
         );
