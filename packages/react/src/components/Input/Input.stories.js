@@ -5,7 +5,7 @@ import { Input } from '.';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'Input',
+  title: 'Components/Input',
   component: Input,
 };
 
