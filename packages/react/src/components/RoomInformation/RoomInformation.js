@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Avatar } from '@rocket.chat/fuselage';
+//import { Avatar } from '@rocket.chat/fuselage';
+import { Avatar } from '../Avatar/Avatar'
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
