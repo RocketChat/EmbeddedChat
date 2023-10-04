@@ -1,7 +1,6 @@
-import { Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
+import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
 import stylesSheet from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
@@ -16,6 +15,28 @@ import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+
+const iconMap = {
+  danger: 'modal-warning',
+  warning: 'modal-warning',
+  info: 'info',
+  success: 'check',
+};
+
+// Define Emotion.sh styles for your component
+const styles = {
+  container: css`
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  `,
+  nospace: css`
+    margin: 0;
+    padding: 0;
+  `,
+};
 
 const ChatHeader = ({
   isClosable,
@@ -217,14 +238,8 @@ const ChatHeader = ({
 
   return (
     <Box
-      css={css`
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        padding: 0.75rem;
-        border: 1px solid rgba(0, 0, 0, 0.5);
-      `}
-      className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
+      css={[styles.container, classNames]} // Apply Emotion.sh styles
+      className={`${stylesSheet.container} ${className}`}
       style={{ ...styleOverrides, ...styles }}
     >
       <Box
@@ -253,13 +268,13 @@ const ChatHeader = ({
             {isUserAuthenticated ? (
               <>
                 <h2
-                  className={`ec-chat-header--channelName ${stylesSheet.nospace}`}
+                  className={`ec-chat-header--channelName ${styles.nospace}`}
                 >
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
-                    className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                    className={`ec-chat-header--channelDescription ${styles.nospace}`}
                     style={{ fontSize: 14 }}
                   >
                     {channelInfo.description || ''}
@@ -268,7 +283,7 @@ const ChatHeader = ({
               </>
             ) : (
               <h2
-                className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                className={`ec-chat-header--channelDescription ${styles.nospace}`}
               >
                 {channelName || 'Login to chat'}
               </h2>
