@@ -52,7 +52,7 @@ const Roominfo = () => {
         </h3>
       </Box>
 
-      <Avatar size="x332" url={getChannelAvatarURL(channelInfo.name)} />
+      <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
       <Box
         css={css`
           margin: 16px;
