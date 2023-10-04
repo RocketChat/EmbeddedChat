@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { Avatar } from '@rocket.chat/fuselage';
-import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
+import { Avatar } from '../Avatar/Avatar';
+import { css } from '@emotion/react';
+
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
@@ -69,7 +70,7 @@ const Roominfo = () => {
         </h3>
       </Box>
 
-      <Avatar size="x332" url={getChannelAvatarURL(channelInfo.name)} />
+      <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
       <Box
         css={css`
           margin: 16px;
