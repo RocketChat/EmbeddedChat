@@ -65,7 +65,7 @@ const Search = () => {
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           className={classes.textInput}
         />
         <Button size="small" onClick={searchMessages}>
