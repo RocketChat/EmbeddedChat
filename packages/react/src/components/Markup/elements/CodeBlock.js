@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import styles from './CodeBlock.module.css';
+import { styles } from '@emotion/react';;
 
 const CodeBlock = ({ lines }) => {
   const code = useMemo(

@@ -6,7 +6,7 @@ import {
   MessageDivider,
 } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
-import classes from './SearchMessage.module.css';
+import { classes } from '@emotion/react';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';

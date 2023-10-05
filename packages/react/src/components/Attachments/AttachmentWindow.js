@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ValidateComponent from './AttachmentWindow/validateComponent';
 import RCContext from '../../context/RCInstance';
-import styles from './AttachmentWindow.module.css';
+import { styles } from '@emotion/react';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 

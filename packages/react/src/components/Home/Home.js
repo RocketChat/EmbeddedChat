@@ -1,8 +1,7 @@
-import { css } from '@emotion/react';
+import { css, styles } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Box } from '../Box';
-import styles from './Home.module.css';
 
 const Home = ({ height }) => (
   <Box

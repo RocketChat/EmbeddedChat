@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
-import classes from './RoomMember.module.css';
+import { classes } from '@emotion/react';
 import { useMemberStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';

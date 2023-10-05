@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '../Box';
 import { GridItem } from './GridItem';
-import classes from './Grid.module.css';
+import { classes } from '@emotion/react';
 
 const getClassNames = (breakPoints) =>
   Object.keys(breakPoints)

@@ -2,10 +2,9 @@
 import React from 'react';
 import Popup from 'reactjs-popup';
 import he from 'he';
-import { css } from '@emotion/react';
+import { css, styles } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
-import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';

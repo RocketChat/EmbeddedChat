@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { Avatar } from '../Avatar/Avatar';
-import { css } from '@emotion/react';
+import { css, classes } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
-import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
 import { Icon } from '../Icon';
 import { Box } from '../Box';

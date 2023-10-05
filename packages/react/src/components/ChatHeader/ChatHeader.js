@@ -1,8 +1,7 @@
 import { Menu } from '@rocket.chat/fuselage';
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
-import stylesSheet from './ChatHeader.module.css';
+import { css, stylesSheet } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import {
   useUserStore,

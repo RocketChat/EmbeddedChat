@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../GenericModal';
-import classes from './TwoFactorTotpModal.module.css';
+import { classes } from '@emotion/react';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Modal } from '../Modal';

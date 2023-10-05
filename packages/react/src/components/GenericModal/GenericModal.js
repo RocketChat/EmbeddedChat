@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classes from './Generic.module.css';
+import { classes } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Modal } from '../Modal';
 
