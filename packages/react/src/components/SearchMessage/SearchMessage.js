@@ -32,6 +32,12 @@ const Search = () => {
     setMessageList(messages);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      searchMessages();
+    }
+  };
+
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
@@ -59,9 +65,7 @@ const Search = () => {
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.keyCode === 13) searchMessages();
-          }}
+          onKeyDown={handleKeyPress}
           className={classes.textInput}
         />
         <Button size="small" onClick={searchMessages}>
