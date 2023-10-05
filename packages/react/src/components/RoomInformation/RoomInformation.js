@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Avatar } from '../Avatar/Avatar';
-import { css, classes } from '@emotion/react';
+import { css } from '@emotion/react';
+import { classes } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import { Icon } from '../Icon';
