@@ -17,7 +17,7 @@ const ToastBarContainer = () => {
       <Button
         onClick={() =>
           dispatchToast({
-            payload: 'Success Message',
+            message: 'Success Message',
             type: 'success',
           })
         }
@@ -29,7 +29,7 @@ const ToastBarContainer = () => {
         color="error"
         onClick={() =>
           dispatchToast({
-            payload: 'Error Message',
+            message: 'Error Message',
             type: 'error',
           })
         }
@@ -40,7 +40,7 @@ const ToastBarContainer = () => {
         color="info"
         onClick={() =>
           dispatchToast({
-            payload: 'Info Message',
+            message: 'Info Message',
             type: 'info',
           })
         }
@@ -51,7 +51,7 @@ const ToastBarContainer = () => {
         color="warning"
         onClick={() =>
           dispatchToast({
-            payload: 'Warning Message',
+            message: 'Warning Message',
             type: 'warning',
           })
         }
