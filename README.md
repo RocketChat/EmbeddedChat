@@ -70,6 +70,17 @@ Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-E
 To run the embeddedchat, you will need a *Rocket.Chat* server running (development or production). To setup Rocket.Chat dev environment follow this guide.
 [https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development](https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development)
 
+#### Prerequisites
+
+Ensure you have Node.js version 16.19.0 installed. We recommend using [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) to manage your Node.js versions.
+
+To use the correct Node.js version for this project, run the following command:
+
+```bash
+nvm install
+nvm use
+``` 
+
 We use yarn workspaces. Install yarn if not already installed.
 
 #### Install dependencies
@@ -80,22 +91,26 @@ yarn
 
 Thats all, This will install all the dependencies and will then build our auth, api and react package.
 
+#### Starting storybook for react
+```bash
+cd packages/react
+yarn storybook
+```
+Till now, storybook should be up and running. You can play around with EmbeddedChat and it's component and see changes in storybook in real-time.
+ 
+### Working with api and auth packages.
 #### Starting auth dev environment
+If you want to make changes to auth package and test them, you can start its playground server.
 ```bash
 cd packages/auth
 yarn dev
 ```
+React package depends on api package. If you make any change to api package, build the package using `yarn build` in `package/api` directory. Then, restart the react projects.
 
 #### Starting api dev environment
+If you want to make changes to api package and test them, you can start its playground server.
 ```bash
 cd packages/api
 yarn dev
 ```
 Api package depends on auth package. If you make any change to auth package, build the package using `yarn build` in `package/auth` directory. Then, restart the api dev environment.
-
-#### Starting react dev environment
-```bash
-cd packages/react
-yarn storybook
-```
-React package depends on api package. If you make any change to api package, build the package using `yarn build` in `package/api` directory. Then, restart the react dev environment.

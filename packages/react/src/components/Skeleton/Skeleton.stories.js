@@ -3,7 +3,7 @@ import React from 'react';
 import { Skeleton } from '.';
 
 export default {
-  title: 'Skeleton',
+  title: 'Components/Skeleton',
   component: Skeleton,
 };
 

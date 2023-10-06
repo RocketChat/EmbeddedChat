@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
 import stylesSheet from './ChatHeader.module.css';
@@ -15,6 +15,7 @@ import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import { Menu } from '../Menu';
 
 const iconMap = {
   danger: 'modal-warning',
@@ -75,7 +76,7 @@ const ChatHeader = ({
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
     } catch (e) {
@@ -83,37 +84,37 @@ const ChatHeader = ({
     } finally {
       setIsUserAuthenticated(false);
     }
-  };
+  }, [RCInstance, setIsUserAuthenticated]);
 
-  const showStarredMessage = async () => {
+  const showStarredMessage = useCallback(async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);
     setFilter(true);
-  };
+  }, [RCInstance, setMessages, setFilter]);
 
-  const showPinnedMessage = async () => {
+  const showPinnedMessage = useCallback(async () => {
     const { messages } = await RCInstance.getPinnedMessages();
     setMessages(messages);
     setFilter(true);
-  };
+  }, [RCInstance, setMessages, setFilter]);
 
-  const showChannelMembers = async () => {
+  const showChannelMembers = useCallback(async () => {
     const { members = [] } = await RCInstance.getChannelMembers();
     setMembersHandler(members);
     toggleShowMembers();
     setShowSearch(false);
-  };
+  }, [RCInstance, setMembersHandler, toggleShowMembers, setShowSearch]);
 
-  const showSearchMessage = async () => {
+  const showSearchMessage = useCallback(() => {
     setShowSearch(true);
     if (showMembers) toggleShowMembers();
-  };
+  }, [setShowSearch, showMembers, toggleShowMembers]);
 
-  const showChannelinformation = async () => {
+  const showChannelinformation = useCallback(async () => {
     setShowChannelinfo(true);
     setShowSearch(false);
     if (showMembers) toggleShowMembers();
-  };
+  }, [setShowChannelinfo, setShowSearch, showMembers, toggleShowMembers]);
 
   useEffect(() => {
     const getChannelInfo = async () => {
@@ -125,117 +126,83 @@ const ChatHeader = ({
     if (isUserAuthenticated) {
       getChannelInfo();
     }
-  }, [isUserAuthenticated, RCInstance]);
+  }, [isUserAuthenticated, RCInstance, setChannelInfo]);
 
-  const menuOptions = () => ({
-    ...(fullScreen && {
-      minimize: {
+  const menuOptions = useMemo(() => {
+    const options = [];
+    if (fullScreen) {
+      options.push({
+        id: 'minimize',
         action: () => setFullScreen((prev) => !prev),
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="mobile"
-              size="1em"
-            />
-            Minimize
-          </Box>
-        ),
-      },
-    }),
-    ...(moreOpts && {
-      threads: {
-        action: function noRefCheck() {},
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="thread"
-              size="1em"
-            />
-            Threads
-          </Box>
-        ),
-      },
-      members: {
-        action: showChannelMembers,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="members"
-              size="1em"
-            />
-            Members
-          </Box>
-        ),
-      },
-      starred: {
-        action: showStarredMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="star"
-              size="1em"
-            />
-            Starred
-          </Box>
-        ),
-      },
-      pinned: {
-        action: showPinnedMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon style={{ marginInlineEnd: '0.4rem' }} name="pin" size="1em" />
-            Pinned
-          </Box>
-        ),
-      },
-      search: {
-        action: showSearchMessage,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="magnifier"
-              size="1em"
-            />
-            Search
-          </Box>
-        ),
-      },
-      roominfo: {
-        action: showChannelinformation,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="info"
-              size="1em"
-            />
-            Room Information
-          </Box>
-        ),
-      },
-    }),
-    ...(isUserAuthenticated && {
-      logout: {
+        icon: 'mobile',
+        label: 'Minimize',
+      });
+    }
+    if (moreOpts) {
+      options.push(
+        ...[
+          {
+            id: 'thread',
+            action: function noRefCheck() {},
+            label: 'Threads',
+            icon: 'thread',
+          },
+          {
+            id: 'members',
+            action: showChannelMembers,
+            label: 'Members',
+            icon: 'members',
+          },
+          {
+            id: 'starred',
+            action: showStarredMessage,
+            label: 'Starred',
+            icon: 'star',
+          },
+          {
+            id: 'pinned',
+            action: showPinnedMessage,
+            label: 'Pinned',
+            icon: 'pin',
+          },
+          {
+            id: 'search',
+            action: showSearchMessage,
+            label: 'Search',
+            icon: 'magnifier',
+          },
+          {
+            id: 'rInfo',
+            action: showChannelinformation,
+            label: 'Room Information',
+            icon: 'info',
+          },
+        ]
+      );
+    }
+    if (isUserAuthenticated) {
+      options.push({
+        id: 'logout',
         action: handleLogout,
-        label: (
-          <Box style={{ alignItems: 'center', display: 'flex' }} color="danger">
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="reply-directly"
-              size="1em"
-            />
-            Logout
-          </Box>
-        ),
-      },
-    }),
-  });
-
+        label: 'Logout',
+        icon: 'reply-directly',
+        color: 'error',
+      });
+    }
+    return options;
+  }, [
+    fullScreen,
+    handleLogout,
+    isUserAuthenticated,
+    moreOpts,
+    setFullScreen,
+    showChannelMembers,
+    showChannelinformation,
+    showPinnedMessage,
+    showSearchMessage,
+    showStarredMessage,
+  ]);
+  console.log(menuOptions);
   return (
     <Box
       css={[styles.container, classNames]} // Apply Emotion.sh styles
@@ -301,7 +268,7 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-            <Menu margin="0 4px" display="inline" options={menuOptions()} />
+            <Menu options={menuOptions} />
           ) : (
             <>
               <ActionButton
@@ -315,7 +282,7 @@ const ChatHeader = ({
               >
                 <Icon name="computer" size="1.25rem" />
               </ActionButton>
-              <Menu margin="0 4px" display="inline" options={menuOptions()} />
+              <Menu options={menuOptions} />
             </>
           )}
           {isClosable && (

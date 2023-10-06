@@ -5,7 +5,7 @@ import { Button } from '../Button';
 import { Throbber } from '.';
 
 export default {
-  title: 'Throbber',
+  title: 'Components/Throbber',
   component: Throbber,
 };
 

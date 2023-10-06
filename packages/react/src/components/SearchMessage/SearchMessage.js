@@ -1,8 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
-import { Message, MessageReactions, MessageDivider } from '@rocket.chat/fuselage';
-import { css } from '@emotion/react'; // Step 1: Import `css` from Emotion.sh
+import {
+  Message,
+  MessageReactions,
+  MessageDivider,
+} from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
+import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
@@ -10,40 +14,6 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-
-const styles = {
-  searchBar: css`
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 350px;
-    height: 100%;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    background-color: white;
-    box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
-    z-index: 100;
-
-    @media (max-width: 550px) {
-      width: 100vw;
-    }
-  `,
-  container: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-  `,
-  textInput: css`
-    width: 65%;
-    height: 2.5rem;
-    border: none;
-    outline: none;
-    ::placeholder {
-      padding-left: 5px;
-    }
-  `,
-};
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -62,11 +32,17 @@ const Search = () => {
     setMessageList(messages);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      searchMessages();
+    }
+  };
+
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box css={styles.searchBar} style={{ padding: '1rem' }}>
+    <Box className={classes.searchBar} style={{ padding: '1rem' }}>
       <Box
         style={{
           display: 'flex',
@@ -84,15 +60,13 @@ const Search = () => {
           </ActionButton>
         </h3>
       </Box>
-      <Box css={styles.container} style={{ border: '2px solid #ddd' }}>
+      <Box className={classes.container} style={{ border: '2px solid #ddd' }}>
         <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.keyCode === 13) searchMessages();
-          }}
-          css={styles.textInput}
+          onKeyDown={handleKeyPress}
+          className={classes.textInput}
         />
         <Button size="small" onClick={searchMessages}>
           Enter
@@ -141,5 +115,4 @@ const Search = () => {
     </Box>
   );
 };
-
 export default Search;

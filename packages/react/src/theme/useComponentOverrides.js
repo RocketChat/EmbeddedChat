@@ -8,7 +8,7 @@ const useComponentOverrides = (component, className = '', style = {}) => {
       `${Array.isArray(className) ? className.join(' ') : className} ${
         theme?.components?.[component]?.classNames || ''
       }`,
-    [className, theme?.components?.[component]?.classNames]
+    [className, component, theme?.components]
   );
   const styleOverrides = useMemo(
     () => ({
@@ -16,7 +16,7 @@ const useComponentOverrides = (component, className = '', style = {}) => {
       ...((theme?.components && theme?.components[component]?.styleOverrides) ||
         {}),
     }),
-    [style, theme?.components?.[component]?.styleOverrides]
+    [component, style, theme?.components]
   );
   return { styleOverrides, classNames };
 };

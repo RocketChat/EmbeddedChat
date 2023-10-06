@@ -7,6 +7,7 @@
 		"packages/*"
 	],
 	"scripts": {
+		"preinstall": "node scripts/node-check.js",
 		"postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build"
 	},
 	"devDependencies": {
