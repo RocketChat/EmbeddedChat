@@ -1,17 +1,17 @@
 import React from 'react';
 import { Box } from '../Box';
 import { GridItem } from './GridItem';
-import classes from './Grid.module.css';
+import styles from './GridStyles';
 
 const getClassNames = (breakPoints) =>
   Object.keys(breakPoints)
     .filter((key) => !!breakPoints[key])
-    .map((key) => classes[`ec-grid--${key}`])
-    .concat(classes['ec-grid'])
+    .map((key) => styles[`ec-grid--${key}`])
+    .concat(styles['ec-grid'])
     .join(' ');
 
 const Grid = ({ xs, sm, md, lg, xl, ...props }) => (
-  <Box className={classes['ec-grid__wrapper']}>
+  <Box className={styles['ec-grid__wrapper']}>
     <Box className={getClassNames({ xs, sm, md, lg, xl })} {...props} />
   </Box>
 );

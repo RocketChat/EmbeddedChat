@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box } from '../Box';
-import classes from './Grid.module.css';
+import styles from './GridStyles';
 
 const getClassNames = (breakPoints) =>
   Object.keys(breakPoints)
     .filter((key) => !!breakPoints[key])
-    .map((key) => classes[`ec-grid__item--${key}`])
-    .concat(classes['ec-grid__item '])
+    .map((key) => styles[`ec-grid__item--${key}`])
+    .concat(styles['ec-grid__item '])
     .join(' ');
 
 export const GridItem = ({ xs, sm, md, lg, xl, ...props }) => (
