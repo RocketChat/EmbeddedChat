@@ -1,4 +1,4 @@
-import { CheckBox } from '@rocket.chat/fuselage';
+import { CheckBox } from '../../CheckBox/CheckBox';
 import React from 'react';
 import PropTypes from 'prop-types';
 import InlineElements from '../elements/InlineElements';
