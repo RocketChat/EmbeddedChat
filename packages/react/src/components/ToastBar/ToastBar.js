@@ -9,7 +9,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 
 const ToastBar = ({ toast, onClose }) => {
-  const { type, payload, time = 2000 } = toast;
+  const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
   const theme = useTheme();
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
@@ -77,7 +77,7 @@ const ToastBar = ({ toast, onClose }) => {
       style={styleOverrides}
     >
       <Icon size="1em" name={iconName} />
-      {payload}
+      {message}
       <ActionButton icon="cross" size="small" onClick={onClose} ghost />
     </Box>
   );
