@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import PropTypes from 'prop-types';
 import { useMessageStore, useToastStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { Modal } from '../Modal';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [
@@ -28,13 +28,11 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
       dispatchToastMessage({
         type: 'success',
         message: 'Message reported successfully',
-        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
         message: 'Error in reporting message',
-        position: toastPosition,
       });
     }
 

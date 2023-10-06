@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../context/RCInstance';
 import {
   useToastStore,
@@ -7,6 +6,7 @@ import {
   totpModalStore,
   loginModalStore,
 } from '../store';
+import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);

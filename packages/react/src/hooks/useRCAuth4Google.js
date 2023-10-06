@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import RCContext from '../context/RCInstance';
 import { useGoogleLogin } from './useGoogleLogin';
 import { useToastStore, useUserStore, totpModalStore } from '../store';
+import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);

@@ -18,7 +18,7 @@ export const Simple = {
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',
-    toastBarPosition: 'bottom-end',
+    toastBarPosition: 'bottom right',
     showRoles: true,
     showAvatar: false,
     enableThreads: true,

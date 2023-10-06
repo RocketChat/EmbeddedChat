@@ -24,7 +24,7 @@ const Icon = ({ size = 24, name, className = '', style = {}, ...props }) => {
       y="0"
       width={size}
       height={size}
-      color="inherit"
+      color="currentColor"
       className={`ec-icon ${classNames}`}
       style={styleOverrides}
       {...props}

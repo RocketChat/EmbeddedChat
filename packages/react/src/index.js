@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ToastBarProvider } from '@rocket.chat/fuselage-toastbar';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
@@ -13,6 +12,7 @@ import DefaultTheme from './theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from './lib/auth';
 import { Box } from './components/Box';
 import useComponentOverrides from './theme/useComponentOverrides';
+import { ToastBarProvider } from './components/ToastBar';
 
 export const EmbeddedChat = ({
   isClosable = false,
@@ -25,7 +25,7 @@ export const EmbeddedChat = ({
   channelName,
   anonymousMode = false,
   headerColor = '#fff',
-  toastBarPosition = 'bottom-end',
+  toastBarPosition = 'bottom right',
   showRoles = false,
   showAvatar = false,
   enableThreads = false,
@@ -136,7 +136,7 @@ export const EmbeddedChat = ({
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
-      <ToastBarProvider>
+      <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={{ RCInstance, ECOptions }}>
           {attachmentWindowOpen ? <AttachmentWindow /> : null}
           <Box

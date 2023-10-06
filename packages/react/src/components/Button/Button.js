@@ -96,7 +96,7 @@ const Button = ({
     }
     &.ghost {
       background: none;
-      color: ${theme?.palette?.[color]?.main || '#1A2027'};
+      color: ${theme?.palette?.[color]?.main || 'currentColor'};
       border: none;
     }
     &.disabled.ghost {
