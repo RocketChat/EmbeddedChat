@@ -37,6 +37,8 @@ const iconsList = [
   'star-filled',
   'trash',
   'kebab',
+  'check',
+  'error-circle',
 ];
 const svgDirPath = path.join(
   __dirname,

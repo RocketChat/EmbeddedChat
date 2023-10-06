@@ -22,10 +22,10 @@ const ToastBar = ({ toast, onClose }) => {
         iconName = 'info';
         break;
       case 'warning':
-        iconName = 'warning';
+        iconName = 'report';
         break;
       case 'error':
-        iconName = 'warning';
+        iconName = 'error-circle';
         break;
       case 'success':
       default:
@@ -52,7 +52,7 @@ const ToastBar = ({ toast, onClose }) => {
   const ToastBarCSS = css`
     display: flex;
     flex-direction: row;
-    gap: 2em;
+    gap: 1em;
     align-items: center;
     justify-content: space-between;
     width: fit-content;

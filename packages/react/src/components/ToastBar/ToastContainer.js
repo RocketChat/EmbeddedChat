@@ -7,7 +7,7 @@ import ToastBar from './ToastBar';
 const ToastContainer = () => {
   const theme = useTheme();
   const ToastContainerCss = css`
-    // position: fixed;
+    position: fixed;
     z-index: ${theme.zIndex.toastbar};
   `;
 
