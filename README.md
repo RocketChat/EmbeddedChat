@@ -81,7 +81,10 @@ nvm install
 nvm use
 ``` 
 
-We use yarn workspaces. Install yarn if not already installed.
+We use yarn workspaces. Enable corepack if not already enabled.
+```
+corepack enable
+```
 
 #### Install dependencies
 
