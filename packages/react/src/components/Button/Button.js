@@ -23,15 +23,22 @@ const Button = ({
   square = false,
   ghost = false,
   disabled = false,
+  themeMode = 'light', // Theme mode for light/dark theme
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
   const theme = useTheme();
+  const isDarkTheme = themeMode === 'dark'; // Determine if the dark theme is active
+
   const classNameButton = css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.palette[color]?.main};
-    color: ${theme.palette[color]?.contrastText || 'currentColor'};
+    background-color: ${isDarkTheme
+      ? theme.palette[color]?.dark
+      : theme.palette[color]?.main};
+    color: ${isDarkTheme
+      ? theme.palette[color]?.contrastTextDark
+      : theme.palette[color]?.contrastText || 'currentColor'};
     border-color: ${theme.palette[color]?.main || 'currentColor'};
     border-style: solid;
     border-width: 1px;
@@ -113,10 +120,8 @@ const Button = ({
       type="button"
       css={classNameButton}
       className={`ec-button ec-button--${size} ${
-        square ? `ec-button-square` : ``
-      } ${ghost ? 'ghost' : ''} ${
-        disabled ? 'disabled' : ''
-      } ${className} ${classNames}`}
+        square ? 'ec-button-square' : ''
+      } ${ghost ? 'ghost' : ''} ${disabled ? 'disabled' : ''} ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
@@ -137,6 +142,7 @@ Button.propTypes = {
   square: PropTypes.bool,
   ghost: PropTypes.bool,
   disabled: PropTypes.bool,
+  themeMode: PropTypes.oneOf(['light', 'dark']), // Add themeMode prop
 };
 
 export default Button;

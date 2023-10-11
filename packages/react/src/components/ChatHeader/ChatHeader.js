@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import stylesSheet from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
@@ -9,6 +10,7 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
+  useThemeStore, // Import the theme store
 } from '../../store';
 import { ThreadHeader } from '../ThreadHeader';
 import { Box } from '../Box';
@@ -106,6 +108,13 @@ const ChatHeader = ({
     }
   }, [isUserAuthenticated, RCInstance, setChannelInfo]);
 
+  // Function to toggle the theme
+  const themeStore = useThemeStore();
+  const toggleTheme = () => {
+    themeStore.toggleTheme(); // Assuming you have a function to toggle the theme
+  };
+
+  // Menu options with the theme toggle button
   const menuOptions = useMemo(() => {
     const options = [];
     if (fullScreen) {
@@ -154,6 +163,12 @@ const ChatHeader = ({
             action: showChannelinformation,
             label: 'Room Information',
             icon: 'info',
+          },
+          {
+          id: 'toggle-theme',
+          action: toggleTheme,
+          label: 'Toggle Theme',
+          icon: 'moon', // Replace with your theme toggle icon
           },
         ]
       );
@@ -265,6 +280,19 @@ const ChatHeader = ({
                 small
               >
                 <Icon name="computer" size="1.25rem" />
+              </ActionButton>
+              <ActionButton // Theme toggle button
+                onClick={toggleTheme}
+                ghost
+                display="inline"
+                square
+                small
+              >
+                {isDarkTheme ? ( // Check the current theme
+                  <FontAwesomeIcon icon={['fas', 'sun']} /> // Light theme icon
+                ) : (
+                  <FontAwesomeIcon icon={['fas', 'moon']} /> // Dark theme icon
+                )}
               </ActionButton>
               <Menu options={menuOptions} />
             </>

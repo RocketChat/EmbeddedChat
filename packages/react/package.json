@@ -83,6 +83,7 @@
   "dependencies": {
     "@embeddedchat/api": "1.0.0",
     "@emotion/babel-preset-css-prop": "^11.11.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@rocket.chat/fuselage": "^0.31.23",
     "@rocket.chat/fuselage-hooks": "^0.31.23",
     "@rocket.chat/fuselage-polyfills": "^0.31.23",
