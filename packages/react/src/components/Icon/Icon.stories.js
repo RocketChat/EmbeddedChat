@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '@emotion/react';
 import DefaultTheme from '../../theme/DefaultTheme';
+import DarkTheme from '../../theme/DarkTheme'; // Import your DarkTheme
 import { Icon } from '.';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -40,6 +41,42 @@ export const CustomSize = {
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>
+      <Icon {...args} />
+    </ThemeProvider>
+  ),
+};
+
+// Stories for Dark Theme
+export const GoogleIconDark = {
+  args: {
+    name: 'google',
+  },
+  render: (args) => (
+    <ThemeProvider theme={DarkTheme}>
+      <Icon {...args} />
+    </ThemeProvider>
+  ),
+};
+
+export const CustomStyleDark = {
+  args: {
+    name: 'google',
+    style: { color: 'red' },
+  },
+  render: (args) => (
+    <ThemeProvider theme={DarkTheme}>
+      <Icon {...args} />
+    </ThemeProvider>
+  ),
+};
+
+export const CustomSizeDark = {
+  args: {
+    name: 'google',
+    size: '64px',
+  },
+  render: (args) => (
+    <ThemeProvider theme={DarkTheme}>
       <Icon {...args} />
     </ThemeProvider>
   ),
