@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "preinstall": "node scripts/node-check.js",
-    "postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build"
+    "postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build",
+    "dev": "parcel <entry-file>"
   },
   "devDependencies": {
     "esbuild": "^0.17.19",
