@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '@emotion/react';
 import DefaultTheme from '../../theme/DefaultTheme';
+import DarkTheme from '../../theme/DarkTheme'; // Import your DarkTheme
 import { Menu as MenuComponent } from '.';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -10,7 +11,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Menu = {
+export const LightTheme = {
   args: {
     options: [
       {
@@ -55,6 +56,57 @@ export const Menu = {
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>
+      <MenuComponent {...args} />
+    </ThemeProvider>
+  ),
+};
+
+// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+export const DarkTheme = {
+  args: {
+    options: [
+      {
+        id: 'thread',
+        label: 'Threads',
+        icon: 'thread',
+        disabled: true,
+      },
+      {
+        id: 'members',
+        label: 'Members',
+        icon: 'members',
+      },
+      {
+        id: 'starred',
+        label: 'Starred',
+        icon: 'star',
+      },
+      {
+        id: 'pinned',
+        label: 'Pinned',
+        icon: 'pin',
+      },
+      {
+        id: 'search',
+        label: 'Search',
+        icon: 'magnifier',
+      },
+      {
+        id: 'rInfo',
+        label: 'Room Information',
+        icon: 'info',
+      },
+      {
+        id: 'logout',
+        label: 'Logout',
+        icon: 'reply-directly',
+        color: 'error',
+      },
+    ],
+    anchor: 'right bottom',
+  },
+  render: (args) => (
+    <ThemeProvider theme={DarkTheme}>
       <MenuComponent {...args} />
     </ThemeProvider>
   ),

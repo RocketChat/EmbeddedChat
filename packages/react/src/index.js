@@ -9,6 +9,7 @@ import { useToastStore, useUserStore } from './store';
 import AttachmentWindow from './components/Attachments/AttachmentWindow';
 import useAttachmentWindowStore from './store/attachmentwindow';
 import DefaultTheme from './theme/DefaultTheme';
+import DarkTheme from './theme/DarkTheme';
 import { deleteToken, getToken, saveToken } from './lib/auth';
 import { Box } from './components/Box';
 import useComponentOverrides from './theme/useComponentOverrides';
@@ -45,6 +46,9 @@ export const EmbeddedChat = ({
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
   }, []);
+
+  const theme = useThemeStore((state) => state.isDarkTheme);
+
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -135,7 +139,7 @@ export const EmbeddedChat = ({
   );
 
   return (
-    <ThemeProvider theme={theme || DefaultTheme}>
+    <ThemeProvider theme={theme ? DarkTheme : DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={{ RCInstance, ECOptions }}>
           {attachmentWindowOpen ? <AttachmentWindow /> : null}
