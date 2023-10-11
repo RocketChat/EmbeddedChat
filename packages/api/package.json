@@ -14,6 +14,7 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"parcel-bundler": "^1.12.5",
 		"rollup": "^3.23.0",
 		"rollup-plugin-dts": "^6.0.1",
 		"rollup-plugin-esbuild": "^5.0.0",
