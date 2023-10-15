@@ -41,6 +41,7 @@ export const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+  
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
@@ -79,8 +80,14 @@ export const EmbeddedChat = ({
       setRCInstance(newRCInstance);
     };
 
+    const handleLogoutAndReInstantiate = () => {
+      RCInstance.close()
+        .then(reInstantiate)
+        .catch(console.error);
+    };
+
     if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close().then(reInstantiate).catch(console.error);
+      handleLogoutAndReInstantiate();
     } else {
       reInstantiate();
     }
@@ -103,8 +110,7 @@ export const EmbeddedChat = ({
   const setAuthenticatedName = useUserStore((state) => state.setName);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
-      // getUserEssentials();
+    const handleAuthChange = (user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -121,8 +127,10 @@ export const EmbeddedChat = ({
       } else {
         setIsUserAuthenticated(false);
       }
-    });
-  }, [RCInstance]);
+    };
+
+    RCInstance.auth.onAuthChange(handleAuthChange);
+  }, [RCInstance, setIsUserAuthenticated]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
