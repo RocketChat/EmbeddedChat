@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 
 const MessageEmoji = ({ body }) => {
   const containerStyle = css`
-    font-size: 1rem; /* You can adjust the size as needed */
+    font-size: 1rem; /* Adjust the size as needed */
   `;
 
   const emojiHtml = emojione.toImage(body);
