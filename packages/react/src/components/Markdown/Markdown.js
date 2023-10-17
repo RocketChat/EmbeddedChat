@@ -6,11 +6,16 @@ import { css } from '@emotion/react'; // Import Emotion's css function
 import { markdownStyles } from './Markdown.styles'; // Import Emotion styles
 import MessageEmoji from '../MessageEmoji/MessageEmoji';
 
-
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
+    const containerStyle = css`
+      font-size: 1rem; // Adjust the size as needed
+    `;
+
     return (
-      <MessageEmoji body={body} />
+      <div css={containerStyle}>
+        <MessageEmoji body={body} />
+      </div>
     );
   }
 

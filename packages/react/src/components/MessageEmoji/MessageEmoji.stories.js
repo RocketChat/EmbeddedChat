@@ -11,6 +11,7 @@ export default {
 export const Default = {
   args: {
     body: 'Hello, :smile:!',
+    size: '1.5rem', // Specify the size based on markdownStyles
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>

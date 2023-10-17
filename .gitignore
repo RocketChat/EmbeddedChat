@@ -12,3 +12,5 @@ node_modules
 !.yarn/versions
 
 .babelrc
+
+.vscode

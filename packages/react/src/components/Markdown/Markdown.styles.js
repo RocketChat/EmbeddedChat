@@ -19,11 +19,13 @@ export const markdownStyles = {
     height: 1.5rem;
     width: 1.5rem;
     image-rendering: pixelated;
+    font-size: inherit; // Use 'inherit' to match text size
   `,
   joypixels_BigEmoji: css`
     height: 2.75rem;
     width: 2.75rem;
     image-rendering: pixelated;
+    font-size: inherit; // Use 'inherit' to match text size
   `,
   emojione: css`
     margin: 0 0.15em;

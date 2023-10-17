@@ -11,10 +11,7 @@
     "prettier",
     "plugin:storybook/recommended"
   ],
-  "plugins": [
-    "react",
-    "prettier"
-  ],
+  "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "no-unused-vars": "warn",
@@ -26,16 +23,10 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
-    "arrow-body-style": [
-      "error",
-      "as-needed"
-    ],
+    "arrow-body-style": ["error", "as-needed"],
     "import/prefer-default-export": "off",
     "camelcase": "off",
     "no-param-reassign": "off",
