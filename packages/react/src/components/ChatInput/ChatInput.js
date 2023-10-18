@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { css } from '@emotion/react';
 import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
@@ -29,6 +28,7 @@ import { Icon } from '../Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ChatInput = () => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -158,7 +158,6 @@ const ChatInput = () => {
         dispatchToastMessage({
           type: 'error',
           message: 'Error sending message, login again',
-          position: toastPosition,
         });
       } else {
         replaceMessage(pendingMessage._id, res.message);
@@ -419,7 +418,7 @@ const ChatInput = () => {
             <Button
               onClick={openLoginModal}
               color="primary"
-              style={{ overflow: 'visible' }}
+              style={{ height: '100%', margin: '3px' }}
             >
               JOIN
             </Button>

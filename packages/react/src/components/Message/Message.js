@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
-import { useToastBarDispatch } from '@rocket.chat/fuselage-toastbar';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
@@ -21,6 +20,7 @@ import { MessageMetrics } from './MessageMetrics';
 import { MessageToolbox } from './MessageToolbox';
 import { Avatar } from '../Avatar';
 import { MessageDivider } from './MessageDivider';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const MessageCss = css`
   display: flex;
@@ -76,14 +76,12 @@ const Message = ({
       dispatchToastMessage({
         type: 'success',
         message: 'Message starred',
-        position: toastPosition,
       });
     } else {
       await RCInstance.unstarMessage(msg._id);
       dispatchToastMessage({
         type: 'success',
         message: 'Message unstarred',
-        position: toastPosition,
       });
     }
   };
@@ -97,13 +95,11 @@ const Message = ({
       dispatchToastMessage({
         type: 'error',
         message: 'Error pinning message',
-        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
-        position: toastPosition,
       });
     }
   };
@@ -115,13 +111,11 @@ const Message = ({
       dispatchToastMessage({
         type: 'success',
         message: 'Message deleted successfully',
-        position: toastPosition,
       });
     } else {
       dispatchToastMessage({
         type: 'error',
         message: 'Error in deleting message',
-        position: toastPosition,
       });
     }
   };

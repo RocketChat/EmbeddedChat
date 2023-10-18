@@ -1,18 +1,19 @@
 {
-	"name": "embeddedchat",
-	"version": "1.0.0",
-	"description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
-	"private": true,
-	"workspaces": [
-		"packages/*"
-	],
-	"scripts": {
-		"preinstall": "node scripts/node-check.js",
-		"postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build"
-	},
-	"devDependencies": {
-		"esbuild": "^0.17.19",
-		"lerna": "^6.6.2",
-		"typescript": "^5.1.3"
-	}
+  "name": "embeddedchat",
+  "version": "1.0.0",
+  "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
+  "packageManager": "yarn@3.6.4",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "node scripts/node-check.js",
+    "postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.19",
+    "lerna": "^6.6.2",
+    "typescript": "^5.1.3"
+  }
 }

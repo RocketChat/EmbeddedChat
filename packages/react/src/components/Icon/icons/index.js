@@ -32,6 +32,8 @@ import Italic from './Italic';
 import StarFilled from './StarFilled';
 import Trash from './Trash';
 import Kebab from './Kebab';
+import Check from './Check';
+import ErrorCircle from './ErrorCircle';
 
 const icons = {
   file: File,
@@ -68,6 +70,8 @@ const icons = {
   'star-filled': StarFilled,
   trash: Trash,
   kebab: Kebab,
+  check: Check,
+  'error-circle': ErrorCircle,
 };
 
 export default icons;

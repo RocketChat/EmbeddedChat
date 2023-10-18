@@ -138,7 +138,7 @@ const DefaultTheme = {
     header: 1100,
     popup: 1200,
     modal: 1300,
-    snackbar: 1400,
+    toastbar: 1400,
     tooltip: 1500,
   },
 };
