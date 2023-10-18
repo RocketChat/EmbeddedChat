@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
-import {
-  Message,
-  MessageReactions,
-  MessageDivider,
-} from '@rocket.chat/fuselage';
+// import {
+//   Message,
+//   MessageReactions,
+//   MessageDivider,
+// } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
@@ -14,6 +14,7 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import { Message, MessageReactions, MessageDivider } from '../Message';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
