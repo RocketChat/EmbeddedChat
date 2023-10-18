@@ -1,6 +1,5 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
@@ -84,11 +83,3 @@ export const MessageReactions = ({
     </Box>
   );
 };
-
-MessageReactions.propTypes = {
-  message: PropTypes.object,
-  authenticatedUserUsername: PropTypes.string,
-  handleEmojiClick: PropTypes.func,
-};
-
-export default MessageReactions;

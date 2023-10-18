@@ -4,11 +4,14 @@ import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
+import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Message, MessageReactions, MessageDivider } from '../Message';
+import { Message } from '../Message';
+import MessageDivider from '../Message/MessageDivider';
+import { MessageReactions } from '../Message/MessageReactions';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
