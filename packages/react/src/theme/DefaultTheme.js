@@ -1,25 +1,29 @@
-const DefaultTheme = {
+import { createTheme } from '@mui/system';
+
+const DefaultTheme = createTheme({
   breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
   },
   components: {
-    ChatBody: {
+    MuiChatBody: {
       styleOverrides: {
         border: 'none',
       },
     },
-    ChatInput: {
+    MuiChatInput: {
       styleOverrides: {
         fontWeight: 400,
         color: 'gray',
       },
     },
-    Message: {
-      classNames: 'myCustomClass',
+    MuiMessage: {
+      className: 'myCustomClass',
     },
   },
   palette: {
@@ -76,53 +80,13 @@ const DefaultTheme = {
     },
   },
   typography: {
-    default: {
-      fontFamily:
-        '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetca Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
-      fontSize: 14,
-      fontWeightLight: 300,
-      fontWeightRegular: 400,
-      fontWeightMedium: 500,
-      fontWeightBold: 700,
-    },
-    h1: {
-      fontSize: 'clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)',
-      fontWeight: 800,
-      lineHeight: 1.1142857142857143,
-      color: '#0A1929',
-    },
-    h2: {
-      fontSize: 'clamp(1.5rem, 0.9643rem + 1.4286vw, 2.25rem)',
-      fontWeight: 800,
-      lineHeight: 1.2222222222222223,
-      color: '#132F4C',
-    },
-    h3: {
-      fontSize: '2.25rem',
-      lineHeight: 1.2222222222222223,
-      fontWeight: 400,
-    },
-    h4: {
-      fontSize: '1.75rem',
-      lineHeight: 1.5,
-      fontWeight: 400,
-    },
-    h5: {
-      fontSize: '1.5rem',
-      lineHeight: 1.5,
-      color: '#007FFF',
-      fontWeight: 400,
-    },
-    h6: {
-      fontSize: '1.25rem',
-      lineHeight: 1.5,
-      fontWeight: 500,
-    },
-    button: {
-      fontWeight: 700,
-      fontSize: '0.875rem',
-      lineHeight: 1.75,
-    },
+    fontFamily:
+      '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+    fontSize: 14,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 700,
   },
   shadows: [
     'none',
@@ -141,6 +105,7 @@ const DefaultTheme = {
     toastbar: 1400,
     tooltip: 1500,
   },
-};
+});
 
 export default DefaultTheme;
+
