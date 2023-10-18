@@ -2,9 +2,7 @@ import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
-import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
-import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
@@ -75,18 +73,12 @@ const Search = () => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
           return (
-            <Message
-              key={msg._id}
-              message={msg}
-              variant="default"
-              showAvatar={true}
-            >
+            <Message key={msg._id} message={msg}>
               {newDay && (
                 <MessageDivider>
                   {format(new Date(msg.ts), 'MMMM d, yyyy')}
                 </MessageDivider>
               )}
-
               <MessageReactions
                 authenticatedUserUsername={authenticatedUserUsername}
                 message={msg}
