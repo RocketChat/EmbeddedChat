@@ -1,67 +1,28 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import emojione from 'emoji-toolkit';
 import { Markup } from '../Markup/index';
 import { Box } from '../Box';
-import { MessageEmoji } from '@rocket.chat/fuselage';
-
-// Define Emotion.sh styles using template literals
-const markdownStyles = css`
-  p {
-    margin: 0;
-    padding: 0;
-  }
-
-  code {
-    font-family: 'Menlo', monospace;
-    color: #333;
-    border-color: #ccc;
-    background-color: #f8f8f8;
-    margin: 5px 0;
-    padding: 0.5em;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  .joypixels {
-    height: 1.5rem;
-    width: 1.5rem;
-    image-rendering: pixelated;
-  }
-
-  .joypixels_BigEmoji {
-    height: 2.75rem;
-    width: 2.75rem;
-    image-rendering: pixelated;
-  }
-
-  .emojione {
-    margin: 0 0.15em;
-    vertical-align: middle;
-    white-space: nowrap;
-    font-size: inherit;
-    line-height: normal;
-  }
-`;
+import { css } from '@emotion/react'; // Import Emotion's css function
+import { markdownStyles } from './Markdown.styles'; // Import Emotion styles
+import MessageEmoji from '../MessageEmoji/MessageEmoji';
 
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
+    const containerStyle = css`
+      font-size: 1rem; // Adjust the size as needed
+    `;
+
     return (
-      <MessageEmoji>
-        <Box
-          dangerouslySetInnerHTML={{
-            __html: emojione.toImage(body),
-          }}
-        />
-      </MessageEmoji>
+      <div css={containerStyle}>
+        <MessageEmoji body={body} />
+      </div>
     );
   }
 
   if (!body || !body.md) return <></>;
 
   return (
-    <Box css={markdownStyles}>
+    <Box>
       <Markup tokens={body.md} />
     </Box>
   );
