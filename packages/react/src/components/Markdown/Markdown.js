@@ -1,21 +1,21 @@
 import React from 'react';
-import './Markdown.css';
-import { MessageEmoji } from '@rocket.chat/fuselage';
 import PropTypes from 'prop-types';
-import emojione from 'emoji-toolkit';
 import { Markup } from '../Markup/index';
 import { Box } from '../Box';
+import { css } from '@emotion/react'; // Import Emotion's css function
+import { markdownStyles } from './Markdown.styles'; // Import Emotion styles
+import MessageEmoji from '../MessageEmoji/MessageEmoji';
 
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
+    const containerStyle = css`
+      font-size: 1rem; // Adjust the size as needed
+    `;
+
     return (
-      <MessageEmoji>
-        <Box
-          dangerouslySetInnerHTML={{
-            __html: emojione.toImage(body),
-          }}
-        />
-      </MessageEmoji>
+      <div css={containerStyle}>
+        <MessageEmoji body={body} />
+      </div>
     );
   }
 
@@ -27,9 +27,10 @@ const Markdown = ({ body, isReaction = false }) => {
     </Box>
   );
 };
-export default Markdown;
 
 Markdown.propTypes = {
   body: PropTypes.any,
   isReaction: PropTypes.bool,
 };
+
+export default Markdown;
