@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { appendClassNames } from '../../lib/appendClassNames';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
@@ -75,9 +74,4 @@ export const MessageDivider = ({
   );
 };
 
-MessageDivider.propTypes = {
-  children: PropTypes.node,
-  unreadLabel: PropTypes.string,
-};
 
-export default MessageDivider;
