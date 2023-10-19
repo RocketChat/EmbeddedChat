@@ -7,6 +7,8 @@ import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
+import Cookies from 'js-cookie';
+import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageHeaderCss = css`
   display: flex;
@@ -56,6 +58,8 @@ const MessageHeaderTimestapCss = css`
   flex-shrink: 0;
   color: #9ea2a8;
 `;
+
+const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
 
 const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
@@ -123,6 +127,13 @@ const MessageHeader = ({ message }) => {
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
             name="edit"
+            size="1em"
+          />
+        )}
+        {message.starred && message.starred.find((u) => u._id === authenticatedUserId) && (
+          <Icon
+            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+            name="star"
             size="1em"
           />
         )}
