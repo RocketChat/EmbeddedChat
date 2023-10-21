@@ -5,6 +5,7 @@ import { Box } from '../Box';
 import { css } from '@emotion/react'; // Import Emotion's css function
 import { markdownStyles } from './Markdown.styles'; // Import Emotion styles
 import MessageEmoji from '../MessageEmoji/MessageEmoji';
+import {} from './Markdown.css'
 
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
