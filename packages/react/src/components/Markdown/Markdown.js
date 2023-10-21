@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react'; // Import Emotion's css function
 import { Markup } from '../Markup/index';
 import { Box } from '../Box';
-import { css } from '@emotion/react'; // Import Emotion's css function
-import { markdownStyles } from './Markdown.styles'; // Import Emotion styles
 import MessageEmoji from '../MessageEmoji/MessageEmoji';
 
 const Markdown = ({ body, isReaction = false }) => {
