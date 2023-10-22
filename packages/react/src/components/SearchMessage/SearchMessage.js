@@ -7,7 +7,7 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Message } from '../Message';
+import { Message } from '../Message/Message';
 import MessageDivider from '../Message/MessageDivider';
 import { MessageReactions } from '../Message/MessageReactions';
 
