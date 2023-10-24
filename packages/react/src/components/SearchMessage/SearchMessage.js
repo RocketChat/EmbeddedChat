@@ -1,19 +1,18 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
-import {
-  Message,
-  MessageReactions,
-  MessageDivider,
-} from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
-import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+
+// Import your custom components here
+import Message from '../Message/Message';
+import MessageDivider from '../Message/MessageDivider';
+import MessageReactions from '../Message/MessageReactions';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -89,7 +88,7 @@ const Search = () => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
           return (
-            <Message key={msg._id}>
+            <Message key={msg._id} message={msg}>
               <Message.Container>
                 {newDay && (
                   <MessageDivider>
@@ -108,18 +107,10 @@ const Search = () => {
                 <Message.Body>
                   <Markdown body={msg} />
                 </Message.Body>
-                <MessageReactions>
-                  {msg.reactions &&
-                    serializeReactions(msg.reactions).map((reaction) => (
-                      <MessageReactions.Reaction
-                        key={reaction.name}
-                        mine={isSameUser(reaction, authenticatedUserUsername)}
-                      >
-                        <Markdown body={reaction.name} />
-                        <p>{reaction.count}</p>
-                      </MessageReactions.Reaction>
-                    ))}
-                </MessageReactions>
+                <MessageReactions
+                  authenticatedUserUsername={authenticatedUserUsername}
+                  message={msg}
+                />
               </Message.Container>
             </Message>
           );
