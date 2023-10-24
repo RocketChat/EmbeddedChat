@@ -9,7 +9,6 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 
-// Import your custom components here
 import Message from '../Message/Message';
 import MessageDivider from '../Message/MessageDivider';
 import MessageReactions from '../Message/MessageReactions';
