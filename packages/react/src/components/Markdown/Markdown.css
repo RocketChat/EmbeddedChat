@@ -1,6 +1,11 @@
-p {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
+/*
+* Temporary fix for Issue #273 until "Markdown.styles.js" works correctly
+*/
+
+.joypixels {
+    height: 1.5rem;
+    width: 1.5rem;
+    image-rendering: pixelated;
+    font-size: inherit;
+    vertical-align: middle;
 }
