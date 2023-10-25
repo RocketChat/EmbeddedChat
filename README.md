@@ -106,6 +106,12 @@ yarn storybook
 
 Till now, storybook should be up and running. You can play around with EmbeddedChat and it's component and see changes in storybook in real-time.
 
+By default, the Rocket Chat server host is http://localhost:3000, in case you have Rocket Chat server running on any other port/server you can try set up custome url as ```STORYBOOK_RC_HOST=<your-custom-url>``` variable by creating a ``.env`` file in ```packages/react``` directory or simply run this commmand:
+
+```bash
+STORYBOOK_RC_HOST=<your-custom-url> yarn storybook
+```
+
 ### Working with api and auth packages.
 
 #### Starting auth dev environment

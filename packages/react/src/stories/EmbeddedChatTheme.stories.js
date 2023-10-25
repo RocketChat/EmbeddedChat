@@ -9,7 +9,7 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const WithTheme = {
   args: {
-    host: 'http://localhost:3000',
+    host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
     GOOGLE_CLIENT_ID: '',
     isClosable: true,
