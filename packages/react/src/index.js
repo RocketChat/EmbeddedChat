@@ -20,7 +20,7 @@ export const EmbeddedChat = ({
   moreOpts = false,
   width = '100%',
   height = '50vh',
-  host = 'http://localhost:3000',
+  host = process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,
   anonymousMode = false,
