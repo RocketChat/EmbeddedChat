@@ -26,6 +26,16 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     height: 100vh;
     max-height: 600px;
     position: relative;
+    ::-webkit-scrollbar {
+      width: 7px;
+    };
+    ::-webkit-scrollbar-thumb {
+      background: #8d8d8d;
+      border-radius:4px;
+    };
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    };
   `;
   const DragComponentCss = css`
     width: 100%;
