@@ -28,6 +28,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     position: relative;
     ::-webkit-scrollbar {
       width: 7px;
+      height:8px;
     };
     ::-webkit-scrollbar-thumb {
       background: #8d8d8d;
@@ -36,6 +37,9 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     ::-webkit-scrollbar-thumb:hover {
       background: #555;
     };
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
   `;
   const DragComponentCss = css`
     width: 100%;
