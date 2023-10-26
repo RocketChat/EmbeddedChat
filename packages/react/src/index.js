@@ -14,6 +14,35 @@ import { Box } from './components/Box';
 import useComponentOverrides from './theme/useComponentOverrides';
 import { ToastBarProvider } from './components/ToastBar';
 
+// Include scrollbar styles directly in JavaScript
+const scrollbarStyles = `
+  /* Style the main scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  /* Style the scrollbar thumb (the draggable part) */
+  ::-webkit-scrollbar-thumb {
+    background: #7f7f7f;
+    border-radius: 12px;
+  }
+
+  /* Style the scrollbar thumb on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555555;
+  }
+
+  /* Style the scrollbar track (the background) */
+  ::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+`;
+
+const style = document.createElement('style');
+style.type = 'text/css';
+style.innerHTML = scrollbarStyles;
+document.getElementsByTagName('head')[0].appendChild(style);
+
 export const EmbeddedChat = ({
   isClosable = false,
   setClosableState,
