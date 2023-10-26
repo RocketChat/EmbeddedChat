@@ -28,7 +28,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     position: relative;
     ::-webkit-scrollbar {
       width: 7px;
-      height:8px;
+      height:7.7px;
     };
     ::-webkit-scrollbar-thumb {
       background: #8d8d8d;
