@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './ThreadHeader.module.css';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
