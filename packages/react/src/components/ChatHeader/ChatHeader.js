@@ -181,16 +181,31 @@ const ChatHeader = ({
     showStarredMessage,
   ]);
   console.log(menuOptions);
+
+  const chatHeaderContainer = css`
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  `;
+
+  const channelNameStyles = css`
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  `;
+
+  const channelDescriptionStyles = css`
+    margin: 0 1rem;
+  `;
+
   return (
     <Box
-      css={css`
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        padding: 0.75rem;
-        border: 1px solid rgba(0, 0, 0, 0.5);
-      `}
-      className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
+      css={chatHeaderContainer}
+      className={`ec-chat-header  ${classNames} ${className}`}
       style={{ ...styleOverrides, ...styles }}
     >
       <Box
@@ -202,30 +217,17 @@ const ChatHeader = ({
           width: 100%;
         `}
       >
-        <Box
-          css={css`
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-            align-items: center;
-          `}
-        >
+        <Box css={channelNameStyles}>
           <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
-          <Box
-            css={css`
-              margin: 0 1rem;
-            `}
-          >
+          <Box css={channelDescriptionStyles}>
             {isUserAuthenticated ? (
               <>
-                <h2
-                  className={`ec-chat-header--channelName ${stylesSheet.nospace}`}
-                >
+                <h2 className={`ec-chat-header--channelName %`}>
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
-                    className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                    className={`ec-chat-header--channelDescription ${channelDescriptionStyles}`}
                     style={{ fontSize: 14 }}
                   >
                     {channelInfo.description || ''}
@@ -234,7 +236,7 @@ const ChatHeader = ({
               </>
             ) : (
               <h2
-                className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                className={`ec-chat-header--channelDescription ${channelDescriptionStyles}`}
               >
                 {channelName || 'Login to chat'}
               </h2>
