@@ -5,7 +5,6 @@ import he from 'he';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
-import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
@@ -72,7 +71,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         gap: 0.375rem;
         align-items: center;
       `}
-      className={`ec-chat-input-formatting-toolbar ${styles.chatFormat} ${classNames}`}
+      className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >
       {isUserAuthenticated && (

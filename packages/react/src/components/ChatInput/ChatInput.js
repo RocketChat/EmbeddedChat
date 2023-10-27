@@ -333,6 +333,14 @@ const ChatInput = () => {
                 Arial,
                 sans-serif
               );
+
+              &:disabled {
+                cursor: not-allowed;
+              }
+
+              &::placeholder {
+                padding-left: 5px;
+              }
             `}
             onChange={(e) => {
               messageRef.current.value = parseEmoji(e.target.value);
