@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import stylesSheet from './ChatHeader.module.css';
 import RCContext from '../../context/RCInstance';
 import {
   useUserStore,
@@ -23,7 +24,6 @@ const ChatHeader = ({
   fullScreen,
   setFullScreen,
   channelName,
-  isDarkMode,
   className = '',
   styles = {},
 }) => {
@@ -181,30 +181,16 @@ const ChatHeader = ({
     showStarredMessage,
   ]);
   console.log(menuOptions);
-
-  const chatHeaderContainer = css`
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    padding: 0.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.5);
-  `;
-
-  const channelNameStyles = css`
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: center;
-  `;
-
-  const channelDescriptionStyles = css`
-    margin: 0 1rem;
-  `;
-
   return (
     <Box
-      css={chatHeaderContainer}
-      className={`ec-chat-header  ${classNames} ${className}`}
+      css={css`
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        padding: 0.75rem;
+        border: 1px solid rgba(0, 0, 0, 0.5);
+      `}
+      className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
       style={{ ...styleOverrides, ...styles }}
     >
       <Box
@@ -216,35 +202,30 @@ const ChatHeader = ({
           width: 100%;
         `}
       >
-        <Box css={channelNameStyles}>
-          {isDarkMode ? (
-            <Icon
-              name="hash"
-              size={fullScreen ? '1.25rem' : '1rem'}
-              css={css`
-                color: #000;
-              `}
-            />
-          ) : (
-            <Icon
-              name="hash"
-              size={fullScreen ? '1.25rem' : '1rem'}
-              css={css`
-                color: #fff;
-              `}
-            />
-          )}
-          <Box css={channelDescriptionStyles}>
+        <Box
+          css={css`
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            align-items: center;
+          `}
+        >
+          <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
+          <Box
+            css={css`
+              margin: 0 1rem;
+            `}
+          >
             {isUserAuthenticated ? (
               <>
                 <h2
-                  className={`ec-chat-header--channelName ${channelNameStyles}`}
+                  className={`ec-chat-header--channelName ${stylesSheet.nospace}`}
                 >
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
-                    className={`ec-chat-header--channelDescription ${channelDescriptionStyles}`}
+                    className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
                     style={{ fontSize: 14 }}
                   >
                     {channelInfo.description || ''}
@@ -253,7 +234,7 @@ const ChatHeader = ({
               </>
             ) : (
               <h2
-                className={`ec-chat-header--channelDescription ${channelDescriptionStyles}`}
+                className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
               >
                 {channelName || 'Login to chat'}
               </h2>
@@ -283,23 +264,7 @@ const ChatHeader = ({
                 square
                 small
               >
-                {isDarkMode ? (
-                  <Icon
-                    name="computer"
-                    size={fullScreen ? '1.25rem' : '1rem'}
-                    css={css`
-                      color: #000;
-                    `}
-                  />
-                ) : (
-                  <Icon
-                    name="computer"
-                    size={fullScreen ? '1.25rem' : '1rem'}
-                    css={css`
-                      color: #fff;
-                    `}
-                  />
-                )}
+                <Icon name="computer" size="1.25rem" />
               </ActionButton>
               <Menu options={menuOptions} />
             </>
@@ -314,23 +279,7 @@ const ChatHeader = ({
               square
               small
             >
-              {isDarkMode ? (
-                <Icon
-                  name="cross"
-                  size={fullScreen ? '1.25rem' : '1rem'}
-                  css={css`
-                    color: #000;
-                  `}
-                />
-              ) : (
-                <Icon
-                  name="cross"
-                  size={fullScreen ? '1.25rem' : '1rem'}
-                  css={css`
-                    color: #fff;
-                  `}
-                />
-              )}
+              <Icon name="cross" size="1.25rem" />
             </ActionButton>
           )}
         </Box>
