@@ -20,6 +20,7 @@ export const markdownStyles = {
     width: 1.5rem;
     image-rendering: pixelated;
     font-size: inherit; // Use 'inherit' to match text size
+    vertical-align: middle; // Hotfix in "Markdown.css"
   `,
   joypixels_BigEmoji: css`
     height: 2.75rem;
