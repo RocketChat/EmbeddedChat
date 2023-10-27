@@ -20,3 +20,4 @@ MessageEmoji.propTypes = {
 };
 
 export default MessageEmoji;
+

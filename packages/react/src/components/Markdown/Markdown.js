@@ -6,6 +6,7 @@ import { Box } from '../Box';
 import MessageEmoji from '../MessageEmoji/MessageEmoji';
 import {} from './Markdown.css';
 
+
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
     const containerStyle = css`
@@ -34,3 +35,4 @@ Markdown.propTypes = {
 };
 
 export default Markdown;
+
