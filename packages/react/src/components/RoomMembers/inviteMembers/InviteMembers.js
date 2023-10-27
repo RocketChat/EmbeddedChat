@@ -2,18 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Label } from '@rocket.chat/fuselage';
 import { css } from '@emotion/react';
-import classes from '../RoomMember.module.css';
 import useInviteStore from '../../../store/inviteStore';
 import { Box } from '../../Box';
 import { Icon } from '../../Icon';
 import { Input } from '../../Input';
 import { ActionButton } from '../../ActionButton';
 
+const styles = {
+  modal: css`
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color: white;
+    box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+    z-index: 100;
+
+    @media (max-width: 550px) {
+      width: 100vw;
+    }
+  `,
+};
+
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
 
   return (
-    <Box style={{ padding: '16px' }} className={classes.modal}>
+    <Box style={{ padding: '16px' }} css={styles.modal}>
       <Box
         css={css`
           display: flex;
