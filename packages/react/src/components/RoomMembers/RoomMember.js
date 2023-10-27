@@ -1,7 +1,7 @@
+import { css } from '@emotion/react';
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
-import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -10,6 +10,33 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+
+const styles = {
+  modal: css`
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color: white;
+    box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+    z-index: 100;
+
+    @media (max-width: 550px) {
+      width: 100vw;
+    }
+  `,
+  container: css`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+  `,
+};
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -23,7 +50,7 @@ const RoomMembers = ({ members }) => {
   if (showInvite) return <InviteMembers inviteData={inviteData} />;
 
   return (
-    <Box className={classes.modal} style={{ padding: '16px' }}>
+    <Box css={styles.modal} style={{ padding: '16px' }}>
       <Box style={{ display: 'flex' }}>
         <h3 style={{ display: 'contents' }}>
           <Icon
@@ -37,7 +64,7 @@ const RoomMembers = ({ members }) => {
           </ActionButton>
         </h3>
       </Box>
-      <Box className={classes.container}>
+      <Box css={styles.container}>
         {members.map((member) => (
           <RoomMemberItem user={member} key={member._id} />
         ))}
