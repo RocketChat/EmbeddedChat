@@ -60,7 +60,10 @@ const Search = () => {
           </ActionButton>
         </h3>
       </Box>
-      <Box className={classes.container} style={{ border: '2px solid #ddd', position: 'relative' }}>
+      <Box
+        className={classes.container}
+        style={{ border: '2px solid #ddd', position: 'relative' }}
+      >
         <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
         <input
           placeholder="Search Message"
@@ -68,7 +71,16 @@ const Search = () => {
           onKeyDown={handleKeyPress}
           className={classes.textInput}
         />
-        <Button size="small" onClick={searchMessages}  style={{position: 'absolute', top: '50%', right: '5px', transform: 'translateY(-50%)'}}>
+        <Button
+          size="small"
+          onClick={searchMessages}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '5px',
+            transform: 'translateY(-50%)',
+          }}
+        >
           Enter
         </Button>
       </Box>
