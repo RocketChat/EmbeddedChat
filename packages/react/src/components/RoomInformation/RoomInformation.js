@@ -30,12 +30,10 @@ const roomInfoTitleStyle = css`
 `;
 
 const roomInfoContainerStyle = css`
-  display: flex;
   margin: 16px;
 `;
 
 const roomInfoHeaderStyle = css`
-  display: flex;
   font-size: 1.25rem;
   margin-block: 16px;
 `;
