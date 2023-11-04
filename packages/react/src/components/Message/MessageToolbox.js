@@ -14,7 +14,7 @@ const MessageToolboxWrapperCss = css`
     position: absolute;
     top: 0;
     right: 2rem;
-    z-index: 8999;
+    z-index: 1;
   }
 `;
 
