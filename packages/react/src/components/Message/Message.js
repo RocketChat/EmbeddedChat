@@ -179,13 +179,34 @@ const Message = ({
               width: '100%',
             }}
           >
-            {showAvatar && (
+            {!sequential && showAvatar ? (
               <Box style={{ margin: '3px' }}>
                 <Avatar
                   url={getUserAvatarUrl(message.u.username)}
                   alt="avatar"
                 />
               </Box>
+            ) : message.starred &&
+              message.starred.find((u) => u._id === authenticatedUserId) ? (
+              <Box
+                style={{
+                  margin: '3px',
+                  marginTop: '15px',
+                  marginLeft: '20px',
+                }}
+              >
+                <Icon
+                  style={{ opacity: 0.5 }}
+                  name="star-filled"
+                  size="1.2em"
+                />
+              </Box>
+            ) : (
+              <Box
+                style={{
+                  marginLeft: '42px',
+                }}
+              ></Box>
             )}
             <Box
               style={{

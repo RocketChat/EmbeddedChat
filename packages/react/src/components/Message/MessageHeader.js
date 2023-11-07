@@ -59,7 +59,7 @@ const MessageHeaderTimestapCss = css`
   color: #9ea2a8;
 `;
 
-const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
+const authenticatedUserId = useUserStore(state => state.userId);
 
 const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
