@@ -7,8 +7,6 @@ import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import Cookies from 'js-cookie';
-import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageHeaderCss = css`
   display: flex;
