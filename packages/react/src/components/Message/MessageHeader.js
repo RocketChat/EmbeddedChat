@@ -7,8 +7,6 @@ import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import Cookies from 'js-cookie';
-import { RC_USER_ID_COOKIE } from '../../lib/constant';
 
 const MessageHeaderCss = css`
   display: flex;
@@ -59,11 +57,12 @@ const MessageHeaderTimestapCss = css`
   color: #9ea2a8;
 `;
 
-const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
 
 const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const roles = useUserStore((state) => state.roles);
+
+  const authenticatedUserId = useUserStore(state => state.userId);
 
   const userActions = () => {
     switch (message.t) {

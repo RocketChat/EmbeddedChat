@@ -22,6 +22,7 @@ import { MessageToolbox } from './MessageToolbox';
 import { Avatar } from '../Avatar';
 import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { Icon } from '../Icon';
 
 const MessageCss = css`
   display: flex;
@@ -56,7 +57,7 @@ const Message = ({
     style
   );
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
+  const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -179,13 +180,34 @@ const Message = ({
               width: '100%',
             }}
           >
-            {showAvatar && (
+            {!sequential && showAvatar ? (
               <Box style={{ margin: '3px' }}>
                 <Avatar
                   url={getUserAvatarUrl(message.u.username)}
                   alt="avatar"
                 />
               </Box>
+            ) : message.starred &&
+              message.starred.find((u) => u._id === authenticatedUserId) ? (
+              <Box
+                style={{
+                  margin: '3px',
+                  marginTop: '15px',
+                  marginLeft: '20px',
+                }}
+              >
+                <Icon
+                  style={{ opacity: 0.5 }}
+                  name="star-filled"
+                  size="1.2em"
+                />
+              </Box>
+            ) : (
+              <Box
+                style={{
+                  marginLeft: '42px',
+                }}
+              ></Box>
             )}
             <Box
               style={{
