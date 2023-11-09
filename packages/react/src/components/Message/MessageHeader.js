@@ -57,6 +57,8 @@ const MessageHeaderTimestapCss = css`
   color: #9ea2a8;
 `;
 
+const authenticatedUserId = useUserStore(state => state.userId);
+
 const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const roles = useUserStore((state) => state.roles);
@@ -123,6 +125,13 @@ const MessageHeader = ({ message }) => {
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
             name="edit"
+            size="1em"
+          />
+        )}
+        {message.starred && message.starred.find((u) => u._id === authenticatedUserId) && (
+          <Icon
+            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+            name="star"
             size="1em"
           />
         )}
