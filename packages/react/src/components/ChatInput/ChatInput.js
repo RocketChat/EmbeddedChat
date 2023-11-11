@@ -342,6 +342,30 @@ const ChatInput = () => {
                 // new line with shift enter. do nothing.
                 return;
               }
+              if (e.ctrlKey && e.key === 'i') {
+                e.preventDefault();
+                let start = e.target.selectionStart;
+                let end = e.target.selectionEnd;
+                if (end - start > 0) {
+                  const italic = ` _${messageRef.current.value.slice(start, end)}_ `;
+                  messageRef.current.value = (messageRef.current.value.slice(0, start) + italic + messageRef.current.value.slice(end));
+                } else {
+                  messageRef.current.value = "__";
+                  e.target.setSelectionRange(start + 1, start + 1);
+                }
+              }
+              if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                let start = e.target.selectionStart;
+                let end = e.target.selectionEnd;
+                if (end - start > 0) {
+                  const bold = ` *${messageRef.current.value.slice(start, end)}* `;
+                  messageRef.current.value = (messageRef.current.value.slice(0, start) + bold + messageRef.current.value.slice(end));
+                } else {
+                  messageRef.current.value = "**";
+                  e.target.setSelectionRange(start + 1, start + 1);
+                }
+              }
               if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
                 // Insert line break in text input field
                 messageRef.current.value += '\n';
