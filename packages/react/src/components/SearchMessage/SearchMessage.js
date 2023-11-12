@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
@@ -6,7 +7,6 @@ import {
   MessageDivider,
 } from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
-import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
@@ -14,6 +14,61 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+
+const searchBarStyle = css`
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  background-color: white;
+  box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+  z-index: 100;
+  padding: 1rem;
+
+  @media (max-width: 550px) {
+    width: 100vw;
+  }
+`;
+
+const containerStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
+`;
+
+const iconStyle = css`
+  padding: 0.125em;
+`;
+
+const textInputStyle = css`
+  width: 65%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+
+  ::placeholder {
+    padding-left: 5px;
+  }
+`;
+
+const closeButtonStyle = css`
+  cursor: pointer;
+  position: absolute;
+  top: 30%;
+  right: 10%;
+  padding: 12px 16px;
+  transform: translateY(-50%);
+
+  &:hover {
+    background: #bbb;
+  }
+`;
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -42,33 +97,45 @@ const Search = () => {
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box className={classes.searchBar} style={{ padding: '1rem' }}>
+    <Box css={searchBarStyle} style={{ padding: '1rem' }}>
       <Box
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: '0.5rem',
-          marginBottom: '0.25rem',
-        }}
+        css={css`
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.25rem;
+        `}
       >
         <h3 style={{ display: 'contents' }}>
-          <Icon name="magnifier" size="1.25rem" />
+          <Icon name="magnifier" size="1.25rem" css={iconStyle} />
           <Box style={{ color: '#4a4a4a', width: '80%' }}>Search Messages</Box>
           <ActionButton onClick={toggleShowSearch} ghost size="small">
             <Icon name="cross" size="x20" />
           </ActionButton>
         </h3>
       </Box>
-      <Box className={classes.container} style={{ border: '2px solid #ddd', position: 'relative' }}>
-        <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
+      <Box
+        css={containerStyle}
+        style={{ border: '2px solid #ddd', position: 'relative' }}
+      >
+        <Icon name="magnifier" size="1.25rem" css={iconStyle} />
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyPress}
-          className={classes.textInput}
+          css={textInputStyle}
         />
-        <Button size="small" onClick={searchMessages}  style={{position: 'absolute', top: '50%', right: '5px', transform: 'translateY(-50%)'}}>
+        <Button
+          size="small"
+          onClick={searchMessages}
+          css={css`
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            transform: translateY(-50%);
+          `}
+        >
           Enter
         </Button>
       </Box>

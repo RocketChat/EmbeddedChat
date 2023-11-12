@@ -6,7 +6,6 @@ import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import classes from './Message.module.css';
 import { useMessageStore, useToastStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
@@ -38,6 +37,19 @@ const MessageCss = css`
   padding-inline: 1.25rem;
   &:hover {
     background: #f2f3f5;
+  }
+`;
+
+const pendingMessageBodyStyles = css`
+  opacity: 0.4 !important;
+  white-space: pre-line;
+`;
+
+const messageBodyStyles = css`
+  & {
+    .messageParentBox > & {
+      padding-block: 0.25rem;
+    }
   }
 `;
 
@@ -219,9 +231,9 @@ const Message = ({
               {!message.t ? (
                 <>
                   <MessageBody
-                    className={
-                      message.isPending ? classes.PendingMessageBody : ''
-                    }
+                    className={css(messageBodyStyles, {
+                      [pendingMessageBodyStyles]: message.isPending,
+                    })}
                   >
                     {message.attachments && message.attachments.length > 0 ? (
                       <>

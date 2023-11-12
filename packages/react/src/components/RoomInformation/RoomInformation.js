@@ -2,11 +2,49 @@ import React, { useContext } from 'react';
 import { Avatar } from '../Avatar/Avatar';
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
-import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
+
+const componentStyle = css`
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  background-color: white;
+  box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+  z-index: 100;
+  padding: 16px;
+
+  @media (max-width: 550px) {
+    width: 100vw;
+  }
+`;
+
+const roomInfoTitleStyle = css`
+  display: flex;
+`;
+
+const roomInfoContainerStyle = css`
+  margin: 16px;
+`;
+
+const roomInfoHeaderStyle = css`
+  font-size: 1.25rem;
+  margin-block: 16px;
+`;
+
+const roomInfoDescriptionStyle = css`
+  margin-block: 5px;
+`;
+
+const roomInfoDescriptionText = css`
+  opacity: 0.5;
+`;
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -26,12 +64,8 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
   return (
-    <Box className={classes.component} style={{ padding: '16px' }}>
-      <Box
-        css={css`
-          display: flex;
-        `}
-      >
+    <Box css={componentStyle}>
+      <Box css={roomInfoTitleStyle}>
         <h3 style={{ display: 'contents' }}>
           <Icon
             name="info"
@@ -53,33 +87,10 @@ const Roominfo = () => {
       </Box>
 
       <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
-      <Box
-        css={css`
-          margin: 16px;
-        `}
-      >
-        <Box
-          css={css`
-            margin-block: 16px;
-            font-size: 1.25rem;
-          `}
-        >
-          # {channelInfo.name}
-        </Box>
-        <Box
-          css={css`
-            margin-block: 5px;
-          `}
-        >
-          Description
-        </Box>
-        <Box
-          css={css`
-            opacity: 0.5rem;
-          `}
-        >
-          {channelInfo.description}
-        </Box>
+      <Box css={roomInfoContainerStyle}>
+        <Box css={roomInfoHeaderStyle}># {channelInfo.name}</Box>
+        <Box css={roomInfoDescriptionStyle}>Description</Box>
+        <Box css={roomInfoDescriptionText}>{channelInfo.description}</Box>
       </Box>
     </Box>
   );

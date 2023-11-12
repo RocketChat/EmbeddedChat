@@ -1,4 +1,4 @@
-.container {
+/* .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,7 +9,7 @@
 .nospace {
   margin: 0;
   padding: 0;
-}
+} */
 
 .icon_light_mode > i {
   color: #fff;

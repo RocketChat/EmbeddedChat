@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
@@ -5,6 +6,16 @@ import { useMessageStore, useUserStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
+
+const messageParentBox = css`
+  .messageBody {
+    padding-block: 0.25rem;
+  }
+
+  .PendingMessageBody {
+    opacity: 0.4 !important;
+  }
+`;
 
 const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
   const showAvatar = useUserStore((state) => state.showAvatar);
@@ -28,6 +39,7 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               sequential={sequential}
               variant="thread"
               showAvatar={showAvatar}
+              css={messageParentBox}
             />
           )
         );

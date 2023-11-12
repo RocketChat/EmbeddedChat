@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from 'react';
 import { css } from '@emotion/react';
-import styles from './ChatInput.module.css';
 import RCContext from '../../context/RCInstance';
 import {
   useToastStore,
@@ -307,7 +306,42 @@ const ChatInput = () => {
             rows={1}
             disabled={!isUserAuthenticated || isRecordingMessage}
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
-            className={styles.textInput}
+            css={css`
+              padding: 12px 12px 12px 12px;
+              width: 100%;
+              border: none;
+              outline: none;
+              resize: none;
+              overflow-x: hidden;
+              overflow-y: auto;
+              font-size: 15px;
+              font-family: var(
+                --rcx-font-family-sans,
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                'Segoe UI',
+                Roboto,
+                Oxygen,
+                Ubuntu,
+                Cantarell,
+                'Helvetica Neue',
+                'Apple Color Emoji',
+                'Segoe UI Emoji',
+                'Segoe UI Symbol',
+                'Meiryo UI',
+                Arial,
+                sans-serif
+              );
+
+              &:disabled {
+                cursor: not-allowed;
+              }
+
+              &::placeholder {
+                padding-left: 5px;
+              }
+            `}
             onChange={(e) => {
               messageRef.current.value = parseEmoji(e.target.value);
 
@@ -433,7 +467,9 @@ const ChatInput = () => {
               style={{ padding: '0.5rem' }}
             >
               <Icon
-                className={styles.chatInputIconCursor}
+                css={css`
+                  cursor: pointer;
+                `}
                 name="send"
                 size="1.25rem"
               />
