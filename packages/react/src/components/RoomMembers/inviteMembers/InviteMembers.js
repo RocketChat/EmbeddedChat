@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label } from '@rocket.chat/fuselage';
 import { css } from '@emotion/react';
 import classes from '../RoomMember.module.css';
 import useInviteStore from '../../../store/inviteStore';
@@ -45,13 +44,13 @@ const InviteMembers = ({ inviteData }) => {
           flex-direction: column;
         `}
       >
-        <Label>Invite Link</Label>
+        <span>Invite Link</span>
         <Input readOnly value={inviteData.url} />
       </Box>
-      <Label>
+      <span>
         Your invite link will expire on{' '}
         {new Date(inviteData.expires).toString().split('GMT')[0]}
-      </Label>
+      </span>
     </Box>
   );
 };

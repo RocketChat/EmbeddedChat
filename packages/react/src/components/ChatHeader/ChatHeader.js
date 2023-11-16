@@ -180,7 +180,7 @@ const ChatHeader = ({
     showSearchMessage,
     showStarredMessage,
   ]);
-  console.log(menuOptions);
+
   return (
     <Box
       css={css`
