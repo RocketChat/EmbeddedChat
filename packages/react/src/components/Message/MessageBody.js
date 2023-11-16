@@ -37,7 +37,7 @@ export const MessageBody = ({
       style={styleOverrides}
       {...props}
     >
-      <p>{children}</p>
+      {children}
     </Box>
   );
 };

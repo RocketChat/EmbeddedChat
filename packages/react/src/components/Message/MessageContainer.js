@@ -6,7 +6,9 @@ import { appendClassNames } from '../../lib/appendClassNames';
 
 const MessageContainerCss = css`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
   min-width: 1px;
