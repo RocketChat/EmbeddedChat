@@ -1,10 +1,10 @@
-import { Margins } from '@rocket.chat/fuselage';
 import React from 'react';
 import { Surface } from './Surface';
+import { Box } from '../../Box';
 
 const MessageSurface = ({ children }) => (
   <Surface type="message">
-    <Margins blockEnd="x16">{children}</Margins>
+    <Box style={{ marginBlock: '1rem' }}>{children}</Box>
   </Surface>
 );
 
