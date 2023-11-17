@@ -1,10 +1,9 @@
-import { AxiosError } from "axios";
 import loginWithPassword from "./loginWithPassword";
 import loginWithOAuthService from "./loginWithOAuthService";
 import loginWithOAuthServiceToken from "./loginWithOAuthServiceToken";
 import loginWithResumeToken from "./loginWithResumeToken";
 import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
-import { Api } from "./Api";
+import { Api, ApiError } from "./Api";
 
 class RocketChatAuth {
 	host: string;
@@ -124,7 +123,7 @@ class RocketChatAuth {
 				try {
 					await this.loginWithResumeToken(this.currentUser.authToken);
 				} catch (e) {
-					if( e instanceof AxiosError && e.response?.status === 401) {
+					if( e instanceof ApiError && e.response?.status === 401) {
 						// token cannot be refreshed as the resume token is no longer valid.
 						await this.logout();
 					} 
