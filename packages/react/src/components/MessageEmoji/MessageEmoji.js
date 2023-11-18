@@ -8,10 +8,23 @@ const MessageEmoji = ({ body }) => {
     font-size: 1rem; /* Adjust the size as needed */
   `;
 
-  const emojiHtml = emojione.toImage(body);
+  // const emojiHtml = emojione.toImage(body);
+
+  const emojiRegex = /:\w+:/g;
+
+  const emojiMatches = body.match(emojiRegex);
+
+  let modifiedBody = body;
+  if (emojiMatches) {
+    emojiMatches.forEach((shortcode) => {
+      const emojiHtml = emojione.toImage(shortcode);
+      const styledEmojiHtml = emojiHtml.replace('<img', '<img style="height: 1.2em; width: 1.2em;"');
+      modifiedBody = modifiedBody.replace(shortcode, styledEmojiHtml);
+    });
+  }
 
   return (
-    <div css={containerStyle} dangerouslySetInnerHTML={{ __html: emojiHtml }} />
+    <div css={containerStyle} dangerouslySetInnerHTML={{ __html: modifiedBody }} />
   );
 };
 
