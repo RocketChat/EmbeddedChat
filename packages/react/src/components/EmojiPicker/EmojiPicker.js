@@ -1,12 +1,16 @@
 import React from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import PropTypes from 'prop-types';
-import { Box } from '../Box';
+import styles from './CustomEmojiPicker.module.css';
 
 const CustomEmojiPicker = ({ handleEmojiClick }) => (
-  <Box>
-    <EmojiPicker onEmojiClick={handleEmojiClick} />
-  </Box>
+  <>
+  <div className={styles.box}>
+    <div className={styles.box}>
+      <EmojiPicker onEmojiClick={handleEmojiClick} />
+    </div>
+  </div>
+  </>
 );
 
 export default CustomEmojiPicker;

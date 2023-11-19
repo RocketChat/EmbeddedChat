@@ -7,9 +7,11 @@
   "workspaces": [
     "packages/*"
   ],
+
   "scripts": {
     "preinstall": "node scripts/node-check.js",
-    "postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build"
+    "postinstall": "cd packages/auth && yarn build && cd ../api && yarn build && cd ../react && yarn build",
+    "start": "cd packages/react && yarn start"
   },
   "devDependencies": {
     "esbuild": "^0.17.19",
