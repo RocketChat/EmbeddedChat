@@ -27,8 +27,25 @@ async function loginWithPassword() {
 	}
 }
 
+async function loginWithRocketChatOAuth() {
+  try {
+    await api.auth.loginWithRocketChatOAuth();
+  } catch (e) {
+    printResult(e);
+  }
+}
+
 async function printResult(result) {
-	window.document.getElementById("output").innerHTML = "\n" + JSON.stringify(result, null, 2);
+  const outputElement = window.document.getElementById("output");
+  if (result instanceof Error) {
+    if (outputElement) {
+      const escapedMessage = escapeHTML(result.message);
+      const escapedStack = escapeHTML(result.stack);
+      outputElement.innerHTML = `<code>\nError: ${escapedMessage}\nStack: ${escapedStack}</co>`;
+    }
+  } else {
+    outputElement.innerHTML = "\n" + JSON.stringify(result, null, 2);
+  }
 }
 
 const msgListener = msg => {
@@ -82,7 +99,10 @@ const callApi = async (e) => {
 window.addEventListener('DOMContentLoaded', () => {
 	console.log('Ready')
 	document.getElementById("loginWithPassword").addEventListener("click", loginWithPassword)
-	
+	document
+    .getElementById("loginWithRocketChatOAuth")
+    .addEventListener("click", loginWithRocketChatOAuth);
+
 	const hostInput = document.getElementById("hostUrl")
 	const roomInput = document.getElementById("roomId")
 	const host = hostInput.value;
@@ -95,3 +115,12 @@ window.addEventListener('DOMContentLoaded', () => {
 	document.getElementById("call-api").addEventListener("click", callApi)
 })
 
+function escapeHTML(str) {
+  return str.replace(
+    /[&<>'"]/g,
+    (tag) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[
+        tag
+      ] || tag)
+  );
+}

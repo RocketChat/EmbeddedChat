@@ -50,7 +50,13 @@ export const getCallbackContent = async (read: IRead, credentials: ICredentials 
             if (config.success) {
                 if (window.opener) {
                     // Post message to opener with credentials
-                    window.opener.postMessage(config.credentials, config.origin);
+                    window.opener.postMessage(
+                        {
+                            type: 'rc-oauth-callback',
+                            credentials: config.credentials
+                        },
+                        config.origin
+                    );
                 }
             } else {
                 console.error(config.error);
@@ -59,5 +65,5 @@ export const getCallbackContent = async (read: IRead, credentials: ICredentials 
     </script>
 </body>
 </html>
-    `
+    `;
 }
