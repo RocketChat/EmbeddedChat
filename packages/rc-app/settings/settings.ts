@@ -20,9 +20,9 @@ export const settings:ISetting[] = [
 		packageValue: '',
 	},
     {
-		id: 'allowed-domains',
-		i18nLabel: 'Allowed Domains',
-		i18nDescription: 'The allowed domains for third party login for EmbeddedChat (Comma separated). Leave blank to allow all domains.',
+		id: 'allowed-origins',
+		i18nLabel: 'Allowed origins',
+		i18nDescription: 'The allowed origins for third party login for EmbeddedChat (Comma separated). Leave blank to allow all origins.',
 		type: SettingType.STRING,
 		required: false,
 		public: false,
