@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import { format } from 'date-fns';
@@ -255,4 +255,4 @@ Message.propTypes = {
   showAvatar: PropTypes.bool,
 };
 
-export default Message;
+export default memo(Message);

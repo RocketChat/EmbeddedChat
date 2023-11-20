@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import stylesSheet from './ChatHeader.module.css';
-import RCContext from '../../context/RCInstance';
+import RCContext, { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
   useMessageStore,
@@ -34,7 +34,7 @@ const ChatHeader = ({
     (state) => state.setShowChannelinfo
   );
 
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance } = useRCContext();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated

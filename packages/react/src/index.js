@@ -33,7 +33,7 @@ export const EmbeddedChat = ({
   style = {},
   hideHeader = false,
   auth = {
-    flow: 'MANAGED',
+    flow: 'PASSWORD',
   },
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -56,7 +56,7 @@ export const EmbeddedChat = ({
       getToken,
       deleteToken,
       saveToken,
-      autoLogin: auth.flow === 'MANAGED',
+      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
     });
     if (auth.flow === 'TOKEN') {
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
@@ -70,7 +70,7 @@ export const EmbeddedChat = ({
         getToken,
         deleteToken,
         saveToken,
-        autoLogin: auth.flow === 'MANAGED',
+        autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
       });
       if (auth.flow === 'TOKEN') {
         newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
@@ -226,7 +226,8 @@ EmbeddedChat.propTypes = {
   enableThreads: PropTypes.bool,
   theme: PropTypes.object,
   auth: PropTypes.oneOfType([
-    PropTypes.shape({ flow: PropTypes.oneOf(['MANAGED']) }),
+    PropTypes.shape({ flow: PropTypes.oneOf(['PASSWORD']) }),
+    PropTypes.shape({ flow: PropTypes.oneOf(['OAUTH']) }),
     PropTypes.shape({
       flow: PropTypes.oneOf(['TOKEN']),
       credentials: PropTypes.object,

@@ -1,13 +1,7 @@
-import React, {
-  useState,
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import styles from './ChatInput.module.css';
-import RCContext from '../../context/RCInstance';
+import { useRCContext } from '../../context/RCInstance';
 import {
   useToastStore,
   useUserStore,
@@ -32,7 +26,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ChatInput = () => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useRCContext();
   const [commands, setCommands] = useState([]);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -116,9 +110,21 @@ const ChatInput = () => {
     setIsLoginModalOpen(true);
   };
 
-  const onJoin = () => {
+  const onJoin = async () => {
     if (!isUserAuthenticated) {
-      openLoginModal();
+      if (ECOptions.authFlow === 'OAUTH') {
+        try {
+          await RCInstance.auth.loginWithRocketChatOAuth();
+        } catch (e) {
+          console.error(e);
+          dispatchToastMessage({
+            type: 'error',
+            message: e.message,
+          });
+        }
+      } else {
+        openLoginModal();
+      }
     }
   };
 

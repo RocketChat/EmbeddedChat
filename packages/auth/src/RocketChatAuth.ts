@@ -101,14 +101,9 @@ class RocketChatAuth {
 
   /**
    * Login with RocketChat OAuth. The EmbeddedChatApp must be installed and configured in RocketChat.
-   * @param credentials
    * @returns
    */
-  async loginWithRocketChatOAuth(credentials: {
-    [key: string]: string;
-    service: string;
-    access_token: string;
-  }) {
+  async loginWithRocketChatOAuth() {
     if (typeof window === "undefined") {
       throw new Error("loginWithRocketChatOAuth can only be called in browser");
     }
