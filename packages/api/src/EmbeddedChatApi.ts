@@ -798,6 +798,7 @@ export default class EmbeddedChatApi {
 
   async getChannelMembers() {
     try {
+      console.log('getCurrentUser', await this.auth.getCurrentUser());
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const response = await fetch(
         `${this.host}/api/v1/channels.members?roomId=${this.rid}`,
