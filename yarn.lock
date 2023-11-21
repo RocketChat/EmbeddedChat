@@ -2097,7 +2097,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@embeddedchat/htmlembed@workspace:packages/htmlembed"
   dependencies:
-    "@embeddedchat/react": 0.1.0
+    "@embeddedchat/react": 0.1.4
     "@vitejs/plugin-react": ^3.1.0
     live-server: ^1.2.2
     react: ^18.2.0
@@ -2165,42 +2165,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@embeddedchat/react@npm:0.1.0":
-  version: 0.1.0
-  resolution: "@embeddedchat/react@npm:0.1.0"
-  dependencies:
-    "@embeddedchat/api": 0.0.1
-    "@emotion/babel-preset-css-prop": ^11.11.0
-    "@emotion/react": 11.7.1
-    "@rocket.chat/fuselage-hooks": ^0.31.23
-    "@rocket.chat/icons": ^0.31.23
-    "@rocket.chat/message-parser": ^0.31.25
-    "@rocket.chat/sdk": ^1.0.0-alpha.42
-    "@rocket.chat/ui-kit": ^0.31.25
-    "@rollup/plugin-json": ^6.0.0
-    color: ^4.2.3
-    color-alpha: ^1.1.3
-    date-fns: ^2.30.0
-    emoji-picker-react: ^4.4.9
-    emoji-toolkit: ^7.0.1
-    gapi-cjs: ^1.0.3
-    he: ^1.2.0
-    js-cookie: ^3.0.5
-    normalize.css: ^8.0.1
-    prop-types: ^15.8.1
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    react-virtuoso: ^4.3.10
-    reactjs-popup: ^2.0.5
-    zustand: ^4.3.8
-  peerDependencies:
-    react: ">=17.0.2"
-    react-dom: ">=17.0.2"
-  checksum: fbcd5228a40334e845ee623b8f19e1e46b00ad1d9b1507ece7d10a771355526b3177eba9149b0bc02277eeefc3fefc61549777b6c7b1a2244e6ea262f0b71453
-  languageName: node
-  linkType: hard
-
-"@embeddedchat/react@workspace:packages/react":
+"@embeddedchat/react@0.1.4, @embeddedchat/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/react@workspace:packages/react"
   dependencies:
