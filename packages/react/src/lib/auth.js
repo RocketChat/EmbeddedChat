@@ -1,11 +1,18 @@
 export async function saveToken(token) {
-  localStorage.setItem('ec_token', token);
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('ec_token', token);
+  }
 }
 
 export async function getToken() {
-  return localStorage.getItem('ec_token');
+  if (typeof localStorage !== 'undefined') {
+    return localStorage.getItem('ec_token');
+  } 
+  return null;
 }
 
 export async function deleteToken() {
-  localStorage.removeItem('ec_token');
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('ec_token');
+  }
 }
