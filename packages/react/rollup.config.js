@@ -29,6 +29,7 @@ export default [
         plugins: [PRODUCTION && terser()],
       },
     ],
+    external: ['react', 'react-dom', '@emotion/react'],
     plugins: [
       replace(
         PRODUCTION

@@ -4,6 +4,10 @@
   "description": "React component library for embedding Rocket.Chat in React applications, providing customizable and feature-rich chat interfaces with easy React integration.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RocketChat/EmbeddedChat"
+  },
   "files": [
     "dist"
   ],
@@ -23,18 +27,14 @@
     "build-storybook": "storybook build",
     "build-icons": "node tools/icons-generator.js"
   },
-  "peerDependencies": {
-    "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18"
-  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.17.7",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@emotion/babel-plugin": "^11.11.0",
-    "@emotion/react": "^11.11.1",
     "@open-wc/building-rollup": "^3.0.2",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.0.2",
@@ -80,9 +80,14 @@
     "schedule": "^0.4.0",
     "storybook": "^7.0.26"
   },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
   "dependencies": {
     "@embeddedchat/api": "0.0.1",
     "@emotion/babel-preset-css-prop": "^11.11.0",
+    "@emotion/react": "11.7.1",
     "@rocket.chat/fuselage-hooks": "^0.31.23",
     "@rocket.chat/icons": "^0.31.23",
     "@rocket.chat/message-parser": "^0.31.25",
@@ -99,8 +104,8 @@
     "js-cookie": "^3.0.5",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",
-    "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-virtuoso": "^4.3.10",
     "reactjs-popup": "^2.0.5",
     "zustand": "^4.3.8"
