@@ -29,7 +29,7 @@ export default [
         plugins: [PRODUCTION && terser()],
       },
     ],
-    external: ['react', 'react-dom', '@emotion/react'],
+    external: ['react', 'react-dom', '@emotion/react', 'stylis'],
     plugins: [
       replace(
         PRODUCTION
@@ -40,7 +40,7 @@ export default [
             }
           : {}
       ),
-      resolve({ browser: true, extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
+      resolve({ browser: true, extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'] }),
       commonjs({ include: ['node_modules/**', '../../node_modules/**'] }),
       babel({
         exclude: 'node_modules/**',
