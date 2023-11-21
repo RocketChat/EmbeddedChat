@@ -11,7 +11,6 @@ export const Simple = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    GOOGLE_CLIENT_ID: '',
     isClosable: true,
     setClosableState: true,
     moreOpts: true,
@@ -23,7 +22,7 @@ export const Simple = {
     showAvatar: true,
     enableThreads: true,
     auth: {
-      flow: 'MANAGED',
+      flow: 'PASSWORD',
     },
   },
 };

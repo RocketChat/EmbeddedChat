@@ -12,127 +12,99 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 </a>
 </div>
 
-## Installation
-
-```bash
-npm i embeddedchat
-```
-
-## Usage
-
-Just import the component,
-
-```javascript
-import { RCComponent } from "embeddedchat";
-```
-
-and use it,
-
-```jsx
-<RCComponent
-  isClosable={true}
-  setClosableState={setClosableState}
-  moreOpts={true}
-  width="100%"
-  height="40vh"
-  GOOGLE_CLIENT_ID={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-  host={"http://localhost:3000"}
-  roomId={"GENERAL"}
-  channelName="Customer Service"
-  anonymousMode={false}
-  showAvatar={false}
-  showRoles={false}
-/>
-```
-
-## Props
-
-Read this [wiki page](https://github.com/RocketChat/EmbeddedChat/wiki/Roots-of-EmbeddedChat) for more info on each prop.
-
-| prop             | description                                                                                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| isClosable       | is the component closable?, defaults to `false`.                                                                                            |
-| setClosableState | the reusable setState, which will track the opening and closing of EmbeddedChat. It is a `setState fn` => which toggles the previous state. |
-| moreOpts         | it adds a kebab menu with added functionalities like showing pinned, starred, thread messages                                               |
-| width            | `width` of the component                                                                                                                    |
-| height           | `height` of the component (based on the `ChatBody`)                                                                                         |
-| host             | your Rocket.Chat host domain, defaults to `http://localhost:3000` (the dev server)                                                          |
-| GOOGLE_CLIENT_ID | it is the google client id that you will receive after creating a project in google console                                                 |
-| roomId           | the public room's id that you want to subscribe to                                                                                          |
-| channelName      | the fallback channel name to be present on the chat header                                                                                  |
-| anonymousMode    | if the user can see the chat without logging in                                                                                             |
-| showAvatar       | show the user's avatar in the chat component, defaults to false                                                                             |
-| showRoles        | show the user's roles in the chat component, defaults to false                                                                              |
-| enableThreads    | enable RocketChat's style thread messages, defaults to false                                                                                |
+## Installation and Usage
+Installtion and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
 
 ## Development
 
 ### Local Setup
 
-To run the embeddedchat, you will need a _Rocket.Chat_ server running (development or production). To setup Rocket.Chat dev environment follow this guide.
-[https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development](https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development)
+To develop and test `EmbeddedChat`, a local instance of Rocket.Chat server is necessary. For setting up a Rocket.Chat development environment, follow the guide provided at [Rocket.Chat GitHub Repository](https://github.com/RocketChat/Rocket.Chat#%EF%B8%8F-local-development).
 
 #### Prerequisites
 
-Ensure you have Node.js version 16.19.0 installed. We recommend using [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) to manage your Node.js versions.
+- **Node.js**: Version 16.19.0 is required. Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
+  
+  To install and use the correct Node.js version, execute:
 
-To use the correct Node.js version for this project, run the following command:
+  ```bash
+  nvm install
+  nvm use
+  ```
 
-```bash
-nvm install
-nvm use
-```
+- **Yarn Workspaces**: Ensure Yarn workspaces are enabled. If not, run:
 
-We use yarn workspaces. Enable corepack if not already enabled.
+  ```bash
+  corepack enable
+  ```
 
-```
-corepack enable
-```
+#### Install Dependencies
 
-#### Install dependencies
+Install all necessary dependencies and build the packages (`auth`, `api`, and `react`) with:
 
 ```bash
 yarn
 ```
 
-Thats all, This will install all the dependencies and will then build our auth, api and react package.
+### Starting Storybook for React
 
-#### Starting storybook for react
+Navigate to the `react` package and start Storybook:
 
 ```bash
 cd packages/react
 yarn storybook
 ```
 
-Till now, storybook should be up and running. You can play around with EmbeddedChat and it's component and see changes in storybook in real-time.
+Storybook should now be operational. Experiment with `EmbeddedChat` and its components, observing real-time changes in Storybook.
 
-By default, the Rocket Chat server host is http://localhost:3000, in case you have Rocket Chat server running on any other port/server you can try set up custom url as ```STORYBOOK_RC_HOST=<your-custom-url>``` variable by creating a ``.env`` file in ```packages/react``` directory or simply run this commmand in ```packages/react```:
+#### Custom Rocket Chat Server Configuration
 
-```bash
-STORYBOOK_RC_HOST=<your-custom-url> yarn storybook
-```
+By default, Storybook connects to `http://localhost:3000`. To use a different Rocket Chat server:
 
-### Working with api and auth packages.
+- Create a `.env` file in the `packages/react` directory.
+- Set the `STORYBOOK_RC_HOST` variable:
 
-#### Starting auth dev environment
+  ```bash
+  STORYBOOK_RC_HOST=<your-custom-url>
+  ```
 
-If you want to make changes to auth package and test them, you can start its playground server.
+  Alternatively, run this command in the `packages/react` directory:
 
-```bash
-cd packages/auth
-yarn dev
-```
+  ```bash
+  STORYBOOK_RC_HOST=<your-custom-url> yarn storybook
+  ```
 
-React package depends on api package. If you make any change to api package, build the package using `yarn build` in `package/api` directory. Then, restart the react projects.
+### Working with API and Auth Packages
 
-#### Starting api dev environment
+#### Auth Package Development
 
-If you want to make changes to api package and test them, you can start its playground server.
+To develop and test changes in the `auth` package:
 
-```bash
-cd packages/api
-yarn dev
-```
+1. Navigate to the `auth` package directory.
+2. Start the playground server:
 
-Api package depends on auth package. If you make any change to auth package, build the package using `yarn build` in `package/auth` directory. Then, restart the api dev environment.
+    ```bash
+    cd packages/auth
+    yarn dev
+    ```
+
+#### API Package Development
+
+For development in the `api` package:
+
+1. Navigate to the `api` package directory.
+2. Start the playground server:
+
+    ```bash
+    cd packages/api
+    yarn dev
+    ```
+
+Note: The `react` package depends on the `api` package. After making changes to `api`, rebuild it with `yarn build` in `package/api`, and then restart the `react` projects.
+
+Similarly, the `api` package depends on the `auth` package. After changes to `auth`, rebuild it with `yarn build` in `package/auth`, and then restart the `api` development environment.
+
+### Conclusion
+
+This setup provides a comprehensive environment for developing and testing the `EmbeddedChat` component, along with its associated `api` and `auth` packages. Enjoy exploring and enhancing the capabilities of `EmbeddedChat`!
 

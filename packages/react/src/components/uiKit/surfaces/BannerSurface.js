@@ -1,10 +1,10 @@
-import { Margins } from '@rocket.chat/fuselage';
 import React from 'react';
 import { Surface } from './Surface';
+import { Box } from '../../Box';
 
 const BannerSurface = ({ children }) => (
   <Surface type="banner">
-    <Margins block="x8">{children}</Margins>
+    <Box style={{ marginBlock: '0.5rem' }}>{children}</Box>
   </Surface>
 );
 

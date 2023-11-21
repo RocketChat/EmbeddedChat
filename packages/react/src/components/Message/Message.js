@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import { format } from 'date-fns';
@@ -7,21 +7,21 @@ import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
-import { useMessageStore, useToastStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import { Box } from '../Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { MessageContainer } from './MessageContainer';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
 import { MessageMetrics } from './MessageMetrics';
 import { MessageToolbox } from './MessageToolbox';
-import { Avatar } from '../Avatar';
 import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import MessageAvatarContainer from './MessageAvatarContainer';
+import MessageBodyContainer from './MessageBodyContainer';
 
 const MessageCss = css`
   display: flex;
@@ -62,7 +62,6 @@ const Message = ({
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
   const dispatchToastMessage = useToastBarDispatch();
-  const toastPosition = useToastStore((state) => state.position);
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
@@ -129,11 +128,6 @@ const Message = ({
     openThread(msg);
   };
 
-  const getUserAvatarUrl = (username) => {
-    const host = RCInstance.getHost();
-    const URL = `${host}/avatar/${username}`;
-    return URL;
-  };
   const context = useMemo(
     () => ({
       action: async ({ actionId, value, blockId, appId }) => {
@@ -153,16 +147,13 @@ const Message = ({
       appId: message.blocks && message.blocks[0] && message.blocks[0].appId,
       rid: RCInstance.rid,
     }),
-    []
+    [RCInstance, message._id, message.blocks]
   );
 
+  const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
+  const shouldShowHeader = !sequential || (!showAvatar && isStarred);
   return (
     <>
-      {newDay ? (
-        <MessageDivider>
-          {format(new Date(message.ts), 'MMMM d, yyyy')}
-        </MessageDivider>
-      ) : null}
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={MessageCss}
@@ -170,103 +161,88 @@ const Message = ({
         isPending={message.isPending}
         style={styleOverrides}
       >
-        <MessageContainer>
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-              width: '100%',
-            }}
-          >
-            {showAvatar && (
-              <Box style={{ margin: '3px' }}>
-                <Avatar
-                  url={getUserAvatarUrl(message.u.username)}
-                  alt="avatar"
-                />
-              </Box>
-            )}
-            <Box
-              style={{
-                marginLeft: '5px',
-                position: 'relative',
-                width: '100%',
-              }}
-            >
-              {!sequential && <MessageHeader message={message} />}
-              {!message.t ? (
-                <>
-                  <MessageBody
-                    className={
-                      message.isPending ? classes.PendingMessageBody : ''
-                    }
-                  >
-                    {message.attachments && message.attachments.length > 0 ? (
-                      <>
-                        <Markdown body={message} isReaction={false} />
-                        <Attachments attachments={message.attachments} />
-                      </>
-                    ) : (
-                      <Markdown body={message} isReaction={false} />
-                    )}
-                    {message.blocks && (
-                      <kitContext.Provider value={context} mid={message.mid}>
-                        <UiKitComponent
-                          render={UiKitMessage}
-                          blocks={message.blocks}
-                        />
-                      </kitContext.Provider>
-                    )}
-                  </MessageBody>
-
-                  <MessageReactions
-                    authenticatedUserUsername={authenticatedUserUsername}
-                    message={message}
-                    handleEmojiClick={handleEmojiClick}
-                  />
-                </>
-              ) : (
-                <>
-                  {message.attachments && (
+        {showAvatar && (
+          <MessageAvatarContainer
+            message={message}
+            sequential={sequential}
+            isStarred={isStarred}
+          />
+        )}
+        <MessageBodyContainer>
+          {shouldShowHeader && <MessageHeader message={message} />}
+          {!message.t ? (
+            <>
+              <MessageBody
+                className={message.isPending ? classes.PendingMessageBody : ''}
+              >
+                {message.attachments && message.attachments.length > 0 ? (
+                  <>
+                    <Markdown body={message} isReaction={false} />
                     <Attachments attachments={message.attachments} />
-                  )}
-                </>
+                  </>
+                ) : (
+                  <Markdown body={message} isReaction={false} />
+                )}
+                {message.blocks && (
+                  <kitContext.Provider value={context} mid={message.mid}>
+                    <UiKitComponent
+                      render={UiKitMessage}
+                      blocks={message.blocks}
+                    />
+                  </kitContext.Provider>
+                )}
+              </MessageBody>
+
+              <MessageReactions
+                authenticatedUserUsername={authenticatedUserUsername}
+                message={message}
+                handleEmojiClick={handleEmojiClick}
+              />
+            </>
+          ) : (
+            <>
+              {message.attachments && (
+                <Attachments attachments={message.attachments} />
               )}
-              {message.tcount && variant !== 'thread' ? (
-                <MessageMetrics
-                  message={message}
-                  handleOpenThread={handleOpenThread}
-                />
-              ) : null}
-              {!message.t ? (
-                <MessageToolbox
-                  message={message}
-                  authenticatedUserId={authenticatedUserId}
-                  handleDeleteMessage={handleDeleteMessage}
-                  handleOpenThread={handleOpenThread}
-                  handleStarMessage={handleStarMessage}
-                  handlePinMessage={handlePinMessage}
-                  handleEditMessage={() => {
-                    setEditMessage({
-                      message: message.message,
-                      id: message._id,
-                    });
-                  }}
-                  handleEmojiClick={handleEmojiClick}
-                  handlerReportMessage={() => {
-                    setMessageToReport(message._id);
-                    toggletoggleShowReportMessage();
-                  }}
-                  isThreadMessage={variant === 'thread'}
-                />
-              ) : (
-                <></>
-              )}
-            </Box>
-          </Box>
-        </MessageContainer>
+            </>
+          )}
+          {message.tcount && variant !== 'thread' ? (
+            <MessageMetrics
+              message={message}
+              handleOpenThread={handleOpenThread}
+            />
+          ) : null}
+          {!message.t ? (
+            <MessageToolbox
+              message={message}
+              authenticatedUserId={authenticatedUserId}
+              handleDeleteMessage={handleDeleteMessage}
+              handleOpenThread={handleOpenThread}
+              handleStarMessage={handleStarMessage}
+              handlePinMessage={handlePinMessage}
+              handleEditMessage={() => {
+                setEditMessage({
+                  message: message.message,
+                  id: message._id,
+                });
+              }}
+              handleEmojiClick={handleEmojiClick}
+              handlerReportMessage={() => {
+                setMessageToReport(message._id);
+                toggletoggleShowReportMessage();
+              }}
+              isThreadMessage={variant === 'thread'}
+            />
+          ) : (
+            <></>
+          )}
+        </MessageBodyContainer>
       </Box>
+      {newDay ? (
+        <MessageDivider>
+          {format(new Date(message.ts), 'MMMM d, yyyy')}
+        </MessageDivider>
+      ) : null}
     </>
   );
 };
@@ -279,4 +255,4 @@ Message.propTypes = {
   showAvatar: PropTypes.bool,
 };
 
-export default Message;
+export default memo(Message);

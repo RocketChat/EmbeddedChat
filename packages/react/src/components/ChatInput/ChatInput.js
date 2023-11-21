@@ -1,13 +1,7 @@
-import React, {
-  useState,
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import styles from './ChatInput.module.css';
-import RCContext from '../../context/RCInstance';
+import { useRCContext } from '../../context/RCInstance';
 import {
   useToastStore,
   useUserStore,
@@ -32,7 +26,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ChatInput = () => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useRCContext();
   const [commands, setCommands] = useState([]);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -53,8 +47,10 @@ const ChatInput = () => {
   }, [RCInstance]);
 
   const [filteredCommands, setFilteredCommands] = useState([]);
-  const getFilteredCommands = (cmd) =>
-    commands.filter((c) => c.command.startsWith(cmd.replace('/', '')));
+  const getFilteredCommands = useCallback(
+    (cmd) => commands.filter((c) => c.command.startsWith(cmd.replace('/', ''))),
+    [commands]
+  );
 
   const execCommand = async (command, params) => {
     await RCInstance.execCommand({ command, params });
@@ -112,6 +108,24 @@ const ChatInput = () => {
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
+  };
+
+  const onJoin = async () => {
+    if (!isUserAuthenticated) {
+      if (ECOptions.authFlow === 'OAUTH') {
+        try {
+          await RCInstance.auth.loginWithRocketChatOAuth();
+        } catch (e) {
+          console.error(e);
+          dispatchToastMessage({
+            type: 'error',
+            message: e.message,
+          });
+        }
+      } else {
+        openLoginModal();
+      }
+    }
   };
 
   const sendMessage = async () => {
@@ -188,14 +202,14 @@ const ChatInput = () => {
     toggle();
     setData(event.target.files[0]);
   };
-  const getAllChannelMembers = async () => {
+  const getAllChannelMembers = useCallback(async () => {
     try {
       const channelMembers = await RCInstance.getChannelMembers();
       setRoomMembers(channelMembers.members);
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [RCInstance, setRoomMembers]);
 
   useEffect(() => {
     if (editMessage.msg) {
@@ -204,7 +218,7 @@ const ChatInput = () => {
   }, [editMessage]);
   useEffect(() => {
     getAllChannelMembers();
-  }, []);
+  }, [getAllChannelMembers]);
 
   const username = useUserStore((state) => state.username);
   const timerRef = useRef();
@@ -252,19 +266,134 @@ const ChatInput = () => {
     }
   }, []);
 
-  const showCommands = useCallback(async (e) => {
-    const cursor = e.target.selectionStart;
-    const tokens = e.target.value
-      .trim()
-      .slice(0, cursor + 1)
-      .split(/\s+/);
-    if (tokens.length === 1 && tokens[0].startsWith('/')) {
-      setFilteredCommands(getFilteredCommands(tokens[0]));
-    } else {
-      setFilteredCommands([]);
-    }
-  });
+  const showCommands = useCallback(
+    async (e) => {
+      const cursor = e.target.selectionStart;
+      const tokens = e.target.value
+        .trim()
+        .slice(0, cursor + 1)
+        .split(/\s+/);
+      if (tokens.length === 1 && tokens[0].startsWith('/')) {
+        setFilteredCommands(getFilteredCommands(tokens[0]));
+      } else {
+        setFilteredCommands([]);
+      }
+    },
+    [getFilteredCommands]
+  );
 
+  const onTextChange = (e) => {
+    messageRef.current.value = parseEmoji(e.target.value);
+
+    if (e.code === 'Enter') {
+      messageRef.current.value += '\n';
+    }
+
+    setDisableButton(!messageRef.current.value.length);
+
+    e.target.style.height = 'auto';
+    if (e.target.scrollHeight <= 150) {
+      e.target.style.boxSizing = 'border-box';
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    } else {
+      e.target.style.height = '150px';
+    }
+    searchToMentionUser(
+      messageRef.current.value,
+      roomMembers,
+      startReading,
+      setStartReading,
+      setFilteredMembers,
+      setmentionIndex,
+      setshowMembersList
+    );
+    sendTypingStart();
+  };
+
+  const onKeyDown = (e) => {
+    if (e.shiftKey && e.keyCode === 13) {
+      // new line with shift enter. do nothing.
+      return;
+    }
+    if (e.ctrlKey && e.key === 'i') {
+      e.preventDefault();
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      if (end - start > 0) {
+        const italic = ` _${messageRef.current.value.slice(start, end)}_ `;
+        messageRef.current.value =
+          messageRef.current.value.slice(0, start) +
+          italic +
+          messageRef.current.value.slice(end);
+      } else {
+        messageRef.current.value = '__';
+        e.target.setSelectionRange(start + 1, start + 1);
+      }
+    }
+    if (e.ctrlKey && e.key === 'b') {
+      e.preventDefault();
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      if (end - start > 0) {
+        const bold = ` *${messageRef.current.value.slice(start, end)}* `;
+        messageRef.current.value =
+          messageRef.current.value.slice(0, start) +
+          bold +
+          messageRef.current.value.slice(end);
+      } else {
+        messageRef.current.value = '**';
+        e.target.setSelectionRange(start + 1, start + 1);
+      }
+    }
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
+      // Insert line break in text input field
+      messageRef.current.value += '\n';
+      e.target.style.height = 'auto';
+      if (e.target.scrollHeight <= 150) {
+        e.target.style.boxSizing = 'border-box';
+        e.target.style.height = `${e.target.scrollHeight}px`;
+      } else {
+        e.target.style.height = '150px';
+      }
+    } else if (editMessage.msg && e.keyCode === 27) {
+      messageRef.current.value = '';
+      setDisableButton(true);
+      setEditMessage({});
+    } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+      e.preventDefault();
+      e.target.style.height = '38px';
+      sendMessage();
+    }
+
+    if (e.key === 'ArrowDown') {
+      setmentionIndex(
+        mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
+      );
+    }
+    if (e.key === 'ArrowUp') {
+      setmentionIndex(
+        mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+      );
+    }
+    if (showMembersList && e.key === 'Enter') {
+      e.preventDefault();
+      let selectedMember = null;
+      if (mentionIndex === filteredMembers.length) selectedMember = 'all';
+      else if (mentionIndex === filteredMembers.length + 1)
+        selectedMember = 'everyone';
+      else selectedMember = filteredMembers[mentionIndex].username;
+      messageRef.current.value = `${messageRef.current.value.substring(
+        0,
+        messageRef.current.value.lastIndexOf('@')
+      )}@${selectedMember}`;
+
+      setshowMembersList(false);
+
+      setStartReading(false);
+      setFilteredMembers([]);
+      setmentionIndex(-1);
+    }
+  };
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box
@@ -308,94 +437,10 @@ const ChatInput = () => {
             disabled={!isUserAuthenticated || isRecordingMessage}
             placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
-            onChange={(e) => {
-              messageRef.current.value = parseEmoji(e.target.value);
-
-              if (e.code === 'Enter') {
-                messageRef.current.value += '\n';
-              }
-
-              setDisableButton(!messageRef.current.value.length);
-
-              e.target.style.height = 'auto';
-              if (e.target.scrollHeight <= 150) {
-                e.target.style.boxSizing = 'border-box';
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              } else {
-                e.target.style.height = '150px';
-              }
-              searchToMentionUser(
-                messageRef.current.value,
-                roomMembers,
-                startReading,
-                setStartReading,
-                setFilteredMembers,
-                setmentionIndex,
-                setshowMembersList
-              );
-              sendTypingStart();
-            }}
+            onChange={onTextChange}
             onKeyUp={showCommands}
             onBlur={sendTypingStop}
-            onKeyDown={(e) => {
-              if (e.shiftKey && e.keyCode === 13) {
-                // new line with shift enter. do nothing.
-                return;
-              }
-              if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-                // Insert line break in text input field
-                messageRef.current.value += '\n';
-                e.target.style.height = 'auto';
-                if (e.target.scrollHeight <= 150) {
-                  e.target.style.boxSizing = 'border-box';
-                  e.target.style.height = `${e.target.scrollHeight}px`;
-                } else {
-                  e.target.style.height = '150px';
-                }
-              } else if (editMessage.msg && e.keyCode === 27) {
-                messageRef.current.value = '';
-                setDisableButton(true);
-                setEditMessage({});
-              } else if (filteredMembers.length === 0 && e.keyCode === 13) {
-                e.preventDefault();
-                e.target.style.height = '38px';
-                sendMessage();
-              }
-
-              if (e.key === 'ArrowDown') {
-                setmentionIndex(
-                  mentionIndex + 1 >= filteredMembers.length + 2
-                    ? 0
-                    : mentionIndex + 1
-                );
-              }
-              if (e.key === 'ArrowUp') {
-                setmentionIndex(
-                  mentionIndex - 1 < 0
-                    ? filteredMembers.length + 1
-                    : mentionIndex - 1
-                );
-              }
-              if (showMembersList && e.key === 'Enter') {
-                e.preventDefault();
-                let selectedMember = null;
-                if (mentionIndex === filteredMembers.length)
-                  selectedMember = 'all';
-                else if (mentionIndex === filteredMembers.length + 1)
-                  selectedMember = 'everyone';
-                else selectedMember = filteredMembers[mentionIndex].username;
-                messageRef.current.value = `${messageRef.current.value.substring(
-                  0,
-                  messageRef.current.value.lastIndexOf('@')
-                )}@${selectedMember}`;
-
-                setshowMembersList(false);
-
-                setStartReading(false);
-                setFilteredMembers([]);
-                setmentionIndex(-1);
-              }
-            }}
+            onKeyDown={onKeyDown}
             ref={messageRef}
           />
 
@@ -416,7 +461,7 @@ const ChatInput = () => {
             </ActionButton>
           ) : (
             <Button
-              onClick={openLoginModal}
+              onClick={onJoin}
               color="primary"
               style={{ height: '100%', margin: '3px' }}
             >

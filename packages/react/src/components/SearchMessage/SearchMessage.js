@@ -1,19 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
-import {
-  Message,
-  MessageReactions,
-  MessageDivider,
-} from '@rocket.chat/fuselage';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
-import { isSameUser, serializeReactions } from '../../lib/reaction';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import { MessageContainer } from '../Message/MessageContainer';
+import { MessageDivider } from '../Message/MessageDivider';
+import { MessageReactions } from '../Message/MessageReactions';
+import MessageHeader from '../Message/MessageHeader';
+import { MessageBody } from '../Message/MessageBody';
+import MessageBodyContainer from '../Message/MessageBodyContainer';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -60,7 +60,10 @@ const Search = () => {
           </ActionButton>
         </h3>
       </Box>
-      <Box className={classes.container} style={{ border: '2px solid #ddd', position: 'relative' }}>
+      <Box
+        className={classes.container}
+        style={{ border: '2px solid #ddd', position: 'relative' }}
+      >
         <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
         <input
           placeholder="Search Message"
@@ -68,7 +71,16 @@ const Search = () => {
           onKeyDown={handleKeyPress}
           className={classes.textInput}
         />
-        <Button size="small" onClick={searchMessages}  style={{position: 'absolute', top: '50%', right: '5px', transform: 'translateY(-50%)'}}>
+        <Button
+          size="small"
+          onClick={searchMessages}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '5px',
+            transform: 'translateY(-50%)',
+          }}
+        >
           Enter
         </Button>
       </Box>
@@ -77,39 +89,25 @@ const Search = () => {
           const prev = arr[index + 1];
           const newDay = isMessageNewDay(msg, prev);
           return (
-            <Message key={msg._id}>
-              <Message.Container>
-                {newDay && (
-                  <MessageDivider>
-                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                  </MessageDivider>
-                )}
-                <Message.Header>
-                  <Message.Name>{msg.u.username}</Message.Name>
-                  <Message.Timestamp>
-                    {format(new Date(msg.ts), 'h:mm a')}
-                  </Message.Timestamp>
-                  {msg.editedAt && (
-                    <Icon style={{ opacity: 0.5 }} name="edit" />
-                  )}
-                </Message.Header>
-                <Message.Body>
-                  <Markdown body={msg} />
-                </Message.Body>
-                <MessageReactions>
-                  {msg.reactions &&
-                    serializeReactions(msg.reactions).map((reaction) => (
-                      <MessageReactions.Reaction
-                        key={reaction.name}
-                        mine={isSameUser(reaction, authenticatedUserUsername)}
-                      >
-                        <Markdown body={reaction.name} />
-                        <p>{reaction.count}</p>
-                      </MessageReactions.Reaction>
-                    ))}
-                </MessageReactions>
-              </Message.Container>
-            </Message>
+            <React.Fragment key={msg._id}>
+              {newDay && (
+                <MessageDivider>
+                  {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                </MessageDivider>
+              )}
+              <MessageContainer>
+                <MessageBodyContainer>
+                  <MessageHeader message={msg} />
+                  <MessageBody>
+                    <Markdown body={msg} />
+                  </MessageBody>
+                  <MessageReactions
+                    authenticatedUserUsername={authenticatedUserUsername}
+                    message={msg}
+                  />
+                </MessageBodyContainer>
+              </MessageContainer>
+            </React.Fragment>
           );
         })}
     </Box>

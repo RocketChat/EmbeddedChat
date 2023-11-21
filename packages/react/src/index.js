@@ -20,11 +20,10 @@ export const EmbeddedChat = ({
   moreOpts = false,
   width = '100%',
   height = '50vh',
-  host = process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
+  host = 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,
   anonymousMode = false,
-  headerColor = '#fff',
   toastBarPosition = 'bottom right',
   showRoles = false,
   showAvatar = false,
@@ -34,7 +33,7 @@ export const EmbeddedChat = ({
   style = {},
   hideHeader = false,
   auth = {
-    flow: 'MANAGED',
+    flow: 'PASSWORD',
   },
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -57,7 +56,7 @@ export const EmbeddedChat = ({
       getToken,
       deleteToken,
       saveToken,
-      autoLogin: auth.flow === 'MANAGED',
+      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
     });
     if (auth.flow === 'TOKEN') {
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
@@ -71,7 +70,7 @@ export const EmbeddedChat = ({
         getToken,
         deleteToken,
         saveToken,
-        autoLogin: auth.flow === 'MANAGED',
+        autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
       });
       if (auth.flow === 'TOKEN') {
         newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
@@ -122,7 +121,14 @@ export const EmbeddedChat = ({
         setIsUserAuthenticated(false);
       }
     });
-  }, [RCInstance]);
+  }, [
+    RCInstance,
+    setAuthenticatedName,
+    setAuthenticatedUserAvatarUrl,
+    setAuthenticatedUserId,
+    setAuthenticatedUserUsername,
+    setIsUserAuthenticated,
+  ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
@@ -130,14 +136,40 @@ export const EmbeddedChat = ({
     () => ({
       enableThreads,
       authFlow: auth.flow,
+      width,
+      height,
+      host,
+      roomId,
+      channelName,
+      showRoles,
+      showAvatar,
+      hideHeader,
+      anonymousMode,
     }),
-    [enableThreads, auth.flow]
+    [
+      enableThreads,
+      auth.flow,
+      width,
+      height,
+      host,
+      roomId,
+      channelName,
+      showRoles,
+      showAvatar,
+      hideHeader,
+      anonymousMode,
+    ]
+  );
+
+  const RCContextValue = useMemo(
+    () => ({ RCInstance, ECOptions }),
+    [RCInstance, ECOptions]
   );
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
-        <RCInstanceProvider value={{ RCInstance, ECOptions }}>
+        <RCInstanceProvider value={RCContextValue}>
           {attachmentWindowOpen ? <AttachmentWindow /> : null}
           <Box
             css={css`
@@ -159,7 +191,6 @@ export const EmbeddedChat = ({
                 moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
-                headerColor={headerColor}
               />
             )}
             {isUserAuthenticated || anonymousMode ? (
@@ -189,14 +220,14 @@ EmbeddedChat.propTypes = {
   roomId: PropTypes.string,
   channelName: PropTypes.string,
   anonymousMode: PropTypes.bool,
-  headerColor: PropTypes.string,
   toastBarPosition: PropTypes.string,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
   enableThreads: PropTypes.bool,
   theme: PropTypes.object,
   auth: PropTypes.oneOfType([
-    PropTypes.shape({ flow: PropTypes.oneOf(['MANAGED']) }),
+    PropTypes.shape({ flow: PropTypes.oneOf(['PASSWORD']) }),
+    PropTypes.shape({ flow: PropTypes.oneOf(['OAUTH']) }),
     PropTypes.shape({
       flow: PropTypes.oneOf(['TOKEN']),
       credentials: PropTypes.object,

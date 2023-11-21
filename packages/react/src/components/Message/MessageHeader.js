@@ -60,7 +60,10 @@ const MessageHeaderTimestapCss = css`
 const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const roles = useUserStore((state) => state.roles);
-
+  const authenticatedUserId = useUserStore((state) => state.userId);
+  const isStarred =
+    message.starred &&
+    message.starred.find((u) => u._id === authenticatedUserId);
   const userActions = () => {
     switch (message.t) {
       case 'ul':
@@ -126,6 +129,13 @@ const MessageHeader = ({ message }) => {
             size="1em"
           />
         )}
+        {isStarred ? (
+          <Icon
+            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+            name="star-filled"
+            size="1em"
+          />
+        ) : null}
       </Box>
     );
   }
