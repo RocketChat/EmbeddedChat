@@ -179,6 +179,7 @@ export const EmbeddedChat = ({
               overflow: hidden;
               max-height: 100vh;
               height: ${height};
+              text-align: initial;
             `}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
