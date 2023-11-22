@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import Popup from 'reactjs-popup';
-import he from 'he';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
@@ -25,19 +24,14 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     (state) => state.isRecordingMessage
   );
 
+  const [isEmojiOpen, setEmojiOpen] = useState(false);
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
   };
 
-  const handleEmojiClick = (n) => {
-    if (n.length > 5) {
-      const flagUnifed = `&#x${n.split('-').join(';&#x')};`;
-      const flag = he.decode(flagUnifed);
-      messageRef.current.value += flag;
-      return;
-    }
-    const unified_emoji = he.decode(`&#x${n};`);
-    messageRef.current.value += unified_emoji;
+  const handleEmojiClick = (emojiEvent) => {
+    const [emoji] = emojiEvent.names;
+    messageRef.current.value += ` :${emoji}: `;
   };
 
   const wrapSelection = (pattern) => {
@@ -46,7 +40,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     const initText = input.value.slice(0, selectionStart);
     const selectedText = input.value.slice(selectionStart, selectionEnd);
     const finalText = input.value.slice(selectionEnd, input.value.length);
-
     if (
       !document.execCommand ||
       !document.execCommand(
@@ -76,17 +69,32 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       style={styleOverrides}
     >
       {isUserAuthenticated && (
-        <Popup
-          disabled={isRecordingMessage}
-          trigger={
-            <ActionButton square ghost disabled={isRecordingMessage}>
-              <Icon name="emoji" size="1.25rem" />
-            </ActionButton>
-          }
-          position="top left"
-        >
-          <EmojiPicker handleEmojiClick={handleEmojiClick} />
-        </Popup>
+        <>
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage}
+            onClick={() => setEmojiOpen((t) => !t)}
+          >
+            <Icon name="emoji" size="1.25rem" />
+          </ActionButton>
+          <Popup
+            modal
+            open={isEmojiOpen}
+            onClose={() => setEmojiOpen(false)}
+            closeOnEscape
+            disabled={isRecordingMessage}
+            closeOnDocumentClick
+            position="left center"
+          >
+            <EmojiPicker
+              handleEmojiClick={(emoji) => {
+                setEmojiOpen(false);
+                handleEmojiClick(emoji);
+              }}
+            />
+          </Popup>
+        </>
       )}
       {formatter.map((item, index) => (
         <ActionButton

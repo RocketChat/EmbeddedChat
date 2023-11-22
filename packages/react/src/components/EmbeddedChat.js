@@ -16,6 +16,7 @@ import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
+import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
   isClosable = false,
@@ -175,15 +176,14 @@ const EmbeddedChat = ({
         <RCInstanceProvider value={RCContextValue}>
           {attachmentWindowOpen ? <AttachmentWindow /> : null}
           <Box
-            css={css`
-              display: flex;
-              flex-direction: column;
-              width: ${width};
-              overflow: hidden;
-              max-height: 100vh;
-              height: ${height};
-              text-align: initial;
-            `}
+            css={[
+              styles.embeddedchat,
+              css`
+                width: ${width};
+                height: ${height};
+              `,
+              fullScreen && styles.fullscreen,
+            ]}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
           >
