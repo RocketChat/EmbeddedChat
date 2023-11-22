@@ -2097,7 +2097,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@embeddedchat/htmlembed@workspace:packages/htmlembed"
   dependencies:
-    "@embeddedchat/react": 0.1.4
+    "@embeddedchat/react": 0.1.5
     "@vitejs/plugin-react": ^3.1.0
     live-server: ^1.2.2
     react: ^18.2.0
@@ -2165,7 +2165,41 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@embeddedchat/react@0.1.4, @embeddedchat/react@workspace:packages/react":
+"@embeddedchat/react@npm:0.1.5":
+  version: 0.1.5
+  resolution: "@embeddedchat/react@npm:0.1.5"
+  dependencies:
+    "@embeddedchat/api": 0.0.1
+    "@emotion/babel-preset-css-prop": ^11.11.0
+    "@emotion/react": 11.7.1
+    "@rocket.chat/fuselage-hooks": ^0.31.23
+    "@rocket.chat/icons": ^0.31.23
+    "@rocket.chat/message-parser": ^0.31.25
+    "@rocket.chat/sdk": ^1.0.0-alpha.42
+    "@rocket.chat/ui-kit": ^0.31.25
+    "@rollup/plugin-json": ^6.0.0
+    color: ^4.2.3
+    color-alpha: ^1.1.3
+    date-fns: ^2.30.0
+    emoji-picker-react: ^4.4.9
+    emoji-toolkit: ^7.0.1
+    gapi-cjs: ^1.0.3
+    he: ^1.2.0
+    js-cookie: ^3.0.5
+    normalize.css: ^8.0.1
+    prop-types: ^15.8.1
+    react-virtuoso: ^4.3.10
+    reactjs-popup: ^2.0.5
+    stylis: ^4.2.0
+    zustand: ^4.3.8
+  peerDependencies:
+    react: ^17.0.2
+    react-dom: ^17.0.2
+  checksum: a10f1428d8cc8d514e2bdbcd54be513b83518e7e59aa6ac1e6bff28d19f7883c16f8fc744205437ded141bceb61729a74b11e19d13f7bb3b94bd5b700678e76a
+  languageName: node
+  linkType: hard
+
+"@embeddedchat/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/react@workspace:packages/react"
   dependencies:
@@ -2217,7 +2251,6 @@ __metadata:
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-storybook: ^0.6.12
     gapi-cjs: ^1.0.3
-    he: ^1.2.0
     identity-obj-proxy: ^3.0.0
     jest: ^27.5.1
     js-cookie: ^3.0.5
@@ -2243,8 +2276,8 @@ __metadata:
     stylis: ^4.2.0
     zustand: ^4.3.8
   peerDependencies:
-    react: ^17.0.2
-    react-dom: ^17.0.2
+    react: ">=17.0.2 <19.0.0"
+    react-dom: ">=17.0.2 <19.0.0"
   languageName: unknown
   linkType: soft
 
