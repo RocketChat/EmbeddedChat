@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useToastStore = create((set) => ({
   position: 'top-start',

@@ -1,11 +1,13 @@
 const createRandomId = () => {
-  if (window.crypto.randomUUID) {
-    return window.crypto.randomUUID().replaceAll('-', '').slice(0, 17);
-  }
-  if (window.crypto.getRandomValues) {
-    const array = new window.BigUint64Array(2);
-    window.crypto.getRandomValues(array);
-    return (array[0] * array[1]).toString(36).slice(0, 17);
+  if ( typeof window !== 'undefined' ) {
+    if (window.crypto.randomUUID) {
+      return window.crypto.randomUUID().replaceAll('-', '').slice(0, 17);
+    }
+    if (window.crypto.getRandomValues) {
+      const array = new window.BigUint64Array(2);
+      window.crypto.getRandomValues(array);
+      return (array[0] * array[1]).toString(36).slice(0, 17);
+    }
   }
   return (
     Math.random().toString(36).replace('0.', '') +

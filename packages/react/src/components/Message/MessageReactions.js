@@ -15,10 +15,11 @@ const MessageReactionsCss = css`
 
 const MessageReactionCss = css`
   letter-spacing: 0rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 400;
   line-height: 1rem;
   display: inline-flex;
+  gap: 0.125rem;
   align-items: center;
   margin: 0.125rem;
   padding: 0.125rem;
@@ -30,6 +31,13 @@ const MessageReactionCss = css`
   &:hover {
     border-color: #6c727a;
     background-color: #f2f3f5;
+  }
+  img.joypixels {
+    height: 1.25em;
+    width: 1.25em;
+  }
+  p {
+    margin: 0;
   }
 `;
 

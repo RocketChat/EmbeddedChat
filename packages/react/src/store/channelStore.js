@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useChannelStore = create((set) => ({
   showChannelinfo: false,

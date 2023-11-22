@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import stylesSheet from './ChatHeader.module.css';
-import RCContext, { useRCContext } from '../../context/RCInstance';
+import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
   useMessageStore,
@@ -119,12 +119,13 @@ const ChatHeader = ({
     if (moreOpts) {
       options.push(
         ...[
-          {
-            id: 'thread',
-            action: function noRefCheck() {},
-            label: 'Threads',
-            icon: 'thread',
-          },
+          // TODO
+          // {
+          //   id: 'thread',
+          //   action: function noRefCheck() {},
+          //   label: 'Threads',
+          //   icon: 'thread',
+          // },
           {
             id: 'members',
             action: showChannelMembers,

@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@embeddedchat/api": "1.0.0",
+		"@embeddedchat/api": "0.0.2",
 		"@emotion/native": "^11.11.0",
 		"@emotion/react": "^11.11.1",
 		"@expo/vector-icons": "^13.0.0",
@@ -54,7 +54,7 @@
 		"storybook:ios": "sb-rn-get-stories && cross-env STORYBOOK_ENABLED='true' expo start --ios",
 		"storybook:android": "sb-rn-get-stories && cross-env STORYBOOK_ENABLED='true' expo start --android"
 	},
-	"version": "1.0.0",
+	"version": "0.0.2",
 	"private": true,
 	"name": "@embeddedchat/react-native",
 	"main": "start-app.js"
