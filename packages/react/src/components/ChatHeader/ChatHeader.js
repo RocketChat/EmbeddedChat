@@ -119,12 +119,13 @@ const ChatHeader = ({
     if (moreOpts) {
       options.push(
         ...[
-          {
-            id: 'thread',
-            action: function noRefCheck() {},
-            label: 'Threads',
-            icon: 'thread',
-          },
+          // TODO
+          // {
+          //   id: 'thread',
+          //   action: function noRefCheck() {},
+          //   label: 'Threads',
+          //   icon: 'thread',
+          // },
           {
             id: 'members',
             action: showChannelMembers,
