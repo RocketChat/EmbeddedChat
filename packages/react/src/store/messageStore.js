@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import cloneArray from '../lib/cloneArray';
 import { upsertMessage } from '../lib/messageListHelpers';
 
