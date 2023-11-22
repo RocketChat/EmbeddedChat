@@ -7,7 +7,7 @@ export async function saveToken(token) {
 export async function getToken() {
   if (typeof localStorage !== 'undefined') {
     return localStorage.getItem('ec_token');
-  } 
+  }
   return null;
 }
 

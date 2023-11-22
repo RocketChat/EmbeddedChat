@@ -1,6 +1,6 @@
 {
   "name": "@embeddedchat/react",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "React component library for embedding Rocket.Chat in React applications, providing customizable and feature-rich chat interfaces with easy React integration.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -81,10 +81,11 @@
     "schedule": "^0.4.0",
     "storybook": "^7.0.26"
   },
-  "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
+ "peerDependencies": {
+    "react": ">=17.0.2 <19.0.0",
+    "react-dom": ">=17.0.2 <19.0.0"
+  }
+  ,
   "dependencies": {
     "@embeddedchat/api": "0.0.1",
     "@emotion/babel-preset-css-prop": "^11.11.0",
