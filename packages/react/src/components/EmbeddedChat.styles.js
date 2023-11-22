@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 export const styles = {
   embeddedchat: css`
+    background: #fff;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -11,7 +12,10 @@ export const styles = {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: unset !important;
+    max-height: unset !important;
+    background: #fff;
   `,
 };

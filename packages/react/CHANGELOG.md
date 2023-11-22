@@ -1,5 +1,11 @@
 # @embeddedchat/react
 
+## 0.1.9
+
+### Patch Changes
+
+- Fixed fullscreen styling
+
 ## 0.1.8
 
 ### Patch Changes
