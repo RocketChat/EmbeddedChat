@@ -2068,7 +2068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@embeddedchat/api@0.0.1, @embeddedchat/api@workspace:packages/api":
+"@embeddedchat/api@0.0.2, @embeddedchat/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/api@workspace:packages/api"
   dependencies:
@@ -2081,6 +2081,16 @@ __metadata:
     rollup-plugin-serve: ^2.0.2
   languageName: unknown
   linkType: soft
+
+"@embeddedchat/api@npm:0.0.1":
+  version: 0.0.1
+  resolution: "@embeddedchat/api@npm:0.0.1"
+  dependencies:
+    "@embeddedchat/auth": 0.0.1
+    "@rocket.chat/sdk": ^1.0.0-alpha.42
+  checksum: 30dddba87906d1fc4c320b045ad6323bff694e400ac4f6a0ecc10cb6e10c2cb4a9a544f161967bccc56b21cec0723c3d395afa2fab26bf1cfbd5abc9ce06532e
+  languageName: node
+  linkType: hard
 
 "@embeddedchat/auth@0.0.1, @embeddedchat/auth@workspace:packages/auth":
   version: 0.0.0-use.local
@@ -2124,7 +2134,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.19.3
     "@babel/eslint-parser": ^7.22.15
-    "@embeddedchat/api": 0.0.1
+    "@embeddedchat/api": 0.0.2
     "@emotion/native": ^11.11.0
     "@emotion/react": ^11.11.1
     "@expo/vector-icons": ^13.0.0
@@ -2207,7 +2217,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@babel/preset-env": ^7.16.11
     "@babel/preset-react": ^7.16.7
-    "@embeddedchat/api": 0.0.1
+    "@embeddedchat/api": 0.0.2
     "@emotion/babel-plugin": ^11.11.0
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1
