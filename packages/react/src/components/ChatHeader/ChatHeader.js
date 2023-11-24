@@ -66,13 +66,15 @@ const ChatHeader = ({
 
   const showStarredMessage = useCallback(async () => {
     const { messages } = await RCInstance.getStarredMessages();
-    setMessages(messages);
+    // setMessages(messages);
+    setMessages((prevMessages) => [...prevMessages, ...messages]);
     setFilter(true);
   }, [RCInstance, setMessages, setFilter]);
 
   const showPinnedMessage = useCallback(async () => {
     const { messages } = await RCInstance.getPinnedMessages();
-    setMessages(messages);
+    // setMessages(messages);
+    setMessages((prevMessages) => [...prevMessages, ...messages]);
     setFilter(true);
   }, [RCInstance, setMessages, setFilter]);
 
@@ -175,6 +177,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     moreOpts,
     setFullScreen,
+    // setMessages,
     showChannelMembers,
     showChannelinformation,
     showPinnedMessage,
