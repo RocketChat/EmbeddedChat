@@ -212,7 +212,7 @@ const ChatInput = () => {
   }, [RCInstance, setRoomMembers]);
 
   useEffect(() => {
-    if (editMessage.msg) {
+    if (editMessage && editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     }
   }, [editMessage]);
