@@ -43,13 +43,26 @@ const useMessageStore = create((set, get) => ({
       }));
     }
   },
-  replaceMessage: (oldMessageId, newMessage) =>
-    set((state) => {
-      const idx = state.messages.findIndex((m) => m._id === oldMessageId);
-      if (idx !== -1) {
-        return [...state.messages].splice(idx, idx, newMessage);
-      }
-    }),
+  replaceMessage: (oldMessageId, newMessage) => {
+    const threadMessage = get().threadMessages.find(
+      (m) => m._id === oldMessageId
+    );
+    const message = get().messages.find((m) => m._id === oldMessageId);
+    if (threadMessage) {
+      return set((state) => ({
+        threadMessages: cloneArray(state.threadMessages).map((m) =>
+          m._id === oldMessageId ? newMessage : m
+        ),
+      }));
+    }
+    if (message) {
+      return set((state) => ({
+        messages: cloneArray(state.messages).map((m) =>
+          m._id === oldMessageId ? newMessage : m
+        ),
+      }));
+    }
+  },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
