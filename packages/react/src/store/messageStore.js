@@ -31,14 +31,13 @@ const useMessageStore = create((set, get) => ({
     const threadMessage = get().threadMessages.find((m) => m._id === messageId);
     const message = get().messages.find((m) => m._id === messageId);
     if (threadMessage) {
-      return set((state) => ({
+      set((state) => ({
         threadMessages: cloneArray(state.threadMessages).filter(
           (m) => m._id !== messageId
         ),
       }));
-    }
-    if (message) {
-      return set((state) => ({
+    } else if (message) {
+      set((state) => ({
         messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
       }));
     }
@@ -47,8 +46,11 @@ const useMessageStore = create((set, get) => ({
     set((state) => {
       const idx = state.messages.findIndex((m) => m._id === oldMessageId);
       if (idx !== -1) {
-        return [...state.messages].splice(idx, idx, newMessage);
+        const updatedMessages = [...state.messages];
+        updatedMessages.splice(idx, 1, newMessage);
+        return { messages: updatedMessages };
       }
+      return {};
     }),
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
   setMessageToReport: (messageId) =>
@@ -56,7 +58,7 @@ const useMessageStore = create((set, get) => ({
   toggleShowReportMessage: () => {
     set((state) => ({ showReportMessage: !state.showReportMessage }));
   },
-  toogleRecordingMessage: () => {
+  toggleRecordingMessage: () => {
     set((state) => ({
       isRecordingMessage: !state.isRecordingMessage,
     }));
