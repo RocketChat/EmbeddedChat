@@ -11,7 +11,7 @@
     "preview": "npm run build && vite preview --port=4001"
   },
   "dependencies": {
-    "@embeddedchat/react": "0.1.5",
+    "@embeddedchat/react": "0.1.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
