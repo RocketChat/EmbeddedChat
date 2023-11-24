@@ -1,5 +1,11 @@
 # @embeddedchat/react
 
+## 0.1.10
+
+### Patch Changes
+
+- 47e03ce: Fixed: Error on sending thread messages
+
 ## 0.1.9
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@embeddedchat/react",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "React component library for embedding Rocket.Chat in React applications, providing customizable and feature-rich chat interfaces with easy React integration.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

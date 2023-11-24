@@ -28,15 +28,15 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     position: relative;
     ::-webkit-scrollbar {
       width: 7px;
-      height:7.7px;
-    };
+      height: 7.7px;
+    }
     ::-webkit-scrollbar-thumb {
       background: #8d8d8d;
-      border-radius:4px;
-    };
+      border-radius: 4px;
+    }
     ::-webkit-scrollbar-thumb:hover {
       background: #555;
-    };
+    }
     ::-webkit-scrollbar-button {
       display: none;
     }
@@ -119,7 +119,14 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
         console.error(e);
       }
     },
-    [RCInstance, ECOptions?.enableThreads, isUserAuthenticated, anonymousMode]
+    [
+      isUserAuthenticated,
+      RCInstance,
+      ECOptions?.enableThreads,
+      showRoles,
+      setMessages,
+      setRoles,
+    ]
   );
 
   const handleGoBack = async () => {
@@ -132,7 +139,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
   };
 
   const getThreadMessages = useCallback(async () => {
-    if (isUserAuthenticated) {
+    if (isUserAuthenticated && threadMainMessage?._id) {
       try {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
@@ -145,7 +152,13 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
         console.error(e);
       }
     }
-  }, [isThreadOpen, isUserAuthenticated, RCInstance, threadMainMessage]);
+  }, [
+    isUserAuthenticated,
+    anonymousMode,
+    RCInstance,
+    threadMainMessage?._id,
+    setThreadMessages,
+  ]);
 
   useEffect(() => {
     if (isThreadOpen && ECOptions.enableThreads) {
@@ -214,6 +227,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
     addMessage,
     removeMessage,
     onActionTriggerResponse,
+    anonymousMode,
   ]);
 
   const [onDrag, setOnDrag] = useState(false);
