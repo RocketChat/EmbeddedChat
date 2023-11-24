@@ -1,5 +1,13 @@
 # @embeddedchat/htmlembed
 
+## 0.0.5
+
+### Patch Changes
+
+- 14117c0: Fixed: invalid storing of authenticatedUserId
+- Updated dependencies [14117c0]
+  - @embeddedchat/react@0.1.12
+
 ## 0.0.4
 
 ### Patch Changes
