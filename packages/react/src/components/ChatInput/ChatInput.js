@@ -24,6 +24,13 @@ import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
+const editingMessageCss = css`
+  background-color: #fff8e0;
+  & textarea {
+    background-color: inherit;
+  }
+`;
+
 const ChatInput = () => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
@@ -178,7 +185,7 @@ const ChatInput = () => {
       }
       setDisableButton(true);
     } else {
-      const res = await RCInstance.updateMessage(editMessage.id, message);
+      const res = await RCInstance.updateMessage(editMessage._id, message);
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
@@ -214,6 +221,8 @@ const ChatInput = () => {
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
+    } else {
+      messageRef.current.value = '';
     }
   }, [editMessage]);
   useEffect(() => {
@@ -424,13 +433,15 @@ const ChatInput = () => {
           />
         )}
         <Box
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            flex-direction: row;
-          `}
+          css={[
+            css`
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: row;
+            `,
+            editMessage.msg && editingMessageCss,
+          ]}
         >
           <textarea
             rows={1}
@@ -445,29 +456,22 @@ const ChatInput = () => {
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          {isUserAuthenticated ? (
-            <ActionButton
-              ghost
-              size="medium"
-              onClick={sendMessage}
-              disabled={disableButton || isRecordingMessage}
-              style={{ padding: '0.5rem' }}
-            >
-              <Icon
-                className={styles.chatInputIconCursor}
-                name="send"
-                size="1.25rem"
-              />
-            </ActionButton>
-          ) : (
-            <Button
-              onClick={onJoin}
-              color="primary"
-              style={{ height: '100%', margin: '3px' }}
-            >
-              JOIN
-            </Button>
-          )}
+          <Box>
+            {isUserAuthenticated ? (
+              <ActionButton
+                ghost
+                size="medium"
+                onClick={sendMessage}
+                disabled={disableButton || isRecordingMessage}
+              >
+                <Icon className={styles.chatInputIconCursor} name="send" />
+              </ActionButton>
+            ) : (
+              <Button onClick={onJoin} color="primary">
+                JOIN
+              </Button>
+            )}
+          </Box>
         </Box>
         {isUserAuthenticated && (
           <ChatInputFormattingToolbar
