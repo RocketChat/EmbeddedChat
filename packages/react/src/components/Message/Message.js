@@ -1,6 +1,5 @@
 import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
@@ -9,7 +8,6 @@ import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
-import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import { Box } from '../Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -62,7 +60,7 @@ const Message = ({
     style
   );
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
+  const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
