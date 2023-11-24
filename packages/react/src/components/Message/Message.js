@@ -40,6 +40,12 @@ const MessageCss = css`
     background: #f2f3f5;
   }
 `;
+const MessageEditingCss = css`
+  background-color: #fff8e0;
+  &:hover {
+    background-color: #fff8e0;
+  }
+`;
 
 const Message = ({
   message,
@@ -156,7 +162,7 @@ const Message = ({
     <>
       <Box
         className={appendClassNames('ec-message', classNames)}
-        css={MessageCss}
+        css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
         isEditing={editMessage.id === message._id}
         isPending={message.isPending}
         style={styleOverrides}
@@ -215,16 +221,18 @@ const Message = ({
           {!message.t ? (
             <MessageToolbox
               message={message}
+              isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
               handleDeleteMessage={handleDeleteMessage}
               handleOpenThread={handleOpenThread}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
               handleEditMessage={() => {
-                setEditMessage({
-                  message: message.message,
-                  id: message._id,
-                });
+                if (editMessage._id === message._id) {
+                  setEditMessage({});
+                } else {
+                  setEditMessage(message);
+                }
               }}
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {

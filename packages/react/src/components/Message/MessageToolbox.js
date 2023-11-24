@@ -46,6 +46,7 @@ export const MessageToolbox = ({
   handleStarMessage,
   handlerReportMessage,
   handleEditMessage,
+  isEditing = false,
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(
@@ -112,7 +113,8 @@ export const MessageToolbox = ({
         {message.u._id === authenticatedUserId && (
           <>
             <ActionButton
-              ghost
+              ghost={!isEditing}
+              color={isEditing ? 'secondary' : 'default'}
               size="small"
               icon="edit"
               onClick={() => handleEditMessage(message)}
