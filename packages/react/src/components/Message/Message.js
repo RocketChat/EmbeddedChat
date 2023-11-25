@@ -1,6 +1,5 @@
 import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
@@ -9,7 +8,6 @@ import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
-import { RC_USER_ID_COOKIE } from '../../lib/constant';
 import { Box } from '../Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -40,6 +38,12 @@ const MessageCss = css`
     background: #f2f3f5;
   }
 `;
+const MessageEditingCss = css`
+  background-color: #fff8e0;
+  &:hover {
+    background-color: #fff8e0;
+  }
+`;
 
 const Message = ({
   message,
@@ -56,7 +60,7 @@ const Message = ({
     style
   );
   const { RCInstance } = useContext(RCContext);
-  const authenticatedUserId = Cookies.get(RC_USER_ID_COOKIE);
+  const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -156,7 +160,7 @@ const Message = ({
     <>
       <Box
         className={appendClassNames('ec-message', classNames)}
-        css={MessageCss}
+        css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
         isEditing={editMessage.id === message._id}
         isPending={message.isPending}
         style={styleOverrides}
@@ -215,16 +219,18 @@ const Message = ({
           {!message.t ? (
             <MessageToolbox
               message={message}
+              isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
               handleDeleteMessage={handleDeleteMessage}
               handleOpenThread={handleOpenThread}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
               handleEditMessage={() => {
-                setEditMessage({
-                  message: message.message,
-                  id: message._id,
-                });
+                if (editMessage._id === message._id) {
+                  setEditMessage({});
+                } else {
+                  setEditMessage(message);
+                }
               }}
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {

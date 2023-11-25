@@ -1,5 +1,17 @@
 # @embeddedchat/react
 
+## 0.1.12
+
+### Patch Changes
+
+- 14117c0: Fixed: invalid storing of authenticatedUserId
+
+## 0.1.11
+
+### Patch Changes
+
+- ce5a26b: Improved: Message Editing feature
+
 ## 0.1.10
 
 ### Patch Changes
