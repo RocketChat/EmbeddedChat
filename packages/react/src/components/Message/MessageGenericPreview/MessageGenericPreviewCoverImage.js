@@ -14,11 +14,11 @@ const MessageGenericPreviewCoverImage = ({
       className,
       'rcx-message-generic-preview__preview'
     )}
-    style={{ backgroundImage: url(`${url}`), maxWidth: '100%' }}
+    style={{ backgroundImage: `url(${url})`, maxWidth: '100%' }}
     data-testid="preview-image"
     {...props}
   >
-    <div style={{ paddingTop: `${(height / width) * 100}`% }} />
+    <div style={{ paddingTop: `${(height / width) * 100}%` }} />
   </div>
 );
 
