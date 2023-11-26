@@ -13,11 +13,11 @@ const fontFamily = (name) => {
     throw new Error('Invalid font family name');
   }
 
-  return css`
-    :root {
-      --rcx-font-family-${name}: ${typography.$fontFamilies[name]};
-    }
-  `;
+  //   return css`
+  //     :root {
+  //       --rcx-font-family-${name}: ${typography.$fontFamilies[name]};
+  //     }
+  //   `;
 };
 
 // Get font scales keys
