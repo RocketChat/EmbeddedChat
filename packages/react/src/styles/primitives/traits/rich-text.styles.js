@@ -1,6 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { colors, lengths, typography } from '../../your-token-paths'; // Update with your actual paths
+import { colors } from '../../colors.styles';
+import { functions } from '../../functions.styles';
+import { lengths } from '../../lengths.styles';
+import { typography } from '../../typography.styles';
 
 const withInlineElements = css`
   a,

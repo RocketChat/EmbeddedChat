@@ -4,6 +4,9 @@ import { lengths } from '../../../styles/lengths.styles';
 import { colors } from '../../../styles/colors.styles';
 import { functions } from '../../../styles/functions.styles';
 import { typography } from '../../../styles/typography.styles';
+import { richText } from '../../../styles/primitives/traits/rich-text.styles';
+import { size } from '../../../styles/mixins/size.styles';
+
 const { borderTheme, fontTheme, surfaceTheme } = theme;
 
 const messageGenericPreviewStyles = css`
