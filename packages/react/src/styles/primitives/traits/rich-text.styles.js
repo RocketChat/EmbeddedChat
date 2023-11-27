@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { colors } from '../../colors.styles';
-import { functions } from '../../functions.styles';
 import { lengths } from '../../lengths.styles';
 import { typography } from '../../typography.styles';
 
