@@ -60,7 +60,7 @@ const MessageList = ({ messages, handleGoBack }) => {
               size="1.25rem"
               color="error"
             />
-            <p style={{ display: 'inline' }}>Go Back</p>
+            <p style={{ marginBottom: '0.2rem' }}>Go Back</p>
           </Button>
         </Box>
       )}
