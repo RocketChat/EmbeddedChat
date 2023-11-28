@@ -62,7 +62,7 @@ const Menu = ({
   const onClick = (action, disabled) => () => {
     if (!disabled) {
       action();
-      setOpen;
+      setOpen(!isOpen);
     }
   };
 
