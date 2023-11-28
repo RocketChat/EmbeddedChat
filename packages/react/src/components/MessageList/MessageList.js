@@ -52,7 +52,7 @@ const MessageList = ({ messages, handleGoBack }) => {
           );
         })}
       {filtered && (
-        <Box>
+        <Box style={{ marginLeft: '1.5rem' }}>
           <Button size="small" onClick={handleGoBack}>
             <Icon
               style={{ marginInlineEnd: '0.4rem' }}
