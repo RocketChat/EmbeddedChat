@@ -11,7 +11,7 @@ const RoomMemberItem = ({ user }) => (
     }}
   >
     <img
-      src={`http://localhost:3000/avatar/${user.username}`}
+      src={`${process.env.STORYBOOK_RC_HOST}/avatar/${user.username}`}
       alt="avatar"
       style={{ height: '1.5rem', marginLeft: '0.5rem' }}
     />
