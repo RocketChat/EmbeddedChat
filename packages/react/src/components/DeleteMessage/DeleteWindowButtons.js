@@ -20,10 +20,10 @@ const DeleteWindowButtons = ({ children, messageId }) => {
 
   const handleDeleteMessage = async () => {
     // Add logic to delete the message
-    // const res = await RCInstance.deleteMessage(messageId);
+    const res = await RCInstance.deleteMessage(messageId);
 
-    // Example logic for success and error messages
-    const res = { success: true }; // Replace with actual logic
+    //  // Example logic for success and error messages
+    //  const res = { success: true }; // Replace with actual logic
 
     if (res.success) {
       dispatchToastMessage({
@@ -48,7 +48,7 @@ const DeleteWindowButtons = ({ children, messageId }) => {
         </Modal.Title>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>
-      <Modal.Content>{children}</Modal.Content>
+      <hr />
       <Modal.Footer>
         <Button color="secondary" onClick={handleOnClose}>
           Cancel

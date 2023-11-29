@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
@@ -20,6 +20,7 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+import MessageDeleteWindow from '../DeleteMessage/MessageDeleteWindow';
 
 const MessageCss = css`
   display: flex;
@@ -59,6 +60,9 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -109,6 +113,7 @@ const Message = ({
   };
 
   const handleDeleteMessage = async (msg) => {
+    setDeleteModalOpen(true);
     const res = await RCInstance.deleteMessage(msg._id);
 
     if (res.success) {
@@ -221,7 +226,7 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
-              handleDeleteMessage={handleDeleteMessage}
+              handleDeleteMessage={setDeleteModalOpen}
               handleOpenThread={handleOpenThread}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
@@ -244,6 +249,7 @@ const Message = ({
           )}
         </MessageBodyContainer>
       </Box>
+      {isDeleteModalOpen && <MessageDeleteWindow messageId={message._id} />}
       {newDay ? (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}
