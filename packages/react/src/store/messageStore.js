@@ -43,6 +43,19 @@ const useMessageStore = create((set, get) => ({
       }));
     }
   },
+  deleteMessage: async (messageId) => {
+    // Add logic to delete the message
+    const res = await RCInstance.deleteMessage(messageId);
+
+    if (res.success) {
+      set((state) => ({
+        messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
+        threadMessages: cloneArray(state.threadMessages).filter(
+          (m) => m._id !== messageId
+        ),
+      }));
+    }
+  },
   replaceMessage: (oldMessageId, newMessage) => {
     const threadMessage = get().threadMessages.find(
       (m) => m._id === oldMessageId
