@@ -7,7 +7,6 @@ import { appendClassNames } from '../../lib/appendClassNames';
 import { ActionButton } from '../ActionButton';
 import { EmojiPicker } from '../EmojiPicker';
 import MessageDeleteWindow from '../DeleteMessage/MessageDeleteWindow';
-import { useMessageStore } from '../../store';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -58,9 +57,6 @@ export const MessageToolbox = ({
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  const messageToDelete = useMessageStore((state) => state.messageToDelete);
 
   return (
     <Box css={MessageToolboxWrapperCss}>
@@ -133,12 +129,6 @@ export const MessageToolbox = ({
               color="error"
               onClick={() => setDeleteModalOpen(true)}
             />
-            {isDeleteModalOpen && (
-              <MessageDeleteWindow
-                messageId={message._id}
-                onClose={() => setDeleteModalOpen(false)}
-              />
-            )}
           </>
         )}
         <ActionButton

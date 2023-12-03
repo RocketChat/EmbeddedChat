@@ -70,23 +70,7 @@ const useMessageStore = create((set, get) => ({
   toggleShowReportMessage: () => {
     set((state) => ({ showReportMessage: !state.showReportMessage }));
   },
-  setMessageToDelete: (messageId) =>
-    set(() => ({ messageToDelete: messageId, showDeleteMessage: true })),
-  toggleShowDeleteMessage: () => {
-    set((state) => ({ showDeleteMessage: !state.showDeleteMessage }));
-  },
-  deleteMessage: async () => {
-    const messageId = get().messageToDelete;
 
-    set((state) => ({
-      messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
-      threadMessages: cloneArray(state.threadMessages).filter(
-        (m) => m._id !== messageId
-      ),
-      messageToDelete: null, // Clear the messageToDelete after deletion
-      showDeleteMessage: false, // Close the modal after deletion
-    }));
-  },
   toogleRecordingMessage: () => {
     set((state) => ({
       isRecordingMessage: !state.isRecordingMessage,
