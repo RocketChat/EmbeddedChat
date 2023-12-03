@@ -43,7 +43,6 @@ const useMessageStore = create((set, get) => ({
       }));
     }
   },
-
   replaceMessage: (oldMessageId, newMessage) => {
     const threadMessage = get().threadMessages.find(
       (m) => m._id === oldMessageId
@@ -70,7 +69,6 @@ const useMessageStore = create((set, get) => ({
   toggleShowReportMessage: () => {
     set((state) => ({ showReportMessage: !state.showReportMessage }));
   },
-
   toogleRecordingMessage: () => {
     set((state) => ({
       isRecordingMessage: !state.isRecordingMessage,
