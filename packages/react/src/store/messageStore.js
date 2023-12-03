@@ -43,19 +43,7 @@ const useMessageStore = create((set, get) => ({
       }));
     }
   },
-  deleteMessage: async (messageId) => {
-    // Add logic to delete the message
-    const res = await RCInstance.deleteMessage(messageId);
 
-    if (res.success) {
-      set((state) => ({
-        messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
-        threadMessages: cloneArray(state.threadMessages).filter(
-          (m) => m._id !== messageId
-        ),
-      }));
-    }
-  },
   replaceMessage: (oldMessageId, newMessage) => {
     const threadMessage = get().threadMessages.find(
       (m) => m._id === oldMessageId
@@ -81,6 +69,23 @@ const useMessageStore = create((set, get) => ({
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {
     set((state) => ({ showReportMessage: !state.showReportMessage }));
+  },
+  setMessageToDelete: (messageId) =>
+    set(() => ({ messageToDelete: messageId, showDeleteMessage: true })),
+  toggleShowDeleteMessage: () => {
+    set((state) => ({ showDeleteMessage: !state.showDeleteMessage }));
+  },
+  deleteMessage: async () => {
+    const messageId = get().messageToDelete;
+
+    set((state) => ({
+      messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
+      threadMessages: cloneArray(state.threadMessages).filter(
+        (m) => m._id !== messageId
+      ),
+      messageToDelete: null, // Clear the messageToDelete after deletion
+      showDeleteMessage: false, // Close the modal after deletion
+    }));
   },
   toogleRecordingMessage: () => {
     set((state) => ({

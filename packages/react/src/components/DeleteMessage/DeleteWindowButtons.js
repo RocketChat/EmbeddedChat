@@ -1,29 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useToastStore } from '../../store';
+import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { Modal } from '../Modal';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
-const DeleteWindowButtons = ({ children, messageId }) => {
+const DeleteWindowButtons = ({ children, deleteDescription, messageId }) => {
   const [toggleDeleteMessage, setMessageToDelete] = useMessageStore((state) => [
     state.toggleShowDeleteMessage,
     state.setMessageToDelete,
   ]);
+  const { RCInstance } = useContext(RCContext);
   const dispatchToastMessage = useToastBarDispatch();
+  const toastPosition = useToastStore((state) => state.position);
 
   const handleOnClose = () => {
     toggleDeleteMessage();
-    setMessageToDelete(null);
+    setMessageToDelete(NaN);
   };
 
   const handleDeleteMessage = async () => {
-    // Add logic to delete the message
-    const res = await RCInstance.deleteMessage(messageId);
-
-    //  // Example logic for success and error messages
-    //  const res = { success: true }; // Replace with actual logic
+    const res = await RCInstance.reportMessage(messageId, deleteDescription);
 
     if (res.success) {
       dispatchToastMessage({
@@ -48,21 +47,21 @@ const DeleteWindowButtons = ({ children, messageId }) => {
         </Modal.Title>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>
-      <hr />
+      <Modal.Content>{children}</Modal.Content>
       <Modal.Footer>
         <Button color="secondary" onClick={handleOnClose}>
           Cancel
         </Button>
         <Button onClick={handleDeleteMessage} color="error">
-          Delete message
+          Report message
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
-
 DeleteWindowButtons.propTypes = {
   children: PropTypes.object.isRequired,
+  deleteDescription: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
 };
 

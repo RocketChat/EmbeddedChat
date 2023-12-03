@@ -20,7 +20,6 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
-import MessageDeleteWindow from '../DeleteMessage/MessageDeleteWindow';
 
 const MessageCss = css`
   display: flex;
@@ -61,14 +60,13 @@ const Message = ({
     style
   );
 
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
+  const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
+
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -113,7 +111,6 @@ const Message = ({
   };
 
   const handleDeleteMessage = async (msg) => {
-    setDeleteModalOpen(true);
     const res = await RCInstance.deleteMessage(msg._id);
 
     if (res.success) {
@@ -127,6 +124,8 @@ const Message = ({
         message: 'Error in deleting message',
       });
     }
+
+    showDeleteMessage();
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
@@ -226,7 +225,7 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
-              handleDeleteMessage={setDeleteModalOpen}
+              handleDeleteMessage={handleDeleteMessage}
               handleOpenThread={handleOpenThread}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
@@ -240,7 +239,7 @@ const Message = ({
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {
                 setMessageToReport(message._id);
-                toggletoggleShowReportMessage();
+                toggleShowReportMessage();
               }}
               isThreadMessage={variant === 'thread'}
             />
@@ -249,7 +248,7 @@ const Message = ({
           )}
         </MessageBodyContainer>
       </Box>
-      {isDeleteModalOpen && <MessageDeleteWindow messageId={message._id} />}
+
       {newDay ? (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}
