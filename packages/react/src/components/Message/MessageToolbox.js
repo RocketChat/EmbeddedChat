@@ -47,7 +47,6 @@ export const MessageToolbox = ({
   authenticatedUserId,
   handleOpenThread,
   handleEmojiClick,
-  // handleDeleteMessage,
   handlePinMessage,
   handleStarMessage,
   handlerReportMessage,

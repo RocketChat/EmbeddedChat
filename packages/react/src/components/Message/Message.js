@@ -108,22 +108,6 @@ const Message = ({
     }
   };
 
-  // const handleDeleteMessage = async (msg) => {
-  //   const res = await RCInstance.deleteMessage(msg._id);
-
-  //   if (res.success) {
-  //     dispatchToastMessage({
-  //       type: 'success',
-  //       message: 'Message deleted successfully',
-  //     });
-  //   } else {
-  //     dispatchToastMessage({
-  //       type: 'error',
-  //       message: 'Error in deleting message',
-  //     });
-  //   }
-  // };
-
   const handleEmojiClick = async (e, msg, canReact) => {
     await RCInstance.reactToMessage(e.names?.[0] || e.name, msg._id, canReact);
   };
@@ -221,7 +205,6 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
-              // handleDeleteMessage={handleDeleteMessage}
               handleOpenThread={handleOpenThread}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
