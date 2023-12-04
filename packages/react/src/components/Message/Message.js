@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo, useState } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
@@ -59,14 +59,12 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
-
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
+  const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
-
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -124,8 +122,6 @@ const Message = ({
         message: 'Error in deleting message',
       });
     }
-
-    showDeleteMessage();
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
@@ -239,7 +235,7 @@ const Message = ({
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {
                 setMessageToReport(message._id);
-                toggleShowReportMessage();
+                toggletoggleShowReportMessage();
               }}
               isThreadMessage={variant === 'thread'}
             />
@@ -248,7 +244,6 @@ const Message = ({
           )}
         </MessageBodyContainer>
       </Box>
-
       {newDay ? (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}
