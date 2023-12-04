@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import Popup from 'reactjs-popup';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -6,6 +6,12 @@ import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { ActionButton } from '../ActionButton';
 import { EmojiPicker } from '../EmojiPicker';
+import { Modal } from '../Modal';
+import { Icon } from '../Icon';
+import { Button } from '../Button';
+import RCContext from '../../context/RCInstance';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { useToastStore } from '../../store';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -41,7 +47,7 @@ export const MessageToolbox = ({
   authenticatedUserId,
   handleOpenThread,
   handleEmojiClick,
-  handleDeleteMessage,
+  // handleDeleteMessage,
   handlePinMessage,
   handleStarMessage,
   handlerReportMessage,
@@ -54,88 +60,145 @@ export const MessageToolbox = ({
     className,
     style
   );
+
+  const { RCInstance } = useContext(RCContext);
+  const dispatchToastMessage = useToastBarDispatch();
+  const toastPosition = useToastStore((state) => state.position);
+
   const [isEmojiOpen, setEmojiOpen] = useState(false);
+
+  const [deleteId, setDeleteId] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleOnClose = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleClickDelete = (message) => {
+    setDeleteId(message._id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteMessage = async (message) => {
+    const res = await RCInstance.deleteMessage(message._id);
+
+    if (res.success) {
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message deleted successfully',
+      });
+    } else {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in deleting message',
+      });
+    }
+
+    handleOnClose();
+  };
+
   return (
-    <Box css={MessageToolboxWrapperCss}>
-      <Box
-        css={MessageToolboxCss}
-        className={appendClassNames('ec-message-toolbox', classNames)}
-        style={styleOverrides}
-        {...props}
-      >
-        {!isThreadMessage ? (
-          <ActionButton
-            ghost
-            size="small"
-            icon="thread"
-            onClick={handleOpenThread(message)}
-          />
-        ) : null}
-        <ActionButton
-          ghost
-          size="small"
-          icon={`${
-            message.starred &&
-            message.starred.find((u) => u._id === authenticatedUserId)
-              ? 'star-filled'
-              : 'star'
-          }`}
-          onClick={() => handleStarMessage(message)}
-        />
-        <ActionButton
-          ghost
-          size="small"
-          icon="emoji"
-          onClick={() => setEmojiOpen(true)}
-        />
-        <Popup
-          modal
-          open={isEmojiOpen}
-          onClose={() => setEmojiOpen(false)}
-          closeOnEscape
-          position="left center"
+    <>
+      <Box css={MessageToolboxWrapperCss}>
+        <Box
+          css={MessageToolboxCss}
+          className={appendClassNames('ec-message-toolbox', classNames)}
+          style={styleOverrides}
+          {...props}
         >
-          <EmojiPicker
-            handleEmojiClick={(emoji) => {
-              setEmojiOpen(false);
-              handleEmojiClick(emoji, message, true);
-            }}
-          />
-        </Popup>
-        {!isThreadMessage && (
-          <ActionButton
-            ghost
-            size="small"
-            icon="pin"
-            onClick={() => handlePinMessage(message)}
-          />
-        )}
-        {message.u._id === authenticatedUserId && (
-          <>
-            <ActionButton
-              ghost={!isEditing}
-              color={isEditing ? 'secondary' : 'default'}
-              size="small"
-              icon="edit"
-              onClick={() => handleEditMessage(message)}
-            />
+          {!isThreadMessage ? (
             <ActionButton
               ghost
               size="small"
-              icon="trash"
-              color="error"
-              onClick={() => handleDeleteMessage(message)}
+              icon="thread"
+              onClick={handleOpenThread(message)}
             />
-          </>
-        )}
-        <ActionButton
-          ghost
-          size="small"
-          icon="report"
-          color="error"
-          onClick={() => handlerReportMessage(message)}
-        />
+          ) : null}
+          <ActionButton
+            ghost
+            size="small"
+            icon={`${
+              message.starred &&
+              message.starred.find((u) => u._id === authenticatedUserId)
+                ? 'star-filled'
+                : 'star'
+            }`}
+            onClick={() => handleStarMessage(message)}
+          />
+          <ActionButton
+            ghost
+            size="small"
+            icon="emoji"
+            onClick={() => setEmojiOpen(true)}
+          />
+          <Popup
+            modal
+            open={isEmojiOpen}
+            onClose={() => setEmojiOpen(false)}
+            closeOnEscape
+            position="left center"
+          >
+            <EmojiPicker
+              handleEmojiClick={(emoji) => {
+                setEmojiOpen(false);
+                handleEmojiClick(emoji, message, true);
+              }}
+            />
+          </Popup>
+          {!isThreadMessage && (
+            <ActionButton
+              ghost
+              size="small"
+              icon="pin"
+              onClick={() => handlePinMessage(message)}
+            />
+          )}
+          {message.u._id === authenticatedUserId && (
+            <>
+              <ActionButton
+                ghost={!isEditing}
+                color={isEditing ? 'secondary' : 'default'}
+                size="small"
+                icon="edit"
+                onClick={() => handleEditMessage(message)}
+              />
+              <ActionButton
+                ghost
+                size="small"
+                icon="trash"
+                color="error"
+                onClick={() => handleClickDelete(message)}
+              />
+            </>
+          )}
+          <ActionButton
+            ghost
+            size="small"
+            icon="report"
+            color="error"
+            onClick={() => handlerReportMessage(message)}
+          />
+        </Box>
       </Box>
-    </Box>
+      {showDeleteModal && (
+        <Modal>
+          <Modal.Header>
+            <Modal.Title>
+              <Icon name="delete" size="1.25rem" /> Delete this message?
+            </Modal.Title>
+            <Modal.Close onClick={handleOnClose} />
+          </Modal.Header>
+          <hr />
+          <Modal.Footer>
+            <Button color="secondary" onClick={handleOnClose}>
+              Cancel
+            </Button>
+            <Button color="error" onClick={() => handleDeleteMessage(message)}>
+              Delete message
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+    </>
   );
 };
