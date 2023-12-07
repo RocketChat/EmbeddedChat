@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const RoomMemberItem = ({ user }) => (
+const RoomMemberItem = ({ user, host }) => (
   <div
     style={{
       width: '100%',
@@ -11,7 +11,7 @@ const RoomMemberItem = ({ user }) => (
     }}
   >
     <img
-      src={`${process.env.STORYBOOK_RC_HOST}/avatar/${user.username}`}
+      src={`${host}/avatar/${user.username}`}
       alt="avatar"
       style={{ height: '1.5rem', marginLeft: '0.5rem' }}
     />

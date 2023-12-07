@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
-import RCContext from '../../context/RCInstance';
+import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './inviteMembers/InviteMembers';
 import { Button } from '../Button';
@@ -13,6 +13,8 @@ import { ActionButton } from '../ActionButton';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
+  const { ECOptions } = useRCContext();
+  const { host } = ECOptions;
 
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
@@ -39,7 +41,7 @@ const RoomMembers = ({ members }) => {
       </Box>
       <Box className={classes.container}>
         {members.map((member) => (
-          <RoomMemberItem user={member} key={member._id} />
+          <RoomMemberItem user={member} host={host} key={member._id} />
         ))}
       </Box>
       <Button
