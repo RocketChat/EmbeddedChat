@@ -10,6 +10,7 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import Tooltip from '@mui/material/Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
@@ -70,14 +71,19 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     >
       {isUserAuthenticated && (
         <>
+          <Tooltip title="Emoji" arrow>
+          <div>
           <ActionButton
             square
             ghost
             disabled={isRecordingMessage}
             onClick={() => setEmojiOpen((t) => !t)}
-          >
-            <Icon name="emoji" size="1.25rem" />
+          > 
+          <Icon name="emoji" size="1.25rem" />
           </ActionButton>
+          </div>
+          </Tooltip>
+          
           <Popup
             modal
             open={isEmojiOpen}
@@ -97,6 +103,9 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </>
       )}
       {formatter.map((item, index) => (
+
+        <Tooltip title={item.name[0].toUpperCase()+item.name.slice(1)} arrow>
+          <div>
         <ActionButton
           square
           disabled={isRecordingMessage}
@@ -108,16 +117,26 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         >
           <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
         </ActionButton>
+        </div>
+        </Tooltip>
       ))}
-      <AudioMessageRecorder />
+      <Tooltip title="Audio message" arrow>
+        <div>
+        <AudioMessageRecorder />
+        </div>
+      </Tooltip>
       <ActionButton
         square
         ghost
         disabled={isRecordingMessage}
         onClick={handleClickToOpenFiles}
-      >
+      >  
+      
         <Icon name="plus" size="1.25rem" style={{ padding: '0.5em' }} />
+       
       </ActionButton>
+      
+      
     </Box>
   );
 };

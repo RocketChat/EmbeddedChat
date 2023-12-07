@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import stylesSheet from './ChatHeader.module.css';
 import { useRCContext } from '../../context/RCInstance';
+import { Tooltip } from '@mui/material';
 import {
   useUserStore,
   useMessageStore,
@@ -256,6 +257,8 @@ const ChatHeader = ({
             <Menu options={menuOptions} />
           ) : (
             <>
+            <Tooltip title="Maximize" arrow>
+              <div>
               <ActionButton
                 onClick={() => {
                   setFullScreen((prev) => !prev);
@@ -267,6 +270,8 @@ const ChatHeader = ({
               >
                 <Icon name="computer" size="1.25rem" />
               </ActionButton>
+              </div>
+              </Tooltip>
               <Menu options={menuOptions} />
             </>
           )}
