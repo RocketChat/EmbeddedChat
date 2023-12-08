@@ -125,7 +125,8 @@ const Message = ({
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
-    await RCInstance.reactToMessage(e.names?.[0] || e.name, msg._id, canReact);
+    const emoji = (e.names?.[0] || e.name).replace(/\s/g, '_');
+    await RCInstance.reactToMessage(emoji, msg._id, canReact);
   };
 
   const handleOpenThread = (msg) => async () => {

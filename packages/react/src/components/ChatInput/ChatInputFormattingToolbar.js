@@ -31,7 +31,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
 
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
-    messageRef.current.value += ` :${emoji}: `;
+    messageRef.current.value += ` :${emoji.replace(/\s/g, '_')}: `;
   };
 
   const wrapSelection = (pattern) => {
