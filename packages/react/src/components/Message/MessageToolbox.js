@@ -9,9 +9,6 @@ import { EmojiPicker } from '../EmojiPicker';
 import { Modal } from '../Modal';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
-import RCContext from '../../context/RCInstance';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import { useToastStore } from '../../store';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -60,10 +57,6 @@ export const MessageToolbox = ({
     className,
     style
   );
-
-  const { RCInstance } = useContext(RCContext);
-  const dispatchToastMessage = useToastBarDispatch();
-  const toastPosition = useToastStore((state) => state.position);
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
