@@ -49,6 +49,7 @@ export const MessageToolbox = ({
   handleEmojiClick,
   handlePinMessage,
   handleStarMessage,
+  handleDeleteMessage,
   handlerReportMessage,
   handleEditMessage,
   isEditing = false,
@@ -76,24 +77,6 @@ export const MessageToolbox = ({
   const handleClickDelete = (message) => {
     setDeleteId(message._id);
     setShowDeleteModal(true);
-  };
-
-  const handleDeleteMessage = async (message) => {
-    const res = await RCInstance.deleteMessage(message._id);
-
-    if (res.success) {
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Message deleted successfully',
-      });
-    } else {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Error in deleting message',
-      });
-    }
-
-    handleOnClose();
   };
 
   return (
@@ -192,7 +175,13 @@ export const MessageToolbox = ({
             <Button color="secondary" onClick={handleOnClose}>
               Cancel
             </Button>
-            <Button color="error" onClick={() => handleDeleteMessage(message)}>
+            <Button
+              color="error"
+              onClick={() => {
+                handleDeleteMessage(message);
+                handleOnClose();
+              }}
+            >
               Delete message
             </Button>
           </Modal.Footer>
