@@ -67,7 +67,7 @@ export const MessageToolbox = ({
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
-  const [deleteId, setDeleteId] = useState('');
+  const setDeleteId = useState('')[1];
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleOnClose = () => {
