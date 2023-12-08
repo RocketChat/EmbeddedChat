@@ -10,6 +10,7 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import {Tooltip} from "../Tooltip"
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
@@ -70,6 +71,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     >
       {isUserAuthenticated && (
         <>
+        <Tooltip text="Emoji" position="top">
+          <div>
           <ActionButton
             square
             ghost
@@ -78,6 +81,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           >
             <Icon name="emoji" size="1.25rem" />
           </ActionButton>
+          </div>
+          </Tooltip>
           <Popup
             modal
             open={isEmojiOpen}
@@ -97,6 +102,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </>
       )}
       {formatter.map((item, index) => (
+        
+        <Tooltip text={item.name} position="top">
         <ActionButton
           square
           disabled={isRecordingMessage}
@@ -105,11 +112,14 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
             wrapSelection(item.pattern);
           }}
           key={index}
-        >
+        >  
           <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
+          
         </ActionButton>
+        </Tooltip>
+       
       ))}
-      <AudioMessageRecorder />
+      <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
       <ActionButton
         square
         ghost
