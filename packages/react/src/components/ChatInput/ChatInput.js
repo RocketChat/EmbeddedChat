@@ -23,6 +23,7 @@ import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import EmojiPreview from '../EmojiPreview/EmojiPreview';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -218,6 +219,9 @@ const ChatInput = () => {
     }
   }, [RCInstance, setRoomMembers]);
 
+  const [currentEmojiIndex, setCurrentEmojiIndex] = useState(0);
+  const emojiListLengthRef = useRef(0);
+
   useEffect(() => {
     if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
@@ -378,10 +382,16 @@ const ChatInput = () => {
       setmentionIndex(
         mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
       );
+      setCurrentEmojiIndex((prevIndex) =>
+        prevIndex >= emojiListLengthRef.current - 1 ? 0 : prevIndex + 1
+      );
     }
     if (e.key === 'ArrowUp') {
       setmentionIndex(
         mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+      );
+      setCurrentEmojiIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : emojiListLengthRef.current - 1
       );
     }
     if (showMembersList && e.key === 'Enter') {
@@ -403,8 +413,15 @@ const ChatInput = () => {
       setmentionIndex(-1);
     }
   };
+
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
+      <EmojiPreview
+        messageRef={messageRef}
+        currentEmojiIndex={currentEmojiIndex}
+        setCurrentEmojiIndex={setCurrentEmojiIndex}
+        emojiListLengthRef={emojiListLengthRef}
+      />
       <Box
         css={css`
           margin-inline-start: 20px;
