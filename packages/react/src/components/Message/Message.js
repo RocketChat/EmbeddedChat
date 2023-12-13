@@ -108,8 +108,8 @@ const Message = ({
     }
   };
 
-  const handleDeleteMessage = async (msg) => {
-    const res = await RCInstance.deleteMessage(msg._id);
+  const handleDeleteMessage = async (message) => {
+    const res = await RCInstance.deleteMessage(message._id);
 
     if (res.success) {
       dispatchToastMessage({
@@ -222,8 +222,8 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
-              handleDeleteMessage={handleDeleteMessage}
               handleOpenThread={handleOpenThread}
+              handleDeleteMessage={handleDeleteMessage}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
               handleEditMessage={() => {
