@@ -9,6 +9,7 @@ import { EmojiPicker } from '../EmojiPicker';
 import { Modal } from '../Modal';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
+import { parseEmoji } from '../../lib/emoji';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -60,15 +61,13 @@ export const MessageToolbox = ({
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
-  const setDeleteId = useState('')[1];
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleOnClose = () => {
     setShowDeleteModal(false);
   };
 
-  const handleClickDelete = (message) => {
-    setDeleteId(message._id);
+  const handleClickDelete = () => {
     setShowDeleteModal(true);
   };
 
@@ -163,7 +162,16 @@ export const MessageToolbox = ({
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
-          <hr />
+          <Modal.Content
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              padding: '0 0.5rem 0.5rem',
+            }}
+          >
+            {parseEmoji(message.msg)}
+          </Modal.Content>
           <Modal.Footer>
             <Button color="secondary" onClick={handleOnClose}>
               Cancel
