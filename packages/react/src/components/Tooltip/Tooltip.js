@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-const Tooltip = ({ children, text, position }) => {
+const Tooltip = ({ children, text, position, X, Y }) => {
     const [isTooltipVisible, setTooltipVisible] = useState(false);
 
     const tooltipStyle = {
         position: 'absolute',
         left: '64%',
-        transform: 'translateX(-50%) ',
+        transform: 'translateX(-52%) translateY(0%)',
         backgroundColor: 'rgba(97, 97, 97, 1)',
         color: 'white',
         padding: '4px',
@@ -29,16 +29,29 @@ const Tooltip = ({ children, text, position }) => {
     }
 
     // Add more positions according to your needs and modify tooltipStyle and tooltipArrowStyle accordingly
+    const Adjust = (X, Y) => {
+        let XY = "";
+        if (X != null) {
+            XY = XY + "translateX(" + X + ")";
+            tooltipStyle.transform = XY;
+        }
+        if (Y != null) {
+            XY = XY + "translateY(" + Y + ")";
+            tooltipStyle.transform = XY;
+        }
+    }
 
     if (position === "top") {
         tooltipStyle.top = '-100%';
         tooltipArrowStyle.top = '100%';
-        tooltipArrowStyle.transform = 'translateX(-50%)';
+        Adjust(X, Y);
     }
     else if (position === "bottom") {
         tooltipStyle.top = '100%';
+        tooltipStyle.transform = 'translateY(45%) translateX(-55%)';
         tooltipArrowStyle.bottom = '100%';
-        tooltipArrowStyle.transform = 'translateX(-50%) rotate(180deg)';
+        tooltipArrowStyle.transform = 'rotate(180deg)';
+        Adjust(X, Y);
     }
 
 
