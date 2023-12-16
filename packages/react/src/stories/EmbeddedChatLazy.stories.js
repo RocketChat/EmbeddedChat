@@ -7,7 +7,7 @@ export default {
   component: EmbeddedChat,
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+// More on writing stories with args:  https://storybook.js.org/docs/react/writing-stories/args
 export const Simple = {
   args: {
     fallback: <div>Loading...</div>,
