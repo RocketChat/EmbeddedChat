@@ -12,8 +12,9 @@ function AttachmentWindow() {
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
+  console.log(data);
 
-  const [fileName, setFileName] = useState(data.name);
+  const [fileName, setFileName] = useState(data?.name);
   const [fileDescription, setFileDescription] = useState('');
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
