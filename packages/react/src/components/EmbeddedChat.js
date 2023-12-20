@@ -17,6 +17,7 @@ import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { styles } from './EmbeddedChat.styles';
+import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 
 const EmbeddedChat = ({
   isClosable = false,
@@ -44,10 +45,11 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, []);
+  }, [toastBarPosition, showAvatar]);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -135,6 +137,7 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
+  const data = useAttachmentWindowStore((state) => state.data);
 
   const ECOptions = useMemo(
     () => ({
@@ -174,7 +177,13 @@ const EmbeddedChat = ({
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? <AttachmentWindow /> : null}
+          {attachmentWindowOpen ? (!!data ?
+            <>
+              <AttachmentWindow />
+            </>
+            :
+            <ValidateComponent data={data} />
+          ) : null}
           <Box
             css={[
               styles.embeddedchat,
