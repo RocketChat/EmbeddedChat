@@ -38,7 +38,7 @@ const ButtonElement = ({ block, context, surfaceRenderer }) => {
       primary={block.style === 'primary'}
       danger={block.style === 'danger'}
       minWidth="4ch"
-      small
+      size='medium'
       value={block.value}
       onClick={action}
     >
