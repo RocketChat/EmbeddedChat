@@ -10,6 +10,7 @@ import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentWindow from './Attachments/AttachmentWindow';
+import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -17,7 +18,6 @@ import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { styles } from './EmbeddedChat.styles';
-import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 
 const EmbeddedChat = ({
   isClosable = false,
