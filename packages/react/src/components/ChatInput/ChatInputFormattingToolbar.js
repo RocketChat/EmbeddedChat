@@ -103,22 +103,19 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       )}
       {formatter.map((item, index) => (
 
-        <div key={index}>
-          <Tooltip text={item.name} position="top">
-            <ActionButton
-              square
-              disabled={isRecordingMessage}
-              ghost
-              onClick={() => {
-                wrapSelection(item.pattern);
-              }}
-              key={index}
-            >
-              <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
+        <Tooltip text={item.name} position="top" key={index}>
+          <ActionButton
+            square
+            disabled={isRecordingMessage}
+            ghost
+            onClick={() => {
+              wrapSelection(item.pattern);
+            }}
+          >
+            <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
 
-            </ActionButton>
-          </Tooltip>
-        </div>
+          </ActionButton>
+        </Tooltip>
 
       ))}
       <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
