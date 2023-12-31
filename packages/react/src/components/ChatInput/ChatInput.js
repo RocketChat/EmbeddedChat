@@ -298,6 +298,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
     if (e.code === 'Enter') {
       messageRef.current.value += '\n';
+      sendTypingStop();
     }
 
     setDisableButton(!messageRef.current.value.length);
@@ -403,6 +404,10 @@ const ChatInput = ({ scrollToBottom }) => {
       setStartReading(false);
       setFilteredMembers([]);
       setmentionIndex(-1);
+    }
+
+    if (e.key === 'Enter') {
+      sendTypingStop();
     }
   };
   return (
