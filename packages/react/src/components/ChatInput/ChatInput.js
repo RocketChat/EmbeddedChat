@@ -31,7 +31,7 @@ const editingMessageCss = css`
   }
 `;
 
-const ChatInput = () => {
+const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const [commands, setCommands] = useState([]);
@@ -67,6 +67,7 @@ const ChatInput = () => {
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef();
+
   const [disableButton, setDisableButton] = useState(true);
 
   const roomMembers = mentionmemberStore((state) => state.roomMembers);
@@ -136,6 +137,7 @@ const ChatInput = () => {
   };
 
   const sendMessage = async () => {
+    scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
     if (!message.length || !isUserAuthenticated) {
