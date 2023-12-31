@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
@@ -170,6 +170,17 @@ const EmbeddedChat = ({
     [RCInstance, ECOptions]
   );
 
+  const messageListRef = useRef(null);
+
+  const scrollToBottom = () => {
+    console.log("Scrolling..........");
+    if (messageListRef.current) {
+      requestAnimationFrame(() => {
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      });
+    }
+  };
+
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
@@ -202,11 +213,12 @@ const EmbeddedChat = ({
                 height={!fullScreen ? height : '88vh'}
                 anonymousMode={anonymousMode}
                 showRoles={showRoles}
+                messageListRef={messageListRef}
               />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
             )}
-            <ChatInput />
+            <ChatInput scrollToBottom={scrollToBottom} />
           </Box>
         </RCInstanceProvider>
       </ToastBarProvider>
