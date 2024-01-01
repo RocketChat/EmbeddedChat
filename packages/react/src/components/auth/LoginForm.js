@@ -6,6 +6,8 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
+import { EyeOpen } from '../Icon/icons/EyeOpen';
+import { EyeClose } from '../Icon/icons/EyeClose';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -29,6 +31,15 @@ export default function LoginForm() {
   const handleEditPassword = (e) => {
     setpassword(e.target.value);
   };
+
+  const togglePassword = () => {
+    const x = document.getElementById('password');
+    if (x.type === 'password') {
+      x.type = 'text';
+    } else {
+      x.type = 'password';
+    }
+  }
 
   const fieldCSS = css`
     display: flex;
@@ -63,7 +74,12 @@ export default function LoginForm() {
     -webkit-margin-after: 0.125rem;
     margin-block-end: 0.125rem;
   `;
-
+  
+  const eyeCss = css`
+    cursor: pointer;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  `;
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -87,7 +103,22 @@ export default function LoginForm() {
           <Box css={fieldCSS}>
             <Box css={fieldLabel}>Password</Box>
             <Box css={fieldRow}>
-              <Input type="password" onChange={handleEditPassword} />
+              <Input type="password" id="password" onChange={handleEditPassword} />
+              <Box type="button" css={eyeCss} onClick={togglePassword}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="23"
+                  viewBox="0 0 23 23"
+                  fill="none"
+                  stroke="gray"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M22 12s-4-6-10-6S2 12 2 12s4 6 10 6 10-6 10-6zM12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path>
+                </svg>
+              </Box>
             </Box>
           </Box>
           <Box
