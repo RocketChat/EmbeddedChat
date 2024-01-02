@@ -17,32 +17,84 @@ export default function TypingUsers() {
   }, [RCInstance, setTypingUsers, currentUserName]);
 
   const typingStatusMessage = useMemo(() => {
-    if (typingUsers.length === 0) return '';
-    if (typingUsers.length === 1)
+    if (!typingUsers.length) return '';
+
+    if (typingUsers.length) {
+      const otherTypingUsers = typingUsers.filter((user) => user !== currentUserName);
+
+      if (typingUsers.length === 1) {
+        if (typingUsers.includes(currentUserName)) {
+          return '';
+        }
+        return (
+          <span>
+            <b>{typingUsers[0]}</b>
+            {' is typing...'}
+          </span>
+        );
+      }
+
+      if (typingUsers.length === 2) {
+        if (typingUsers.includes(currentUserName)) {
+          return (
+            <span>
+              <b>{otherTypingUsers[0]}</b>
+              {' is typing...'}
+            </span>
+          );
+        }
+        return (
+          <span>
+            <b>{typingUsers[0]}</b>
+            {' and '}
+            <b>{typingUsers[1]}</b>
+            {' are typing...'}
+          </span>
+        );
+      }
+
+      if (typingUsers.length === 3) {
+        if (typingUsers.includes(currentUserName)) {
+          return (
+            <span>
+              <b>{otherTypingUsers[0]}</b>
+              {' and '}
+              <b>{otherTypingUsers[1]}</b>
+              {' are typing...'}
+            </span>
+          );
+        }
+        return (
+          <span>
+            <b>{typingUsers[0]} </b>
+            {', '}
+            <b>{typingUsers[1]} </b>
+            {`and 1 more is typing...`}
+          </span>
+        );
+      }
+
+      if (typingUsers.includes(currentUserName)) {
+        return (
+          <span>
+            <b>{typingUsers[0]} </b>
+            {', '}
+            <b>{typingUsers[1]} </b>
+            {`and ${typingUsers.length - 3} more are typing...`}
+          </span>
+        );
+      }
       return (
         <span>
-          <b>{typingUsers[0]}</b>
-          {' is typing...'}
+          <b>{typingUsers[0]} </b>
+          {', '}
+          <b>{typingUsers[1]} </b>
+          {`and ${typingUsers.length - 2} more are typing...`}
         </span>
       );
-    if (typingUsers.length === 2)
-      return (
-        <span>
-          <b>{typingUsers[0]}</b>
-          {' and '}
-          <b>{typingUsers[1]}</b>
-          {' are typing...'}
-        </span>
-      );
-    return (
-      <span>
-        <b>{typingUsers[0]} </b>
-        {', '}
-        <b>{typingUsers[1]} </b>
-        {`and ${typingUsers.length - 2} more are typing...`}
-      </span>
-    );
-  }, [typingUsers]);
+    }
+
+  }, [typingUsers, currentUserName]);
 
   return (
     <Box
