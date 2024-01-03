@@ -1,13 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PreviewImage from './preview/image';
 import PreviewAudio from './preview/audio';
 import PreviewDefault from './preview/default';
+import { useToastBarDispatch } from '../../../hooks/useToastBarDispatch';
 
 const ValidateComponent = ({ data }) => {
-  const type = data.type.split('/')[0];
+  const type = data ? data.type.split('/')[0] : '';
 
   const [previewURL, setPreviewURL] = useState('');
+  const dispatchToastMessage = useToastBarDispatch();
+
+
+  useEffect(() => {
+    if (!data) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Media Type Not Accepted'
+      });
+    }
+  }, [data, dispatchToastMessage]);
+
+  if (!data) {
+    return null;
+  }
 
   const reader = new FileReader();
   reader.onload = (e) => {

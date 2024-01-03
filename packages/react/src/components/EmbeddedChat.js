@@ -10,6 +10,7 @@ import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentWindow from './Attachments/AttachmentWindow';
+import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -44,10 +45,11 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, []);
+  }, [toastBarPosition, showAvatar]);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -135,6 +137,7 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
+  const data = useAttachmentWindowStore((state) => state.data);
 
   const ECOptions = useMemo(
     () => ({
@@ -184,7 +187,13 @@ const EmbeddedChat = ({
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? <AttachmentWindow /> : null}
+          {attachmentWindowOpen ? (!!data ?
+            <>
+              <AttachmentWindow />
+            </>
+            :
+            <ValidateComponent data={data} />
+          ) : null}
           <Box
             css={[
               styles.embeddedchat,
