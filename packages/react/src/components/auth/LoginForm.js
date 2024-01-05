@@ -35,6 +35,11 @@ export default function LoginForm() {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
 
   const fieldCSS = css`
     display: flex;
@@ -92,6 +97,7 @@ export default function LoginForm() {
                 type="text"
                 onChange={handleEdituserOrEmail}
                 placeholder="example@example.com"
+                onKeyPress={handleKeyPress}
               />
             </Box>
           </Box>
@@ -102,6 +108,7 @@ export default function LoginForm() {
               <Input
                 type={showPassword ? 'text' : 'password'}
                 onChange={handleEditPassword}
+                onKeyPress={handleKeyPress}
               />
               <Box
                 type="button"
