@@ -16,9 +16,9 @@ const MessageToolboxWrapperCss = css`
   .ec-message:hover & {
     display: flex;
     position: absolute;
-    top: 0;
-    right: 2rem;
-    z-index: 1;
+    bottom: 100%;
+    z-index: 90;
+    right:2rem;
   }
 `;
 
