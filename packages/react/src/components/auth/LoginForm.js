@@ -6,10 +6,13 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
+import EyeOpen from './icons/EyeOpen';
+import EyeClose from './icons/EyeClose';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
   const [password, setpassword] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const isLoginModalOpen = loginModalStore((state) => state.isLoginModalOpen);
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
@@ -28,6 +31,14 @@ export default function LoginForm() {
   };
   const handleEditPassword = (e) => {
     setpassword(e.target.value);
+  };
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   const fieldCSS = css`
@@ -64,6 +75,12 @@ export default function LoginForm() {
     margin-block-end: 0.125rem;
   `;
 
+  const passwordEyeCss = css`
+    cursor: pointer;
+    position: absolute;
+    right: 1em;
+  `;
+
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -80,6 +97,7 @@ export default function LoginForm() {
                 type="text"
                 onChange={handleEdituserOrEmail}
                 placeholder="example@example.com"
+                onKeyPress={handleKeyPress}
               />
             </Box>
           </Box>
@@ -87,7 +105,18 @@ export default function LoginForm() {
           <Box css={fieldCSS}>
             <Box css={fieldLabel}>Password</Box>
             <Box css={fieldRow}>
-              <Input type="password" onChange={handleEditPassword} />
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                onChange={handleEditPassword}
+                onKeyPress={handleKeyPress}
+              />
+              <Box
+                type="button"
+                css={passwordEyeCss}
+                onClick={handleTogglePassword}
+              >
+                {showPassword ? <EyeOpen /> : <EyeClose />}
+              </Box>
             </Box>
           </Box>
           <Box
