@@ -1,8 +1,7 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo, Suspense, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
-import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
@@ -15,11 +14,16 @@ import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
 import { MessageMetrics } from './MessageMetrics';
-import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+
+const MessageToolbox = React.lazy(() => import('./MessageToolbox')
+.then(module => ({default: module.MessageToolbox})));
+
+const  Attachments = React.lazy(() => import('../Attachments')
+.then(module => ({default: module.Attachments})));
 
 const MessageCss = css`
   display: flex;
@@ -183,7 +187,10 @@ const Message = ({
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
+                    <Suspense fallback={<div>Loading...</div>}>
                     <Attachments attachments={message.attachments} />
+                    </Suspense>
+                    
                   </>
                 ) : (
                   <Markdown body={message} isReaction={false} />
@@ -207,7 +214,9 @@ const Message = ({
           ) : (
             <>
               {message.attachments && (
+              <Suspense fallback={<div>Loading...</div>}>
                 <Attachments attachments={message.attachments} />
+              </Suspense>
               )}
             </>
           )}
@@ -218,6 +227,7 @@ const Message = ({
             />
           ) : null}
           {!message.t ? (
+            <Suspense fallback={<div>Loading...</div>}>
             <MessageToolbox
               message={message}
               isEditing={editMessage._id === message._id}
@@ -240,6 +250,7 @@ const Message = ({
               }}
               isThreadMessage={variant === 'thread'}
             />
+            </Suspense>
           ) : (
             <></>
           )}

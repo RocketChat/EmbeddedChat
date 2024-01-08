@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import stylesSheet from './ChatHeader.module.css';
@@ -10,13 +10,15 @@ import {
   useSearchMessageStore,
   useChannelStore,
 } from '../../store';
-import { ThreadHeader } from '../ThreadHeader';
 import {Tooltip} from '../Tooltip';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Menu } from '../Menu';
+
+const Menu = lazy(() => import('../Menu').then(module => ({default: module.Menu})));
+const ThreadHeader = lazy(() => import('../ThreadHeader')
+.then(module => ({default: module.ThreadHeader})));
 
 const ChatHeader = ({
   isClosable,
@@ -254,9 +256,10 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-          
+          <Suspense fallback={<div>Loading...</div>}>
             <Menu options={menuOptions} />
-            
+          </Suspense>
+         
           ) : (
             <><Tooltip text="Maximize" position="bottom">
               <ActionButton
@@ -271,7 +274,11 @@ const ChatHeader = ({
                 <Icon name="computer" size="1.25rem" />
               </ActionButton>
               </Tooltip>
+              
+            <Suspense fallback={<div>Loading...</div>}>
               <Menu options={menuOptions} />
+            </Suspense>
+
             </>
           )}
           {isClosable && (
@@ -290,7 +297,9 @@ const ChatHeader = ({
         </Box>
       </Box>
       {isThreadOpen && (
+      <Suspense fallback={<div>Loading...</div>}>
         <ThreadHeader title={threadTitle} handleClose={closeThread} />
+       </Suspense>
       )}
     </Box>
   );
