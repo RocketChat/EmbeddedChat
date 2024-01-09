@@ -6,6 +6,7 @@ import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { css } from '@emotion/react';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -56,9 +57,33 @@ function AttachmentWindow() {
               <Icon name="cross" size="1.25rem" />
             </div>
           </Box>
-          <Box>
-            <ValidateComponent data={data} />
-            <Box style={{ marginTop: '20px' }}>
+          <Box
+            css={css`
+            overflow-y: auto;
+            max-height: 350px;
+            scrollbar-width: thin;
+            scrollbar-color: #e0e0e1 transparent;
+            &::-webkit-scrollbar {
+              width: 4px;
+            }
+            &::-webkit-scrollbar-thumb {
+              background-color: #e0e0e1;
+              border-radius: 4px;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+              background-color: #e0e0e1;
+            }
+            &::-webkit-scrollbar-track {
+              background-color: transparent;
+            }
+          `}
+          >
+            <Box css={css`
+              text-align: center;
+            `}>
+              <ValidateComponent data={data} />
+            </Box>
+            <Box style={{ margin: '20px 0 0 0' }}>
               <Box className={styles.attachment_window_input_container}>
                 <span style={{ fontWeight: '550' }}>File name</span>
                 <input
@@ -85,30 +110,29 @@ function AttachmentWindow() {
             </Box>
           </Box>
           <Box className={styles.attachment_window_submit_container}>
-            <button
-              type="button"
-              onClick={toggle}
-              style={{ background: '#e4e7ea', marginRight: '5px' }}
-              className={styles.attachment_window_submit_button}
-            >
-              Cancel
-            </button>
+            <Box>
+              <button
+                type="button"
+                onClick={toggle}
+                style={{ background: '#e4e7ea', marginRight: '5px' }}
+                className={styles.attachment_window_cancel_button}
+              >
+                Cancel
+              </button>
 
-            <button
-              type="button"
-              onClick={submit}
-              style={{
-                background: '#007fff',
-                marginLeft: '5px',
-                color: '#ffffff',
-                ':hover': {
-                  backgroundColor: '#114eab'
-                }
-              }}
-              className={styles.attachment_window_submit_button}
-            >
-              Send
-            </button>
+              <button
+                type="button"
+                onClick={submit}
+                style={{
+                  background: '#007fff',
+                  marginLeft: '5px',
+                  color: '#ffffff',
+                }}
+                className={styles.attachment_window_submit_button}
+              >
+                Send
+              </button>
+            </Box>
           </Box>
         </Box>
       </Box>
