@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
@@ -10,7 +10,6 @@ import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentWindow from './Attachments/AttachmentWindow';
-import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -41,15 +40,38 @@ const EmbeddedChat = ({
     flow: 'PASSWORD',
   },
 }) => {
+  const baseDragComponentCss = css`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    z-index: 0;
+    opacity: 25%;
+    flex-direction: column;
+  `;
+
+  const DragComponentCss = css`
+  ${baseDragComponentCss};
+  animation-name: inherit;
+  animation-duration: 0.1s;
+  transition: all 0.1s ease-in;
+  transform-origin: center center;
+`;
+
+  const borderCss = css`
+  position: relative;
+    z-index: 300; 
+    border: 4px dashed #007fff !important; 
+  `;
+
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, [toastBarPosition, showAvatar]);
+  }, []);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -137,7 +159,8 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
-  const data = useAttachmentWindowStore((state) => state.data);
+  const toggle = useAttachmentWindowStore((state) => state.toggle);
+  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const ECOptions = useMemo(
     () => ({
@@ -173,27 +196,39 @@ const EmbeddedChat = ({
     [RCInstance, ECOptions]
   );
 
-  const messageListRef = useRef(null);
+  const [onDrag, setOnDrag] = useState(false);
+  const [leaveCount, setLeaveCount] = useState(0);
 
-  const scrollToBottom = () => {
-    if (messageListRef.current) {
-      requestAnimationFrame(() => {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-      });
+  const handleDrag = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = () => {
+    setOnDrag(true);
+  };
+  const handleDragLeave = () => {
+    if ((leaveCount % 2) === 1) {
+      setOnDrag(false);
+      setLeaveCount(leaveCount + 1);
+    } else {
+      setLeaveCount(leaveCount + 1);
     }
+  };
+
+  const handleDragDrop = (e) => {
+    e.preventDefault();
+    setOnDrag(false);
+    setLeaveCount(0);
+
+    toggle();
+    setData(e.dataTransfer.files[0]);
   };
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (!!data ?
-            <>
-              <AttachmentWindow />
-            </>
-            :
-            <ValidateComponent data={data} />
-          ) : null}
+          {attachmentWindowOpen ? <AttachmentWindow /> : null}
           <Box
             css={[
               styles.embeddedchat,
@@ -202,9 +237,14 @@ const EmbeddedChat = ({
                 height: ${height};
               `,
               fullScreen && styles.fullscreen,
+              onDrag && DragComponentCss,
             ]}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
+            onDragOver={(e) => handleDrag(e)}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDragDrop(e)}
           >
             {hideHeader ? null : (
               <ChatHeader
@@ -216,17 +256,36 @@ const EmbeddedChat = ({
                 setFullScreen={setFullScreen}
               />
             )}
-            {isUserAuthenticated || anonymousMode ? (
-              <ChatBody
-                height={!fullScreen ? height : '88vh'}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-              />
+
+            {onDrag ? (
+              <Box
+                css={[onDrag && borderCss]}
+              >
+                {isUserAuthenticated || anonymousMode ? (
+                  <ChatBody
+                    height={!fullScreen ? height : '88vh'}
+                    anonymousMode={anonymousMode}
+                    showRoles={showRoles}
+                  />
+                ) : (
+                  <Home height={!fullScreen ? height : '88vh'} />
+                )}
+                <ChatInput />
+              </Box>
             ) : (
-              <Home height={!fullScreen ? height : '88vh'} />
+              <>
+                {isUserAuthenticated || anonymousMode ? (
+                  <ChatBody
+                    height={!fullScreen ? height : '88vh'}
+                    anonymousMode={anonymousMode}
+                    showRoles={showRoles}
+                  />
+                ) : (
+                  <Home height={!fullScreen ? height : '88vh'} />
+                )}
+                <ChatInput />
+              </>
             )}
-            <ChatInput scrollToBottom={scrollToBottom} />
           </Box>
         </RCInstanceProvider>
       </ToastBarProvider>
@@ -263,3 +322,4 @@ EmbeddedChat.propTypes = {
 };
 
 export default memo(EmbeddedChat);
+
