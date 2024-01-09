@@ -5,6 +5,7 @@ import RCContext from '../../context/RCInstance';
 import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -13,7 +14,7 @@ function AttachmentWindow() {
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
 
-  const [fileName, setFileName] = useState(data?.name);
+  const [fileName, setFileName] = useState(data.name);
   const [fileDescription, setFileDescription] = useState('');
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
@@ -49,9 +50,10 @@ function AttachmentWindow() {
             <div
               aria-hidden="true"
               onClick={toggle}
+              style={{ display: 'inline' }}
               className={styles.attachment_window_close}
             >
-              X
+              <Icon name="cross" size="1.25rem" />
             </div>
           </Box>
           <ValidateComponent data={data} />
@@ -84,7 +86,7 @@ function AttachmentWindow() {
             <button
               type="button"
               onClick={toggle}
-              style={{ background: '#e1e1e1', marginRight: '5px' }}
+              style={{ background: '#e4e7ea', marginRight: '5px' }}
               className={styles.attachment_window_submit_button}
             >
               Cancel
@@ -93,7 +95,7 @@ function AttachmentWindow() {
             <button
               type="button"
               onClick={submit}
-              style={{ background: '#9EC8E2', marginLeft: '5px' }}
+              style={{ background: '#007fff', marginLeft: '5px', color: '#ffffff' }}
               className={styles.attachment_window_submit_button}
             >
               Send
