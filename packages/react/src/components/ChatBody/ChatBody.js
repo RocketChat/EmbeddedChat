@@ -9,12 +9,11 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
-import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const ChatBody = ({ height, anonymousMode, showRoles }) => {
+const ChatBody = ({ height, anonymousMode, showRoles, MessageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -41,25 +40,10 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
       display: none;
     }
   `;
-  const DragComponentCss = css`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    z-index: 50;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-weight: 900;
-    font-size: xxx-large;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `;
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
-
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
@@ -231,6 +215,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
 
   return (
     <Box
+      ref={MessageListRef}
       css={ChatBodyCss}
       style={{
         borderLeft: '1px solid #b1b1b1',

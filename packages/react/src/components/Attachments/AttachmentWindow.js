@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ValidateComponent from './AttachmentWindow/validateComponent';
+import Backdrop from './AttachmentWindow/Backdrop';
 import RCContext from '../../context/RCInstance';
 import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { css } from '@emotion/react';
-import Backdrop from './AttachmentWindow/Backdrop';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -16,7 +16,7 @@ function AttachmentWindow() {
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
 
-  const [fileName, setFileName] = useState(data.name);
+  const [fileName, setFileName] = useState(data?.name);
   const [fileDescription, setFileDescription] = useState('');
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
@@ -81,8 +81,9 @@ function AttachmentWindow() {
           `}
             >
               <Box css={css`
-              text-align: center;
-            `}>
+                text-align: center;
+              `}
+              >
                 <ValidateComponent data={data} />
               </Box>
               <Box style={{ margin: '20px 0 0 0' }}>
