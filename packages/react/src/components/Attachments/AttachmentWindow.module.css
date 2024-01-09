@@ -53,6 +53,10 @@
   display: inline;
 }
 
+.attachment_window_close:active {
+  background-color: #8f9194; 
+}
+
 .attachment_window_input_container {
   display: flex;
   flex-direction: column;
@@ -96,3 +100,7 @@
   border-radius: 4px;
   cursor: pointer; 
 }
+
+/* .fwefw {
+  background-color: #114eab;
+} */

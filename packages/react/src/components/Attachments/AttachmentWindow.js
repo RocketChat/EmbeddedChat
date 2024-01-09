@@ -56,30 +56,32 @@ function AttachmentWindow() {
               <Icon name="cross" size="1.25rem" />
             </div>
           </Box>
-          <ValidateComponent data={data} />
-          <Box style={{ marginTop: '20px' }}>
-            <Box className={styles.attachment_window_input_container}>
-              <span>File name</span>
-              <input
-                onChange={(e) => {
-                  handleFileName(e);
-                }}
-                value={fileName}
-                className={styles.attachment_window_input}
-                placeholder="name"
-              />
-            </Box>
+          <Box>
+            <ValidateComponent data={data} />
+            <Box style={{ marginTop: '20px' }}>
+              <Box className={styles.attachment_window_input_container}>
+                <span style={{ fontWeight: '550' }}>File name</span>
+                <input
+                  onChange={(e) => {
+                    handleFileName(e);
+                  }}
+                  value={fileName}
+                  className={styles.attachment_window_input}
+                  placeholder="name"
+                />
+              </Box>
 
-            <Box className={styles.attachment_window_input_container}>
-              <span>File description</span>
-              <input
-                onChange={(e) => {
-                  handleFileDescription(e);
-                }}
-                value={fileDescription}
-                className={styles.attachment_window_input}
-                placeholder="Description"
-              />
+              <Box className={styles.attachment_window_input_container}>
+                <span style={{ fontWeight: '550' }}>File description</span>
+                <input
+                  onChange={(e) => {
+                    handleFileDescription(e);
+                  }}
+                  value={fileDescription}
+                  className={styles.attachment_window_input}
+                  placeholder="Description"
+                />
+              </Box>
             </Box>
           </Box>
           <Box className={styles.attachment_window_submit_container}>
@@ -95,7 +97,14 @@ function AttachmentWindow() {
             <button
               type="button"
               onClick={submit}
-              style={{ background: '#007fff', marginLeft: '5px', color: '#ffffff' }}
+              style={{
+                background: '#007fff',
+                marginLeft: '5px',
+                color: '#ffffff',
+                ':hover': {
+                  backgroundColor: '#114eab'
+                }
+              }}
               className={styles.attachment_window_submit_button}
             >
               Send

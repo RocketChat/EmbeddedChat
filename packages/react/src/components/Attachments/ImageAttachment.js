@@ -7,9 +7,7 @@ const ImageAttachment = ({ attachment, host }) => (
     <p>{attachment?.description}</p>
     <img
       src={host + attachment.image_url}
-      height={attachment?.image_dimensions?.height ?? 357}
-      width={attachment?.image_dimensions?.width ?? 476}
-      style={{ maxWidth: '100%', objectFit: 'cover' }}
+      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
     />
   </Box>
 );
