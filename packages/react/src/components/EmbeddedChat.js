@@ -322,4 +322,3 @@ EmbeddedChat.propTypes = {
 };
 
 export default memo(EmbeddedChat);
-

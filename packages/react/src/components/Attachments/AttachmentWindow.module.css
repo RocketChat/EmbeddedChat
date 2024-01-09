@@ -90,10 +90,17 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  background: #007fff;
+  margin-left: 5px;
+  color: #ffffff;
 }
 
 .attachment_window_submit_button:hover {
   background-color: #005bb6;
+}
+
+.attachment_window_submit_button:active {
+  background-color: #003f7e;
 }
 
 .attachment_window_cancel_button {
@@ -103,13 +110,14 @@
   border: none;
   border-radius: 4px;
   cursor: pointer; 
+  background: #e4e7ea; 
+  margin-right: 5px;
 }
 
 .attachment_window_cancel_button:hover {
-  background-color: #96999d;
+  background-color: #b2b5ba;
 }
 
-/* .fwefw {
-  background-color: #114eab;
-} */
-
+.attachment_window_cancel_button:active {
+  background-color: #85878b;
+}

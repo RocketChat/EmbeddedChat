@@ -7,7 +7,7 @@ import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { css } from '@emotion/react';
-import Backdrop from './Backdrop';
+import Backdrop from './AttachmentWindow/Backdrop';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);

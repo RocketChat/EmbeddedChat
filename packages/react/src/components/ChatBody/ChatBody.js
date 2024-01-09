@@ -14,7 +14,7 @@ import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
+const ChatBody = ({ height, anonymousMode, showRoles }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -60,8 +60,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
 
-  const toggle = useAttachmentWindowStore((state) => state.toggle);
-  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
@@ -230,37 +228,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     anonymousMode,
   ]);
 
-  const [onDrag, setOnDrag] = useState(false);
-  const [leaveCount, setLeaveCount] = useState(0);
-
-  const handleDrag = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDragEnter = () => {
-    setOnDrag(true);
-  };
-  const handleDragLeave = () => {
-    if (leaveCount % 2 === 1) {
-      setOnDrag(false);
-      setLeaveCount(leaveCount + 1);
-    } else {
-      setLeaveCount(leaveCount + 1);
-    }
-  };
-
-  const handleDragDrop = (e) => {
-    e.preventDefault();
-    setOnDrag(false);
-    setLeaveCount(0);
-
-    toggle();
-    setData(e.dataTransfer.files[0]);
-  };
 
   return (
     <Box
-      ref={messageListRef}
       css={ChatBodyCss}
       style={{
         borderLeft: '1px solid #b1b1b1',
@@ -268,17 +238,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
         paddingTop: '70px',
         ...styleOverrides,
       }}
-      onDragOver={(e) => handleDrag(e)}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
       className={`ec-chat-body ${classNames}`}
       height={height}
     >
-      {onDrag ? (
-        <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
-          Drop to upload file
-        </Box>
-      ) : null}
       {isThreadOpen ? (
         <ThreadMessageList
           threadMainMessage={threadMainMessage}
