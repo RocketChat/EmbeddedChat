@@ -23,6 +23,7 @@ import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import ErrorModal from './ErrorModal';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -84,6 +85,9 @@ const ChatInput = ({ scrollToBottom }) => {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
+  const [errorModal, setErrorModal] = useState(null);
+  const [isAttachmentMode, setIsAttachmentMode] = useState(false);
+
 
   const {
     editMessage,
@@ -117,6 +121,16 @@ const ChatInput = ({ scrollToBottom }) => {
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
+  const openErrorModal = (errorMessage) => {
+    setErrorModal(errorMessage);
+  };
+  const closeErrorModal = () => {
+    setErrorModal(null);
+  };
+  const handleConvertToAttachment = () => {
+    setIsAttachmentMode(true);
+    closeErrorModal();
+  };
 
   const onJoin = async () => {
     if (!isUserAuthenticated) {
@@ -140,6 +154,31 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
+
+    if(isAttachmentMode){
+      const blob = new Blob([message], { type: 'text/plain' });
+      const formData = new FormData();
+      formData.append('file', blob, 'message.txt');
+      try {
+        sendAttachment(formData);
+        console.log('Message sent as attachment:', formData);
+      } catch (error) {
+        console.error('Error sending attachment:', error);
+      }
+
+      messageRef.current.value = '';
+      setDisableButton(true);
+      setEditMessage({});
+      setIsAttachmentMode(false);
+      return;
+    }
+
+    const msgMaxLength = 500;
+    if (message.length > msgMaxLength) {
+      openErrorModal('Message is too long!');
+      return;
+    }
+
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
       if (editMessage.msg) {
@@ -487,6 +526,9 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         )}
       </Box>
+      {errorModal && (
+        <ErrorModal message={errorModal} onClose={closeErrorModal} onConfirm={handleConvertToAttachment} />
+      )}
     </Box>
   );
 };
