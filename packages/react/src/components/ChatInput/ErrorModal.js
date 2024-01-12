@@ -32,10 +32,10 @@ const ErrorModal = ({ message, onClose, onConfirm }) => {
     <>
       <Box css={outerContainerCss} onClick={onClose}/>
       <Box css={containerCss}>
-        <h2> ⚠️ {message} </h2>
+        <h2> <span css={css`opacity:60%;`}> ⚠︎ </span> {message} </h2>
         <p>Send it as attachment instead?</p>
         <Button css={css`position:absolute; right:1em;`} onClick={onConfirm}>Ok</Button>
-        <span css={css`position:absolute; top:1em; right:1em;cursor:pointer;`} onClick={onClose}> ✖ </span>
+        <span css={css`position:absolute; top:1em; right:1em;cursor:pointer;scale:1.5;`} onClick={onClose}> ⨯ </span>
       </Box>
     </>
   );

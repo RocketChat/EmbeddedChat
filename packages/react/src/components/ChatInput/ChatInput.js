@@ -85,7 +85,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
-  const [errorModal, setErrorModal] = useState(null);
+  const [errorModal, setErrorModal] = useState("Message too long");
   const [isAttachmentMode, setIsAttachmentMode] = useState(false);
 
 
@@ -127,6 +127,10 @@ const ChatInput = ({ scrollToBottom }) => {
   const closeErrorModal = () => {
     setErrorModal(null);
   };
+
+  useEffect(() => {
+    if(isAttachmentMode) sendMessage();
+  }, [isAttachmentMode]);
   const handleConvertToAttachment = () => {
     setIsAttachmentMode(true);
     closeErrorModal();
@@ -154,20 +158,19 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
-
+    
     if(isAttachmentMode){
-      const blob = new Blob([message], { type: 'text/plain' });
-      const formData = new FormData();
-      formData.append('file', blob, 'message.txt');
-      try {
-        sendAttachment(formData);
-        console.log('Message sent as attachment:', formData);
-      } catch (error) {
-        console.error('Error sending attachment:', error);
-      }
+      const messageBlob = new Blob([message], { type: 'text/plain' });
+      const file = new File([messageBlob], 'message.txt', {
+        type:'text/plain',
+        lastModified: Date.now(),
+      });
+
+      // file upload logic
+      toggle();
+      setData(file);
 
       messageRef.current.value = '';
-      setDisableButton(true);
       setEditMessage({});
       setIsAttachmentMode(false);
       return;
