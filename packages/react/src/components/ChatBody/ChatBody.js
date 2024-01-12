@@ -13,7 +13,7 @@ import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const ChatBody = ({ height, anonymousMode, showRoles, MessageListRef }) => {
+const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -215,7 +215,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, MessageListRef }) => {
 
   return (
     <Box
-      ref={MessageListRef}
+      ref={messageListRef}
       css={ChatBodyCss}
       style={{
         borderLeft: '1px solid #b1b1b1',
