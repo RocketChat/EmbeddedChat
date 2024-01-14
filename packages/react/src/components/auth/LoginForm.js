@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
+import { unAuthStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
 import EyeOpen from './icons/EyeOpen';
 import EyeClose from './icons/EyeClose';
+import UserNotFound from './icons/UserNotFound';
 
 export default function LoginForm() {
   const [userOrEmail, setuserOrEmail] = useState(null);
@@ -17,6 +19,8 @@ export default function LoginForm() {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
+  const isUnauthorizedAttempt = unAuthStore((state)=>state.isUnauthorizedAttempt);
+  const setIsUnauthorizedAttempt = unAuthStore((state)=>state.setIsUnauthorizedAttempt);
   const { handleLogin } = useRCAuth();
 
   const handleSubmit = () => {
@@ -24,6 +28,7 @@ export default function LoginForm() {
   };
   const handleClose = () => {
     setIsLoginModalOpen(false);
+    setIsUnauthorizedAttempt(false);
   };
 
   const handleEdituserOrEmail = (e) => {
@@ -81,6 +86,17 @@ export default function LoginForm() {
     right: 1em;
   `;
 
+  const callOutRow = css`
+  display: flex;
+  align-self:flex-start;
+  padding:0.5rem;
+  margin-top: 1rem;
+  border: 1px solid #b02e2c;
+  border-radius:0.3rem;
+  width:100%;
+  `
+
+
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -127,6 +143,13 @@ export default function LoginForm() {
               alignItems: 'center',
             }}
           >
+            {isUnauthorizedAttempt && (
+              <Box css={callOutRow}>
+                <UserNotFound />
+                <Box style={{ marginLeft: '0.5rem' }}>User not found or incorrect password</Box>
+              </Box>
+            )}
+
             <Button
               color="primary"
               onClick={handleSubmit}

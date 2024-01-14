@@ -5,6 +5,7 @@ import {
   useUserStore,
   totpModalStore,
   loginModalStore,
+  unAuthStore
 } from '../store';
 import { useToastBarDispatch } from './useToastBarDispatch';
 
@@ -15,6 +16,7 @@ export const useRCAuth = () => {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
+  const setIsUnauthorizedAttempt = unAuthStore((state)=>state.setIsUnauthorizedAttempt);
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
   );
@@ -30,13 +32,15 @@ export const useRCAuth = () => {
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
       if (res.error === 'Unauthorized') {
-        dispatchToastMessage({
-          type: 'error',
-          message:
-            'Invalid username or password. Please check your credentials and try again',
-          position: toastPosition,
-        });
+        setIsUnauthorizedAttempt(true);
+        // dispatchToastMessage({
+        //   type: 'error',
+        //   message:
+        //     'Invalid username or password. Please check your credentials and try again',
+        //   position: toastPosition,
+        // });
       } else {
+        setIsUnauthorizedAttempt(false);
         if (res.error === 'totp-required') {
           setPassword(password);
           setEmailorUser(userOrEmail);
@@ -57,6 +61,7 @@ export const useRCAuth = () => {
 
         if (res.status === 'success') {
           setIsLoginModalOpen(false);
+          setIsUnauthorizedAttempt(false);
           setUserAvatarUrl(res.me.avatarUrl);
           setAuthenticatedUserUsername(res.me.username);
           setIsUserAuthenticated(true);

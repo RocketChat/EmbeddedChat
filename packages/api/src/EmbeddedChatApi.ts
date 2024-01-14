@@ -134,6 +134,7 @@ export default class EmbeddedChatApi {
       return { status: 'success', me: data.me };
     } catch (error) {
       console.error(error);
+      return {error:'Unauthorized'}
     }
   }
 
