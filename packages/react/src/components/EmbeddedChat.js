@@ -19,6 +19,24 @@ import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { styles } from './EmbeddedChat.styles';
 
+const DragOverlay = () => {
+  const overlayCss = css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #007fff;
+    z-index: 10000; 
+  `;
+
+  return (
+    <div css={overlayCss}>
+      <h1 style={{ textDecoration: 'solid' }}><b>Drop to upload file</b></h1>
+    </div>
+  );
+};
+
 const EmbeddedChat = ({
   isClosable = false,
   setClosableState,
@@ -42,27 +60,30 @@ const EmbeddedChat = ({
   },
 }) => {
   const baseDragComponentCss = css`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    z-index: 0;
+    z-index: 300;
     opacity: 25%;
     flex-direction: column;
   `;
 
   const DragComponentCss = css`
-  ${baseDragComponentCss};
-  animation-name: inherit;
-  animation-duration: 0.1s;
-  transition: all 0.1s ease-in;
-  transform-origin: center center;
+    ${baseDragComponentCss};
+    animation-name: inherit;
+    animation-duration: 0.1s;
+    transition: all 0.1s ease-in;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* to allow interactions with the components underneath */
 `;
 
   const borderCss = css`
-  position: relative;
-    z-index: 300; 
-    border: 4px dashed #007fff !important; 
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 9999; /* Choose a high value for z-index */
+    border: 4px dashed #007fff !important;
   `;
 
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -253,9 +274,9 @@ const EmbeddedChat = ({
               css`
                 width: ${width};
                 height: ${height};
+                position: relative;
               `,
               fullScreen && styles.fullscreen,
-              onDrag && DragComponentCss,
             ]}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
@@ -264,6 +285,7 @@ const EmbeddedChat = ({
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDragDrop(e)}
           >
+            {onDrag && <DragOverlay />}
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -276,21 +298,24 @@ const EmbeddedChat = ({
             )}
 
             {onDrag ? (
-              <Box
-                css={[onDrag && borderCss]}
-              >
-                {isUserAuthenticated || anonymousMode ? (
-                  <ChatBody
-                    height={!fullScreen ? height : '88vh'}
-                    anonymousMode={anonymousMode}
-                    showRoles={showRoles}
-                    messageListRef={messageListRef}
-                  />
-                ) : (
-                  <Home height={!fullScreen ? height : '88vh'} />
-                )}
+              <>
+                <Box
+                  css={[onDrag && DragComponentCss, onDrag && borderCss]}
+                  style={{ height: !fullScreen ? height : '90vh' }}
+                >
+                  {isUserAuthenticated || anonymousMode ? (
+                    <ChatBody
+                      height={!fullScreen ? height : '88vh'}
+                      anonymousMode={anonymousMode}
+                      showRoles={showRoles}
+                      messageListRef={messageListRef}
+                    />
+                  ) : (
+                    <Home height={!fullScreen ? height : '88vh'} />
+                  )}
+                </Box>
                 <ChatInput scrollToBottom={scrollToBottom} />
-              </Box>
+              </>
             ) : (
               <>
                 {isUserAuthenticated || anonymousMode ? (
