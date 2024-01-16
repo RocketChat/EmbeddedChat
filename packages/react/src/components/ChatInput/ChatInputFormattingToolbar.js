@@ -1,17 +1,18 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import Popup from 'reactjs-popup';
 import { css } from '@emotion/react';
-import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
 import styles from './ChatInput.module.css';
 import { formatter } from '../../lib/textFormat';
-import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import {Tooltip} from "../Tooltip"
 import useComponentOverrides from '../../theme/useComponentOverrides';
+
+const AudioMessageRecorder = lazy(() => import('./AudioMessageRecorder'));
+const EmojiPicker = React.lazy(() => import('../EmojiPicker/index'));
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -92,12 +93,14 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
             closeOnDocumentClick
             position="left center"
           >
+            <Suspense fallback={<div>Loading EmojiPicker...</div>}>
             <EmojiPicker
               handleEmojiClick={(emoji) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji);
               }}
             />
+          </Suspense>
           </Popup>
         </>
       )}
@@ -119,7 +122,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </Tooltip>
        
       ))}
-      <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
+      <Tooltip text="Audio Message" position="top"><Suspense fallback={<div>Loading...</div>}><AudioMessageRecorder /></Suspense></Tooltip>
       <ActionButton
         square
         ghost
