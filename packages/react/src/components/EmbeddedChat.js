@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
@@ -9,6 +9,7 @@ import { ChatInput } from './ChatInput';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentWindow from './Attachments/AttachmentWindow';
+import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -43,10 +44,11 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, []);
+  }, [toastBarPosition, showAvatar]);
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -134,6 +136,7 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
+  const data = useAttachmentWindowStore((state) => state.data);
 
   const ECOptions = useMemo(
     () => ({
@@ -169,11 +172,27 @@ const EmbeddedChat = ({
     [RCInstance, ECOptions]
   );
 
+  const messageListRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messageListRef.current) {
+      requestAnimationFrame(() => {
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      });
+    }
+  };
+
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? <AttachmentWindow /> : null}
+          {attachmentWindowOpen ? (!!data ?
+            <>
+              <AttachmentWindow />
+            </>
+            :
+            <ValidateComponent data={data} />
+          ) : null}
           <Box
             css={[
               styles.embeddedchat,
@@ -201,7 +220,7 @@ const EmbeddedChat = ({
               anonymousMode={anonymousMode}
               showRoles={showRoles}
             />
-            <ChatInput />
+            <ChatInput scrollToBottom={scrollToBottom} />
           </Box>
         </RCInstanceProvider>
       </ToastBarProvider>
