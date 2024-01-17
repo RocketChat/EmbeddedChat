@@ -17,25 +17,9 @@ import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
+import { dropBoxStyles } from './DropBox/DropBox.styles';
 import { styles } from './EmbeddedChat.styles';
 
-const DragOverlay = () => {
-  const overlayCss = css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    color: #007fff;
-    z-index: 10000; 
-  `;
-
-  return (
-    <div css={overlayCss}>
-      <h1 style={{ textDecoration: 'solid' }}><b>Drop to upload file</b></h1>
-    </div>
-  );
-};
 
 const EmbeddedChat = ({
   isClosable = false,
@@ -59,33 +43,6 @@ const EmbeddedChat = ({
     flow: 'PASSWORD',
   },
 }) => {
-  const baseDragComponentCss = css`
-    z-index: 300;
-    opacity: 25%;
-    flex-direction: column;
-  `;
-
-  const DragComponentCss = css`
-    ${baseDragComponentCss};
-    animation-name: inherit;
-    animation-duration: 0.1s;
-    transition: all 0.1s ease-in;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* to allow interactions with the components underneath */
-`;
-
-  const borderCss = css`
-    position: relative;
-    top: 0;
-    left: 0;
-    z-index: 9999; /* Choose a high value for z-index */
-    border: 4px dashed #007fff !important;
-  `;
-
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
@@ -285,7 +242,6 @@ const EmbeddedChat = ({
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDragDrop(e)}
           >
-            {onDrag && <DragOverlay />}
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -300,7 +256,10 @@ const EmbeddedChat = ({
             {onDrag ? (
               <>
                 <Box
-                  css={[onDrag && DragComponentCss, onDrag && borderCss]}
+                  css={[
+                    onDrag && dropBoxStyles.dropBoxCss,
+                    onDrag && dropBoxStyles.borderCss
+                  ]}
                   style={{ height: !fullScreen ? height : '90vh' }}
                 >
                   {isUserAuthenticated || anonymousMode ? (
