@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import React, { forwardRef, useRef, useCallback } from 'react';
+import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
@@ -36,6 +36,19 @@ export const Modal = forwardRef(
       [onClose]
     );
 
+    const handleEscKey = useCallback((e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    }, [onClose]);
+
+    useEffect(() => {
+      window.addEventListener('keydown', handleEscKey);
+
+      return () => {
+        window.removeEventListener('keydown', handleEscKey);
+      };
+    }, [handleEscKey]);
 
     return (
       <ModalBackdrop ref={backDropRef} onClick={handleClick}>
