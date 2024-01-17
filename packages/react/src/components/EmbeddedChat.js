@@ -19,8 +19,7 @@ import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { dropBoxStyles } from './DropBox/DropBox.styles';
 import { styles } from './EmbeddedChat.styles';
-import { DropBoxProvider } from './DropBox/DropBoxProvider';
-import { useDropBox } from '../hooks/useDropBox';
+import { DropBoxProvider, useDropBox } from '../context/DropBoxContext';
 
 
 const EmbeddedChat = ({
@@ -110,8 +109,6 @@ const EmbeddedChat = ({
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
 
-  const { data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
-
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       // getUserEssentials();
@@ -186,6 +183,8 @@ const EmbeddedChat = ({
       });
     }
   };
+
+  const { onDrag, data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
