@@ -1,6 +1,6 @@
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
-
+import path from 'path';
 import packageJson from './package.json' assert { type: 'json' };
 
 const name = packageJson.main.replace(/\.js$/, '');
@@ -8,7 +8,9 @@ const name = packageJson.main.replace(/\.js$/, '');
 const bundle = config => ({
   ...config,
   input: 'src/index.ts',
-  external: id => !/^[./]/.test(id),
+  external: id => {
+    return id[0] !== '.' && !path.isAbsolute(id);
+  },
 })
 
 export default [
