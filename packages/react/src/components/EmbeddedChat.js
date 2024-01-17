@@ -19,6 +19,8 @@ import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { dropBoxStyles } from './DropBox/DropBox.styles';
 import { styles } from './EmbeddedChat.styles';
+import { DropBoxProvider } from './DropBox/DropBoxProvider';
+import { useDropBox } from '../hooks/useDropBox';
 
 
 const EmbeddedChat = ({
@@ -108,6 +110,8 @@ const EmbeddedChat = ({
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
 
+  const { data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
+
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       // getUserEssentials();
@@ -138,9 +142,6 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
-  const toggle = useAttachmentWindowStore((state) => state.toggle);
-  const data = useAttachmentWindowStore((state) => state.data);
-  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const ECOptions = useMemo(
     () => ({
@@ -186,82 +187,70 @@ const EmbeddedChat = ({
     }
   };
 
-  const [onDrag, setOnDrag] = useState(false);
-  const [leaveCount, setLeaveCount] = useState(0);
-
-  const handleDrag = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDragEnter = () => {
-    setOnDrag(true);
-  };
-  const handleDragLeave = () => {
-    if ((leaveCount % 2) === 1) {
-      setOnDrag(false);
-      setLeaveCount(leaveCount + 1);
-    } else {
-      setLeaveCount(leaveCount + 1);
-    }
-  };
-
-  const handleDragDrop = (e) => {
-    e.preventDefault();
-    setOnDrag(false);
-    setLeaveCount(0);
-
-    toggle();
-    setData(e.dataTransfer.files[0]);
-  };
-
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (!!data ?
-            <>
-              <AttachmentWindow />
-            </>
-            :
-            <ValidateComponent data={data} />
-          ) : null}
-          <Box
-            css={[
-              styles.embeddedchat,
-              css`
+          <DropBoxProvider>
+            {attachmentWindowOpen ? (!!data ?
+              <>
+                <AttachmentWindow />
+              </>
+              :
+              <ValidateComponent data={data} />
+            ) : null}
+            <Box
+              css={[
+                styles.embeddedchat,
+                css`
                 width: ${width};
                 height: ${height};
                 position: relative;
               `,
-              fullScreen && styles.fullscreen,
-            ]}
-            className={`ec-embedded-chat ${className} ${classNames}`}
-            style={{ ...style, ...styleOverrides }}
-            onDragOver={(e) => handleDrag(e)}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDragDrop(e)}
-          >
-            {hideHeader ? null : (
-              <ChatHeader
-                channelName={channelName}
-                isClosable={isClosable}
-                setClosableState={setClosableState}
-                moreOpts={moreOpts}
-                fullScreen={fullScreen}
-                setFullScreen={setFullScreen}
-              />
-            )}
+                fullScreen && styles.fullscreen,
+              ]}
+              className={`ec-embedded-chat ${className} ${classNames}`}
+              style={{ ...style, ...styleOverrides }}
+              onDragOver={(e) => handleDrag(e)}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDragDrop(e)}
+            >
+              {hideHeader ? null : (
+                <ChatHeader
+                  channelName={channelName}
+                  isClosable={isClosable}
+                  setClosableState={setClosableState}
+                  moreOpts={moreOpts}
+                  fullScreen={fullScreen}
+                  setFullScreen={setFullScreen}
+                />
+              )}
 
-            {onDrag ? (
-              <>
-                <Box
-                  css={[
-                    onDrag && dropBoxStyles.dropBoxCss,
-                    onDrag && dropBoxStyles.borderCss
-                  ]}
-                  style={{ height: !fullScreen ? height : '90vh' }}
-                >
+              {onDrag ? (
+                <>
+                  <Box
+                    css={[
+                      onDrag && dropBoxStyles.dropBoxCss,
+                      onDrag && dropBoxStyles.borderCss
+                    ]}
+                    style={{ height: !fullScreen ? height : '90vh' }}
+                  >
+                    {isUserAuthenticated || anonymousMode ? (
+                      <ChatBody
+                        height={!fullScreen ? height : '88vh'}
+                        anonymousMode={anonymousMode}
+                        showRoles={showRoles}
+                        messageListRef={messageListRef}
+                      />
+                    ) : (
+                      <Home height={!fullScreen ? height : '88vh'} />
+                    )}
+                  </Box>
+                  <ChatInput scrollToBottom={scrollToBottom} />
+                </>
+              ) : (
+                <>
                   {isUserAuthenticated || anonymousMode ? (
                     <ChatBody
                       height={!fullScreen ? height : '88vh'}
@@ -272,25 +261,11 @@ const EmbeddedChat = ({
                   ) : (
                     <Home height={!fullScreen ? height : '88vh'} />
                   )}
-                </Box>
-                <ChatInput scrollToBottom={scrollToBottom} />
-              </>
-            ) : (
-              <>
-                {isUserAuthenticated || anonymousMode ? (
-                  <ChatBody
-                    height={!fullScreen ? height : '88vh'}
-                    anonymousMode={anonymousMode}
-                    showRoles={showRoles}
-                    messageListRef={messageListRef}
-                  />
-                ) : (
-                  <Home height={!fullScreen ? height : '88vh'} />
-                )}
-                <ChatInput scrollToBottom={scrollToBottom} />
-              </>
-            )}
-          </Box>
+                  <ChatInput scrollToBottom={scrollToBottom} />
+                </>
+              )}
+            </Box>
+          </DropBoxProvider>
         </RCInstanceProvider>
       </ToastBarProvider>
     </ThemeProvider>

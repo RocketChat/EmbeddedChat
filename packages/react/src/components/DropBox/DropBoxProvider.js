@@ -1,11 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DropBoxContext from '../context/DropBoxContext';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 import PropTypes from 'prop-types';
 
 export const DropBoxProvider = ({ children }) => {
+
+   const toggle = useAttachmentWindowStore((state) => state.toggle);
+   const data = useAttachmentWindowStore((state) => state.data);
+   const setData = useAttachmentWindowStore((state) => state.setData);
+
    const [onDrag, setOnDrag] = useState(false);
    const [leaveCount, setLeaveCount] = useState(0);
-   const [data, setData] = useState(null);
 
    const handleDrag = (e) => {
       e.preventDefault();
@@ -28,6 +33,8 @@ export const DropBoxProvider = ({ children }) => {
       e.preventDefault();
       setOnDrag(false);
       setLeaveCount(0);
+
+      toggle();
       setData(e.dataTransfer.files[0]);
    };
 
@@ -44,8 +51,10 @@ export const DropBoxProvider = ({ children }) => {
       onDrag,
       data,
       setData,
+      handleDrag,
       handleDragEnter,
       handleDragLeave,
+      handleDragDrop
    };
 
    return (
