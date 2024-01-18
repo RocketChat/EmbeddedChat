@@ -10,6 +10,7 @@ import { Modal } from '../Modal';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { parseEmoji } from '../../lib/emoji';
+import Tooltip from '../Tooltip/Tooltip';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -81,30 +82,31 @@ export const MessageToolbox = ({
           {...props}
         >
           {!isThreadMessage ? (
+            <Tooltip text="Reply in thread" position="top">
+              <ActionButton
+                ghost
+                size="small"
+                icon="thread"
+                onClick={handleOpenThread(message)}
+              />
+            </Tooltip>
+          ) : null}
+          <Tooltip text="Star message" position="top">
             <ActionButton
               ghost
               size="small"
-              icon="thread"
-              onClick={handleOpenThread(message)}
+              icon="star"
+              onClick={() => handleStarMessage(message)}
             />
-          ) : null}
-          <ActionButton
-            ghost
-            size="small"
-            icon={`${
-              message.starred &&
-              message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
-            }`}
-            onClick={() => handleStarMessage(message)}
-          />
-          <ActionButton
-            ghost
-            size="small"
-            icon="emoji"
-            onClick={() => setEmojiOpen(true)}
-          />
+          </Tooltip>
+          <Tooltip text="Add reaction" position="top">
+            <ActionButton
+              ghost
+              size="small"
+              icon="emoji"
+              onClick={() => setEmojiOpen(true)}
+            />
+          </Tooltip>
           <Popup
             modal
             open={isEmojiOpen}
@@ -120,38 +122,47 @@ export const MessageToolbox = ({
             />
           </Popup>
           {!isThreadMessage && (
-            <ActionButton
-              ghost
-              size="small"
-              icon="pin"
-              onClick={() => handlePinMessage(message)}
-            />
-          )}
-          {message.u._id === authenticatedUserId && (
-            <>
-              <ActionButton
-                ghost={!isEditing}
-                color={isEditing ? 'secondary' : 'default'}
-                size="small"
-                icon="edit"
-                onClick={() => handleEditMessage(message)}
-              />
+            <Tooltip text="Pin" position="top">
               <ActionButton
                 ghost
                 size="small"
-                icon="trash"
-                color="error"
-                onClick={() => handleClickDelete(message)}
+                icon="pin"
+
+                onClick={() => handlePinMessage(message)}
               />
+            </Tooltip>
+          )}
+          {message.u._id === authenticatedUserId && (
+            <>
+              <Tooltip text="Edit" position="top">
+                <ActionButton
+                  ghost={!isEditing}
+                  color={isEditing ? 'secondary' : 'default'}
+                  size="small"
+                  icon="edit"
+                  onClick={() => handleEditMessage(message)}
+                />
+              </Tooltip>
+              <Tooltip text="Delete" position="top">
+                <ActionButton
+                  ghost
+                  size="small"
+                  icon="trash"
+                  color="error"
+                  onClick={() => handleClickDelete(message)}
+                />
+              </Tooltip>
             </>
           )}
-          <ActionButton
-            ghost
-            size="small"
-            icon="report"
-            color="error"
-            onClick={() => handlerReportMessage(message)}
-          />
+          <Tooltip text="Report" position="top">
+            <ActionButton
+              ghost
+              size="small"
+              icon="report"
+              color="error"
+              onClick={() => handlerReportMessage(message)}
+            />
+          </Tooltip>
         </Box>
       </Box>
       {showDeleteModal && (
