@@ -39,7 +39,7 @@ export const MessageMetrics = ({
   className = '',
   message,
   style = {},
-  handleOpenThread = () => {},
+  handleOpenThread = () => { },
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(

@@ -45,6 +45,7 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);

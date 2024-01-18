@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { GenericModal } from '../GenericModal';
 import { loginModalStore } from '../../store';
@@ -6,17 +6,38 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
+import EyeOpen from './icons/EyeOpen';
+import EyeClose from './icons/EyeClose';
 
 export default function LoginForm() {
-  const [userOrEmail, setuserOrEmail] = useState(null);
-  const [password, setpassword] = useState(null);
+  const [userOrEmail, setUserOrEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const isLoginModalOpen = loginModalStore((state) => state.isLoginModalOpen);
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();
 
+  useEffect(()=>{
+    if(userOrEmail !== null && userOrEmail.trim() === ''){
+      setUsernameError(true);
+    }else{
+      setUsernameError(false);
+    }
+
+    if(password !== null && password.trim() === ''){
+      setPasswordError(true);
+    }else{
+      setPasswordError(false);
+    }
+  },[userOrEmail,password])
+
   const handleSubmit = () => {
+    if(!userOrEmail) setUserOrEmail('');
+    if(!password) setPassword('');
     handleLogin(userOrEmail, password);
   };
   const handleClose = () => {
@@ -24,10 +45,18 @@ export default function LoginForm() {
   };
 
   const handleEdituserOrEmail = (e) => {
-    setuserOrEmail(e.target.value);
+    setUserOrEmail(e.target.value);
   };
   const handleEditPassword = (e) => {
-    setpassword(e.target.value);
+    setPassword(e.target.value);
+  };
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   const fieldCSS = css`
@@ -64,6 +93,12 @@ export default function LoginForm() {
     margin-block-end: 0.125rem;
   `;
 
+  const passwordEyeCss = css`
+    cursor: pointer;
+    position: absolute;
+    right: 1em;
+  `;
+
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -80,15 +115,31 @@ export default function LoginForm() {
                 type="text"
                 onChange={handleEdituserOrEmail}
                 placeholder="example@example.com"
+                onKeyPress={handleKeyPress}
+                style={{ borderColor: usernameError ? 'red' : '' }}
               />
             </Box>
+            {usernameError && <span style={{ color: 'red', fontSize:'13px' }}>This field is required</span>}
           </Box>
 
           <Box css={fieldCSS}>
             <Box css={fieldLabel}>Password</Box>
             <Box css={fieldRow}>
-              <Input type="password" onChange={handleEditPassword} />
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                onChange={handleEditPassword}
+                onKeyPress={handleKeyPress}
+                style={{ borderColor: passwordError ? 'red' : '' }}
+              />
+              <Box
+                type="button"
+                css={passwordEyeCss}
+                onClick={handleTogglePassword}
+              >
+                {showPassword ? <EyeOpen /> : <EyeClose />}
+              </Box>
             </Box>
+            {passwordError && <span style={{ color: 'red', fontSize:'13px' }}>This field is required</span>}
           </Box>
           <Box
             style={{

@@ -40,7 +40,7 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   };
 
   return (
-    <Modal>
+    <Modal onClose={handleOnClose}>
       <Modal.Header>
         <Modal.Title>
           <Icon name="report" size="1.25rem" /> Report this message?
