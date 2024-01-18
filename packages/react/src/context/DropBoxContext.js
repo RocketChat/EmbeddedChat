@@ -8,6 +8,7 @@
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import useAttachmentWindowStore from '../store/attachmentwindow';
 
 const DropBoxContext = createContext();
 
@@ -15,67 +16,70 @@ export const useDropBox = () => {
    return useContext(DropBoxContext);
 };
 
-export const DropBoxProvider = ({ children }) => {
+export default DropBoxContext;
 
-   const toggle = useAttachmentWindowStore((state) => state.toggle);
-   const data = useAttachmentWindowStore((state) => state.data);
-   const setData = useAttachmentWindowStore((state) => state.setData);
 
-   const [onDrag, setOnDrag] = useState(false);
-   const [leaveCount, setLeaveCount] = useState(0);
+// export const DropBoxProvider = ({ children }) => {
 
-   const handleDrag = (e) => {
-      e.preventDefault();
-   };
+//    const toggle = useAttachmentWindowStore((state) => state.toggle);
+//    const data = useAttachmentWindowStore((state) => state.data);
+//    const setData = useAttachmentWindowStore((state) => state.setData);
 
-   const handleDragEnter = () => {
-      setOnDrag(true);
-   };
+//    const [onDrag, setOnDrag] = useState(false);
+//    const [leaveCount, setLeaveCount] = useState(0);
 
-   const handleDragLeave = () => {
-      if ((leaveCount % 2) === 1) {
-         setOnDrag(false);
-         setLeaveCount(leaveCount + 1);
-      } else {
-         setLeaveCount(leaveCount + 1);
-      }
-   };
+//    const handleDrag = (e) => {
+//       e.preventDefault();
+//    };
 
-   const handleDragDrop = (e) => {
-      e.preventDefault();
-      setOnDrag(false);
-      setLeaveCount(0);
+//    const handleDragEnter = () => {
+//       setOnDrag(true);
+//    };
 
-      toggle();
-      setData(e.dataTransfer.files[0]);
-   };
+//    const handleDragLeave = () => {
+//       if ((leaveCount % 2) === 1) {
+//          setOnDrag(false);
+//          setLeaveCount(leaveCount + 1);
+//       } else {
+//          setLeaveCount(leaveCount + 1);
+//       }
+//    };
 
-   useEffect(() => {
-      document.addEventListener('dragover', handleDrag);
-      document.addEventListener('drop', handleDragDrop);
-      return () => {
-         document.removeEventListener('dragover', handleDrag);
-         document.removeEventListener('drop', handleDragDrop);
-      };
-   }, []);
+//    const handleDragDrop = (e) => {
+//       e.preventDefault();
+//       setOnDrag(false);
+//       setLeaveCount(0);
 
-   const value = {
-      onDrag,
-      data,
-      setData,
-      handleDrag,
-      handleDragEnter,
-      handleDragLeave,
-      handleDragDrop
-   };
+//       toggle();
+//       setData(e.dataTransfer.files[0]);
+//    };
 
-   return (
-      <DropBoxContext.Provider value={value}>
-         {children}
-      </DropBoxContext.Provider>
-   );
-};
+//    useEffect(() => {
+//       document.addEventListener('dragover', handleDrag);
+//       document.addEventListener('drop', handleDragDrop);
+//       return () => {
+//          document.removeEventListener('dragover', handleDrag);
+//          document.removeEventListener('drop', handleDragDrop);
+//       };
+//    }, []);
 
-DropBoxProvider.propTypes = {
-   children: PropTypes.node.isRequired,
-};
+//    const value = {
+//       onDrag,
+//       data,
+//       setData,
+//       handleDrag,
+//       handleDragEnter,
+//       handleDragLeave,
+//       handleDragDrop
+//    };
+
+//    return (
+//       <DropBoxContext.Provider value={value}>
+//          {children}
+//       </DropBoxContext.Provider>
+//    );
+// };
+
+// DropBoxProvider.propTypes = {
+//    children: PropTypes.node.isRequired,
+// };

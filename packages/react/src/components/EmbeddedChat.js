@@ -19,8 +19,8 @@ import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
 import { dropBoxStyles } from './DropBox/DropBox.styles';
 import { styles } from './EmbeddedChat.styles';
-import { DropBoxProvider, useDropBox } from '../context/DropBoxContext';
-
+import { useDropBox } from '../context/DropBoxContext';
+import { DropBoxProvider } from './DropBox/DropBoxProvider';
 
 const EmbeddedChat = ({
   isClosable = false,
