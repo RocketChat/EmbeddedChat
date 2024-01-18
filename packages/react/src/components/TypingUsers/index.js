@@ -69,7 +69,7 @@ export default function TypingUsers() {
             <b>{typingUsers[0]} </b>
             {', '}
             <b>{typingUsers[1]} </b>
-            {`and 1 more is typing...`}
+            {`and 1 more are typing...`}
           </span>
         );
       }
