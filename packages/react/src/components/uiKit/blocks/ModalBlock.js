@@ -61,6 +61,7 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
   );
   return (
     <Modal
+      onClose={onClose}
       open
       id={id}
       ref={ref}

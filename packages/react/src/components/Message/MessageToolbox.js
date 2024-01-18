@@ -91,12 +91,11 @@ export const MessageToolbox = ({
           <ActionButton
             ghost
             size="small"
-            icon={`${
-              message.starred &&
-              message.starred.find((u) => u._id === authenticatedUserId)
+            icon={`${message.starred &&
+                message.starred.find((u) => u._id === authenticatedUserId)
                 ? 'star-filled'
                 : 'star'
-            }`}
+              }`}
             onClick={() => handleStarMessage(message)}
           />
           <ActionButton
@@ -155,7 +154,7 @@ export const MessageToolbox = ({
         </Box>
       </Box>
       {showDeleteModal && (
-        <Modal>
+        <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
               <Icon name="trash" size="1.25rem" /> Delete this message?
