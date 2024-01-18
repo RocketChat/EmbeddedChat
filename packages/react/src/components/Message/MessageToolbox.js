@@ -37,6 +37,13 @@ const MessageToolboxCss = css`
   background: #fff;
 `;
 
+const popupStyle= {
+  margin: '0',
+  position: 'absolute',
+  right:'2rem',
+  top:'7.5rem'
+};
+
 export const MessageToolbox = ({
   className = '',
   message,
@@ -109,7 +116,7 @@ export const MessageToolbox = ({
             open={isEmojiOpen}
             onClose={() => setEmojiOpen(false)}
             closeOnEscape
-            position="left center"
+            contentStyle={popupStyle}
           >
             <EmojiPicker
               handleEmojiClick={(emoji) => {
