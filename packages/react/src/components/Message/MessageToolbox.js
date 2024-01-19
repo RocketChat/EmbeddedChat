@@ -37,11 +37,11 @@ const MessageToolboxCss = css`
   background: #fff;
 `;
 
-const popupStyle= {
+const popupStyle = {
   margin: '0',
   position: 'absolute',
-  right:'2rem',
-  top:'7.5rem'
+  right: '2rem',
+  top: '7.5rem'
 };
 
 export const MessageToolbox = ({
@@ -99,9 +99,9 @@ export const MessageToolbox = ({
             ghost
             size="small"
             icon={`${message.starred &&
-                message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
+              message.starred.find((u) => u._id === authenticatedUserId)
+              ? 'star-filled'
+              : 'star'
               }`}
             onClick={() => handleStarMessage(message)}
           />
@@ -129,7 +129,10 @@ export const MessageToolbox = ({
             <ActionButton
               ghost
               size="small"
-              icon="pin"
+              icon={`${message.pinned
+                ? 'pin-filled'
+                : 'pin'
+                }`}
               onClick={() => handlePinMessage(message)}
             />
           )}

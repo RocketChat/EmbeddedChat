@@ -34,6 +34,7 @@ import Trash from './Trash';
 import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
+import PinFilled from './PinFilled';
 
 const icons = {
   file: File,
@@ -72,6 +73,7 @@ const icons = {
   kebab: Kebab,
   check: Check,
   'error-circle': ErrorCircle,
+  'pin-filled': PinFilled
 };
 
 export default icons;
