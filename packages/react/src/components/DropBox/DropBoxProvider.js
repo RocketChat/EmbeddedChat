@@ -1,10 +1,10 @@
 // DropBoxProvider.js
 
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import PropTypes from 'prop-types';
+import DropBoxContext from '../../context/DropBoxContext';
 
-// export const DropBoxContext = createContext();
 
 
 const DropBoxProvider = ({ children }) => {
@@ -51,15 +51,7 @@ const DropBoxProvider = ({ children }) => {
       };
    }, []);
 
-   // const value = {
-   //    onDrag,
-   //    data,
-   //    setData,
-   //    handleDrag,
-   //    handleDragEnter,
-   //    handleDragLeave,
-   //    handleDragDrop
-   // };
+
 
    return (
       <DropBoxContext.Provider value={{
