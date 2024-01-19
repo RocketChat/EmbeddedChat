@@ -16,11 +16,11 @@ import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
+import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from './ToastBar';
-import { dropBoxStyles } from './DropBox/DropBox.styles';
+import { DropBoxOverlay, dropBoxStyles } from './DropBox';
 import { styles } from './EmbeddedChat.styles';
-import { DropBoxProvider } from './DropBox/DropBoxProvider';
-import { useDropBox } from '../hooks/useDropBox';
+
 
 const EmbeddedChat = ({
   isClosable = false,
@@ -52,6 +52,8 @@ const EmbeddedChat = ({
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
   }, [toastBarPosition, showAvatar]);
+
+  const { onDrag, data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -184,72 +186,56 @@ const EmbeddedChat = ({
     }
   };
 
-  const { onDrag, data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          <DropBoxProvider>
-            {attachmentWindowOpen ? (!!data ?
-              <>
-                <AttachmentWindow />
-              </>
-              :
-              <ValidateComponent data={data} />
-            ) : null}
-            <Box
-              css={[
-                styles.embeddedchat,
-                css`
+          {attachmentWindowOpen ? (!!data ?
+            <>
+              <AttachmentWindow />
+            </>
+            :
+            <ValidateComponent data={data} />
+          ) : null}
+          <Box
+            css={[
+              styles.embeddedchat,
+              css`
                 width: ${width};
                 height: ${height};
                 position: relative;
               `,
-                fullScreen && styles.fullscreen,
-              ]}
-              className={`ec-embedded-chat ${className} ${classNames}`}
-              style={{ ...style, ...styleOverrides }}
-              onDragOver={(e) => handleDrag(e)}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={(e) => handleDragDrop(e)}
-            >
-              {hideHeader ? null : (
-                <ChatHeader
-                  channelName={channelName}
-                  isClosable={isClosable}
-                  setClosableState={setClosableState}
-                  moreOpts={moreOpts}
-                  fullScreen={fullScreen}
-                  setFullScreen={setFullScreen}
-                />
-              )}
+              fullScreen && styles.fullscreen,
+            ]}
+            className={`ec-embedded-chat ${className} ${classNames}`}
+            style={{ ...style, ...styleOverrides }}
+            onDragOver={(e) => handleDrag(e)}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDragDrop(e)}
+          >
+            {onDrag && <DropBoxOverlay />}
+            {hideHeader ? null : (
+              <ChatHeader
+                channelName={channelName}
+                isClosable={isClosable}
+                setClosableState={setClosableState}
+                moreOpts={moreOpts}
+                fullScreen={fullScreen}
+                setFullScreen={setFullScreen}
+              />
+            )}
 
-              {onDrag ? (
-                <>
-                  <Box
-                    css={[
-                      onDrag && dropBoxStyles.dropBoxCss,
-                      onDrag && dropBoxStyles.borderCss
-                    ]}
-                    style={{ height: !fullScreen ? height : '90vh' }}
-                  >
-                    {isUserAuthenticated || anonymousMode ? (
-                      <ChatBody
-                        height={!fullScreen ? height : '88vh'}
-                        anonymousMode={anonymousMode}
-                        showRoles={showRoles}
-                        messageListRef={messageListRef}
-                      />
-                    ) : (
-                      <Home height={!fullScreen ? height : '88vh'} />
-                    )}
-                  </Box>
-                  <ChatInput scrollToBottom={scrollToBottom} />
-                </>
-              ) : (
-                <>
+            {onDrag ? (
+              <>
+                <Box
+                  css={[
+                    onDrag && dropBoxStyles.dropBoxCss,
+                    onDrag && dropBoxStyles.borderCss
+                  ]}
+                  style={{ height: !fullScreen ? height : '90vh' }}
+                >
                   {isUserAuthenticated || anonymousMode ? (
                     <ChatBody
                       height={!fullScreen ? height : '88vh'}
@@ -260,11 +246,25 @@ const EmbeddedChat = ({
                   ) : (
                     <Home height={!fullScreen ? height : '88vh'} />
                   )}
-                  <ChatInput scrollToBottom={scrollToBottom} />
-                </>
-              )}
-            </Box>
-          </DropBoxProvider>
+                </Box>
+                <ChatInput scrollToBottom={scrollToBottom} />
+              </>
+            ) : (
+              <>
+                {isUserAuthenticated || anonymousMode ? (
+                  <ChatBody
+                    height={!fullScreen ? height : '88vh'}
+                    anonymousMode={anonymousMode}
+                    showRoles={showRoles}
+                    messageListRef={messageListRef}
+                  />
+                ) : (
+                  <Home height={!fullScreen ? height : '88vh'} />
+                )}
+                <ChatInput scrollToBottom={scrollToBottom} />
+              </>
+            )}
+          </Box>
         </RCInstanceProvider>
       </ToastBarProvider>
     </ThemeProvider>
