@@ -61,7 +61,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     margin: '0',
     position: 'absolute',
     left: '0.375rem',
-    top:'7.5rem'
+    top:'9.5rem'
   };
 
   return (
