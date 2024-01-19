@@ -10,7 +10,7 @@ import {
   useSearchMessageStore,
   useChannelStore,
 } from '../../store';
-import { ThreadHeader } from '../ThreadHeader';
+import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -46,16 +46,20 @@ const ChatHeader = ({
   );
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
+  const headerTitle = useMessageStore((state) => state.headerTitle);
+  const filtered = useMessageStore((state) => state.filtered);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const closeThread = useMessageStore((state) => state.closeThread);
   const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+  const setHeaderTitle = useMessageStore((state) => state.setHeaderTitle);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowAllThreads = useThreadsMessageStore((state => state.setShowAllThreads));
+
 
   const handleLogout = useCallback(async () => {
     try {
@@ -70,12 +74,14 @@ const ChatHeader = ({
   const showStarredMessage = useCallback(async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);
+    setHeaderTitle("Starred Messages");
     setFilter(true);
   }, [RCInstance, setMessages, setFilter]);
 
   const showPinnedMessage = useCallback(async () => {
     const { messages } = await RCInstance.getPinnedMessages();
     setMessages(messages);
+    setHeaderTitle("Pinned Messages");
     setFilter(true);
   }, [RCInstance, setMessages, setFilter]);
 
@@ -296,7 +302,11 @@ const ChatHeader = ({
         </Box>
       </Box>
       {isThreadOpen && (
-        <ThreadHeader title={threadTitle} handleClose={closeThread} />
+        <DynamicHeader title={threadTitle} isClosable={true} handleClose={closeThread} iconName='arrow-back' />
+      )}
+
+      {!isThreadOpen && filtered && (
+   <DynamicHeader title={headerTitle} iconName={headerTitle && headerTitle.includes('Pin') ? 'pin' : 'star'} />
       )}
     </Box>
   );
