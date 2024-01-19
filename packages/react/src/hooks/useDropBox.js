@@ -1,5 +1,8 @@
 // // DropBoxProvider.js
 
+import { useContext } from 'react';
+import DropBoxContext from '../context/DropBoxContext';
+
 // import React, { useContext, useEffect, useRef, useState } from 'react';
 // import DropBoxContext from '../context/DropBoxContext';
 // import PropTypes from 'prop-types';
@@ -82,3 +85,9 @@
 // // DropBoxProvider.propTypes = {
 // //    children: PropTypes.node.isRequired,
 // // };
+
+
+
+export const useDropBox = () => {
+   return useContext(DropBoxContext);
+};

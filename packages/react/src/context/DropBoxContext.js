@@ -1,22 +1,22 @@
-// import { createContext } from 'react';
-
-// const DropBoxContext = createContext();
-
-// export default DropBoxContext;
-
-// DropBoxProvider.js
-
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import useAttachmentWindowStore from '../store/attachmentwindow';
+import { createContext } from 'react';
 
 const DropBoxContext = createContext();
 
-export const useDropBox = () => {
-   return useContext(DropBoxContext);
-};
-
 export default DropBoxContext;
+
+// DropBoxProvider.js
+
+// import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+// import PropTypes from 'prop-types';
+// import useAttachmentWindowStore from '../store/attachmentwindow';
+
+// const DropBoxContext = createContext();
+
+// export const useDropBox = () => {
+//    return useContext(DropBoxContext);
+// };
+
+// export default DropBoxContext;
 
 
 // export const DropBoxProvider = ({ children }) => {

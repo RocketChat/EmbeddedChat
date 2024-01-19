@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import DropBoxContext from '../../context/DropBoxContext';
+// DropBoxProvider.js
+
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
-import DropBoxOverlay from './DropBoxOverlay';
 import PropTypes from 'prop-types';
+
+// export const DropBoxContext = createContext();
+
 
 const DropBoxProvider = ({ children }) => {
 
-   const toggle = useAttachmentWindowStore((state) => state.toggle);
    const data = useAttachmentWindowStore((state) => state.data);
    const setData = useAttachmentWindowStore((state) => state.setData);
+   const toggle = useAttachmentWindowStore((state) => state.toggle);
 
    const [onDrag, setOnDrag] = useState(false);
    const [leaveCount, setLeaveCount] = useState(0);
@@ -48,22 +51,37 @@ const DropBoxProvider = ({ children }) => {
       };
    }, []);
 
-   const value = {
-      onDrag,
-      data,
-      setData,
-      handleDrag,
-      handleDragEnter,
-      handleDragLeave,
-      handleDragDrop
-   };
+   // const value = {
+   //    onDrag,
+   //    data,
+   //    setData,
+   //    handleDrag,
+   //    handleDragEnter,
+   //    handleDragLeave,
+   //    handleDragDrop
+   // };
 
    return (
-      <DropBoxContext.Provider value={value}>
-         <DropBoxOverlay />
+      <DropBoxContext.Provider value={{
+         onDrag,
+         data,
+         setData,
+         handleDrag,
+         handleDragEnter,
+         handleDragLeave,
+         handleDragDrop
+      }}>
          {children}
       </DropBoxContext.Provider>
    );
 };
+
+DropBoxProvider.propTypes = {
+   children: PropTypes.node.isRequired,
+};
+
+// export const useDropBox = () => {
+//    return useContext(DropBoxContext);
+// };
 
 export default DropBoxProvider;
