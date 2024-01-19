@@ -167,7 +167,7 @@ export const MessageToolbox = ({
         <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
-              <Icon name="trash" size="1.25rem" /> Delete this message?
+              <Icon name="trash" size="1.25rem" style={{ marginRight: '0.5rem' }} /> Delete this message?
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
