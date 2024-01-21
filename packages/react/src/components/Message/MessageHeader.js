@@ -61,6 +61,7 @@ const MessageHeader = ({ message }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const roles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const isPinned = message.pinned;
   const isStarred =
     message.starred &&
     message.starred.find((u) => u._id === authenticatedUserId);
@@ -133,6 +134,13 @@ const MessageHeader = ({ message }) => {
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
             name="star-filled"
+            size="1em"
+          />
+        ) : null}
+        {isPinned ? (
+          <Icon
+            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+            name="pin"
             size="1em"
           />
         ) : null}

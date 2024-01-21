@@ -5,7 +5,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import RCContext from '../../context/RCInstance';
 
-const MessageAvatarContainer = ({ message, sequential, isStarred }) => {
+const MessageAvatarContainer = ({ message, sequential, isStarred, isPinned }) => {
   const { RCInstance } = useContext(RCContext);
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
@@ -27,8 +27,12 @@ const MessageAvatarContainer = ({ message, sequential, isStarred }) => {
           alt="avatar"
           size={message.t ? '1.2em' : '2.25em'}
         />
-      ) : isStarred ? (
+      ) : null}
+      {isStarred ? (
         <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
+      ) : null}
+      {isPinned ? (
+        <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />
       ) : null}
     </Box>
   );

@@ -156,6 +156,7 @@ const Message = ({
   );
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
+  const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
   return (
     <>
@@ -169,6 +170,7 @@ const Message = ({
             message={message}
             sequential={sequential}
             isStarred={isStarred}
+            isPinned={isPinned}
           />
         )}
         <MessageBodyContainer>
