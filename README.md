@@ -108,3 +108,8 @@ Similarly, the `api` package depends on the `auth` package. After changes to `au
 
 This setup provides a comprehensive environment for developing and testing the `EmbeddedChat` component, along with its associated `api` and `auth` packages. Enjoy exploring and enhancing the capabilities of `EmbeddedChat`!
 
+### Contributors
+
+<a href="https://github.com/RocketChat/EmbeddedChat/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=RocketChat/EmbeddedChat" />
+</a>
