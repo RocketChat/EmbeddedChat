@@ -28,7 +28,7 @@ const renderIcon = (icon, variant) => {
 };
 
 const GenericModal = ({ variant = 'info', children, title, icon, onClose }) => (
-  <Modal>
+  <Modal onClose={onClose}>
     <Modal.Header>
       {renderIcon(icon, variant)}
       <Modal.Title>{title ?? 'Are_you_sure'}</Modal.Title>

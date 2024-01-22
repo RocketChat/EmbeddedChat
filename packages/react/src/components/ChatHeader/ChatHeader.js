@@ -11,7 +11,7 @@ import {
   useChannelStore,
 } from '../../store';
 import { ThreadHeader } from '../ThreadHeader';
-import {Tooltip} from '../Tooltip';
+import { Tooltip } from '../Tooltip';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
@@ -254,9 +254,9 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-          
+
             <Menu options={menuOptions} />
-            
+
           ) : (
             <><Tooltip text="Maximize" position="bottom">
               <ActionButton
@@ -266,11 +266,11 @@ const ChatHeader = ({
                 ghost
                 display="inline"
                 square
-                small
+                size='medium'
               >
                 <Icon name="computer" size="1.25rem" />
               </ActionButton>
-              </Tooltip>
+            </Tooltip>
               <Menu options={menuOptions} />
             </>
           )}
@@ -282,7 +282,7 @@ const ChatHeader = ({
               ghost
               display="inline"
               square
-              small
+              size='medium'
             >
               <Icon name="cross" size="1.25rem" />
             </ActionButton>

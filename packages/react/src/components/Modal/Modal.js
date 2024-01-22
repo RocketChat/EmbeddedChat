@@ -1,12 +1,13 @@
 import { css, useTheme } from '@emotion/react';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
 
 export const Modal = forwardRef(
-  ({ className = '', style = {}, open = true, children, ...props }, ref) => {
+  ({ className = '', style = {}, open = true, children, onClose = () => { }, ...props }, ref) => {
     const { classNames, styleOverrides } = useComponentOverrides('Modal');
+    const backDropRef = useRef(null);
     const theme = useTheme();
     const ModalCss = css`
       background: none;
@@ -25,8 +26,32 @@ export const Modal = forwardRef(
     if (!open) {
       return null;
     }
+
+    const handleClick = useCallback(
+      (e) => {
+        if (e.target === backDropRef.current) {
+          onClose();
+        }
+      },
+      [onClose]
+    );
+
+    const handleEscKey = useCallback((e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    }, [onClose]);
+
+    useEffect(() => {
+      window.addEventListener('keydown', handleEscKey);
+
+      return () => {
+        window.removeEventListener('keydown', handleEscKey);
+      };
+    }, [handleEscKey]);
+
     return (
-      <ModalBackdrop>
+      <ModalBackdrop ref={backDropRef} onClick={handleClick}>
         <Box
           ref={ref}
           is="dialog"

@@ -14,7 +14,7 @@ import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const ChatBody = ({ height, anonymousMode, showRoles }) => {
+const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -91,12 +91,12 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
           anonymousMode,
           ECOptions?.enableThreads
             ? {
-                query: {
-                  tmid: {
-                    $exists: false,
-                  },
+              query: {
+                tmid: {
+                  $exists: false,
                 },
-              }
+              },
+            }
             : undefined
         );
         if (messages) {
@@ -260,6 +260,7 @@ const ChatBody = ({ height, anonymousMode, showRoles }) => {
 
   return (
     <Box
+      ref={messageListRef}
       css={ChatBodyCss}
       style={{
         borderLeft: '1px solid #b1b1b1',

@@ -16,9 +16,9 @@ const MessageToolboxWrapperCss = css`
   .ec-message:hover & {
     display: flex;
     position: absolute;
-    top: 0;
-    right: 2rem;
-    z-index: 1;
+    bottom: 100%;
+    z-index: 90;
+    right:2rem;
   }
 `;
 
@@ -91,12 +91,11 @@ export const MessageToolbox = ({
           <ActionButton
             ghost
             size="small"
-            icon={`${
-              message.starred &&
-              message.starred.find((u) => u._id === authenticatedUserId)
+            icon={`${message.starred &&
+                message.starred.find((u) => u._id === authenticatedUserId)
                 ? 'star-filled'
                 : 'star'
-            }`}
+              }`}
             onClick={() => handleStarMessage(message)}
           />
           <ActionButton
@@ -155,7 +154,7 @@ export const MessageToolbox = ({
         </Box>
       </Box>
       {showDeleteModal && (
-        <Modal>
+        <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
               <Icon name="trash" size="1.25rem" /> Delete this message?
