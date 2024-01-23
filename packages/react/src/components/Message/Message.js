@@ -21,7 +21,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
-import QuoteAttachment from '../Attachments/QuoteAttachment';
+// import QuoteAttachment from '../Attachments/QuoteAttachment';
 
 const MessageCss = css`
   display: flex;

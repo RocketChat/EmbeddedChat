@@ -23,7 +23,7 @@ import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import QuoteAttachment from '../Attachments/QuoteAttachment';
+// import QuoteAttachment from '../Attachments/QuoteAttachment';
 import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 import PinnedAttachment from '../Attachments/PinnedAttachment';
 
