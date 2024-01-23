@@ -35,6 +35,10 @@ const editingMessageCss = css`
 `;
 
 const ChatInput = ({ scrollToBottom }) => {
+
+  const { quotedMessages, removeQuotedMessage, clearQuotedMessages } = useQuoteMessage();
+  console.log(quotedMessages);
+
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const [commands, setCommands] = useState([]);
@@ -140,6 +144,7 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const sendMessage = async () => {
+    // clearQuotedMessages();
     scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
@@ -172,6 +177,20 @@ const ChatInput = ({ scrollToBottom }) => {
       if (ECOptions.enableThreads && threadId) {
         pendingMessage.tmid = threadId;
       }
+      console.log(pendingMessage);
+      console.log(pendingMessage.attachements);
+
+      if (!!quotedMessages && quotedMessages.length > 0) {
+        quotedMessages.forEach((quotedMessage) => {
+          pendingMessage.attachments.push(quotedMessage)
+        });
+        clearQuotedMessages();
+      }
+      console.log(pendingMessage);
+      console.log(pendingMessage.attachments);
+
+      const originalAttachments = [...pendingMessage.attachments]; // Save original attachments
+
       upsertMessage(pendingMessage, ECOptions.enableThreads);
       const res = await RCInstance.sendMessage(
         {
@@ -180,6 +199,10 @@ const ChatInput = ({ scrollToBottom }) => {
         },
         ECOptions.enableThreads ? threadId : undefined
       );
+      res.message.attachments = originalAttachments; // Restore attachments
+
+      console.log(message);
+      console.log(res);
 
       if (!res.success) {
         await RCInstance.logout();
@@ -417,7 +440,6 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const { quotedMessages, removeQuotedMessage } = useQuoteMessage();
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
@@ -444,7 +466,11 @@ const ChatInput = ({ scrollToBottom }) => {
         `}
         >
           {quotedMessages?.map((attachment, index) => (
-            <PinnedAttachment key={index} attachment={attachment} onCancel={removeQuotedMessage} />
+            <PinnedAttachment
+              key={index}
+              attachment={attachment}
+              onCancel={() => removeQuotedMessage(index)}
+            />
           ))}
         </Box>
       )}

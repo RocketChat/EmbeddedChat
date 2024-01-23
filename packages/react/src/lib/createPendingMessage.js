@@ -39,7 +39,7 @@ const createPendingMessage = (
     urls: [],
     mentions: [],
     channels: [],
-    attachements: [],
+    attachments: [],
     md: [
       {
         type: 'PARAGRAPH',
