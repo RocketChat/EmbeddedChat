@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
@@ -18,8 +18,10 @@ import { MessageMetrics } from './MessageMetrics';
 import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+// import QuoteAttachment from '../Attachments/QuoteAttachment';
 
 const MessageCss = css`
   display: flex;
@@ -59,6 +61,7 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
+  const { quotedMessages, addQuotedMessage } = useQuoteMessage();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -133,6 +136,7 @@ const Message = ({
     openThread(msg);
   };
 
+
   const context = useMemo(
     () => ({
       action: async ({ actionId, value, blockId, appId }) => {
@@ -157,11 +161,18 @@ const Message = ({
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
+
+  console.log(message);
+  console.log(message.attachments);
+  console.log(!!message.attachments);
+
   return (
     <>
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
+        isEditing={editMessage.id === message._id}
+        isPending={message.isPending}
         style={styleOverrides}
       >
         {showAvatar && (
@@ -173,12 +184,12 @@ const Message = ({
         )}
         <MessageBodyContainer>
           {shouldShowHeader && <MessageHeader message={message} />}
-          {!message.t ? (
+          {!(!!message.t) ? (
             <>
               <MessageBody
                 className={message.isPending ? classes.PendingMessageBody : ''}
               >
-                {message.attachments && message.attachments.length > 0 ? (
+                {!!message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
                     <Attachments attachments={message.attachments} />
@@ -186,7 +197,8 @@ const Message = ({
                 ) : (
                   <Markdown body={message} isReaction={false} />
                 )}
-                {message.blocks && (
+
+                {!!message.blocks && (
                   <kitContext.Provider value={context} mid={message.mid}>
                     <UiKitComponent
                       render={UiKitMessage}
@@ -204,22 +216,23 @@ const Message = ({
             </>
           ) : (
             <>
-              {message.attachments && (
+              {!!message.attachments && (
                 <Attachments attachments={message.attachments} />
               )}
             </>
           )}
-          {message.tcount && variant !== 'thread' ? (
+          {!!message.tcount && variant !== 'thread' ? (
             <MessageMetrics
               message={message}
               handleOpenThread={handleOpenThread}
             />
           ) : null}
-          {!message.t ? (
+          {!(!!message.t) ? (
             <MessageToolbox
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
+              handleQuoteMessage={addQuotedMessage}
               handleOpenThread={handleOpenThread}
               handleDeleteMessage={handleDeleteMessage}
               handleStarMessage={handleStarMessage}
@@ -241,6 +254,11 @@ const Message = ({
           ) : (
             <></>
           )}
+          {/* {!!quotedMessages && quotedMessages.length > 0 && (
+            quotedMessages?.map((attachment, index) => (
+              <QuoteAttachment key={index} attachment={attachment} />
+            ))
+          )} */}
         </MessageBodyContainer>
       </Box>
       {newDay ? (

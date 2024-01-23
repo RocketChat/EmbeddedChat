@@ -17,6 +17,7 @@ import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import { ToastBarProvider } from './ToastBar';
+import { QuoteMessageProvider } from '../context/QuoteMessageContext';
 import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
@@ -187,47 +188,49 @@ const EmbeddedChat = ({
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (!!data ?
-            <>
-              <AttachmentWindow />
-            </>
-            :
-            <ValidateComponent data={data} />
-          ) : null}
-          <Box
-            css={[
-              styles.embeddedchat,
-              css`
+          <QuoteMessageProvider>
+            {attachmentWindowOpen ? (!!data ?
+              <>
+                <AttachmentWindow />
+              </>
+              :
+              <ValidateComponent data={data} />
+            ) : null}
+            <Box
+              css={[
+                styles.embeddedchat,
+                css`
                 width: ${width};
                 height: ${height};
               `,
-              fullScreen && styles.fullscreen,
-            ]}
-            className={`ec-embedded-chat ${className} ${classNames}`}
-            style={{ ...style, ...styleOverrides }}
-          >
-            {hideHeader ? null : (
-              <ChatHeader
-                channelName={channelName}
-                isClosable={isClosable}
-                setClosableState={setClosableState}
-                moreOpts={moreOpts}
-                fullScreen={fullScreen}
-                setFullScreen={setFullScreen}
-              />
-            )}
-            {isUserAuthenticated || anonymousMode ? (
-              <ChatBody
-                height={!fullScreen ? height : '88vh'}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-              />
-            ) : (
-              <Home height={!fullScreen ? height : '88vh'} />
-            )}
-            <ChatInput scrollToBottom={scrollToBottom} />
-          </Box>
+                fullScreen && styles.fullscreen,
+              ]}
+              className={`ec-embedded-chat ${className} ${classNames}`}
+              style={{ ...style, ...styleOverrides }}
+            >
+              {hideHeader ? null : (
+                <ChatHeader
+                  channelName={channelName}
+                  isClosable={isClosable}
+                  setClosableState={setClosableState}
+                  moreOpts={moreOpts}
+                  fullScreen={fullScreen}
+                  setFullScreen={setFullScreen}
+                />
+              )}
+              {isUserAuthenticated || anonymousMode ? (
+                <ChatBody
+                  height={!fullScreen ? height : '88vh'}
+                  anonymousMode={anonymousMode}
+                  showRoles={showRoles}
+                  messageListRef={messageListRef}
+                />
+              ) : (
+                <Home height={!fullScreen ? height : '88vh'} />
+              )}
+              <ChatInput scrollToBottom={scrollToBottom} />
+            </Box>
+          </QuoteMessageProvider>
         </RCInstanceProvider>
       </ToastBarProvider>
     </ThemeProvider>
