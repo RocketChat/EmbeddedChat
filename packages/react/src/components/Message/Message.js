@@ -20,6 +20,7 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 
 const MessageCss = css`
   display: flex;
@@ -71,6 +72,8 @@ const Message = ({
     setEditMessage: state.setEditMessage,
   }));
   const openThread = useMessageStore((state) => state.openThread);
+
+  const { addQuotedMessage } = useQuoteMessage();
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -220,6 +223,7 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
+              handleQuoteMessage={addQuotedMessage}
               handleOpenThread={handleOpenThread}
               handleDeleteMessage={handleDeleteMessage}
               handleStarMessage={handleStarMessage}

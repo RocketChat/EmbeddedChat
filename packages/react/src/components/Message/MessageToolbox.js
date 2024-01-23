@@ -85,7 +85,7 @@ export const MessageToolbox = ({
             ghost
             size="small"
             icon="quote"
-            onClick={handleQuoteMessage}
+            onClick={() => handleQuoteMessage(message)}
           />
           {!isThreadMessage ? (
             <ActionButton

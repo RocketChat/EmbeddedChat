@@ -23,6 +23,8 @@ import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import QuoteAttachment from '../Attachments/QuoteAttachment';
+import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -410,8 +412,25 @@ const ChatInput = ({ scrollToBottom }) => {
       sendTypingStop();
     }
   };
+
+  const { quotedMessages, onCancel } = useQuoteMessage();
+
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
+      <Box
+        css={css`
+          overflow-y: auto;
+          max-height: 300px;
+        `}
+      >
+        {quotedMessages?.map((attachment, index) => (
+          <QuoteAttachment
+            key={index}
+            attachment={attachment}
+            onCancel={() => onCancel(index)} // Pass onCancel function
+          />
+        ))}
+      </Box>
       <Box
         css={css`
           margin-inline-start: 20px;
