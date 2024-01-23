@@ -1,8 +1,12 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import RCContext from './RCInstance';
 
 const QuoteMessageContext = createContext();
 
-export const QuotedMessagesProvider = ({ children }) => {
+export const QuoteMessageProvider = ({ children }) => {
+   const { RCInstance } = useContext(RCContext);
+   let host = RCInstance.getHost();
+   console.log(host);
    const [quotedMessages, setQuotedMessages] = useState([]);
 
    const addQuotedMessage = useCallback(async (message) => {
@@ -10,17 +14,7 @@ export const QuotedMessagesProvider = ({ children }) => {
       const {
          attachments,
          channels,
-         editedAt,
-         editedBy,
-         reactions,
-         replies,
-         t,
-         tcount,
-         tlm,
          md,
-         file,
-         files,
-         groupable,
          mentions,
          msg,
          rid,
@@ -36,40 +30,30 @@ export const QuotedMessagesProvider = ({ children }) => {
 
       if (!isMessageAlreadyAdded) {
          const quotedMessage = {
-            attachments,
-            channels,
-            editedAt,
-            editedBy,
-            reactions,
-            replies,
-            t,
-            tcount,
-            tlm,
-            md,
-            file,
-            files,
-            groupable,
-            mentions,
-            msg,
-            rid,
-            ts,
-            u,
-            urls,
-            _id,
-            _updatedAt
+            attachments: attachments,
+            channels: channels,
+            md: md,
+            mentions: mentions,
+            text: msg,
+            rid: rid,
+            ts: ts,
+            author_icon: `/avatar/${u.username}`,
+            author_name: u.name,
+            author_username: u.username,
+            urls: urls,
+            _id: _id,
+            _updatedAt: _updatedAt
          };
          setQuotedMessages((prevMessages) => [...prevMessages, quotedMessage]);
+         console.log(quotedMessage);
       }
    }, [quotedMessages]);
-
-   useEffect(() => {
-      console.log(quotedMessages);
-   }, [quotedMessages])
 
    const removeQuotedMessage = useCallback(async (index) => {
       setQuotedMessages((prevMessages) => {
          const newMessages = [...prevMessages];
          newMessages.splice(index, 1);
+         console.log(newMessages);
          return newMessages;
       });
    }, []);
@@ -77,6 +61,9 @@ export const QuotedMessagesProvider = ({ children }) => {
    const clearQuotedMessages = useCallback(async () => {
       setQuotedMessages([]);
    }, []);
+
+   console.log(quotedMessages);
+
 
    return (
       <QuoteMessageContext.Provider
@@ -91,5 +78,6 @@ export const QuotedMessagesProvider = ({ children }) => {
       </QuoteMessageContext.Provider>
    );
 };
+
 
 export default QuoteMessageContext;

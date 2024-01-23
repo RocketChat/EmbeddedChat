@@ -18,7 +18,7 @@ import { MessageMetrics } from './MessageMetrics';
 import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import { useQuotedMessages } from '../../context/QuotedMessagesContext';
+import { useQuoteMessage } from '../../hooks/useQuoteMessage';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import QuoteAttachment from '../Attachments/QuoteAttachment';
@@ -61,7 +61,7 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
-  const { quotedMessages, addQuotedMessage } = useQuotedMessages();
+  const { quotedMessages, addQuotedMessage, removeQuotedMessage } = useQuoteMessage();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -253,6 +253,12 @@ const Message = ({
             />
           ) : (
             <></>
+          )}
+          {!!quotedMessages && quotedMessages.length > 0 && quotedMessages[0]._id === message._id && (
+            <QuoteAttachment
+              attachment={quotedMessages[0]}
+              onCancel={() => removeQuotedMessage(0)}
+            />
           )}
         </MessageBodyContainer>
       </Box>

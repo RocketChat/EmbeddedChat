@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Attachments from './Attachments';
 import { css } from '@emotion/react';
@@ -6,6 +6,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { format, isSameDay } from 'date-fns';
+import RCContext from '../../context/RCInstance';
 
 const quoteStyles = css`
   display: flex;
@@ -38,7 +39,7 @@ const quoteStyles = css`
     width: 24px;
     height: 24px;
     margin-right: 8px;
-    border-radius: 50%;
+    border-radius: 15%;
   }
 
   .rcx-attachment__author-name {
@@ -49,6 +50,7 @@ const quoteStyles = css`
     white-space: nowrap;
     max-width: max-content;
     margin-right: 10px;
+    color: #93979e;
   }
 
   .rcx-attachment__time {
@@ -88,11 +90,21 @@ const quoteStyles = css`
 `;
 
 const QuoteAttachment = ({ attachment, onCancel }) => {
+
+   const { RCInstance } = useContext(RCContext);
+   // console.log(RCContext);
+   // console.log(RCInstance);
+   let host = RCInstance.getHost();
+
    console.log(attachment);
+   // console.log(host);
 
    const formatTime = (timestamp) => {
+      console.log('Timestamp: ', timestamp);
       const messageDate = new Date(timestamp);
       const currentDate = new Date();
+
+      console.log(messageDate + '/' + currentDate);
 
       if (isSameDay(messageDate, currentDate)) {
          return format(messageDate, 'hh:mm a');
@@ -106,13 +118,15 @@ const QuoteAttachment = ({ attachment, onCancel }) => {
          <Box className="rcx-attachment__details">
             <Box className="rcx-attachment__content">
                <Box className="rcx-attachment__author">
-                  {/* {!!attachment.author_icon && (
-                  <Box
-                     className="rcx-attachment__author-avatar"
-                  />
-               )} */}
+                  {!!attachment.author_icon && (
+                     <Box
+                        className="rcx-attachment__author-avatar"
+                        is="img"
+                        src={`${host}${attachment.author_icon}`}
+                     />
+                  )}
                   <Box className="rcx-attachment__author-name">
-                     <b>{attachment.u.username}</b>
+                     <b>{attachment.author_name}</b>
                   </Box>
                   {!!attachment.ts && (
                      <Box className="rcx-attachment__time">
@@ -121,7 +135,7 @@ const QuoteAttachment = ({ attachment, onCancel }) => {
                   )}
                </Box>
                <Box>
-                  <Box className="rcx-message-body">{attachment.msg}</Box>
+                  <Box className="rcx-message-body">{attachment.text}</Box>
                </Box>
                {!!attachment.attachments && (
                   <Box className="rcx-attachment__content">
