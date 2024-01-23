@@ -142,6 +142,9 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
+    console.log(message);
+    console.log(messageRef);
+
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
       if (editMessage.msg) {
@@ -413,24 +416,38 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const { quotedMessages, onCancel } = useQuoteMessage();
+  const { quotedMessages, removeQuotedMessage } = useQuoteMessage();
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box
-        css={css`
-          overflow-y: auto;
-          max-height: 300px;
+      {(!!quotedMessages && quotedMessages.length > 0) && (
+        <Box
+          css={css`
+            overflow-y: auto;
+            max-height: 300px; /* Adjust the max height as needed */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #8d8d8d transparent; /* For Firefox */
+            &::-webkit-scrollbar {
+              width: 7px;
+            }
+            &::-webkit-scrollbar-thumb {
+              background-color: #8d8d8d;
+              border-radius: 4px;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+              background-color: #555;
+            }
+            &::-webkit-scrollbar-track {
+              background-color: transparent;
+            }
         `}
-      >
-        {quotedMessages?.map((attachment, index) => (
-          <QuoteAttachment
-            key={index}
-            attachment={attachment}
-            onCancel={() => onCancel(index)} // Pass onCancel function
-          />
-        ))}
-      </Box>
+        >
+          {quotedMessages?.map((attachment, index) => (
+            <QuoteAttachment key={index} attachment={attachment} onCancel={removeQuotedMessage} />
+          ))}
+        </Box>
+      )}
+
       <Box
         css={css`
           margin-inline-start: 20px;

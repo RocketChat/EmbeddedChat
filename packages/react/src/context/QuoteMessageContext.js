@@ -1,19 +1,72 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useEffect } from 'react';
 
 const QuoteMessageContext = createContext();
 
-export const QuoteMessageProvider = ({ children }) => {
+export const QuotedMessagesProvider = ({ children }) => {
    const [quotedMessages, setQuotedMessages] = useState([]);
 
-   const addQuotedMessage = useCallback((message) => {
-      setQuotedMessages((prevMessages) => {
-         const newMessages = [...prevMessages, message];
-         console.log(newMessages);
-         return newMessages;
-      });
-   }, []);
+   const addQuotedMessage = useCallback(async (message) => {
+      console.log(message);
+      const {
+         attachments,
+         channels,
+         editedAt,
+         editedBy,
+         reactions,
+         replies,
+         t,
+         tcount,
+         tlm,
+         md,
+         file,
+         files,
+         groupable,
+         mentions,
+         msg,
+         rid,
+         ts,
+         u,
+         urls,
+         _id,
+         _updatedAt
+      } = message;
 
-   const removeQuotedMessage = useCallback((index) => {
+      // Check if the message with the same _id already exists
+      const isMessageAlreadyAdded = quotedMessages.some((quotedMsg) => quotedMsg._id === _id);
+
+      if (!isMessageAlreadyAdded) {
+         const quotedMessage = {
+            attachments,
+            channels,
+            editedAt,
+            editedBy,
+            reactions,
+            replies,
+            t,
+            tcount,
+            tlm,
+            md,
+            file,
+            files,
+            groupable,
+            mentions,
+            msg,
+            rid,
+            ts,
+            u,
+            urls,
+            _id,
+            _updatedAt
+         };
+         setQuotedMessages((prevMessages) => [...prevMessages, quotedMessage]);
+      }
+   }, [quotedMessages]);
+
+   useEffect(() => {
+      console.log(quotedMessages);
+   }, [quotedMessages])
+
+   const removeQuotedMessage = useCallback(async (index) => {
       setQuotedMessages((prevMessages) => {
          const newMessages = [...prevMessages];
          newMessages.splice(index, 1);
@@ -21,23 +74,14 @@ export const QuoteMessageProvider = ({ children }) => {
       });
    }, []);
 
-   const clearQuotedMessages = useCallback(() => {
+   const clearQuotedMessages = useCallback(async () => {
       setQuotedMessages([]);
    }, []);
-
-   const onCancel = useCallback((index) => {
-      const updatedQuotedMessages = [...quotedMessages];
-      updatedQuotedMessages.splice(index, 1);
-      // Update the state or perform any other necessary actions
-      // For example, if using React hooks, you can do something like this:
-      setQuotedMessages(updatedQuotedMessages);
-   }, [quotedMessages, setQuotedMessages]);
 
    return (
       <QuoteMessageContext.Provider
          value={{
             quotedMessages,
-            onCancel,
             addQuotedMessage,
             removeQuotedMessage,
             clearQuotedMessages,
