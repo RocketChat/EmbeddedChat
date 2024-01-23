@@ -43,6 +43,7 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  handleQuoteMessage,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -80,6 +81,12 @@ export const MessageToolbox = ({
           style={styleOverrides}
           {...props}
         >
+          <ActionButton
+            ghost
+            size="small"
+            icon="quote"
+            onClick={handleQuoteMessage}
+          />
           {!isThreadMessage ? (
             <ActionButton
               ghost
@@ -92,9 +99,9 @@ export const MessageToolbox = ({
             ghost
             size="small"
             icon={`${message.starred &&
-                message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
+              message.starred.find((u) => u._id === authenticatedUserId)
+              ? 'star-filled'
+              : 'star'
               }`}
             onClick={() => handleStarMessage(message)}
           />
