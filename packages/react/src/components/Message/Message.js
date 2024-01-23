@@ -61,7 +61,7 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
-  const { quotedMessages, addQuotedMessage, removeQuotedMessage } = useQuoteMessage();
+  const { quotedMessages, addQuotedMessage } = useQuoteMessage();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -254,12 +254,11 @@ const Message = ({
           ) : (
             <></>
           )}
-          {!!quotedMessages && quotedMessages.length > 0 && quotedMessages[0]._id === message._id && (
-            <QuoteAttachment
-              attachment={quotedMessages[0]}
-              onCancel={() => removeQuotedMessage(0)}
-            />
-          )}
+          {/* {!!quotedMessages && quotedMessages.length > 0 && (
+            quotedMessages?.map((attachment, index) => (
+              <QuoteAttachment key={index} attachment={attachment} />
+            ))
+          )} */}
         </MessageBodyContainer>
       </Box>
       {newDay ? (

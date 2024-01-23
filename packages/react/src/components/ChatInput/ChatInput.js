@@ -25,6 +25,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import QuoteAttachment from '../Attachments/QuoteAttachment';
 import { useQuoteMessage } from '../../hooks/useQuoteMessage';
+import PinnedAttachment from '../Attachments/PinnedAttachment';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -424,9 +425,9 @@ const ChatInput = ({ scrollToBottom }) => {
         <Box
           css={css`
             overflow-y: auto;
-            max-height: 300px; /* Adjust the max height as needed */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #8d8d8d transparent; /* For Firefox */
+            max-height: 250px; 
+            scrollbar-width: thin; 
+            scrollbar-color: #8d8d8d transparent; 
             &::-webkit-scrollbar {
               width: 7px;
             }
@@ -443,7 +444,7 @@ const ChatInput = ({ scrollToBottom }) => {
         `}
         >
           {quotedMessages?.map((attachment, index) => (
-            <QuoteAttachment key={index} attachment={attachment} onCancel={removeQuotedMessage} />
+            <PinnedAttachment key={index} attachment={attachment} onCancel={removeQuotedMessage} />
           ))}
         </Box>
       )}
