@@ -23,6 +23,7 @@ const Button = ({
   square = false,
   ghost = false,
   disabled = false,
+  icon,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
@@ -86,7 +87,6 @@ const Button = ({
       padding: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
       flex-shrink: 0;
     }
     &.disabled:not(.ghost) {

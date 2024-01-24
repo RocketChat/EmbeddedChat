@@ -52,8 +52,17 @@ const MessageList = ({ messages, handleGoBack }) => {
           );
         })}
       {filtered && (
-        <Box>
-          <Button size="small" onClick={handleGoBack}>
+        <Box style={{ marginLeft: '1.3rem' }}>
+          <Button
+            style={{
+              display: 'inline-flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            icon={Icon}
+            size="small"
+            onClick={handleGoBack}
+          >
             <Icon
               style={{ marginInlineEnd: '0.4rem' }}
               name="back"
