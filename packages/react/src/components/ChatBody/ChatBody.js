@@ -13,6 +13,7 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import { Home } from '../Home';
 
 const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
@@ -85,6 +86,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     async (anonymousMode) => {
       try {
         if (!isUserAuthenticated && !anonymousMode) {
+          setMessages([]);
           return;
         }
         const { messages } = await RCInstance.getMessages(
@@ -274,6 +276,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
       className={`ec-chat-body ${classNames}`}
       height={height}
     >
+      {!isUserAuthenticated && !anonymousMode && <Home height={height} />}
+
       {onDrag ? (
         <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
           Drop to upload file
@@ -287,8 +291,11 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
       ) : (
         <MessageList messages={messages} handleGoBack={handleGoBack} />
       )}
+
       <TotpModal handleLogin={handleLogin} />
+
       <LoginForm />
+
       {isModalOpen && (
         <ModalBlock
           appId={viewData.appId}

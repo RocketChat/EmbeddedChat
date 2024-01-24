@@ -6,7 +6,6 @@ import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatBody } from './ChatBody';
 import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
-import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentWindow from './Attachments/AttachmentWindow';
@@ -216,16 +215,11 @@ const EmbeddedChat = ({
                 setFullScreen={setFullScreen}
               />
             )}
-            {isUserAuthenticated || anonymousMode ? (
-              <ChatBody
-                height={!fullScreen ? height : '88vh'}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-              />
-            ) : (
-              <Home height={!fullScreen ? height : '88vh'} />
-            )}
+            <ChatBody
+              height={!fullScreen ? height : '88vh'}
+              anonymousMode={anonymousMode}
+              showRoles={showRoles}
+            />
             <ChatInput scrollToBottom={scrollToBottom} />
           </Box>
         </RCInstanceProvider>
