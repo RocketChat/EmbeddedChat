@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { Avatar } from '../Avatar/Avatar';
 import RCContext from '../../context/RCInstance';
@@ -10,12 +10,10 @@ import { ActionButton } from '../ActionButton';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
-
   const channelInfo = useChannelStore((state) => state.channelInfo);
-
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
+  const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
+  const setShowChannelinfo = useChannelStore((state) => state.setShowChannelinfo);
+  const [visiblState, setvisibleState] = useState(false);
 
   const toggleshowRoominfo = () => {
     setShowChannelinfo(false);
@@ -25,8 +23,41 @@ const Roominfo = () => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
+
+  const componentRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setvisibleState(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
+
+    if (componentRef.current) {
+      observer.observe(componentRef.current);
+    }
+    return () => {
+      if (componentRef.current) {
+        observer.unobserve(componentRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (componentRef.current && !componentRef.current.contains(event.target) && visiblState) {
+        setShowChannelinfo(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [visiblState]);
+
   return (
-    <Box className={classes.component} style={{ padding: '16px' }}>
+    <Box ref={componentRef} className={classes.component} style={{ padding: '16px', overflow: "hidden" }}>
       <Box
         css={css`
           display: flex;
