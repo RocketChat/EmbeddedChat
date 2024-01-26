@@ -407,7 +407,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const response = await fetch(
-        `${this.host}/api/v1/channels.info?roomId=${this.rid}`,
+        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -435,13 +435,14 @@ export default class EmbeddedChatApi {
    * fields - json object with properties that have either 1 or 0 to include them or exclude them
    * @returns messages
    */
-  async getMessages(anonymousMode = false, options: {
+  async getMessages(anonymousMode = false, isChannelPrivate = false, options: {
     query?: object | undefined;
     field?: object | undefined;
     } = {
       query: undefined,
       field: undefined
     }) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels' ;
     const endp = anonymousMode ? 'anonymousread' : 'messages';
     const query = options?.query
       ? `&query=${JSON.stringify(options.query)}`
@@ -452,7 +453,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const messages = await fetch(
-        `${this.host}/api/v1/channels.${endp}?roomId=${this.rid}${query}${field}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -468,19 +469,20 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getThreadMessages(tmid: string) {
-    return this.getMessages(false, {
+  async getThreadMessages(tmid: string, isChannelPrivate = false,) {
+    return this.getMessages(false, isChannelPrivate,{
       query: {
         tmid,
       },
     });
   }
 
-  async getChannelRoles() {
+  async getChannelRoles(isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels';
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const roles = await fetch(
-        `${this.host}/api/v1/channels.roles?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -796,11 +798,12 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getChannelMembers() {
+  async getChannelMembers(isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels';
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const response = await fetch(
-        `${this.host}/api/v1/channels.members?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
