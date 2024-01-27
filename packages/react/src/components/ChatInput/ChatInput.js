@@ -531,7 +531,8 @@ const ChatInput = ({ scrollToBottom }) => {
         )}
       </Box>
       {errorModal && (
-        <Modal css={css`padding: 1em;`}>
+        <Modal>
+        <Modal css={css`padding: 1em;`} onClose={closeErrorModal}>
           <Modal.Header>
             <Modal.Title>
               <Icon name="report" size="1.25rem" /> 
@@ -548,6 +549,7 @@ const ChatInput = ({ scrollToBottom }) => {
               Ok
             </Button>
           </Modal.Footer>
+        </Modal>
         </Modal>
       )}
     </Box>
