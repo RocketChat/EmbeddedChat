@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { Avatar } from '../Avatar';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import { Tooltip } from '../Tooltip';
 import RCContext from '../../context/RCInstance';
 
 const MessageAvatarContainer = ({ message, sequential, isStarred, isPinned }) => {
@@ -28,11 +29,15 @@ const MessageAvatarContainer = ({ message, sequential, isStarred, isPinned }) =>
           size={message.t ? '1.2em' : '2.25em'}
         />
       ) : null}
-      {isStarred ? (
-        <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
+      {isStarred && sequential ? (
+        <Tooltip text="Message has been starred" position="top">
+          <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
+        </Tooltip>
       ) : null}
-      {isPinned ? (
-        <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />
+      {isPinned && sequential ? (
+        <Tooltip text="Message has been pinned" position="top">
+          <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />
+        </Tooltip>
       ) : null}
     </Box>
   );

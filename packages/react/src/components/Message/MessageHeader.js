@@ -7,6 +7,7 @@ import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
+import { Tooltip } from '../Tooltip';
 
 const MessageHeaderCss = css`
   display: flex;
@@ -131,18 +132,22 @@ const MessageHeader = ({ message }) => {
           />
         )}
         {isStarred ? (
-          <Icon
-            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-            name="star-filled"
-            size="1em"
-          />
+          <Tooltip text="Message has been starred" position="top">
+            <Icon
+              style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+              name="star-filled"
+              size="1em"
+            />
+          </Tooltip>
         ) : null}
         {isPinned ? (
-          <Icon
-            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-            name="pin"
-            size="1em"
-          />
+          <Tooltip text="Message has been pinned" position="top">
+            <Icon
+              style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+              name="pin"
+              size="1em"
+            />
+          </Tooltip>
         ) : null}
       </Box>
     );
