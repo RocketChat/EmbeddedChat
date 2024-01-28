@@ -37,8 +37,8 @@ const ChatHeader = ({
   const setShowChannelinfo = useChannelStore(
     (state) => state.setShowChannelinfo
   );
-  const isChannelPrivate = useChannelStore((state)=>state.isChannelPrivate);
-  const setIsChannelPrivate = useChannelStore((state)=>state.setIsChannelPrivate);
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const setIsChannelPrivate = useChannelStore((state) => state.setIsChannelPrivate);
 
   const { RCInstance } = useRCContext();
 
@@ -120,7 +120,7 @@ const ChatHeader = ({
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.room);
-        if(res.room.t === 'p') setIsChannelPrivate(true);
+        if (res.room.t === 'p') setIsChannelPrivate(true);
       } else {
         if ('errorType' in res && res.errorType === 'error-room-not-found') {
           dispatchToastMessage({
