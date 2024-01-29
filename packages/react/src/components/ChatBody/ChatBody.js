@@ -99,6 +99,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
             }
             : undefined
         );
+
         if (messages) {
           setMessages(messages.filter((message) => message._hidden !== true));
         }

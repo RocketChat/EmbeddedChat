@@ -34,7 +34,7 @@ import Trash from './Trash';
 import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
-
+import Copy from './Copy';
 const icons = {
   file: File,
   mobile: Mobile,
@@ -71,6 +71,7 @@ const icons = {
   trash: Trash,
   kebab: Kebab,
   check: Check,
+  copy:Copy,
   'error-circle': ErrorCircle,
 };
 

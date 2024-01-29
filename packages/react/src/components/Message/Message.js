@@ -20,6 +20,9 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+import { useChannelStore } from '../../store';
+
+import { de } from 'date-fns/locale';
 
 const MessageCss = css`
   display: flex;
@@ -60,6 +63,8 @@ const Message = ({
     style
   );
   const { RCInstance } = useContext(RCContext);
+  const channelInfo = useChannelStore((state) => state.channelInfo);
+ 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
@@ -110,7 +115,6 @@ const Message = ({
 
   const handleDeleteMessage = async (message) => {
     const res = await RCInstance.deleteMessage(message._id);
-
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
@@ -120,6 +124,49 @@ const Message = ({
       dispatchToastMessage({
         type: 'error',
         message: 'Error in deleting message',
+      });
+    }
+  };
+
+  const handleCopyMessage = async (message) => {
+    navigator.clipboard.writeText(message.msg)
+      .then(() => {
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message copied successfully',
+        });
+      })
+      .catch(err => {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error in copying message',
+        });
+      });
+  };
+  const getMessageLink = async (id) => {
+    try {
+      const host = await RCInstance.getHost();
+      const res = await RCInstance.channelInfo();
+      console.log(res)
+      return `${host}/channel/${res.channel.name}/?msg=${id}`;
+    } catch (err) {
+      console.log(err);
+      throw err; 
+    }
+  };
+  
+  const handleCopyMessageLink = async (message) => {
+    try {
+      const messageLink = await getMessageLink(message._id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
       });
     }
   };
@@ -222,8 +269,11 @@ const Message = ({
               authenticatedUserId={authenticatedUserId}
               handleOpenThread={handleOpenThread}
               handleDeleteMessage={handleDeleteMessage}
+              handleCopyMessage={handleCopyMessage}
               handleStarMessage={handleStarMessage}
               handlePinMessage={handlePinMessage}
+              handleCopyMessageLink={handleCopyMessageLink}
+
               handleEditMessage={() => {
                 if (editMessage._id === message._id) {
                   setEditMessage({});

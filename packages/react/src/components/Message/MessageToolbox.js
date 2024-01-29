@@ -48,8 +48,10 @@ export const MessageToolbox = ({
   handlePinMessage,
   handleStarMessage,
   handleDeleteMessage,
+  handleCopyMessage,
   handlerReportMessage,
   handleEditMessage,
+  handleCopyMessageLink,
   isEditing = false,
   ...props
 }) => {
@@ -135,6 +137,20 @@ export const MessageToolbox = ({
                 icon="edit"
                 onClick={() => handleEditMessage(message)}
               />
+              
+              <ActionButton
+                ghost
+                size="small"
+                icon="link"
+                onClick={() => handleCopyMessageLink(message)}
+              />
+              <ActionButton
+                ghost
+                size="small"
+                icon="copy"
+                onClick={() => handleCopyMessage(message)}
+              />
+
               <ActionButton
                 ghost
                 size="small"
