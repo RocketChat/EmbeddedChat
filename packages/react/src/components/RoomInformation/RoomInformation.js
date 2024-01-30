@@ -29,7 +29,6 @@ const Roominfo = () => {
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.channel);
-        console.log(channelInfo,"channelInfo 2")
       }
     };
 
