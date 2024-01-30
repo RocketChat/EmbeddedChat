@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { Avatar } from '../Avatar/Avatar';
 import RCContext from '../../context/RCInstance';
 import classes from './RoomInformation.module.css';
-import { useChannelStore } from '../../store';
+import { useChannelStore, useUserStore } from '../../store';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
@@ -12,14 +12,31 @@ const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
-
+  const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(
     (state) => state.setShowChannelinfo
+  );
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
   );
 
   const toggleshowRoominfo = () => {
     setShowChannelinfo(false);
   };
+
+  useEffect(() => {
+    const getChannelInfo = async () => {
+      const res = await RCInstance.channelInfo();
+      if (res.success) {
+        setChannelInfo(res.channel);
+        console.log(channelInfo,"channelInfo 2")
+      }
+    };
+
+    if(isUserAuthenticated){
+      getChannelInfo();
+    }
+  }, [isUserAuthenticated, RCInstance, setChannelInfo]);
 
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
