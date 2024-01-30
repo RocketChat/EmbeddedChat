@@ -6,7 +6,7 @@ import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserInfoStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
@@ -53,6 +53,7 @@ const Message = ({
   showAvatar = false,
   className = '',
   style = {},
+  setSelectedMsg
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -62,6 +63,7 @@ const Message = ({
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
+  const setShowUserInfo = useUserInfoStore((state) => state.setShowUserInfo);
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
@@ -157,6 +159,12 @@ const Message = ({
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
+  
+  const handleHeaderClick = (message) => {
+    setShowUserInfo(true);
+    setSelectedMsg(message)
+  };
+
   return (
     <>
       <Box
@@ -164,6 +172,7 @@ const Message = ({
         css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
         style={styleOverrides}
       >
+        <Box onClick={() => handleHeaderClick(message)}>
         {showAvatar && (
           <MessageAvatarContainer
             message={message}
@@ -171,6 +180,7 @@ const Message = ({
             isStarred={isStarred}
           />
         )}
+        </Box>
         <MessageBodyContainer>
           {shouldShowHeader && <MessageHeader message={message} />}
           {!message.t ? (

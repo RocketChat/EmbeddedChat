@@ -403,6 +403,26 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getUserByUsername(username: string) {
+    try {
+      const { userId, authToken } = await this.auth.getCurrentUser() || {};
+      const response = await fetch(
+        `${this.host}/api/v1/users.info?username=${username}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': authToken,
+            'X-User-Id': userId,
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async channelInfo() {
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
