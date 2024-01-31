@@ -57,7 +57,7 @@ const Throbber = forwardRef(
   ) => {
     const ThrobberCss = css`
       display: flex;
-      justify-content: center;
+      width: fit-content
       margin-block: -0.125rem;
     `;
     return (
