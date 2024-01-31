@@ -16,10 +16,11 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
+  margin-bottom: 1rem;
 }
 
 .textInput {
-  width: 65%;
+  width: 75%;
   height: 2.5rem;
   border: none;
   outline: none;
