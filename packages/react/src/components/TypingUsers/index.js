@@ -10,11 +10,20 @@ export default function TypingUsers() {
   const [typingUsers, setTypingUsers] = useState([]);
 
   useEffect(() => {
-    RCInstance?.addTypingStatusListener((t) => {
-      setTypingUsers((t || []).filter((u) => u !== currentUserName));
-    });
-    return () => RCInstance?.removeTypingStatusListener(setTypingUsers);
-  }, [RCInstance, setTypingUsers, currentUserName]);
+    if (!RCInstance) return;
+
+    const handleTypingStatusChange = (users) => {
+      setTypingUsers((prevUsers) => (
+        users.filter((user) => user !== currentUserName)
+      ));
+    };
+
+    RCInstance.addTypingStatusListener(handleTypingStatusChange);
+
+    return () => {
+      RCInstance.removeTypingStatusListener(handleTypingStatusChange);
+    };
+  }, [RCInstance, currentUserName]);
 
   const typingStatusMessage = useMemo(() => {
     if (typingUsers.length === 0) return '';
