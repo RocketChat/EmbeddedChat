@@ -13,10 +13,12 @@ import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
+import AllThreads from '../AllThreads/AllThreads';
 import { Message } from '../Message';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
+import useThreadsMessageStore from '../../store/threadsMessageStore';
 
 const MessageList = ({ messages, handleGoBack }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -27,6 +29,7 @@ const MessageList = ({ messages, handleGoBack }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
+  const showAllThreads = useThreadsMessageStore((state) => state.showAllThreads);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -68,6 +71,7 @@ const MessageList = ({ messages, handleGoBack }) => {
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
+      {showAllThreads && <AllThreads />}
     </>
   );
 };
