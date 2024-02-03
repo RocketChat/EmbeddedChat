@@ -11,40 +11,44 @@ const buttonStyle = css`
   left: 50%;
   transform: translateX(-50%);
   user-select: none;
-  animation: fadeIn 0.5s ease-in-out;
+  opacity: 0;
+  animation: fadeInAndMoveUp 1s ease-in-out forwards;
 
   &.not {
     visibility: hidden;
   }
 
   &.clicked {
-    animation: fadeOut 1s linear forwards, moveDown 1s linear forwards;
+    animation: fadeOutAndMoveUp 1s ease-in-out forwards;
   }
 
-  @keyframes fadeIn {
+  @keyframes fadeInAndMoveUp {
     from {
       opacity: 0;
+      transform: translateY(20px) translateX(-50%);
     }
     to {
       opacity: 1;
+      transform: translateY(0) translateX(-50%);
     }
   }
 
-  @keyframes fadeOut {
+  @keyframes fadeOutAndMoveUp {
     50% {
       opacity: 1;
     }
     100% {
       opacity: 0;
+      transform: translateY(-20px) translateX(-50%);
       visibility: hidden;
     }
   }
+`;
 
-  @keyframes moveDown {
-    to {
-      transform: translateY(50px); // Adjust the distance to move downward
-    }
-  }
+const textAndIconContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const RecentMessageButton = ({ visible, onClick, text }) => {
@@ -65,14 +69,14 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
       }}
       style={{
         cursor: 'pointer',
-        // display: 'inline-block',
-        padding: '0',
-        // backgroundColor: 'transparent',
+        padding: '3px 5px 10px 6px',
         borderRadius: '20px'
       }}
     >
-      {text}
-      <Icon name="arrow-down" size={16} />
+      <div css={textAndIconContainer}>
+        {text}
+        <Icon name="arrow-down" size={16} />
+      </div>
     </Button>
     // </Box>
   );

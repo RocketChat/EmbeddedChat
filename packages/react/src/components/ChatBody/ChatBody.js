@@ -300,17 +300,13 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
       messageListRef.current.scrollTop + messageListRef.current.clientHeight <
       messageListRef.current.scrollHeight
     );
-    // console.log(messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-    //   messageListRef.current.scrollHeight);
-    // console.log(isUserScrolledUp);
+    console.log(messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+      messageListRef.current.scrollHeight);
+    console.log(isUserScrolledUp);
 
-    // Reset otherUserMessage when the user scrolls to the bottom
-    console.log(messageListRef.current.scrollTop + messageListRef.current.clientHeight >= messageListRef.current.scrollHeight);
 
     // Check if the user has scrolled to the bottom
-    const isAtBottom =
-      messageListRef.current.scrollTop + messageListRef.current.clientHeight >=
-      messageListRef.current.scrollHeight;
+    const isAtBottom = messageListRef.current.scrollTop === 0;
 
     // Hide the popup when the user scrolls to the bottom manually
     if (isAtBottom) {
