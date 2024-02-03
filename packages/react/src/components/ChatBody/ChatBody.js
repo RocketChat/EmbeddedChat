@@ -258,47 +258,127 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     setData(e.dataTransfer.files[0]);
   };
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [newMessagesAvailable, setNewMessagesAvailable] = useState(false);
+  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
+
+
+  const handleScroll = () => {
+    // Update the scroll position when the user scrolls
+    setScrollPosition(messageListRef.current.scrollTop);
+
+    // Check if the user has scrolled up
+    setIsUserScrolledUp(
+      messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+      messageListRef.current.scrollHeight
+    );
+  };
+
+  const showNewMessagesPopup = () => {
+    // Implement the logic to show a popup notifying about new messages
+
+    setPopupVisible(true);
+    setNewMessagesAvailable(true);
+  };
+
+  const handlePopupClick = () => {
+    // Trigger a function to scroll the chat-body to the bottom
+
+
+    // Hide the popup after clicking on it
+    setPopupVisible(false);
+
+    // Reset the newMessagesAvailable state
+    setNewMessagesAvailable(false);
+  };
+
+  useEffect(() => {
+    // Attach the scroll event listener
+    messageListRef.current.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      messageListRef.current.removeEventListener('scroll', handleScroll);
+    };
+  }, [messageListRef]);
+
+  useEffect(() => {
+    // Check if the user has scrolled up (not at the bottom)
+    const isScrolledUp =
+      scrollPosition + messageListRef.current.clientHeight <
+      messageListRef.current.scrollHeight;
+
+    // Check if there are new messages from other users
+    const hasNewMessages =
+      messages.some((message) => message.fromCurrentUser === false) &&
+      newMessagesAvailable;
+
+    if (isScrolledUp && hasNewMessages) {
+      // Show a popup to inform the user about new messages
+
+      showNewMessagesPopup();
+    } else {
+      setNewMessagesAvailable(false);
+    }
+  }, [messages, scrollPosition, newMessagesAvailable]);
+
   return (
-    <Box
-      ref={messageListRef}
-      css={ChatBodyCss}
-      style={{
-        borderLeft: '1px solid #b1b1b1',
-        borderRight: '1px solid #b1b1b1',
-        paddingTop: '70px',
-        ...styleOverrides,
-      }}
-      onDragOver={(e) => handleDrag(e)}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      className={`ec-chat-body ${classNames}`}
-      height={height}
-    >
-      {onDrag ? (
-        <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
-          Drop to upload file
-        </Box>
-      ) : null}
-      {isThreadOpen ? (
-        <ThreadMessageList
-          threadMainMessage={threadMainMessage}
-          threadMessages={threadMessages}
-        />
-      ) : (
-        <MessageList messages={messages} handleGoBack={handleGoBack} />
-      )}
-      <TotpModal handleLogin={handleLogin} />
-      <LoginForm />
-      {isModalOpen && (
-        <ModalBlock
-          appId={viewData.appId}
-          onClose={onModalClose}
-          onCancel={onModalClose}
-          onSubmit={onModalSubmit}
-          view={viewData}
-        />
-      )}
-    </Box>
+    <>
+      <Box
+        ref={messageListRef}
+        css={ChatBodyCss}
+        style={{
+          borderLeft: '1px solid #b1b1b1',
+          borderRight: '1px solid #b1b1b1',
+          paddingTop: '70px',
+          ...styleOverrides,
+        }}
+        onDragOver={(e) => handleDrag(e)}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        className={`ec-chat-body ${classNames}`}
+        height={height}
+      >
+        {onDrag ? (
+          <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
+            Drop to upload file
+          </Box>
+        ) : null}
+        {isThreadOpen ? (
+          <ThreadMessageList
+            threadMainMessage={threadMainMessage}
+            threadMessages={threadMessages}
+          />
+        ) : (
+          <MessageList messages={messages} handleGoBack={handleGoBack} />
+        )}
+        <TotpModal handleLogin={handleLogin} />
+        <LoginForm />
+        {isModalOpen && (
+          <ModalBlock
+            appId={viewData.appId}
+            onClose={onModalClose}
+            onCancel={onModalClose}
+            onSubmit={onModalSubmit}
+            view={viewData}
+          />
+        )}
+      </Box>
+      {
+        (isUserScrolledUp && (newMessagesAvailable)) && (
+          <RecentMessageButton
+            visible={popupVisible}
+            text="New messages"
+            onClick={() => {
+              handlePopupClick()
+              scrollToBottom();
+            }}
+            fullScreen={fullScreen}
+          />
+        )
+      }
+    </>
   );
 };
 
