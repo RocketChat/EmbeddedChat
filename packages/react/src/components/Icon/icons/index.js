@@ -34,6 +34,7 @@ import Trash from './Trash';
 import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
+import ArrowDown from './ArrowDown';
 
 const icons = {
   file: File,
@@ -72,6 +73,7 @@ const icons = {
   kebab: Kebab,
   check: Check,
   'error-circle': ErrorCircle,
+  'arrow-down': ArrowDown,
 };
 
 export default icons;
