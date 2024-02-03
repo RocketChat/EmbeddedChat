@@ -174,10 +174,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   const addMessage = useCallback(
     (message) => {
       if (message.u.username !== username) {
-        const isScrolledUp =
-          messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight;
-
+        const isScrolledUp = messageListRef.current.scrollTop !== 0;
         if (isScrolledUp) {
           setOtherUserMessage(true);
         }
