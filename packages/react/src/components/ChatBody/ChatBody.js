@@ -13,8 +13,9 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import RecentMessageButton from './RecentMessageButton';
 
-const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
+const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -79,6 +80,10 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
+  );
+
+  const username = useUserStore(
+    (state) => state.username
   );
 
   const getMessagesAndRoles = useCallback(
@@ -262,6 +267,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [newMessagesAvailable, setNewMessagesAvailable] = useState(false);
   const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
+  const [otherUserMessage, setOtherUserMessage] = useState(false);
 
 
   const handleScroll = () => {
@@ -273,6 +279,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
       messageListRef.current.scrollTop + messageListRef.current.clientHeight <
       messageListRef.current.scrollHeight
     );
+    console.log(messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+      messageListRef.current.scrollHeight);
+    // console.log(isUserScrolledUp);
   };
 
   const showNewMessagesPopup = () => {
@@ -287,6 +296,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
 
 
     // Hide the popup after clicking on it
+    scrollToBottom();
     setPopupVisible(false);
 
     // Reset the newMessagesAvailable state
@@ -303,23 +313,37 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     };
   }, [messageListRef]);
 
+  // useEffect(() => {
+
+  // }, [messages])
+
   useEffect(() => {
     // Check if the user has scrolled up (not at the bottom)
     const isScrolledUp =
       scrollPosition + messageListRef.current.clientHeight <
       messageListRef.current.scrollHeight;
+    console.log(isScrolledUp);
 
     // Check if there are new messages from other users
-    const hasNewMessages =
-      messages.some((message) => message.fromCurrentUser === false) &&
-      newMessagesAvailable;
 
-    if (isScrolledUp && hasNewMessages) {
+    // const hasNewMessages =
+    //   messages.some((message) => message.fromCurrentUser === false) &&
+    //   newMessagesAvailable;
+
+    const hasNewMessages = (messages.some((message) => message.u.username !== username));
+    console.log(username);
+    console.log(hasNewMessages);
+    console.log(messages);
+
+    if (hasNewMessages) {
+      setOtherUserMessage(true);
+    }
+    console.log(otherUserMessage);
+
+    if (isScrolledUp) {
       // Show a popup to inform the user about new messages
 
       showNewMessagesPopup();
-    } else {
-      setNewMessagesAvailable(false);
     }
   }, [messages, scrollPosition, newMessagesAvailable]);
 
@@ -365,19 +389,13 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
           />
         )}
       </Box>
-      {
-        (isUserScrolledUp && (newMessagesAvailable)) && (
-          <RecentMessageButton
-            visible={popupVisible}
-            text="New messages"
-            onClick={() => {
-              handlePopupClick()
-              scrollToBottom();
-            }}
-            fullScreen={fullScreen}
-          />
-        )
-      }
+      {(isUserScrolledUp && popupVisible) && (
+        <RecentMessageButton
+          visible={popupVisible}
+          text="New messages"
+          onClick={handlePopupClick}
+        />
+      )}
     </>
   );
 };

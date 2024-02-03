@@ -47,7 +47,7 @@ const buttonStyle = css`
   }
 `;
 
-const RecentMessageButton = ({ visible, onClick, text, fullScreen }) => {
+const RecentMessageButton = ({ visible, onClick, text }) => {
   const [clicked, setClicked] = useState(false);
 
   return (
@@ -57,7 +57,6 @@ const RecentMessageButton = ({ visible, onClick, text, fullScreen }) => {
         buttonStyle,
         !visible && 'not',
         clicked && 'clicked',
-        fullScreen && { position: 'relative' }
       ]}
       primary
       onClick={() => {
