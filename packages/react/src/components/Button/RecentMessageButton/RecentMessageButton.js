@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Box } from '../Box';
-import { Button } from '../Button';
+import { Button } from '..';
+import { Icon } from '../../Icon';
 import { css } from '@emotion/react';
-import { Icon } from '../Icon';
 
 
 const buttonStyle = css`
@@ -55,7 +54,6 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
   const [clicked, setClicked] = useState(false);
 
   return (
-    // <Box >
     <Button
       css={[
         buttonStyle,
@@ -78,7 +76,6 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
         <Icon name="arrow-down" size={16} />
       </div>
     </Button>
-    // </Box>
   );
 };
 

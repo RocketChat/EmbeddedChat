@@ -13,7 +13,7 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import RecentMessageButton from './RecentMessageButton';
+import RecentMessageButton from '../Button/RecentMessageButton/RecentMessageButton';
 
 const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
