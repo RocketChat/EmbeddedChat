@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '..';
-import { Icon } from '../../Icon';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 import { css } from '@emotion/react';
 
 
