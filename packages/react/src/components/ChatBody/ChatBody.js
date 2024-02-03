@@ -174,10 +174,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   const addMessage = useCallback(
     (message) => {
       if (message.u.username !== username) {
-        const isScrolledUp =
-          messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight;
-
+        const isScrolledUp = messageListRef.current.scrollTop !== 0;
         if (isScrolledUp) {
           setOtherUserMessage(true);
         }
@@ -278,37 +275,19 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   const [otherUserMessage, setOtherUserMessage] = useState(false);
 
   const handlePopupClick = () => {
-    // Trigger a function to scroll the chat-body to the bottom
-
-
-    // Hide the popup after clicking on it
-
     scrollToBottom();
     setIsUserScrolledUp(false);
     setOtherUserMessage(false);
     setPopupVisible(false);
-    // setIsButtonClicked(true);
   };
 
 
   const handleScroll = () => {
-    // Update the scroll position when the user scrolls
     setScrollPosition(messageListRef.current.scrollTop);
 
-    // Check if the user has scrolled up
-    setIsUserScrolledUp(
-      messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-      messageListRef.current.scrollHeight
-    );
-    console.log(messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-      messageListRef.current.scrollHeight);
-    console.log(isUserScrolledUp);
+    setIsUserScrolledUp(!!messageListRef.current.scrollTop);
 
-
-    // Check if the user has scrolled to the bottom
     const isAtBottom = messageListRef.current.scrollTop === 0;
-
-    // Hide the popup when the user scrolls to the bottom manually
     if (isAtBottom) {
       setPopupVisible(false);
       setIsUserScrolledUp(false);
@@ -317,52 +296,24 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   };
 
   const showNewMessagesPopup = () => {
-    // Implement the logic to show a popup notifying about new messages
-
     setPopupVisible(true);
   };
 
 
   useEffect(() => {
-    // Attach the scroll event listener
     messageListRef.current.addEventListener('scroll', handleScroll);
-
-    // Clean up the event listener on component unmount
     return () => {
       messageListRef.current.removeEventListener('scroll', handleScroll);
     };
   }, [messageListRef]);
 
-  // useEffect(() => {
-
-  // }, [messages])
 
   useEffect(() => {
-    // Check if the user has scrolled up (not at the bottom)
     const isScrolledUp =
       scrollPosition + messageListRef.current.clientHeight <
       messageListRef.current.scrollHeight;
-    console.log(isScrolledUp);
-
-    // Check if there are new messages from other users
-
-    // const hasNewMessages =
-    //   messages.some((message) => message.fromCurrentUser === false) &&
-    //   newMessagesAvailable;
-
-    // const hasNewMessages = (messages.some((message) => message.u.username !== username));
-    console.log(username);
-    // console.log(hasNewMessages);
-    console.log(messages);
-
-    // if (hasNewMessages) {
-    //   setOtherUserMessage(hasNewMessages);
-    // }
-    // console.log(otherUserMessage);
 
     if (isScrolledUp && otherUserMessage) {
-      // Show a popup to inform the user about new messages
-
       showNewMessagesPopup();
     }
   }, [scrollPosition, otherUserMessage]);
