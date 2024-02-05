@@ -9,6 +9,7 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
+  useToastStore
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
@@ -18,6 +19,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ChatHeader = ({
   isClosable,
@@ -45,6 +47,8 @@ const ChatHeader = ({
     (state) => state.setIsUserAuthenticated
   );
 
+  const dispatchToastMessage = useToastBarDispatch();
+
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
@@ -59,6 +63,7 @@ const ChatHeader = ({
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowAllThreads = useThreadsMessageStore((state => state.setShowAllThreads));
+  const toastPosition = useToastStore((state) => state.position);
 
 
   const handleLogout = useCallback(async () => {
@@ -113,7 +118,17 @@ const ChatHeader = ({
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.channel);
+      } else {
+        if ('errorType' in res && res.errorType === 'error-room-not-found') {
+          dispatchToastMessage({
+            type: 'error',
+            message: "Channel doesn't exist. Logging out.",
+            position: toastPosition,
+          });
+          await RCInstance.logout();
+        }
       }
+
     };
     if (isUserAuthenticated) {
       getChannelInfo();
