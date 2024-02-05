@@ -1,6 +1,6 @@
 import { Rocketchat } from '@rocket.chat/sdk';
 import cloneArray from './cloneArray';
-import { IRocketChatAuthOptions, RocketChatAuth } from '@embeddedchat/auth';
+import { IRocketChatAuthOptions, RocketChatAuth, ApiError } from '@embeddedchat/auth';
 
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
@@ -133,6 +133,10 @@ export default class EmbeddedChatApi {
       }
       return { status: 'success', me: data.me };
     } catch (error) {
+      if (error instanceof ApiError && error.response?.status === 401) {
+        const authErrorRes = await error.response.json();
+        return { error: authErrorRes?.error };
+      }
       console.error(error);
     }
   }
