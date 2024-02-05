@@ -17,6 +17,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
+import useThreadsMessageStore from '../../store/threadsMessageStore';
 
 const ChatHeader = ({
   isClosable,
@@ -54,6 +55,7 @@ const ChatHeader = ({
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
+  const setShowAllThreads = useThreadsMessageStore((state => state.setShowAllThreads));
 
   const handleLogout = useCallback(async () => {
     try {
@@ -95,6 +97,11 @@ const ChatHeader = ({
     if (showMembers) toggleShowMembers();
   }, [setShowChannelinfo, setShowSearch, showMembers, toggleShowMembers]);
 
+  const showAllThreads = useCallback(async () => {
+    setShowAllThreads(true);
+    setShowSearch(false);
+  }, [setShowAllThreads, setShowSearch]);
+
   useEffect(() => {
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
@@ -120,13 +127,12 @@ const ChatHeader = ({
     if (moreOpts) {
       options.push(
         ...[
-          // TODO
-          // {
-          //   id: 'thread',
-          //   action: function noRefCheck() {},
-          //   label: 'Threads',
-          //   icon: 'thread',
-          // },
+          {
+            id: 'thread',
+            action: showAllThreads,
+            label: 'Threads',
+            icon: 'thread',
+          },
           {
             id: 'members',
             action: showChannelMembers,

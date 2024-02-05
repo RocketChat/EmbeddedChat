@@ -40,6 +40,7 @@ export const MessageMetrics = ({
   message,
   style = {},
   handleOpenThread = () => { },
+  isReplyButton = true,
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(
@@ -54,9 +55,9 @@ export const MessageMetrics = ({
       style={styleOverrides}
       {...props}
     >
-      <Button size="small" onClick={handleOpenThread(message)}>
+      {isReplyButton && <Button size="small" onClick={handleOpenThread(message)}>
         Reply
-      </Button>
+      </Button>}
       <div css={MessageMetricsItemCss} title="Replies">
         <Icon size="1.25rem" name="thread" />
         <div css={MessageMetricsItemLabelCss}>{message.tcount}</div>
