@@ -57,6 +57,13 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     input.selectionEnd = input.selectionStart + selectedText.length;
   };
 
+  const popupStyle= {
+    margin: '0',
+    position: 'absolute',
+    left: '0.375rem',
+    top:'9.5rem'
+  };
+
   return (
     <Box
       css={css`
@@ -90,7 +97,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
             closeOnEscape
             disabled={isRecordingMessage}
             closeOnDocumentClick
-            position="left center"
+            contentStyle={popupStyle}
           >
             <EmojiPicker
               handleEmojiClick={(emoji) => {
