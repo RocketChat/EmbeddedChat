@@ -435,13 +435,13 @@ export default class EmbeddedChatApi {
    * fields - json object with properties that have either 1 or 0 to include them or exclude them
    * @returns messages
    */
-  async getMessages(anonymousMode = false, isChannelPrivate = false, options: {
+  async getMessages(anonymousMode = false, options: {
     query?: object | undefined;
     field?: object | undefined;
     } = {
       query: undefined,
       field: undefined
-    }) {
+    }, isChannelPrivate = false) {
     const roomType = isChannelPrivate ? 'groups' : 'channels' ;
     const endp = anonymousMode ? 'anonymousread' : 'messages';
     const query = options?.query
@@ -469,12 +469,12 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getThreadMessages(tmid: string, isChannelPrivate = false,) {
-    return this.getMessages(false, isChannelPrivate,{
+  async getThreadMessages(tmid: string, isChannelPrivate = false) {
+    return this.getMessages(false, {
       query: {
         tmid,
       },
-    });
+    }, isChannelPrivate);
   }
 
   async getChannelRoles(isChannelPrivate = false) {

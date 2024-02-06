@@ -90,7 +90,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
         }
         const { messages } = await RCInstance.getMessages(
           anonymousMode,
-          anonymousMode ? false : isChannelPrivate,
           ECOptions?.enableThreads
             ? {
               query: {
@@ -99,7 +98,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
                 },
               },
             }
-            : undefined
+            : undefined, anonymousMode ? false : isChannelPrivate
         );
         if (messages) {
           setMessages(messages.filter((message) => message._hidden !== true));
