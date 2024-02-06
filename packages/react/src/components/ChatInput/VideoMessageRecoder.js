@@ -151,14 +151,14 @@ const VideoMessageRecorder = () => {
     <>
       {state === 'idle' && (
         <ActionButton ghost square onClick={handleRecordButtonClick}>
-          <Icon size="1.25rem" name="videoRecorder" />
+          <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>
       )}
 
       {state === 'recording' && (
         <>
           <ActionButton ghost square>
-            <Icon size="1.25rem" name="disabledRecorder" />
+            <Icon size="1.25rem" name="disabled-recorder" />
           </ActionButton>
           <Modal
             open={state === 'recording'}
