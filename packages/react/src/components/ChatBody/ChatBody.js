@@ -9,7 +9,6 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
-import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -42,27 +41,10 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
       display: none;
     }
   `;
-  const DragComponentCss = css`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    z-index: 50;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-weight: 900;
-    font-size: xxx-large;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `;
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
-
-  const toggle = useAttachmentWindowStore((state) => state.toggle);
-  const setData = useAttachmentWindowStore((state) => state.setData);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
@@ -241,33 +223,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     anonymousMode,
   ]);
 
-  const [onDrag, setOnDrag] = useState(false);
-  const [leaveCount, setLeaveCount] = useState(0);
-
-  const handleDrag = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDragEnter = () => {
-    setOnDrag(true);
-  };
-  const handleDragLeave = () => {
-    if (leaveCount % 2 === 1) {
-      setOnDrag(false);
-      setLeaveCount(leaveCount + 1);
-    } else {
-      setLeaveCount(leaveCount + 1);
-    }
-  };
-
-  const handleDragDrop = (e) => {
-    e.preventDefault();
-    setOnDrag(false);
-    setLeaveCount(0);
-
-    toggle();
-    setData(e.dataTransfer.files[0]);
-  };
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -333,17 +288,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
           paddingTop: '70px',
           ...styleOverrides,
         }}
-        onDragOver={(e) => handleDrag(e)}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
         className={`ec-chat-body ${classNames}`}
         height={height}
       >
-        {onDrag ? (
-          <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
-            Drop to upload file
-          </Box>
-        ) : null}
         {isThreadOpen ? (
           <ThreadMessageList
             threadMainMessage={threadMainMessage}
