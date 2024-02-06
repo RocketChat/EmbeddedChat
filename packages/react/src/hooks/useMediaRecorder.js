@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-function useUserMedia(constraints) {
+function useUserMedia(constraints, videoRef) {
   const [stream, setStream] = useState();
   async function getStream(refresh = false) {
     if (stream && !refresh) {
@@ -8,14 +8,20 @@ function useUserMedia(constraints) {
     }
     const _stream = await navigator.mediaDevices.getUserMedia(constraints);
     setStream(_stream);
+
+    // Optionally, set the stream as the srcObject of the video element
+    if (videoRef.current) {
+      videoRef.current.srcObject = _stream;
+    }
+
     return _stream;
   }
   return { stream, getStream };
 }
 
-export function useMediaRecorder({ constraints, onStop }) {
+export function useMediaRecorder({ constraints, onStop, videoRef }) {
   const [recorder, setRecorder] = useState();
-  const { getStream } = useUserMedia(constraints);
+  const { getStream } = useUserMedia(constraints, videoRef);
   const chunks = useRef([]);
 
   async function start() {

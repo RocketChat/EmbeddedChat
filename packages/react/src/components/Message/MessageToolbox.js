@@ -37,6 +37,13 @@ const MessageToolboxCss = css`
   background: #fff;
 `;
 
+const popupStyle = {
+  margin: '0',
+  position: 'absolute',
+  right: '2rem',
+  top: '7.5rem'
+};
+
 export const MessageToolbox = ({
   className = '',
   message,
@@ -92,9 +99,9 @@ export const MessageToolbox = ({
             ghost
             size="small"
             icon={`${message.starred &&
-                message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
+              message.starred.find((u) => u._id === authenticatedUserId)
+              ? 'star-filled'
+              : 'star'
               }`}
             onClick={() => handleStarMessage(message)}
           />
@@ -109,7 +116,7 @@ export const MessageToolbox = ({
             open={isEmojiOpen}
             onClose={() => setEmojiOpen(false)}
             closeOnEscape
-            position="left center"
+            contentStyle={popupStyle}
           >
             <EmojiPicker
               handleEmojiClick={(emoji) => {
@@ -122,7 +129,10 @@ export const MessageToolbox = ({
             <ActionButton
               ghost
               size="small"
-              icon="pin"
+              icon={`${message.pinned
+                ? 'pin-filled'
+                : 'pin'
+                }`}
               onClick={() => handlePinMessage(message)}
             />
           )}
@@ -157,7 +167,7 @@ export const MessageToolbox = ({
         <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
-              <Icon name="trash" size="1.25rem" /> Delete this message?
+              <Icon name="trash" size="1.25rem" style={{ marginRight: '0.5rem' }} /> Delete this message?
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>

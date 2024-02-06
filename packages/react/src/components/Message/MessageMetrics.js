@@ -12,7 +12,7 @@ const MessageMetricsCss = css`
   margin-left: -0.25rem;
   margin-right: -0.25rem;
   margin-inline: -0.25rem;
-  margin-top: 0.125rem;
+  margin-top: 0.5rem;
 `;
 
 const MessageMetricsItemCss = css`
@@ -24,9 +24,12 @@ const MessageMetricsItemCss = css`
   justify-content: center;
   align-items: center;
   margin-left: 0.25rem;
-  margin-right: 0.25rem;
-  margin-inline: 0.25rem;
   color: #6c727a;
+`;
+
+const FirstMessageMetricsItemCss = css`
+  ${MessageMetricsItemCss};
+  margin-left: 0.5rem;
 `;
 
 const MessageMetricsItemLabelCss = css`
@@ -40,6 +43,7 @@ export const MessageMetrics = ({
   message,
   style = {},
   handleOpenThread = () => { },
+  isReplyButton = true,
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(
@@ -54,17 +58,17 @@ export const MessageMetrics = ({
       style={styleOverrides}
       {...props}
     >
-      <Button size="small" onClick={handleOpenThread(message)}>
+      {isReplyButton && <Button size="small" onClick={handleOpenThread(message)}>
         Reply
-      </Button>
-      <div css={MessageMetricsItemCss} title="Replies">
+      </Button>}
+      <div css={FirstMessageMetricsItemCss} title="Replies">
         <Icon size="1.25rem" name="thread" />
         <div css={MessageMetricsItemLabelCss}>{message.tcount}</div>
       </div>
       {!!message.tcount && (
         <div css={MessageMetricsItemCss} title="Participants">
           <Icon size="1.25rem" name="user" />
-          <div css={MessageMetricsItemCss}>{message.replies.length}</div>
+          <div css={MessageMetricsItemLabelCss}>{message.replies.length}</div>
         </div>
       )}
       <div
