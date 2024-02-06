@@ -12,6 +12,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Tooltip } from "../Tooltip"
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import VideoMessageRecorder from './VideoMessageRecoder';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -126,6 +127,9 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
 
       ))}
       <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
+      <Tooltip text="Video Message" position="top">
+        <VideoMessageRecorder />
+      </Tooltip>
       <ActionButton
         square
         ghost
