@@ -86,7 +86,7 @@ function AttachmentWindow() {
               >
                 <ValidateComponent data={data} />
               </Box>
-              <Box style={{ margin: '20px 0 0 0' }}>
+              <Box style={{ margin: '30px' }}>
                 <Box className={styles.attachment_window_input_container}>
                   <span style={{ fontWeight: '550' }}>File name</span>
                   <input
