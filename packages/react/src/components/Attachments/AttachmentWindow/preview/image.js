@@ -7,9 +7,7 @@ function PreviewImage({ previewURL }) {
     <Box>
       <img
         src={previewURL}
-        height={357}
-        width={476}
-        style={{ maxWidth: '100%', objectFit: 'contain' }}
+        style={{ maxWidth: '90%', objectFit: 'contain' }}
       />
     </Box>
   );
