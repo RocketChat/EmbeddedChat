@@ -62,6 +62,7 @@ function AttachmentWindow() {
             <Box
               css={css`
             overflow-y: auto;
+            overflow-x: hidden;
             max-height: 350px;
             scrollbar-width: thin;
             scrollbar-color: #e0e0e1 transparent;
