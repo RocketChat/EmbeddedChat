@@ -7,6 +7,7 @@ import {
   useUserStore,
   useMessageStore,
   loginModalStore,
+  useChannelStore
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -84,6 +85,8 @@ const ChatInput = ({ scrollToBottom }) => {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const setIsChannelPrivate = useChannelStore((state) => state.setIsChannelPrivate);
 
   const {
     editMessage,
@@ -213,12 +216,12 @@ const ChatInput = ({ scrollToBottom }) => {
   };
   const getAllChannelMembers = useCallback(async () => {
     try {
-      const channelMembers = await RCInstance.getChannelMembers();
+      const channelMembers = await RCInstance.getChannelMembers(isChannelPrivate);
       setRoomMembers(channelMembers.members);
     } catch (e) {
       console.error(e);
     }
-  }, [RCInstance, setRoomMembers]);
+  }, [RCInstance, setRoomMembers, isChannelPrivate]);
 
   useEffect(() => {
     if (editMessage.msg) {

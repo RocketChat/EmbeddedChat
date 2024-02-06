@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useChannelStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../Box';
@@ -52,6 +52,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const setFilter = useMessageStore((state) => state.setFilter);
   const setRoles = useUserStore((state) => state.setRoles);
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -84,7 +85,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
                 },
               },
             }
-            : undefined
+            : undefined, anonymousMode ? false : isChannelPrivate
         );
         if (messages) {
           setMessages(messages.filter((message) => message._hidden !== true));
@@ -94,12 +95,11 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
           return;
         }
         if (showRoles) {
-          const { roles } = await RCInstance.getChannelRoles();
+          const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
           // convert roles array from api into object for better search
-          const rolesObj = roles.reduce(
-            (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-            {}
-          );
+          const rolesObj = roles?.length > 0
+            ? roles.reduce((obj, item) => ({ ...obj, [item.u.username]: item }), {})
+            : {};
           setRoles(rolesObj);
         }
       } catch (e) {
@@ -113,6 +113,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
       showRoles,
       setMessages,
       setRoles,
+      isChannelPrivate
     ]
   );
 
@@ -132,7 +133,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
           return;
         }
         const { messages } = await RCInstance.getThreadMessages(
-          threadMainMessage._id
+          threadMainMessage._id,
+          isChannelPrivate
         );
         setThreadMessages(messages);
       } catch (e) {
@@ -145,6 +147,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     RCInstance,
     threadMainMessage?._id,
     setThreadMessages,
+    isChannelPrivate
   ]);
 
   useEffect(() => {
