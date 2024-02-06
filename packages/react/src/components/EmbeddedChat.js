@@ -223,6 +223,7 @@ const EmbeddedChat = ({
                 anonymousMode={anonymousMode}
                 showRoles={showRoles}
                 messageListRef={messageListRef}
+                scrollToBottom={scrollToBottom}
               />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
