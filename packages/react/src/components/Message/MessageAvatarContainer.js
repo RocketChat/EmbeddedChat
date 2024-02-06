@@ -30,12 +30,12 @@ const MessageAvatarContainer = ({ message, sequential, isStarred, isPinned }) =>
         />
       ) : null}
       {isStarred && sequential ? (
-        <Tooltip text="Message has been starred" position="top">
+        <Tooltip text="Starred" position="top">
           <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
         </Tooltip>
       ) : null}
       {isPinned && sequential ? (
-        <Tooltip text="Message has been pinned" position="top">
+        <Tooltip text="Pinned" position="top">
           <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />
         </Tooltip>
       ) : null}

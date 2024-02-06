@@ -132,7 +132,7 @@ const MessageHeader = ({ message }) => {
           />
         )}
         {isStarred ? (
-          <Tooltip text="Message has been starred" position="top">
+          <Tooltip text="Starred" position="top">
             <Icon
               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
               name="star-filled"
@@ -141,7 +141,7 @@ const MessageHeader = ({ message }) => {
           </Tooltip>
         ) : null}
         {isPinned ? (
-          <Tooltip text="Message has been pinned" position="top">
+          <Tooltip text="Pinned" position="top">
             <Icon
               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
               name="pin"
