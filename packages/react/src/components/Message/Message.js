@@ -162,8 +162,6 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
-        isEditing={editMessage.id === message._id}
-        isPending={message.isPending}
         style={styleOverrides}
       >
         {showAvatar && (
