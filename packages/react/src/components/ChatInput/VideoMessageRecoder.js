@@ -12,7 +12,7 @@ import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import Modal from 'react-modal';
+import { Modal } from '../Modal'
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -161,10 +161,9 @@ const VideoMessageRecorder = () => {
             <Icon size="1.25rem" name="disabledRecorder" />
           </ActionButton>
           <Modal
-            isOpen={state === 'recording'}
-            onRequestClose={handleCancelRecordButton}
-            className={styles.modal}
-            overlayClassName={styles.overlay}
+            open={state === 'recording'}
+            onClose={handleCancelRecordButton}
+            className={styles}
           >
             <video muted autoPlay playsInline ref={videoRef} />
             <Box className={styles.videoBox}>
