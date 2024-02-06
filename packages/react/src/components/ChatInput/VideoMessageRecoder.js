@@ -1,14 +1,22 @@
-import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
-import styles from './AudioMessage.module.css';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
+import styles from './VideoMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import Modal from 'react-modal';
 
-const AudioMessageRecorder = () => {
+const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
+
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage
   );
@@ -20,16 +28,17 @@ const AudioMessageRecorder = () => {
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
   const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
-  const onStop = (audioChunks) => {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-    const fileName = 'Audio record.mp3';
-    setFile(new File([audioBlob], fileName, { type: 'audio/mpeg' }));
+
+  const onStop = (videoChunks) => {
+    const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
+    const fileName = 'Video record.mp4';
+    setFile(new File([videoBlob], fileName, { type: 'video/mp4' }));
   };
 
   const [start, stop] = useMediaRecorder({
-    constraints: { audio: true, video: false },
+    constraints: { audio: true, video: true }, // Update constraints as needed
     onStop,
-    videoRef: videoRef
+    videoRef: videoRef,
   });
 
   const stopRecording = async () => {
@@ -45,7 +54,8 @@ const AudioMessageRecorder = () => {
   const handleRecordButtonClick = () => {
     setRecordState('recording');
     try {
-      start();
+      start(videoRef.current);
+      console.log(videoRef); // Start recording with the videoRef
       toogleRecordingMessage();
       const startTime = new Date();
       setRecordingInterval(
@@ -86,6 +96,9 @@ const AudioMessageRecorder = () => {
         await navigator.permissions.query({
           name: 'microphone',
         });
+        await navigator.permissions.query({
+          name: 'camera',
+        });
         return;
       } catch (error) {
         console.warn(error);
@@ -100,6 +113,9 @@ const AudioMessageRecorder = () => {
       if (
         !(await navigator.mediaDevices.enumerateDevices()).some(
           ({ kind }) => kind === 'audioinput'
+        ) &&
+        !(await navigator.mediaDevices.enumerateDevices()).some(
+          ({ kind }) => kind === 'videoinput'
         )
       ) {
         return null;
@@ -131,34 +147,43 @@ const AudioMessageRecorder = () => {
     }
   }, [isRecorded, file]);
 
-  if (state === 'idle') {
-    return (
-      <ActionButton ghost square onClick={handleRecordButtonClick}>
-        <Icon size="1.25rem" name="mic" />
-      </ActionButton>
-    );
-  }
-
   return (
-    <Box className={styles.audioBox}>
+    <>
+      {state === 'idle' && (
+        <ActionButton ghost square onClick={handleRecordButtonClick}>
+          <Icon size="1.25rem" name="videoRecorder" />
+        </ActionButton>
+      )}
+
       {state === 'recording' && (
         <>
-          <ActionButton ghost onClick={handleCancelRecordButton}>
-            <Icon size="1.25rem" name="circle-cross" />
+          <ActionButton ghost square>
+            <Icon size="1.25rem" name="disabledRecorder" />
           </ActionButton>
-          <Box className={styles.record}>
-            <span className={styles.audioDot} />
-            <span className={styles.timer}>{time}</span>
-          </Box>
-          <ActionButton ghost onClick={handleStopRecordButton}>
-            <Icon name="circle-check" size="1.25rem" />
-          </ActionButton>
+          <Modal
+            isOpen={state === 'recording'}
+            onRequestClose={handleCancelRecordButton}
+            className={styles.modal}
+            overlayClassName={styles.overlay}
+          >
+            <video muted autoPlay playsInline ref={videoRef} />
+            <Box className={styles.videoBox}>
+              <ActionButton ghost onClick={handleCancelRecordButton}>
+                <Icon size="1.25rem" name="circle-cross" />
+              </ActionButton>
+              <Box className={styles.record}>
+                <span className={styles.videoDot} />
+                <span className={styles.timer}>{time}</span>
+              </Box>
+              <ActionButton ghost onClick={handleStopRecordButton}>
+                <Icon name="circle-check" size="1.25rem" />
+              </ActionButton>
+            </Box>
+          </Modal>
         </>
       )}
-    </Box>
+    </>
   );
 };
 
-export default AudioMessageRecorder;
-
-AudioMessageRecorder.propTypes = {};
+export default VideoMessageRecorder;

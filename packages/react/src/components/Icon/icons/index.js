@@ -35,6 +35,8 @@ import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
 import PinFilled from './PinFilled';
+import VideoRecorder from './VideoRecoder';
+import DisabledRecorder from './DisableRecorder';
 
 const icons = {
   file: File,
@@ -46,6 +48,8 @@ const icons = {
   computer: Computer,
   cross: Cross,
   mic: Mic,
+  videoRecorder: VideoRecorder,
+  disabledRecorder: DisabledRecorder,
   'circle-cross': CircleCross,
   'circle-check': CircleCheck,
   send: Send,
