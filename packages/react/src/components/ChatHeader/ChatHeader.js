@@ -141,12 +141,6 @@ const ChatHeader = ({
   const menuOptions = useMemo(() => {
     const options = [];
     if (fullScreen) {
-      options.push({
-        id: 'minimize',
-        action: () => setFullScreen((prev) => !prev),
-        icon: 'mobile',
-        label: 'Minimize',
-      });
     }
     if (moreOpts) {
       options.push(
@@ -284,23 +278,37 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-
-            <Menu options={menuOptions} />
-
+            <>
+              <Tooltip text="Minimize" position="bottom">
+                <ActionButton
+                  onClick={() => {
+                    setFullScreen((prev) => !prev);
+                  }}
+                  ghost
+                  display="inline"
+                  square
+                  size="medium"
+                >
+                  <Icon name="mobile" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
+              <Menu options={menuOptions} />
+            </>
           ) : (
-            <><Tooltip text="Maximize" position="bottom">
-              <ActionButton
-                onClick={() => {
-                  setFullScreen((prev) => !prev);
-                }}
-                ghost
-                display="inline"
-                square
-                size='medium'
-              >
-                <Icon name="computer" size="1.25rem" />
-              </ActionButton>
-            </Tooltip>
+            <>
+              <Tooltip text="Maximize" position="bottom">
+                <ActionButton
+                  onClick={() => {
+                    setFullScreen((prev) => !prev);
+                  }}
+                  ghost
+                  display="inline"
+                  square
+                  size="medium"
+                >
+                  <Icon name="computer" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
               <Menu options={menuOptions} />
             </>
           )}
@@ -312,7 +320,7 @@ const ChatHeader = ({
               ghost
               display="inline"
               square
-              size='medium'
+              size="medium"
             >
               <Icon name="cross" size="1.25rem" />
             </ActionButton>
