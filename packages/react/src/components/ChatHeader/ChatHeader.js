@@ -37,6 +37,8 @@ const ChatHeader = ({
   const setShowChannelinfo = useChannelStore(
     (state) => state.setShowChannelinfo
   );
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const setIsChannelPrivate = useChannelStore((state) => state.setIsChannelPrivate);
 
   const { RCInstance } = useRCContext();
 
@@ -91,11 +93,11 @@ const ChatHeader = ({
   }, [RCInstance, setMessages, setFilter]);
 
   const showChannelMembers = useCallback(async () => {
-    const { members = [] } = await RCInstance.getChannelMembers();
+    const { members = [] } = await RCInstance.getChannelMembers(isChannelPrivate);
     setMembersHandler(members);
     toggleShowMembers();
     setShowSearch(false);
-  }, [RCInstance, setMembersHandler, toggleShowMembers, setShowSearch]);
+  }, [RCInstance, setMembersHandler, toggleShowMembers, setShowSearch, isChannelPrivate]);
 
   const showSearchMessage = useCallback(() => {
     setShowSearch(true);
@@ -117,7 +119,8 @@ const ChatHeader = ({
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
       if (res.success) {
-        setChannelInfo(res.channel);
+        setChannelInfo(res.room);
+        if (res.room.t === 'p') setIsChannelPrivate(true);
       } else {
         if ('errorType' in res && res.errorType === 'error-room-not-found') {
           dispatchToastMessage({
@@ -133,7 +136,7 @@ const ChatHeader = ({
     if (isUserAuthenticated) {
       getChannelInfo();
     }
-  }, [isUserAuthenticated, RCInstance, setChannelInfo]);
+  }, [isUserAuthenticated, RCInstance, setChannelInfo, setIsChannelPrivate]);
 
   const menuOptions = useMemo(() => {
     const options = [];
