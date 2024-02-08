@@ -35,6 +35,8 @@ import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
 import Copy from './Copy';
+import PinFilled from './PinFilled';
+
 const icons = {
   file: File,
   mobile: Mobile,
@@ -73,6 +75,7 @@ const icons = {
   check: Check,
   copy:Copy,
   'error-circle': ErrorCircle,
+  'pin-filled': PinFilled
 };
 
 export default icons;
