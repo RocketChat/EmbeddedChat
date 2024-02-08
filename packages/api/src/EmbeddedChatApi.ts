@@ -1,6 +1,6 @@
 import { Rocketchat } from '@rocket.chat/sdk';
 import cloneArray from './cloneArray';
-import { IRocketChatAuthOptions, RocketChatAuth } from '@embeddedchat/auth';
+import { IRocketChatAuthOptions, RocketChatAuth, ApiError } from '@embeddedchat/auth';
 
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
@@ -133,6 +133,10 @@ export default class EmbeddedChatApi {
       }
       return { status: 'success', me: data.me };
     } catch (error) {
+      if (error instanceof ApiError && error.response?.status === 401) {
+        const authErrorRes = await error.response.json();
+        return { error: authErrorRes?.error };
+      }
       console.error(error);
     }
   }
@@ -407,7 +411,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const response = await fetch(
-        `${this.host}/api/v1/channels.info?roomId=${this.rid}`,
+        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -441,7 +445,8 @@ export default class EmbeddedChatApi {
     } = {
       query: undefined,
       field: undefined
-    }) {
+    }, isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels' ;
     const endp = anonymousMode ? 'anonymousread' : 'messages';
     const query = options?.query
       ? `&query=${JSON.stringify(options.query)}`
@@ -452,7 +457,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const messages = await fetch(
-        `${this.host}/api/v1/channels.${endp}?roomId=${this.rid}${query}${field}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -468,19 +473,20 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getThreadMessages(tmid: string) {
+  async getThreadMessages(tmid: string, isChannelPrivate = false) {
     return this.getMessages(false, {
       query: {
         tmid,
       },
-    });
+    }, isChannelPrivate);
   }
 
-  async getChannelRoles() {
+  async getChannelRoles(isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels';
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const roles = await fetch(
-        `${this.host}/api/v1/channels.roles?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -796,11 +802,12 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getChannelMembers() {
+  async getChannelMembers(isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? 'groups' : 'channels';
     try {
       const { userId, authToken } = await this.auth.getCurrentUser() || {};
       const response = await fetch(
-        `${this.host}/api/v1/channels.members?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
         {
           headers: {
             'Content-Type': 'application/json',
