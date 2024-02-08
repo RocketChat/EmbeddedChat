@@ -29,7 +29,7 @@ export const useRCAuth = () => {
   const handleLogin = async (userOrEmail, password, code) => {
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
-      if (res.error === 'Unauthorized') {
+      if (res.error === 'Unauthorized' || res.error === 403) {
         dispatchToastMessage({
           type: 'error',
           message:
