@@ -70,6 +70,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       css={css`
         background-color: #cbced1;
         display: flex;
+        position: relative;
         flex-direction: row;
         gap: 0.375rem;
         align-items: center;

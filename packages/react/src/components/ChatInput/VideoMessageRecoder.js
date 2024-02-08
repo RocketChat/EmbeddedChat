@@ -5,7 +5,7 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import styles from './VideoMessage.module.css';
+import styles from './VideoMessageRecorder.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
@@ -55,7 +55,6 @@ const VideoMessageRecorder = () => {
     setRecordState('recording');
     try {
       start(videoRef.current);
-      console.log(videoRef); // Start recording with the videoRef
       toogleRecordingMessage();
       const startTime = new Date();
       setRecordingInterval(
@@ -163,7 +162,12 @@ const VideoMessageRecorder = () => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            className={styles}
+            style={{
+              display: 'flex',
+              width: '28rem',
+              boxShadow: '0px 1px 1px 1px rgb(203, 203, 203)',
+              backgroundColor: 'rgb(39, 39, 39)',
+            }}
           >
             <video muted autoPlay playsInline ref={videoRef} />
             <Box className={styles.videoBox}>
@@ -180,7 +184,8 @@ const VideoMessageRecorder = () => {
             </Box>
           </Modal>
         </>
-      )}
+      )
+      }
     </>
   );
 };
