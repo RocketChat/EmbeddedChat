@@ -34,17 +34,11 @@ import Trash from './Trash';
 import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
-<<<<<<< HEAD
-=======
-
->>>>>>> ff5c21b48eef5d29524640980cf6c998d0da07c7
 import Copy from './Copy';
 import PinFilled from './PinFilled';
 import ArrowDown from './ArrowDown';
-import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
-
 
 const icons = {
   file: File,
