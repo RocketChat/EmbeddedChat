@@ -10,7 +10,7 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Tooltip } from "../Tooltip"
+import { Tooltip } from '../Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
 
@@ -58,11 +58,11 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     input.selectionEnd = input.selectionStart + selectedText.length;
   };
 
-  const popupStyle= {
+  const popupStyle = {
     margin: '0',
     position: 'absolute',
     left: '0.375rem',
-    top:'9.5rem'
+    top: '9.5rem',
   };
 
   return (
@@ -111,7 +111,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </>
       )}
       {formatter.map((item, index) => (
-
         <Tooltip text={item.name} position="top" key={index}>
           <ActionButton
             square
@@ -121,13 +120,17 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               wrapSelection(item.pattern);
             }}
           >
-            <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
-
+            <Icon
+              disabled={isRecordingMessage}
+              name={item.name}
+              size="1.25rem"
+            />
           </ActionButton>
         </Tooltip>
-
       ))}
-      <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
+      <Tooltip text="Audio Message" position="top">
+        <AudioMessageRecorder />
+      </Tooltip>
       <Tooltip text="Video Message" position="top">
         <VideoMessageRecorder />
       </Tooltip>

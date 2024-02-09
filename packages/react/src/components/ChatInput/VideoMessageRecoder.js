@@ -12,7 +12,7 @@ import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Modal } from '../Modal'
+import { Modal } from '../Modal';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -38,7 +38,7 @@ const VideoMessageRecorder = () => {
   const [start, stop] = useMediaRecorder({
     constraints: { audio: true, video: true }, // Update constraints as needed
     onStop,
-    videoRef: videoRef,
+    videoRef,
   });
 
   const stopRecording = async () => {
@@ -184,8 +184,7 @@ const VideoMessageRecorder = () => {
             </Box>
           </Modal>
         </>
-      )
-      }
+      )}
     </>
   );
 };
