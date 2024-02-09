@@ -287,7 +287,18 @@ const Message = ({
           </Modal.Header>
           <Modal.Content css={css`margin: 1em;`}> Are you sure you want to pin this message? </Modal.Content>
           <Modal.Content css={css`margin: 1em;`}> 
-            {`quoted message`}
+          {/* Add the isPinned prop after that gets merged */}
+            <MessageAvatarContainer message={message} sequential={sequential} isStarred={isStarred} /> 
+            <MessageHeader message={message} isTimeStamped={false} />
+            <MessageBodyContainer>
+              <MessageBody>
+                  {message.attachments && message.attachments.length > 0 ? (
+                      message.file.namexxx
+                  ) : (
+                      message.msg
+                  )}
+              </MessageBody>
+            </MessageBodyContainer>
           </Modal.Content>
           <Modal.Content css={css`margin: 1em;`}> 
             Pinned messages are visible to everyone <br />
