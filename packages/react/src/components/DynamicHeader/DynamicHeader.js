@@ -5,34 +5,36 @@ import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 
-const DynamicHeader = ({ title, isHeaderIcon = false, handleClose = () => { }, iconName, headerIconName }) => {
-  return (
+const DynamicHeader = ({
+  title,
+  isHeaderIcon = false,
+  handleClose = () => {},
+  iconName,
+  headerIconName,
+}) => (
+  <Box
+    className={styles.container}
+    style={{
+      paddingBlockStart: '10px',
+    }}
+  >
     <Box
-      className={styles.container}
       style={{
-        paddingBlockStart: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: '0.5rem',
       }}
     >
-      <Box
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: '0.5rem',
-        }}
-      >
-          <ActionButton onClick={handleClose} ghost display="inline" square small>
-            <Icon name={iconName} size="1.25rem" />
-          </ActionButton>
+      <ActionButton onClick={handleClose} ghost display="inline" square small>
+        <Icon name={iconName} size="1.25rem" />
+      </ActionButton>
 
-        <h4 className={styles.nospace}>{title}</h4>
-        {isHeaderIcon && (
-            <Icon name={headerIconName} size="1.25rem" />
-        )}
-      </Box>
+      <h4 className={styles.nospace}>{title}</h4>
+      {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
     </Box>
-  );
-};
+  </Box>
+);
 
 export default DynamicHeader;
 

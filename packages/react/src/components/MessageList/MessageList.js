@@ -26,7 +26,9 @@ const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
-  const showAllThreads = useThreadsMessageStore((state) => state.showAllThreads);
+  const showAllThreads = useThreadsMessageStore(
+    (state) => state.showAllThreads
+  );
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -65,5 +67,4 @@ export default MessageList;
 
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape),
-
 };
