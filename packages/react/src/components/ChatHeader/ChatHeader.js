@@ -20,6 +20,8 @@ import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import useFetchChatData from '../../hooks/useFetchChatData';
+
 
 const ChatHeader = ({
   isClosable,
@@ -30,6 +32,8 @@ const ChatHeader = ({
   channelName,
   className = '',
   styles = {},
+  anonymousMode,
+  showRoles
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const channelInfo = useChannelStore((state) => state.channelInfo);
@@ -50,6 +54,7 @@ const ChatHeader = ({
   );
 
   const dispatchToastMessage = useToastBarDispatch();
+  const getMessagesAndRoles = useFetchChatData(showRoles);
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
@@ -66,6 +71,16 @@ const ChatHeader = ({
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowAllThreads = useThreadsMessageStore((state => state.setShowAllThreads));
   const toastPosition = useToastStore((state) => state.position);
+
+
+  const handleGoBack = async () => {
+    if (isUserAuthenticated) {
+      getMessagesAndRoles();
+    } else {
+      getMessagesAndRoles(anonymousMode);
+    }
+    setFilter(false);
+  };
 
 
   const handleLogout = useCallback(async () => {
@@ -320,11 +335,11 @@ const ChatHeader = ({
         </Box>
       </Box>
       {isThreadOpen && (
-        <DynamicHeader title={threadTitle} isClosable={true} handleClose={closeThread} iconName='arrow-back' />
+        <DynamicHeader title={threadTitle} handleClose={closeThread} iconName='arrow-back' />
       )}
 
       {!isThreadOpen && filtered && (
-   <DynamicHeader title={headerTitle} iconName={headerTitle && headerTitle.includes('Pin') ? 'pin' : 'star'} />
+        <DynamicHeader title={headerTitle} handleClose={handleGoBack} iconName='arrow-back' isHeaderIcon headerIconName={headerTitle && headerTitle.includes('Pin') ? 'pin' : 'star'} />
       )}
     </Box>
   );

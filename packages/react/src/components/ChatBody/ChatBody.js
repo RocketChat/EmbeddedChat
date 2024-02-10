@@ -13,6 +13,7 @@ import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageListRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
@@ -46,12 +47,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
 
-  const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
-  const setFilter = useMessageStore((state) => state.setFilter);
-  const setRoles = useUserStore((state) => state.setRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
@@ -69,62 +67,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     (state) => state.username
   );
 
-  const getMessagesAndRoles = useCallback(
-    async (anonymousMode) => {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { messages } = await RCInstance.getMessages(
-          anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-              query: {
-                tmid: {
-                  $exists: false,
-                },
-              },
-            }
-            : undefined, anonymousMode ? false : isChannelPrivate
-        );
-        if (messages) {
-          setMessages(messages.filter((message) => message._hidden !== true));
-        }
-        if (!isUserAuthenticated) {
-          // fetch roles only when user is authenticated
-          return;
-        }
-        if (showRoles) {
-          const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
-          // convert roles array from api into object for better search
-          const rolesObj = roles?.length > 0
-            ? roles.reduce((obj, item) => ({ ...obj, [item.u.username]: item }), {})
-            : {};
-          setRoles(rolesObj);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [
-      isUserAuthenticated,
-      RCInstance,
-      ECOptions?.enableThreads,
-      showRoles,
-      setMessages,
-      setRoles,
-      isChannelPrivate
-    ]
-  );
-
-  const handleGoBack = async () => {
-    if (isUserAuthenticated) {
-      getMessagesAndRoles();
-    } else {
-      getMessagesAndRoles(anonymousMode);
-    }
-    setFilter(false);
-  };
+  const getMessagesAndRoles = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -300,7 +243,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
             threadMessages={threadMessages}
           />
         ) : (
-          <MessageList messages={messages} handleGoBack={handleGoBack} />
+          <MessageList messages={messages} />
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />

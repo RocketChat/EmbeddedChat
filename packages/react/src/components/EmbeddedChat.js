@@ -225,6 +225,8 @@ const EmbeddedChat = ({
                 moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
               />
             )}
 
