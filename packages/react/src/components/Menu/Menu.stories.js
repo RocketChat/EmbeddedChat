@@ -17,7 +17,6 @@ export const Menu = {
         id: 'thread',
         label: 'Threads',
         icon: 'thread',
-        disabled: true,
       },
       {
         id: 'members',
