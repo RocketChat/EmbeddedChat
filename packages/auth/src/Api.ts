@@ -33,7 +33,7 @@ export class Api {
 			body: data ? JSON.stringify(data) : undefined,
 			method,
 			headers: {
-				'Content-Type': 'application/json'
+				...config.headers,
 			}
 		});
 		if (!response.ok) {
