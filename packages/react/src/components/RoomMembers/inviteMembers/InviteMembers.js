@@ -11,10 +11,6 @@ import { ActionButton } from '../../ActionButton';
 
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
-
-  console.log(new Date(inviteData.expires).toString().split('GMT'));
-  console.log(new Date(inviteData.expires));
-
   const dispatchToastMessage = useToastBarDispatch();
 
   const copyToClipboard = () => {

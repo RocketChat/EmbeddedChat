@@ -26,7 +26,6 @@ const RoomMembers = ({ members }) => {
     const getUserInfo = async () => {
       try {
         const res = await RCInstance.me();
-        console.log(res);
         setUserInfo(res);
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -69,7 +68,6 @@ const RoomMembers = ({ members }) => {
           style={{ marginTop: '10px', width: '100%' }}
           onClick={async () => {
             const res = await RCInstance.findOrCreateInvite();
-            console.log(res);
             setInviteData(res);
             toggleInviteView();
           }}

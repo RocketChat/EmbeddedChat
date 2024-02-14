@@ -22,9 +22,9 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
+import { Divider } from '../Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import { Divider } from '../Divider';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -273,10 +273,15 @@ const ChatInput = ({ scrollToBottom }) => {
     const currentMessage = messageRef.current.value;
     const tokens = (currentMessage || '').split(' ');
     const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
+
     if (firstTokenIdx !== -1) {
       tokens[firstTokenIdx] = `/${commandName}`;
+      tokens[firstTokenIdx] += ' ';
       const newMessageString = tokens.join(' ');
       messageRef.current.value = newMessageString;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd = tokens[firstTokenIdx].length;
+
+      messageRef.current.focus();
       setFilteredCommands([]);
     }
   }, []);
