@@ -15,11 +15,45 @@ function CommandsList({
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
+
+  const commandStyles = css`
+    cursor: pointer;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding-left: 0; 
+    padding-right: 2px;
+
+    &:hover {
+      background-color: #dddddd;
+    }
+  `;
+
   const classNameCommandsList = css`
+    margin-bottom: 5px;
     display: block;
     max-height: 10rem;
     overflow: scroll;
+    overflow-x: hidden;
+    max-height: 145px;
+    scrollbar-width: thin;
+    scrollbar-color: #e0e0e1 transparent;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #e0e0e1;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #e0e0e1;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   `;
+
+
   return (
     <Box
       css={classNameCommandsList}
@@ -30,7 +64,7 @@ function CommandsList({
       <ul style={{ listStyle: 'none' }}>
         {filteredCommands.map((command) => (
           <li
-            style={{ cursor: 'pointer' }}
+            css={commandStyles}
             onClick={() => {
               if (execCommand) {
                 execCommand(command);
@@ -41,7 +75,16 @@ function CommandsList({
             }}
             key={command.command}
           >
-            {command.command}
+            <span style={{ justifyContent: 'space-evenly' }}>
+              <span style={{ color: '#000000' }}>
+                {command.command}
+              </span>
+              &nbsp;&nbsp;&nbsp;
+              <span>
+                {command.params}
+              </span>
+            </span>
+            <span>{command.description}</span>
           </li>
         ))}
       </ul>

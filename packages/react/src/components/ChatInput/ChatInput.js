@@ -24,6 +24,7 @@ import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { Divider } from '../Divider';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -437,10 +438,13 @@ const ChatInput = ({ scrollToBottom }) => {
           <></>
         )}
         {filteredCommands.length === 0 ? null : (
-          <CommandsList
-            filteredCommands={filteredCommands}
-            onCommandClick={onCommandClick}
-          />
+          <>
+            <CommandsList
+              filteredCommands={filteredCommands}
+              onCommandClick={onCommandClick}
+            />
+            <Divider />
+          </>
         )}
         <Box
           css={[
