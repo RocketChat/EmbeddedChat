@@ -36,7 +36,10 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Lint
+      - name: Format check
+        run: yarn format:check
+
+      - name: Lint check
         run: yarn lint
 
       - name: Build

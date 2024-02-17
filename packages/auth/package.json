@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
-    "dev": "yarn parcel playground/index.html"
+    "dev": "yarn parcel playground/index.html",
+    "format": "prettier --write 'src/' ",
+    "format:check": "prettier --check 'src/' "
   },
   "author": "",
   "license": "ISC",

@@ -5,7 +5,7 @@
  */
 const cloneArray = (array: any[]) => {
   const newArray = [...array].map((item) =>
-    typeof item === 'object' ? { ...item } : item
+    typeof item === "object" ? { ...item } : item
   );
   return newArray;
 };
