@@ -38,6 +38,7 @@ import ArrowDown from './ArrowDown';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
+import Copy from './Copy';
 
 const icons = {
   file: File,
@@ -48,6 +49,7 @@ const icons = {
   hash: Hash,
   computer: Computer,
   cross: Cross,
+  copy: Copy,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
