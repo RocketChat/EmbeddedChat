@@ -38,7 +38,6 @@ const RoomMembers = ({ members }) => {
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
 
-
   const [inviteData, setInviteData] = useState(null);
 
   if (showInvite) return <InviteMembers inviteData={inviteData} />;

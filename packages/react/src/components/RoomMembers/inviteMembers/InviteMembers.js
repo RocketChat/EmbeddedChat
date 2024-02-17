@@ -14,18 +14,18 @@ const InviteMembers = ({ inviteData }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(inviteData.url)
+    navigator.clipboard
+      .writeText(inviteData.url)
       .then(() => {
         dispatchToastMessage({
           type: 'success',
-          message: 'Copied to clipboard'
+          message: 'Copied to clipboard',
         });
       })
       .catch((error) => {
         console.error('Error copying to clipboard:', error);
       });
   };
-
 
   return (
     <Box style={{ padding: '16px' }} className={classes.modal}>
@@ -68,7 +68,9 @@ const InviteMembers = ({ inviteData }) => {
             margin-bottom: 10px;
           `}
         >
-          <span><b>Invite Link</b></span>
+          <span>
+            <b>Invite Link</b>
+          </span>
           <ActionButton onClick={copyToClipboard} ghost size="small">
             <Icon name="copy" size="1.25rem" />
           </ActionButton>

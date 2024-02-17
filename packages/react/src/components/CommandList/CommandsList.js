@@ -2,9 +2,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect } from 'react';
 import { css } from '@emotion/react';
+import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import PropTypes from 'prop-types';
 
 function CommandsList({
   className = '',
@@ -42,10 +42,10 @@ function CommandsList({
 
   const listItemStyle = css`
     cursor: pointer;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding-left: 0; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
     padding-right: 2px;
 
     &:hover {
