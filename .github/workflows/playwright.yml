@@ -17,10 +17,13 @@ jobs:
       with:
         node-version: 16.19.0
 
-    - name: Install all dependencies
-      run: |
-        npm install -g yarn
-        yarn
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.yarn
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
 
     - name: Install and build the project
       run: |
@@ -34,7 +37,7 @@ jobs:
       run: npx playwright install --with-deps
       
     - name: Run Playwright tests
-      run: yarn test
+      run: npx playwright test
       
     - name: Upload Playwright report
       uses: actions/upload-artifact@v3
