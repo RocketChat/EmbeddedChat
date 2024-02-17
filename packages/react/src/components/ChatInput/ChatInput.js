@@ -8,11 +8,11 @@ import {
   useMessageStore,
   loginModalStore,
   useChannelStore,
+  useMemberStore
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
-import mentionmemberStore from '../../store/mentionmemberStore';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import TypingUsers from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
@@ -22,6 +22,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
+import { Divider } from '../Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
@@ -45,11 +46,20 @@ const ChatInput = ({ scrollToBottom }) => {
     (state) => state.setIsUserAuthenticated
   );
 
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+
+  const members = useMemberStore((state) => state.members);
+  const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
+
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((data) => setCommands(data.commands || []))
+          .catch(console.error);
+
+        RCInstance.getChannelMembers(isChannelPrivate)
+          .then((channelMembers) => setMembersHandler(channelMembers.members || []))
           .catch(console.error);
       }
     });
@@ -68,27 +78,18 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const inputRef = useRef(null);
   const typingRef = useRef();
-  const messageRef = useRef();
+  const messageRef = useRef(null);
 
   const [disableButton, setDisableButton] = useState(true);
-
-  const roomMembers = mentionmemberStore((state) => state.roomMembers);
-  const setRoomMembers = mentionmemberStore((state) => state.setRoomMembers);
 
   const [filteredMembers, setFilteredMembers] = useState([]);
 
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [startReading, setStartReading] = useState(false);
-  const showMembersList = mentionmemberStore((state) => state.showMembersList);
-  const setshowMembersList = mentionmemberStore(
-    (state) => state.toggleShowMembers
-  );
+  const [showMembersList, setshowMembersList] = useState(false);
+
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
-  );
-  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const setIsChannelPrivate = useChannelStore(
-    (state) => state.setIsChannelPrivate
   );
 
   const {
@@ -217,16 +218,6 @@ const ChatInput = ({ scrollToBottom }) => {
     toggle();
     setData(event.target.files[0]);
   };
-  const getAllChannelMembers = useCallback(async () => {
-    try {
-      const channelMembers = await RCInstance.getChannelMembers(
-        isChannelPrivate
-      );
-      setRoomMembers(channelMembers.members);
-    } catch (e) {
-      console.error(e);
-    }
-  }, [RCInstance, setRoomMembers, isChannelPrivate]);
 
   useEffect(() => {
     if (editMessage.msg) {
@@ -235,9 +226,6 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value = '';
     }
   }, [editMessage]);
-  useEffect(() => {
-    getAllChannelMembers();
-  }, [getAllChannelMembers]);
 
   const username = useUserStore((state) => state.username);
   const timerRef = useRef();
@@ -285,6 +273,33 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   }, []);
 
+  const handleMemberClick = (selectedItem) => {
+    setshowMembersList(false);
+
+    let insertionText;
+    if (selectedItem === 'all') {
+      insertionText = `@all `;
+    }
+
+    else if (selectedItem === 'here') {
+      insertionText = `@here `;
+    }
+
+    else {
+      insertionText = `${messageRef.current.value.substring(
+        0,
+        messageRef.current.value.lastIndexOf('@')
+      )}@${selectedItem.username} `;
+    }
+
+    messageRef.current.value = insertionText;
+
+    const cursorPosition = insertionText.length;
+    messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
+    messageRef.current.focus();
+  };
+
+
   const showCommands = useCallback(
     async (e) => {
       const cursor = e.target.selectionStart;
@@ -320,7 +335,7 @@ const ChatInput = ({ scrollToBottom }) => {
     }
     searchToMentionUser(
       messageRef.current.value,
-      roomMembers,
+      members,
       startReading,
       setStartReading,
       setFilteredMembers,
@@ -400,7 +415,7 @@ const ChatInput = ({ scrollToBottom }) => {
       let selectedMember = null;
       if (mentionIndex === filteredMembers.length) selectedMember = 'all';
       else if (mentionIndex === filteredMembers.length + 1)
-        selectedMember = 'everyone';
+        selectedMember = 'here';
       else selectedMember = filteredMembers[mentionIndex].username;
       messageRef.current.value = `${messageRef.current.value.substring(
         0,
@@ -434,10 +449,14 @@ const ChatInput = ({ scrollToBottom }) => {
         `}
       >
         {showMembersList ? (
-          <MembersList
-            mentionIndex={mentionIndex}
-            filteredMembers={filteredMembers}
-          />
+          <>
+            <MembersList
+              mentionIndex={mentionIndex}
+              filteredMembers={filteredMembers}
+              onMemberClick={handleMemberClick}
+            />
+            <Divider />
+          </>
         ) : (
           <></>
         )}
@@ -465,8 +484,8 @@ const ChatInput = ({ scrollToBottom }) => {
               isUserAuthenticated && canSendMsg
                 ? 'Message'
                 : isUserAuthenticated
-                ? 'This room is read only'
-                : 'Sign in to chat'
+                  ? 'This room is read only'
+                  : 'Sign in to chat'
             }
             className={styles.textInput}
             onChange={onTextChange}

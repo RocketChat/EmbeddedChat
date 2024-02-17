@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { useMemberStore, useUserStore } from '../../../store';
 
 const Mention = ({ contents }) => {
+  const members = useMemberStore((state) => state.members);
+  const username = useUserStore((state) => state.username);
+
   const mentionStyles = css`
     background-color: ${contents.value === 'all' || contents.value === 'here' ? '#f38c39' :
       (contents.value === username ? '#ec0d2a' : '#e4e7ea')
@@ -20,9 +23,6 @@ const Mention = ({ contents }) => {
       text-decoration: ${contents.value === 'all' || contents.value === 'here' ? 'none' : 'underline'};
     }
   `;
-
-  const members = useMemberStore((state) => state.members);
-  const username = useUserStore((state) => state.username);
 
   const hasMember = (user) => {
     if (user === 'all' || user === 'here') return true;
