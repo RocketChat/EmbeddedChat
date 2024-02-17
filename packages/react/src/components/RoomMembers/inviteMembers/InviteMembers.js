@@ -14,17 +14,19 @@ const InviteMembers = ({ inviteData }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(inviteData.url)
-      .then(() => {
-        dispatchToastMessage({
-          type: 'success',
-          message: 'Copied to clipboard',
+    if (inviteData && inviteData.url) {
+      navigator.clipboard
+        .writeText(inviteData.url)
+        .then(() => {
+          dispatchToastMessage({
+            type: 'success',
+            message: 'Copied to clipboard',
+          });
+        })
+        .catch((error) => {
+          console.error('Error copying to clipboard:', error);
         });
-      })
-      .catch((error) => {
-        console.error('Error copying to clipboard:', error);
-      });
+    }
   };
 
   return (
@@ -53,46 +55,50 @@ const InviteMembers = ({ inviteData }) => {
           </ActionButton>
         </h3>
       </Box>
-      <Box
-        css={css`
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-        `}
-      >
+      {inviteData && (
         <Box
           css={css`
+            width: 100%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            flex-direction: column;
           `}
         >
-          <span>
-            <b>Invite Link</b>
-          </span>
-          <ActionButton onClick={copyToClipboard} ghost size="small">
-            <Icon name="copy" size="1.25rem" />
-          </ActionButton>
+          <Box
+            css={css`
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 10px;
+            `}
+          >
+            <span>
+              <b>Invite Link</b>
+            </span>
+            <ActionButton onClick={copyToClipboard} ghost size="small">
+              <Icon name="copy" size="1.25rem" />
+            </ActionButton>
+          </Box>
+          <Input readOnly value={inviteData.url} />
         </Box>
-        <Input readOnly value={inviteData.url} />
-      </Box>
+      )}
       <div
         css={css`
           margin-top: 8px;
         `}
       >
-        <p
-          css={css`
-            color: #9ea2a8;
-            font-size: 0.78em;
-          `}
-        >
-          <b>
-            Your invite link will expire on{' '}
-            {new Date(inviteData.expires).toString().split('GMT')[0]}
-          </b>
-        </p>
+        {inviteData && (
+          <p
+            css={css`
+              color: #9ea2a8;
+              font-size: 0.78em;
+            `}
+          >
+            <b>
+              Your invite link will expire on{' '}
+              {new Date(inviteData.expires).toString().split('GMT')[0]}
+            </b>
+          </p>
+        )}
       </div>
     </Box>
   );
