@@ -1,5 +1,5 @@
 // @ts-expect-error no types served yet
-import { EmbeddedChat } from "@embeddedchat/react";
+import { EmbeddedChat } from "@embeddedchat/react/dist/esm/index.js";
 
 function App() {
   return (
