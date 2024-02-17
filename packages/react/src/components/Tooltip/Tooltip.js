@@ -48,6 +48,8 @@ const Tooltip = ({ children, text, position }) => {
     setTooltipVisible(false);
   };
 
+  let touchTimer;
+
   const handleTouchStart = () => {
     touchTimer = setTimeout(() => {
       setTooltipVisible(true);
@@ -58,8 +60,6 @@ const Tooltip = ({ children, text, position }) => {
     clearTimeout(touchTimer);
     setTooltipVisible(false);
   };
-
-  let touchTimer;
 
   return (
     <div
