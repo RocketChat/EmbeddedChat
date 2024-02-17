@@ -33,9 +33,6 @@ export const Modal = forwardRef(
       background: ${theme?.palette?.background?.modal || '#fff'};
       border-radius: 0.25rem;
     `;
-    if (!open) {
-      return null;
-    }
 
     const handleClick = useCallback(
       (e) => {
@@ -62,6 +59,10 @@ export const Modal = forwardRef(
         window.removeEventListener('keydown', handleEscKey);
       };
     }, [handleEscKey]);
+
+    if (!open) {
+      return null;
+    }
 
     return (
       <ModalBackdrop ref={backDropRef} onClick={handleClick}>
