@@ -2297,7 +2297,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@embeddedchat/react@*, @embeddedchat/react@0.1.12, @embeddedchat/react@workspace:packages/react":
+"@embeddedchat/react@0.1.12, @embeddedchat/react@workspace:*, @embeddedchat/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/react@workspace:packages/react"
   dependencies:
@@ -14693,7 +14693,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e-react@workspace:packages/e2e-react"
   dependencies:
-    "@embeddedchat/react": "*"
+    "@embeddedchat/react": "workspace:*"
     "@playwright/test": ^1.41.2
     "@types/node": ^20.11.19
     "@types/react": ^18.2.55
