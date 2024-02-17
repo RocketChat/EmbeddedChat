@@ -12,18 +12,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
-    - name: Change directory to e2e-react
-      run: cd packages/e2e-react
-      
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       with:
         node-version: 16
-        
-    - name: Install dependencies
+
+    - name: Install all dependencies
       run: |
         npm install -g yarn
         yarn
+
+    - name: Install and build the project
+      run: |
+        yarn
+        yarn build
+
+    - name: Change directory to e2e-react
+      run: cd packages/e2e-react
         
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
