@@ -25,14 +25,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
-    - name: Install and build the project
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build the project
       run: |
-        yarn
         yarn build
 
-    - name: Change directory to e2e-react
-      run: cd packages/e2e-react
-        
     - name: Get installed Playwright version
       id: playwright-version
       run: echo "::set-output name=version::$(yarn why --json @playwright/test | grep -h 'workspace:.' | jq --raw-output '.children[].locator' | sed -e 's/@playwright\/test@.*://')"
@@ -50,7 +49,7 @@ jobs:
       run: npx playwright install --with-deps
       
     - name: Run Playwright tests
-      run: npx playwright test
+      run: cd packages/e2e-react && npx playwright test
       
     - name: Upload Playwright report
       uses: actions/upload-artifact@v3
