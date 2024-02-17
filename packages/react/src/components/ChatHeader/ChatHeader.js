@@ -83,6 +83,8 @@ const ChatHeader = ({
     }
     setFilter(false);
   };
+  const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
+  const authenticatedUserId = useUserStore((state) => state.userId);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -140,22 +142,53 @@ const ChatHeader = ({
   }, [setShowAllThreads, setShowSearch]);
 
   useEffect(() => {
+    const setMessageAllowed = async () => {
+      const permissionRes = await RCInstance.permissionInfo();
+      const channelRolesRes = await RCInstance.getChannelRoles(
+        isChannelPrivate
+      );
+
+      if (permissionRes.success && channelRolesRes.success) {
+        const postMsgRoles = permissionRes.update[140]?.roles || [];
+
+        const userRoles = channelRolesRes.roles
+          .filter((chRole) => chRole.u?._id === authenticatedUserId)
+          .flatMap((chRole) => chRole.roles);
+
+        const canSendMsg =
+          userRoles.length > 0 &&
+          postMsgRoles.some((role) => userRoles.includes(role));
+        setCanSendMsg(canSendMsg);
+      }
+    };
+
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-      } else if ('errorType' in res) {
-        if (res.errorType === 'error-room-not-found') {
-          dispatchToastMessage({
-            type: 'error',
-            message: "Channel doesn't exist. Logging out.",
-            position: toastPosition,
-          });
-          await RCInstance.logout();
-        }
+        if (res.room.ro) setMessageAllowed();
+      } else if (
+        'errorType' in res &&
+        res.errorType === 'error-room-not-found'
+      ) {
+        dispatchToastMessage({
+          type: 'error',
+          message: "Channel doesn't exist. Logging out.",
+          position: toastPosition,
+        });
+        await RCInstance.logout();
+      } else if ('errorType' in res && res.errorType === 'Not Allowed') {
+        dispatchToastMessage({
+          type: 'error',
+          message:
+            "You don't have permission to access this channel. Logging out",
+          position: toastPosition,
+        });
+        await RCInstance.logout();
       }
     };
+
     if (isUserAuthenticated) {
       getChannelInfo();
     }
@@ -166,6 +199,9 @@ const ChatHeader = ({
     setIsChannelPrivate,
     dispatchToastMessage,
     toastPosition,
+    isChannelPrivate,
+    setCanSendMsg,
+    authenticatedUserId,
   ]);
 
   const menuOptions = useMemo(() => {

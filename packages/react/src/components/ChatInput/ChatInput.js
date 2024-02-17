@@ -39,6 +39,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const canSendMsg = useUserStore((state) => state.canSendMsg);
 
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
@@ -459,8 +460,14 @@ const ChatInput = ({ scrollToBottom }) => {
         >
           <textarea
             rows={1}
-            disabled={!isUserAuthenticated || isRecordingMessage}
-            placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+            disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
+            placeholder={
+              isUserAuthenticated && canSendMsg
+                ? 'Message'
+                : isUserAuthenticated
+                ? 'This room is read only'
+                : 'Sign in to chat'
+            }
             className={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
