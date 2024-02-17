@@ -22,8 +22,7 @@ const useUserStore = create((set) => ({
   canSendMsg: true,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
-  setCanSendMsg: (canSendMsg) =>
-    set(() => ({ canSendMsg })),
+  setCanSendMsg: (canSendMsg) => set(() => ({ canSendMsg })),
   password: null,
   setPassword: (password) => set(() => ({ password })),
   emailoruser: null,
