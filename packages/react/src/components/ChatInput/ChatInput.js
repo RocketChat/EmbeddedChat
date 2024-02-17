@@ -7,7 +7,7 @@ import {
   useUserStore,
   useMessageStore,
   loginModalStore,
-  useChannelStore,
+  useChannelStore
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -22,6 +22,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../ActionButton';
+import { Divider } from '../Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
@@ -39,7 +40,6 @@ const ChatInput = ({ scrollToBottom }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const canSendMsg = useUserStore((state) => state.canSendMsg);
 
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
@@ -87,9 +87,7 @@ const ChatInput = ({ scrollToBottom }) => {
     (state) => state.setIsLoginModalOpen
   );
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const setIsChannelPrivate = useChannelStore(
-    (state) => state.setIsChannelPrivate
-  );
+  const setIsChannelPrivate = useChannelStore((state) => state.setIsChannelPrivate);
 
   const {
     editMessage,
@@ -219,9 +217,7 @@ const ChatInput = ({ scrollToBottom }) => {
   };
   const getAllChannelMembers = useCallback(async () => {
     try {
-      const channelMembers = await RCInstance.getChannelMembers(
-        isChannelPrivate
-      );
+      const channelMembers = await RCInstance.getChannelMembers(isChannelPrivate);
       setRoomMembers(channelMembers.members);
     } catch (e) {
       console.error(e);
@@ -277,10 +273,15 @@ const ChatInput = ({ scrollToBottom }) => {
     const currentMessage = messageRef.current.value;
     const tokens = (currentMessage || '').split(' ');
     const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
+
     if (firstTokenIdx !== -1) {
       tokens[firstTokenIdx] = `/${commandName}`;
+      tokens[firstTokenIdx] += ' ';
       const newMessageString = tokens.join(' ');
       messageRef.current.value = newMessageString;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd = tokens[firstTokenIdx].length;
+
+      messageRef.current.focus();
       setFilteredCommands([]);
     }
   }, []);
@@ -442,10 +443,13 @@ const ChatInput = ({ scrollToBottom }) => {
           <></>
         )}
         {filteredCommands.length === 0 ? null : (
-          <CommandsList
-            filteredCommands={filteredCommands}
-            onCommandClick={onCommandClick}
-          />
+          <>
+            <CommandsList
+              filteredCommands={filteredCommands}
+              onCommandClick={onCommandClick}
+            />
+            <Divider />
+          </>
         )}
         <Box
           css={[
@@ -460,14 +464,8 @@ const ChatInput = ({ scrollToBottom }) => {
         >
           <textarea
             rows={1}
-            disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
-            placeholder={
-              isUserAuthenticated && canSendMsg
-                ? 'Message'
-                : isUserAuthenticated
-                ? 'This room is read only'
-                : 'Sign in to chat'
-            }
+            disabled={!isUserAuthenticated || isRecordingMessage}
+            placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
             className={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
