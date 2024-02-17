@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import { Box } from '../Box';
 
-export const ModalBackdrop = forwardRef(({ children, onClick = () => { } }, ref) => {
-  return (
+export const ModalBackdrop = forwardRef(
+  ({ children, onClick = () => {} }, ref) => (
     <Box
       ref={ref}
       onClick={onClick}
@@ -23,4 +23,4 @@ export const ModalBackdrop = forwardRef(({ children, onClick = () => { } }, ref)
       {children}
     </Box>
   )
-});
+);

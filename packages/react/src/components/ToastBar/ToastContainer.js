@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback } from 'react';
-import { css, useTheme, keyframes} from '@emotion/react';
+import { css, useTheme, keyframes } from '@emotion/react';
 import ToastContext from '../../context/ToastContext';
 import { Box } from '../Box';
 import ToastBar from './ToastBar';
@@ -25,7 +25,7 @@ const ToastContainer = () => {
     position: fixed;
     z-index: ${theme.zIndex.toastbar};
     border-radius: 0.25em;
-    background-color:white;
+    background-color: white;
     animation: ${animation} ${2000}ms ease-in-out forwards;
   `;
 

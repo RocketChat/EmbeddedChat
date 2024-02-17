@@ -10,12 +10,12 @@ const LiCss = css`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.5em;
-`
+`;
 const TaskListBlock = ({ tasks }) => (
   <ul className="task-list">
     {tasks.map((item, index) => (
       <li key={index} css={LiCss}>
-        <CheckBox checked={item.status} style={{ alignSelf: 'baseline'}}/>
+        <CheckBox checked={item.status} style={{ alignSelf: 'baseline' }} />
         <InlineElements contents={item.value} />
       </li>
     ))}

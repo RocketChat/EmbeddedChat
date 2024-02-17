@@ -15,11 +15,9 @@ const useUserStore = create((set) => ({
   },
   avatarUrl: '',
   setUserAvatarUrl: (avatarUrl) =>
-    set(() => {
-      return {
-        avatarUrl,
-      };
-    }),
+    set(() => ({
+      avatarUrl,
+    })),
   isUserAuthenticated: false,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),

@@ -22,6 +22,7 @@
     "test:watch": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/components/**/*.js",
     "test:build": "run-s build",
     "format": "prettier --write 'src/' --loglevel=silent",
+    "lint": "eslint 'src/**/*.js'",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

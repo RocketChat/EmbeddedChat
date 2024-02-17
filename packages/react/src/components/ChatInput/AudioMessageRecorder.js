@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
@@ -29,7 +35,7 @@ const AudioMessageRecorder = () => {
   const [start, stop] = useMediaRecorder({
     constraints: { audio: true, video: false },
     onStop,
-    videoRef: videoRef
+    videoRef,
   });
 
   const stopRecording = async () => {

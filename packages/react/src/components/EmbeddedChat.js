@@ -197,7 +197,7 @@ const EmbeddedChat = ({
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
           {attachmentWindowOpen ? (
-            !!data ? (
+            data ? (
               <>
                 <AttachmentWindow />
               </>
