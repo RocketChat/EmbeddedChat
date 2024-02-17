@@ -7,7 +7,6 @@ export const searchToMentionUser = (
   setmentionIndex,
   setshowMembersList
 ) => {
-  console.log(message);
   const lastChar = message ? message[message.length - 1] : '';
   if (message.length === 0) {
     setshowMembersList(false);
