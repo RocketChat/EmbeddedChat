@@ -11,7 +11,6 @@ import { ActionButton } from '../../ActionButton';
 
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
-
   const dispatchToastMessage = useToastBarDispatch();
 
   const copyToClipboard = () => {
@@ -26,6 +25,7 @@ const InviteMembers = ({ inviteData }) => {
         console.error('Error copying to clipboard:', error);
       });
   };
+
 
   return (
     <Box style={{ padding: '16px' }} className={classes.modal}>
