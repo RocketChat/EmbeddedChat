@@ -33,11 +33,7 @@ const CheckBox = ({ checked, ...props }) => {
         style={{ display: 'none' }}
       />
       {checked ? (
-        <Icon
-          name={'check'}
-          size={'1.12rem'}
-          style={{ display: 'inline-block' }}
-        />
+        <Icon name="check" size="1.12rem" style={{ display: 'inline-block' }} />
       ) : null}
     </label>
   );

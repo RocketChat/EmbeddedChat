@@ -6,7 +6,7 @@ const useChannelStore = create((set) => ({
   setShowChannelinfo: (showChannelinfo) => set(() => ({ showChannelinfo })),
   channelInfo: {},
   setChannelInfo: (channelInfo) => set(() => ({ channelInfo })),
-  setIsChannelPrivate: (isChannelPrivate) => set(() => ({ isChannelPrivate }))
+  setIsChannelPrivate: (isChannelPrivate) => set(() => ({ isChannelPrivate })),
 }));
 
 export default useChannelStore;

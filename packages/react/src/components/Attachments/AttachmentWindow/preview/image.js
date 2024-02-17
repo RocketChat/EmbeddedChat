@@ -5,10 +5,7 @@ import { Box } from '../../../Box';
 function PreviewImage({ previewURL }) {
   return (
     <Box>
-      <img
-        src={previewURL}
-        style={{ maxWidth: '90%', objectFit: 'contain' }}
-      />
+      <img src={previewURL} style={{ maxWidth: '90%', objectFit: 'contain' }} />
     </Box>
   );
 }

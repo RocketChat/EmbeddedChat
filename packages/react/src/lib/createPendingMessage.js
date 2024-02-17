@@ -1,5 +1,5 @@
 const createRandomId = () => {
-  if ( typeof window !== 'undefined' ) {
+  if (typeof window !== 'undefined') {
     if (window.crypto.randomUUID) {
       return window.crypto.randomUUID().replaceAll('-', '').slice(0, 17);
     }
