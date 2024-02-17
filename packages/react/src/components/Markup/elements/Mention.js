@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react'
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { useMemberStore, useUserStore } from '../../../store';
 
@@ -8,11 +8,17 @@ const Mention = ({ contents }) => {
   const username = useUserStore((state) => state.username);
 
   const mentionStyles = css`
-    background-color: ${contents.value === 'all' || contents.value === 'here' ? '#f38c39' :
-      (contents.value === username ? '#ec0d2a' : '#e4e7ea')
+    background-color: ${contents.value === 'all' || contents.value === 'here'
+      ? '#f38c39'
+      : contents.value === username
+        ? '#ec0d2a'
+        : '#e4e7ea'
     };
-    color: ${contents.value === 'all' || contents.value === 'here' ? '#ffffff' :
-      (contents.value === username ? '#ffffff' : '#2f343d')
+    color: ${contents.value === 'all' || contents.value === 'here'
+      ? '#ffffff' :
+      contents.value === username
+        ? '#ffffff'
+        : '#2f343d'
     };
     font-weight: bold;
     cursor: pointer;
@@ -20,7 +26,9 @@ const Mention = ({ contents }) => {
     border-radius: 3px;
 
     &:hover {
-      text-decoration: ${contents.value === 'all' || contents.value === 'here' ? 'none' : 'underline'};
+      text-decoration: ${contents.value === 'all' || contents.value === 'here'
+      ? 'none'
+      : 'underline'}; 
     }
   `;
 
@@ -37,11 +45,7 @@ const Mention = ({ contents }) => {
   return (
     <>
       {hasMember(contents.value) === true ? (
-        <span
-          css={mentionStyles}
-        >
-          {contents.value}
-        </span>
+        <span css={mentionStyles}>{contents.value}</span>
       ) : (
         `@${contents.value}`
       )}

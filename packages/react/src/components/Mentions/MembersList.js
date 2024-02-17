@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { css } from '@emotion/react';
-import { Box } from '../Box';
 import PropTypes from 'prop-types';
+import { Box } from '../Box';
 
 function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
   const listStyle = css`
@@ -30,10 +30,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
 
   const listItemStyle = css`
     cursor: pointer;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding-left: 0; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
     padding-right: 2px;
 
     &:hover {
@@ -46,7 +46,6 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     font-weight: 600;
   `;
 
-
   const handleMemberClick = (selectedItem) => {
     onMemberClick(selectedItem);
   };
@@ -55,8 +54,11 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
         const selectedItem =
-          mentionIndex < filteredMembers.length ? filteredMembers[mentionIndex] :
-            mentionIndex === filteredMembers.length ? 'all' : 'here';
+          mentionIndex < filteredMembers.length
+            ? filteredMembers[mentionIndex]
+            : mentionIndex === filteredMembers.length
+              ? 'all'
+              : 'here';
         handleMemberClick(selectedItem);
       }
     };
@@ -67,7 +69,6 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
       document.removeEventListener('keydown', handleKeyPress);
     };
   }, [mentionIndex, filteredMembers, handleMemberClick]);
-
 
   return (
     <Box css={listStyle}>

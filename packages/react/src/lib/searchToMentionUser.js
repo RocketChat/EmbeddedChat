@@ -29,7 +29,9 @@ export const searchToMentionUser = (
       setmentionIndex(-1);
       setshowMembersList(false);
     } else {
-      const query = message.substring(message.lastIndexOf('@') + 1).toLowerCase();
+      const query = message
+        .substring(message.lastIndexOf('@') + 1)
+        .toLowerCase();
       const filteredMentionMembers = roomMembers.filter(
         (member) =>
           member.name.toLowerCase().includes(query) ||

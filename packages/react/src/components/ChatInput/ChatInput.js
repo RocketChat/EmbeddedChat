@@ -8,7 +8,7 @@ import {
   useMessageStore,
   loginModalStore,
   useChannelStore,
-  useMemberStore
+  useMemberStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -59,7 +59,8 @@ const ChatInput = ({ scrollToBottom }) => {
           .catch(console.error);
 
         RCInstance.getChannelMembers(isChannelPrivate)
-          .then((channelMembers) => setMembersHandler(channelMembers.members || []))
+          .then((channelMembers) =>
+            setMembersHandler(channelMembers.members || []))
           .catch(console.error);
       }
     });
