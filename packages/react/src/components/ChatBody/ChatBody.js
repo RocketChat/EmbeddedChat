@@ -49,6 +49,11 @@ const ChatBody = ({
     }
   `;
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [, setIsUserScrolledUp] = useState(false);
+  const [otherUserMessage, setOtherUserMessage] = useState(false);
+
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
@@ -172,11 +177,6 @@ const ChatBody = ({
     onActionTriggerResponse,
     anonymousMode,
   ]);
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
-  const [otherUserMessage, setOtherUserMessage] = useState(false);
 
   const handlePopupClick = () => {
     scrollToBottom();
