@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import bundleSize from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
-import analyze from 'rollup-plugin-analyzer'
+import analyze from 'rollup-plugin-analyzer';
 
 const packageJson = require('./package.json');
 const PRODUCTION = process.env.NODE_ENV === 'production';
@@ -40,7 +40,10 @@ export default [
             }
           : {}
       ),
-      resolve({ browser: true, extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'] }),
+      resolve({
+        browser: true,
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
+      }),
       commonjs({ include: ['node_modules/**', '../../node_modules/**'] }),
       babel({
         exclude: 'node_modules/**',

@@ -57,6 +57,8 @@ export const MessageToolbox = ({
   handleDeleteMessage,
   handlerReportMessage,
   handleEditMessage,
+  handleCopyMessage,
+  handleCopyMessageLink,
   isEditing = false,
   ...props
 }) => {
@@ -142,6 +144,18 @@ export const MessageToolbox = ({
                 size="small"
                 icon="edit"
                 onClick={() => handleEditMessage(message)}
+              />
+              <ActionButton
+                ghost
+                size="small"
+                icon="link"
+                onClick={() => handleCopyMessageLink(message)}
+              />
+              <ActionButton
+                ghost
+                size="small"
+                icon="copy"
+                onClick={() => handleCopyMessage(message)}
               />
               <ActionButton
                 ghost
