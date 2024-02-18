@@ -146,7 +146,6 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const sendMessage = async () => {
-    scrollToBottom();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
     if (!message.length || !isUserAuthenticated) {
@@ -210,6 +209,8 @@ const ChatInput = ({ scrollToBottom }) => {
       setDisableButton(true);
       setEditMessage({});
     }
+
+    scrollToBottom();
   };
 
   const sendAttachment = (event) => {
@@ -278,11 +279,18 @@ const ChatInput = ({ scrollToBottom }) => {
   const handleMemberClick = (selectedItem) => {
     setshowMembersList(false);
 
+    console.log(messageRef.current.value);
     let insertionText;
     if (selectedItem === 'all') {
-      insertionText = `@all `;
+      insertionText = `${messageRef.current.value.substring(
+        0,
+        messageRef.current.value.lastIndexOf('@')
+      )}@all `;
     } else if (selectedItem === 'here') {
-      insertionText = `@here `;
+      insertionText = `${messageRef.current.value.substring(
+        0,
+        messageRef.current.value.lastIndexOf('@')
+      )}@here `;
     } else {
       insertionText = `${messageRef.current.value.substring(
         0,
