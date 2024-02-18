@@ -39,8 +39,21 @@ export const searchToMentionUser = (
       );
 
       setFilteredMembers(filteredMentionMembers);
-      setshowMembersList(true);
-      setmentionIndex(0);
+
+      const isValidUsername = roomMembers.some(
+        (member) =>
+          member.name.toLowerCase().includes(query) ||
+          member.username.toLowerCase().includes(query)
+      );
+
+
+      if (isValidUsername) {
+        setshowMembersList(true);
+        setmentionIndex(0);
+      } else {
+        setshowMembersList(false);
+        setmentionIndex(-1);
+      }
     }
   }
 };

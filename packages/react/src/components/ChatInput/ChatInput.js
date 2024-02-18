@@ -402,36 +402,41 @@ const ChatInput = ({ scrollToBottom }) => {
     }
 
     if (e.key === 'ArrowDown') {
+      e.preventDefault();
       setmentionIndex(
         mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
       );
     }
     if (e.key === 'ArrowUp') {
+      e.preventDefault();
       setmentionIndex(
         mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
       );
-    }
-    if (showMembersList && e.key === 'Enter') {
-      e.preventDefault();
-      let selectedMember = null;
-      if (mentionIndex === filteredMembers.length) selectedMember = 'all';
-      else if (mentionIndex === filteredMembers.length + 1)
-        selectedMember = 'here';
-      else selectedMember = filteredMembers[mentionIndex].username;
-      messageRef.current.value = `${messageRef.current.value.substring(
-        0,
-        messageRef.current.value.lastIndexOf('@')
-      )}@${selectedMember}`;
 
-      setshowMembersList(false);
-
-      setStartReading(false);
-      setFilteredMembers([]);
-      setmentionIndex(-1);
+      const lastIndexOfAt = messageRef.current.value.lastIndexOf('@');
+      const cursorPosition = lastIndexOfAt === -1 ? 0 : lastIndexOfAt + 1;
+      messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
     }
 
     if (e.key === 'Enter') {
-      sendTypingStop();
+      e.preventDefault();
+      if (showMembersList) {
+        let selectedMember = null;
+        if (mentionIndex === filteredMembers.length) selectedMember = 'all';
+        else if (mentionIndex === filteredMembers.length + 1)
+          selectedMember = 'here';
+        else selectedMember = filteredMembers[mentionIndex].username;
+
+        handleMemberClick(selectedMember);
+
+        setshowMembersList(false);
+        setStartReading(false);
+        setFilteredMembers([]);
+        setmentionIndex(-1);
+      } else {
+        sendTypingStop();
+        sendMessage();
+      }
     }
   };
   return (
