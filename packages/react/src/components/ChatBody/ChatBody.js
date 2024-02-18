@@ -13,8 +13,15 @@ import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
-const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageListRef }) => {
+const ChatBody = ({
+  height,
+  anonymousMode,
+  showRoles,
+  scrollToBottom,
+  messageListRef,
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -42,16 +49,18 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     }
   `;
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [, setIsUserScrolledUp] = useState(false);
+  const [otherUserMessage, setOtherUserMessage] = useState(false);
+
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
 
-  const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
-  const setFilter = useMessageStore((state) => state.setFilter);
-  const setRoles = useUserStore((state) => state.setRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
@@ -65,66 +74,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     (state) => state.isUserAuthenticated
   );
 
-  const username = useUserStore(
-    (state) => state.username
-  );
+  const username = useUserStore((state) => state.username);
 
-  const getMessagesAndRoles = useCallback(
-    async (anonymousMode) => {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { messages } = await RCInstance.getMessages(
-          anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-              query: {
-                tmid: {
-                  $exists: false,
-                },
-              },
-            }
-            : undefined, anonymousMode ? false : isChannelPrivate
-        );
-        if (messages) {
-          setMessages(messages.filter((message) => message._hidden !== true));
-        }
-        if (!isUserAuthenticated) {
-          // fetch roles only when user is authenticated
-          return;
-        }
-        if (showRoles) {
-          const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
-          // convert roles array from api into object for better search
-          const rolesObj = roles?.length > 0
-            ? roles.reduce((obj, item) => ({ ...obj, [item.u.username]: item }), {})
-            : {};
-          setRoles(rolesObj);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [
-      isUserAuthenticated,
-      RCInstance,
-      ECOptions?.enableThreads,
-      showRoles,
-      setMessages,
-      setRoles,
-      isChannelPrivate
-    ]
-  );
-
-  const handleGoBack = async () => {
-    if (isUserAuthenticated) {
-      getMessagesAndRoles();
-    } else {
-      getMessagesAndRoles(anonymousMode);
-    }
-    setFilter(false);
-  };
+  const getMessagesAndRoles = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -147,7 +99,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     RCInstance,
     threadMainMessage?._id,
     setThreadMessages,
-    isChannelPrivate
+    isChannelPrivate,
   ]);
 
   useEffect(() => {
@@ -226,12 +178,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     anonymousMode,
   ]);
 
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
-  const [otherUserMessage, setOtherUserMessage] = useState(false);
-
   const handlePopupClick = () => {
     scrollToBottom();
     setIsUserScrolledUp(false);
@@ -239,13 +185,12 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     setPopupVisible(false);
   };
 
-
   const handleScroll = () => {
     setScrollPosition(messageListRef.current.scrollTop);
 
     setIsUserScrolledUp(
       messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-      messageListRef.current.scrollHeight
+        messageListRef.current.scrollHeight
     );
 
     const isAtBottom = messageListRef.current.scrollTop === 0;
@@ -260,7 +205,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
     setPopupVisible(true);
   };
 
-
   useEffect(() => {
     messageListRef.current.addEventListener('scroll', handleScroll);
 
@@ -268,7 +212,6 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
       messageListRef.current.removeEventListener('scroll', handleScroll);
     };
   }, [messageListRef]);
-
 
   useEffect(() => {
     const isScrolledUp =
@@ -300,7 +243,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
             threadMessages={threadMessages}
           />
         ) : (
-          <MessageList messages={messages} handleGoBack={handleGoBack} />
+          <MessageList messages={messages} />
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
@@ -314,9 +257,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, scrollToBottom, messageLis
           />
         )}
       </Box>
-      {(popupVisible && otherUserMessage) && (
+      {popupVisible && otherUserMessage && (
         <RecentMessageButton
-          visible={true}
+          visible
           text="New messages"
           onClick={handlePopupClick}
         />

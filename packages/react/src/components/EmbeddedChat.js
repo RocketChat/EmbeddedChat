@@ -21,7 +21,6 @@ import { ToastBarProvider } from './ToastBar';
 import { DropBoxOverlay, dropBoxStyles } from './DropBox';
 import { styles } from './EmbeddedChat.styles';
 
-
 const EmbeddedChat = ({
   isClosable = false,
   setClosableState,
@@ -53,7 +52,14 @@ const EmbeddedChat = ({
     setShowAvatar(showAvatar);
   }, [toastBarPosition, showAvatar]);
 
-  const { onDrag, data, handleDrag, handleDragEnter, handleDragLeave, handleDragDrop } = useDropBox();
+  const {
+    onDrag,
+    data,
+    handleDrag,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragDrop,
+  } = useDropBox();
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -127,7 +133,6 @@ const EmbeddedChat = ({
             setIsUserAuthenticated(true);
           })
           .catch(console.error);
-
       } else {
         setIsUserAuthenticated(false);
       }
@@ -187,17 +192,18 @@ const EmbeddedChat = ({
     }
   };
 
-
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (!!data ?
-            <>
-              <AttachmentWindow />
-            </>
-            :
-            <ValidateComponent data={data} />
+          {attachmentWindowOpen ? (
+            data ? (
+              <>
+                <AttachmentWindow />
+              </>
+            ) : (
+              <ValidateComponent data={data} />
+            )
           ) : null}
           <Box
             css={[
@@ -225,6 +231,8 @@ const EmbeddedChat = ({
                 moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
               />
             )}
 
@@ -233,7 +241,7 @@ const EmbeddedChat = ({
                 <Box
                   css={[
                     onDrag && dropBoxStyles.dropBoxCss,
-                    onDrag && dropBoxStyles.borderCss
+                    onDrag && dropBoxStyles.borderCss,
                   ]}
                   style={{ height: !fullScreen ? height : '90vh' }}
                 >

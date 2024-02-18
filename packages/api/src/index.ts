@@ -1,1 +1,1 @@
-export { default as EmbeddedChatApi } from './EmbeddedChatApi'
+export { default as EmbeddedChatApi } from "./EmbeddedChatApi";

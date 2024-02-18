@@ -11,12 +11,11 @@ const ValidateComponent = ({ data }) => {
   const [previewURL, setPreviewURL] = useState('');
   const dispatchToastMessage = useToastBarDispatch();
 
-
   useEffect(() => {
     if (!data) {
       dispatchToastMessage({
         type: 'error',
-        message: 'Media Type Not Accepted'
+        message: 'Media Type Not Accepted',
       });
     }
   }, [data, dispatchToastMessage]);

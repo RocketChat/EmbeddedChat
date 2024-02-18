@@ -9,7 +9,11 @@
   "scripts": {
     "preinstall": "node scripts/node-check.js",
     "postinstall": "yarn build",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "build:storybook": "lerna run build-storybook",
+    "format": "lerna run format",
+    "format:check": "lerna run format:check"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
