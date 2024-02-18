@@ -46,7 +46,6 @@ export const searchToMentionUser = (
           member.username.toLowerCase().includes(query)
       );
 
-
       if (isValidUsername) {
         setshowMembersList(true);
         setmentionIndex(0);

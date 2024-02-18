@@ -60,7 +60,8 @@ const ChatInput = ({ scrollToBottom }) => {
 
         RCInstance.getChannelMembers(isChannelPrivate)
           .then((channelMembers) =>
-            setMembersHandler(channelMembers.members || []))
+            setMembersHandler(channelMembers.members || [])
+          )
           .catch(console.error);
       }
     });
@@ -280,13 +281,9 @@ const ChatInput = ({ scrollToBottom }) => {
     let insertionText;
     if (selectedItem === 'all') {
       insertionText = `@all `;
-    }
-
-    else if (selectedItem === 'here') {
+    } else if (selectedItem === 'here') {
       insertionText = `@here `;
-    }
-
-    else {
+    } else {
       insertionText = `${messageRef.current.value.substring(
         0,
         messageRef.current.value.lastIndexOf('@')
@@ -299,7 +296,6 @@ const ChatInput = ({ scrollToBottom }) => {
     messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
     messageRef.current.focus();
   };
-
 
   const showCommands = useCallback(
     async (e) => {
@@ -490,8 +486,8 @@ const ChatInput = ({ scrollToBottom }) => {
               isUserAuthenticated && canSendMsg
                 ? 'Message'
                 : isUserAuthenticated
-                  ? 'This room is read only'
-                  : 'Sign in to chat'
+                ? 'This room is read only'
+                : 'Sign in to chat'
             }
             className={styles.textInput}
             onChange={onTextChange}

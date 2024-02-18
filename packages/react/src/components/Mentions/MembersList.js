@@ -57,30 +57,51 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           mentionIndex < filteredMembers.length
             ? filteredMembers[mentionIndex]
             : mentionIndex === filteredMembers.length
-              ? 'all'
-              : 'here';
+            ? 'all'
+            : 'here';
         handleMemberClick(selectedItem);
       }
     };
 
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyPress);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 
   return (
-    <Box css={listStyle}>
+    <Box
+      css={listStyle}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+        }
+      }}
+    >
       <ul style={{ listStyle: 'none' }}>
         {filteredMembers.map((member, index) => (
           <li
             key={member._id}
             css={listItemStyle}
+            onClick={() => handleMemberClick(member)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleMemberClick(member);
+              }
+            }}
+            tabIndex={0}
             style={{
               backgroundColor: index === mentionIndex && '#dddddd',
             }}
-            onClick={() => handleMemberClick(member)}
           >
             <span style={{ justifyContent: 'space-evenly' }}>
               <span css={listTextStyle}>{member.name}</span>
@@ -92,22 +113,34 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
         <li
           key="all"
           css={listItemStyle}
+          onClick={() => handleMemberClick('all')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleMemberClick('all');
+            }
+          }}
+          tabIndex={0}
           style={{
             backgroundColor:
               mentionIndex === filteredMembers.length && '#dddddd',
           }}
-          onClick={() => handleMemberClick('all')}
         >
           <span css={listTextStyle}>all</span>
         </li>
         <li
           key="here"
           css={listItemStyle}
+          onClick={() => handleMemberClick('here')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleMemberClick('here');
+            }
+          }}
+          tabIndex={0}
           style={{
             backgroundColor:
               mentionIndex === filteredMembers.length + 1 && '#dddddd',
           }}
-          onClick={() => handleMemberClick('here')}
         >
           <span css={listTextStyle}>here</span>
         </li>

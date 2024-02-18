@@ -11,15 +11,13 @@ const Mention = ({ contents }) => {
     background-color: ${contents.value === 'all' || contents.value === 'here'
       ? '#f38c39'
       : contents.value === username
-        ? '#ec0d2a'
-        : '#e4e7ea'
-    };
+      ? '#ec0d2a'
+      : '#e4e7ea'};
     color: ${contents.value === 'all' || contents.value === 'here'
-      ? '#ffffff' :
-      contents.value === username
-        ? '#ffffff'
-        : '#2f343d'
-    };
+      ? '#ffffff'
+      : contents.value === username
+      ? '#ffffff'
+      : '#2f343d'};
     font-weight: bold;
     cursor: pointer;
     padding: 1.5px;
@@ -27,8 +25,8 @@ const Mention = ({ contents }) => {
 
     &:hover {
       text-decoration: ${contents.value === 'all' || contents.value === 'here'
-      ? 'none'
-      : 'underline'}; 
+        ? 'none'
+        : 'underline'};
     }
   `;
 
