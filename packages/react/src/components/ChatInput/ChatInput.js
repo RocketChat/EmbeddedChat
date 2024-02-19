@@ -146,6 +146,7 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const sendMessage = async () => {
+    messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
     if (!message.length || !isUserAuthenticated) {

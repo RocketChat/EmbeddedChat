@@ -35,7 +35,6 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     align-items: center;
     padding-left: 0;
     padding-right: 2px;
-    background-color: ${mentionIndex === filteredMembers.length && '#dddddd'};
 
     &:hover {
       background-color: #e8e8e8;
@@ -82,7 +81,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
   return (
     <Box css={listStyle}>
       <ul style={{ listStyle: 'none' }}>
-        {filteredMembers.map((member) => (
+        {filteredMembers.map((member, index) => (
           <li
             key={member._id}
             role="presentation"
@@ -92,6 +91,9 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               if (e.key === 'Enter') {
                 handleMemberClick(member);
               }
+            }}
+            style={{
+              backgroundColor: index === mentionIndex && '#dddddd',
             }}
           >
             <span style={{ justifyContent: 'space-evenly' }}>
@@ -111,6 +113,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               handleMemberClick('all');
             }
           }}
+          style={{
+            backgroundColor:
+              mentionIndex === filteredMembers.length && '#dddddd',
+          }}
         >
           <span css={listTextStyle}>all</span>
         </li>
@@ -123,6 +129,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
             if (e.key === 'Enter') {
               handleMemberClick('here');
             }
+          }}
+          style={{
+            backgroundColor:
+              mentionIndex === filteredMembers.length + 1 && '#dddddd',
           }}
         >
           <span css={listTextStyle}>here</span>
