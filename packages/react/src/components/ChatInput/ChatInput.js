@@ -279,7 +279,6 @@ const ChatInput = ({ scrollToBottom }) => {
   const handleMemberClick = (selectedItem) => {
     setshowMembersList(false);
 
-    console.log(messageRef.current.value);
     let insertionText;
     if (selectedItem === 'all') {
       insertionText = `${messageRef.current.value.substring(
@@ -494,8 +493,8 @@ const ChatInput = ({ scrollToBottom }) => {
               isUserAuthenticated && canSendMsg
                 ? 'Message'
                 : isUserAuthenticated
-                ? 'This room is read only'
-                : 'Sign in to chat'
+                  ? 'This room is read only'
+                  : 'Sign in to chat'
             }
             className={styles.textInput}
             onChange={onTextChange}
