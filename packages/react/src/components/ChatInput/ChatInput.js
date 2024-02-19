@@ -493,8 +493,8 @@ const ChatInput = ({ scrollToBottom }) => {
               isUserAuthenticated && canSendMsg
                 ? 'Message'
                 : isUserAuthenticated
-                  ? 'This room is read only'
-                  : 'Sign in to chat'
+                ? 'This room is read only'
+                : 'Sign in to chat'
             }
             className={styles.textInput}
             onChange={onTextChange}
