@@ -84,7 +84,7 @@ const Menu = ({
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
     >
-      <Tooltip text="Options" position="bottom">
+      <Tooltip text="Options" position="bottom" X="-25%" Y="30%">
         {' '}
         <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
       </Tooltip>

@@ -111,7 +111,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </>
       )}
       {formatter.map((item, index) => (
-        <Tooltip text={item.name} position="top" key={index}>
+        <Tooltip text={item.name} position="top" key={index} X="-17%">
           <ActionButton
             square
             disabled={isRecordingMessage}
@@ -128,10 +128,10 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           </ActionButton>
         </Tooltip>
       ))}
-      <Tooltip text="Audio Message" position="top">
+      <Tooltip text="Audio Message" position="top" X="-35%">
         <AudioMessageRecorder />
       </Tooltip>
-      <Tooltip text="Video Message" position="top">
+      <Tooltip text="Video Message" position="top" X="-35%">
         <VideoMessageRecorder />
       </Tooltip>
       <ActionButton
