@@ -18,7 +18,7 @@ const MessageToolboxWrapperCss = css`
     position: absolute;
     bottom: 100%;
     z-index: 90;
-    right:2rem;
+    right: 2rem;
   }
 `;
 
@@ -41,7 +41,7 @@ const popupStyle = {
   margin: '0',
   position: 'absolute',
   right: '2rem',
-  top: '7.5rem'
+  top: '7.5rem',
 };
 
 export const MessageToolbox = ({
@@ -98,11 +98,12 @@ export const MessageToolbox = ({
           <ActionButton
             ghost
             size="small"
-            icon={`${message.starred &&
+            icon={`${
+              message.starred &&
               message.starred.find((u) => u._id === authenticatedUserId)
-              ? 'star-filled'
-              : 'star'
-              }`}
+                ? 'star-filled'
+                : 'star'
+            }`}
             onClick={() => handleStarMessage(message)}
           />
           <ActionButton
@@ -129,10 +130,7 @@ export const MessageToolbox = ({
             <ActionButton
               ghost
               size="small"
-              icon={`${message.pinned
-                ? 'pin-filled'
-                : 'pin'
-                }`}
+              icon={`${message.pinned ? 'pin-filled' : 'pin'}`}
               onClick={() => handlePinMessage(message)}
             />
           )}
@@ -167,7 +165,12 @@ export const MessageToolbox = ({
         <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
-              <Icon name="trash" size="1.25rem" style={{ marginRight: '0.5rem' }} /> Delete this message?
+              <Icon
+                name="trash"
+                size="1.25rem"
+                style={{ marginRight: '0.5rem' }}
+              />{' '}
+              Delete this message?
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>

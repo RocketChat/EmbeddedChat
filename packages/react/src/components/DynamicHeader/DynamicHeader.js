@@ -5,43 +5,42 @@ import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 
-const DynamicHeader = ({ title, isClosable = false, handleClose = () => { }, iconName }) => {
-  return (
+const DynamicHeader = ({
+  title,
+  isHeaderIcon = false,
+  handleClose = () => {},
+  iconName,
+  headerIconName,
+}) => (
+  <Box
+    className={styles.container}
+    style={{
+      paddingBlockStart: '10px',
+    }}
+  >
     <Box
-      className={styles.container}
       style={{
-        paddingBlockStart: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: '0.5rem',
       }}
     >
-      <Box
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: '0.5rem',
-        }}
-      >
-        {isClosable && (
-          <ActionButton onClick={handleClose} ghost display="inline" square small>
-            <Icon name={iconName} size="1.25rem" />
-          </ActionButton>
-        )}
-        {!isClosable && (
-          <div>
-            <Icon name={iconName} size="1.25rem" />
-          </div>
-        )}
-        <h4 className={styles.nospace}>{title}</h4>
-      </Box>
+      <ActionButton onClick={handleClose} ghost display="inline" square small>
+        <Icon name={iconName} size="1.25rem" />
+      </ActionButton>
+
+      <h4 className={styles.nospace}>{title}</h4>
+      {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
     </Box>
-  );
-};
+  </Box>
+);
 
 export default DynamicHeader;
 
 DynamicHeader.propTypes = {
   handleClose: PropTypes.func,
   title: PropTypes.string,
-  isClosable: PropTypes.bool,
+  isHeaderIcon: PropTypes.bool,
   iconName: PropTypes.string,
 };

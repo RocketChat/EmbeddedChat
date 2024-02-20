@@ -79,7 +79,7 @@ const icons = {
   check: Check,
   'error-circle': ErrorCircle,
   'arrow-down': ArrowDown,
-  'pin-filled': PinFilled
+  'pin-filled': PinFilled,
 };
 
 export default icons;

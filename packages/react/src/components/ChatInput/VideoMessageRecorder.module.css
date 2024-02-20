@@ -10,13 +10,8 @@
 .videoBox {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: 5px;
-  width: 45%;
-  background-color: rgb(44, 44, 44);
+  justify-content: space-between;
   color: white;
-  border-radius: 20px;
 }
 
 .timer {
@@ -26,19 +21,6 @@
 .record {
   display: flex;
   margin: auto;
-}
-
-.modal {
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  top: 130px;
-  right: 18px;
-  height: 13.2rem;
-  width: 17.6rem;
-  box-shadow: 0px 1px 1px 1px rgb(203, 203, 203);
-  background-color: rgb(39, 39, 39);
-  z-index: 999;
 }
 
 .overlay {
