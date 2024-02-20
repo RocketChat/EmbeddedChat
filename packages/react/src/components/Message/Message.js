@@ -288,20 +288,28 @@ const Message = ({
           <Modal.Content css={css`margin: 1em;`}> Are you sure you want to pin this message? </Modal.Content>
           <Modal.Content css={css`margin: 1em;`}> 
           {/* Add the isPinned prop after that gets merged */}
-            <MessageAvatarContainer message={message} sequential={sequential} isStarred={isStarred} /> 
-            <MessageHeader message={message} isTimeStamped={false} />
+          <Box key={message._id} css={MessageCss}>
+            {showAvatar && (
+                <MessageAvatarContainer
+                    message={message}
+                    sequential={false}
+                    isStarred={false}
+                />
+            )}
             <MessageBodyContainer>
-              <MessageBody>
-                  {message.attachments && message.attachments.length > 0 ? (
-                      message.file.namexxx
-                  ) : (
-                      message.msg
-                  )}
-              </MessageBody>
-            </MessageBodyContainer>
+                <MessageHeader message={message} isTimeStamped={false} />
+                <MessageBody>
+                    {message.attachments && message.attachments.length > 0 ? (
+                        message.file.name
+                    ) : (
+                        message.msg
+                    )}
+                </MessageBody>
+              </MessageBodyContainer>
+          </Box>
           </Modal.Content>
           <Modal.Content css={css`margin: 1em;`}> 
-            Pinned messages are visible to everyone <br />
+            <span css={css`font-weight:bold; display:block;`}>Pinned messages are visible to everyone</span>
             Starred messages are only visible to you 
           </Modal.Content>
           <Modal.Footer>
