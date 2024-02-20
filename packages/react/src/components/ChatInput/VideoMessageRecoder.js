@@ -5,14 +5,14 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import styles from './VideoMessage.module.css';
+import styles from './VideoMessageRecorder.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Modal } from '../Modal'
+import { Modal } from '../Modal';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -38,7 +38,7 @@ const VideoMessageRecorder = () => {
   const [start, stop] = useMediaRecorder({
     constraints: { audio: true, video: true }, // Update constraints as needed
     onStop,
-    videoRef: videoRef,
+    videoRef,
   });
 
   const stopRecording = async () => {
@@ -55,7 +55,6 @@ const VideoMessageRecorder = () => {
     setRecordState('recording');
     try {
       start(videoRef.current);
-      console.log(videoRef); // Start recording with the videoRef
       toogleRecordingMessage();
       const startTime = new Date();
       setRecordingInterval(
@@ -163,7 +162,12 @@ const VideoMessageRecorder = () => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            className={styles}
+            style={{
+              display: 'flex',
+              width: '28rem',
+              boxShadow: '0px 1px 1px 1px rgb(203, 203, 203)',
+              backgroundColor: 'rgb(39, 39, 39)',
+            }}
           >
             <video muted autoPlay playsInline ref={videoRef} />
             <Box className={styles.videoBox}>

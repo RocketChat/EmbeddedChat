@@ -71,7 +71,12 @@ const Search = () => {
           className={classes.textInput}
         />
 
-        <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em', cursor: 'pointer' }} onClick={searchMessages} />
+        <Icon
+          name="magnifier"
+          size="1.25rem"
+          style={{ padding: '0.125em', cursor: 'pointer' }}
+          onClick={searchMessages}
+        />
       </Box>
       {messageList &&
         messageList.map((msg, index, arr) => {

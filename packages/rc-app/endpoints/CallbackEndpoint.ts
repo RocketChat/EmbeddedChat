@@ -55,30 +55,42 @@ export class CallbackEndpoint extends ApiEndpoint {
         const response = await http.post(tokenUrl, {
             content: formData.toString(),
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                "Content-Type": "application/x-www-form-urlencoded",
             },
-        })
+        });
 
         if (response.statusCode !== 200) {
-          return {
-            status: response.statusCode,
-            content: await getCallbackContent(read, null, origin, response.data.error_description || 'Unknown'),
-            headers: {
-                'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
-            }
-          }
+            return {
+                status: response.statusCode,
+                content: await getCallbackContent(
+                    read,
+                    null,
+                    origin,
+                    response.data.error_description || "Unknown"
+                ),
+                headers: {
+                    "Content-Security-Policy":
+                        "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
+                },
+            };
         }
 
         return {
             status: 200,
-            content: await getCallbackContent(read, {
-                accessToken: response.data?.access_token,
-                expiresIn: response.data?.expires_in,
-                serviceName: customOAuthName,
-            }, origin, false),
+            content: await getCallbackContent(
+                read,
+                {
+                    accessToken: response.data?.access_token,
+                    expiresIn: response.data?.expires_in,
+                    serviceName: customOAuthName,
+                },
+                origin,
+                false
+            ),
             headers: {
-                'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
-            }
+                "Content-Security-Policy":
+                    "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
+            },
         };
     }
 }

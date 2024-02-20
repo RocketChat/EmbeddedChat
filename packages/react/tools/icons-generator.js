@@ -104,4 +104,4 @@ iconsList.forEach((icon) => {
 });
 
 fs.writeFileSync(path.join(svgIconOutputDir, 'index.js'), getIndexFileCode());
-execSync(`npx prettier --write '${svgIconOutputDir}' --loglevel=silent`);
+execSync(`npx prettier --write '${svgIconOutputDir}' `);

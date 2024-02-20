@@ -115,14 +115,15 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
               </Message.Role>
             ))
           : null} */}
-        {isTimeStamped && <Box
-          is="span"
-          css={MessageHeaderTimestapCss}
-          className={appendClassNames('ec-message-header-timestamp')}
-        >
-          {format(new Date(message.ts), 'h:mm a')}
-        </Box>
-        }
+        {isTimeStamped && (
+          <Box
+            is="span"
+            css={MessageHeaderTimestapCss}
+            className={appendClassNames('ec-message-header-timestamp')}
+          >
+            {format(new Date(message.ts), 'h:mm a')}
+          </Box>
+        )}
         {message.editedAt && (
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
