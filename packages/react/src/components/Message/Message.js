@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { css } from '@emotion/react';
@@ -20,6 +20,9 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+import { Modal } from '../Modal';
+import { Icon } from '../Icon';
+import { Button } from '../Button';
 
 const MessageCss = css`
   display: flex;
@@ -71,6 +74,20 @@ const Message = ({
     setEditMessage: state.setEditMessage,
   }));
   const openThread = useMessageStore((state) => state.openThread);
+  const [pinMessageConfirmed, setPinMessageConfirmed] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+
+  const openConfirmationModal = () => {
+    setConfirmationModal(true);
+  };
+  const closeConfirmationModal = () => {
+    setConfirmationModal(false);
+  };
+
+  const handleConfirmPinning = () => {
+    setPinMessageConfirmed(true);
+    closeConfirmationModal();
+  };
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -92,6 +109,12 @@ const Message = ({
 
   const handlePinMessage = async (msg) => {
     const isPinned = msg.pinned;
+    if (!isPinned && !pinMessageConfirmed) {
+      openConfirmationModal();
+      return;
+    }
+    setPinMessageConfirmed(false);
+
     const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(msg._id)
       : await RCInstance.pinMessage(msg._id);
@@ -107,6 +130,10 @@ const Message = ({
       });
     }
   };
+
+  useEffect(() => {
+    if (pinMessageConfirmed) handlePinMessage(message);
+  }, [pinMessageConfirmed]);
 
   const handleDeleteMessage = async (msg) => {
     const res = await RCInstance.deleteMessage(msg._id);
@@ -248,6 +275,85 @@ const Message = ({
           {format(new Date(message.ts), 'MMMM d, yyyy')}
         </MessageDivider>
       ) : null}
+      {confirmationModal && (
+        <Modal>
+          <Modal
+            css={css`
+              padding: 1em;
+            `}
+            onClose={closeConfirmationModal}
+          >
+            <Modal.Header>
+              <Modal.Title>
+                <Icon
+                  name="pin"
+                  size="1.25rem"
+                  css={css`
+                    margin-right: 5px;
+                  `}
+                />
+                Pin Message
+              </Modal.Title>
+              <Modal.Close onClick={closeConfirmationModal} />
+            </Modal.Header>
+            <Modal.Content
+              css={css`
+                margin: 1em;
+              `}
+            >
+              {' '}
+              Are you sure you want to pin this message?{' '}
+            </Modal.Content>
+            <Modal.Content
+              css={css`
+                margin: 1em;
+              `}
+            >
+              {/* Add the isPinned prop after that gets merged */}
+              <Box key={message._id} css={MessageCss}>
+                {showAvatar && (
+                  <MessageAvatarContainer
+                    message={message}
+                    sequential={false}
+                    isStarred={false}
+                  />
+                )}
+                <MessageBodyContainer>
+                  <MessageHeader message={message} isTimeStamped={false} />
+                  <MessageBody>
+                    {message.attachments && message.attachments.length > 0
+                      ? message.file.name
+                      : message.msg}
+                  </MessageBody>
+                </MessageBodyContainer>
+              </Box>
+            </Modal.Content>
+            <Modal.Content
+              css={css`
+                margin: 1em;
+              `}
+            >
+              <span
+                css={css`
+                  font-weight: bold;
+                  display: block;
+                `}
+              >
+                Pinned messages are visible to everyone
+              </span>
+              Starred messages are only visible to you
+            </Modal.Content>
+            <Modal.Footer>
+              <Button color="secondary" onClick={closeConfirmationModal}>
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmPinning} color="primary">
+                Yes, Pin Message
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Modal>
+      )}
     </>
   );
 };
