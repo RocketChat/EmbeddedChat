@@ -16,7 +16,7 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 </div>
 
 ## Installation and Usage
-Installtion and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
+Installation and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
 
 ## Development
 
