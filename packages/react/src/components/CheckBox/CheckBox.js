@@ -21,6 +21,7 @@ const CheckBox = ({ checked, ...props }) => {
     }
   `;
   return (
+    // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <label
       css={CheckBoxCss}
       className={appendClassNames('ec-check-box', classNames)}
@@ -33,11 +34,7 @@ const CheckBox = ({ checked, ...props }) => {
         style={{ display: 'none' }}
       />
       {checked ? (
-        <Icon
-          name={'check'}
-          size={'1.12rem'}
-          style={{ display: 'inline-block' }}
-        />
+        <Icon name="check" size="1.12rem" style={{ display: 'inline-block' }} />
       ) : null}
     </label>
   );

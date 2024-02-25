@@ -52,17 +52,17 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
             expiresIn,
             serviceName,
           });
-					popup.close();
+          popup.close();
           resolve(response.data);
         }
       };
       window.addEventListener("message", onMessage);
       const checkInterval = setInterval(() => {
-				if (popup.closed)	{
-					clearInterval(checkInterval);
-					window.removeEventListener("message", onMessage);
-				}
-			}, 1000);
+        if (popup.closed) {
+          clearInterval(checkInterval);
+          window.removeEventListener("message", onMessage);
+        }
+      }, 1000);
     } else {
       throw new Error("Popup blocked");
     }
