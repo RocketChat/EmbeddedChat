@@ -12,7 +12,7 @@ import ButtonElement from '../elements/ButtonElement';
 import DatePickerElement from '../elements/DatePickerElement';
 import ImageElement from '../elements/ImageElement';
 import LinearScaleElement from '../elements/LinearScaleElement';
-// import MultiStaticSelectElement from '../elements/MultiStaticSelectElement';
+import MultiStaticSelectElement from '../elements/MultiStaticSelectElement';
 import OverflowElement from '../elements/OverflowElement';
 import PlainTextInputElement from '../elements/PlainTextInputElement';
 import StaticSelectElement from '../elements/StaticSelectElement';
@@ -234,17 +234,15 @@ export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
       return null;
     }
 
-    return null;
-    // implement this without fuselage
-    // return (
-    //   <MultiStaticSelectElement
-    //     key={block.actionId || index}
-    //     block={block}
-    //     context={context}
-    //     index={index}
-    //     surfaceRenderer={this}
-    //   />
-    // );
+    return (
+      <MultiStaticSelectElement
+        key={block.actionId || index}
+        block={block}
+        context={context}
+        index={index}
+        surfaceRenderer={this}
+      />
+    );
   }
 
   overflow(block, context, index) {
