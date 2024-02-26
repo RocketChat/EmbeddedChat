@@ -13,9 +13,9 @@ import DatePickerElement from '../elements/DatePickerElement';
 import ImageElement from '../elements/ImageElement';
 import LinearScaleElement from '../elements/LinearScaleElement';
 // import MultiStaticSelectElement from '../elements/MultiStaticSelectElement';
-// import OverflowElement from '../elements/OverflowElement';
+import OverflowElement from '../elements/OverflowElement';
 import PlainTextInputElement from '../elements/PlainTextInputElement';
-// import StaticSelectElement from '../elements/StaticSelectElement';
+import StaticSelectElement from '../elements/StaticSelectElement';
 import { Markup } from '../../Markup';
 
 export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
@@ -218,17 +218,15 @@ export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
       return null;
     }
 
-    return null;
-    // implement this without fuselage
-    // return (
-    //   <StaticSelectElement
-    //     key={block.actionId || index}
-    //     block={block}
-    //     context={context}
-    //     index={index}
-    //     surfaceRenderer={this}
-    //   />
-    // );
+    return (
+      <StaticSelectElement
+        key={block.actionId || index}
+        block={block}
+        context={context}
+        index={index}
+        surfaceRenderer={this}
+      />
+    );
   }
 
   multi_static_select(block, context, index) {
@@ -254,17 +252,15 @@ export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
       return null;
     }
 
-    return null;
-    // implement this without fuselage
-    // return (
-    //   <OverflowElement
-    //     key={index}
-    //     block={block}
-    //     context={context}
-    //     index={index}
-    //     surfaceRenderer={this}
-    //   />
-    // );
+    return (
+      <OverflowElement
+        key={index}
+        block={block}
+        context={context}
+        index={index}
+        surfaceRenderer={this}
+      />
+    );
   }
 
   plain_text_input(block, context, index) {
