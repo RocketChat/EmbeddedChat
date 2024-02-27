@@ -6,7 +6,7 @@ import ContextBlock from '../blocks/ContextBlock';
 import DividerBlock from '../blocks/DividerBlock';
 import ImageBlock from '../blocks/ImageBlock';
 import InputBlock from '../blocks/InputBlock';
-// import PreviewBlock from '../blocks/PreviewBlock';
+import PreviewBlock from '../blocks/PreviewBlock';
 import SectionBlock from '../blocks/SectionBlock';
 import ButtonElement from '../elements/ButtonElement';
 import DatePickerElement from '../elements/DatePickerElement';
@@ -79,18 +79,16 @@ export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
     if (context !== UiKit.BlockContext.BLOCK) {
       return null;
     }
-    return null;
 
-    // TODO: Implement this without fuselage.
-    // return (
-    //   <PreviewBlock
-    //     key={index}
-    //     block={block}
-    //     context={context}
-    //     index={index}
-    //     surfaceRenderer={this}
-    //   />
-    // );
+    return (
+      <PreviewBlock
+        key={index}
+        block={block}
+        context={context}
+        index={index}
+        surfaceRenderer={this}
+      />
+    );
   }
 
   context(block, context, index) {

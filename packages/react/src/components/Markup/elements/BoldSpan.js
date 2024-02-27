@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
 import ItalicSpan from './ItalicSpan';
 import StrikeSpan from './StrikeSpan';
+import LinkSpan from './LinkSpan';
 
 const BoldSpan = ({ contents }) => (
   <strong>
@@ -16,6 +17,18 @@ const BoldSpan = ({ contents }) => (
 
         case 'ITALIC':
           return <ItalicSpan key={index} contents={content.value} />;
+        case 'LINK':
+          return (
+            <LinkSpan
+              key={index}
+              href={content.value.src.value}
+              label={
+                Array.isArray(content.value.label)
+                  ? content.value.label
+                  : [content.value.label]
+              }
+            />
+          );
 
         default:
           return null;
