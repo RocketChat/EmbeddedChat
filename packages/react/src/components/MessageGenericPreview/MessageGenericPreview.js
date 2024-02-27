@@ -13,7 +13,7 @@ const MessageGenericPreview = (props, className = '', style = {}) => {
     padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #cbced1;
+    background-color: #eff0f1;
   `;
   return (
     <div
