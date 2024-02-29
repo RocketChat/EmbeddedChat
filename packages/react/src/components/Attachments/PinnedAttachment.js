@@ -29,7 +29,9 @@ const PinnedAttachment = ({ attachment }) => {
         />
         <Box>{attachment?.author_name}</Box>
       </Box>
-      <Box>{attachment?.text}</Box>
+      <Box style={{
+        marginTop: '0.7rem',
+      }}>{attachment?.text}</Box>
     </Box>)
 }
 
