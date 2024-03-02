@@ -230,6 +230,12 @@ const ChatHeader = ({
             icon: 'members',
           },
           {
+            id: 'files',
+            action: showAllFiles,
+            label: 'Files',
+            icon: 'clip',
+          },
+          {
             id: 'starred',
             action: showStarredMessage,
             label: 'Starred',

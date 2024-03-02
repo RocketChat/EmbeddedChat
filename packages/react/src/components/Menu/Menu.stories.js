@@ -24,6 +24,11 @@ export const Menu = {
         icon: 'members',
       },
       {
+        id: 'files',
+        label: 'Files',
+        icon: 'clip',
+      },
+      {
         id: 'starred',
         label: 'Starred',
         icon: 'star',
