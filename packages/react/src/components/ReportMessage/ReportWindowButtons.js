@@ -14,7 +14,6 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   ]);
   const { RCInstance } = useContext(RCContext);
   const dispatchToastMessage = useToastBarDispatch();
-  const toastPosition = useToastStore((state) => state.position);
 
   const handleOnClose = () => {
     toggleReportMessage();

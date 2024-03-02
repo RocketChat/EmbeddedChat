@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
@@ -46,9 +46,9 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     font-weight: 600;
   `;
 
-  const handleMemberClick = (selectedItem) => {
+  const handleMemberClick = useCallback((selectedItem) => {
     onMemberClick(selectedItem);
-  };
+  }, [handleMemberClick]);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -57,8 +57,8 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           mentionIndex < filteredMembers.length
             ? filteredMembers[mentionIndex]
             : mentionIndex === filteredMembers.length
-            ? 'all'
-            : 'here';
+              ? 'all'
+              : 'here';
         handleMemberClick(selectedItem);
       }
     };

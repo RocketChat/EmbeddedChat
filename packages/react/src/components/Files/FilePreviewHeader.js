@@ -50,47 +50,47 @@ const FilePreviewHeaderTimestapCss = css`
 `;
 
 const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
-   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-   const authenticatedUserId = useUserStore((state) => state.userId);
-   const isStarred =
-      file.starred && file.starred.find((u) => u._id === authenticatedUserId);
+  const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
+  const authenticatedUserId = useUserStore((state) => state.userId);
+  const isStarred =
+    file.starred && file.starred.find((u) => u._id === authenticatedUserId);
 
-   return (
+  return (
+    <Box
+      css={FilePreviewHeaderCss}
+      className={appendClassNames('ec-file-header', classNames)}
+      style={styleOverrides}
+    >
       <Box
-         css={FilePreviewHeaderCss}
-         className={appendClassNames('ec-file-header', classNames)}
-         style={styleOverrides}
+        is="span"
+        css={FilePreviewHeaderNameCss}
+        className={appendClassNames('ec-file-header-name')}
       >
-         <Box
-            is="span"
-            css={FilePreviewHeaderNameCss}
-            className={appendClassNames('ec-file-header-name')}
-         >
-            {file.name}
-         </Box>
-
-         {isTimeStamped && (
-            <Box
-               is="span"
-               css={FilePreviewHeaderTimestapCss}
-               className={appendClassNames('ec-file-header-timestamp')}
-            >
-               {format(new Date(file.ts), 'h:mm a')}
-            </Box>
-         )}
-         {isStarred ? (
-            <Icon
-               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-               name="star-filled"
-               size="1em"
-            />
-         ) : null}
+        {file.name}
       </Box>
-   );
+
+      {isTimeStamped && (
+        <Box
+          is="span"
+          css={FilePreviewHeaderTimestapCss}
+          className={appendClassNames('ec-file-header-timestamp')}
+        >
+          {format(new Date(file.ts), 'h:mm a')}
+        </Box>
+      )}
+      {isStarred ? (
+        <Icon
+          style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+          name="star-filled"
+          size="1em"
+        />
+      ) : null}
+    </Box>
+  );
 };
 
 export default FilePreviewHeader;
 
 FilePreviewHeader.propTypes = {
-   file: PropTypes.any,
+  file: PropTypes.any,
 };

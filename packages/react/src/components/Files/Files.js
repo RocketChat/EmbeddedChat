@@ -3,11 +3,7 @@ import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
-import {
-   useMessageStore,
-   useUserStore,
-   useFileStore,
-} from '../../store';
+import { useFileStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageBody } from '../Message/MessageBody';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
@@ -88,8 +84,6 @@ const FilePreviewUsernameCss = css`
 
 const Files = () => {
    const { RCInstance } = useRCContext();
-   const showAvatar = useUserStore((state) => state.showAvatar);
-   const messages = useMessageStore((state) => state.messages);
    const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
    const [text, setText] = useState('');
    const [isFilesFetched, setIsFilesFetched] = useState(false);

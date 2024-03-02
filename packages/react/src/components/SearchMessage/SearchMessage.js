@@ -4,7 +4,6 @@ import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
 import { Markdown } from '../Markdown/index';
 import { useUserStore, useSearchMessageStore } from '../../store';
-import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';

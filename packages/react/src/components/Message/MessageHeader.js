@@ -83,9 +83,9 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
     }
   };
 
-  const userRoles = roles[message.u.username]
-    ? roles[message.u.username].roles
-    : null;
+  // const userRoles = roles[message.u.username]
+  //   ? roles[message.u.username].roles
+  //   : null;
 
   if (!message.t) {
     return (

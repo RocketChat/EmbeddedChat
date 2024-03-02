@@ -32,35 +32,30 @@ const FileMetricsItemLabelCss = css`
   white-space: nowrap;
 `;
 
-export const FileMetrics = ({
-   className = '',
-   file,
-   style = {},
-   ...props
-}) => {
-   const { styleOverrides, classNames } = useComponentOverrides(
-      'MessageMetrics',
-      className,
-      style
-   );
-   return (
-      <Box
-         css={FileMetricsCss}
-         className={appendClassNames('ec-message-metrics', classNames)}
-         style={styleOverrides}
-         {...props}
+export const FileMetrics = ({ className = '', file, style = {}, ...props }) => {
+  const { styleOverrides, classNames } = useComponentOverrides(
+    'MessageMetrics',
+    className,
+    style
+  );
+  return (
+    <Box
+      css={FileMetricsCss}
+      className={appendClassNames('ec-message-metrics', classNames)}
+      style={styleOverrides}
+      {...props}
+    >
+      <div
+        css={FileMetricsItemCss}
+        title={new Date(file.uploadedAt).toLocaleString()}
       >
-         <div
-            css={FileMetricsItemCss}
-            title={new Date(file.uploadedAt).toLocaleString()}
-         >
-            <Icon size="1.25rem" name="clock" />
-            <div css={FileMetricsItemLabelCss}>
-               {formatDistance(new Date(file.uploadedAt), new Date(), {
-                  addSuffix: true,
-               })}
-            </div>
-         </div>
-      </Box>
-   );
+        <Icon size="1.25rem" name="clock" />
+        <div css={FileMetricsItemLabelCss}>
+          {formatDistance(new Date(file.uploadedAt), new Date(), {
+            addSuffix: true,
+          })}
+        </div>
+      </div>
+    </Box>
+  );
 };
