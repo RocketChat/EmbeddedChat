@@ -10,19 +10,23 @@ import { appendClassNames } from '../../lib/appendClassNames';
 
 const FilePreviewHeaderCss = css`
   display: flex;
+  overflow-x: hidden;
   flex-direction: row;
   flex-grow: 0;
   flex-shrink: 1;
   min-width: 1px;
+  padding-right: 3px;
   margin-top: 0.125rem;
   margin-bottom: 0.125rem;
   margin-block: 0.125rem;
   gap: 0.125rem;
   align-items: center;
+  max-width: 85%;
 `;
 
 const FilePreviewHeaderNameCss = css`
   letter-spacing: 0rem;
+  display: inline-block;
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.25rem;
@@ -31,18 +35,6 @@ const FilePreviewHeaderNameCss = css`
   white-space: nowrap;
   flex-shrink: 1;
   color: #2f343d;
-`;
-
-const FilePreviewHeaderUsernameCss = css`
-  letter-spacing: 0rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 1;
-  color: #6c727a;
 `;
 
 const FilePreviewHeaderTimestapCss = css`
@@ -61,8 +53,7 @@ const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
    const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
    const authenticatedUserId = useUserStore((state) => state.userId);
    const isStarred =
-      file.starred &&
-      file.starred.find((u) => u._id === authenticatedUserId);
+      file.starred && file.starred.find((u) => u._id === authenticatedUserId);
 
    return (
       <Box
@@ -96,8 +87,6 @@ const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
          ) : null}
       </Box>
    );
-
-
 };
 
 export default FilePreviewHeader;

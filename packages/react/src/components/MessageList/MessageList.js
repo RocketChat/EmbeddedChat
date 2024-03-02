@@ -7,6 +7,8 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useThreadsMessageStore,
+  useFileStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -16,9 +18,6 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
 import { Files } from '../Files';
 import { Message } from '../Message';
-
-import useThreadsMessageStore from '../../store/threadsMessageStore';
-import useFileStore from '../../store/fileStore';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);

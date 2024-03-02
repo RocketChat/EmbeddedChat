@@ -3,14 +3,14 @@ import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
-import { useMessageStore, useUserStore, useThreadsMessageStore } from '../../store';
-import { MessageBody } from '../Message/MessageBody';
-import { MessageMetrics } from '../Message/MessageMetrics';
-import MessageAvatarContainer from '../Message/MessageAvatarContainer';
-import MessageBodyContainer from '../Message/MessageBodyContainer';
-import MessageHeader from '../Message/MessageHeader';
-import useFileStore from '../../store/fileStore';
+import {
+   useMessageStore,
+   useUserStore,
+   useFileStore,
+} from '../../store';
 import { useRCContext } from '../../context/RCInstance';
+import { MessageBody } from '../Message/MessageBody';
+import MessageBodyContainer from '../Message/MessageBodyContainer';
 import FilePreviewContainer from './FilePreviewContainer';
 import FilePreviewHeader from './FilePreviewHeader';
 import { FileMetrics } from './FileMetrics';
@@ -35,43 +35,55 @@ const MessageCss = css`
 `;
 
 const componentStyle = css`
- position: fixed;
- right: 0;
- top: 0;
- width: 350px;
- height: 100%;
- overflow: hidden;
- background-color: white;
- box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
- z-index: 100;
- @media (max-width: 550px) {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+  z-index: 100;
+  @media (max-width: 550px) {
     width: 100vw;
- }
+  }
 `;
 
 const wrapContainerStyle = css`
- height: 100%;
- display: flex;
- flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const searchContainerStyle = css`
- display: flex;
- align-items: center;
- justify-content: center;
- background-color: #fff;
- border: 2px solid #ddd;
- position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
 `;
 
 const textInputStyle = css`
- width: 75%;
- height: 2.5rem;
- border: none;
- outline: none;
- &::placeholder {
+  width: 75%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+  &::placeholder {
     padding-left: 5px;
- }
+  }
+`;
+
+const FilePreviewUsernameCss = css`
+  letter-spacing: 0rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  color: #6c727a;
 `;
 
 const Files = () => {
@@ -80,6 +92,7 @@ const Files = () => {
    const messages = useMessageStore((state) => state.messages);
    const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
    const [text, setText] = useState('');
+   const [isFilesFetched, setIsFilesFetched] = useState(false);
    const [files, setFiles] = useState([]);
 
    const toggleShowAllFiles = () => {
@@ -89,12 +102,6 @@ const Files = () => {
    const handleInputChange = (e) => {
       setText(e.target.value);
    };
-
-   const filteredThreads = useMemo(() => {
-      return messages.filter((message) =>
-         message.msg.toLowerCase().includes(text.toLowerCase())
-      );
-   }, [messages, text]);
 
    const filteredFiles = useMemo(() => {
       return files.filter((file) =>
@@ -107,28 +114,32 @@ const Files = () => {
          const res = await RCInstance.getAllFiles();
          if (res?.files) {
             setFiles(res.files);
+            setIsFilesFetched(true);
          }
-         console.log(res);
-      }
+      };
       fetchAllFiles();
    }, [RCInstance, setFiles]);
 
    return (
       <Box css={componentStyle}>
          <Box css={wrapContainerStyle}>
-
             <Box style={{ padding: '16px' }}>
-               <Box css={css`display: flex;`}>
+               <Box
+                  css={css`
+              display: flex;
+            `}
+               >
                   <h3 style={{ display: 'contents' }}>
                      <Icon
                         name="clip"
                         size="1.25rem"
                         style={{ padding: '0px 20px 20px 0px' }}
                      />
-                     <Box css={css`
-                                width: 100%;
-                                color: #4a4a4a;
-                            `}
+                     <Box
+                        css={css`
+                  width: 100%;
+                  color: #4a4a4a;
+                `}
                      >
                         Files
                      </Box>
@@ -145,52 +156,73 @@ const Files = () => {
                      css={textInputStyle}
                   />
 
-                  <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em', cursor: 'pointer' }} />
+                  <Icon
+                     name="magnifier"
+                     size="1.25rem"
+                     style={{ padding: '0.125em', cursor: 'pointer' }}
+                  />
                </Box>
             </Box>
 
-            <Box
-               style={{
-                  flex: '1',
-                  overflow: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: filteredFiles.length === 0 ? 'center' : 'initial',
-                  alignItems: filteredFiles.length === 0 ? 'center' : 'initial'
-               }}
-            >
-               {filteredFiles.length === 0 ? (
-                  <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#4a4a4a' }}>
-                     <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
-                     <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>No files found</span>
-                  </Box>
-               ) : (filteredFiles
-                  .map((file) => (
-                     file.path && (
-                        <Box key={file._id} css={MessageCss}>
-                           {/* {showAvatar && (
-                              <MessageAvatarContainer
-                                 message={file}
-                                 sequential={false}
-                                 isStarred={false}
-                              /> */}
-                           <FilePreviewContainer
-                              file={file}
-                              sequential={false}
-                              isStarred={false}
-                           />
-                           {/* )} */}
-                           <MessageBodyContainer>
-                              {<FilePreviewHeader file={file} isTimeStamped={false} />}
-                              <MessageBody>
-                                 @{file.user.username}
-                              </MessageBody>
-                              <FileMetrics file={file} />
-                           </MessageBodyContainer>
-                        </Box>
+            {isFilesFetched && (
+               <Box
+                  style={{
+                     flex: '1',
+                     overflow: 'auto',
+                     display: 'flex',
+                     flexDirection: 'column',
+                     justifyContent: filteredFiles.length === 0 ? 'center' : 'initial',
+                     alignItems: filteredFiles.length === 0 ? 'center' : 'initial',
+                  }}
+               >
+                  {filteredFiles.length === 0 ? (
+                     <Box
+                        style={{
+                           display: 'flex',
+                           flexDirection: 'column',
+                           alignItems: 'center',
+                           color: '#4a4a4a',
+                        }}
+                     >
+                        <Icon
+                           name="magnifier"
+                           size="3rem"
+                           style={{ padding: '0.5rem' }}
+                        />
+                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                           No files found
+                        </span>
+                     </Box>
+                  ) : (
+                     filteredFiles.map(
+                        (file) =>
+                           file.path && (
+                              <Box key={file._id} css={MessageCss}>
+                                 <FilePreviewContainer
+                                    file={file}
+                                    sequential={false}
+                                    isStarred={false}
+                                 />
+                                 <MessageBodyContainer>
+                                    {
+                                       <FilePreviewHeader
+                                          file={file}
+                                          isTimeStamped={false}
+                                       />
+                                    }
+                                    <MessageBody>
+                                       <div css={FilePreviewUsernameCss}>
+                                          @{file.user.username}
+                                       </div>
+                                    </MessageBody>
+                                    <FileMetrics file={file} />
+                                 </MessageBodyContainer>
+                              </Box>
+                           )
                      )
-                  )))}
-            </Box>
+                  )}
+               </Box>
+            )}
          </Box>
       </Box>
    );

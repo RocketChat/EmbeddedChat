@@ -10,6 +10,8 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useToastStore,
+  useThreadsMessageStore,
+  useFileStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
@@ -18,10 +20,8 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
-import useThreadsMessageStore from '../../store/threadsMessageStore';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
-import useFileStore from '../../store/fileStore';
 
 const ChatHeader = ({
   isClosable,
@@ -285,6 +285,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     moreOpts,
     setFullScreen,
+    showAllFiles,
     showAllThreads,
     showChannelMembers,
     showChannelinformation,
