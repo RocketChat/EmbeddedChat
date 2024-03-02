@@ -21,6 +21,7 @@ import { Menu } from '../Menu';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
+import useFileStore from '../../store/fileStore';
 
 const ChatHeader = ({
   isClosable,
@@ -73,6 +74,7 @@ const ChatHeader = ({
   const setShowAllThreads = useThreadsMessageStore(
     (state) => state.setShowAllThreads
   );
+  const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const toastPosition = useToastStore((state) => state.position);
 
   const handleGoBack = async () => {
@@ -140,6 +142,11 @@ const ChatHeader = ({
     setShowAllThreads(true);
     setShowSearch(false);
   }, [setShowAllThreads, setShowSearch]);
+
+  const showAllFiles = useCallback(async () => {
+    setShowAllFiles(true);
+    setShowSearch(false);
+  }, [setShowAllFiles, setShowSearch]);
 
   useEffect(() => {
     const setMessageAllowed = async () => {

@@ -14,9 +14,11 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
+import { Files } from '../Files';
 import { Message } from '../Message';
 
 import useThreadsMessageStore from '../../store/threadsMessageStore';
+import useFileStore from '../../store/fileStore';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -29,6 +31,7 @@ const MessageList = ({ messages }) => {
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
+  const showAllFiles = useFileStore((state) => state.showAllFiles);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -59,6 +62,7 @@ const MessageList = ({ messages }) => {
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
+      {showAllFiles && <Files />}
     </>
   );
 };
