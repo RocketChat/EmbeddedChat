@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
@@ -10,6 +10,10 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import useFileStore from '../../store/fileStore';
+import { useRCContext } from '../../context/RCInstance';
+import FilePreviewContainer from './FilePreviewContainer';
+import FilePreviewHeader from './FilePreviewHeader';
+import { FileMetrics } from './FileMetrics';
 
 const MessageCss = css`
   display: flex;
@@ -71,19 +75,15 @@ const textInputStyle = css`
 `;
 
 const Files = () => {
+   const { RCInstance } = useRCContext();
    const showAvatar = useUserStore((state) => state.showAvatar);
    const messages = useMessageStore((state) => state.messages);
    const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
-   const openThread = useMessageStore((state) => state.openThread);
    const [text, setText] = useState('');
+   const [files, setFiles] = useState([]);
 
    const toggleShowAllFiles = () => {
       setShowAllFiles(false);
-   };
-
-   const handleOpenThread = (msg) => () => {
-      openThread(msg);
-      toggleShowAllFiles(false);
    };
 
    const handleInputChange = (e) => {
@@ -95,6 +95,23 @@ const Files = () => {
          message.msg.toLowerCase().includes(text.toLowerCase())
       );
    }, [messages, text]);
+
+   const filteredFiles = useMemo(() => {
+      return files.filter((file) =>
+         file.name.toLowerCase().includes(text.toLowerCase())
+      );
+   }, [files, text]);
+
+   useEffect(() => {
+      const fetchAllFiles = async () => {
+         const res = await RCInstance.getAllFiles();
+         if (res?.files) {
+            setFiles(res.files);
+         }
+         console.log(res);
+      }
+      fetchAllFiles();
+   }, [RCInstance, setFiles]);
 
    return (
       <Box css={componentStyle}>
@@ -138,40 +155,37 @@ const Files = () => {
                   overflow: 'auto',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: filteredThreads.length === 0 ? 'center' : 'initial',
-                  alignItems: filteredThreads.length === 0 ? 'center' : 'initial'
+                  justifyContent: filteredFiles.length === 0 ? 'center' : 'initial',
+                  alignItems: filteredFiles.length === 0 ? 'center' : 'initial'
                }}
             >
-               {filteredThreads.length === 0 ? (
+               {filteredFiles.length === 0 ? (
                   <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#4a4a4a' }}>
                      <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
                      <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>No files found</span>
                   </Box>
-               ) : (filteredThreads
-                  .map((message) => (
-                     !message.t && message.tcount && (
-                        <Box key={message._id} css={MessageCss} onClick={handleOpenThread(message)}>
-                           {showAvatar && (
+               ) : (filteredFiles
+                  .map((file) => (
+                     file.path && (
+                        <Box key={file._id} css={MessageCss}>
+                           {/* {showAvatar && (
                               <MessageAvatarContainer
-                                 message={message}
+                                 message={file}
                                  sequential={false}
                                  isStarred={false}
-                              />
-                           )}
+                              /> */}
+                           <FilePreviewContainer
+                              file={file}
+                              sequential={false}
+                              isStarred={false}
+                           />
+                           {/* )} */}
                            <MessageBodyContainer>
-                              {<MessageHeader message={message} isTimeStamped={false} />}
+                              {<FilePreviewHeader file={file} isTimeStamped={false} />}
                               <MessageBody>
-                                 {message.attachments && message.attachments.length > 0 ? (
-                                    message.file.name
-                                 ) : (
-                                    message.msg
-                                 )}
+                                 @{file.user.username}
                               </MessageBody>
-
-                              <MessageMetrics
-                                 message={message}
-                                 isReplyButton={false}
-                              />
+                              <FileMetrics file={file} />
                            </MessageBodyContainer>
                         </Box>
                      )
