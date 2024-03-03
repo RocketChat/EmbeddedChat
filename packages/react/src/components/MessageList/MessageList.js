@@ -7,6 +7,8 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useMentionsStore,
+  useThreadsMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -14,9 +16,8 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
+import UserMentions from '../UserMentions/UserMentions';
 import { Message } from '../Message';
-
-import useThreadsMessageStore from '../../store/threadsMessageStore';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -29,6 +30,7 @@ const MessageList = ({ messages }) => {
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
+  const showMentions = useMentionsStore((state) => state.showMentions);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -59,6 +61,7 @@ const MessageList = ({ messages }) => {
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
+      {showMentions && <UserMentions />}
     </>
   );
 };
