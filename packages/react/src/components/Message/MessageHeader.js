@@ -59,7 +59,6 @@ const MessageHeaderTimestapCss = css`
 
 const MessageHeader = ({ message, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-  const roles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const isStarred =
     message.starred &&

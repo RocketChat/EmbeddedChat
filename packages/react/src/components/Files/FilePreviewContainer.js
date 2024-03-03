@@ -16,7 +16,7 @@ const FilePreviewContainer = ({ file, sequential, isStarred }) => {
   return (
     <Box css={FilePreviewContainerCss}>
       {!sequential ? (
-        <Avatar url={file.url} alt="file" size={'2.25em'} />
+        <Avatar url={file.url} alt="file" size="2.25em" />
       ) : isStarred ? (
         <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
       ) : null}

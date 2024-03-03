@@ -65,7 +65,7 @@ const ChatInput = ({ scrollToBottom }) => {
           .catch(console.error);
       }
     });
-  }, [RCInstance]);
+  }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   const [filteredCommands, setFilteredCommands] = useState([]);
   const getFilteredCommands = useCallback(

@@ -46,9 +46,12 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     font-weight: 600;
   `;
 
-  const handleMemberClick = useCallback((selectedItem) => {
-    onMemberClick(selectedItem);
-  }, [handleMemberClick]);
+  const handleMemberClick = useCallback(
+    (selectedItem) => {
+      onMemberClick(selectedItem);
+    },
+    [onMemberClick]
+  );
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -57,8 +60,8 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           mentionIndex < filteredMembers.length
             ? filteredMembers[mentionIndex]
             : mentionIndex === filteredMembers.length
-              ? 'all'
-              : 'here';
+            ? 'all'
+            : 'here';
         handleMemberClick(selectedItem);
       }
     };

@@ -50,7 +50,7 @@ const EmbeddedChat = ({
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, [toastBarPosition, showAvatar]);
+  }, [toastBarPosition, showAvatar, setShowAvatar, setToastbarPosition]);
 
   const {
     onDrag,

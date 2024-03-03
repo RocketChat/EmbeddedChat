@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useMessageStore, useToastStore } from '../../store';
+import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
