@@ -11,6 +11,7 @@ import {
   useChannelStore,
   useToastStore,
   useThreadsMessageStore,
+  useMentionsStore,
   useFileStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
@@ -75,6 +76,7 @@ const ChatHeader = ({
     (state) => state.setShowAllThreads
   );
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
+  const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const toastPosition = useToastStore((state) => state.position);
 
   const handleGoBack = async () => {
@@ -147,6 +149,11 @@ const ChatHeader = ({
     setShowAllFiles(true);
     setShowSearch(false);
   }, [setShowAllFiles, setShowSearch]);
+  
+  const showMentions = useCallback(async () => {
+    setShowMentions(true);
+    setShowSearch(false);
+  }, [setShowMentions, setShowSearch]);
 
   useEffect(() => {
     const setMessageAllowed = async () => {
@@ -231,6 +238,12 @@ const ChatHeader = ({
             icon: 'thread',
           },
           {
+            id: 'mentions',
+            action: showMentions,
+            label: 'Mentions',
+            icon: 'at',
+          },
+          {
             id: 'members',
             action: showChannelMembers,
             label: 'Members',
@@ -287,6 +300,7 @@ const ChatHeader = ({
     setFullScreen,
     showAllFiles,
     showAllThreads,
+    showMentions,
     showChannelMembers,
     showChannelinformation,
     showPinnedMessage,

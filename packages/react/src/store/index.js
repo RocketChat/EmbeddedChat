@@ -8,3 +8,4 @@ export { default as loginModalStore } from './loginmodalStore';
 export { default as useChannelStore } from './channelStore';
 export { default as useThreadsMessageStore } from './threadsMessageStore';
 export { default as useFileStore } from './fileStore';
+export { default as useMentionsStore } from './mentionsStore';

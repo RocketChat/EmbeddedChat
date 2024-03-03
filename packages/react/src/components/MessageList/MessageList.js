@@ -7,8 +7,9 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
-  useThreadsMessageStore,
   useFileStore,
+  useMentionsStore,
+  useThreadsMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -17,6 +18,7 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
 import { Files } from '../Files';
+import UserMentions from '../UserMentions/UserMentions';
 import { Message } from '../Message';
 
 const MessageList = ({ messages }) => {
@@ -31,6 +33,7 @@ const MessageList = ({ messages }) => {
     (state) => state.showAllThreads
   );
   const showAllFiles = useFileStore((state) => state.showAllFiles);
+  const showMentions = useMentionsStore((state) => state.showMentions);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -62,6 +65,7 @@ const MessageList = ({ messages }) => {
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
       {showAllFiles && <Files />}
+      {showMentions && <UserMentions />}
     </>
   );
 };
