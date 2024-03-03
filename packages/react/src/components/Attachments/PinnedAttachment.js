@@ -27,7 +27,7 @@ const PinnedAttachment = ({ attachment }) => {
         <Avatar
           url={getUserAvatarUrl(attachment?.author_icon)}
           alt="avatar"
-          size={'1.2em'}
+          size="1.2em"
         />
         <Box>{attachment?.author_name}</Box>
       </Box>
