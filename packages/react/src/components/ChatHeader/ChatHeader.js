@@ -149,7 +149,7 @@ const ChatHeader = ({
     setShowAllFiles(true);
     setShowSearch(false);
   }, [setShowAllFiles, setShowSearch]);
-  
+
   const showMentions = useCallback(async () => {
     setShowMentions(true);
     setShowSearch(false);
