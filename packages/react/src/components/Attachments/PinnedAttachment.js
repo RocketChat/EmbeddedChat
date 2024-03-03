@@ -15,13 +15,15 @@ const PinnedAttachment = ({ attachment }) => {
     <Box
       style={{
         borderInlineStart: '1px solid currentColor',
-        paddingLeft: '0.8rem'
+        paddingLeft: '0.8rem',
       }}
     >
-      <Box style={{
-        display: 'flex',
-        gap: '0.3rem',
-      }}>
+      <Box
+        style={{
+          display: 'flex',
+          gap: '0.3rem',
+        }}
+      >
         <Avatar
           url={getUserAvatarUrl(attachment?.author_icon)}
           alt="avatar"
@@ -29,12 +31,16 @@ const PinnedAttachment = ({ attachment }) => {
         />
         <Box>{attachment?.author_name}</Box>
       </Box>
-      <Box style={{
-        marginTop: '0.7rem',
-      }}>{attachment?.text}</Box>
-    </Box>)
-}
-
+      <Box
+        style={{
+          marginTop: '0.7rem',
+        }}
+      >
+        {attachment?.text}
+      </Box>
+    </Box>
+  );
+};
 
 export default PinnedAttachment;
 
