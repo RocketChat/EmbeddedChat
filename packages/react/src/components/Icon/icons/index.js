@@ -38,6 +38,7 @@ import ArrowDown from './ArrowDown';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
+import Clipboard from './Clipboard';
 
 const icons = {
   file: File,
@@ -79,7 +80,8 @@ const icons = {
   check: Check,
   'error-circle': ErrorCircle,
   'arrow-down': ArrowDown,
-  'pin-filled': PinFilled
+  'pin-filled': PinFilled,
+  clipboard: Clipboard,
 };
 
 export default icons;

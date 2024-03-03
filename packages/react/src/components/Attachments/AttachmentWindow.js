@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { css } from '@emotion/react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ValidateComponent from './AttachmentWindow/validateComponent';
 import Backdrop from './AttachmentWindow/Backdrop';
@@ -7,7 +8,6 @@ import styles from './AttachmentWindow.module.css';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
-import { css } from '@emotion/react';
 
 function AttachmentWindow() {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -61,29 +61,30 @@ function AttachmentWindow() {
             </Box>
             <Box
               css={css`
-            overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 350px;
-            scrollbar-width: thin;
-            scrollbar-color: #e0e0e1 transparent;
-            &::-webkit-scrollbar {
-              width: 4px;
-            }
-            &::-webkit-scrollbar-thumb {
-              background-color: #e0e0e1;
-              border-radius: 4px;
-            }
-            &::-webkit-scrollbar-thumb:hover {
-              background-color: #e0e0e1;
-            }
-            &::-webkit-scrollbar-track {
-              background-color: transparent;
-            }
-          `}
-            >
-              <Box css={css`
-                text-align: center;
+                overflow-y: auto;
+                overflow-x: hidden;
+                max-height: 350px;
+                scrollbar-width: thin;
+                scrollbar-color: #e0e0e1 transparent;
+                &::-webkit-scrollbar {
+                  width: 4px;
+                }
+                &::-webkit-scrollbar-thumb {
+                  background-color: #e0e0e1;
+                  border-radius: 4px;
+                }
+                &::-webkit-scrollbar-thumb:hover {
+                  background-color: #e0e0e1;
+                }
+                &::-webkit-scrollbar-track {
+                  background-color: transparent;
+                }
               `}
+            >
+              <Box
+                css={css`
+                  text-align: center;
+                `}
               >
                 <ValidateComponent data={data} />
               </Box>

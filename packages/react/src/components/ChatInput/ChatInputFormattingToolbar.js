@@ -72,11 +72,11 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     }
   };
 
-  const popupStyle= {
+  const popupStyle = {
     margin: '0',
     position: 'absolute',
     left: '0.375rem',
-    top:'9.5rem'
+    top: '9.5rem',
   };
 
   return (
@@ -84,6 +84,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       css={css`
         background-color: #cbced1;
         display: flex;
+        position: relative;
         flex-direction: row;
         gap: 0.375rem;
         align-items: center;
@@ -141,7 +142,9 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
           </ActionButton>
         </Tooltip>
       ))}
-      <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
+      <Tooltip text="Audio Message" position="top">
+        <AudioMessageRecorder />
+      </Tooltip>
       <Tooltip text="Video Message" position="top">
         <VideoMessageRecorder />
       </Tooltip>

@@ -8,4 +8,4 @@ export const isAllowedOrigin = async (read: IRead, origin: string) => {
         return true;
     }
     return allowedOrigins.includes(origin);
-}
+};

@@ -5,7 +5,8 @@ import { ActionButton } from '../ActionButton';
 import MenuItem from './MenuItem';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
-import {Tooltip} from '../Tooltip';
+import { Tooltip } from '../Tooltip';
+
 const MenuWrapperCss = css`
   position: relative;
   display: inline-block;
@@ -83,8 +84,10 @@ const Menu = ({
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
     >
-     <Tooltip text="Options" position="bottom"> <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
-     </Tooltip>
+      <Tooltip text="Options" position="bottom">
+        {' '}
+        <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+      </Tooltip>
       {isOpen ? (
         <Box
           css={[MenuCss, shadowCss]}

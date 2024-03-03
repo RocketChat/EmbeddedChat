@@ -5,7 +5,17 @@ import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
 
 export const Modal = forwardRef(
-  ({ className = '', style = {}, open = true, children, onClose = () => { }, ...props }, ref) => {
+  (
+    {
+      className = '',
+      style = {},
+      open = true,
+      children,
+      onClose = () => {},
+      ...props
+    },
+    ref
+  ) => {
     const { classNames, styleOverrides } = useComponentOverrides('Modal');
     const backDropRef = useRef(null);
     const theme = useTheme();
@@ -23,9 +33,6 @@ export const Modal = forwardRef(
       background: ${theme?.palette?.background?.modal || '#fff'};
       border-radius: 0.25rem;
     `;
-    if (!open) {
-      return null;
-    }
 
     const handleClick = useCallback(
       (e) => {
@@ -36,11 +43,14 @@ export const Modal = forwardRef(
       [onClose]
     );
 
-    const handleEscKey = useCallback((e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    }, [onClose]);
+    const handleEscKey = useCallback(
+      (e) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      },
+      [onClose]
+    );
 
     useEffect(() => {
       window.addEventListener('keydown', handleEscKey);
@@ -49,6 +59,10 @@ export const Modal = forwardRef(
         window.removeEventListener('keydown', handleEscKey);
       };
     }, [handleEscKey]);
+
+    if (!open) {
+      return null;
+    }
 
     return (
       <ModalBackdrop ref={backDropRef} onClick={handleClick}>

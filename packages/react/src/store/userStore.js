@@ -15,14 +15,14 @@ const useUserStore = create((set) => ({
   },
   avatarUrl: '',
   setUserAvatarUrl: (avatarUrl) =>
-    set(() => {
-      return {
-        avatarUrl,
-      };
-    }),
+    set(() => ({
+      avatarUrl,
+    })),
   isUserAuthenticated: false,
+  canSendMsg: true,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
+  setCanSendMsg: (canSendMsg) => set(() => ({ canSendMsg })),
   password: null,
   setPassword: (password) => set(() => ({ password })),
   emailoruser: null,
