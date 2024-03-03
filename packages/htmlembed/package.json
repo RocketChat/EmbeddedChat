@@ -8,7 +8,9 @@
   "private": true,
   "scripts": {
     "build": "vite build && node postbuild.cjs",
-    "preview": "npm run build && vite preview --port=4001"
+    "preview": "npm run build && vite preview --port=4001",
+    "format": "prettier --write 'src/' ",
+    "format:check": "prettier --check 'src/' "
   },
   "dependencies": {
     "@embeddedchat/react": "0.1.12",

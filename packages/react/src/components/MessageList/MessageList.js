@@ -21,7 +21,7 @@ import { Icon } from '../Icon';
 import UserInfo from '../UserInformation/UserInfomation';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
 
-const MessageList = ({ messages, handleGoBack }) => {
+const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
   const showUserInfo = useUserInfoStore((state) => state.showUserInfo)
@@ -31,7 +31,9 @@ const MessageList = ({ messages, handleGoBack }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
-  const showAllThreads = useThreadsMessageStore((state) => state.showAllThreads);
+  const showAllThreads = useThreadsMessageStore(
+    (state) => state.showAllThreads
+  );
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -59,11 +61,7 @@ const MessageList = ({ messages, handleGoBack }) => {
             )
           );
         })}
-      {filtered && (
-        <ActionButton onClick={handleGoBack} ghost display="inline" square small>
-          <Icon name="arrow-back" size="1.25rem" color="error" />
-        </ActionButton>
-      )}
+
       {showMembers && <RoomMembers members={members} />}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
@@ -78,5 +76,4 @@ export default MessageList;
 
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape),
-  handleGoBack: PropTypes.func,
 };

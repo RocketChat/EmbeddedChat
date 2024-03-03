@@ -110,8 +110,8 @@ const Message = ({
     }
   };
 
-  const handleDeleteMessage = async (message) => {
-    const res = await RCInstance.deleteMessage(message._id);
+  const handleDeleteMessage = async (msg) => {
+    const res = await RCInstance.deleteMessage(msg._id);
 
     if (res.success) {
       dispatchToastMessage({

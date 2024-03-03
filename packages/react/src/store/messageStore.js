@@ -12,7 +12,7 @@ const useMessageStore = create((set, get) => ({
   isRecordingMessage: false,
   isThreadOpen: false,
   threadMainMessage: null,
-  headerTitle:null,
+  headerTitle: null,
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (messages) => set(() => ({ messages })),
   upsertMessage: (message, enableThreads = false) => {
@@ -90,7 +90,7 @@ const useMessageStore = create((set, get) => ({
     }));
   },
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
-  setHeaderTitle: (title) => set(()=>({headerTitle:title}))
+  setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
 }));
 
 export default useMessageStore;

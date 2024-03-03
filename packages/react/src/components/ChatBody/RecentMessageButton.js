@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
-import { css } from '@emotion/react';
-
 
 const buttonStyle = css`
   position: relative;
@@ -55,11 +54,7 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
 
   return (
     <Button
-      css={[
-        buttonStyle,
-        !visible && 'not',
-        clicked && 'clicked',
-      ]}
+      css={[buttonStyle, !visible && 'not', clicked && 'clicked']}
       primary
       onClick={() => {
         onClick();
@@ -68,7 +63,7 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
       style={{
         cursor: 'pointer',
         padding: '3px 5px 10px 6px',
-        borderRadius: '20px'
+        borderRadius: '20px',
       }}
     >
       <div css={textAndIconContainer}>

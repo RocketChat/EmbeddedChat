@@ -54,7 +54,7 @@
 }
 
 .attachment_window_close:active {
-  background-color: #8f9194; 
+  background-color: #8f9194;
 }
 
 .attachment_window_input_container {
@@ -109,8 +109,8 @@
   outline: none;
   border: none;
   border-radius: 4px;
-  cursor: pointer; 
-  background: #e4e7ea; 
+  cursor: pointer;
+  background: #e4e7ea;
   margin-right: 5px;
 }
 

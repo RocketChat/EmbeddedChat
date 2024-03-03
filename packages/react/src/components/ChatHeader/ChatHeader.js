@@ -9,7 +9,7 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
-  useToastStore
+  useToastStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
@@ -20,6 +20,7 @@ import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const ChatHeader = ({
   isClosable,
@@ -30,6 +31,8 @@ const ChatHeader = ({
   channelName,
   className = '',
   styles = {},
+  anonymousMode,
+  showRoles,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const channelInfo = useChannelStore((state) => state.channelInfo);
@@ -38,7 +41,9 @@ const ChatHeader = ({
     (state) => state.setShowChannelinfo
   );
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const setIsChannelPrivate = useChannelStore((state) => state.setIsChannelPrivate);
+  const setIsChannelPrivate = useChannelStore(
+    (state) => state.setIsChannelPrivate
+  );
 
   const { RCInstance } = useRCContext();
 
@@ -50,6 +55,7 @@ const ChatHeader = ({
   );
 
   const dispatchToastMessage = useToastBarDispatch();
+  const getMessagesAndRoles = useFetchChatData(showRoles);
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
@@ -64,9 +70,21 @@ const ChatHeader = ({
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
-  const setShowAllThreads = useThreadsMessageStore((state => state.setShowAllThreads));
+  const setShowAllThreads = useThreadsMessageStore(
+    (state) => state.setShowAllThreads
+  );
   const toastPosition = useToastStore((state) => state.position);
 
+  const handleGoBack = async () => {
+    if (isUserAuthenticated) {
+      getMessagesAndRoles();
+    } else {
+      getMessagesAndRoles(anonymousMode);
+    }
+    setFilter(false);
+  };
+  const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
+  const authenticatedUserId = useUserStore((state) => state.userId);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -81,23 +99,31 @@ const ChatHeader = ({
   const showStarredMessage = useCallback(async () => {
     const { messages } = await RCInstance.getStarredMessages();
     setMessages(messages);
-    setHeaderTitle("Starred Messages");
+    setHeaderTitle('Starred Messages');
     setFilter(true);
-  }, [RCInstance, setMessages, setFilter]);
+  }, [RCInstance, setMessages, setHeaderTitle, setFilter]);
 
   const showPinnedMessage = useCallback(async () => {
     const { messages } = await RCInstance.getPinnedMessages();
     setMessages(messages);
-    setHeaderTitle("Pinned Messages");
+    setHeaderTitle('Pinned Messages');
     setFilter(true);
-  }, [RCInstance, setMessages, setFilter]);
+  }, [RCInstance, setMessages, setHeaderTitle, setFilter]);
 
   const showChannelMembers = useCallback(async () => {
-    const { members = [] } = await RCInstance.getChannelMembers(isChannelPrivate);
+    const { members = [] } = await RCInstance.getChannelMembers(
+      isChannelPrivate
+    );
     setMembersHandler(members);
     toggleShowMembers();
     setShowSearch(false);
-  }, [RCInstance, setMembersHandler, toggleShowMembers, setShowSearch, isChannelPrivate]);
+  }, [
+    RCInstance,
+    setMembersHandler,
+    toggleShowMembers,
+    setShowSearch,
+    isChannelPrivate,
+  ]);
 
   const showSearchMessage = useCallback(() => {
     setShowSearch(true);
@@ -116,27 +142,67 @@ const ChatHeader = ({
   }, [setShowAllThreads, setShowSearch]);
 
   useEffect(() => {
+    const setMessageAllowed = async () => {
+      const permissionRes = await RCInstance.permissionInfo();
+      const channelRolesRes = await RCInstance.getChannelRoles(
+        isChannelPrivate
+      );
+
+      if (permissionRes.success && channelRolesRes.success) {
+        const postMsgRoles = permissionRes.update[140]?.roles || [];
+
+        const userRoles = channelRolesRes.roles
+          .filter((chRole) => chRole.u?._id === authenticatedUserId)
+          .flatMap((chRole) => chRole.roles);
+
+        const canSendMsg =
+          userRoles.length > 0 &&
+          postMsgRoles.some((role) => userRoles.includes(role));
+        setCanSendMsg(canSendMsg);
+      }
+    };
+
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-      } else {
-        if ('errorType' in res && res.errorType === 'error-room-not-found') {
-          dispatchToastMessage({
-            type: 'error',
-            message: "Channel doesn't exist. Logging out.",
-            position: toastPosition,
-          });
-          await RCInstance.logout();
-        }
+        if (res.room.ro) setMessageAllowed();
+      } else if (
+        'errorType' in res &&
+        res.errorType === 'error-room-not-found'
+      ) {
+        dispatchToastMessage({
+          type: 'error',
+          message: "Channel doesn't exist. Logging out.",
+          position: toastPosition,
+        });
+        await RCInstance.logout();
+      } else if ('errorType' in res && res.errorType === 'Not Allowed') {
+        dispatchToastMessage({
+          type: 'error',
+          message:
+            "You don't have permission to access this channel. Logging out",
+          position: toastPosition,
+        });
+        await RCInstance.logout();
       }
-
     };
+
     if (isUserAuthenticated) {
       getChannelInfo();
     }
-  }, [isUserAuthenticated, RCInstance, setChannelInfo, setIsChannelPrivate]);
+  }, [
+    isUserAuthenticated,
+    RCInstance,
+    setChannelInfo,
+    setIsChannelPrivate,
+    dispatchToastMessage,
+    toastPosition,
+    isChannelPrivate,
+    setCanSendMsg,
+    authenticatedUserId,
+  ]);
 
   const menuOptions = useMemo(() => {
     const options = [];
@@ -206,6 +272,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     moreOpts,
     setFullScreen,
+    showAllThreads,
     showChannelMembers,
     showChannelinformation,
     showPinnedMessage,
@@ -284,23 +351,22 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
           {fullScreen ? (
-
             <Menu options={menuOptions} />
-
           ) : (
-            <><Tooltip text="Maximize" position="bottom">
-              <ActionButton
-                onClick={() => {
-                  setFullScreen((prev) => !prev);
-                }}
-                ghost
-                display="inline"
-                square
-                size='medium'
-              >
-                <Icon name="computer" size="1.25rem" />
-              </ActionButton>
-            </Tooltip>
+            <>
+              <Tooltip text="Maximize" position="bottom">
+                <ActionButton
+                  onClick={() => {
+                    setFullScreen((prev) => !prev);
+                  }}
+                  ghost
+                  display="inline"
+                  square
+                  size="medium"
+                >
+                  <Icon name="computer" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
               <Menu options={menuOptions} />
             </>
           )}
@@ -312,7 +378,7 @@ const ChatHeader = ({
               ghost
               display="inline"
               square
-              size='medium'
+              size="medium"
             >
               <Icon name="cross" size="1.25rem" />
             </ActionButton>
@@ -320,11 +386,23 @@ const ChatHeader = ({
         </Box>
       </Box>
       {isThreadOpen && (
-        <DynamicHeader title={threadTitle} isClosable={true} handleClose={closeThread} iconName='arrow-back' />
+        <DynamicHeader
+          title={threadTitle}
+          handleClose={closeThread}
+          iconName="arrow-back"
+        />
       )}
 
       {!isThreadOpen && filtered && (
-   <DynamicHeader title={headerTitle} iconName={headerTitle && headerTitle.includes('Pin') ? 'pin' : 'star'} />
+        <DynamicHeader
+          title={headerTitle}
+          handleClose={handleGoBack}
+          iconName="arrow-back"
+          isHeaderIcon
+          headerIconName={
+            headerTitle && headerTitle.includes('Pin') ? 'pin' : 'star'
+          }
+        />
       )}
     </Box>
   );
