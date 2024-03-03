@@ -40,6 +40,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const canSendMsg = useUserStore((state) => state.canSendMsg);
 
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
@@ -92,7 +93,6 @@ const ChatInput = ({ scrollToBottom }) => {
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
-  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const {
     editMessage,
@@ -269,14 +269,10 @@ const ChatInput = ({ scrollToBottom }) => {
     const currentMessage = messageRef.current.value;
     const tokens = (currentMessage || '').split(' ');
     const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
-
     if (firstTokenIdx !== -1) {
       tokens[firstTokenIdx] = `/${commandName}`;
-      tokens[firstTokenIdx] += ' ';
       const newMessageString = tokens.join(' ');
       messageRef.current.value = newMessageString;
-
-      messageRef.current.focus();
       setFilteredCommands([]);
     }
   }, []);
@@ -475,13 +471,10 @@ const ChatInput = ({ scrollToBottom }) => {
           <></>
         )}
         {filteredCommands.length === 0 ? null : (
-          <>
-            <CommandsList
-              filteredCommands={filteredCommands}
-              onCommandClick={onCommandClick}
-            />
-            <Divider />
-          </>
+          <CommandsList
+            filteredCommands={filteredCommands}
+            onCommandClick={onCommandClick}
+          />
         )}
         <Box
           css={[
@@ -496,8 +489,14 @@ const ChatInput = ({ scrollToBottom }) => {
         >
           <textarea
             rows={1}
-            disabled={!isUserAuthenticated || isRecordingMessage}
-            placeholder={isUserAuthenticated ? 'Message' : 'Sign in to chat'}
+            disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
+            placeholder={
+              isUserAuthenticated && canSendMsg
+                ? 'Message'
+                : isUserAuthenticated
+                ? 'This room is read only'
+                : 'Sign in to chat'
+            }
             className={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
