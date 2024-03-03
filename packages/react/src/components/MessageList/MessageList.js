@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
 import {
@@ -7,6 +7,7 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useUserInfoStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -15,12 +16,16 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
 import { Message } from '../Message';
-
+import { ActionButton } from '../ActionButton';
+import { Icon } from '../Icon';
+import UserInfo from '../UserInformation/UserInfomation';
 import useThreadsMessageStore from '../../store/threadsMessageStore';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
+  const showUserInfo = useUserInfoStore((state) => state.showUserInfo)
+  const filtered = useMessageStore((state) => state.filtered);
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
@@ -32,6 +37,8 @@ const MessageList = ({ messages }) => {
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
+  const [selectedMsg, setSelectedMsg] = useState({})
 
   return (
     <>
@@ -49,6 +56,7 @@ const MessageList = ({ messages }) => {
                 sequential={sequential}
                 variant="default"
                 showAvatar={showAvatar}
+                setSelectedMsg={setSelectedMsg}
               />
             )
           );
@@ -58,6 +66,7 @@ const MessageList = ({ messages }) => {
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
+      {showUserInfo && <UserInfo message={selectedMsg} />}
       {showAllThreads && <AllThreads />}
     </>
   );

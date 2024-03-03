@@ -331,6 +331,26 @@ export default class RocketChatInstance {
     }
   }
 
+  async getUserByUsername(username) {
+    try {
+      const response = await fetch(
+        `${this.host}/api/v1/users.info?username${username}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': Cookies.get(RC_USER_TOKEN_COOKIE),
+            'X-User-Id': Cookies.get(RC_USER_ID_COOKIE),
+          },
+          method: 'GET',
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+
   async channelInfo() {
     try {
       const response = await fetch(
