@@ -137,10 +137,6 @@ const ChatInput = ({ scrollToBottom }) => {
     setErrorModal(false);
   };
 
-  useEffect(() => {
-    if (isAttachmentMode) sendMessage();
-  }, [isAttachmentMode]);
-
   const handleConvertToAttachment = () => {
     setIsAttachmentMode(true);
     closeErrorModal();
@@ -257,6 +253,10 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
   };
 
+  useEffect(() => {
+    if (isAttachmentMode) sendMessage();
+  }, [isAttachmentMode, sendMessage]);
+  
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
