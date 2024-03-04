@@ -40,6 +40,7 @@ import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
 import Clipboard from './Clipboard';
 import Download from './Download';
+import At from './At';
 
 const icons = {
   file: File,
@@ -84,6 +85,7 @@ const icons = {
   'pin-filled': PinFilled,
   clipboard: Clipboard,
   download: Download,
+  at: At,
 };
 
 export default icons;
