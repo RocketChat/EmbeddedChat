@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Avatar } from '../Avatar/Avatar';
 import RCContext from '../../context/RCInstance';
@@ -10,12 +10,23 @@ import { ActionButton } from '../ActionButton';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
+  const componentRef = useRef(null);
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
+  const setShowChannelinfo = useChannelStore((state) => state.setShowChannelinfo);
 
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (componentRef.current && !componentRef.current.contains(event.target)) {
+        setShowChannelinfo(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setShowChannelinfo]);
 
   const toggleshowRoominfo = () => {
     setShowChannelinfo(false);
@@ -25,8 +36,9 @@ const Roominfo = () => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
+
   return (
-    <Box className={classes.component} style={{ padding: '16px' }}>
+    <Box ref={componentRef} className={classes.component} style={{ padding: '16px' }}>
       <Box
         css={css`
           display: flex;
@@ -84,4 +96,5 @@ const Roominfo = () => {
     </Box>
   );
 };
+
 export default Roominfo;
