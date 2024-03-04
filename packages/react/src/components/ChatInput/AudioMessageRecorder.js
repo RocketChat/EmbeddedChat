@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 import styles from './AudioMessage.module.css';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
@@ -8,6 +14,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 
 const AudioMessageRecorder = () => {
+  const videoRef = useRef(null);
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage
   );
@@ -28,6 +35,7 @@ const AudioMessageRecorder = () => {
   const [start, stop] = useMediaRecorder({
     constraints: { audio: true, video: false },
     onStop,
+    videoRef,
   });
 
   const stopRecording = async () => {

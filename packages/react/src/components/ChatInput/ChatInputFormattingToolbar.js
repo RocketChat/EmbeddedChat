@@ -10,8 +10,9 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { Tooltip } from "../Tooltip"
+import { Tooltip } from '../Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import VideoMessageRecorder from './VideoMessageRecoder';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -32,7 +33,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
 
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
-    messageRef.current.value += ` :${emoji.replace(/\s/g, '_')}: `;
+    messageRef.current.value += ` :${emoji.replace(/[\s-]+/g, '_')}: `;
   };
 
   const wrapSelection = (pattern) => {
@@ -57,11 +58,19 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     input.selectionEnd = input.selectionStart + selectedText.length;
   };
 
+  const popupStyle = {
+    margin: '0',
+    position: 'absolute',
+    left: '0.375rem',
+    top: '9.5rem',
+  };
+
   return (
     <Box
       css={css`
         background-color: #cbced1;
         display: flex;
+        position: relative;
         flex-direction: row;
         gap: 0.375rem;
         align-items: center;
@@ -90,7 +99,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
             closeOnEscape
             disabled={isRecordingMessage}
             closeOnDocumentClick
-            position="left center"
+            contentStyle={popupStyle}
           >
             <EmojiPicker
               handleEmojiClick={(emoji) => {
@@ -102,7 +111,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
         </>
       )}
       {formatter.map((item, index) => (
-
         <Tooltip text={item.name} position="top" key={index}>
           <ActionButton
             square
@@ -112,13 +120,20 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               wrapSelection(item.pattern);
             }}
           >
-            <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
-
+            <Icon
+              disabled={isRecordingMessage}
+              name={item.name}
+              size="1.25rem"
+            />
           </ActionButton>
         </Tooltip>
-
       ))}
-      <Tooltip text="Audio Message" position="top"><AudioMessageRecorder /></Tooltip>
+      <Tooltip text="Audio Message" position="top">
+        <AudioMessageRecorder />
+      </Tooltip>
+      <Tooltip text="Video Message" position="top">
+        <VideoMessageRecorder />
+      </Tooltip>
       <ActionButton
         square
         ghost

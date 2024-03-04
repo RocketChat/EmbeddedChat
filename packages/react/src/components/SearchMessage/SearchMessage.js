@@ -49,7 +49,7 @@ const Search = () => {
           flexDirection: 'row',
           alignItems: 'center',
           gap: '0.5rem',
-          marginBottom: '0.25rem',
+          marginBottom: '1rem',
         }}
       >
         <h3 style={{ display: 'contents' }}>
@@ -64,25 +64,19 @@ const Search = () => {
         className={classes.container}
         style={{ border: '2px solid #ddd', position: 'relative' }}
       >
-        <Icon name="magnifier" size="1.25rem" style={{ padding: '0.125em' }} />
         <input
           placeholder="Search Message"
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyPress}
           className={classes.textInput}
         />
-        <Button
-          size="small"
+
+        <Icon
+          name="magnifier"
+          size="1.25rem"
+          style={{ padding: '0.125em', cursor: 'pointer' }}
           onClick={searchMessages}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            right: '5px',
-            transform: 'translateY(-50%)',
-          }}
-        >
-          Enter
-        </Button>
+        />
       </Box>
       {messageList &&
         messageList.map((msg, index, arr) => {

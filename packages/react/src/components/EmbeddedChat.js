@@ -16,7 +16,9 @@ import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
+import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from './ToastBar';
+import { DropBoxOverlay, dropBoxStyles } from './DropBox';
 import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
@@ -45,11 +47,19 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
   }, [toastBarPosition, showAvatar]);
+
+  const {
+    onDrag,
+    data,
+    handleDrag,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragDrop,
+  } = useDropBox();
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -114,15 +124,15 @@ const EmbeddedChat = ({
         RCInstance.connect()
           .then(() => {
             console.log(`Connected to RocketChat ${RCInstance.host}`);
+            console.log('reinstantiated');
+            const { me } = user;
+            setAuthenticatedUserAvatarUrl(me.avatarUrl);
+            setAuthenticatedUserUsername(me.username);
+            setAuthenticatedUserId(me._id);
+            setAuthenticatedName(me.name);
+            setIsUserAuthenticated(true);
           })
           .catch(console.error);
-        console.log('reinstantiated');
-        const { me } = user;
-        setAuthenticatedUserAvatarUrl(me.avatarUrl);
-        setAuthenticatedUserUsername(me.username);
-        setAuthenticatedUserId(me._id);
-        setAuthenticatedName(me.name);
-        setIsUserAuthenticated(true);
       } else {
         setIsUserAuthenticated(false);
       }
@@ -137,7 +147,6 @@ const EmbeddedChat = ({
   ]);
 
   const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
-  const data = useAttachmentWindowStore((state) => state.data);
 
   const ECOptions = useMemo(
     () => ({
@@ -187,12 +196,14 @@ const EmbeddedChat = ({
     <ThemeProvider theme={theme || DefaultTheme}>
       <ToastBarProvider position={toastBarPosition}>
         <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (!!data ?
-            <>
-              <AttachmentWindow />
-            </>
-            :
-            <ValidateComponent data={data} />
+          {attachmentWindowOpen ? (
+            data ? (
+              <>
+                <AttachmentWindow />
+              </>
+            ) : (
+              <ValidateComponent data={data} />
+            )
           ) : null}
           <Box
             css={[
@@ -200,12 +211,18 @@ const EmbeddedChat = ({
               css`
                 width: ${width};
                 height: ${height};
+                position: relative;
               `,
               fullScreen && styles.fullscreen,
             ]}
             className={`ec-embedded-chat ${className} ${classNames}`}
             style={{ ...style, ...styleOverrides }}
+            onDragOver={(e) => handleDrag(e)}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDragDrop(e)}
           >
+            {onDrag && <DropBoxOverlay />}
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -214,19 +231,50 @@ const EmbeddedChat = ({
                 moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
-              />
-            )}
-            {isUserAuthenticated || anonymousMode ? (
-              <ChatBody
-                height={!fullScreen ? height : '88vh'}
                 anonymousMode={anonymousMode}
                 showRoles={showRoles}
-                messageListRef={messageListRef}
               />
-            ) : (
-              <Home height={!fullScreen ? height : '88vh'} />
             )}
-            <ChatInput scrollToBottom={scrollToBottom} />
+
+            {onDrag ? (
+              <>
+                <Box
+                  css={[
+                    onDrag && dropBoxStyles.dropBoxCss,
+                    onDrag && dropBoxStyles.borderCss,
+                  ]}
+                  style={{ height: !fullScreen ? height : '90vh' }}
+                >
+                  {isUserAuthenticated || anonymousMode ? (
+                    <ChatBody
+                      height={!fullScreen ? height : '88vh'}
+                      anonymousMode={anonymousMode}
+                      showRoles={showRoles}
+                      messageListRef={messageListRef}
+                      scrollToBottom={scrollToBottom}
+                    />
+                  ) : (
+                    <Home height={!fullScreen ? height : '88vh'} />
+                  )}
+                </Box>
+                <ChatInput scrollToBottom={scrollToBottom} />
+              </>
+            ) : (
+              <>
+                {isUserAuthenticated || anonymousMode ? (
+                  <ChatBody
+                    height={!fullScreen ? height : '88vh'}
+                    anonymousMode={anonymousMode}
+                    showRoles={showRoles}
+                    messageListRef={messageListRef}
+                    scrollToBottom={scrollToBottom}
+                  />
+                ) : (
+                  <Home height={!fullScreen ? height : '88vh'} />
+                )}
+                <ChatInput scrollToBottom={scrollToBottom} />
+              </>
+            )}
           </Box>
         </RCInstanceProvider>
       </ToastBarProvider>

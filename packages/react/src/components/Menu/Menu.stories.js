@@ -17,7 +17,11 @@ export const Menu = {
         id: 'thread',
         label: 'Threads',
         icon: 'thread',
-        disabled: true,
+      },
+      {
+        id: 'mentions',
+        label: 'Mentions',
+        icon: 'at',
       },
       {
         id: 'members',

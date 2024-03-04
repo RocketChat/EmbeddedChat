@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './ThreadHeader.module.css';
+import styles from './DynamicHeader.module.css';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 
-const ThreadHeader = ({ title, handleClose }) => (
+const DynamicHeader = ({
+  title,
+  isHeaderIcon = false,
+  handleClose = () => {},
+  iconName,
+  headerIconName,
+}) => (
   <Box
     className={styles.container}
     style={{
@@ -21,16 +27,20 @@ const ThreadHeader = ({ title, handleClose }) => (
       }}
     >
       <ActionButton onClick={handleClose} ghost display="inline" square small>
-        <Icon name="arrow-back" size="1.25rem" />
+        <Icon name={iconName} size="1.25rem" />
       </ActionButton>
+
       <h4 className={styles.nospace}>{title}</h4>
+      {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
     </Box>
   </Box>
 );
 
-export default ThreadHeader;
+export default DynamicHeader;
 
-ThreadHeader.propTypes = {
+DynamicHeader.propTypes = {
   handleClose: PropTypes.func,
   title: PropTypes.string,
+  isHeaderIcon: PropTypes.bool,
+  iconName: PropTypes.string,
 };

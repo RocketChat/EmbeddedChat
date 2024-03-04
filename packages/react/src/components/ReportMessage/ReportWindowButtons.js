@@ -43,7 +43,12 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
     <Modal onClose={handleOnClose}>
       <Modal.Header>
         <Modal.Title>
-          <Icon name="report" size="1.25rem" /> Report this message?
+          <Icon
+            name="report"
+            size="1.25rem"
+            style={{ marginRight: '0.5rem' }}
+          />
+          Report this message?
         </Modal.Title>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>

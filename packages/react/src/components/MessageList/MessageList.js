@@ -7,26 +7,30 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useMentionsStore,
+  useThreadsMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
+import AllThreads from '../AllThreads/AllThreads';
+import UserMentions from '../UserMentions/UserMentions';
 import { Message } from '../Message';
-import { Button } from '../Button';
-import { Box } from '../Box';
-import { Icon } from '../Icon';
 
-const MessageList = ({ messages, handleGoBack }) => {
+const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
-  const filtered = useMessageStore((state) => state.filtered);
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
+  const showAllThreads = useThreadsMessageStore(
+    (state) => state.showAllThreads
+  );
+  const showMentions = useMentionsStore((state) => state.showMentions);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -51,23 +55,13 @@ const MessageList = ({ messages, handleGoBack }) => {
             )
           );
         })}
-      {filtered && (
-        <Box>
-          <Button size="small" onClick={handleGoBack}>
-            <Icon
-              style={{ marginInlineEnd: '0.4rem' }}
-              name="back"
-              size="1.25rem"
-              color="error"
-            />
-            <p style={{ display: 'inline' }}>Go Back</p>
-          </Button>
-        </Box>
-      )}
+
       {showMembers && <RoomMembers members={members} />}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
+      {showAllThreads && <AllThreads />}
+      {showMentions && <UserMentions />}
     </>
   );
 };
@@ -76,5 +70,4 @@ export default MessageList;
 
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape),
-  handleGoBack: PropTypes.func,
 };

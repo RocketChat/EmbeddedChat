@@ -27,6 +27,7 @@ const MessageReportWindow = ({ messageId }) => {
             display: 'flex',
             justifyContent: 'center',
             marginBottom: '0.125rem',
+            padding: '0.6rem 0',
           }}
         >
           <Input
