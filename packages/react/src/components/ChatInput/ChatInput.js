@@ -149,6 +149,16 @@ const ChatInput = ({ scrollToBottom }) => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
+    
+    const maxMessageLength = 1000;
+    if (message.length > maxMessageLength) {
+    dispatchToastMessage({
+      type: 'error',
+      message: 'Message is too long. Please send it as an attachment instead.',
+    });
+    return;
+    }
+
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
       if (editMessage.msg) {
