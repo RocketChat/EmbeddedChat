@@ -256,7 +256,7 @@ const ChatInput = ({ scrollToBottom }) => {
   useEffect(() => {
     if (isAttachmentMode) sendMessage();
   }, [isAttachmentMode, sendMessage]);
-  
+
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
