@@ -6,7 +6,12 @@ import { Icon } from '../Icon';
 import { Tooltip } from '../Tooltip';
 import RCContext from '../../context/RCInstance';
 
-const MessageAvatarContainer = ({ message, sequential, isStarred, isPinned }) => {
+const MessageAvatarContainer = ({
+  message,
+  sequential,
+  isStarred,
+  isPinned,
+}) => {
   const { RCInstance } = useContext(RCContext);
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
