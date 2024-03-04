@@ -10,6 +10,8 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useToastStore,
+  useThreadsMessageStore,
+  useMentionsStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
@@ -18,7 +20,6 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
-import useThreadsMessageStore from '../../store/threadsMessageStore';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 
@@ -73,6 +74,7 @@ const ChatHeader = ({
   const setShowAllThreads = useThreadsMessageStore(
     (state) => state.setShowAllThreads
   );
+  const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const toastPosition = useToastStore((state) => state.position);
 
   const handleGoBack = async () => {
@@ -140,6 +142,11 @@ const ChatHeader = ({
     setShowAllThreads(true);
     setShowSearch(false);
   }, [setShowAllThreads, setShowSearch]);
+
+  const showMentions = useCallback(async () => {
+    setShowMentions(true);
+    setShowSearch(false);
+  }, [setShowMentions, setShowSearch]);
 
   useEffect(() => {
     const setMessageAllowed = async () => {
@@ -224,6 +231,12 @@ const ChatHeader = ({
             icon: 'thread',
           },
           {
+            id: 'mentions',
+            action: showMentions,
+            label: 'Mentions',
+            icon: 'at',
+          },
+          {
             id: 'members',
             action: showChannelMembers,
             label: 'Members',
@@ -273,6 +286,7 @@ const ChatHeader = ({
     moreOpts,
     setFullScreen,
     showAllThreads,
+    showMentions,
     showChannelMembers,
     showChannelinformation,
     showPinnedMessage,
