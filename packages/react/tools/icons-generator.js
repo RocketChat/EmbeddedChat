@@ -39,6 +39,8 @@ const iconsList = [
   'kebab',
   'check',
   'error-circle',
+  'chevron-down',
+  'chevron-left',
 ];
 const svgDirPath = path.join(
   __dirname,
