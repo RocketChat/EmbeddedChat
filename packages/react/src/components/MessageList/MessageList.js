@@ -7,8 +7,6 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
-  useMentionsStore,
-  useThreadsMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -16,8 +14,10 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
-import UserMentions from '../UserMentions/UserMentions';
 import { Message } from '../Message';
+import { Icon } from '../Icon';
+
+import useThreadsMessageStore from '../../store/threadsMessageStore';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -27,14 +27,29 @@ const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
+  const headerTitle = useMessageStore((state) => state.headerTitle);
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
-  const showMentions = useMentionsStore((state) => state.showMentions);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
-
+  let iconType = 'thread';
+  if (headerTitle === 'Pinned Messages') {
+    iconType = 'pin';
+  } else if (headerTitle === 'Starred Messages') {
+    iconType = 'star';
+  }
+  if (messages.length === 0) {
+    return (
+      <div style={{ margin: 'auto' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Icon name={iconType} size="2rem" />
+        </div>
+        <div style={{ textAlign: 'center' }}>No {headerTitle}</div>
+      </div>
+    );
+  }
   return (
     <>
       {messages &&
@@ -61,7 +76,6 @@ const MessageList = ({ messages }) => {
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
-      {showMentions && <UserMentions />}
     </>
   );
 };
