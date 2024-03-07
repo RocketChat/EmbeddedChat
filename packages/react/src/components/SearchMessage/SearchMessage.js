@@ -103,7 +103,7 @@ const Search = () => {
             alignItems: messageList.length === 0 ? 'center' : 'initial',
           }}
         >
-          {messageList.length == 0 ? (
+          {messageList.length === 0 ? (
             <Box
               style={{
                 display: 'flex',
@@ -141,7 +141,7 @@ const Search = () => {
                     newDay={false}
                     sequential={false}
                     variant="default"
-                    showAvatar={true}
+                    showAvatar
                     showToolbox={false}
                   />
                 </Box>
