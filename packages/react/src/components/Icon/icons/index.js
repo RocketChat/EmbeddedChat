@@ -41,6 +41,8 @@ import DisabledRecorder from './DisableRecorder';
 import Clipboard from './Clipboard';
 import Download from './Download';
 import At from './At';
+import ChevronDown from './ChevronDown';
+import ChevronLeft from './ChevronLeft';
 
 const icons = {
   file: File,
@@ -86,6 +88,8 @@ const icons = {
   clipboard: Clipboard,
   download: Download,
   at: At,
+  'chevron-down': ChevronDown,
+  'chevron-left': ChevronLeft,
 };
 
 export default icons;
