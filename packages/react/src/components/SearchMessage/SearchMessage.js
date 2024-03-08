@@ -1,15 +1,14 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
 import classes from './SearchMessage.module.css';
-import { useUserStore, useSearchMessageStore } from '../../store';
+import { useSearchMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
-import isMessageSequential from '../../lib/isMessageSequential';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -37,7 +36,9 @@ const Search = () => {
 
   useEffect(() => {
     if (!text.trim()) {
-      setMessageList([]);
+      if (messageList.length > 0) {
+        setMessageList([]);
+      }
     } else {
       debouncedSearch();
     }
@@ -46,7 +47,7 @@ const Search = () => {
     return () => {
       debouncedSearch.cancel();
     };
-  }, [text, debouncedSearch]);
+  }, [text, debouncedSearch, messageList.length]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -69,7 +70,7 @@ const Search = () => {
               Search Messages
             </Box>
             <ActionButton onClick={toggleShowSearch} ghost size="small">
-              <Icon name="cross" size="x20" />
+              <Icon name="cross" />
             </ActionButton>
           </h3>
         </Box>
@@ -125,7 +126,6 @@ const Search = () => {
             messageList.map((msg, index, arr) => {
               const prev = arr[index + 1];
               const newDay = isMessageNewDay(msg, prev);
-              const sequential = isMessageSequential(msg, prev, 300);
               return (
                 <Box key={msg._id}>
                   {newDay && (
