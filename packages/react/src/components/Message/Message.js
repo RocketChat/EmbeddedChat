@@ -158,7 +158,6 @@ const Message = ({
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
-  console.log(message);
   return (
     <>
       <Box
