@@ -39,6 +39,7 @@ import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
 import Clipboard from './Clipboard';
+import Download from './Download';
 import At from './At';
 
 const icons = {
@@ -83,6 +84,7 @@ const icons = {
   'arrow-down': ArrowDown,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
+  download: Download,
   at: At,
 };
 
