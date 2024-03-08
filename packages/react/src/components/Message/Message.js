@@ -53,6 +53,7 @@ const Message = ({
   showAvatar = false,
   className = '',
   style = {},
+  showToolbox = true,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -215,7 +216,7 @@ const Message = ({
               handleOpenThread={handleOpenThread}
             />
           ) : null}
-          {!message.t ? (
+          {!message.t && showToolbox ? (
             <MessageToolbox
               message={message}
               isEditing={editMessage._id === message._id}
