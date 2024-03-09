@@ -41,6 +41,7 @@ const iconsList = [
   'error-circle',
   'chevron-down',
   'chevron-left',
+  'key',
 ];
 const svgDirPath = path.join(
   __dirname,

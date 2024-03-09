@@ -199,7 +199,9 @@ const ChatInput = ({ scrollToBottom }) => {
     if (!editMessage.msg) {
       if (message.startsWith('/')) {
         // its a slash command
-        const [command, params] = message.split(/\s+/);
+        const [command, ...paramsArray] = message.split(' ');
+        const params = paramsArray.join(' ');
+
         if (commands.find((c) => c.command === command.replace('/', ''))) {
           messageRef.current.value = '';
           setDisableButton(true);
