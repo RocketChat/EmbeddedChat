@@ -111,7 +111,7 @@ const ChatBody = ({
   const addMessage = useCallback(
     (message) => {
       if (message.u.username !== username) {
-        const isScrolledUp = messageListRef.current.scrollTop !== 0;
+        const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp) {
           setOtherUserMessage(true);
         }
@@ -188,14 +188,15 @@ const ChatBody = ({
   };
 
   const handleScroll = () => {
-    setScrollPosition(messageListRef.current.scrollTop);
+    if (messageListRef && messageListRef.current) {
+      setScrollPosition(messageListRef.current.scrollTop);
+      setIsUserScrolledUp(
+        messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+          messageListRef.current.scrollHeight
+      );
+    }
 
-    setIsUserScrolledUp(
-      messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-        messageListRef.current.scrollHeight
-    );
-
-    const isAtBottom = messageListRef.current.scrollTop === 0;
+    const isAtBottom = messageListRef?.current?.scrollTop === 0;
     if (isAtBottom) {
       setPopupVisible(false);
       setIsUserScrolledUp(false);
@@ -208,10 +209,11 @@ const ChatBody = ({
   };
 
   useEffect(() => {
-    messageListRef.current.addEventListener('scroll', handleScroll);
+    const currentRef = messageListRef.current;
+    currentRef.addEventListener('scroll', handleScroll);
 
     return () => {
-      messageListRef.current.removeEventListener('scroll', handleScroll);
+      currentRef.removeEventListener('scroll', handleScroll);
     };
   }, [messageListRef]);
 
