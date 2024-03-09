@@ -95,8 +95,7 @@ const ChatInput = ({ scrollToBottom }) => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const [errorModal, setErrorModal] = useState(false);
-  const [isAttachmentMode, setIsAttachmentMode] = useState(false);
+  const [msgLongMsgLongErrorModal, setMsgLongErrorModal] = useState(false);
 
   const {
     editMessage,
@@ -130,16 +129,11 @@ const ChatInput = ({ scrollToBottom }) => {
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-  const openErrorModal = () => {
-    setErrorModal(true);
+  const openMsgLongErrorModal = () => {
+    setMsgLongErrorModal(true);
   };
-  const closeErrorModal = () => {
-    setErrorModal(false);
-  };
-
-  const handleConvertToAttachment = () => {
-    setIsAttachmentMode(true);
-    closeErrorModal();
+  const closeMsgLongErrorModal = () => {
+    setMsgLongErrorModal(false);
   };
 
   const onJoin = async () => {
@@ -160,7 +154,7 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (isAttachmentMode = false) => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
@@ -172,19 +166,17 @@ const ChatInput = ({ scrollToBottom }) => {
         lastModified: Date.now(),
       });
 
-      // file upload logic
       toggle();
       setData(file);
 
       messageRef.current.value = '';
       setEditMessage({});
-      setIsAttachmentMode(false);
       return;
     }
 
     const msgMaxLength = 500;
     if (message.length > msgMaxLength) {
-      openErrorModal();
+      openMsgLongErrorModal();
       return;
     }
 
@@ -198,7 +190,6 @@ const ChatInput = ({ scrollToBottom }) => {
 
     if (!editMessage.msg) {
       if (message.startsWith('/')) {
-        // its a slash command
         const [command, ...paramsArray] = message.split(' ');
         const params = paramsArray.join(' ');
 
@@ -255,9 +246,10 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
   };
 
-  useEffect(() => {
-    if (isAttachmentMode) sendMessage();
-  }, [isAttachmentMode, sendMessage]);
+  const handleConvertToAttachment = () => {
+    closeMsgLongErrorModal();
+    sendMessage(true);
+  };
 
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -575,20 +567,20 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         )}
       </Box>
-      {errorModal && (
+      {msgLongMsgLongErrorModal && (
         <Modal>
           <Modal
             css={css`
               padding: 1em;
             `}
-            onClose={closeErrorModal}
+            onClose={closeMsgLongErrorModal}
           >
             <Modal.Header>
               <Modal.Title>
                 <Icon name="report" size="1.25rem" />
                 Message Too Long!
               </Modal.Title>
-              <Modal.Close onClick={closeErrorModal} />
+              <Modal.Close onClick={closeMsgLongErrorModal} />
             </Modal.Header>
             <Modal.Content
               css={css`
@@ -599,7 +591,7 @@ const ChatInput = ({ scrollToBottom }) => {
               Send it as attachment instead?{' '}
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={closeErrorModal}>
+              <Button color="secondary" onClick={closeMsgLongErrorModal}>
                 Cancel
               </Button>
               <Button onClick={handleConvertToAttachment} color="primary">

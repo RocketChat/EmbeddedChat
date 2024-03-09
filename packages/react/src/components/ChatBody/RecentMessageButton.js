@@ -10,6 +10,7 @@ const buttonStyle = css`
   transform: translateX(-50%);
   user-select: none;
   opacity: 0;
+  overflow: visible;
   animation: fadeInAndMoveUp 1s ease-in-out forwards;
 
   &.not {
@@ -47,6 +48,7 @@ const textAndIconContainer = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 200;
 `;
 
 const RecentMessageButton = ({ visible, onClick, text }) => {
@@ -55,21 +57,21 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
   return (
     <Button
       css={[buttonStyle, !visible && 'not', clicked && 'clicked']}
-      primary
+      color="primary"
+      size="small"
       onClick={() => {
         onClick();
         setClicked(true);
       }}
       style={{
         cursor: 'pointer',
-        padding: '3px 5px 10px 6px',
         borderRadius: '20px',
       }}
     >
-      <div css={textAndIconContainer}>
+      <span css={textAndIconContainer}>
         {text}
         <Icon name="arrow-down" size={16} />
-      </div>
+      </span>
     </Button>
   );
 };
