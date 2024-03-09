@@ -138,7 +138,6 @@ const ChatBody = ({
 
   const onModalSubmit = useCallback(
     async (data) => {
-      console.log(data);
       const { actionId, value, blockId, appId, viewId } = data;
       await RCInstance?.triggerBlockAction({
         rid: RCInstance.rid,

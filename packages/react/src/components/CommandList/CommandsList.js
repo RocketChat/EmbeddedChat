@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
@@ -53,14 +53,17 @@ function CommandsList({
     }
   `;
 
-  const handleCommandClick = (command) => {
-    if (execCommand) {
-      execCommand(command);
-    }
-    if (onCommandClick) {
-      onCommandClick(command);
-    }
-  };
+  const handleCommandClick = useCallback(
+    (command) => {
+      if (execCommand) {
+        execCommand(command);
+      }
+      if (onCommandClick) {
+        onCommandClick(command);
+      }
+    },
+    [execCommand, onCommandClick]
+  );
 
   useEffect(() => {
     const handleKeyPress = (event) => {
