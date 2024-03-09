@@ -42,20 +42,34 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     const initText = input.value.slice(0, selectionStart);
     const selectedText = input.value.slice(selectionStart, selectionEnd);
     const finalText = input.value.slice(selectionEnd, input.value.length);
-    if (
-      !document.execCommand ||
-      !document.execCommand(
-        'insertText',
-        false,
-        pattern.replace('{{text}}', selectedText)
-      )
-    ) {
-      input.value =
-        initText + pattern.replace('{{text}}', selectedText) + finalText;
-    }
 
-    input.selectionStart = selectionStart + pattern.indexOf('{{text}}');
-    input.selectionEnd = input.selectionStart + selectedText.length;
+    const startPattern = pattern.slice(0, pattern.indexOf('{{text}}'));
+    const endPattern = pattern.slice(
+      pattern.indexOf('{{text}}') + '{{text}}'.length
+    );
+
+    const startPatternFound = initText.endsWith(startPattern);
+    const endPatternFound = finalText.startsWith(endPattern);
+
+    if (startPatternFound && endPatternFound) {
+      // Text is already wrapped, so unwrap it
+      input.value =
+        initText.slice(0, initText.length - startPattern.length) +
+        selectedText +
+        finalText.slice(endPattern.length);
+
+      input.selectionStart = selectionStart - startPattern.length;
+      input.selectionEnd = input.selectionStart + selectedText.length;
+    } else {
+      // Text is not wrapped, so wrap it
+      const wrappedText = startPattern + selectedText + endPattern;
+      if (!document.execCommand?.('insertText', false, wrappedText)) {
+        input.value = initText + wrappedText + finalText;
+      }
+
+      input.selectionStart = selectionStart + startPattern.length;
+      input.selectionEnd = input.selectionStart + selectedText.length;
+    }
   };
 
   const popupStyle = {

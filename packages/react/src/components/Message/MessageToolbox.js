@@ -89,7 +89,7 @@ export const MessageToolbox = ({
           {...props}
         >
           {!isThreadMessage ? (
-            <Tooltip text="Reply" position="top" X="-28%" Y="-64%">
+            <Tooltip text="Reply in thread" position="top">
               <ActionButton
                 ghost
                 size="small"
@@ -98,7 +98,15 @@ export const MessageToolbox = ({
               />
             </Tooltip>
           ) : null}
-          <Tooltip text="Star" position="top" X="-26%" Y="-64%">
+          <Tooltip
+            text={
+              message.starred &&
+              message.starred.find((u) => u._id === authenticatedUserId)
+                ? 'Remove star'
+                : 'Star'
+            }
+            position="top"
+          >
             <ActionButton
               ghost
               size="small"
@@ -111,7 +119,8 @@ export const MessageToolbox = ({
               onClick={() => handleStarMessage(message)}
             />
           </Tooltip>
-          <Tooltip text="Emoji" position="top" X="-26%" Y="-64%">
+
+          <Tooltip text="Add reaction" position="top">
             <ActionButton
               ghost
               size="small"
@@ -134,7 +143,7 @@ export const MessageToolbox = ({
             />
           </Popup>
           {!isThreadMessage && (
-            <Tooltip text="Pin" position="top" X="-26%" Y="-64%">
+            <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
                 ghost
                 size="small"
@@ -145,7 +154,7 @@ export const MessageToolbox = ({
           )}
           {message.u._id === authenticatedUserId && (
             <>
-              <Tooltip text="Edit" position="top" X="-26%" Y="-64%">
+              <Tooltip text="Edit" position="top">
                 <ActionButton
                   ghost={!isEditing}
                   color={isEditing ? 'secondary' : 'default'}
@@ -154,7 +163,7 @@ export const MessageToolbox = ({
                   onClick={() => handleEditMessage(message)}
                 />
               </Tooltip>
-              <Tooltip text="Delete" position="top" X="-26%" Y="-64%">
+              <Tooltip text="Delete" position="top">
                 <ActionButton
                   ghost
                   size="small"
@@ -165,7 +174,8 @@ export const MessageToolbox = ({
               </Tooltip>
             </>
           )}
-          <Tooltip text="Report" position="top" X="-26%" Y="-64%">
+
+          <Tooltip text="Report" position="top">
             <ActionButton
               ghost
               size="small"

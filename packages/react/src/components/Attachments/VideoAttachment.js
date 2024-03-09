@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
+import AttachmentMetadata from './AttachmentMetadata';
 
 const VideoAttachment = ({ attachment, host }) => (
   <Box>
-    <p>{attachment?.description}</p>
+    <AttachmentMetadata
+      attachment={attachment}
+      url={host + attachment.video_url}
+    />
     <video width={300} controls>
       <source src={host + attachment.video_url} type={attachment.video_type} />
     </video>

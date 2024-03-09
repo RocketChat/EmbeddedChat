@@ -20,6 +20,7 @@ import { MessageDivider } from './MessageDivider';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
+import { LinkPreview } from '../LinkPreview';
 
 const MessageCss = css`
   display: flex;
@@ -53,6 +54,7 @@ const Message = ({
   showAvatar = false,
   className = '',
   style = {},
+  showToolbox = true,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -186,6 +188,19 @@ const Message = ({
                 ) : (
                   <Markdown body={message} isReaction={false} />
                 )}
+
+                {message.urls &&
+                  message.urls.map(
+                    (url, index) =>
+                      url.meta && (
+                        <LinkPreview
+                          key={index}
+                          url={url.url}
+                          meta={url.meta}
+                        />
+                      )
+                  )}
+
                 {message.blocks && (
                   <kitContext.Provider value={context} mid={message.mid}>
                     <UiKitComponent
@@ -215,7 +230,7 @@ const Message = ({
               handleOpenThread={handleOpenThread}
             />
           ) : null}
-          {!message.t ? (
+          {!message.t && showToolbox ? (
             <MessageToolbox
               message={message}
               isEditing={editMessage._id === message._id}

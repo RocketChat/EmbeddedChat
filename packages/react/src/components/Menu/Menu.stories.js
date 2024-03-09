@@ -19,6 +19,11 @@ export const Menu = {
         icon: 'thread',
       },
       {
+        id: 'mentions',
+        label: 'Mentions',
+        icon: 'at',
+      },
+      {
         id: 'members',
         label: 'Members',
         icon: 'members',
