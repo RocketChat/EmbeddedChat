@@ -38,6 +38,7 @@ import ArrowDown from './ArrowDown';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
+import Copy from './Copy';
 import Clipboard from './Clipboard';
 import Download from './Download';
 import At from './At';
@@ -54,6 +55,7 @@ const icons = {
   hash: Hash,
   computer: Computer,
   cross: Cross,
+  copy: Copy,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
