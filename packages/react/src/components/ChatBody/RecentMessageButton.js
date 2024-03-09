@@ -68,10 +68,10 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
         borderRadius: '20px',
       }}
     >
-      <span css={textAndIconContainer}>
+      <div css={textAndIconContainer}>
         {text}
         <Icon name="arrow-down" size={16} />
-      </span>
+      </div>
     </Button>
   );
 };
