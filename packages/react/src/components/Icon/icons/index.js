@@ -39,6 +39,12 @@ import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
 import Copy from './Copy';
+import Clipboard from './Clipboard';
+import Download from './Download';
+import At from './At';
+import ChevronDown from './ChevronDown';
+import ChevronLeft from './ChevronLeft';
+import Key from './Key';
 
 const icons = {
   file: File,
@@ -49,6 +55,7 @@ const icons = {
   hash: Hash,
   computer: Computer,
   cross: Cross,
+  copy: Copy,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
@@ -81,7 +88,12 @@ const icons = {
   'error-circle': ErrorCircle,
   'arrow-down': ArrowDown,
   'pin-filled': PinFilled,
-  copy: Copy,
+  clipboard: Clipboard,
+  download: Download,
+  at: At,
+  'chevron-down': ChevronDown,
+  'chevron-left': ChevronLeft,
+  key: Key,
 };
 
 export default icons;

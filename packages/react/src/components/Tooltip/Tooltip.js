@@ -31,7 +31,7 @@ const Tooltip = ({ children, text, position }) => {
   // Add more positions according to your needs and modify tooltipStyle and tooltipArrowStyle accordingly
 
   if (position === 'top') {
-    tooltipStyle.top = '-100%';
+    tooltipStyle.top = 'calc(-100% - 10px)'; // avoid overlaying the element
     tooltipArrowStyle.top = '100%';
     tooltipArrowStyle.transform = 'translateX(-50%)';
   } else if (position === 'bottom') {
