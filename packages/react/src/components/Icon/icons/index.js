@@ -40,7 +40,10 @@ import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
 import Copy from './Copy';
 import Clipboard from './Clipboard';
+import Download from './Download';
 import At from './At';
+import ChevronDown from './ChevronDown';
+import ChevronLeft from './ChevronLeft';
 
 const icons = {
   file: File,
@@ -85,7 +88,10 @@ const icons = {
   'arrow-down': ArrowDown,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
+  download: Download,
   at: At,
+  'chevron-down': ChevronDown,
+  'chevron-left': ChevronLeft,
 };
 
 export default icons;
