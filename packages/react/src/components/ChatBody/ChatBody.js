@@ -136,31 +136,21 @@ const ChatBody = ({
     setViewData(null);
   };
 
-  const onModalSubmit = useCallback(async (data) => {
-    console.log(data);
-    // const { actionId, value, blockId, appId, viewId } = data;
-    // await RCInstance?.triggerBlockAction({
-    //   rid: RCInstance.rid,
-    //   actionId,
-    //   value,
-    //   blockId,
-    //   appId,
-    //   viewId,
-    // });
-  }, []);
-
-  // const onModalSubmit = useCallback(async (data, value) => {
-  //   console.log(data);
-  //   // const { actionId, value, blockId, appId, viewId } = data;
-  //   // await RCInstance?.triggerBlockAction({
-  //   //   rid: RCInstance.rid,
-  //   //   actionId,
-  //   //   value,
-  //   //   blockId,
-  //   //   appId,
-  //   //   viewId,
-  //   // });
-  // }, []);
+  const onModalSubmit = useCallback(
+    async (data) => {
+      console.log(data);
+      const { actionId, value, blockId, appId, viewId } = data;
+      await RCInstance?.triggerBlockAction({
+        rid: RCInstance.rid,
+        actionId,
+        value,
+        blockId,
+        appId,
+        viewId,
+      });
+    },
+    [RCInstance]
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
