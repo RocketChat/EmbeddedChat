@@ -55,7 +55,7 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
           ghost
           display="inline"
           square
-          small
+          size="small"
         >
           {isPreviewOpen ? (
             <Icon name="chevron-left" size="1.25rem" />

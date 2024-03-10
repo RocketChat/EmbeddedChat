@@ -185,7 +185,7 @@ const EmbeddedChat = ({
   const messageListRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (messageListRef.current) {
+    if (messageListRef && messageListRef.current) {
       requestAnimationFrame(() => {
         messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
       });
