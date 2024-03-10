@@ -108,6 +108,8 @@ Note: The `react` package depends on the `api` package. After making changes to 
 
 Similarly, the `api` package depends on the `auth` package. After changes to `auth`, rebuild it with `yarn build` in `package/auth`, and then restart the `api` development environment.
 
+Make sure the "Enable CORS" option is ON. It can be found in Administration > Settings > General > REST API > Enable CORS. 
+
 ### Conclusion
 
 This setup provides a comprehensive environment for developing and testing the `EmbeddedChat` component, along with its associated `api` and `auth` packages. Enjoy exploring and enhancing the capabilities of `EmbeddedChat`!
