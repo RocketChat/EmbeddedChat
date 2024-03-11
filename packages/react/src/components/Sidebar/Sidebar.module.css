@@ -23,7 +23,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
-  margin-bottom: 1rem
+  margin-bottom: 1rem;
 }
 
 .sidebarTitle {
@@ -41,4 +41,3 @@
     width: 100vw;
   }
 }
-
