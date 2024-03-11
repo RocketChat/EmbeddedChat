@@ -135,7 +135,7 @@ const AudioMessageRecorder = () => {
     if (file) {
       setFile(null);
     }
-  }, [isRecorded, file, ECOptions.enableThreads, RCInstance, threadId]);
+  }, [isRecorded, file]);
 
   if (state === 'idle') {
     return (
