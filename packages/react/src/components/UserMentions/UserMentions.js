@@ -75,6 +75,8 @@ const UserMentions = () => {
             justifyContent:
               mentionedMessages.length === 0 ? 'center' : 'initial',
             alignItems: mentionedMessages.length === 0 ? 'center' : 'initial',
+            overflowX: 'hidden',
+            maxWidth: '100%',
           }}
         >
           {mentionedMessages.length === 0 ? (

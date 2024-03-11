@@ -72,7 +72,11 @@ const AllThreads = () => {
     >
       <Box
         className={classes.searchContainer}
-        style={{ border: '2px solid #ddd', position: 'relative' }}
+        style={{
+          border: '2px solid #ddd',
+          position: 'relative',
+          marginBottom: '1rem',
+        }}
       >
         <input
           placeholder="Search Messages"
