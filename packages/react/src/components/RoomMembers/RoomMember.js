@@ -9,7 +9,6 @@ import InviteMembers from './inviteMembers/InviteMembers';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
-import { ActionButton } from '../ActionButton';
 import Sidebar from '../Sidebar/Sidebar';
 
 const RoomMembers = ({ members }) => {
