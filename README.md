@@ -61,7 +61,7 @@ yarn storybook
 
 Storybook should now be operational. Experiment with `EmbeddedChat` and its components, observing real-time changes in Storybook.
 
-Make sure the "Enable CORS" option is ON in your Rocket.Chat server. It can be found in Administration > Settings > General > REST API > Enable CORS. 
+Note: Please make sure the "Enable CORS" option is ON in your Rocket.Chat server. It can be found in Administration > Settings > General > REST API > Enable CORS. It has to enabled to access the functionality of the app.
 
 #### Custom Rocket Chat Server Configuration
 
