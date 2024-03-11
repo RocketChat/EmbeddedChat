@@ -19,10 +19,9 @@ function CommandsList({
   const listStyle = css`
     margin-bottom: 5px;
     display: block;
-    max-height: 10rem;
     overflow: scroll;
     overflow-x: hidden;
-    max-height: 145px;
+    max-height: 105px;
     scrollbar-width: thin;
     scrollbar-color: #e0e0e1 transparent;
     &::-webkit-scrollbar {
