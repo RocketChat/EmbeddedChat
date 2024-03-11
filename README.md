@@ -61,6 +61,8 @@ yarn storybook
 
 Storybook should now be operational. Experiment with `EmbeddedChat` and its components, observing real-time changes in Storybook.
 
+Make sure the "Enable CORS" option is ON in your Rocket.Chat server. It can be found in Administration > Settings > General > REST API > Enable CORS. 
+
 #### Custom Rocket Chat Server Configuration
 
 By default, Storybook connects to `http://localhost:3000`. To use a different Rocket Chat server:
@@ -107,8 +109,6 @@ For development in the `api` package:
 Note: The `react` package depends on the `api` package. After making changes to `api`, rebuild it with `yarn build` in `package/api`, and then restart the `react` projects.
 
 Similarly, the `api` package depends on the `auth` package. After changes to `auth`, rebuild it with `yarn build` in `package/auth`, and then restart the `api` development environment.
-
-Make sure the "Enable CORS" option is ON. It can be found in Administration > Settings > General > REST API > Enable CORS. 
 
 ### Conclusion
 
