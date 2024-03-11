@@ -11,7 +11,11 @@ export default function TypingUsers() {
 
   useEffect(() => {
     RCInstance?.addTypingStatusListener((t) => {
-      setTypingUsers((t || []).filter((u) => u !== currentUserName));
+
+     
+      // Filter out the current user from the typingUsers list
+      const filteredTypingUsers = t.filter((user) => user !== currentUserName);
+      setTypingUsers(filteredTypingUsers);
     });
     return () => RCInstance?.removeTypingStatusListener(setTypingUsers);
   }, [RCInstance, setTypingUsers, currentUserName]);
