@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
@@ -45,6 +45,8 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     font-weight: 600;
   `;
 
+  const memberRef = useRef(null); 
+
   const handleMemberClick = useCallback(
     (selectedItem) => {
       onMemberClick(selectedItem);
@@ -79,9 +81,18 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     };
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 
+  useEffect(() => {
+    if (memberRef.current) {
+      const selectedMember = memberRef.current.children[mentionIndex];
+      if (selectedMember) {
+        selectedMember.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [mentionIndex]);
+
   return (
     <Box css={listStyle}>
-      <ul style={{ listStyle: 'none' }}>
+      <ul style={{ listStyle: 'none' }} ref={memberRef}>
         {filteredMembers.map((member, index) => (
           <li
             key={member._id}
