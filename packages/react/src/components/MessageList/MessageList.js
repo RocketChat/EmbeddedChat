@@ -9,6 +9,8 @@ import {
   useUserStore,
   useMentionsStore,
   useThreadsMessageStore,
+  usePinnedMessageStore,
+  useStarredMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
@@ -18,6 +20,8 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
 import { Message } from '../Message';
+import PinnedMessages from '../PinnedMessages/PinnedMessages';
+import StarredMessages from '../StarredMessages/StarredMessages';
 import { Icon } from '../Icon';
 
 const MessageList = ({ messages }) => {
@@ -33,6 +37,8 @@ const MessageList = ({ messages }) => {
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
+  const showPinned = usePinnedMessageStore((state) => state.showPinned);
+  const showStarred = useStarredMessageStore((state) => state.showStarred);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -82,6 +88,8 @@ const MessageList = ({ messages }) => {
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
       {showMentions && <UserMentions />}
+      {showPinned && <PinnedMessages />}
+      {showStarred && <StarredMessages />}
     </>
   );
 };
