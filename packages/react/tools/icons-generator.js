@@ -42,6 +42,7 @@ const iconsList = [
   'chevron-down',
   'chevron-left',
   'key',
+  'attachment',
 ];
 const svgDirPath = path.join(
   __dirname,

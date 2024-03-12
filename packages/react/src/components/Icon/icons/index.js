@@ -46,6 +46,7 @@ import At from './At';
 import ChevronDown from './ChevronDown';
 import ChevronLeft from './ChevronLeft';
 import Key from './Key';
+import Attachment from './Attachment';
 
 const icons = {
   file: File,
@@ -96,6 +97,7 @@ const icons = {
   'chevron-down': ChevronDown,
   'chevron-left': ChevronLeft,
   key: Key,
+  attachment: Attachment,
 };
 
 export default icons;
