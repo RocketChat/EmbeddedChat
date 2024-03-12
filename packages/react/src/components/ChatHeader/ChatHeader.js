@@ -12,6 +12,7 @@ import {
   useToastStore,
   useThreadsMessageStore,
   useMentionsStore,
+  useFileStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../Tooltip';
@@ -74,6 +75,7 @@ const ChatHeader = ({
   const setShowAllThreads = useThreadsMessageStore(
     (state) => state.setShowAllThreads
   );
+  const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const toastPosition = useToastStore((state) => state.position);
 
@@ -142,6 +144,11 @@ const ChatHeader = ({
     setShowAllThreads(true);
     setShowSearch(false);
   }, [setShowAllThreads, setShowSearch]);
+
+  const showAllFiles = useCallback(async () => {
+    setShowAllFiles(true);
+    setShowSearch(false);
+  }, [setShowAllFiles, setShowSearch]);
 
   const showMentions = useCallback(async () => {
     setShowMentions(true);
@@ -243,6 +250,12 @@ const ChatHeader = ({
             icon: 'members',
           },
           {
+            id: 'files',
+            action: showAllFiles,
+            label: 'Files',
+            icon: 'clip',
+          },
+          {
             id: 'starred',
             action: showStarredMessage,
             label: 'Starred',
@@ -285,6 +298,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     moreOpts,
     setFullScreen,
+    showAllFiles,
     showAllThreads,
     showMentions,
     showChannelMembers,

@@ -37,7 +37,7 @@ function FlexItem({
     }
 
     return style;
-  }, [align, basis, grow, order, shrink]);
+  }, [align, basis, grow, order, shrink, style]);
 
   return (
     <Box style={{ ...itemStyle }} {...props}>
