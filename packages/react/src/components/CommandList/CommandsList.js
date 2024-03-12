@@ -86,11 +86,13 @@ function CommandsList({
     if (commandRef.current) {
       const selectedCommand = commandRef.current.children[commandIndex];
       if (selectedCommand) {
-        selectedCommand.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        selectedCommand.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
       }
     }
   }, [commandIndex]);
-
 
   return (
     <Box
@@ -103,7 +105,7 @@ function CommandsList({
         {filteredCommands.map((command, index) => (
           <li
             key={command.command}
-            role='presentation'
+            role="presentation"
             css={listItemStyle}
             onClick={() => handleCommandClick(command)}
             onKeyDown={(e) => {

@@ -45,7 +45,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     font-weight: 600;
   `;
 
-  const memberRef = useRef(null); 
+  const memberRef = useRef(null);
 
   const handleMemberClick = useCallback(
     (selectedItem) => {

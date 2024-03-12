@@ -463,7 +463,7 @@ const ChatInput = ({ scrollToBottom }) => {
         mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
       );
       setCommandIndex(
-        commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1 
+        commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1
       );
 
       const lastIndexOfAt = messageRef.current.value.lastIndexOf('@');
@@ -486,12 +486,12 @@ const ChatInput = ({ scrollToBottom }) => {
         setStartReading(false);
         setFilteredMembers([]);
         setmentionIndex(-1);
-      } else if(filteredCommands.length > 0){
+      } else if (filteredCommands.length > 0) {
         const selectedCommand = filteredCommands[commandIndex];
         onCommandClick(selectedCommand);
 
         setCommandIndex(0);
-      }else {
+      } else {
         sendTypingStop();
         sendMessage();
       }
