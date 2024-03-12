@@ -48,7 +48,7 @@ export const Avatar = ({
           onError={() => setImgError(true)}
         />
       ) : (
-        <Box css={FallBackBoxCss} style={{}} color="blue">
+        <Box css={FallBackBoxCss}>
           <Icon name={fallbackIcon} size="1.25rem" />
         </Box>
       )}
