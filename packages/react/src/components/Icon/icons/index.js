@@ -40,6 +40,7 @@ import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
 import Copy from './Copy';
 import Clipboard from './Clipboard';
+import Clip from './Clip';
 import Download from './Download';
 import At from './At';
 import ChevronDown from './ChevronDown';
@@ -89,6 +90,7 @@ const icons = {
   'arrow-down': ArrowDown,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
+  clip: Clip,
   download: Download,
   at: At,
   'chevron-down': ChevronDown,

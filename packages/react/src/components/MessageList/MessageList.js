@@ -7,6 +7,7 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useFileStore,
   useMentionsStore,
   useThreadsMessageStore,
 } from '../../store';
@@ -17,6 +18,7 @@ import UserMentions from '../UserMentions/UserMentions';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
+import { Files } from '../Files';
 import { Message } from '../Message';
 import { Icon } from '../Icon';
 
@@ -30,6 +32,7 @@ const MessageList = ({ messages }) => {
   const showAvatar = useUserStore((state) => state.showAvatar);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const showMentions = useMentionsStore((state) => state.showMentions);
+  const showAllFiles = useFileStore((state) => state.showAllFiles);
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
@@ -81,6 +84,7 @@ const MessageList = ({ messages }) => {
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
+      {showAllFiles && <Files />}
       {showMentions && <UserMentions />}
     </>
   );

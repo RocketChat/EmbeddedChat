@@ -96,7 +96,7 @@ const ChatInput = ({ scrollToBottom }) => {
     (state) => state.setIsLoginModalOpen
   );
 
-  const [msgLongMsgLongErrorModal, setMsgLongErrorModal] = useState(false);
+  const [isMsgLong, setIsMsgLong] = useState(false);
 
   const {
     editMessage,
@@ -130,11 +130,11 @@ const ChatInput = ({ scrollToBottom }) => {
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-  const openMsgLongErrorModal = () => {
-    setMsgLongErrorModal(true);
+  const openMsgLongModal = () => {
+    setIsMsgLong(true);
   };
-  const closeMsgLongErrorModal = () => {
-    setMsgLongErrorModal(false);
+  const closeMsgLongModal = () => {
+    setIsMsgLong(false);
   };
 
   const onJoin = async () => {
@@ -177,7 +177,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
     const msgMaxLength = 500;
     if (message.length > msgMaxLength) {
-      openMsgLongErrorModal();
+      openMsgLongModal();
       return;
     }
 
@@ -248,7 +248,7 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleConvertToAttachment = () => {
-    closeMsgLongErrorModal();
+    closeMsgLongModal();
     sendMessage(true);
   };
 
@@ -566,7 +566,7 @@ const ChatInput = ({ scrollToBottom }) => {
               <ActionButton
                 ghost
                 size="medium"
-                onClick={sendMessage}
+                onClick={() => sendMessage()}
                 disabled={disableButton || isRecordingMessage}
               >
                 <Icon className={styles.chatInputIconCursor} name="send" />
@@ -585,20 +585,20 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         )}
       </Box>
-      {msgLongMsgLongErrorModal && (
+      {isMsgLong && (
         <Modal>
           <Modal
             css={css`
               padding: 1em;
             `}
-            onClose={closeMsgLongErrorModal}
+            onClose={closeMsgLongModal}
           >
             <Modal.Header>
               <Modal.Title>
                 <Icon name="report" size="1.25rem" />
                 Message Too Long!
               </Modal.Title>
-              <Modal.Close onClick={closeMsgLongErrorModal} />
+              <Modal.Close onClick={closeMsgLongModal} />
             </Modal.Header>
             <Modal.Content
               css={css`
@@ -609,7 +609,7 @@ const ChatInput = ({ scrollToBottom }) => {
               Send it as attachment instead?{' '}
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={closeMsgLongErrorModal}>
+              <Button color="secondary" onClick={closeMsgLongModal}>
                 Cancel
               </Button>
               <Button onClick={handleConvertToAttachment} color="primary">

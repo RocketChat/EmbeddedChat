@@ -53,6 +53,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     },
     [onMemberClick]
   );
+
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
