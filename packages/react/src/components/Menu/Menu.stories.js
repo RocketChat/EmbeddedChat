@@ -49,6 +49,11 @@ export const Menu = {
         icon: 'info',
       },
       {
+        id: 'scroll-to-top',
+        label: 'Scroll to Top',
+        icon: 'arrow-up',
+      },
+      {
         id: 'logout',
         label: 'Logout',
         icon: 'reply-directly',
