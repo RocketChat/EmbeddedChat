@@ -4,10 +4,13 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 
-const MessageBodyContainer = ({ children }) => {
+const MessageBodyContainer = ({ children, className = '', style = {} }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
-    'MessageBodyContainer'
+    'MessageBodyContainer',
+    className,
+    style
   );
+
   const classNameMBC = css`
     margin-left: 5px;
     position: relative;
