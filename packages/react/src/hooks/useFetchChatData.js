@@ -4,7 +4,7 @@ import { useUserStore, useChannelStore, useMessageStore } from '../store';
 
 const useFetchChatData = (showRoles) => {
   const { RCInstance, ECOptions } = useContext(RCContext);
-  const setRoles = useUserStore((state) => state.setRoles);
+  const setMemberRoles = useChannelStore((state) => state.setMemberRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setMessages = useMessageStore((state) => state.setMessages);
   const isUserAuthenticated = useUserStore(
@@ -53,7 +53,7 @@ const useFetchChatData = (showRoles) => {
                 )
               : {};
 
-          setRoles(rolesObj);
+          setMemberRoles(rolesObj);
         }
       } catch (e) {
         console.error(e);
@@ -65,7 +65,7 @@ const useFetchChatData = (showRoles) => {
       ECOptions?.enableThreads,
       showRoles,
       setMessages,
-      setRoles,
+      setMemberRoles,
       isChannelPrivate,
     ]
   );

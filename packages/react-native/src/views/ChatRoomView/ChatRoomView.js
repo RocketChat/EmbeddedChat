@@ -4,7 +4,7 @@ import { ChatInput } from '../../components/ChatInput';
 import { MessageActionsSheet } from '../../components/MessageActionsSheet';
 import { MessageList } from '../../components/MessageList';
 import { useRCContext } from '../../contexts/RCInstance';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useChannelStore, useUserStore } from '../../store';
 
 const styles = StyleSheet.create({
 	container: {
@@ -16,7 +16,7 @@ const ChatRoomView = () => {
 	const { RCInstance, ECOptions } = useRCContext();
 
 	const isUserAuthenticated = useUserStore((state) => state.isUserAuthenticated);
-	const setRoles = useUserStore((state) => state.setRoles);
+	const setMemberRoles = useChannelStore((state) => state.setMemberRoles);
 
 	const setMessages = useMessageStore((state) => state.setMessages);
 	const upsertMessage = useMessageStore((state) => state.upsertMessage);
@@ -56,7 +56,7 @@ const ChatRoomView = () => {
 							Object.assign(obj, { [item.u.username]: item }),
 						{}
 					);
-					setRoles(rolesObj);
+					setMemberRoles(rolesObj);
 				}
 			} catch (e) {
 				console.error(e);
