@@ -64,6 +64,8 @@ const Message = ({
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
+  const authenticatedUserRoles = useUserStore((state) => state.roles);
+
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
@@ -235,6 +237,7 @@ const Message = ({
               message={message}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
+              authenticatedUserRoles={authenticatedUserRoles}
               handleOpenThread={handleOpenThread}
               handleDeleteMessage={handleDeleteMessage}
               handleStarMessage={handleStarMessage}

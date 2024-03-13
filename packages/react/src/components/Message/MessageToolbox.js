@@ -51,6 +51,7 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  authenticatedUserRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -141,7 +142,7 @@ export const MessageToolbox = ({
               }}
             />
           </Popup>
-          {!isThreadMessage && (
+          {!isThreadMessage && authenticatedUserRoles.includes('admin') && (
             <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
                 ghost
