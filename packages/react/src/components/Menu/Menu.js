@@ -31,6 +31,7 @@ const Menu = ({
   className = '',
   style = {},
   anchor = 'right bottom',
+  isToolTip = true,
 }) => {
   const theme = useTheme();
   const shadowCss = css`
@@ -84,10 +85,14 @@ const Menu = ({
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
     >
-      <Tooltip text="Options" position="bottom">
-        {' '}
+      {isToolTip ? (
+        <Tooltip text="Options" position="bottom">
+          {' '}
+          <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+        </Tooltip>
+      ) : (
         <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
-      </Tooltip>
+      )}
       {isOpen ? (
         <Box
           css={[MenuCss, shadowCss]}

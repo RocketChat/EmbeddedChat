@@ -50,7 +50,7 @@ const EmbeddedChat = ({
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, [toastBarPosition, showAvatar]);
+  }, [toastBarPosition, showAvatar, setShowAvatar, setToastbarPosition]);
 
   const {
     onDrag,
@@ -185,7 +185,7 @@ const EmbeddedChat = ({
   const messageListRef = useRef(null);
 
   const scrollToBottom = () => {
-    if (messageListRef.current) {
+    if (messageListRef && messageListRef.current) {
       requestAnimationFrame(() => {
         messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
       });

@@ -60,7 +60,6 @@ const MessageHeaderTimestapCss = css`
 
 const MessageHeader = ({ message, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-  const roles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const isPinned = message.pinned;
   const isStarred =
@@ -85,9 +84,9 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
     }
   };
 
-  const userRoles = roles[message.u.username]
-    ? roles[message.u.username].roles
-    : null;
+  // const userRoles = roles[message.u.username]
+  //   ? roles[message.u.username].roles
+  //   : null;
 
   if (!message.t) {
     return (

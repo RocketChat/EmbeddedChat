@@ -7,17 +7,20 @@ import {
   useSearchMessageStore,
   useChannelStore,
   useUserStore,
+  useFileStore,
   useMentionsStore,
   useThreadsMessageStore,
 } from '../../store';
 import RoomMembers from '../RoomMembers/RoomMember';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
+import UserMentions from '../UserMentions/UserMentions';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import AllThreads from '../AllThreads/AllThreads';
-import UserMentions from '../UserMentions/UserMentions';
+import { Files } from '../Files';
 import { Message } from '../Message';
+import { Icon } from '../Icon';
 
 const MessageList = ({ messages }) => {
   const showSearch = useSearchMessageStore((state) => state.showSearch);
@@ -27,14 +30,34 @@ const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
+  const headerTitle = useMessageStore((state) => state.headerTitle);
+  const showMentions = useMentionsStore((state) => state.showMentions);
+  const showAllFiles = useFileStore((state) => state.showAllFiles);
   const showAllThreads = useThreadsMessageStore(
     (state) => state.showAllThreads
   );
-  const showMentions = useMentionsStore((state) => state.showMentions);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
-
+  let iconType = 'thread';
+  let msgType = headerTitle;
+  if (msgType === 'Pinned Messages') {
+    iconType = 'pin';
+  } else if (msgType === 'Starred Messages') {
+    iconType = 'star';
+  } else {
+    msgType = 'messages';
+  }
+  if (messages.length === 0) {
+    return (
+      <div style={{ margin: 'auto' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Icon name={iconType} size="2rem" />
+        </div>
+        <div style={{ textAlign: 'center' }}>No {msgType}</div>
+      </div>
+    );
+  }
   return (
     <>
       {messages &&
@@ -61,6 +84,7 @@ const MessageList = ({ messages }) => {
       {showSearch && <SearchMessage />}
       {showChannelinfo && <Roominfo />}
       {showAllThreads && <AllThreads />}
+      {showAllFiles && <Files />}
       {showMentions && <UserMentions />}
     </>
   );

@@ -111,7 +111,7 @@ const ChatBody = ({
   const addMessage = useCallback(
     (message) => {
       if (message.u.username !== username) {
-        const isScrolledUp = messageListRef.current.scrollTop !== 0;
+        const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp) {
           setOtherUserMessage(true);
         }
@@ -136,18 +136,20 @@ const ChatBody = ({
     setViewData(null);
   };
 
-  const onModalSubmit = useCallback(async (data, value) => {
-    console.log(data);
-    // const { actionId, value, blockId, appId, viewId } = data;
-    // await RCInstance?.triggerBlockAction({
-    //   rid: RCInstance.rid,
-    //   actionId,
-    //   value,
-    //   blockId,
-    //   appId,
-    //   viewId,
-    // });
-  });
+  const onModalSubmit = useCallback(
+    async (data) => {
+      const { actionId, value, blockId, appId, viewId } = data;
+      await RCInstance?.triggerBlockAction({
+        rid: RCInstance.rid,
+        actionId,
+        value,
+        blockId,
+        appId,
+        viewId,
+      });
+    },
+    [RCInstance]
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -186,14 +188,15 @@ const ChatBody = ({
   };
 
   const handleScroll = () => {
-    setScrollPosition(messageListRef.current.scrollTop);
+    if (messageListRef && messageListRef.current) {
+      setScrollPosition(messageListRef.current.scrollTop);
+      setIsUserScrolledUp(
+        messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+          messageListRef.current.scrollHeight
+      );
+    }
 
-    setIsUserScrolledUp(
-      messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-        messageListRef.current.scrollHeight
-    );
-
-    const isAtBottom = messageListRef.current.scrollTop === 0;
+    const isAtBottom = messageListRef?.current?.scrollTop === 0;
     if (isAtBottom) {
       setPopupVisible(false);
       setIsUserScrolledUp(false);
@@ -206,10 +209,11 @@ const ChatBody = ({
   };
 
   useEffect(() => {
-    messageListRef.current.addEventListener('scroll', handleScroll);
+    const currentRef = messageListRef.current;
+    currentRef.addEventListener('scroll', handleScroll);
 
     return () => {
-      messageListRef.current.removeEventListener('scroll', handleScroll);
+      currentRef.removeEventListener('scroll', handleScroll);
     };
   }, [messageListRef]);
 

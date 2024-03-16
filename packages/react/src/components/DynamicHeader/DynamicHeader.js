@@ -26,7 +26,13 @@ const DynamicHeader = ({
         gap: '0.5rem',
       }}
     >
-      <ActionButton onClick={handleClose} ghost display="inline" square small>
+      <ActionButton
+        onClick={handleClose}
+        ghost
+        display="inline"
+        square
+        size="small"
+      >
         <Icon name={iconName} size="1.25rem" />
       </ActionButton>
 

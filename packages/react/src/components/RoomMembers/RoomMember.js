@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
 import classes from './RoomMember.module.css';
@@ -19,6 +19,24 @@ const RoomMembers = ({ members }) => {
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
+
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const res = await RCInstance.me();
+        setUserInfo(res);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    getUserInfo();
+  }, [RCInstance]);
+
+  const roles = userInfo && userInfo.roles ? userInfo.roles : [];
+  const isAdmin = roles.includes('admin');
 
   const [inviteData, setInviteData] = useState(null);
 
@@ -44,16 +62,18 @@ const RoomMembers = ({ members }) => {
           <RoomMemberItem user={member} host={host} key={member._id} />
         ))}
       </Box>
-      <Button
-        style={{ marginTop: '10px', width: '100%' }}
-        onClick={async () => {
-          const res = await RCInstance.findOrCreateInvite();
-          setInviteData(res);
-          toggleInviteView();
-        }}
-      >
-        <Icon size="1em" name="link" /> Invite Link
-      </Button>
+      {isAdmin && (
+        <Button
+          style={{ marginTop: '10px', width: '100%' }}
+          onClick={async () => {
+            const res = await RCInstance.findOrCreateInvite();
+            setInviteData(res);
+            toggleInviteView();
+          }}
+        >
+          <Icon size="1em" name="link" /> Invite Link
+        </Button>
+      )}
     </Box>
   );
 };

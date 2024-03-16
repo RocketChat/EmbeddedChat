@@ -25,6 +25,7 @@ import { ActionButton } from '../ActionButton';
 import { Divider } from '../Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { Modal } from '../Modal';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -94,6 +95,8 @@ const ChatInput = ({ scrollToBottom }) => {
     (state) => state.setIsLoginModalOpen
   );
 
+  const [isMsgLong, setIsMsgLong] = useState(false);
+
   const {
     editMessage,
     setEditMessage,
@@ -126,6 +129,12 @@ const ChatInput = ({ scrollToBottom }) => {
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
+  const openMsgLongModal = () => {
+    setIsMsgLong(true);
+  };
+  const closeMsgLongModal = () => {
+    setIsMsgLong(false);
+  };
 
   const onJoin = async () => {
     if (!isUserAuthenticated) {
@@ -145,10 +154,32 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (isAttachmentMode = false) => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
+
+    if (isAttachmentMode) {
+      const messageBlob = new Blob([message], { type: 'text/plain' });
+      const file = new File([messageBlob], 'message.txt', {
+        type: 'text/plain',
+        lastModified: Date.now(),
+      });
+
+      toggle();
+      setData(file);
+
+      messageRef.current.value = '';
+      setEditMessage({});
+      return;
+    }
+
+    const msgMaxLength = 500;
+    if (message.length > msgMaxLength) {
+      openMsgLongModal();
+      return;
+    }
+
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
       if (editMessage.msg) {
@@ -159,8 +190,9 @@ const ChatInput = ({ scrollToBottom }) => {
 
     if (!editMessage.msg) {
       if (message.startsWith('/')) {
-        // its a slash command
-        const [command, params] = message.split(/\s+/);
+        const [command, ...paramsArray] = message.split(' ');
+        const params = paramsArray.join(' ');
+
         if (commands.find((c) => c.command === command.replace('/', ''))) {
           messageRef.current.value = '';
           setDisableButton(true);
@@ -212,6 +244,11 @@ const ChatInput = ({ scrollToBottom }) => {
     }
 
     scrollToBottom();
+  };
+
+  const handleConvertToAttachment = () => {
+    closeMsgLongModal();
+    sendMessage(true);
   };
 
   const sendAttachment = (event) => {
@@ -511,7 +548,7 @@ const ChatInput = ({ scrollToBottom }) => {
               <ActionButton
                 ghost
                 size="medium"
-                onClick={sendMessage}
+                onClick={() => sendMessage()}
                 disabled={disableButton || isRecordingMessage}
               >
                 <Icon className={styles.chatInputIconCursor} name="send" />
@@ -530,6 +567,40 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         )}
       </Box>
+      {isMsgLong && (
+        <Modal>
+          <Modal
+            css={css`
+              padding: 1em;
+            `}
+            onClose={closeMsgLongModal}
+          >
+            <Modal.Header>
+              <Modal.Title>
+                <Icon name="report" size="1.25rem" />
+                Message Too Long!
+              </Modal.Title>
+              <Modal.Close onClick={closeMsgLongModal} />
+            </Modal.Header>
+            <Modal.Content
+              css={css`
+                margin: 1em;
+              `}
+            >
+              {' '}
+              Send it as attachment instead?{' '}
+            </Modal.Content>
+            <Modal.Footer>
+              <Button color="secondary" onClick={closeMsgLongModal}>
+                Cancel
+              </Button>
+              <Button onClick={handleConvertToAttachment} color="primary">
+                Ok
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Modal>
+      )}
     </Box>
   );
 };

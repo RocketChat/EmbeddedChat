@@ -38,8 +38,14 @@ import ArrowDown from './ArrowDown';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
+import Copy from './Copy';
 import Clipboard from './Clipboard';
+import Clip from './Clip';
+import Download from './Download';
 import At from './At';
+import ChevronDown from './ChevronDown';
+import ChevronLeft from './ChevronLeft';
+import Key from './Key';
 
 const icons = {
   file: File,
@@ -50,6 +56,7 @@ const icons = {
   hash: Hash,
   computer: Computer,
   cross: Cross,
+  copy: Copy,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
@@ -83,7 +90,12 @@ const icons = {
   'arrow-down': ArrowDown,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
+  clip: Clip,
+  download: Download,
   at: At,
+  'chevron-down': ChevronDown,
+  'chevron-left': ChevronLeft,
+  key: Key,
 };
 
 export default icons;
