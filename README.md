@@ -1,4 +1,7 @@
-# EmbeddedChat
+<h1 align='center'>Embedded chat: A staple in excellent customer service</h1>
+
+![image](https://github.com/coderboy-yash/EmbeddedChat/assets/109899959/b2961a35-4300-48df-b674-8a128c73e838)
+
 
 An easy to use full-stack component (ReactJS + backend behaviors) embedding Rocket.Chat into your webapp.
 
@@ -13,7 +16,7 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 </div>
 
 ## Installation and Usage
-Installtion and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
+Installation and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
 
 ## Development
 
@@ -42,6 +45,7 @@ To develop and test `EmbeddedChat`, a local instance of Rocket.Chat server is ne
 
 Install all necessary dependencies and build the packages (`auth`, `api`, and `react`) with:
 
+
 ```bash
 yarn
 ```
@@ -56,6 +60,8 @@ yarn storybook
 ```
 
 Storybook should now be operational. Experiment with `EmbeddedChat` and its components, observing real-time changes in Storybook.
+
+Note: Please make sure the "Enable CORS" option is ON in your Rocket.Chat server. It can be found in Administration > Settings > General > REST API > Enable CORS. It has to enabled to access the functionality of the app.
 
 #### Custom Rocket Chat Server Configuration
 

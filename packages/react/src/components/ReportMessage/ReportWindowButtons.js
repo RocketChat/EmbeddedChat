@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useMessageStore, useToastStore } from '../../store';
+import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -14,7 +14,6 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   ]);
   const { RCInstance } = useContext(RCContext);
   const dispatchToastMessage = useToastBarDispatch();
-  const toastPosition = useToastStore((state) => state.position);
 
   const handleOnClose = () => {
     toggleReportMessage();
@@ -43,7 +42,12 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
     <Modal onClose={handleOnClose}>
       <Modal.Header>
         <Modal.Title>
-          <Icon name="report" size="1.25rem" /> Report this message?
+          <Icon
+            name="report"
+            size="1.25rem"
+            style={{ marginRight: '0.5rem' }}
+          />
+          Report this message?
         </Modal.Title>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>

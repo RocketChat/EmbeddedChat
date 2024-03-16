@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
+import AttachmentMetadata from './AttachmentMetadata';
 
 const ImageAttachment = ({ attachment, host }) => (
   <Box>
-    <p>{attachment?.description}</p>
+    <AttachmentMetadata
+      attachment={attachment}
+      url={host + attachment.image_url}
+    />
     <img
       src={host + attachment.image_url}
-      height={attachment?.image_dimensions?.height ?? 357}
-      width={attachment?.image_dimensions?.width ?? 476}
-      style={{ maxWidth: '100%', objectFit: 'cover' }}
+      style={{ maxWidth: '100%', objectFit: 'contain' }}
     />
   </Box>
 );

@@ -70,5 +70,5 @@ export default LinkSpan;
 
 LinkSpan.propTypes = {
   href: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.array,
 };

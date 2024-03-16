@@ -10,6 +10,7 @@ import { Modal } from '../Modal';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { parseEmoji } from '../../lib/emoji';
+import { Tooltip } from '../Tooltip';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -18,7 +19,7 @@ const MessageToolboxWrapperCss = css`
     position: absolute;
     bottom: 100%;
     z-index: 90;
-    right:2rem;
+    right: 2rem;
   }
 `;
 
@@ -36,6 +37,13 @@ const MessageToolboxCss = css`
 
   background: #fff;
 `;
+
+const popupStyle = {
+  margin: '0',
+  position: 'absolute',
+  right: '2rem',
+  top: '7.5rem',
+};
 
 export const MessageToolbox = ({
   className = '',
@@ -81,35 +89,50 @@ export const MessageToolbox = ({
           {...props}
         >
           {!isThreadMessage ? (
+            <Tooltip text="Reply in thread" position="top">
+              <ActionButton
+                ghost
+                size="small"
+                icon="thread"
+                onClick={handleOpenThread(message)}
+              />
+            </Tooltip>
+          ) : null}
+          <Tooltip
+            text={
+              message.starred &&
+              message.starred.find((u) => u._id === authenticatedUserId)
+                ? 'Remove star'
+                : 'Star'
+            }
+            position="top"
+          >
             <ActionButton
               ghost
               size="small"
-              icon="thread"
-              onClick={handleOpenThread(message)}
-            />
-          ) : null}
-          <ActionButton
-            ghost
-            size="small"
-            icon={`${message.starred &&
+              icon={`${
+                message.starred &&
                 message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
+                  ? 'star-filled'
+                  : 'star'
               }`}
-            onClick={() => handleStarMessage(message)}
-          />
-          <ActionButton
-            ghost
-            size="small"
-            icon="emoji"
-            onClick={() => setEmojiOpen(true)}
-          />
+              onClick={() => handleStarMessage(message)}
+            />
+          </Tooltip>
+          <Tooltip text="Add reaction" position="top">
+            <ActionButton
+              ghost
+              size="small"
+              icon="emoji"
+              onClick={() => setEmojiOpen(true)}
+            />
+          </Tooltip>
           <Popup
             modal
             open={isEmojiOpen}
             onClose={() => setEmojiOpen(false)}
             closeOnEscape
-            position="left center"
+            contentStyle={popupStyle}
           >
             <EmojiPicker
               handleEmojiClick={(emoji) => {
@@ -119,45 +142,58 @@ export const MessageToolbox = ({
             />
           </Popup>
           {!isThreadMessage && (
-            <ActionButton
-              ghost
-              size="small"
-              icon="pin"
-              onClick={() => handlePinMessage(message)}
-            />
-          )}
-          {message.u._id === authenticatedUserId && (
-            <>
-              <ActionButton
-                ghost={!isEditing}
-                color={isEditing ? 'secondary' : 'default'}
-                size="small"
-                icon="edit"
-                onClick={() => handleEditMessage(message)}
-              />
+            <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
                 ghost
                 size="small"
-                icon="trash"
-                color="error"
-                onClick={() => handleClickDelete(message)}
+                icon={`${message.pinned ? 'pin-filled' : 'pin'}`}
+                onClick={() => handlePinMessage(message)}
               />
+            </Tooltip>
+          )}
+          {message.u._id === authenticatedUserId && (
+            <>
+              <Tooltip text="Edit" position="top">
+                <ActionButton
+                  ghost={!isEditing}
+                  color={isEditing ? 'secondary' : 'default'}
+                  size="small"
+                  icon="edit"
+                  onClick={() => handleEditMessage(message)}
+                />
+              </Tooltip>
+              <Tooltip text="Delete" position="top">
+                <ActionButton
+                  ghost
+                  size="small"
+                  icon="trash"
+                  color="error"
+                  onClick={() => handleClickDelete(message)}
+                />
+              </Tooltip>
             </>
           )}
-          <ActionButton
-            ghost
-            size="small"
-            icon="report"
-            color="error"
-            onClick={() => handlerReportMessage(message)}
-          />
+          <Tooltip text="Report" position="top">
+            <ActionButton
+              ghost
+              size="small"
+              icon="report"
+              color="error"
+              onClick={() => handlerReportMessage(message)}
+            />
+          </Tooltip>
         </Box>
       </Box>
       {showDeleteModal && (
         <Modal onClose={handleOnClose}>
           <Modal.Header>
             <Modal.Title>
-              <Icon name="trash" size="1.25rem" /> Delete this message?
+              <Icon
+                name="trash"
+                size="1.25rem"
+                style={{ marginRight: '0.5rem' }}
+              />{' '}
+              Delete this message?
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>

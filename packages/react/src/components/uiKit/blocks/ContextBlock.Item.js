@@ -9,8 +9,9 @@ const Item = ({ block: element, surfaceRenderer: parser, index }) => {
     useComponentOverrides('ContextBlockItem');
   const ContextBlockCss = css`
     display: inline-block;
+    padding: 0 0.75rem;
     font-size: 0.8rem;
-    color: #ffffff3f;
+    color: #3d3d3d;
     margin: -0.25rem;
   `;
   const renderedElement = parser.renderContextBlockElement(element, index);

@@ -5,22 +5,27 @@ interface ICredentials {
     accessToken: string;
     expiresIn: number;
     serviceName: string;
-};
+}
 
-export const getCallbackContent = async (read: IRead, credentials: ICredentials | null, origin: string, error) => {
+export const getCallbackContent = async (
+    read: IRead,
+    credentials: ICredentials | null,
+    origin: string,
+    error
+) => {
     const { accessToken, expiresIn = 3600, serviceName } = credentials || {};
-    const isAllowed = await isAllowedOrigin(read, origin);;
+    const isAllowed = await isAllowedOrigin(read, origin);
     let config: any = {};
     if (error) {
         config = {
             success: false,
             error,
-        }
+        };
     } else if (!isAllowed) {
         config = {
             success: false,
-            error: 'origin not allowed',
-        }
+            error: "origin not allowed",
+        };
     } else {
         config = {
             success: true,
@@ -29,8 +34,8 @@ export const getCallbackContent = async (read: IRead, credentials: ICredentials 
                 accessToken,
                 expiresIn,
                 serviceName,
-            }
-        }
+            },
+        };
     }
     const closeLinkHtml = `<p><span id="message">${
         config.success ? "Login Successful" : "Login Failed: " + config.error
@@ -66,4 +71,4 @@ export const getCallbackContent = async (read: IRead, credentials: ICredentials 
 </body>
 </html>
     `;
-}
+};

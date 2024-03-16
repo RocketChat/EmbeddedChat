@@ -3,18 +3,25 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useChannelStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../auth/LoginForm';
-import useAttachmentWindowStore from '../../store/attachmentwindow';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import RecentMessageButton from './RecentMessageButton';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
-const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
+const ChatBody = ({
+  height,
+  anonymousMode,
+  showRoles,
+  scrollToBottom,
+  messageListRef,
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const ChatBodyCss = css`
     word-break: break-all;
@@ -41,34 +48,20 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
       display: none;
     }
   `;
-  const DragComponentCss = css`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    z-index: 50;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-weight: 900;
-    font-size: xxx-large;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `;
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [, setIsUserScrolledUp] = useState(false);
+  const [otherUserMessage, setOtherUserMessage] = useState(false);
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
 
-  const toggle = useAttachmentWindowStore((state) => state.toggle);
-  const setData = useAttachmentWindowStore((state) => state.setData);
-
-  const setMessages = useMessageStore((state) => state.setMessages);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
-  const setFilter = useMessageStore((state) => state.setFilter);
-  const setRoles = useUserStore((state) => state.setRoles);
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -81,62 +74,9 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     (state) => state.isUserAuthenticated
   );
 
-  const getMessagesAndRoles = useCallback(
-    async (anonymousMode) => {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { messages } = await RCInstance.getMessages(
-          anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-              query: {
-                tmid: {
-                  $exists: false,
-                },
-              },
-            }
-            : undefined
-        );
-        if (messages) {
-          setMessages(messages.filter((message) => message._hidden !== true));
-        }
-        if (!isUserAuthenticated) {
-          // fetch roles only when user is authenticated
-          return;
-        }
-        if (showRoles) {
-          const { roles } = await RCInstance.getChannelRoles();
-          // convert roles array from api into object for better search
-          const rolesObj = roles.reduce(
-            (obj, item) => Object.assign(obj, { [item.u.username]: item }),
-            {}
-          );
-          setRoles(rolesObj);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [
-      isUserAuthenticated,
-      RCInstance,
-      ECOptions?.enableThreads,
-      showRoles,
-      setMessages,
-      setRoles,
-    ]
-  );
+  const username = useUserStore((state) => state.username);
 
-  const handleGoBack = async () => {
-    if (isUserAuthenticated) {
-      getMessagesAndRoles();
-    } else {
-      getMessagesAndRoles(anonymousMode);
-    }
-    setFilter(false);
-  };
+  const getMessagesAndRoles = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -145,7 +85,8 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
           return;
         }
         const { messages } = await RCInstance.getThreadMessages(
-          threadMainMessage._id
+          threadMainMessage._id,
+          isChannelPrivate
         );
         setThreadMessages(messages);
       } catch (e) {
@@ -158,6 +99,7 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     RCInstance,
     threadMainMessage?._id,
     setThreadMessages,
+    isChannelPrivate,
   ]);
 
   useEffect(() => {
@@ -168,9 +110,15 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
 
   const addMessage = useCallback(
     (message) => {
+      if (message.u.username !== username) {
+        const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
+        if (isScrolledUp) {
+          setOtherUserMessage(true);
+        }
+      }
       upsertMessage(message, ECOptions?.enableThreads);
     },
-    [upsertMessage, ECOptions?.enableThreads]
+    [upsertMessage, ECOptions?.enableThreads, username, messageListRef]
   );
 
   const [isModalOpen, setModalOpen] = useState();
@@ -188,18 +136,20 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     setViewData(null);
   };
 
-  const onModalSubmit = useCallback(async (data, value) => {
-    console.log(data);
-    // const { actionId, value, blockId, appId, viewId } = data;
-    // await RCInstance?.triggerBlockAction({
-    //   rid: RCInstance.rid,
-    //   actionId,
-    //   value,
-    //   blockId,
-    //   appId,
-    //   viewId,
-    // });
-  });
+  const onModalSubmit = useCallback(
+    async (data) => {
+      const { actionId, value, blockId, appId, viewId } = data;
+      await RCInstance?.triggerBlockAction({
+        rid: RCInstance.rid,
+        actionId,
+        value,
+        blockId,
+        appId,
+        viewId,
+      });
+    },
+    [RCInstance]
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -230,75 +180,95 @@ const ChatBody = ({ height, anonymousMode, showRoles, messageListRef }) => {
     anonymousMode,
   ]);
 
-  const [onDrag, setOnDrag] = useState(false);
-  const [leaveCount, setLeaveCount] = useState(0);
-
-  const handleDrag = (e) => {
-    e.preventDefault();
+  const handlePopupClick = () => {
+    scrollToBottom();
+    setIsUserScrolledUp(false);
+    setOtherUserMessage(false);
+    setPopupVisible(false);
   };
 
-  const handleDragEnter = () => {
-    setOnDrag(true);
-  };
-  const handleDragLeave = () => {
-    if (leaveCount % 2 === 1) {
-      setOnDrag(false);
-      setLeaveCount(leaveCount + 1);
-    } else {
-      setLeaveCount(leaveCount + 1);
+  const handleScroll = () => {
+    if (messageListRef && messageListRef.current) {
+      setScrollPosition(messageListRef.current.scrollTop);
+      setIsUserScrolledUp(
+        messageListRef.current.scrollTop + messageListRef.current.clientHeight <
+          messageListRef.current.scrollHeight
+      );
+    }
+
+    const isAtBottom = messageListRef?.current?.scrollTop === 0;
+    if (isAtBottom) {
+      setPopupVisible(false);
+      setIsUserScrolledUp(false);
+      setOtherUserMessage(false);
     }
   };
 
-  const handleDragDrop = (e) => {
-    e.preventDefault();
-    setOnDrag(false);
-    setLeaveCount(0);
-
-    toggle();
-    setData(e.dataTransfer.files[0]);
+  const showNewMessagesPopup = () => {
+    setPopupVisible(true);
   };
 
+  useEffect(() => {
+    const currentRef = messageListRef.current;
+    currentRef.addEventListener('scroll', handleScroll);
+
+    return () => {
+      currentRef.removeEventListener('scroll', handleScroll);
+    };
+  }, [messageListRef]);
+
+  useEffect(() => {
+    const isScrolledUp =
+      scrollPosition + messageListRef.current.clientHeight <
+      messageListRef.current.scrollHeight;
+
+    if (isScrolledUp && otherUserMessage) {
+      showNewMessagesPopup();
+    }
+  }, [scrollPosition, otherUserMessage]);
+
   return (
-    <Box
-      ref={messageListRef}
-      css={ChatBodyCss}
-      style={{
-        borderLeft: '1px solid #b1b1b1',
-        borderRight: '1px solid #b1b1b1',
-        paddingTop: '70px',
-        ...styleOverrides,
-      }}
-      onDragOver={(e) => handleDrag(e)}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      className={`ec-chat-body ${classNames}`}
-      height={height}
-    >
-      {onDrag ? (
-        <Box onDrop={(e) => handleDragDrop(e)} className={DragComponentCss}>
-          Drop to upload file
-        </Box>
-      ) : null}
-      {isThreadOpen ? (
-        <ThreadMessageList
-          threadMainMessage={threadMainMessage}
-          threadMessages={threadMessages}
+    <>
+      <Box
+        ref={messageListRef}
+        css={ChatBodyCss}
+        style={{
+          borderLeft: '1px solid #b1b1b1',
+          borderRight: '1px solid #b1b1b1',
+          paddingTop: '70px',
+          ...styleOverrides,
+        }}
+        className={`ec-chat-body ${classNames}`}
+        height={height}
+      >
+        {isThreadOpen ? (
+          <ThreadMessageList
+            threadMainMessage={threadMainMessage}
+            threadMessages={threadMessages}
+          />
+        ) : (
+          <MessageList messages={messages} />
+        )}
+        <TotpModal handleLogin={handleLogin} />
+        <LoginForm />
+        {isModalOpen && (
+          <ModalBlock
+            appId={viewData.appId}
+            onClose={onModalClose}
+            onCancel={onModalClose}
+            onSubmit={onModalSubmit}
+            view={viewData}
+          />
+        )}
+      </Box>
+      {popupVisible && otherUserMessage && (
+        <RecentMessageButton
+          visible
+          text="New messages"
+          onClick={handlePopupClick}
         />
-      ) : (
-        <MessageList messages={messages} handleGoBack={handleGoBack} />
       )}
-      <TotpModal handleLogin={handleLogin} />
-      <LoginForm />
-      {isModalOpen && (
-        <ModalBlock
-          appId={viewData.appId}
-          onClose={onModalClose}
-          onCancel={onModalClose}
-          onSubmit={onModalSubmit}
-          view={viewData}
-        />
-      )}
-    </Box>
+    </>
   );
 };
 

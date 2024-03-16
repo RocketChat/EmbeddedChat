@@ -28,7 +28,6 @@ const PlainTextInputElement = ({ block, context, surfaceRenderer }) => {
 
   return (
     <Input
-      type="textarea"
       disabled={loading}
       id={block.actionId}
       name={block.actionId}

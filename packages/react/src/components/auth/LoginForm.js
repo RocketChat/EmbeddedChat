@@ -21,23 +21,23 @@ export default function LoginForm() {
   );
   const { handleLogin } = useRCAuth();
 
-  useEffect(()=>{
-    if(userOrEmail !== null && userOrEmail.trim() === ''){
+  useEffect(() => {
+    if (userOrEmail !== null && userOrEmail.trim() === '') {
       setUsernameError(true);
-    }else{
+    } else {
       setUsernameError(false);
     }
 
-    if(password !== null && password.trim() === ''){
+    if (password !== null && password.trim() === '') {
       setPasswordError(true);
-    }else{
+    } else {
       setPasswordError(false);
     }
-  },[userOrEmail,password])
+  }, [userOrEmail, password]);
 
   const handleSubmit = () => {
-    if(!userOrEmail) setUserOrEmail('');
-    if(!password) setPassword('');
+    if (!userOrEmail) setUserOrEmail('');
+    if (!password) setPassword('');
     handleLogin(userOrEmail, password);
   };
   const handleClose = () => {
@@ -121,7 +121,11 @@ export default function LoginForm() {
                 style={{ borderColor: usernameError ? 'red' : '' }}
               />
             </Box>
-            {usernameError && <span style={{ color: 'red', fontSize:'13px' }}>This field is required</span>}
+            {usernameError && (
+              <span style={{ color: 'red', fontSize: '13px' }}>
+                This field is required
+              </span>
+            )}
           </Box>
 
           <Box css={fieldCSS}>
@@ -141,7 +145,11 @@ export default function LoginForm() {
                 {showPassword ? <EyeOpen /> : <EyeClose />}
               </Box>
             </Box>
-            {passwordError && <span style={{ color: 'red', fontSize:'13px' }}>This field is required</span>}
+            {passwordError && (
+              <span style={{ color: 'red', fontSize: '13px' }}>
+                This field is required
+              </span>
+            )}
           </Box>
           <Box
             style={{

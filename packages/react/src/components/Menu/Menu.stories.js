@@ -17,12 +17,21 @@ export const Menu = {
         id: 'thread',
         label: 'Threads',
         icon: 'thread',
-        disabled: true,
+      },
+      {
+        id: 'mentions',
+        label: 'Mentions',
+        icon: 'at',
       },
       {
         id: 'members',
         label: 'Members',
         icon: 'members',
+      },
+      {
+        id: 'files',
+        label: 'Files',
+        icon: 'clip',
       },
       {
         id: 'starred',

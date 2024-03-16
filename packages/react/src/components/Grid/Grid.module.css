@@ -1,81 +1,81 @@
 .ec-grid {
   display: flex;
   flex-flow: row wrap;
-  margin-block: calc( to-rem(16) / -2 );
-  margin-inline: calc( to-rem(16) / -2 );
+  margin-block: calc(to-rem(16) / -2);
+  margin-inline: calc(to-rem(16) / -2);
 }
 .ec-grid__wrapper {
   overflow: hidden;
 }
 .ec-grid--xs > .ec-grid {
-  margin-block: calc( to-rem(16) / -2 );
-  margin-inline: calc( to-rem(16) / -2 );
+  margin-block: calc(to-rem(16) / -2);
+  margin-inline: calc(to-rem(16) / -2);
 }
 @media screen and (min-width: to-em(600)) {
   .ec-grid {
-    margin-block: calc( to-rem(16) / -2 );
-    margin-inline: calc( to-rem(16) / -2 );
+    margin-block: calc(to-rem(16) / -2);
+    margin-inline: calc(to-rem(16) / -2);
   }
 }
 .ec-grid--sm > .ec-grid {
-  margin-block: calc( to-rem(16) / -2 );
-  margin-inline: calc( to-rem(16) / -2 );
+  margin-block: calc(to-rem(16) / -2);
+  margin-inline: calc(to-rem(16) / -2);
 }
 @media screen and (min-width: to-em(768)) {
   .ec-grid {
-    margin-block: calc( to-rem(24) / -2 );
-    margin-inline: calc( to-rem(24) / -2 );
+    margin-block: calc(to-rem(24) / -2);
+    margin-inline: calc(to-rem(24) / -2);
   }
 }
 .ec-grid--md > .ec-grid {
-  margin-block: calc( to-rem(24) / -2 );
-  margin-inline: calc( to-rem(24) / -2 );
+  margin-block: calc(to-rem(24) / -2);
+  margin-inline: calc(to-rem(24) / -2);
 }
 @media screen and (min-width: to-em(1024)) {
   .ec-grid {
-    margin-block: calc( to-rem(24) / -2 );
-    margin-inline: calc( to-rem(24) / -2 );
+    margin-block: calc(to-rem(24) / -2);
+    margin-inline: calc(to-rem(24) / -2);
   }
 }
 .ec-grid--lg > .ec-grid {
-  margin-block: calc( to-rem(24) / -2 );
-  margin-inline: calc( to-rem(24) / -2 );
+  margin-block: calc(to-rem(24) / -2);
+  margin-inline: calc(to-rem(24) / -2);
 }
 @media screen and (min-width: to-em(1280)) {
   .ec-grid {
-    margin-block: calc( to-rem(24) / -2 );
-    margin-inline: calc( to-rem(24) / -2 );
+    margin-block: calc(to-rem(24) / -2);
+    margin-inline: calc(to-rem(24) / -2);
   }
 }
 .ec-grid--xl > .ec-grid {
-  margin-block: calc( to-rem(24) / -2 );
-  margin-inline: calc( to-rem(24) / -2 );
+  margin-block: calc(to-rem(24) / -2);
+  margin-inline: calc(to-rem(24) / -2);
 }
 @media screen and (min-width: to-em(1600)) {
   .ec-grid {
-    margin-block: calc( to-rem(24) / -2 );
-    margin-inline: calc( to-rem(24) / -2 );
+    margin-block: calc(to-rem(24) / -2);
+    margin-inline: calc(to-rem(24) / -2);
   }
 }
 .ec-grid--xxl > .ec-grid {
-  margin-block: calc( to-rem(24) / -2 );
-  margin-inline: calc( to-rem(24) / -2 );
+  margin-block: calc(to-rem(24) / -2);
+  margin-inline: calc(to-rem(24) / -2);
 }
 @media screen and (min-width: to-em(1920)) {
   .ec-grid {
-    margin-block: calc( to-rem(24) / -2 );
-    margin-inline: calc( to-rem(24) / -2 );
+    margin-block: calc(to-rem(24) / -2);
+    margin-inline: calc(to-rem(24) / -2);
   }
 }
 .ec-grid--xxxl > .ec-grid {
-  margin-block: calc( to-rem(24) / -2 );
-  margin-inline: calc( to-rem(24) / -2 );
+  margin-block: calc(to-rem(24) / -2);
+  margin-inline: calc(to-rem(24) / -2);
 }
 
 .ec-grid__item {
   flex: 1 1 0;
-  padding-block: calc( to-rem(16) / 2 );
-  padding-inline: calc( to-rem(16) / 2 );
+  padding-block: calc(to-rem(16) / 2);
+  padding-inline: calc(to-rem(16) / 2);
 }
 .ec-grid__item--xs-1 {
   flex-grow: 0;
@@ -98,8 +98,8 @@
   max-width: 100%;
 }
 .ec-grid--xs > .ec-grid__item {
-  padding-block: calc( to-rem(16) / 2 );
-  padding-inline: calc( to-rem(16) / 2 );
+  padding-block: calc(to-rem(16) / 2);
+  padding-inline: calc(to-rem(16) / 2);
 }
 .ec-grid--xs > .ec-grid__item--xs-1 {
   flex-grow: 0;
@@ -123,8 +123,8 @@
 }
 @media screen and (min-width: to-em(600)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(16) / 2 );
-    padding-inline: calc( to-rem(16) / 2 );
+    padding-block: calc(to-rem(16) / 2);
+    padding-inline: calc(to-rem(16) / 2);
   }
   .ec-grid__item--sm-1 {
     flex-grow: 0;
@@ -168,8 +168,8 @@
   }
 }
 .ec-grid--sm > .ec-grid__item {
-  padding-block: calc( to-rem(16) / 2 );
-  padding-inline: calc( to-rem(16) / 2 );
+  padding-block: calc(to-rem(16) / 2);
+  padding-inline: calc(to-rem(16) / 2);
 }
 .ec-grid--sm > .ec-grid__item--sm-1 {
   flex-grow: 0;
@@ -213,8 +213,8 @@
 }
 @media screen and (min-width: to-em(768)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(24) / 2 );
-    padding-inline: calc( to-rem(24) / 2 );
+    padding-block: calc(to-rem(24) / 2);
+    padding-inline: calc(to-rem(24) / 2);
   }
   .ec-grid__item--md-1 {
     flex-grow: 0;
@@ -258,8 +258,8 @@
   }
 }
 .ec-grid--md > .ec-grid__item {
-  padding-block: calc( to-rem(24) / 2 );
-  padding-inline: calc( to-rem(24) / 2 );
+  padding-block: calc(to-rem(24) / 2);
+  padding-inline: calc(to-rem(24) / 2);
 }
 .ec-grid--md > .ec-grid__item--md-1 {
   flex-grow: 0;
@@ -303,8 +303,8 @@
 }
 @media screen and (min-width: to-em(1024)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(24) / 2 );
-    padding-inline: calc( to-rem(24) / 2 );
+    padding-block: calc(to-rem(24) / 2);
+    padding-inline: calc(to-rem(24) / 2);
   }
   .ec-grid__item--lg-1 {
     flex-grow: 0;
@@ -368,8 +368,8 @@
   }
 }
 .ec-grid--lg > .ec-grid__item {
-  padding-block: calc( to-rem(24) / 2 );
-  padding-inline: calc( to-rem(24) / 2 );
+  padding-block: calc(to-rem(24) / 2);
+  padding-inline: calc(to-rem(24) / 2);
 }
 .ec-grid--lg > .ec-grid__item--lg-1 {
   flex-grow: 0;
@@ -433,8 +433,8 @@
 }
 @media screen and (min-width: to-em(1280)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(24) / 2 );
-    padding-inline: calc( to-rem(24) / 2 );
+    padding-block: calc(to-rem(24) / 2);
+    padding-inline: calc(to-rem(24) / 2);
   }
   .ec-grid__item--xl-1 {
     flex-grow: 0;
@@ -498,8 +498,8 @@
   }
 }
 .ec-grid--xl > .ec-grid__item {
-  padding-block: calc( to-rem(24) / 2 );
-  padding-inline: calc( to-rem(24) / 2 );
+  padding-block: calc(to-rem(24) / 2);
+  padding-inline: calc(to-rem(24) / 2);
 }
 .ec-grid--xl > .ec-grid__item--xl-1 {
   flex-grow: 0;
@@ -563,8 +563,8 @@
 }
 @media screen and (min-width: to-em(1600)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(24) / 2 );
-    padding-inline: calc( to-rem(24) / 2 );
+    padding-block: calc(to-rem(24) / 2);
+    padding-inline: calc(to-rem(24) / 2);
   }
   .ec-grid__item--xxl-1 {
     flex-grow: 0;
@@ -628,8 +628,8 @@
   }
 }
 .ec-grid--xxl > .ec-grid__item {
-  padding-block: calc( to-rem(24) / 2 );
-  padding-inline: calc( to-rem(24) / 2 );
+  padding-block: calc(to-rem(24) / 2);
+  padding-inline: calc(to-rem(24) / 2);
 }
 .ec-grid--xxl > .ec-grid__item--xxl-1 {
   flex-grow: 0;
@@ -693,8 +693,8 @@
 }
 @media screen and (min-width: to-em(1920)) {
   .ec-grid__item {
-    padding-block: calc( to-rem(24) / 2 );
-    padding-inline: calc( to-rem(24) / 2 );
+    padding-block: calc(to-rem(24) / 2);
+    padding-inline: calc(to-rem(24) / 2);
   }
   .ec-grid__item--xxxl-1 {
     flex-grow: 0;
@@ -758,8 +758,8 @@
   }
 }
 .ec-grid--xxxl > .ec-grid__item {
-  padding-block: calc( to-rem(24) / 2 );
-  padding-inline: calc( to-rem(24) / 2 );
+  padding-block: calc(to-rem(24) / 2);
+  padding-inline: calc(to-rem(24) / 2);
 }
 .ec-grid--xxxl > .ec-grid__item--xxxl-1 {
   flex-grow: 0;

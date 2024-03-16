@@ -39,6 +39,9 @@ const iconsList = [
   'kebab',
   'check',
   'error-circle',
+  'chevron-down',
+  'chevron-left',
+  'key',
 ];
 const svgDirPath = path.join(
   __dirname,
@@ -104,4 +107,4 @@ iconsList.forEach((icon) => {
 });
 
 fs.writeFileSync(path.join(svgIconOutputDir, 'index.js'), getIndexFileCode());
-execSync(`npx prettier --write '${svgIconOutputDir}' --loglevel=silent`);
+execSync(`npx prettier --write '${svgIconOutputDir}' `);

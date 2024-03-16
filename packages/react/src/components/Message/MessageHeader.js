@@ -57,9 +57,8 @@ const MessageHeaderTimestapCss = css`
   color: #9ea2a8;
 `;
 
-const MessageHeader = ({ message }) => {
+const MessageHeader = ({ message, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-  const roles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const isStarred =
     message.starred &&
@@ -83,9 +82,9 @@ const MessageHeader = ({ message }) => {
     }
   };
 
-  const userRoles = roles[message.u.username]
-    ? roles[message.u.username].roles
-    : null;
+  // const userRoles = roles[message.u.username]
+  //   ? roles[message.u.username].roles
+  //   : null;
 
   if (!message.t) {
     return (
@@ -115,13 +114,15 @@ const MessageHeader = ({ message }) => {
               </Message.Role>
             ))
           : null} */}
-        <Box
-          is="span"
-          css={MessageHeaderTimestapCss}
-          className={appendClassNames('ec-message-header-timestamp')}
-        >
-          {format(new Date(message.ts), 'h:mm a')}
-        </Box>
+        {isTimeStamped && (
+          <Box
+            is="span"
+            css={MessageHeaderTimestapCss}
+            className={appendClassNames('ec-message-header-timestamp')}
+          >
+            {format(new Date(message.ts), 'h:mm a')}
+          </Box>
+        )}
         {message.editedAt && (
           <Icon
             style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
