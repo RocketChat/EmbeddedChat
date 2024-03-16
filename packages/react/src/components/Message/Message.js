@@ -6,7 +6,7 @@ import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import classes from './Message.module.css';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useChannelStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
@@ -64,7 +64,6 @@ const Message = ({
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const authenticatedUserRoles = useUserStore((state) => state.roles);
 
   const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -235,9 +234,9 @@ const Message = ({
           {!message.t && showToolbox ? (
             <MessageToolbox
               message={message}
+              RCInstance={RCInstance}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
-              authenticatedUserRoles={authenticatedUserRoles}
               handleOpenThread={handleOpenThread}
               handleDeleteMessage={handleDeleteMessage}
               handleStarMessage={handleStarMessage}
