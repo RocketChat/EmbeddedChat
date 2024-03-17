@@ -9,7 +9,7 @@ import InviteMembers from './inviteMembers/InviteMembers';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
-import { ActionButton } from '../ActionButton';
+import Sidebar from '../Sidebar/Sidebar';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -43,20 +43,11 @@ const RoomMembers = ({ members }) => {
   if (showInvite) return <InviteMembers inviteData={inviteData} />;
 
   return (
-    <Box className={classes.modal} style={{ padding: '16px' }}>
-      <Box style={{ display: 'flex' }}>
-        <h3 style={{ display: 'contents' }}>
-          <Icon
-            name="members"
-            size="1.25rem"
-            style={{ padding: '0px 20px 20px 0px' }}
-          />
-          <Box style={{ color: '#4a4a4a', width: '80%' }}>Members</Box>
-          <ActionButton onClick={toggleShowMembers} ghost size="small">
-            <Icon name="cross" size="1.25rem" />
-          </ActionButton>
-        </h3>
-      </Box>
+    <Sidebar
+      title="Members"
+      iconName="members"
+      setShowWindow={toggleShowMembers}
+    >
       <Box className={classes.container}>
         {members.map((member) => (
           <RoomMemberItem user={member} host={host} key={member._id} />
@@ -74,7 +65,7 @@ const RoomMembers = ({ members }) => {
           <Icon size="1em" name="link" /> Invite Link
         </Button>
       )}
-    </Box>
+    </Sidebar>
   );
 };
 export default RoomMembers;
