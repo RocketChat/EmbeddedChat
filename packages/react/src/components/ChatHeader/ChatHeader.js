@@ -159,7 +159,7 @@ const ChatHeader = ({
   const setCanPinMsg = useUserStore((state) => state.setCanPinMsg);
 
   useEffect(() => {
-    const setMsgAndPinAllowed = async () => {
+    const setMsgAndPinAllowed = async (ro) => {
       const permissionRes = await RCInstance.permissionInfo();
       const channelRolesRes = await RCInstance.getChannelRoles(
         isChannelPrivate
@@ -177,10 +177,12 @@ const ChatHeader = ({
           authenticatedUserRoles
         );
 
-        const canSendMsg =
-          channelMemberRoles.length > 0 &&
-          postMsgRoles.some((role) => channelMemberRoles.includes(role));
-        setCanSendMsg(canSendMsg);
+        if (ro) {
+          const canSendMsg =
+            channelMemberRoles.length > 0 &&
+            postMsgRoles.some((role) => channelMemberRoles.includes(role));
+          setCanSendMsg(canSendMsg);
+        }
 
         const canPinMsg =
           concatenatedRoles.length > 0 &&
@@ -194,7 +196,7 @@ const ChatHeader = ({
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room.ro) setMsgAndPinAllowed();
+        if (res.room.ro) setMsgAndPinAllowed(res.room.ro);
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'
