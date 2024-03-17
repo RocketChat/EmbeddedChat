@@ -196,7 +196,7 @@ const ChatHeader = ({
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room.ro) setMsgAndPinAllowed(res.room.ro);
+        setMsgAndPinAllowed(res.room.ro);
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'
