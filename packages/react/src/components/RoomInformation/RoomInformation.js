@@ -2,11 +2,9 @@ import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { Avatar } from '../Avatar/Avatar';
 import RCContext from '../../context/RCInstance';
-import classes from './RoomInformation.module.css';
 import { useChannelStore } from '../../store';
-import { Icon } from '../Icon';
 import { Box } from '../Box';
-import { ActionButton } from '../ActionButton';
+import Sidebar from '../Sidebar/Sidebar';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -17,41 +15,17 @@ const Roominfo = () => {
     (state) => state.setShowChannelinfo
   );
 
-  const toggleshowRoominfo = () => {
-    setShowChannelinfo(false);
-  };
-
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
-  return (
-    <Box className={classes.component} style={{ padding: '16px' }}>
-      <Box
-        css={css`
-          display: flex;
-        `}
-      >
-        <h3 style={{ display: 'contents' }}>
-          <Icon
-            name="info"
-            size="1.25rem"
-            style={{ padding: '0px 20px 20px 0px' }}
-          />
-          <Box
-            css={css`
-              width: 100%;
-              color: #4a4a4a;
-            `}
-          >
-            Room Information
-          </Box>
-          <ActionButton onClick={toggleshowRoominfo} ghost size="small">
-            <Icon name="cross" size="1.25rem" />
-          </ActionButton>
-        </h3>
-      </Box>
 
+  return (
+    <Sidebar
+      title="Room Information"
+      iconName="info"
+      setShowWindow={setShowChannelinfo}
+    >
       <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
       <Box
         css={css`
@@ -81,7 +55,7 @@ const Roominfo = () => {
           {channelInfo.description}
         </Box>
       </Box>
-    </Box>
+    </Sidebar>
   );
 };
 export default Roominfo;
