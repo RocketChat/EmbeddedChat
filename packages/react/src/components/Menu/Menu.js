@@ -71,7 +71,6 @@ const Menu = ({
   useEffect(() => {
     const onBodyClick = (e) => {
       if (isOpen && !e.target.classList.contains('ec-menu-wrapper')) {
-        console.log('triggered');
         setOpen(false);
       }
     };
