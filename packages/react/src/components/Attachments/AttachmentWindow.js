@@ -15,6 +15,7 @@ function AttachmentWindow() {
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
+  const [isPending, setIsPending] = useState(false);
 
   const [fileName, setFileName] = useState(data?.name);
   const [fileDescription, setFileDescription] = useState('');
@@ -29,6 +30,7 @@ function AttachmentWindow() {
   };
 
   const submit = async () => {
+    setIsPending(true);
     await RCInstance.sendAttachment(
       data,
       fileName,
@@ -37,6 +39,7 @@ function AttachmentWindow() {
     );
     toggle();
     setData(null);
+    setIsPending(false);
   };
   return (
     <Backdrop>
@@ -128,8 +131,9 @@ function AttachmentWindow() {
                   type="button"
                   onClick={submit}
                   className={styles.attachment_window_submit_button}
+                  disabled={isPending}
                 >
-                  Send
+                  {isPending ? 'Sending...' : 'Send'}
                 </button>
               </Box>
             </Box>
