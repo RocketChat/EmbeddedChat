@@ -58,6 +58,7 @@ const MessageHeader = () => {
 			message.starred.find((u) => u._id === authenticatedUserId),
 		[message, authenticatedUserId]
 	);
+	const isPinned = message.pinned;
 	if (!message.t) {
 		return (
 			<View	style={[styles.container, styleOverrides]}>
@@ -81,6 +82,14 @@ const MessageHeader = () => {
 					<CustomIcon
 						style={{ opacity: 0.5 }}
 						name="star-filled"
+						size={16}
+					/> :
+					null
+				}
+				{isPinned?
+					<CustomIcon
+						style={{ opacity: 0.5 }}
+						name="pin"
 						size={16}
 					/> :
 					null

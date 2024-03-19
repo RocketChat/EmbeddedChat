@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
@@ -52,6 +52,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     },
     [onMemberClick]
   );
+
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
