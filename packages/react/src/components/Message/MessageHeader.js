@@ -7,6 +7,7 @@ import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
+import { Tooltip } from '../Tooltip';
 
 const MessageHeaderCss = css`
   display: flex;
@@ -60,6 +61,7 @@ const MessageHeaderTimestapCss = css`
 const MessageHeader = ({ message, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const isPinned = message.pinned;
   const isStarred =
     message.starred &&
     message.starred.find((u) => u._id === authenticatedUserId);
@@ -131,11 +133,22 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
           />
         )}
         {isStarred ? (
-          <Icon
-            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-            name="star-filled"
-            size="1em"
-          />
+          <Tooltip text="Starred" position="top">
+            <Icon
+              style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+              name="star-filled"
+              size="1em"
+            />
+          </Tooltip>
+        ) : null}
+        {isPinned ? (
+          <Tooltip text="Pinned" position="top">
+            <Icon
+              style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+              name="pin"
+              size="1em"
+            />
+          </Tooltip>
         ) : null}
       </Box>
     );
