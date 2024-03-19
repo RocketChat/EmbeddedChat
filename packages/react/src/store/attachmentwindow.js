@@ -7,8 +7,6 @@ const useAttachmentWindowStore = create((set) => ({
   setData: (file) => {
     set({ data: file });
   },
-  isPending: false,
-  setIsPending: (isPending) => set(() => ({ isPending })),
 }));
 
 export default useAttachmentWindowStore;

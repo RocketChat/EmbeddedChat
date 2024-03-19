@@ -15,8 +15,7 @@ function AttachmentWindow() {
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
-  const isPending = useAttachmentWindowStore((state) => state.isPending);
-  const setIsPending = useAttachmentWindowStore((state) => state.setIsPending);
+  const [isPending, setIsPending] = useState(false);
 
   const [fileName, setFileName] = useState(data?.name);
   const [fileDescription, setFileDescription] = useState('');
@@ -128,24 +127,14 @@ function AttachmentWindow() {
                   Cancel
                 </button>
 
-                {!isPending && (
-                  <button
-                    type="button"
-                    onClick={submit}
-                    className={styles.attachment_window_submit_button}
-                  >
-                    Send
-                  </button>
-                )}
-                {isPending && (
-                  <button
-                    type="button"
-                    className={styles.attachment_window_submit_button}
-                    disabled
-                  >
-                    Sending...
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={submit}
+                  className={styles.attachment_window_submit_button}
+                  disabled={isPending}
+                >
+                  {isPending ? 'Sending...' : 'Send'}
+                </button>
               </Box>
             </Box>
           </Box>
