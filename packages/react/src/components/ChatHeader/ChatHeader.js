@@ -12,6 +12,8 @@ import {
   useToastStore,
   useThreadsMessageStore,
   useMentionsStore,
+  usePinnedMessageStore,
+  useStarredMessageStore,
   useFileStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
@@ -72,6 +74,10 @@ const ChatHeader = ({
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
+  const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
+  const setShowStarred = useStarredMessageStore(
+    (state) => state.setShowStarred
+  );
   const setShowAllThreads = useThreadsMessageStore(
     (state) => state.setShowAllThreads
   );
@@ -101,18 +107,12 @@ const ChatHeader = ({
   }, [RCInstance, setIsUserAuthenticated]);
 
   const showStarredMessage = useCallback(async () => {
-    const { messages } = await RCInstance.getStarredMessages();
-    setMessages(messages);
-    setHeaderTitle('Starred Messages');
-    setFilter(true);
-  }, [RCInstance, setMessages, setHeaderTitle, setFilter]);
+    setShowStarred(true);
+  }, [RCInstance, setShowStarred]);
 
   const showPinnedMessage = useCallback(async () => {
-    const { messages } = await RCInstance.getPinnedMessages();
-    setMessages(messages);
-    setHeaderTitle('Pinned Messages');
-    setFilter(true);
-  }, [RCInstance, setMessages, setHeaderTitle, setFilter]);
+    setShowPinned(true);
+  }, [RCInstance, setShowPinned]);
 
   const showChannelMembers = useCallback(async () => {
     const { members = [] } = await RCInstance.getChannelMembers(
