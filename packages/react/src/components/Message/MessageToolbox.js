@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import Popup from 'reactjs-popup';
 import useComponentOverrides from '../../theme/useComponentOverrides';
@@ -11,6 +11,7 @@ import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../Tooltip';
+import { useUserStore } from '../../store';
 
 const MessageToolboxWrapperCss = css`
   display: none;
@@ -48,6 +49,7 @@ const popupStyle = {
 export const MessageToolbox = ({
   className = '',
   message,
+  RCInstance,
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
@@ -78,6 +80,8 @@ export const MessageToolbox = ({
   const handleClickDelete = () => {
     setShowDeleteModal(true);
   };
+
+  const canPinMsg = useUserStore((state) => state.canPinMsg);
 
   return (
     <>
@@ -141,7 +145,7 @@ export const MessageToolbox = ({
               }}
             />
           </Popup>
-          {!isThreadMessage && (
+          {!isThreadMessage && canPinMsg && (
             <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
                 ghost

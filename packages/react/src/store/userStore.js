@@ -20,9 +20,11 @@ const useUserStore = create((set) => ({
     })),
   isUserAuthenticated: false,
   canSendMsg: true,
+  canPinMsg: true,
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
   setCanSendMsg: (canSendMsg) => set(() => ({ canSendMsg })),
+  setCanPinMsg: (canPinMsg) => set(() => ({ canPinMsg })),
   password: null,
   setPassword: (password) => set(() => ({ password })),
   emailoruser: null,
