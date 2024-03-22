@@ -8,6 +8,7 @@ import Sidebar from '../Sidebar/Sidebar';
 
 const channelSidebarCss = css`
   padding: 0 1rem 1rem;
+  margin: 0 auto;
 `;
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
