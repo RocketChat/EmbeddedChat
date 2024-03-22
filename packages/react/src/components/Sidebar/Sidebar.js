@@ -5,7 +5,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 
 const Sidebar = ({ title, iconName, setShowWindow, children }) => (
-  <Box className={classes.sidebar} style={{}}>
+  <Box className={classes.sidebar}>
     <Box className={classes.sidebarContainer}>
       <Box
         className={classes.sidebarHeader}

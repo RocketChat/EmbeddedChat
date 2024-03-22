@@ -58,8 +58,6 @@ const Search = () => {
     } else {
       debouncedSearch();
     }
-
-    // Cleanup function to cancel the debounce on component unmount
     return () => {
       debouncedSearch.cancel();
     };
@@ -102,6 +100,8 @@ const Search = () => {
           flexDirection: 'column',
           justifyContent: messageList.length === 0 ? 'center' : 'initial',
           alignItems: messageList.length === 0 ? 'center' : 'initial',
+          overflowX: 'hidden',
+          maxWidth: '100%',
         }}
       >
         {messageList.length === 0 ? (
@@ -120,8 +120,7 @@ const Search = () => {
           </Box>
         ) : (
           messageList.map((msg, index, arr) => {
-            const prev = arr[index + 1];
-            const newDay = isMessageNewDay(msg, prev);
+            const newDay = index === 0 || isMessageNewDay(msg, arr[index - 1]);
             return (
               <Box key={msg._id}>
                 {newDay && (

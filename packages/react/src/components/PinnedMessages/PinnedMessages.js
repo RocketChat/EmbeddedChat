@@ -43,6 +43,8 @@ const PinnedMessages = () => {
           flexDirection: 'column',
           justifyContent: messageList?.length === 0 ? 'center' : 'initial',
           alignItems: messageList?.length === 0 ? 'center' : 'initial',
+          overflowX: 'hidden',
+          maxWidth: '100%',
         }}
       >
         {loading ? (
@@ -72,9 +74,7 @@ const PinnedMessages = () => {
           </Box>
         ) : (
           messageList?.map((msg, index, arr) => {
-            const prev = arr[index + 1];
-            const newDay = isMessageNewDay(msg, prev);
-            const sequential = isMessageSequential(msg, prev, 300);
+            const newDay = index === 0 || isMessageNewDay(msg, arr[index - 1]);
             return (
               <Box key={msg._id}>
                 {newDay && (
@@ -88,7 +88,6 @@ const PinnedMessages = () => {
                   key={msg._id}
                   message={msg}
                   newDay={false}
-                  sequential={sequential}
                   variant="default"
                   showAvatar
                   showToolbox={false}
