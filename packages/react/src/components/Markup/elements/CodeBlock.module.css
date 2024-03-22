@@ -13,5 +13,7 @@
 
 .prestyle {
   display: inline-block;
-  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
 }
