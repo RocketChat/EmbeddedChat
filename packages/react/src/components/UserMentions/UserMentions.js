@@ -28,6 +28,7 @@ const MessageCss = css`
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   padding-inline: 1.25rem;
+  flex-wrap: wrap;
   &:hover {
     background: #f2f3f5;
   }
@@ -102,7 +103,7 @@ const UserMentions = () => {
               const newDay =
                 index === 0 || isMessageNewDay(message, arr[index - 1]);
               return (
-                <React.Fragment key={message._id}>
+                <Box key={message._id}>
                   {newDay ? (
                     <MessageDivider>
                       {format(new Date(message.ts), 'MMMM d, yyyy')}
@@ -139,7 +140,7 @@ const UserMentions = () => {
                       )}
                     </MessageBodyContainer>
                   </Box>
-                </React.Fragment>
+                </Box>
               );
             })
           )}

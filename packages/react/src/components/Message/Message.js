@@ -35,6 +35,7 @@ const MessageCss = css`
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   padding-inline: 1.25rem;
+  flex-wrap: wrap;
   &:hover {
     background: #f2f3f5;
   }

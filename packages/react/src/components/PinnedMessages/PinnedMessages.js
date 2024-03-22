@@ -6,7 +6,6 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
-import isMessageSequential from '../../lib/isMessageSequential';
 import { Throbber } from '../Throbber';
 import Sidebar from '../Sidebar/Sidebar';
 
