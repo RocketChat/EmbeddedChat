@@ -7,7 +7,7 @@ import { Box } from '../Box';
 import Sidebar from '../Sidebar/Sidebar';
 
 const channelSidebarCss = css`
-  padding: 1rem;
+  padding: 0 1rem 1rem;
 `;
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);

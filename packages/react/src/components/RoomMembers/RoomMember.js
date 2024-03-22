@@ -18,7 +18,7 @@ const roomMemberSidebarCSS = css`
   align-items: center;
   justify-content: center;
   background-color: #fff;
-  padding: 1rem;
+  padding: 0 1rem 1rem;
 `;
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);

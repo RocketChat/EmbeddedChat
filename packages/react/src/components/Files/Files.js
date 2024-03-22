@@ -41,6 +41,7 @@ const searchContainerStyle = css`
   background-color: #fff;
   border: 2px solid #ddd;
   position: relative;
+  margin: 0 1rem 1rem;
 `;
 
 const textInputStyle = css`

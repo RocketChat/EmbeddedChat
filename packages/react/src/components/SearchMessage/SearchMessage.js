@@ -1,15 +1,34 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { css } from '@emotion/react';
 import { isSameDay, format } from 'date-fns';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
-import classes from './SearchMessage.module.css';
-import { Markdown } from '../Markdown/index';
-import { useUserStore, useSearchMessageStore } from '../../store';
+import { useSearchMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import Sidebar from '../Sidebar/Sidebar';
+
+const containerStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
+  margin: 0 1rem 1rem;
+`;
+
+const textInputStyles = css`
+  width: 75%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+  &::placeholder {
+    padding-left: 5px;
+  }
+`;
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -56,7 +75,7 @@ const Search = () => {
       setShowWindow={setShowSearch}
     >
       <Box
-        className={classes.container}
+        css={containerStyles}
         style={{
           border: '2px solid #ddd',
           position: 'relative',
@@ -66,7 +85,7 @@ const Search = () => {
         <input
           placeholder="Search Message"
           onChange={handleInputChange}
-          className={classes.textInput}
+          css={textInputStyles}
         />
 
         <Icon
