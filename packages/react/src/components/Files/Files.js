@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
-import { ActionButton } from '../ActionButton';
 import { useChannelStore, useFileStore, useMessageStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageBody } from '../Message/MessageBody';
@@ -33,27 +32,6 @@ const MessageCss = css`
   &:hover {
     background: #f2f3f5;
   }
-`;
-
-const componentStyle = css`
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 350px;
-  height: 100%;
-  overflow: hidden;
-  background-color: white;
-  box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
-  z-index: 100;
-  @media (max-width: 550px) {
-    width: 100vw;
-  }
-`;
-
-const wrapContainerStyle = css`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 `;
 
 const searchContainerStyle = css`
