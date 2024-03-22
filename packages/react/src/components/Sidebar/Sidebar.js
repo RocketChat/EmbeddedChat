@@ -8,7 +8,7 @@ const sidebarCSS = css`
   position: fixed;
   right: 0;
   top: 0;
-  width: 350px;
+  width: 370px;
   height: 100%;
   background-color: white;
   box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
