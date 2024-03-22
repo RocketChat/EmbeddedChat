@@ -1,10 +1,15 @@
 import { useCallback, useContext } from 'react';
 import RCContext from '../context/RCInstance';
-import { useUserStore, useChannelStore, useMessageStore } from '../store';
+import {
+  useUserStore,
+  useChannelStore,
+  useMemberStore,
+  useMessageStore,
+} from '../store';
 
 const useFetchChatData = (showRoles) => {
   const { RCInstance, ECOptions } = useContext(RCContext);
-  const setMemberRoles = useChannelStore((state) => state.setMemberRoles);
+  const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setMessages = useMessageStore((state) => state.setMessages);
   const isUserAuthenticated = useUserStore(
