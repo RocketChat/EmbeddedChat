@@ -1,15 +1,13 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
-import classes from './StarredMessages.module.css';
 import { useStarredMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
-import { ActionButton } from '../ActionButton';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
-import isMessageSequential from '../../lib/isMessageSequential';
 import { Throbber } from '../Throbber';
+import Sidebar from '../Sidebar/Sidebar';
 
 const StarredMessages = () => {
   const { RCInstance } = useContext(RCContext);
@@ -17,72 +15,52 @@ const StarredMessages = () => {
     (state) => state.setShowStarred
   );
 
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setmessageList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const toggleShowStarred = () => {
-    setShowStarred(false);
-  };
-
-  const getStarredMessages = async () => {
-    const { messages } = await RCInstance.getStarredMessages();
-    setMessageList(messages);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    if (messageList.length === 0) {
-      getStarredMessages();
-    }
-  }, [messageList, getStarredMessages]);
+    const getStarredMessages = async () => {
+      const { messages } = await RCInstance.getStarredMessages();
+      setmessageList(messages);
+      setLoading(false);
+    };
+    getStarredMessages();
+  });
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box className={classes.sidebar} style={{ padding: '1rem' }}>
-      <Box className={classes.wrapContainer}>
+    <Sidebar
+      title="Starred Messages"
+      iconName="star"
+      setShowWindow={setShowStarred}
+    >
+      {loading ? (
         <Box
           style={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '1rem',
+            color: '#4a4a4a',
           }}
         >
-          <h3 style={{ display: 'contents' }}>
-            <Icon name="star" size="1.25rem" />
-            <Box style={{ color: '#4a4a4a', width: '80%' }}>
-              Starred Messages
-            </Box>
-            <ActionButton onClick={toggleShowStarred} ghost size="small">
-              <Icon name="cross" size="x20" />
-            </ActionButton>
-          </h3>
+          <Throbber />
         </Box>
+      ) : (
         <Box
           style={{
             flex: '1',
             overflow: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: messageList.length === 0 ? 'center' : 'initial',
-            alignItems: messageList.length === 0 ? 'center' : 'initial',
+            justifyContent: messageList?.length === 0 ? 'center' : 'initial',
+            alignItems: messageList?.length === 0 ? 'center' : 'initial',
+            overflowX: 'hidden',
+            maxWidth: '100%',
           }}
         >
-          {loading ? (
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                color: '#4a4a4a',
-              }}
-            >
-              <Throbber />
-            </Box>
-          ) : messageList.length === 0 ? (
+          {messageList?.length === 0 ? (
             <Box
               style={{
                 display: 'flex',
@@ -97,10 +75,9 @@ const StarredMessages = () => {
               </span>
             </Box>
           ) : (
-            messageList.map((msg, index, arr) => {
-              const prev = arr[index + 1];
-              const newDay = isMessageNewDay(msg, prev);
-              const sequential = isMessageSequential(msg, prev, 300);
+            messageList?.map((msg, index, arr) => {
+              const newDay =
+                index === 0 || isMessageNewDay(msg, arr[index - 1]);
               return (
                 <Box key={msg._id}>
                   {newDay && (
@@ -114,7 +91,6 @@ const StarredMessages = () => {
                     key={msg._id}
                     message={msg}
                     newDay={false}
-                    sequential={sequential}
                     variant="default"
                     showAvatar
                     showToolbox={false}
@@ -124,8 +100,9 @@ const StarredMessages = () => {
             })
           )}
         </Box>
-      </Box>
-    </Box>
+      )}
+    </Sidebar>
   );
 };
+
 export default StarredMessages;

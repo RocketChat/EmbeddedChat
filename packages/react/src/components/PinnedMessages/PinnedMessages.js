@@ -1,15 +1,13 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
-import classes from './PinnedMessages.module.css';
 import { usePinnedMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
-import { ActionButton } from '../ActionButton';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
-import isMessageSequential from '../../lib/isMessageSequential';
 import { Throbber } from '../Throbber';
+import Sidebar from '../Sidebar/Sidebar';
 
 const PinnedMessages = () => {
   const { RCInstance } = useContext(RCContext);
@@ -18,69 +16,49 @@ const PinnedMessages = () => {
   const [messageList, setMessageList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const toggleShowPinned = () => {
-    setShowPinned(false);
-  };
-
-  const getPinnedMessages = async () => {
-    const { messages } = await RCInstance.getPinnedMessages();
-    setMessageList(messages);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    if (messageList.length === 0) {
-      getPinnedMessages();
-    }
-  }, [messageList, getPinnedMessages]);
+    const getPinnedMessages = async () => {
+      const { messages } = await RCInstance.getPinnedMessages();
+      setMessageList(messages);
+      setLoading(false);
+    };
+    getPinnedMessages();
+  });
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   return (
-    <Box className={classes.sidebar} style={{ padding: '1rem' }}>
-      <Box className={classes.wrapContainer}>
+    <Sidebar
+      title="Pinned Messages"
+      iconName="pin"
+      setShowWindow={setShowPinned}
+    >
+      {loading ? (
         <Box
           style={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '1rem',
+            color: '#4a4a4a',
           }}
         >
-          <h3 style={{ display: 'contents' }}>
-            <Icon name="pin" size="1.25rem" />
-            <Box style={{ color: '#4a4a4a', width: '80%' }}>
-              Pinned Messages
-            </Box>
-            <ActionButton onClick={toggleShowPinned} ghost size="small">
-              <Icon name="cross" size="x20" />
-            </ActionButton>
-          </h3>
+          <Throbber />
         </Box>
+      ) : (
         <Box
           style={{
             flex: '1',
             overflow: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: messageList.length === 0 ? 'center' : 'initial',
-            alignItems: messageList.length === 0 ? 'center' : 'initial',
+            justifyContent: messageList?.length === 0 ? 'center' : 'initial',
+            alignItems: messageList?.length === 0 ? 'center' : 'initial',
+            overflowX: 'hidden',
+            maxWidth: '100%',
           }}
         >
-          {loading ? (
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                color: '#4a4a4a',
-              }}
-            >
-              <Throbber />
-            </Box>
-          ) : messageList.length === 0 ? (
+          {messageList?.length === 0 ? (
             <Box
               style={{
                 display: 'flex',
@@ -95,10 +73,9 @@ const PinnedMessages = () => {
               </span>
             </Box>
           ) : (
-            messageList.map((msg, index, arr) => {
-              const prev = arr[index + 1];
-              const newDay = isMessageNewDay(msg, prev);
-              const sequential = isMessageSequential(msg, prev, 300);
+            messageList?.map((msg, index, arr) => {
+              const newDay =
+                index === 0 || isMessageNewDay(msg, arr[index - 1]);
               return (
                 <Box key={msg._id}>
                   {newDay && (
@@ -112,7 +89,6 @@ const PinnedMessages = () => {
                     key={msg._id}
                     message={msg}
                     newDay={false}
-                    sequential={sequential}
                     variant="default"
                     showAvatar
                     showToolbox={false}
@@ -122,8 +98,8 @@ const PinnedMessages = () => {
             })
           )}
         </Box>
-      </Box>
-    </Box>
+      )}
+    </Sidebar>
   );
 };
 export default PinnedMessages;

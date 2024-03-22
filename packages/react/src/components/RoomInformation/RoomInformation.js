@@ -6,6 +6,10 @@ import { useChannelStore } from '../../store';
 import { Box } from '../Box';
 import Sidebar from '../Sidebar/Sidebar';
 
+const channelSidebarCss = css`
+  padding: 0 1rem 1rem;
+  margin: 0 auto;
+`;
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
 
@@ -26,33 +30,35 @@ const Roominfo = () => {
       iconName="info"
       setShowWindow={setShowChannelinfo}
     >
-      <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
-      <Box
-        css={css`
-          margin: 16px;
-        `}
-      >
+      <Box css={channelSidebarCss}>
+        <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
         <Box
           css={css`
-            margin-block: 16px;
-            font-size: 1.25rem;
+            margin: 16px;
           `}
         >
-          # {channelInfo.name}
-        </Box>
-        <Box
-          css={css`
-            margin-block: 5px;
-          `}
-        >
-          Description
-        </Box>
-        <Box
-          css={css`
-            opacity: 0.5rem;
-          `}
-        >
-          {channelInfo.description}
+          <Box
+            css={css`
+              margin-block: 16px;
+              font-size: 1.25rem;
+            `}
+          >
+            # {channelInfo.name}
+          </Box>
+          <Box
+            css={css`
+              margin-block: 5px;
+            `}
+          >
+            Description
+          </Box>
+          <Box
+            css={css`
+              opacity: 0.5rem;
+            `}
+          >
+            {channelInfo.description}
+          </Box>
         </Box>
       </Box>
     </Sidebar>

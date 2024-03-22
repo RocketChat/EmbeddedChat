@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
-import classes from './RoomMember.module.css';
 import { useMemberStore } from '../../store';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -11,6 +11,15 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import Sidebar from '../Sidebar/Sidebar';
 
+const roomMemberSidebarCSS = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  padding: 0 1rem 1rem;
+`;
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
@@ -40,31 +49,36 @@ const RoomMembers = ({ members }) => {
 
   const [inviteData, setInviteData] = useState(null);
 
-  if (showInvite) return <InviteMembers inviteData={inviteData} />;
-
   return (
     <Sidebar
       title="Members"
       iconName="members"
       setShowWindow={toggleShowMembers}
     >
-      <Box className={classes.container}>
-        {members.map((member) => (
-          <RoomMemberItem user={member} host={host} key={member._id} />
-        ))}
+      <Box css={roomMemberSidebarCSS}>
+        {showInvite ? (
+          <InviteMembers inviteData={inviteData} />
+        ) : (
+          <>
+            {members.map((member) => (
+              <RoomMemberItem user={member} host={host} key={member._id} />
+            ))}
+
+            {isAdmin && (
+              <Button
+                style={{ marginTop: '10px', width: '100%' }}
+                onClick={async () => {
+                  const res = await RCInstance.findOrCreateInvite();
+                  setInviteData(res);
+                  toggleInviteView();
+                }}
+              >
+                <Icon size="1em" name="link" /> Invite Link
+              </Button>
+            )}
+          </>
+        )}
       </Box>
-      {isAdmin && (
-        <Button
-          style={{ marginTop: '10px', width: '100%' }}
-          onClick={async () => {
-            const res = await RCInstance.findOrCreateInvite();
-            setInviteData(res);
-            toggleInviteView();
-          }}
-        >
-          <Icon size="1em" name="link" /> Invite Link
-        </Button>
-      )}
     </Sidebar>
   );
 };
