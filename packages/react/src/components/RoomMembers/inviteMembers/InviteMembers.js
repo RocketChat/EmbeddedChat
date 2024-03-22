@@ -29,7 +29,7 @@ const InviteMembers = ({ inviteData }) => {
   };
 
   return (
-    <Box style={{ padding: '16px' }}>
+    <Box>
       <Box
         css={css`
           display: flex;

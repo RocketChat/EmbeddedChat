@@ -11,7 +11,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import Sidebar from '../Sidebar/Sidebar';
 
-const containerCss = css`
+const roomMemberSidebarCSS = css`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -49,33 +49,35 @@ const RoomMembers = ({ members }) => {
 
   const [inviteData, setInviteData] = useState(null);
 
-  if (showInvite) return <InviteMembers inviteData={inviteData} />;
-
   return (
     <Sidebar
       title="Members"
       iconName="members"
       setShowWindow={toggleShowMembers}
     >
-      <Box css={containerCss}>
-        <>
-          {members.map((member) => (
-            <RoomMemberItem user={member} host={host} key={member._id} />
-          ))}
+      <Box css={roomMemberSidebarCSS}>
+        {showInvite ? (
+          <InviteMembers inviteData={inviteData} />
+        ) : (
+          <>
+            {members.map((member) => (
+              <RoomMemberItem user={member} host={host} key={member._id} />
+            ))}
 
-          {isAdmin && (
-            <Button
-              style={{ marginTop: '10px', width: '100%' }}
-              onClick={async () => {
-                const res = await RCInstance.findOrCreateInvite();
-                setInviteData(res);
-                toggleInviteView();
-              }}
-            >
-              <Icon size="1em" name="link" /> Invite Link
-            </Button>
-          )}
-        </>
+            {isAdmin && (
+              <Button
+                style={{ marginTop: '10px', width: '100%' }}
+                onClick={async () => {
+                  const res = await RCInstance.findOrCreateInvite();
+                  setInviteData(res);
+                  toggleInviteView();
+                }}
+              >
+                <Icon size="1em" name="link" /> Invite Link
+              </Button>
+            )}
+          </>
+        )}
       </Box>
     </Sidebar>
   );
