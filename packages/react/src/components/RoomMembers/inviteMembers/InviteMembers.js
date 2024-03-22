@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import classes from '../RoomMember.module.css';
 import useInviteStore from '../../../store/inviteStore';
 import { useToastBarDispatch } from '../../../hooks/useToastBarDispatch';
 import { Box } from '../../Box';
@@ -30,7 +29,7 @@ const InviteMembers = ({ inviteData }) => {
   };
 
   return (
-    <Box style={{ padding: '16px' }} className={classes.modal}>
+    <Box style={{ padding: '16px' }}>
       <Box
         css={css`
           display: flex;
