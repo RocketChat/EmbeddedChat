@@ -14,6 +14,7 @@ import Menu from '../Menu/Menu';
 import { Modal } from '../Modal';
 import { Button } from '../Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import Sidebar from '../Sidebar/Sidebar';
 
 const MessageCss = css`
   display: flex;
@@ -98,10 +99,6 @@ const Files = () => {
   const [isFilesFetched, setIsFilesFetched] = useState(false);
   const [files, setFiles] = useState([]);
   const [fileToDelete, setFileToDelete] = useState({});
-
-  const toggleShowAllFiles = () => {
-    setShowAllFiles(false);
-  };
 
   const handleInputChange = (e) => {
     setText(e.target.value);
@@ -208,127 +205,99 @@ const Files = () => {
             </Modal.Footer>
           </Modal>
         )}
-      <Box css={componentStyle}>
-        <Box css={wrapContainerStyle}>
-          <Box style={{ padding: '16px' }}>
-            <Box
-              css={css`
-                display: flex;
-              `}
-            >
-              <h3 style={{ display: 'contents' }}>
-                <Icon
-                  name="clip"
-                  size="1.25rem"
-                  style={{ padding: '0px 20px 20px 0px' }}
-                />
-                <Box
-                  css={css`
-                    width: 100%;
-                    color: #4a4a4a;
-                  `}
-                >
-                  Files
-                </Box>
-                <ActionButton onClick={toggleShowAllFiles} ghost size="small">
-                  <Icon name="cross" size="1.25rem" />
-                </ActionButton>
-              </h3>
-            </Box>
 
-            <Box css={searchContainerStyle}>
-              <input
-                placeholder="Search Files"
-                onChange={handleInputChange}
-                css={textInputStyle}
-              />
+      <Sidebar
+        title="Files"
+        iconName="attachment"
+        setShowWindow={setShowAllFiles}
+      >
+        <Box css={searchContainerStyle}>
+          <input
+            placeholder="Search Files"
+            onChange={handleInputChange}
+            css={textInputStyle}
+          />
 
-              <Icon
-                name="magnifier"
-                size="1.25rem"
-                style={{ padding: '0.125em', cursor: 'pointer' }}
-              />
-            </Box>
-          </Box>
-
-          {isFilesFetched && (
-            <Box
-              style={{
-                flex: '1',
-                overflow: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent:
-                  filteredFiles.length === 0 ? 'center' : 'initial',
-                alignItems: filteredFiles.length === 0 ? 'center' : 'initial',
-              }}
-            >
-              {filteredFiles.length === 0 ? (
-                <Box
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    color: '#4a4a4a',
-                  }}
-                >
-                  <Icon
-                    name="magnifier"
-                    size="3rem"
-                    style={{ padding: '0.5rem' }}
-                  />
-                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    No files found
-                  </span>
-                </Box>
-              ) : (
-                filteredFiles.map(
-                  (file) =>
-                    file.path && (
-                      <Box key={file._id} css={MessageCss}>
-                        <FilePreviewContainer
-                          file={file}
-                          sequential={false}
-                          isStarred={false}
-                        />
-                        <MessageBodyContainer style={{ width: '75%' }}>
-                          <FilePreviewHeader
-                            file={file}
-                            isTimeStamped={false}
-                          />
-                          <MessageBody>
-                            <div css={FilePreviewUsernameCss}>
-                              @{file.user.username}
-                            </div>
-                          </MessageBody>
-                          <FileMetrics file={file} />
-                        </MessageBodyContainer>
-
-                        <Menu
-                          isToolTip={false}
-                          options={[
-                            {
-                              id: 'download',
-                              action: () => downloadFile(file.url, file.title),
-                              label: 'Download',
-                              icon: 'circle-arrow-down',
-                            },
-                            {
-                              id: 'delete',
-                              action: () => setFileToDelete(file),
-                              label: 'Delete',
-                              icon: 'trash',
-                            },
-                          ]}
-                        />
-                      </Box>
-                    )
-                )
-              )}
-            </Box>
-          )}
+          <Icon
+            name="magnifier"
+            size="1.25rem"
+            style={{ padding: '0.125em', cursor: 'pointer' }}
+          />
         </Box>
-      </Box>
+
+        {isFilesFetched && (
+          <Box
+            style={{
+              flex: '1',
+              overflow: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: filteredFiles.length === 0 ? 'center' : 'initial',
+              alignItems: filteredFiles.length === 0 ? 'center' : 'initial',
+            }}
+          >
+            {filteredFiles.length === 0 ? (
+              <Box
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  color: '#4a4a4a',
+                }}
+              >
+                <Icon
+                  name="magnifier"
+                  size="3rem"
+                  style={{ padding: '0.5rem' }}
+                />
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                  No files found
+                </span>
+              </Box>
+            ) : (
+              filteredFiles.map(
+                (file) =>
+                  file.path && (
+                    <Box key={file._id} css={MessageCss}>
+                      <FilePreviewContainer
+                        file={file}
+                        sequential={false}
+                        isStarred={false}
+                      />
+                      <MessageBodyContainer style={{ width: '75%' }}>
+                        <FilePreviewHeader file={file} isTimeStamped={false} />
+                        <MessageBody>
+                          <div css={FilePreviewUsernameCss}>
+                            @{file.user.username}
+                          </div>
+                        </MessageBody>
+                        <FileMetrics file={file} />
+                      </MessageBodyContainer>
+
+                      <Menu
+                        isToolTip={false}
+                        options={[
+                          {
+                            id: 'download',
+                            action: () => downloadFile(file.url, file.title),
+                            label: 'Download',
+                            icon: 'circle-arrow-down',
+                          },
+                          {
+                            id: 'delete',
+                            action: () => setFileToDelete(file),
+                            label: 'Delete',
+                            icon: 'trash',
+                          },
+                        ]}
+                      />
+                    </Box>
+                  )
+              )
+            )}
+          </Box>
+        )}
+      </Sidebar>
     </>
   );
 };
