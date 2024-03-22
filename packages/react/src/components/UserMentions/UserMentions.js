@@ -14,6 +14,7 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../Sidebar/Sidebar';
+import { Throbber } from '../Throbber';
 
 const MessageCss = css`
   display: flex;
@@ -65,7 +66,7 @@ const UserMentions = () => {
 
   return (
     <Sidebar title="Mentions" iconName="at" setShowWindow={setShowMentions}>
-      {isLoaded && (
+      {isLoaded ? (
         <Box
           style={{
             flex: '1',
@@ -143,6 +144,17 @@ const UserMentions = () => {
               );
             })
           )}
+        </Box>
+      ) : (
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: '#4a4a4a',
+          }}
+        >
+          <Throbber />
         </Box>
       )}
     </Sidebar>

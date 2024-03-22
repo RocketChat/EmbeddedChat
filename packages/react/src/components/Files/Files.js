@@ -14,6 +14,7 @@ import { Modal } from '../Modal';
 import { Button } from '../Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../Sidebar/Sidebar';
+import { Throbber } from '../Throbber';
 
 const MessageCss = css`
   display: flex;
@@ -204,7 +205,7 @@ const Files = () => {
           />
         </Box>
 
-        {isFilesFetched && (
+        {isFilesFetched ? (
           <Box
             style={{
               flex: '1',
@@ -274,6 +275,17 @@ const Files = () => {
                   )
               )
             )}
+          </Box>
+        ) : (
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              color: '#4a4a4a',
+            }}
+          >
+            <Throbber />
           </Box>
         )}
       </Sidebar>
