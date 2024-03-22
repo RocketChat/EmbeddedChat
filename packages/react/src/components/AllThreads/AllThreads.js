@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { css } from '@emotion/react';
-import classes from './AllThreads.module.css';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import {
@@ -31,6 +30,27 @@ const MessageCss = css`
   cursor: pointer;
   &:hover {
     background: #f2f3f5;
+  }
+`;
+
+const searchContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
+  margin: 0 1rem 1rem;
+`;
+
+const textInput = css`
+  width: 75%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    padding-left: 5px;
   }
 `;
 
@@ -70,20 +90,11 @@ const AllThreads = () => {
       iconName="thread"
       setShowWindow={setShowAllThreads}
     >
-      <Box
-        className={classes.searchContainer}
-        style={{
-          border: '2px solid #ddd',
-          position: 'relative',
-          marginRight: '1rem',
-          marginLeft: '1rem',
-          marginBottom: '1rem',
-        }}
-      >
+      <Box css={searchContainer}>
         <input
           placeholder="Search Messages"
           onChange={handleInputChange}
-          className={classes.textInput}
+          css={textInput}
         />
 
         <Icon
