@@ -75,6 +75,8 @@ const AllThreads = () => {
         style={{
           border: '2px solid #ddd',
           position: 'relative',
+          marginRight: '1rem',
+          marginLeft: '1rem',
           marginBottom: '1rem',
         }}
       >
