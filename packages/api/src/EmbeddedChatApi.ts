@@ -924,6 +924,27 @@ export default class EmbeddedChatApi {
       console.error(err);
     }
   }
+
+  async getMessageLimit() {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(
+        `${this.host}/api/v1/settings/Message_MaxAllowedSize`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async triggerBlockAction({
     type,
     actionId,

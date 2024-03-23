@@ -25,6 +25,7 @@ import { ActionButton } from '../ActionButton';
 import { Menu } from '../Menu';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
+import useSettingsStore from '../../store/settingsStore';
 
 const ChatHeader = ({
   isClosable,
@@ -64,12 +65,10 @@ const ChatHeader = ({
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
-  const setMessages = useMessageStore((state) => state.setMessages);
   const setFilter = useMessageStore((state) => state.setFilter);
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const closeThread = useMessageStore((state) => state.closeThread);
   const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
-  const setHeaderTitle = useMessageStore((state) => state.setHeaderTitle);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
   const showMembers = useMemberStore((state) => state.showMembers);
@@ -84,6 +83,7 @@ const ChatHeader = ({
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const toastPosition = useToastStore((state) => state.position);
+  const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
@@ -156,6 +156,11 @@ const ChatHeader = ({
   }, [setShowMentions, setShowSearch]);
 
   useEffect(() => {
+    const getMessageLimit = async () => {
+      const messageLimitObj = await RCInstance.getMessageLimit();
+      setMessageLimit(messageLimitObj?.value);
+    };
+
     const setMessageAllowed = async () => {
       const permissionRes = await RCInstance.permissionInfo();
       const channelRolesRes = await RCInstance.getChannelRoles(
@@ -205,6 +210,7 @@ const ChatHeader = ({
 
     if (isUserAuthenticated) {
       getChannelInfo();
+      getMessageLimit();
     }
   }, [
     isUserAuthenticated,
@@ -216,6 +222,7 @@ const ChatHeader = ({
     isChannelPrivate,
     setCanSendMsg,
     authenticatedUserId,
+    setMessageLimit,
   ]);
 
   const menuOptions = useMemo(() => {
