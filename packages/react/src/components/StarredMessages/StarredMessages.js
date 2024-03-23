@@ -15,17 +15,17 @@ const StarredMessages = () => {
     (state) => state.setShowStarred
   );
 
-  const [messageList, setmessageList] = useState([]);
+  const [messageList, setMessageList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getStarredMessages = async () => {
       const { messages } = await RCInstance.getStarredMessages();
-      setmessageList(messages);
+      setMessageList(messages);
       setLoading(false);
     };
     getStarredMessages();
-  });
+  }, [RCInstance, setMessageList, setLoading]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
