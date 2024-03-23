@@ -1,0 +1,24 @@
+{
+  "name": "@embeddedchat/auth",
+  "version": "0.0.1",
+  "description": "This is the `@embeddedchat/auth` package, designed to simplify authentication processes in applications using EmbeddedChat. It provides a streamlined and easy-to-use API for handling various authentication methods.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "dev": "yarn parcel playground/index.html",
+    "format": "prettier --write 'src/' ",
+    "format:check": "prettier --check 'src/' "
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.9.1",
+    "rollup": "^3.23.0",
+    "rollup-plugin-dts": "^6.0.1",
+    "rollup-plugin-esbuild": "^5.0.0"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@embeddedchat/api",
+  "version": "0.0.2",
+  "description": "A comprehensive API wrapper for Rocket.Chat, facilitating seamless integration and interaction with chat functionalities in web applications.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "dev": "yarn parcel playground/index.html",
+    "format": "prettier --write 'src/'",
+    "format:check": "prettier --check 'src/'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.10.3",
+    "rollup": "^3.23.0",
+    "rollup-plugin-dts": "^6.0.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-serve": "^2.0.2"
+  },
+  "dependencies": {
+    "@embeddedchat/auth": "0.0.1",
+    "@rocket.chat/sdk": "^1.0.0-alpha.42"
+  }
+}

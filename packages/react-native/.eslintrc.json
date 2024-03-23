@@ -1,0 +1,22 @@
+{
+	"parser": "@babel/eslint-parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"env": {
+		"browser": true,
+		"react-native/react-native": true
+	},
+	"plugins": ["react", "react-native"],
+	"extends": ["eslint:recommended", "plugin:react/recommended"],
+	"rules": {
+		"react-native/no-unused-styles": 2,
+		"react-native/split-platform-components": 2,
+		"react-native/no-raw-text": 2,
+		"no-undef": "error",
+        "react/prop-types": "off",
+        "no-unused-vars": "warn"
+	}
+}

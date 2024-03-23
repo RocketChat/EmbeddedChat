@@ -1,0 +1,26 @@
+{
+  "name": "@embeddedchat/htmlembed",
+  "description": "A lightweight and easy-to-use package that allows seamless integration of Embedded Chat into web applications using a simple HTML snippet. Ideal for quickly embedding chat functionalities without complex setup",
+  "version": "0.0.5",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "vite build && node postbuild.cjs",
+    "preview": "npm run build && vite preview --port=4001",
+    "format": "prettier --write 'src/' ",
+    "format:check": "prettier --check 'src/' "
+  },
+  "dependencies": {
+    "@embeddedchat/react": "0.1.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.1.0",
+    "live-server": "^1.2.2",
+    "vite": "^4.2.0",
+    "vite-plugin-css-injected-by-js": "^3.1.0"
+  }
+}

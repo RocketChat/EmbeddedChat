@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Playground</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+		}
+		.container {
+			display: flex;
+			flex-direction: row;
+		}
+		.container > div {
+			width: 50%;
+			max-width: 50%;
+		}
+		.playground-input .input-group{
+			padding: 1rem;
+		}
+		.playground-output #output{
+			white-space: pre-wrap;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="playground-input">
+			<div class="input-group">
+				<label for="hostUrl">RocketChat host url: </label>
+				<input type="text" id="hostUrl" placeholder="RocketChat host"  value="http://localhost:3000">
+			</div>
+			<div class="input-group">
+				<label for="roomId">RocketChat Room ID: </label>
+				<input type="text" id="roomId" placeholder="RocketChat Room ID"  value="GENERAL">
+			</div>
+			<div class="input-group">
+				<button id="logoutBtn">Logout</button>
+			</div>
+			<div class="input-group">
+				<input type="text" id="email" placeholder="Email">
+				<input type="password" id="password" placeholder="Password">
+				<button id="loginWithPassword">Sign in</button>
+			</div>
+			<div class="input-group">
+				<button id="loginWithRocketChatOAuth">Sign in with RocketChat OAuth</button>
+			</div>
+			<div class="input-group">
+				<label for="userId">User Id</label>
+				<input type="text" id="userId" disabled>
+			</div>
+			<div class="input-group">
+				<label for="username">Name</label>
+				<input type="text" id="username" disabled>
+			</div>
+			<div class="input-group">
+				<label for="function">Function Name</label>
+				<input type="text" id="function" value="sendMessage">
+				<br>
+				<br>
+				<label for="params">Params as array</label>
+				<input type="text" id="params" value='["hello"]'>
+				<br>
+				<br>
+				<button id="call-api">Call</button>
+			</div>
+		</div>
+		<div class="playground-output">
+			<div class="input-group" style="padding: 5px;">
+				<h4>Message feed</h4>
+				<textarea style="width: 100%;" rows="12" id="msgs" placeholder="Messages"></textarea>
+			</div>
+			<div>
+				<h4>API response</h4>
+				<pre>
+					<code id="output"></code>
+				</pre>
+			</div>
+		</div>
+	</div>
+	<script type="module" src="./playground.js" ></script>
+</body>
+</html>

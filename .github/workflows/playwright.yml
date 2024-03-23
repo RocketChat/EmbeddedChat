@@ -1,0 +1,60 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.19.0
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.yarn
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build the project
+      run: |
+        yarn build
+
+    - name: Get installed Playwright version
+      id: playwright-version
+      run: echo "::set-output name=version::$(yarn why --json @playwright/test | grep -h 'workspace:.' | jq --raw-output '.children[].locator' | sed -e 's/@playwright\/test@.*://')"
+
+    - uses: actions/cache@v3
+      id: playwright-cache
+      with:
+        path: '~/.cache/ms-playwright'
+        key: '${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}'
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
+    - name: Install Playwright's dependencies
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      run: npx playwright install --with-deps
+      
+    - name: Run Playwright tests
+      run: cd packages/e2e-react && npx playwright test
+      
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: packages/e2e-react/playwright-report/
+        retention-days: 30

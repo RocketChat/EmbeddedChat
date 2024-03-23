@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div>
+      <div id="embeddedchat"></div>
+      <script src="http://127.0.0.1:4001/embeddedchat.js"></script>
+      <script>
+				// all props for the EmbeddedChat of @embeddedchat/react will go here
+				// the config will be directly applied as props for the EmbeddedChat Component
+        const config = {
+					host: 'http://localhost:3000',
+					roomId: 'GENERAL',
+					GOOGLE_CLIENT_ID: '',
+					isClosable: true,
+					setClosableState: true,
+					moreOpts: true,
+					channelName: 'general',
+					anonymousMode: true,
+					headerColor: 'white',
+					toastBarPosition: 'bottom-end',
+					showRoles: true,
+					showAvatar: false,
+					enableThreads: true,
+					auth: {
+						flow: 'MANAGED',
+					},
+				}
+        EmbeddedChat.renderInElementWithId(config, 'embeddedchat')
+      </script>
+    </div>
+  </body>
+</html>
