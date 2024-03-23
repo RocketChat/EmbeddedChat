@@ -23,7 +23,7 @@ const PinnedMessages = () => {
       setLoading(false);
     };
     getPinnedMessages();
-  });
+  }, [RCInstance, setMessageList, setLoading]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
