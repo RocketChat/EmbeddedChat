@@ -13,6 +13,7 @@ _EmbeddedChat is a full-stack React component node module of the RocketChat appl
 </div>
 
 ## Installation
+
 ```bash
 npm install @embeddedchat/react
 # or
@@ -32,10 +33,7 @@ import { EmbeddedChat } from '@embeddedchat/react';
 To use the `EmbeddedChat` component, include it in your component's render method or return statement. Here's a basic example:
 
 ```jsx
-<EmbeddedChat
-  host="http://your-rocketchat-server.com"
-  roomId="YOUR_ROOM_ID"
-/>
+<EmbeddedChat host="http://your-rocketchat-server.com" roomId="YOUR_ROOM_ID" />
 ```
 
 ### Props
@@ -152,6 +150,7 @@ You can pass a `theme` object to customize the appearance according to your appl
   theme={myCustomTheme}
 />
 ```
+
 Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
 
 ## Handling the Closable State
@@ -167,9 +166,9 @@ If `isClosable` is `true`, provide a `setClosableState` function to manage the s
 ```
 
 ## Development
+
 Follow this [EmbeddedChat Readme](https://github.com/RocketChat/EmbeddedChat) to setup EmbeddedChat for development.
 
 ## Conclusion
 
 The `EmbeddedChat` component offers a flexible and feature-rich solution for integrating RocketChat into your application. Customize it according to your needs to enhance your app's chat functionality.
-
