@@ -38,6 +38,7 @@ const ChatHeader = ({
   styles = {},
   anonymousMode,
   showRoles,
+  messageListRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const channelInfo = useChannelStore((state) => state.channelInfo);
@@ -105,6 +106,14 @@ const ChatHeader = ({
       setIsUserAuthenticated(false);
     }
   }, [RCInstance, setIsUserAuthenticated]);
+
+  const scrollToTop = useCallback(() => {
+    if (messageListRef && messageListRef.current) {
+      requestAnimationFrame(() => {
+        messageListRef.current.scrollTop = -messageListRef.current.scrollHeight;
+      });
+    }
+  }, [messageListRef]);
 
   const showStarredMessage = useCallback(async () => {
     setShowStarred(true);
@@ -286,6 +295,12 @@ const ChatHeader = ({
             label: 'Room Information',
             icon: 'info',
           },
+          {
+            id: 'scroll-to-top',
+            action: scrollToTop,
+            label: 'Scroll to Top',
+            icon: 'arrow-up',
+          },
         ]
       );
     }
@@ -313,6 +328,7 @@ const ChatHeader = ({
     showPinnedMessage,
     showSearchMessage,
     showStarredMessage,
+    scrollToTop,
   ]);
 
   return (
