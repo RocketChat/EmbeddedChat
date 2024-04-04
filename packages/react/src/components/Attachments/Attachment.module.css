@@ -1,0 +1,18 @@
+.overlay {
+  position: fixed; /* Or absolute, depending on the need */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000; /* To overlay everything else */
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto
+}
+
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0; /* Ensures content is not stretched */
+  transform: translateY(-50%);
+}
