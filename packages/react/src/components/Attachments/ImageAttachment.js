@@ -6,7 +6,12 @@ import { Button } from '../Button';
 import ImageGallery from './ImageGallery';
 
 const ImageAttachment = ({ attachment, host }) => {
-  const [showSlider, setShowSlider] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+
+  const extractIdFromUrl = (url) => {
+    const match = url.match(/\/file-upload\/(.*?)\//);
+    return match ? match[1] : null;
+  };
 
   return (
     <Box>
@@ -14,13 +19,15 @@ const ImageAttachment = ({ attachment, host }) => {
         attachment={attachment}
         url={host + attachment.title_link}
       />
-      <Button ghost onClick={() => setShowSlider(true)}>
+      <Button ghost onClick={() => setShowGallery(true)}>
         <img
           src={host + attachment.image_url}
           style={{ maxWidth: '100%', objectFit: 'contain' }}
         />
       </Button>
-      {showSlider && <ImageGallery attachment={attachment} host={host} />}
+      {showGallery && (
+        <ImageGallery currentFileId={extractIdFromUrl(attachment.title_link)} />
+      )}
     </Box>
   );
 };
