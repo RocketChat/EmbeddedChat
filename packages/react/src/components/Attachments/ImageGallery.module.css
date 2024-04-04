@@ -16,3 +16,16 @@
   right: 0; /* Ensures content is not stretched */
   transform: translateY(-50%);
 }
+
+.exit {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #fff;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  z-index: 1001;
+}

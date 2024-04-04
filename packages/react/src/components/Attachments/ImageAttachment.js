@@ -26,7 +26,10 @@ const ImageAttachment = ({ attachment, host }) => {
         />
       </Button>
       {showGallery && (
-        <ImageGallery currentFileId={extractIdFromUrl(attachment.title_link)} />
+        <ImageGallery
+          currentFileId={extractIdFromUrl(attachment.title_link)}
+          setShowGallery={setShowGallery}
+        />
       )}
     </Box>
   );

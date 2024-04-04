@@ -9,8 +9,11 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import classes from './ImageGallery.module.css';
 import { Throbber } from '../Throbber';
+import { Button } from '../Button';
+import { ActionButton } from '../ActionButton';
+import { Icon } from '../Icon';
 
-const ImageGallery = ({ currentFileId }) => {
+const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const { RCInstance } = useRCContext();
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
@@ -31,6 +34,14 @@ const ImageGallery = ({ currentFileId }) => {
 
   return (
     <Box className={classes.overlay}>
+      <ActionButton
+        ghost
+        className={classes.exit}
+        onClick={() => setShowGallery(false)}
+        size="large"
+      >
+        <Icon name="cross" />
+      </ActionButton>
       <Box className={classes.wrapper}>
         {files.length === 0 ? (
           <Throbber />
