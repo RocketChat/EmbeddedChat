@@ -1024,4 +1024,22 @@ export default class EmbeddedChatApi {
     const data = await response.json();
     return data;
   }
+
+  async leaveChannel(isChannelPrivate = false) {
+    const roomType = isChannelPrivate ? "groups" : "channels";
+    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const response = await fetch(`${this.host}/api/v1/${roomType}.leave`, {
+      method: "POST",
+      body: JSON.stringify({
+        roomId: this.rid
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+    });
+    const data = response.json();
+    return data;
+  }
 }
