@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useRCContext } from '../../context/RCInstance';
 import { Box } from '../Box';
 import { Swiper, SwiperSlide } from './Swiper';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
 import classes from './ImageGallery.module.css';
 import { Throbber } from '../Throbber';
-import { Button } from '../Button';
 import { ActionButton } from '../ActionButton';
 import { Icon } from '../Icon';
 
@@ -17,6 +11,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const { RCInstance } = useRCContext();
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllImages = async () => {
@@ -27,6 +22,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
           (file) => file._id === currentFileId
         );
         setCurrentFileIndex(fileIndex);
+        setLoading(false);
       }
     };
     fetchAllImages();
@@ -42,32 +38,23 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
       >
         <Icon name="cross" />
       </ActionButton>
-      <Box className={classes.wrapper}>
-        {files.length === 0 ? (
-          <Throbber />
-        ) : (
-          <Swiper
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={50}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            initialSlide={currentFileIndex}
-          >
-            {files.map(({ _id, url }) => {
-              return (
-                <SwiperSlide id={_id}>
-                  <img
-                    src={url}
-                    style={{ width: '100%', objectFit: 'contain' }}
-                  />
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        )}
-      </Box>
+      {loading ? (
+        <Throbber />
+      ) : (
+        <Swiper
+          navigation
+          pagination={{ clickable: true }}
+          initialSlide={currentFileIndex}
+        >
+          {files.map(({ _id, url }) => (
+            <SwiperSlide key={_id} className={classes.slide}>
+              <Box className={classes.imageWrapper}>
+                <img src={url} className={classes.image} />
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </Box>
   );
 };
