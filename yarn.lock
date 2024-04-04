@@ -2372,6 +2372,7 @@ __metadata:
     schedule: ^0.4.0
     storybook: ^7.0.26
     stylis: ^4.2.0
+    swiper: ^11.1.0
     zustand: ^4.3.8
   peerDependencies:
     react: ">=17.0.2 <19.0.0"
@@ -14772,7 +14773,6 @@ __metadata:
     "@changesets/cli": ^2.26.2
     esbuild: ^0.17.19
     lerna: ^6.6.2
-    swiper: ^11.0.7
     typescript: ^5.1.3
   languageName: unknown
   linkType: soft
@@ -28875,10 +28875,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:^11.0.7":
-  version: 11.0.7
-  resolution: "swiper@npm:11.0.7"
-  checksum: dfb82ff649ff22a612bf6a55f2351caad314e394f1ed8327a994021ac2297072f807d4164f861d33fb52b80bcc502e35138f8a988ca11552c43dfe93fc302160
+"swiper@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "swiper@npm:11.1.0"
+  checksum: c03a4f3dbff711a8dd05ee648677fcf295ae378b0c8988b9c0ddbfea539042ac59f61c0aa18b238091dab9d4a64d07e9c61054d28bf57c159bbd8c1257a543c4
   languageName: node
   linkType: hard
 
