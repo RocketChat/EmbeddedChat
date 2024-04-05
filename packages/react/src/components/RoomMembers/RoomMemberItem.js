@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '../Icon';
 
 const RoomMemberItem = ({ user, host }) => {
   const avatarUrl = new URL(`avatar/${user.username}`, host).toString();
@@ -10,14 +11,22 @@ const RoomMemberItem = ({ user, host }) => {
         paddingBottom: '8px',
         paddingTop: '8px',
         display: 'flex',
+        alignItems: 'center',
       }}
     >
       <img
         src={avatarUrl}
         alt="avatar"
-        style={{ height: '1.5rem', marginLeft: '0.5rem' }}
+        style={{ height: '1.5rem', marginRight: '0.5rem' }}
       />
-      <span style={{ marginLeft: '1.2rem' }}>{user.username}</span>
+      <span style={{ display: 'flex', alignItems: 'center' }}>
+        <Icon
+          name="online"
+          size="1.25rem"
+          style={{ padding: '0.125em', marginRight: '0.5rem', alignSelf: 'center' }}
+        />
+        <span>{user.username}</span>
+      </span>
     </div>
   );
 };

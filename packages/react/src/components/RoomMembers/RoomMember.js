@@ -44,6 +44,18 @@ const RoomMembers = ({ members }) => {
     getUserInfo();
   }, [RCInstance]);
 
+  useEffect(() => {
+    const getStatus = async () => {
+      try {
+        const res = await RCInstance.getUserStatus();
+      } catch (err) {
+        console.error('Error fetching user status', err);
+      }
+    };
+
+    getStatus();
+  }, [RCInstance]);
+
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
 
