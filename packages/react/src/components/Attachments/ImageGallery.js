@@ -44,6 +44,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
         <Swiper
           navigation
           pagination={{ clickable: true }}
+          keyboard
           initialSlide={currentFileIndex}
         >
           {files.map(({ _id, url }) => (
