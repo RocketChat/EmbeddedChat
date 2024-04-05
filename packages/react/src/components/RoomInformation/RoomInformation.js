@@ -5,7 +5,6 @@ import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import { Box } from '../Box';
 import Sidebar from '../Sidebar/Sidebar';
-import { ActionButton } from '../ActionButton';
 import { Icon } from '../Icon';
 import { Modal } from '../Modal';
 import { parseEmoji } from '../../lib/emoji';
@@ -36,23 +35,6 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
 
-  const handleLeaveChannelModal = (e) => {
-    console.log(e);
-    setIsLeaveModal(true);
-  };
-
-  const handleDeleteChannelModal = e => {
-    setIsDeleteModal(true);
-  }
-
-  const handleOnCloseLeaveModal = () => {
-    setIsLeaveModal(false);
-  };
-
-  const handleOnCloseDeleteModal = () => {
-    setIsDeleteModal(false);
-  };
-
   const handleLeaveChannel = async () => {
     try {
       const res = await RCInstance.leaveChannel(isChannelPrivate);
@@ -78,11 +60,10 @@ const Roominfo = () => {
         const res = await RCInstance.me();
         setUserInfo(res);
         setIsUserInfoFetched(true);
-
       } catch (err) {
         console.error('Error fetching user information', err);
       }
-    }
+    };
 
     getUserInfo();
   }, [RCInstance, setUserInfo, setIsUserInfoFetched]);
@@ -100,40 +81,50 @@ const Roominfo = () => {
         {isUserInfoFetched ? (
           <Box css={channelSidebarCss}>
             <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
-            <Box css={css`
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            margin-top: 15px;
-            margin-bottom: 15px;
-          `}>
+            <Box
+              css={css`
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 1;
+                margin-top: 15px;
+                margin-bottom: 15px;
+              `}
+            >
               {isAdmin && (
                 <Button
-                  size='small'
+                  size="small"
                   color="secondary"
-                  onClick={handleDeleteChannelModal}
+                  onClick={() => setIsDeleteModal(true)}
                   css={css`
-                margin: 5px;
-              `}
+                    margin: 5px;
+                  `}
                 >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon name="trash" size="1.25rem" style={{ padding: '0.25em' }} />
+                    <Icon
+                      name="trash"
+                      size="1.25rem"
+                      style={{ padding: '0.25em' }}
+                    />
                     <span>Delete</span>
                   </div>
                 </Button>
               )}
 
               <Button
-                size='small'
+                size="small"
                 color="secondary"
-                onClick={handleLeaveChannelModal}
+                onClick={() => setIsLeaveModal(true)}
                 css={css`
-                margin: 5px;
-              `}
+                  margin: 5px;
+                `}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Icon name="room-leave" size="1.25rem" style={{ padding: '0.25em' }} />
+                  <Icon
+                    name="room-leave"
+                    size="1.25rem"
+                    style={{ padding: '0.25em' }}
+                  />
                   <span>Leave</span>
                 </div>
               </Button>
@@ -141,10 +132,10 @@ const Roominfo = () => {
 
             <Box
               css={css`
-              margin-block: 16px;
-              font-size: 1.25rem;
-              font-weight: bold;
-            `}
+                margin-block: 16px;
+                font-size: 1.25rem;
+                font-weight: bold;
+              `}
             >
               # {channelInfo.name}
             </Box>
@@ -152,15 +143,15 @@ const Roominfo = () => {
               <>
                 <Box
                   css={css`
-              margin-block: 5px;
-            `}
+                    margin-block: 5px;
+                  `}
                 >
                   Description
                 </Box>
                 <Box
                   css={css`
-              opacity: 0.5rem;
-            `}
+                    opacity: 0.5rem;
+                  `}
                 >
                   {channelInfo.description}
                 </Box>
@@ -181,7 +172,7 @@ const Roominfo = () => {
         )}
       </Sidebar>
       {isLeaveModal && (
-        <Modal onClose={handleOnCloseLeaveModal}>
+        <Modal onClose={() => setIsLeaveModal(false)}>
           <Modal.Header>
             <Modal.Title>
               <Icon
@@ -191,7 +182,7 @@ const Roominfo = () => {
               />{' '}
               Are you sure?
             </Modal.Title>
-            <Modal.Close onClick={handleOnCloseLeaveModal} />
+            <Modal.Close onClick={() => setIsLeaveModal(false)} />
           </Modal.Header>
           <Modal.Content
             style={{
@@ -201,17 +192,19 @@ const Roominfo = () => {
               padding: '0 0.5rem 0.5rem',
             }}
           >
-            {parseEmoji(`Are you sure you want to leave the channel "${ECOptions.channelName}"`)}
+            {parseEmoji(
+              `Are you sure you want to leave the channel "${ECOptions.channelName}"`
+            )}
           </Modal.Content>
           <Modal.Footer>
-            <Button color="secondary" onClick={handleOnCloseLeaveModal}>
+            <Button color="secondary" onClick={() => setIsLeaveModal(false)}>
               Cancel
             </Button>
             <Button
               color="error"
               onClick={() => {
                 handleLeaveChannel();
-                handleOnCloseLeaveModal();
+                setIsLeaveModal(false);
               }}
             >
               Leave
@@ -220,7 +213,7 @@ const Roominfo = () => {
         </Modal>
       )}
       {isDeleteModal && (
-        <Modal onClose={handleOnCloseDeleteModal}>
+        <Modal onClose={() => setIsDeleteModal(false)}>
           <Modal.Header>
             <Modal.Title>
               <Icon
@@ -230,7 +223,7 @@ const Roominfo = () => {
               />{' '}
               Are you sure?
             </Modal.Title>
-            <Modal.Close onClick={handleOnCloseDeleteModal} />
+            <Modal.Close onClick={() => setIsDeleteModal(false)} />
           </Modal.Header>
           <Modal.Content
             style={{
@@ -240,17 +233,19 @@ const Roominfo = () => {
               padding: '0 0.5rem 0.5rem',
             }}
           >
-            {parseEmoji(`Deleting a room will delete all messages within the room. This cannot be undone.`)}
+            {parseEmoji(
+              `Deleting a room will delete all messages within the room. This cannot be undone.`
+            )}
           </Modal.Content>
           <Modal.Footer>
-            <Button color="secondary" onClick={handleOnCloseDeleteModal}>
+            <Button color="secondary" onClick={() => setIsDeleteModal(false)}>
               Cancel
             </Button>
             <Button
               color="error"
               onClick={() => {
                 handleDeleteChannel();
-                handleOnCloseDeleteModal();
+                setIsDeleteModal(false);
               }}
             >
               Delete
