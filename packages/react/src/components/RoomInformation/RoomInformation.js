@@ -55,25 +55,23 @@ const Roominfo = () => {
         <Box css={channelSidebarCss}>
           <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
           <Box css={css`
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-grow: 1; // This will allow the Box to grow and take up available space
-          margin-top: 20px; // Adjust the top margin as needed
-          margin-bottom: 20px; // Adjust the bottom margin as needed
-        `}>
-            <ActionButton
-              square
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin-top: 20px;
+            margin-bottom: 20px;
+          `}>
+            <Button
+              size='small'
               color="secondary"
               onClick={handleLeaveChannelModal}
-              css={css`
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            `}
             >
-              <Icon name="room-leave" size="1.25rem" style={{ padding: '0.5em' }} />
-            </ActionButton>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Icon name="room-leave" size="1.25rem" style={{ padding: '0.25em' }} />
+                <span>Leave</span>
+              </div>
+            </Button>
           </Box>
 
           <Box
