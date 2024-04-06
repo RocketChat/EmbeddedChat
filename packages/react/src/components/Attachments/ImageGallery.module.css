@@ -33,3 +33,10 @@
   max-height: 100%;
   object-fit: contain;
 }
+
+.throbberWrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

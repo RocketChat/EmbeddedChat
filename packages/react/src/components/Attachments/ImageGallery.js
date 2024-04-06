@@ -34,12 +34,14 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
         ghost
         className={classes.exit}
         onClick={() => setShowGallery(false)}
-        size="large"
+        size="medium"
       >
         <Icon name="cross" />
       </ActionButton>
       {loading ? (
-        <Throbber />
+        <Box className={classes.throbberWrapper}>
+          <Throbber />
+        </Box>
       ) : (
         <Swiper
           navigation
