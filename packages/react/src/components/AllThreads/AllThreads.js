@@ -84,8 +84,7 @@ const AllThreads = () => {
     [messages, text]
   );
 
- // Check if there are any threads in the messages array
-  const hasThreads = messages.some(message => message.tcount > 0);
+  const containsThreads = messages.some(message => message.tcount > 0);
 
   return (
     <Sidebar
@@ -113,11 +112,11 @@ const AllThreads = () => {
           overflow: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: (!hasThreads || filteredThreads.length === 0) ? 'center' : 'initial',
-          alignItems: (!hasThreads || filteredThreads.length === 0) ? 'center' : 'initial',
+          justifyContent: (!containsThreads || filteredThreads.length === 0) ? 'center' : 'initial',
+          alignItems: (!containsThreads || filteredThreads.length === 0) ? 'center' : 'initial',
         }}
       >
-        {(!hasThreads || filteredThreads.length === 0) ? (
+        {(!containsThreads || filteredThreads.length === 0) ? (
           <Box
             style={{
               display: 'flex',
