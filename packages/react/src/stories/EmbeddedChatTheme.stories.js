@@ -12,8 +12,6 @@ export const WithTheme = {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
     GOOGLE_CLIENT_ID: '',
-    isClosable: true,
-    setClosableState: true,
     moreOpts: true,
     channelName: 'general',
     anonymousMode: true,

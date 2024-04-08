@@ -23,7 +23,7 @@ import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
   isClosable = false,
-  setClosableState,
+  setClosableState = () => {},
   moreOpts = false,
   width = '100%',
   height = '50vh',

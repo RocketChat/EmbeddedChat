@@ -109,6 +109,7 @@
     "react-virtuoso": "^4.3.10",
     "reactjs-popup": "^2.0.5",
     "stylis": "^4.2.0",
+    "swiper": "^11.1.0",
     "zustand": "^4.3.8"
   }
 }

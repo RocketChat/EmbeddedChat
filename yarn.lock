@@ -2372,6 +2372,7 @@ __metadata:
     schedule: ^0.4.0
     storybook: ^7.0.26
     stylis: ^4.2.0
+    swiper: ^11.1.0
     zustand: ^4.3.8
   peerDependencies:
     react: ">=17.0.2 <19.0.0"
@@ -28871,6 +28872,13 @@ __metadata:
     "@swc/core": ^1.2.147
     webpack: ">=2"
   checksum: 010d84d399525c0185d36d62c86c55ae017e7a90046bc8a39be4b7e07526924037868049f6037bc966da98151cb2600934b96a66279b742d3c413a718b427251
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "swiper@npm:11.1.0"
+  checksum: c03a4f3dbff711a8dd05ee648677fcf295ae378b0c8988b9c0ddbfea539042ac59f61c0aa18b238091dab9d4a64d07e9c61054d28bf57c159bbd8c1257a543c4
   languageName: node
   linkType: hard
 
