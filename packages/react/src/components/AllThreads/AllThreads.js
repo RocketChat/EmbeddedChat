@@ -84,6 +84,8 @@ const AllThreads = () => {
     [messages, text]
   );
 
+  const containsThreads = messages.some((message) => message.tcount > 0);
+
   return (
     <Sidebar
       title="Threads"
@@ -110,11 +112,17 @@ const AllThreads = () => {
           overflow: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: filteredThreads.length === 0 ? 'center' : 'initial',
-          alignItems: filteredThreads.length === 0 ? 'center' : 'initial',
+          justifyContent:
+            !containsThreads || filteredThreads.length === 0
+              ? 'center'
+              : 'initial',
+          alignItems:
+            !containsThreads || filteredThreads.length === 0
+              ? 'center'
+              : 'initial',
         }}
       >
-        {filteredThreads.length === 0 ? (
+        {!containsThreads || filteredThreads.length === 0 ? (
           <Box
             style={{
               display: 'flex',
