@@ -21,7 +21,6 @@ const roomMemberSidebarCSS = css`
   padding: 0 1rem 1rem;
 `;
 const RoomMembers = ({ members }) => {
-  console.log(members);
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;

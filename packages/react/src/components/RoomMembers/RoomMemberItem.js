@@ -43,28 +43,44 @@ const RoomMemberItem = ({ user, host }) => {
           <Icon
             name="online"
             size="1.25rem"
-            style={{ padding: '0.125em', marginRight: '0.5rem', alignSelf: 'center' }}
+            style={{
+              padding: '0.125em',
+              marginRight: '0.5rem',
+              alignSelf: 'center',
+            }}
           />
         )}
         {userStatus === 'offline' && (
           <Icon
             name="offline"
             size="1.25rem"
-            style={{ padding: '0.125em', marginRight: '0.5rem', alignSelf: 'center' }}
+            style={{
+              padding: '0.125em',
+              marginRight: '0.5rem',
+              alignSelf: 'center',
+            }}
           />
         )}
         {userStatus === 'away' && (
           <Icon
             name="away"
             size="1.25rem"
-            style={{ padding: '0.125em', marginRight: '0.5rem', alignSelf: 'center' }}
+            style={{
+              padding: '0.125em',
+              marginRight: '0.5rem',
+              alignSelf: 'center',
+            }}
           />
         )}
         {userStatus === 'busy' && (
           <Icon
             name="busy"
             size="1.25rem"
-            style={{ padding: '0.125em', marginRight: '0.5rem', alignSelf: 'center' }}
+            style={{
+              padding: '0.125em',
+              marginRight: '0.5rem',
+              alignSelf: 'center',
+            }}
           />
         )}
         <span>{user.username}</span>

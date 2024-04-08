@@ -8,11 +8,11 @@ const Online = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
     role="img"
-    class="iconify iconify--twemoji"
+    className="iconify iconify--twemoji"
     preserveAspectRatio="xMidYMid meet"
     {...props}
   >
-    <circle fill="#78B159" cx="18" cy="18" r="14"></circle>
+    <circle fill="#78B159" cx="18" cy="18" r="14" />
   </svg>
 );
 
