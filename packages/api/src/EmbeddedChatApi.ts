@@ -1025,9 +1025,9 @@ export default class EmbeddedChatApi {
     return data;
   }
 
-  async getUserStatus() {
+  async getUserStatus(reqUserId: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/users.getStatus?userId=${userId}`, {
+    const response = await fetch(`${this.host}/api/v1/users.getStatus?userId=${reqUserId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

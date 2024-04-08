@@ -21,6 +21,7 @@ const roomMemberSidebarCSS = css`
   padding: 0 1rem 1rem;
 `;
 const RoomMembers = ({ members }) => {
+  console.log(members);
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;
@@ -42,18 +43,6 @@ const RoomMembers = ({ members }) => {
     };
 
     getUserInfo();
-  }, [RCInstance]);
-
-  useEffect(() => {
-    const getStatus = async () => {
-      try {
-        const res = await RCInstance.getUserStatus();
-      } catch (err) {
-        console.error('Error fetching user status', err);
-      }
-    };
-
-    getStatus();
   }, [RCInstance]);
 
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
