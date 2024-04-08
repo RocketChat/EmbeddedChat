@@ -48,6 +48,7 @@ import ChevronLeft from './ChevronLeft';
 import Key from './Key';
 import Attachment from './Attachment';
 import CircleArrowDown from './CircleArrowDown';
+import RoomLeave from './RoomLeave';
 
 const icons = {
   file: File,
@@ -100,6 +101,7 @@ const icons = {
   key: Key,
   attachment: Attachment,
   'circle-arrow-down': CircleArrowDown,
+  'room-leave': RoomLeave,
 };
 
 export default icons;

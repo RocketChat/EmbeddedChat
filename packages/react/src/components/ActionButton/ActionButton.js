@@ -14,8 +14,25 @@ const getSize = ({ small, large }) => {
 };
 
 const ActionButton = forwardRef(
-  ({ icon, size = 'medium', color = 'default', children, ...props }, ref) => (
-    <Button ref={ref} square size={size} color={color} {...props}>
+  (
+    {
+      icon,
+      size = 'medium',
+      color = 'default',
+      children,
+      buttonStyle,
+      ...props
+    },
+    ref
+  ) => (
+    <Button
+      ref={ref}
+      square
+      size={size}
+      color={color}
+      style={buttonStyle}
+      {...props}
+    >
       {children}
       <Icon name={icon} size={getSize(props)} />
     </Button>
@@ -31,6 +48,7 @@ ActionButton.propTypes = {
     PropTypes.node,
   ]),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
+  buttonStyle: PropTypes.object,
 };
 
 export default ActionButton;
