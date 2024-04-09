@@ -103,6 +103,10 @@
   background-color: #003f7e;
 }
 
+.attachment_window_submit_button[disabled] {
+  background-color: rgb(168, 176, 179);
+}
+
 .attachment_window_cancel_button {
   padding: 10px !important;
   width: 80px;

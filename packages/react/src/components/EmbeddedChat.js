@@ -23,7 +23,7 @@ import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
   isClosable = false,
-  setClosableState,
+  setClosableState = () => {},
   moreOpts = false,
   width = '100%',
   height = '50vh',
@@ -116,6 +116,7 @@ const EmbeddedChat = ({
   );
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
+  const setAuthenticatedUserRoles = useUserStore((state) => state.setRoles);
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -130,6 +131,7 @@ const EmbeddedChat = ({
             setAuthenticatedUserUsername(me.username);
             setAuthenticatedUserId(me._id);
             setAuthenticatedName(me.name);
+            setAuthenticatedUserRoles(me.roles);
             setIsUserAuthenticated(true);
           })
           .catch(console.error);
@@ -143,6 +145,7 @@ const EmbeddedChat = ({
     setAuthenticatedUserAvatarUrl,
     setAuthenticatedUserId,
     setAuthenticatedUserUsername,
+    setAuthenticatedUserRoles,
     setIsUserAuthenticated,
   ]);
 

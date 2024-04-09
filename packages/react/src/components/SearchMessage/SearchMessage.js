@@ -1,15 +1,34 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { css } from '@emotion/react';
 import { isSameDay, format } from 'date-fns';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
-import classes from './SearchMessage.module.css';
-import { Markdown } from '../Markdown/index';
-import { useUserStore, useSearchMessageStore } from '../../store';
+import { useSearchMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import Sidebar from '../Sidebar/Sidebar';
+
+const containerStyles = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
+  margin: 0 1rem 1rem;
+`;
+
+const textInputStyles = css`
+  width: 75%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+  &::placeholder {
+    padding-left: 5px;
+  }
+`;
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -39,8 +58,6 @@ const Search = () => {
     } else {
       debouncedSearch();
     }
-
-    // Cleanup function to cancel the debounce on component unmount
     return () => {
       debouncedSearch.cancel();
     };
@@ -56,7 +73,7 @@ const Search = () => {
       setShowWindow={setShowSearch}
     >
       <Box
-        className={classes.container}
+        css={containerStyles}
         style={{
           border: '2px solid #ddd',
           position: 'relative',
@@ -66,7 +83,7 @@ const Search = () => {
         <input
           placeholder="Search Message"
           onChange={handleInputChange}
-          className={classes.textInput}
+          css={textInputStyles}
         />
 
         <Icon
@@ -83,6 +100,8 @@ const Search = () => {
           flexDirection: 'column',
           justifyContent: messageList.length === 0 ? 'center' : 'initial',
           alignItems: messageList.length === 0 ? 'center' : 'initial',
+          overflowX: 'hidden',
+          maxWidth: '100%',
         }}
       >
         {messageList.length === 0 ? (
@@ -101,8 +120,7 @@ const Search = () => {
           </Box>
         ) : (
           messageList.map((msg, index, arr) => {
-            const prev = arr[index + 1];
-            const newDay = isMessageNewDay(msg, prev);
+            const newDay = index === 0 || isMessageNewDay(msg, arr[index - 1]);
             return (
               <Box key={msg._id}>
                 {newDay && (

@@ -14,6 +14,7 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../Sidebar/Sidebar';
+import { Throbber } from '../Throbber';
 
 const MessageCss = css`
   display: flex;
@@ -65,7 +66,7 @@ const UserMentions = () => {
 
   return (
     <Sidebar title="Mentions" iconName="at" setShowWindow={setShowMentions}>
-      {isLoaded && (
+      {isLoaded ? (
         <Box
           style={{
             flex: '1',
@@ -102,7 +103,7 @@ const UserMentions = () => {
               const newDay =
                 index === 0 || isMessageNewDay(message, arr[index - 1]);
               return (
-                <React.Fragment key={message._id}>
+                <Box key={message._id}>
                   {newDay ? (
                     <MessageDivider>
                       {format(new Date(message.ts), 'MMMM d, yyyy')}
@@ -139,10 +140,21 @@ const UserMentions = () => {
                       )}
                     </MessageBodyContainer>
                   </Box>
-                </React.Fragment>
+                </Box>
               );
             })
           )}
+        </Box>
+      ) : (
+        <Box
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: '#4a4a4a',
+          }}
+        >
+          <Throbber />
         </Box>
       )}
     </Sidebar>

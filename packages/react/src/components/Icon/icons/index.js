@@ -48,6 +48,10 @@ import ChevronLeft from './ChevronLeft';
 import Key from './Key';
 import Attachment from './Attachment';
 import CircleArrowDown from './CircleArrowDown';
+import Online from './Online';
+import Offline from './Offline';
+import Away from './Away';
+import Busy from './Busy';
 
 const icons = {
   file: File,
@@ -100,6 +104,10 @@ const icons = {
   key: Key,
   attachment: Attachment,
   'circle-arrow-down': CircleArrowDown,
+  online: Online,
+  offline: Offline,
+  away: Away,
+  busy: Busy,
 };
 
 export default icons;

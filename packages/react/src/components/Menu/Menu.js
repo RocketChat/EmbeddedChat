@@ -70,14 +70,14 @@ const Menu = ({
 
   useEffect(() => {
     const onBodyClick = (e) => {
-      if (!e.target.closest('.ec-menu-wrapper')) {
+      if (isOpen && !e.target.classList.contains('ec-menu-wrapper')) {
         setOpen(false);
       }
     };
     document.body.addEventListener('click', onBodyClick);
 
     return () => document.body.removeEventListener('click', onBodyClick);
-  }, []);
+  }, [isOpen]);
 
   return (
     <div

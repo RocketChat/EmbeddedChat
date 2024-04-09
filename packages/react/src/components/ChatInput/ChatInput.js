@@ -26,6 +26,7 @@ import { Divider } from '../Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
+import useSettingsStore from '../../store/settingsStore';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -51,6 +52,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const members = useMemberStore((state) => state.members);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
+  const msgMaxLength = useSettingsStore((state) => state.messageLimit);
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -174,8 +176,6 @@ const ChatInput = ({ scrollToBottom }) => {
       setEditMessage({});
       return;
     }
-
-    const msgMaxLength = 500;
     if (message.length > msgMaxLength) {
       openMsgLongModal();
       return;

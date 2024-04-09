@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { css } from '@emotion/react';
-import classes from './AllThreads.module.css';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import {
@@ -34,6 +33,27 @@ const MessageCss = css`
   }
 `;
 
+const searchContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  position: relative;
+  margin: 0 1rem 1rem;
+`;
+
+const textInput = css`
+  width: 75%;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    padding-left: 5px;
+  }
+`;
+
 const AllThreads = () => {
   const showAvatar = useUserStore((state) => state.showAvatar);
   const messages = useMessageStore((state) => state.messages);
@@ -64,24 +84,19 @@ const AllThreads = () => {
     [messages, text]
   );
 
+  const containsThreads = messages.some((message) => message.tcount > 0);
+
   return (
     <Sidebar
       title="Threads"
       iconName="thread"
       setShowWindow={setShowAllThreads}
     >
-      <Box
-        className={classes.searchContainer}
-        style={{
-          border: '2px solid #ddd',
-          position: 'relative',
-          marginBottom: '1rem',
-        }}
-      >
+      <Box css={searchContainer}>
         <input
           placeholder="Search Messages"
           onChange={handleInputChange}
-          className={classes.textInput}
+          css={textInput}
         />
 
         <Icon
@@ -97,11 +112,17 @@ const AllThreads = () => {
           overflow: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: filteredThreads.length === 0 ? 'center' : 'initial',
-          alignItems: filteredThreads.length === 0 ? 'center' : 'initial',
+          justifyContent:
+            !containsThreads || filteredThreads.length === 0
+              ? 'center'
+              : 'initial',
+          alignItems:
+            !containsThreads || filteredThreads.length === 0
+              ? 'center'
+              : 'initial',
         }}
       >
-        {filteredThreads.length === 0 ? (
+        {!containsThreads || filteredThreads.length === 0 ? (
           <Box
             style={{
               display: 'flex',

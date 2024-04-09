@@ -41,6 +41,8 @@ export default function LoginForm() {
     handleLogin(userOrEmail, password);
   };
   const handleClose = () => {
+    setUserOrEmail(null);
+    setPassword(null);
     setIsLoginModalOpen(false);
   };
 
