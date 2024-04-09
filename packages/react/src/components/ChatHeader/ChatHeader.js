@@ -155,29 +155,44 @@ const ChatHeader = ({
     setShowSearch(false);
   }, [setShowMentions, setShowSearch]);
 
+  const authenticatedUserRoles = useUserStore((state) => state.roles);
+  const setCanPinMsg = useUserStore((state) => state.setCanPinMsg);
+
   useEffect(() => {
     const getMessageLimit = async () => {
       const messageLimitObj = await RCInstance.getMessageLimit();
       setMessageLimit(messageLimitObj?.value);
     };
 
-    const setMessageAllowed = async () => {
+    const setMsgAndPinAllowed = async (ro) => {
       const permissionRes = await RCInstance.permissionInfo();
       const channelRolesRes = await RCInstance.getChannelRoles(
         isChannelPrivate
       );
 
       if (permissionRes.success && channelRolesRes.success) {
+        const pinMsgRoles = permissionRes.update[146]?.roles || [];
         const postMsgRoles = permissionRes.update[140]?.roles || [];
 
-        const userRoles = channelRolesRes.roles
+        const channelMemberRoles = channelRolesRes.roles
           .filter((chRole) => chRole.u?._id === authenticatedUserId)
           .flatMap((chRole) => chRole.roles);
 
-        const canSendMsg =
-          userRoles.length > 0 &&
-          postMsgRoles.some((role) => userRoles.includes(role));
-        setCanSendMsg(canSendMsg);
+        const concatenatedRoles = channelMemberRoles.concat(
+          authenticatedUserRoles
+        );
+
+        if (ro) {
+          const canSendMsg =
+            channelMemberRoles.length > 0 &&
+            postMsgRoles.some((role) => channelMemberRoles.includes(role));
+          setCanSendMsg(canSendMsg);
+        }
+
+        const canPinMsg =
+          concatenatedRoles.length > 0 &&
+          pinMsgRoles.some((role) => concatenatedRoles.includes(role));
+        setCanPinMsg(canPinMsg);
       }
     };
 
@@ -186,7 +201,7 @@ const ChatHeader = ({
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room.ro) setMessageAllowed();
+        setMsgAndPinAllowed(res.room.ro);
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'
@@ -221,7 +236,9 @@ const ChatHeader = ({
     toastPosition,
     isChannelPrivate,
     setCanSendMsg,
+    setCanPinMsg,
     authenticatedUserId,
+    authenticatedUserRoles,
     setMessageLimit,
   ]);
 

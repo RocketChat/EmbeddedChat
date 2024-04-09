@@ -235,6 +235,7 @@ const Message = ({
           {!message.t && showToolbox ? (
             <MessageToolbox
               message={message}
+              RCInstance={RCInstance}
               isEditing={editMessage._id === message._id}
               authenticatedUserId={authenticatedUserId}
               handleOpenThread={handleOpenThread}
