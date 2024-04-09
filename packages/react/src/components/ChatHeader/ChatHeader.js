@@ -389,7 +389,7 @@ const ChatHeader = ({
             <Menu options={menuOptions} />
           ) : (
             <>
-              <Tooltip text="Maximize" position="bottom">
+              <Tooltip text="Maximize" position="bottom" X="-25%" Y="30%">
                 <ActionButton
                   onClick={() => {
                     setFullScreen((prev) => !prev);

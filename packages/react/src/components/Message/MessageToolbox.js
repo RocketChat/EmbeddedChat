@@ -119,6 +119,7 @@ export const MessageToolbox = ({
               onClick={() => handleStarMessage(message)}
             />
           </Tooltip>
+
           <Tooltip text="Add reaction" position="top">
             <ActionButton
               ghost
@@ -173,6 +174,7 @@ export const MessageToolbox = ({
               </Tooltip>
             </>
           )}
+
           <Tooltip text="Report" position="top">
             <ActionButton
               ghost

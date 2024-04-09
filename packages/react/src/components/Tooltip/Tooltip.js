@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-const Tooltip = ({ children, text, position }) => {
+const Tooltip = ({ children, text, position, X, Y }) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
-
+  let touchTimer;
   const tooltipStyle = {
     position: 'absolute',
-    left: '64%',
-    transform: 'translateX(-50%) ',
-    backgroundColor: 'rgba(97, 97, 97, 1)',
+    backgroundColor: 'black',
     color: 'white',
-    padding: '4px',
+    padding: '4.5px',
     borderRadius: '3px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-    zIndex: 9999,
-    fontSize: '12.5px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4)',
+    zIndex: 999,
+    fontSize: '13.8px',
     whiteSpace: 'nowrap',
     fontFamily: 'sans-serif',
+    left: '64%',
+    transform: 'translateX(-50%) ',
   };
 
   const tooltipArrowStyle = {
@@ -25,35 +25,36 @@ const Tooltip = ({ children, text, position }) => {
     marginLeft: '-5px',
     borderWidth: '6px',
     borderStyle: 'solid',
-    borderColor: 'rgba(97, 97, 97, 1) transparent transparent transparent',
+    borderColor: 'black transparent transparent transparent',
+    zIndex: 999,
   };
 
   // Add more positions according to your needs and modify tooltipStyle and tooltipArrowStyle accordingly
-
   if (position === 'top') {
-    tooltipStyle.top = 'calc(-100% - 10px)'; // avoid overlaying the element
+    tooltipStyle.top = '-2.3rem';
     tooltipArrowStyle.top = '100%';
-    tooltipArrowStyle.transform = 'translateX(-50%)';
   } else if (position === 'bottom') {
     tooltipStyle.top = '100%';
+    tooltipStyle.transform = 'translateY(45%) translateX(-55%)';
     tooltipArrowStyle.bottom = '100%';
-    tooltipArrowStyle.transform = 'translateX(-50%) rotate(180deg)';
+    tooltipArrowStyle.transform = 'rotate(180deg)';
   }
 
   const handleMouseEnter = () => {
-    setTooltipVisible(true);
+    touchTimer = setTimeout(() => {
+      setTooltipVisible(true);
+    }, 300);
   };
 
   const handleMouseLeave = () => {
+    clearTimeout(touchTimer);
     setTooltipVisible(false);
   };
-
-  let touchTimer;
 
   const handleTouchStart = () => {
     touchTimer = setTimeout(() => {
       setTooltipVisible(true);
-    }, 500);
+    }, 400);
   };
 
   const handleTouchEnd = () => {
