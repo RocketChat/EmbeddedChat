@@ -3,14 +3,23 @@ import { ActionButton } from '../ActionButton';
 import { Box } from '../Box';
 
 const AttachmentMetadata = ({ attachment, url }) => {
-  const handleDownload = () => {
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = attachment.title;
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(url);
+      const data = await response.blob();
+      const downloadUrl = URL.createObjectURL(data);
 
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
+      const anchor = document.createElement('a');
+      anchor.href = downloadUrl;
+      anchor.download = attachment.title || 'download';
+
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
   };
 
   return (

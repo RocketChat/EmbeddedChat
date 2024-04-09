@@ -17,7 +17,7 @@ const ImageAttachment = ({ attachment, host }) => {
     <Box>
       <AttachmentMetadata
         attachment={attachment}
-        url={host + attachment.title_link}
+        url={host + (attachment.title_link || attachment.image_url)}
       />
       <Button ghost onClick={() => setShowGallery(true)}>
         <img
