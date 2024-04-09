@@ -7,7 +7,7 @@ const AudioAttachment = ({ attachment, host }) => (
   <Box>
     <AttachmentMetadata
       attachment={attachment}
-      url={host + attachment.audio_url}
+      url={host + (attachment.title_url || attachment.audio_url)}
     />
     <audio src={host + attachment.audio_url} width="100%" controls />
   </Box>
