@@ -112,7 +112,7 @@ const ChatBody = ({
     (message) => {
       if (message.u.username !== username) {
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
-        if (isScrolledUp) {
+        if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
           setOtherUserMessage(true);
         }
       }
