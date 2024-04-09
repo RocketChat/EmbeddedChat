@@ -1044,4 +1044,21 @@ export default class EmbeddedChatApi {
     const data = await response.json();
     return data;
   }
+
+  async getUserStatus(reqUserId: string) {
+    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const response = await fetch(
+      `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+      }
+    );
+    const data = response.json();
+    return data;
+  }
 }
