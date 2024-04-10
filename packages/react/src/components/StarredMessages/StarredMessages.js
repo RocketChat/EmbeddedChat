@@ -26,7 +26,7 @@ const StarredMessages = () => {
     const filtered = messages.filter(
       (message) =>
         'starred' in message &&
-        message.starred.find((star) => star._id === authenticatedUserId)
+        message.starred.find((msg) => msg._id === authenticatedUserId)
     );
     setMessageList(filtered);
     setLoading(false);
