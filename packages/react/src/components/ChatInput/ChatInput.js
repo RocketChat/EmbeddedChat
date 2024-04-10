@@ -262,7 +262,8 @@ const ChatInput = ({ scrollToBottom }) => {
 
   useEffect(() => {
     if (editMessage.attachments) {
-      messageRef.current.value = editMessage.attachments[0].description;
+      messageRef.current.value =
+        editMessage.attachments[0]?.description || editMessage.msg;
     } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     } else {
