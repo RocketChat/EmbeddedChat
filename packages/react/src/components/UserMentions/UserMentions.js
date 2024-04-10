@@ -58,7 +58,7 @@ const UserMentions = () => {
     const filtered = messages.filter(
       (message) =>
         'mentions' in message &&
-        message.mentions.find((msg) => msg._id === authenticatedUserId)
+        message.mentions.some((msg) => msg._id === authenticatedUserId)
     );
     setMentionedMessages(filtered);
     setIsLoaded(true);
