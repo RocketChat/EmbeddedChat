@@ -7,7 +7,6 @@ import { Attachments } from '../Attachments';
 import { useMessageStore, useUserStore, useMentionsStore } from '../../store';
 import { MessageBody } from '../Message/MessageBody';
 import { MessageMetrics } from '../Message/MessageMetrics';
-import { useRCContext } from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
 import { MessageDivider } from '../Message/MessageDivider';
 import MessageAvatarContainer from '../Message/MessageAvatarContainer';
@@ -37,7 +36,8 @@ const MessageCss = css`
 const UserMentions = () => {
   const showAvatar = useUserStore((state) => state.showAvatar);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
-  const { RCInstance } = useRCContext();
+  const messages = useMessageStore((state) => state.messages);
+  const authenticatedUserId = useUserStore((state) => state.userId);
   const [mentionedMessages, setMentionedMessages] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -54,15 +54,15 @@ const UserMentions = () => {
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   useEffect(() => {
-    const fetchMentionedMsgs = async () => {
-      const response = await RCInstance.getMentionedMessages();
-      if (response && response.messages) {
-        setMentionedMessages(response.messages);
-        setIsLoaded(true);
-      }
-    };
-    fetchMentionedMsgs();
-  }, [RCInstance, setMentionedMessages]);
+    setIsLoaded(false);
+    const filtered = messages.filter(
+      (message) =>
+        'mentions' in message &&
+        message.mentions.find((msg) => msg._id === authenticatedUserId)
+    );
+    setMentionedMessages(filtered);
+    setIsLoaded(true);
+  }, [messages]);
 
   return (
     <Sidebar title="Mentions" iconName="at" setShowWindow={setShowMentions}>
