@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
-import RCContext from '../../context/RCInstance';
-import { usePinnedMessageStore } from '../../store';
+import { usePinnedMessageStore, useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
@@ -10,20 +9,19 @@ import { Throbber } from '../Throbber';
 import Sidebar from '../Sidebar/Sidebar';
 
 const PinnedMessages = () => {
-  const { RCInstance } = useContext(RCContext);
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
-
-  const [messageList, setMessageList] = useState([]);
+  const messages = useMessageStore((state) => state.messages);
   const [loading, setLoading] = useState(true);
+  const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
-    const getPinnedMessages = async () => {
-      const { messages } = await RCInstance.getPinnedMessages();
-      setMessageList(messages);
-      setLoading(false);
-    };
-    getPinnedMessages();
-  }, [RCInstance, setMessageList, setLoading]);
+    setLoading(true);
+    const filtered = messages.filter(
+      (message) => 'pinned' in message && message.pinned === true
+    );
+    setMessageList(filtered);
+    setLoading(false);
+  }, [messages]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
