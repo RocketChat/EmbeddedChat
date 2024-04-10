@@ -30,7 +30,7 @@ const StarredMessages = () => {
     );
     setMessageList(filtered);
     setLoading(false);
-  }, [messages]);
+  }, [authenticatedUserId, messages]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));

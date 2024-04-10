@@ -62,7 +62,7 @@ const UserMentions = () => {
     );
     setMentionedMessages(filtered);
     setIsLoaded(true);
-  }, [messages]);
+  }, [authenticatedUserId, messages]);
 
   return (
     <Sidebar title="Mentions" iconName="at" setShowWindow={setShowMentions}>
