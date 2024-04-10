@@ -1,7 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
-import RCContext from '../../context/RCInstance';
-import { useStarredMessageStore } from '../../store';
+import {
+  useStarredMessageStore,
+  useMessageStore,
+  useUserStore,
+} from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
@@ -10,22 +13,24 @@ import { Throbber } from '../Throbber';
 import Sidebar from '../Sidebar/Sidebar';
 
 const StarredMessages = () => {
-  const { RCInstance } = useContext(RCContext);
   const setShowStarred = useStarredMessageStore(
     (state) => state.setShowStarred
   );
-
+  const authenticatedUserId = useUserStore((state) => state.userId);
+  const messages = useMessageStore((state) => state.messages);
   const [messageList, setMessageList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getStarredMessages = async () => {
-      const { messages } = await RCInstance.getStarredMessages();
-      setMessageList(messages);
-      setLoading(false);
-    };
-    getStarredMessages();
-  }, [RCInstance, setMessageList, setLoading]);
+    setLoading(true);
+    const filtered = messages.filter(
+      (message) =>
+        'starred' in message &&
+        message.starred.find((star) => star._id === authenticatedUserId)
+    );
+    setMessageList(filtered);
+    setLoading(false);
+  }, [messages]);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
