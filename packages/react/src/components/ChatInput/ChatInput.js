@@ -296,12 +296,6 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   }, [editMessage]);
 
-  useEffect(() => {
-    if (quoteMessage) {
-      console.log(quoteMessage);
-    }
-  }, [quoteMessage]);
-
   const username = useUserStore((state) => state.username);
   const timerRef = useRef();
   const sendTypingStart = async () => {
