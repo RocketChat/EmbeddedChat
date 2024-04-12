@@ -27,6 +27,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
+import ChatInfo from '../ChatInfo/ChatInfo';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -49,7 +50,7 @@ const ChatInput = ({ scrollToBottom }) => {
   );
 
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-
+  const isChannelReadOnly = useChannelStore((state) => state.isChannelReadOnly);
   const members = useMemberStore((state) => state.members);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
@@ -485,16 +486,30 @@ const ChatInput = ({ scrollToBottom }) => {
   };
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box
-        css={css`
-          margin-inline-start: 20px;
-        `}
-      >
+      <Box>
+        <ChatInfo
+          status={
+            editMessage.msg || editMessage.attachments
+              ? 'Editing Message'
+              : isChannelReadOnly
+              ? 'This room is read only'
+              : undefined
+          }
+          iconName={
+            editMessage.msg || editMessage.attachments ? 'edit' : undefined
+          }
+          instructions={
+            editMessage.msg || editMessage.attachments
+              ? 'esc to cancel · enter to save'
+              : undefined
+          }
+        />
+
         <TypingUsers />
       </Box>
       <Box
         css={css`
-          margin-top: 20px;
+          margin-top: 5px;
           border: 2px solid #ddd;
         `}
       >
