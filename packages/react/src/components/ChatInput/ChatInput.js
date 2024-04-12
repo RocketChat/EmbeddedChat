@@ -189,7 +189,7 @@ const ChatInput = ({ scrollToBottom }) => {
       return;
     }
 
-    if (!editMessage.msg) {
+    if (!editMessage.msg && !editMessage.attachments) {
       if (message.startsWith('/')) {
         const [command, ...paramsArray] = message.split(' ');
         const params = paramsArray.join(' ');
@@ -265,7 +265,10 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   useEffect(() => {
-    if (editMessage.msg) {
+    if (editMessage.attachments) {
+      messageRef.current.value =
+        editMessage.attachments[0]?.description || editMessage.msg;
+    } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     } else {
       messageRef.current.value = '';
@@ -539,7 +542,7 @@ const ChatInput = ({ scrollToBottom }) => {
               justify-content: center;
               flex-direction: row;
             `,
-            editMessage.msg && editingMessageCss,
+            (editMessage.msg || editMessage.attachments) && editingMessageCss,
           ]}
         >
           <textarea
