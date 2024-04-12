@@ -53,7 +53,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       css={QuoteMessageContainerCss}
     >
       <Box css={ActionButtonCss}>
-        <ActionButton ghost onClick={() => setQuoteMessage({})} size="0.75rem">
+        <ActionButton ghost onClick={() => setQuoteMessage({})} size="small">
           <Icon name="cross" size="0.75rem" />
         </ActionButton>
       </Box>
@@ -66,7 +66,13 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{message?.u.username}</Box>
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
-      <Box css={MessageCss}>{message.msg}</Box>
+      <Box css={MessageCss}>
+        {message.msg
+          ? message.msg
+          : `${message.file?.name} (${
+              message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+            } kB)`}
+      </Box>
     </Box>
   );
 };
