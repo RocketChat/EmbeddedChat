@@ -9,9 +9,10 @@ import { Icon } from '../Icon';
 import { useMessageStore } from '../../store';
 
 const QuoteMessageContainerCss = css`
+  margin: 1.25rem 0.5rem 0 0.5rem;
   position: relative;
   font-size: 1rem;
-  background-color: #ebeff5;
+  background-color: #f2f3f5;
   padding: 0.5rem;
   z-index: 100;
   border: 0.5px solid currentColor;
