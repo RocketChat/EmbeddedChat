@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
+import { format } from 'date-fns';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import RCContext from '../../context/RCInstance';
@@ -9,9 +10,9 @@ import { Icon } from '../Icon';
 import { useMessageStore } from '../../store';
 
 const QuoteMessageContainerCss = css`
-  margin: 1.25rem 0.5rem 0 0.5rem;
+  margin: 1.25rem 0.5rem 0.25rem 0.5rem;
   position: relative;
-  font-size: 1rem;
+  font-size: 0.85rem;
   background-color: #f2f3f5;
   padding: 0.5rem;
   z-index: 100;
@@ -63,6 +64,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
           size="1.5em"
         />
         <Box>{message?.u.username}</Box>
+        <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={MessageCss}>{message.msg}</Box>
     </Box>
