@@ -28,6 +28,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChatInfo from '../ChatInfo/ChatInfo';
+import QuoteMessage from '../QuoteMessage/QuoteMessage';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
