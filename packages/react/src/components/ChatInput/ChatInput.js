@@ -105,6 +105,7 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage,
     setEditMessage,
     quoteMessage,
+    setQuoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
@@ -113,6 +114,7 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
+    setQuoteMessage: state.setQuoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
@@ -160,6 +162,12 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
   const sendMessage = async (isAttachmentMode = false) => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
@@ -205,9 +213,19 @@ const ChatInput = ({ scrollToBottom }) => {
           return;
         }
       }
-
       messageRef.current.value = '';
-      const pendingMessage = createPendingMessage(message, user);
+      let pendingMessage = '';
+      if (quoteMessage.msg || quoteMessage.attachments) {
+        const msgLink = await getMessageLink(quoteMessage?._id);
+        pendingMessage = createPendingMessage(
+          `[ ](${msgLink})\n ${message}`,
+          user
+        );
+        setQuoteMessage({});
+      } else {
+        pendingMessage = createPendingMessage(message, user);
+      }
+
       if (ECOptions.enableThreads && threadId) {
         pendingMessage.tmid = threadId;
       }
