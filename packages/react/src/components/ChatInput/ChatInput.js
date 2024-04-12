@@ -228,7 +228,10 @@ const ChatInput = ({ scrollToBottom }) => {
       }
       setDisableButton(true);
     } else {
-      const res = await RCInstance.updateMessage(editMessage._id, message);
+      const res = await RCInstance.updateMessage(
+        editMessage._id,
+        message.replace(/\n/g, '\\n')
+      );
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
