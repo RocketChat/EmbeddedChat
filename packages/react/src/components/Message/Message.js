@@ -248,6 +248,7 @@ const Message = ({
                   setEditMessage(message);
                 }
               }}
+              handleQuoteMessage={() => console.log('Hey')}
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {
                 setMessageToReport(message._id);
