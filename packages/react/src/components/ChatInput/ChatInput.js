@@ -186,7 +186,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
-      if (editMessage.msg) {
+      if (editMessage.msg || editMessage.attachments) {
         setEditMessage({});
       }
       return;
@@ -448,7 +448,10 @@ const ChatInput = ({ scrollToBottom }) => {
       } else {
         e.target.style.height = '150px';
       }
-    } else if (editMessage.msg && e.keyCode === 27) {
+    } else if (
+      (editMessage.msg || editMessage.attachments) &&
+      e.keyCode === 27
+    ) {
       messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
