@@ -27,14 +27,16 @@ For example:
 ```
 
 In the above example:
- - theme.components.ChatInput.styleOverrides would be applied to the style of the ChatInput component.
- - theme.components.ChatInput.classNames would be applied to the className of the ChatInput component.
+
+- theme.components.ChatInput.styleOverrides would be applied to the style of the ChatInput component.
+- theme.components.ChatInput.classNames would be applied to the className of the ChatInput component.
 
 ## Using the useComponentsOverrides Hook
+
 We provide a `useComponentsOverrides` hook that returns the necessary data for component customization.
 
 ```jsx
-import { useComponentOverrides } from '../../theme/useComponentOverrides'; 
+import { useComponentOverrides } from '../../theme/useComponentOverrides';
 
 export const MessageBody = ({
   children,
@@ -60,7 +62,9 @@ export const MessageBody = ({
   );
 };
 ```
+
 ## Adding Classes to Components
+
 We also add a class to each component. For example, `ec-message-body` for the MessageBody component.
 
 Feel free to explore and customize these components according to your project's needs.

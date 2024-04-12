@@ -9,5 +9,3 @@ tasks:
       npm install
       cd ..
     command: npm run dev
-
-
