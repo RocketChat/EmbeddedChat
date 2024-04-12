@@ -72,6 +72,9 @@ const Message = ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
+
+  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+
   const openThread = useMessageStore((state) => state.openThread);
 
   const handleStarMessage = async (msg) => {
@@ -248,7 +251,7 @@ const Message = ({
                   setEditMessage(message);
                 }
               }}
-              handleQuoteMessage={() => console.log('Hey')}
+              handleQuoteMessage={() => setQuoteMessage(message)}
               handleEmojiClick={handleEmojiClick}
               handlerReportMessage={() => {
                 setMessageToReport(message._id);

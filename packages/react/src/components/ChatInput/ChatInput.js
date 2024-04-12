@@ -103,6 +103,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const {
     editMessage,
     setEditMessage,
+    quoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
@@ -110,6 +111,7 @@ const ChatInput = ({ scrollToBottom }) => {
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
+    quoteMessage: state.quoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
@@ -274,6 +276,12 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value = '';
     }
   }, [editMessage]);
+
+  useEffect(() => {
+    if (quoteMessage) {
+      console.log(quoteMessage);
+    }
+  }, [quoteMessage]);
 
   const username = useUserStore((state) => state.username);
   const timerRef = useRef();

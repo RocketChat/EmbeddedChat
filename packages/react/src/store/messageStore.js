@@ -7,6 +7,7 @@ const useMessageStore = create((set, get) => ({
   threadMessages: [],
   filtered: false,
   editMessage: {},
+  quoteMessage: {},
   messageToReport: NaN,
   showReportMessage: false,
   isRecordingMessage: false,
@@ -65,6 +66,7 @@ const useMessageStore = create((set, get) => ({
     }
   },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
+  setQuoteMessage: (quoteMessage) => set(() => ({ quoteMessage })),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {
