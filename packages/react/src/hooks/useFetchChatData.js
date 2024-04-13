@@ -43,7 +43,6 @@ const useFetchChatData = (showRoles) => {
         }
 
         if (!isUserAuthenticated) {
-          // fetch roles only when the user is authenticated
           return;
         }
 
@@ -55,7 +54,6 @@ const useFetchChatData = (showRoles) => {
           );
           setAdmins(adminUsernames);
 
-          // convert roles array from the API into an object for better search
           const rolesObj =
             roles?.length > 0
               ? roles.reduce(
