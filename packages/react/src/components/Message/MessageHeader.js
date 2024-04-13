@@ -84,10 +84,6 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
     }
   };
 
-  // const userRoles = roles[message.u.username]
-  //   ? roles[message.u.username].roles
-  //   : null;
-
   if (!message.t) {
     return (
       <Box
@@ -109,13 +105,7 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         >
           @{message.u.username}
         </Box>
-        {/* TODO {userRoles
-          ? userRoles.map((role, index) => (
-              <Message.Role key={index}>
-                {role.charAt(0).toUpperCase() + role.slice(1)}
-              </Message.Role>
-            ))
-          : null} */}
+
         {isTimeStamped && (
           <Box
             is="span"
