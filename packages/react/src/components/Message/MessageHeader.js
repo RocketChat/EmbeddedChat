@@ -87,6 +87,8 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         return `removed ${message?.msg} as ${message?.role}`;
       case 'room_changed_privacy':
         return `changed room to ${message?.msg}`;
+      case 'room-set-read-only':
+        return `set room to read only`;
       default:
         return '';
     }
