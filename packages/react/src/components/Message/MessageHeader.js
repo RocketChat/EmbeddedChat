@@ -88,7 +88,11 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
       case 'room_changed_privacy':
         return `changed room to ${message?.msg}`;
       case 'room-set-read-only':
-        return `set room to read only`;
+        return 'set room to read only';
+      case 'room-archived':
+        return 'archived room';
+      case 'room-unarchived':
+        return 'unarchived room';
       default:
         return '';
     }
