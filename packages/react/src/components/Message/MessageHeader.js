@@ -66,8 +66,6 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
     message.starred &&
     message.starred.find((u) => u._id === authenticatedUserId);
   const userActions = () => {
-    console.log(message);
-    console.log(message.t);
     switch (message.t) {
       case 'ul':
         return 'left the channel';
