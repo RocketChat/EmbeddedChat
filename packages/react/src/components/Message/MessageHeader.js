@@ -93,6 +93,8 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         return 'archived room';
       case 'room-unarchived':
         return 'unarchived room';
+      case 'room-allowed-reacting':
+        return 'allowed reactions';
       default:
         return '';
     }
