@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
@@ -79,6 +79,7 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
   const showRoles = useUserStore((state) => state.showRoles);
 
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
+  const admins = useMemberStore((state) => state.admins);
 
   const isPinned = message.pinned;
   const isStarred =
@@ -126,11 +127,21 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         </Box>
         {showRoles && (
           <>
+            {admins.includes(message?.u?.username) && (
+              <Box
+                as="span"
+                css={MessageUserRoleCss}
+                className={appendClassNames('ec-message-user-role')}
+              >
+                Admin
+              </Box>
+            )}
+
             {channelLevelRoles[message.u.username]?.roles?.map(
               (role, index) => (
                 <Box
                   key={index}
-                  is="span"
+                  as="span"
                   css={MessageUserRoleCss}
                   className={appendClassNames('ec-message-user-role')}
                 >
