@@ -79,6 +79,10 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         return 'Pinned a message:';
       case 'rm':
         return 'message removed';
+      case 'subscription-role-added':
+        return `set ${message?.msg} as ${message?.role}`;
+      case 'subscription-role-removed':
+        return `removed ${message?.msg} as ${message?.role}`;
       default:
         return '';
     }
