@@ -12,6 +12,7 @@ const useFetchChatData = (showRoles) => {
   const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setMessages = useMessageStore((state) => state.setMessages);
+  const setAdmins = useMemberStore((state) => state.setAdmins);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -48,6 +49,11 @@ const useFetchChatData = (showRoles) => {
 
         if (showRoles) {
           const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
+          const fetchedAdmins = await RCInstance.getUsersInRole('admin');
+          const adminUsernames = fetchedAdmins.users.map(
+            (user) => user.username
+          );
+          setAdmins(adminUsernames);
 
           // convert roles array from the API into an object for better search
           const rolesObj =
@@ -68,10 +74,11 @@ const useFetchChatData = (showRoles) => {
       isUserAuthenticated,
       RCInstance,
       ECOptions?.enableThreads,
+      isChannelPrivate,
       showRoles,
       setMessages,
+      setAdmins,
       setMemberRoles,
-      isChannelPrivate,
     ]
   );
 
