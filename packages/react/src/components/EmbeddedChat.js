@@ -47,10 +47,19 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
+  const setShowRoles = useUserStore((state) => state.setShowRoles);
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
-  }, [toastBarPosition, showAvatar, setShowAvatar, setToastbarPosition]);
+    setShowRoles(showRoles);
+  }, [
+    toastBarPosition,
+    showAvatar,
+    setShowAvatar,
+    setToastbarPosition,
+    showRoles,
+    setShowRoles,
+  ]);
 
   const {
     onDrag,

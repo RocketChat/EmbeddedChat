@@ -29,6 +29,8 @@ const useUserStore = create((set) => ({
   setEmailorUser: (emailoruser) => set(() => ({ emailoruser })),
   showAvatar: false,
   setShowAvatar: (showAvatar) => set(() => ({ showAvatar })),
+  showRoles: false,
+  setShowRoles: (showRoles) => set(() => ({ showRoles })),
   roles: {},
   setRoles: (roles) => set((state) => ({ ...state, roles })),
 }));

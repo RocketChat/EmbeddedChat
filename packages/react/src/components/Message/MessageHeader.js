@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
-import { useUserStore } from '../../store';
+import { useMemberStore, useUserStore } from '../../store';
 import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
@@ -34,6 +34,21 @@ const MessageHeaderNameCss = css`
   color: #2f343d;
 `;
 
+const MessageUserRoleCss = css`
+  background-color: #cbced1;
+  letter-spacing: 0rem;
+  font-size: 0.75rem;
+  padding: 0 0.25rem;
+  margin: 0 0.1rem;
+  border-radius: 2px;
+  font-weight: 700;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #2f343d;
+`;
+
 const MessageHeaderUsernameCss = css`
   letter-spacing: 0rem;
   font-size: 0.875rem;
@@ -61,6 +76,10 @@ const MessageHeaderTimestapCss = css`
 const MessageHeader = ({ message, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const showRoles = useUserStore((state) => state.showRoles);
+
+  const channelLevelRoles = useMemberStore((state) => state.memberRoles);
+
   const isPinned = message.pinned;
   const isStarred =
     message.starred &&
@@ -105,6 +124,22 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         >
           @{message.u.username}
         </Box>
+        {showRoles && (
+          <>
+            {channelLevelRoles[message.u.username]?.roles?.map(
+              (role, index) => (
+                <Box
+                  key={index}
+                  is="span"
+                  css={MessageUserRoleCss}
+                  className={appendClassNames('ec-message-user-role')}
+                >
+                  {role}
+                </Box>
+              )
+            )}
+          </>
+        )}
 
         {isTimeStamped && (
           <Box
