@@ -2,11 +2,7 @@
 import { EmbeddedChat } from "@embeddedchat/react";
 
 function App() {
-  return (
-    <EmbeddedChat
-      anonymousMode={true}
-    />
-  );
+  return <EmbeddedChat />;
 }
 
 export default App;
