@@ -49,6 +49,10 @@ const ChatHeader = ({
   const setIsChannelPrivate = useChannelStore(
     (state) => state.setIsChannelPrivate
   );
+  const setIsChannelReadOnly = useChannelStore(
+    (state) => state.setIsChannelReadOnly
+  );
+  const workspaceLevelRoles = useUserStore((state) => state.roles);
 
   const { RCInstance } = useRCContext();
 
@@ -169,14 +173,15 @@ const ChatHeader = ({
 
       if (permissionRes.success && channelRolesRes.success) {
         const postMsgRoles = permissionRes.update[140]?.roles || [];
-
-        const userRoles = channelRolesRes.roles
+        const channelLevelRoles = channelRolesRes.roles
           .filter((chRole) => chRole.u?._id === authenticatedUserId)
           .flatMap((chRole) => chRole.roles);
 
+        const allRoles = [...channelLevelRoles, ...workspaceLevelRoles];
         const canSendMsg =
-          userRoles.length > 0 &&
-          postMsgRoles.some((role) => userRoles.includes(role));
+          channelLevelRoles.length > 0 &&
+          postMsgRoles.some((role) => allRoles.includes(role));
+
         setCanSendMsg(canSendMsg);
       }
     };
@@ -186,7 +191,10 @@ const ChatHeader = ({
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room.ro) setMessageAllowed();
+        if (res.room.ro) {
+          setIsChannelReadOnly(true);
+          setMessageAllowed();
+        }
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'

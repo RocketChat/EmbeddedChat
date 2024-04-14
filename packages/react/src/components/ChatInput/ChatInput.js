@@ -27,6 +27,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
+import ChatInfo from '../ChatInfo/ChatInfo';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -49,7 +50,7 @@ const ChatInput = ({ scrollToBottom }) => {
   );
 
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-
+  const isChannelReadOnly = useChannelStore((state) => state.isChannelReadOnly);
   const members = useMemberStore((state) => state.members);
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
@@ -189,7 +190,7 @@ const ChatInput = ({ scrollToBottom }) => {
       return;
     }
 
-    if (!editMessage.msg) {
+    if (!editMessage.msg && !editMessage.attachments) {
       if (message.startsWith('/')) {
         const [command, ...paramsArray] = message.split(' ');
         const params = paramsArray.join(' ');
@@ -229,7 +230,10 @@ const ChatInput = ({ scrollToBottom }) => {
       }
       setDisableButton(true);
     } else {
-      const res = await RCInstance.updateMessage(editMessage._id, message);
+      const res = await RCInstance.updateMessage(
+        editMessage._id,
+        message.replace(/\n/g, '\\n')
+      );
       if (!res.success) {
         await RCInstance.logout();
         setIsUserAuthenticated(false);
@@ -262,7 +266,10 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   useEffect(() => {
-    if (editMessage.msg) {
+    if (editMessage.attachments) {
+      messageRef.current.value =
+        editMessage.attachments[0]?.description || editMessage.msg;
+    } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
     } else {
       messageRef.current.value = '';
@@ -499,16 +506,30 @@ const ChatInput = ({ scrollToBottom }) => {
   };
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box
-        css={css`
-          margin-inline-start: 20px;
-        `}
-      >
+      <Box>
+        <ChatInfo
+          status={
+            editMessage.msg || editMessage.attachments
+              ? 'Editing Message'
+              : isChannelReadOnly
+              ? 'This room is read only'
+              : undefined
+          }
+          iconName={
+            editMessage.msg || editMessage.attachments ? 'edit' : undefined
+          }
+          instructions={
+            editMessage.msg || editMessage.attachments
+              ? 'esc to cancel · enter to save'
+              : undefined
+          }
+        />
+
         <TypingUsers />
       </Box>
       <Box
         css={css`
-          margin-top: 15px;
+          margin-top: 5px;
           border: 2px solid #ddd;
         `}
       >
@@ -539,7 +560,7 @@ const ChatInput = ({ scrollToBottom }) => {
               justify-content: center;
               flex-direction: row;
             `,
-            editMessage.msg && editingMessageCss,
+            (editMessage.msg || editMessage.attachments) && editingMessageCss,
           ]}
         >
           <textarea

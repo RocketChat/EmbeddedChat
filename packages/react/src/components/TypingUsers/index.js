@@ -47,9 +47,8 @@ export default function TypingUsers() {
   return (
     <Box
       css={css`
-        height: 24px;
+        height: ${typingUsers.length !== 0 ? '15px' : '0px'};
         font-size: 0.75rem;
-        margin-block-end: -24px;
         margin-inline-start: 0.25rem;
         z-index: 100;
       `}
