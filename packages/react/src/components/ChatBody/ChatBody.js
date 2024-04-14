@@ -94,7 +94,9 @@ const ChatBody = ({
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
-  const showCurrentUserInfo = useUserStore((state) => state.showCurrentUserInfo);
+  const showCurrentUserInfo = useUserStore(
+    (state) => state.showCurrentUserInfo
+  );
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -225,7 +227,7 @@ const ChatBody = ({
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-        messageListRef.current.scrollHeight
+          messageListRef.current.scrollHeight
       );
     }
 

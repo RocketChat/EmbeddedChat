@@ -26,7 +26,6 @@ const MessageAvatarContainer = ({
     justify-content: flex-end;
   `;
 
-
   return (
     <Box css={MessageAvatarContainerCss}>
       {!sequential ? (

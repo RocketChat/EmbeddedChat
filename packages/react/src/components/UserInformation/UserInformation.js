@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Sidebar from '../Sidebar/Sidebar'
+import React, { useContext, useEffect, useState } from 'react';
+import { css } from '@emotion/react';
+import Sidebar from '../Sidebar/Sidebar';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
-import { css } from '@emotion/react';
 import { Box } from '../Box';
 import { Avatar } from '../Avatar';
 import { Icon } from '../Icon';
@@ -37,9 +37,7 @@ const UserInformation = () => {
   const setShowCurrentUserInfo = useUserStore(
     (state) => state.setShowCurrentUserInfo
   );
-  const currentUser = useUserStore(
-    (state) => state.currentUser
-  );
+  const currentUser = useUserStore((state) => state.currentUser);
 
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
@@ -51,13 +49,20 @@ const UserInformation = () => {
     const date = new Date(timestamp);
     const now = new Date();
 
-    const isDifferentDay = date.getDate() !== now.getDate() || date.getMonth() !== now.getMonth() || date.getFullYear() !== now.getFullYear();
+    const isDifferentDay =
+      date.getDate() !== now.getDate() ||
+      date.getMonth() !== now.getMonth() ||
+      date.getFullYear() !== now.getFullYear();
 
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };
     const formattedTime = date.toLocaleTimeString('en-US', options);
 
-    return isDifferentDay ? `${date.toLocaleDateString('en-US', { weekday: 'long' })} ${formattedTime}` : formattedTime;
-  }
+    return isDifferentDay
+      ? `${date.toLocaleDateString('en-US', {
+          weekday: 'long',
+        })} ${formattedTime}`
+      : formattedTime;
+  };
 
   useEffect(() => {
     const getCurrentUserInfo = async () => {
@@ -70,7 +75,7 @@ const UserInformation = () => {
       } catch (err) {
         console.error('Error fetching current user info', err);
       }
-    }
+    };
 
     getCurrentUserInfo();
   }, [RCInstance, setCurrentUserInfo]);
@@ -83,17 +88,19 @@ const UserInformation = () => {
     >
       {isUserInfoFetched ? (
         <Box css={userSidebarCss}>
-          <Avatar size="100%" url={getUserAvatarUrl(currentUserInfo.username)} />
-          <Box
-          >
+          <Avatar
+            size="100%"
+            url={getUserAvatarUrl(currentUserInfo.username)}
+          />
+          <Box>
             <Box
               css={css`
-              display: flex;
-              align-items: center;
-              margin-block: 16px;
-              font-size: 1.25rem;
-              font-weight: bold;
-            `}
+                display: flex;
+                align-items: center;
+                margin-block: 16px;
+                font-size: 1.25rem;
+                font-weight: bold;
+              `}
             >
               <Icon
                 name={currentUserInfo.status}
@@ -109,56 +116,55 @@ const UserInformation = () => {
             {currentUserInfo.roles.length && (
               <Box
                 css={css`
-              margin-block: 15px;
-            `}
+                  margin-block: 15px;
+                `}
               >
                 <Box
                   css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                    margin-block: 5px;
+                    font-weight: bold;
+                  `}
                 >
                   Roles
                 </Box>
                 <Box
                   css={css`
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                width: 100%;
-              `}
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
+                    width: 100%;
+                  `}
                 >
-                  {currentUserInfo?.roles?.map(
-                    (role, index) => (
-                      <Box
-                        key={index}
-                        as="span"
-                        css={userRoleCss}
-                        className={appendClassNames('ec-message-user-role')}
-                      >
-                        {role === 'admin' ? 'Admin' : role}
-                      </Box>
-                    )
-                  )}
+                  {currentUserInfo?.roles?.map((role, index) => (
+                    <Box
+                      key={index}
+                      as="span"
+                      css={userRoleCss}
+                      className={appendClassNames('ec-message-user-role')}
+                    >
+                      {role === 'admin' ? 'Admin' : role}
+                    </Box>
+                  ))}
                 </Box>
               </Box>
             )}
             <Box
               css={css`
-              margin-block: 15px;
-            `}>
+                margin-block: 15px;
+              `}
+            >
               <Box
                 css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                  margin-block: 5px;
+                  font-weight: bold;
+                `}
               >
                 Username
               </Box>
               <Box
                 css={css`
-              opacity: 0.5rem;
-            `}
+                  opacity: 0.5rem;
+                `}
               >
                 {currentUserInfo?.username}
               </Box>
@@ -166,20 +172,21 @@ const UserInformation = () => {
 
             <Box
               css={css`
-              margin-block: 15px;
-            `}>
+                margin-block: 15px;
+              `}
+            >
               <Box
                 css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                  margin-block: 5px;
+                  font-weight: bold;
+                `}
               >
                 Last login
               </Box>
               <Box
                 css={css`
-              opacity: 0.5rem;
-            `}
+                  opacity: 0.5rem;
+                `}
               >
                 {formatTimestamp(currentUserInfo.lastLogin)}
               </Box>
@@ -187,20 +194,21 @@ const UserInformation = () => {
 
             <Box
               css={css`
-              margin-block: 15px;
-            `}>
+                margin-block: 15px;
+              `}
+            >
               <Box
                 css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                  margin-block: 5px;
+                  font-weight: bold;
+                `}
               >
                 Full Name
               </Box>
               <Box
                 css={css`
-              opacity: 0.5rem;
-            `}
+                  opacity: 0.5rem;
+                `}
               >
                 {currentUserInfo.name}
               </Box>
@@ -208,32 +216,36 @@ const UserInformation = () => {
 
             <Box
               css={css`
-              margin-block: 15px;
-            `}>
+                margin-block: 15px;
+              `}
+            >
               <Box
                 css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                  margin-block: 5px;
+                  font-weight: bold;
+                `}
               >
                 Email
               </Box>
               <Box
                 css={css`
-              opacity: 0.5rem;
-            `}
+                  opacity: 0.5rem;
+                `}
               >
                 {currentUserInfo.emails?.map((email, index) => (
                   <Box
                     key={index}
                     css={css`
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-block: 5px;
-          `}
+                      display: flex;
+                      align-items: center;
+                      gap: 0.5rem;
+                      margin-block: 5px;
+                    `}
                   >
-                    <a href={`mailto:${email.address}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <a
+                      href={`mailto:${email.address}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
                       {email.address}
                     </a>
                     <Box css={userRoleCss}>
@@ -246,25 +258,25 @@ const UserInformation = () => {
 
             <Box
               css={css`
-              margin-block: 15px;
-            `}>
+                margin-block: 15px;
+              `}
+            >
               <Box
                 css={css`
-              margin-block: 5px;
-              font-weight: bold;
-            `}
+                  margin-block: 5px;
+                  font-weight: bold;
+                `}
               >
                 Created at
               </Box>
               <Box
                 css={css`
-              opacity: 0.5rem;
-            `}
+                  opacity: 0.5rem;
+                `}
               >
                 {formatTimestamp(currentUserInfo.createdAt)}
               </Box>
             </Box>
-
           </Box>
         </Box>
       ) : (
@@ -280,7 +292,7 @@ const UserInformation = () => {
         </Box>
       )}
     </Sidebar>
-  )
-}
+  );
+};
 
-export default UserInformation
+export default UserInformation;

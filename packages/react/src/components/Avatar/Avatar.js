@@ -39,18 +39,19 @@ export const Avatar = ({
     style
   );
 
-  const showCurrentUserInfo = useUserStore((state) => state.showCurrentUserInfo);
+  const showCurrentUserInfo = useUserStore(
+    (state) => state.showCurrentUserInfo
+  );
   const setShowCurrentUserInfo = useUserStore(
     (state) => state.setShowCurrentUserInfo
   );
-  const setCurrentUser = useUserStore(
-    (state) => state.setCurrentUser
-  );
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   return (
     <AvatarContainer size={size} {...props}>
       {!imgError ? (
         <img
+          role="presentation"
           src={`${url}`}
           css={AvatarCss}
           className={classNames}
