@@ -575,7 +575,11 @@ const ChatInput = ({ scrollToBottom }) => {
                 <Icon className={styles.chatInputIconCursor} name="send" />
               </ActionButton>
             ) : (
-              <Button onClick={onJoin} color="primary">
+              <Button
+                onClick={onJoin}
+                color="primary"
+                data-testid="join-button"
+              >
                 JOIN
               </Button>
             )}

@@ -119,6 +119,7 @@ export default function LoginForm() {
                 placeholder="example@example.com"
                 onKeyPress={handleKeyPress}
                 style={{ borderColor: usernameError ? 'red' : '' }}
+                data-testid="login-email"
               />
             </Box>
             {usernameError && (
@@ -136,6 +137,7 @@ export default function LoginForm() {
                 onChange={handleEditPassword}
                 onKeyPress={handleKeyPress}
                 style={{ borderColor: passwordError ? 'red' : '' }}
+                data-testid="login-password"
               />
               <Box
                 type="button"
@@ -165,6 +167,7 @@ export default function LoginForm() {
               style={{
                 margin: '10px',
               }}
+              data-testid="login-button"
             >
               Login
             </Button>
