@@ -1,21 +1,16 @@
 import { test as setup, expect } from '@playwright/test';
-import { getIframe } from './helpers';
-import dotenv from 'dotenv';
-
-dotenv.config();
-const authFile = '.auth/user.json';
+import { AUTH_FILE_PATH, TEST_PASSWORD, TEST_USERNAME } from '../constants';
 
 setup('authenticate', async ({ page }) => {
   await page.goto('/');
-  const iframe = await getIframe(page);
 
-  await iframe.getByTestId('join-button').click();
+  await page.getByTestId('join-button').click();
 
-  await iframe.getByTestId('login-email').fill(process.env.USERNAME || '');
-  await iframe.getByTestId('login-password').fill(process.env.PASSWORD || '');
+  await page.getByTestId('login-email').fill(TEST_USERNAME);
+  await page.getByTestId('login-password').fill(TEST_PASSWORD);
 
-  await iframe.getByTestId('login-button').click();
-  await expect(iframe.getByTestId('join-button')).toBeHidden();
+  await page.getByTestId('login-button').click();
+  await expect(page.getByTestId('join-button')).toBeHidden();
 
-  await page.context().storageState({ path: authFile });
+  await page.context().storageState({ path: AUTH_FILE_PATH });
 });
