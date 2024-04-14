@@ -79,6 +79,22 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         return 'Pinned a message:';
       case 'rm':
         return 'message removed';
+      case 'subscription-role-added':
+        return `set ${message?.msg} as ${message?.role}`;
+      case 'subscription-role-removed':
+        return `removed ${message?.msg} as ${message?.role}`;
+      case 'room_changed_privacy':
+        return `changed room to ${message?.msg}`;
+      case 'room-set-read-only':
+        return 'set room to read only';
+      case 'room-removed-read-only':
+        return 'removed read only permission';
+      case 'room-archived':
+        return 'archived room';
+      case 'room-unarchived':
+        return 'unarchived room';
+      case 'room-allowed-reacting':
+        return 'allowed reactions';
       default:
         return '';
     }
