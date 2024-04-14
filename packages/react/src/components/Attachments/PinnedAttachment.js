@@ -36,7 +36,10 @@ const PinnedAttachment = ({ attachment }) => {
           marginTop: '0.7rem',
         }}
       >
-        {attachment?.text}
+        { 
+          attachment?.text[0] == '[' ? attachment?.text.match(/\n(.*)/)[1] : attachment?.text 
+        }
+        {console.log(attachment)}
       </Box>
     </Box>
   );
