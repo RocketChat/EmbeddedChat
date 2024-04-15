@@ -38,6 +38,9 @@ const UserInformation = () => {
     (state) => state.setShowCurrentUserInfo
   );
   const currentUser = useUserStore((state) => state.currentUser);
+  const authenticatedUserRoles = useUserStore((state) => state.roles);
+  const authenticatedUserId = useUserStore((state) => state.userId);
+  const isAdmin = authenticatedUserRoles.includes('admin');
 
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
@@ -113,41 +116,42 @@ const UserInformation = () => {
               />
               {currentUserInfo?.username}
             </Box>
-            {currentUserInfo.roles.length && (
-              <Box
-                css={css`
-                  margin-block: 15px;
-                `}
-              >
+            {currentUserInfo?.roles?.length &&
+              (isAdmin || authenticatedUserId === currentUserInfo._id) && (
                 <Box
                   css={css`
-                    margin-block: 5px;
-                    font-weight: bold;
+                    margin-block: 15px;
                   `}
                 >
-                  Roles
+                  <Box
+                    css={css`
+                      margin-block: 5px;
+                      font-weight: bold;
+                    `}
+                  >
+                    Roles
+                  </Box>
+                  <Box
+                    css={css`
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 0.5rem;
+                      width: 100%;
+                    `}
+                  >
+                    {currentUserInfo?.roles?.map((role, index) => (
+                      <Box
+                        key={index}
+                        as="span"
+                        css={userRoleCss}
+                        className={appendClassNames('ec-message-user-role')}
+                      >
+                        {role === 'admin' ? 'Admin' : role}
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
-                <Box
-                  css={css`
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 0.5rem;
-                    width: 100%;
-                  `}
-                >
-                  {currentUserInfo?.roles?.map((role, index) => (
-                    <Box
-                      key={index}
-                      as="span"
-                      css={userRoleCss}
-                      className={appendClassNames('ec-message-user-role')}
-                    >
-                      {role === 'admin' ? 'Admin' : role}
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            )}
+              )}
             <Box
               css={css`
                 margin-block: 15px;
@@ -170,27 +174,29 @@ const UserInformation = () => {
               </Box>
             </Box>
 
-            <Box
-              css={css`
-                margin-block: 15px;
-              `}
-            >
+            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
               <Box
                 css={css`
-                  margin-block: 5px;
-                  font-weight: bold;
+                  margin-block: 15px;
                 `}
               >
-                Last login
+                <Box
+                  css={css`
+                    margin-block: 5px;
+                    font-weight: bold;
+                  `}
+                >
+                  Last login
+                </Box>
+                <Box
+                  css={css`
+                    opacity: 0.5rem;
+                  `}
+                >
+                  {formatTimestamp(currentUserInfo.lastLogin)}
+                </Box>
               </Box>
-              <Box
-                css={css`
-                  opacity: 0.5rem;
-                `}
-              >
-                {formatTimestamp(currentUserInfo.lastLogin)}
-              </Box>
-            </Box>
+            )}
 
             <Box
               css={css`
@@ -214,69 +220,73 @@ const UserInformation = () => {
               </Box>
             </Box>
 
-            <Box
-              css={css`
-                margin-block: 15px;
-              `}
-            >
+            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
               <Box
                 css={css`
-                  margin-block: 5px;
-                  font-weight: bold;
+                  margin-block: 15px;
                 `}
               >
-                Email
-              </Box>
-              <Box
-                css={css`
-                  opacity: 0.5rem;
-                `}
-              >
-                {currentUserInfo.emails?.map((email, index) => (
-                  <Box
-                    key={index}
-                    css={css`
-                      display: flex;
-                      align-items: center;
-                      gap: 0.5rem;
-                      margin-block: 5px;
-                    `}
-                  >
-                    <a
-                      href={`mailto:${email.address}`}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
+                <Box
+                  css={css`
+                    margin-block: 5px;
+                    font-weight: bold;
+                  `}
+                >
+                  Email
+                </Box>
+                <Box
+                  css={css`
+                    opacity: 0.5rem;
+                  `}
+                >
+                  {currentUserInfo.emails?.map((email, index) => (
+                    <Box
+                      key={index}
+                      css={css`
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        margin-block: 5px;
+                      `}
                     >
-                      {email.address}
-                    </a>
-                    <Box css={userRoleCss}>
-                      {email.verified ? 'Verified' : 'Not Verified'}
+                      <a
+                        href={`mailto:${email.address}`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        {email.address}
+                      </a>
+                      <Box css={userRoleCss}>
+                        {email.verified ? 'Verified' : 'Not Verified'}
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  ))}
+                </Box>
               </Box>
-            </Box>
+            )}
 
-            <Box
-              css={css`
-                margin-block: 15px;
-              `}
-            >
+            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
               <Box
                 css={css`
-                  margin-block: 5px;
-                  font-weight: bold;
+                  margin-block: 15px;
                 `}
               >
-                Created at
+                <Box
+                  css={css`
+                    margin-block: 5px;
+                    font-weight: bold;
+                  `}
+                >
+                  Created at
+                </Box>
+                <Box
+                  css={css`
+                    opacity: 0.5rem;
+                  `}
+                >
+                  {formatTimestamp(currentUserInfo.createdAt)}
+                </Box>
               </Box>
-              <Box
-                css={css`
-                  opacity: 0.5rem;
-                `}
-              >
-                {formatTimestamp(currentUserInfo.createdAt)}
-              </Box>
-            </Box>
+            )}
           </Box>
         </Box>
       ) : (
