@@ -36,10 +36,45 @@ const PinnedAttachment = ({ attachment }) => {
           marginTop: '0.7rem',
         }}
       >
-        { 
-          attachment?.text[0] == '[' ? attachment?.text.match(/\n(.*)/)[1] : attachment?.text 
+        {attachment?.text[0] == '['
+          ? attachment?.text.match(/\n(.*)/)[1]
+          : attachment?.text
         }
-        {console.log(attachment)}
+
+        {attachment.attachments[0] ? (
+          <Box
+            style={{
+              borderInlineStart: '1px solid currentColor',
+              paddingLeft: '0.8rem',
+            }}
+          >
+            <Box
+              style={{
+                display: 'flex',
+                gap: '0.3rem',
+              }}
+            >
+              <Avatar
+                url={getUserAvatarUrl(attachment.attachments[0]?.author_icon)}
+                alt="avatar"
+                size="1.2em"
+              />
+              <Box>{attachment.attachments[0]?.author_name}</Box>
+            </Box>
+            <Box
+              style={{
+                marginTop: '0.7rem',
+              }}
+            >
+              {attachment.attachments[0]?.text[0] == '['
+                ? attachment.attachments[0]?.text.match(/\n(.*)/)[1]
+                : attachment.attachments[0]?.text
+              }
+            </Box>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
     </Box>
   );
