@@ -15,13 +15,15 @@ const PinnedAttachment = ({ attachment }) => {
     <Box
       style={{
         borderInlineStart: '1px solid currentColor',
-        paddingLeft: '0.8rem',
+        padding: '0.4rem 0.8rem',
+        backgroundColor: '#ebedf2',
+        opacity: '0.9'
       }}
     >
       <Box
         style={{
           display: 'flex',
-          gap: '0.3rem',
+          gap: '0.1rem',
         }}
       >
         <Avatar
@@ -33,7 +35,7 @@ const PinnedAttachment = ({ attachment }) => {
       </Box>
       <Box
         style={{
-          marginTop: '0.7rem',
+          marginTop: '0.3rem',
         }}
       >
         {attachment?.text[0] == '['
@@ -45,13 +47,15 @@ const PinnedAttachment = ({ attachment }) => {
           <Box
             style={{
               borderInlineStart: '1px solid currentColor',
-              paddingLeft: '0.8rem',
+              padding: '0.4rem 0.8rem',
+              backgroundColor: '#ebedf2',
+              opacity: '0.9'
             }}
           >
             <Box
               style={{
                 display: 'flex',
-                gap: '0.3rem',
+                gap: '0.1rem',
               }}
             >
               <Avatar
@@ -63,7 +67,7 @@ const PinnedAttachment = ({ attachment }) => {
             </Box>
             <Box
               style={{
-                marginTop: '0.7rem',
+                marginTop: '0.3rem',
               }}
             >
               {attachment.attachments[0]?.text[0] == '['
