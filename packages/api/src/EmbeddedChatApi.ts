@@ -543,6 +543,26 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getUsersInRole(role: string) {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const roles = await fetch(
+        `${this.host}/api/v1/roles.getUsersInRole?role=${role}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await roles.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async sendTypingStatus(username: string, typing: boolean) {
     try {
       this.rcClient.methodCall(
