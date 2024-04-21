@@ -4,6 +4,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { AvatarContainer } from './AvatarContainer';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
+import { useUserStore } from '../../store';
 
 export const Avatar = ({
   size = '2.25rem',
@@ -11,6 +12,7 @@ export const Avatar = ({
   style = {},
   url,
   fallbackIcon = 'circle-cross',
+  user,
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
@@ -37,15 +39,28 @@ export const Avatar = ({
     style
   );
 
+  const showCurrentUserInfo = useUserStore(
+    (state) => state.showCurrentUserInfo
+  );
+  const setShowCurrentUserInfo = useUserStore(
+    (state) => state.setShowCurrentUserInfo
+  );
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
+
   return (
     <AvatarContainer size={size} {...props}>
       {!imgError ? (
         <img
+          role="presentation"
           src={`${url}`}
           css={AvatarCss}
           className={classNames}
           style={styleOverrides}
           onError={() => setImgError(true)}
+          onClick={() => {
+            setShowCurrentUserInfo(!showCurrentUserInfo);
+            setCurrentUser(user);
+          }}
         />
       ) : (
         <Box css={FallBackBoxCss}>

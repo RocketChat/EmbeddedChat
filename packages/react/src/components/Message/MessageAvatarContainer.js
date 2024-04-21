@@ -25,6 +25,7 @@ const MessageAvatarContainer = ({
     display: flex;
     justify-content: flex-end;
   `;
+
   return (
     <Box css={MessageAvatarContainerCss}>
       {!sequential ? (
@@ -32,6 +33,7 @@ const MessageAvatarContainer = ({
           url={getUserAvatarUrl(message.u.username)}
           alt="avatar"
           size={message.t ? '1.2em' : '2.25em'}
+          user={message?.u}
         />
       ) : null}
       {isStarred && sequential ? (

@@ -33,6 +33,7 @@ import StarredMessages from '../StarredMessages/StarredMessages';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Files } from '../Files';
+import UserInformation from '../UserInformation/UserInformation';
 
 const ChatBody = ({
   height,
@@ -93,6 +94,9 @@ const ChatBody = ({
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
   const showMembers = useMemberStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
+  const showCurrentUserInfo = useUserStore(
+    (state) => state.showCurrentUserInfo
+  );
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -308,6 +312,7 @@ const ChatBody = ({
       {showMentions && <UserMentions />}
       {showPinned && <PinnedMessages />}
       {showStarred && <StarredMessages />}
+      {showCurrentUserInfo && <UserInformation />}
     </>
   );
 };
