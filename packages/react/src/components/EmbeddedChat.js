@@ -233,6 +233,7 @@ const EmbeddedChat = ({
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDragDrop(e)}
+            data-testid="embedded-chat"
           >
             {onDrag && <DropBoxOverlay />}
             {hideHeader ? null : (

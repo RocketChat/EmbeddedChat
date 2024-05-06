@@ -14643,6 +14643,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:^7.0.0":
   version: 7.0.0
   resolution: "dotenv@npm:7.0.0"
@@ -14702,6 +14709,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^6.21.0
     "@typescript-eslint/parser": ^6.21.0
     "@vitejs/plugin-react": ^4.2.1
+    dotenv: ^16.4.5
     eslint: ^8.56.0
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-react-refresh: ^0.4.5
