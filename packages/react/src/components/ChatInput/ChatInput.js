@@ -28,6 +28,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChatInfo from '../ChatInfo/ChatInfo';
+import QuoteMessage from '../QuoteMessage/QuoteMessage';
 
 const editingMessageCss = css`
   background-color: #fff8e0;
@@ -103,6 +104,8 @@ const ChatInput = ({ scrollToBottom }) => {
   const {
     editMessage,
     setEditMessage,
+    quoteMessage,
+    setQuoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
@@ -110,6 +113,8 @@ const ChatInput = ({ scrollToBottom }) => {
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
+    quoteMessage: state.quoteMessage,
+    setQuoteMessage: state.setQuoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
@@ -157,6 +162,12 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
   const sendMessage = async (isAttachmentMode = false) => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
@@ -183,7 +194,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
-      if (editMessage.msg) {
+      if (editMessage.msg || editMessage.attachments) {
         setEditMessage({});
       }
       return;
@@ -202,9 +213,19 @@ const ChatInput = ({ scrollToBottom }) => {
           return;
         }
       }
-
       messageRef.current.value = '';
-      const pendingMessage = createPendingMessage(message, user);
+      let pendingMessage = '';
+      if (quoteMessage.msg || quoteMessage.attachments) {
+        const msgLink = await getMessageLink(quoteMessage?._id);
+        pendingMessage = createPendingMessage(
+          `[ ](${msgLink})\n ${message}`,
+          user
+        );
+        setQuoteMessage({});
+      } else {
+        pendingMessage = createPendingMessage(message, user);
+      }
+
       if (ECOptions.enableThreads && threadId) {
         pendingMessage.tmid = threadId;
       }
@@ -439,7 +460,10 @@ const ChatInput = ({ scrollToBottom }) => {
       } else {
         e.target.style.height = '150px';
       }
-    } else if (editMessage.msg && e.keyCode === 27) {
+    } else if (
+      (editMessage.msg || editMessage.attachments) &&
+      e.keyCode === 27
+    ) {
       messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
@@ -490,6 +514,9 @@ const ChatInput = ({ scrollToBottom }) => {
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box>
+        {(quoteMessage.msg || quoteMessage.attachments) && (
+          <QuoteMessage message={quoteMessage} />
+        )}
         <ChatInfo
           status={
             editMessage.msg || editMessage.attachments

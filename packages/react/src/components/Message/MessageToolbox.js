@@ -58,6 +58,7 @@ export const MessageToolbox = ({
   handleDeleteMessage,
   handlerReportMessage,
   handleEditMessage,
+  handleQuoteMessage,
   isEditing = false,
   ...props
 }) => {
@@ -98,6 +99,16 @@ export const MessageToolbox = ({
               />
             </Tooltip>
           ) : null}
+
+          <Tooltip text="Quote" position="top">
+            <ActionButton
+              ghost
+              size="small"
+              icon="quote"
+              onClick={() => handleQuoteMessage(message)}
+            />
+          </Tooltip>
+
           <Tooltip
             text={
               message.starred &&

@@ -52,6 +52,7 @@ import Online from './Online';
 import Offline from './Offline';
 import Away from './Away';
 import Busy from './Busy';
+import Quote from './Quote';
 
 const icons = {
   file: File,
@@ -108,6 +109,7 @@ const icons = {
   offline: Offline,
   away: Away,
   busy: Busy,
+  quote: Quote,
 };
 
 export default icons;
