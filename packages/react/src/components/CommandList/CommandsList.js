@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
@@ -9,6 +9,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 function CommandsList({
   className = '',
   style = {},
+  commandIndex,
   filteredCommands,
   execCommand,
   onCommandClick,
@@ -19,10 +20,9 @@ function CommandsList({
   const listStyle = css`
     margin-bottom: 5px;
     display: block;
-    max-height: 10rem;
     overflow: scroll;
     overflow-x: hidden;
-    max-height: 145px;
+    max-height: 105px;
     scrollbar-width: thin;
     scrollbar-color: #e0e0e1 transparent;
     &::-webkit-scrollbar {
@@ -53,6 +53,8 @@ function CommandsList({
     }
   `;
 
+  const commandRef = useRef(null);
+
   const handleCommandClick = useCallback(
     (command) => {
       if (execCommand) {
@@ -68,7 +70,7 @@ function CommandsList({
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
-        const selectedItem = filteredCommands[0];
+        const selectedItem = filteredCommands[commandIndex];
         handleCommandClick(selectedItem);
       }
     };
@@ -78,7 +80,19 @@ function CommandsList({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [filteredCommands, handleCommandClick]);
+  }, [commandIndex, filteredCommands, handleCommandClick]);
+
+  useEffect(() => {
+    if (commandRef.current) {
+      const selectedCommand = commandRef.current.children[commandIndex];
+      if (selectedCommand) {
+        selectedCommand.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }
+    }
+  }, [commandIndex]);
 
   return (
     <Box
@@ -87,12 +101,21 @@ function CommandsList({
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
-      <ul style={{ listStyle: 'none' }}>
-        {filteredCommands.map((command) => (
+      <ul style={{ listStyle: 'none' }} ref={commandRef}>
+        {filteredCommands.map((command, index) => (
           <li
             key={command.command}
+            role="presentation"
             css={listItemStyle}
             onClick={() => handleCommandClick(command)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleCommandClick(command);
+              }
+            }}
+            style={{
+              backgroundColor: index === commandIndex && '#dddddd',
+            }}
           >
             <span style={{ justifyContent: 'space-evenly' }}>
               <span style={{ color: '#000000' }}>{command.command}</span>
@@ -108,6 +131,7 @@ function CommandsList({
 }
 
 CommandsList.propTypes = {
+  commandIndex: PropTypes.any,
   filteredCommands: PropTypes.array,
   execCommand: PropTypes.func,
   className: PropTypes.string,
