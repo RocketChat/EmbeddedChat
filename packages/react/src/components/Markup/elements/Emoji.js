@@ -13,8 +13,8 @@ const emojiInMessageCss = css`
   }
 
   img.joypixels_BigEmoji {
-    height: 2.75rem;
-    width: 2.75rem;
+    height: 2.25rem;
+    width: 2.25rem;
     image-rendering: pixelated;
     font-size: inherit;
   }
@@ -40,8 +40,6 @@ const Emoji = ({ big = false, emoji }) => {
   const emojiHtml = big
     ? emojione.toImage(fallback).replace('joypixels', 'joypixels_BigEmoji')
     : emojione.toImage(fallback);
-
-  console.log('Rendered emoji HTML:', emojiHtml);
 
   return (
     <span
