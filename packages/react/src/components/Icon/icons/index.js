@@ -53,6 +53,8 @@ import Offline from './Offline';
 import Away from './Away';
 import Busy from './Busy';
 import Quote from './Quote';
+import EyeOpen from './EyeOpen';
+import EyeClose from './EyeClose';
 
 const icons = {
   file: File,
@@ -110,6 +112,8 @@ const icons = {
   away: Away,
   busy: Busy,
   quote: Quote,
+  eyeopen: EyeOpen,
+  eyeclose: EyeClose,
 };
 
 export default icons;

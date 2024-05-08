@@ -6,8 +6,7 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
-import EyeOpen from './icons/EyeOpen';
-import EyeClose from './icons/EyeClose';
+import { Icon } from '../Icon';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -60,6 +59,7 @@ export default function LoginForm() {
       handleSubmit();
     }
   };
+  const iconName = showPassword ? 'eyeopen' : 'eyeclose';
 
   const fieldCSS = css`
     display: flex;
@@ -142,7 +142,7 @@ export default function LoginForm() {
                 css={passwordEyeCss}
                 onClick={handleTogglePassword}
               >
-                {showPassword ? <EyeOpen /> : <EyeClose />}
+                <Icon name={iconName} size="1.25rem" />
               </Box>
             </Box>
             {passwordError && (

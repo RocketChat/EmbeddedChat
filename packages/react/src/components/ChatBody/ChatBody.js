@@ -19,7 +19,7 @@ import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
-import LoginForm from '../auth/LoginForm';
+import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
