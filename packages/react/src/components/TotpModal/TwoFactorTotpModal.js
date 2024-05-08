@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../GenericModal';
-import classes from './TwoFactorTotpModal.module.css';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Modal } from '../Modal';
 import { Input } from '../Input';
 
+const FooterCss = css`
+  display: flex;
+  justify-content: space-around;
+`;
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
   const isModalOpen = totpModalStore((state) => state.isModalOpen);
@@ -48,7 +52,7 @@ export default function TotpModal({ handleLogin }) {
             />
           </Box>
           <Modal.Footer>
-            <Box className={classes.Footer}>
+            <Box css={FooterCss}>
               <Button color="secondary" onClick={handleClose}>
                 Cancel
               </Button>
