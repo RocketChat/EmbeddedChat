@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { css } from '@emotion/react';
 
-const MessageEmoji = ({ body }) => {
+const EmojiReaction = ({ body }) => {
   const containerStyle = css`
-    font-size: 1rem; /* Adjust the size as needed */
+    font-size: 1rem;
   `;
 
   const emojiHtml = emojione.toImage(body);
@@ -15,8 +15,8 @@ const MessageEmoji = ({ body }) => {
   );
 };
 
-MessageEmoji.propTypes = {
+EmojiReaction.propTypes = {
   body: PropTypes.string.isRequired,
 };
 
-export default MessageEmoji;
+export default EmojiReaction;

@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react'; // Import Emotion's css function
+import { css } from '@emotion/react';
 import { Markup } from '../Markup/index';
 import { Box } from '../Box';
-import MessageEmoji from '../MessageEmoji/MessageEmoji';
 import {} from './Markdown.css';
+import EmojiReaction from '../EmojiReaction/EmojiReaction';
 
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
     const containerStyle = css`
-      font-size: 1rem; // Adjust the size as needed
+      font-size: 1rem;
     `;
 
     return (
       <div css={containerStyle}>
-        <MessageEmoji body={body} />
+        <EmojiReaction body={body} />
       </div>
     );
   }

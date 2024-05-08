@@ -11,6 +11,7 @@ import TaskListBlock from './blocks/TaskListBlock';
 
 const Markup = ({ tokens }) =>
   tokens.map((token, index) => {
+    console.log(token);
     switch (token.type) {
       case 'PARAGRAPH':
         return <ParagraphBlock key={index} contents={token.value} />;
