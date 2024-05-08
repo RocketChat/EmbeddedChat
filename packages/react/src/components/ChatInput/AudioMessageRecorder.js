@@ -5,13 +5,35 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import styles from './AudioMessage.module.css';
+import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+
+const audioDot = css`
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: red;
+  margin: auto;
+  margin-right: 8px;
+`;
+
+const audioBox = css`
+  display: flex;
+`;
+
+const timer = css`
+  margin: auto;
+`;
+
+const record = css`
+  display: flex;
+  margin: auto;
+`;
 
 const AudioMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -146,15 +168,15 @@ const AudioMessageRecorder = () => {
   }
 
   return (
-    <Box className={styles.audioBox}>
+    <Box css={audioBox}>
       {state === 'recording' && (
         <>
           <ActionButton ghost onClick={handleCancelRecordButton}>
             <Icon size="1.25rem" name="circle-cross" />
           </ActionButton>
-          <Box className={styles.record}>
-            <span className={styles.audioDot} />
-            <span className={styles.timer}>{time}</span>
+          <Box css={record}>
+            <span css={audioDot} />
+            <span css={timer}>{time}</span>
           </Box>
           <ActionButton ghost onClick={handleStopRecordButton}>
             <Icon name="circle-check" size="1.25rem" />

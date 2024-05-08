@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
-import styles from './ChatInput.module.css';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useToastStore,
@@ -34,6 +33,47 @@ const editingMessageCss = css`
   background-color: #fff8e0;
   & textarea {
     background-color: inherit;
+  }
+`;
+
+const chatInputIconCursor = css`
+  cursor: pointer;
+`;
+
+const textInput = css`
+  padding: 12px;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  font-family: var(
+    --rcx-font-family-sans,
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Helvetica Neue',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Meiryo UI',
+    Arial,
+    sans-serif
+  );
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    padding-left: 5px;
   }
 `;
 
@@ -582,7 +622,7 @@ const ChatInput = ({ scrollToBottom }) => {
                 ? 'This room is read only'
                 : 'Sign in to chat'
             }
-            className={styles.textInput}
+            css={textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
             onBlur={sendTypingStop}
@@ -599,7 +639,7 @@ const ChatInput = ({ scrollToBottom }) => {
                 onClick={() => sendMessage()}
                 disabled={disableButton || isRecordingMessage}
               >
-                <Icon className={styles.chatInputIconCursor} name="send" />
+                <Icon css={chatInputIconCursor} name="send" />
               </ActionButton>
             ) : (
               <Button onClick={onJoin} color="primary">

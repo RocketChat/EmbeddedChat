@@ -5,7 +5,7 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import styles from './VideoMessageRecorder.module.css';
+import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
@@ -13,6 +13,31 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Modal } from '../Modal';
+
+const videoDot = css`
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: red;
+  margin: auto;
+  margin-right: 8px;
+`;
+
+const videoBox = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+`;
+
+const timer = css`
+  margin: auto;
+`;
+
+const record = css`
+  display: flex;
+  margin: auto;
+`;
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -170,13 +195,13 @@ const VideoMessageRecorder = () => {
             }}
           >
             <video muted autoPlay playsInline ref={videoRef} />
-            <Box className={styles.videoBox}>
+            <Box css={videoBox}>
               <ActionButton ghost onClick={handleCancelRecordButton}>
                 <Icon size="1.25rem" name="circle-cross" />
               </ActionButton>
-              <Box className={styles.record}>
-                <span className={styles.videoDot} />
-                <span className={styles.timer}>{time}</span>
+              <Box css={record}>
+                <span css={videoDot} />
+                <span css={timer}>{time}</span>
               </Box>
               <ActionButton ghost onClick={handleStopRecordButton}>
                 <Icon name="circle-check" size="1.25rem" />

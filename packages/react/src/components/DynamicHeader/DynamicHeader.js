@@ -1,9 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './DynamicHeader.module.css';
+import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
+
+const container = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  z-index: 100;
+`;
+
+const nospace = css`
+  margin: 0;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
 
 const DynamicHeader = ({
   title,
@@ -13,7 +29,7 @@ const DynamicHeader = ({
   headerIconName,
 }) => (
   <Box
-    className={styles.container}
+    css={container}
     style={{
       paddingBlockStart: '10px',
     }}
@@ -36,7 +52,7 @@ const DynamicHeader = ({
         <Icon name={iconName} size="1.25rem" />
       </ActionButton>
 
-      <h4 className={styles.nospace}>{title}</h4>
+      <h4 css={nospace}>{title}</h4>
       {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
     </Box>
   </Box>
