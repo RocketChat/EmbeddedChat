@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import stylesSheet from './ChatHeader.module.css';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
@@ -26,6 +25,17 @@ import { Menu } from '../Menu';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
+
+const container = css`
+  width: 100%;
+  z-index: 100;
+  background-color: #fff;
+`;
+
+const nospace = css`
+  margin: 0;
+  padding: 0;
+`;
 
 const ChatHeader = ({
   isClosable,
@@ -326,13 +336,14 @@ const ChatHeader = ({
   return (
     <Box
       css={css`
+        ${container}
         display: flex;
         width: 100%;
         flex-direction: column;
         padding: 0.75rem;
         border: 1px solid rgba(0, 0, 0, 0.5);
       `}
-      className={`ec-chat-header ${stylesSheet.container} ${classNames} ${className}`}
+      className={`ec-chat-header ${classNames} ${className}`}
       style={{ ...styleOverrides, ...styles }}
     >
       <Box
@@ -360,14 +371,13 @@ const ChatHeader = ({
           >
             {isUserAuthenticated ? (
               <>
-                <h2
-                  className={`ec-chat-header--channelName ${stylesSheet.nospace}`}
-                >
+                <h2 className="ec-chat-header--channelName" css={nospace}>
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
-                    className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
+                    className="ec-chat-header--channelDescription"
+                    css={nospace}
                     style={{ fontSize: 14 }}
                   >
                     {channelInfo.description || ''}
@@ -375,9 +385,7 @@ const ChatHeader = ({
                 )}
               </>
             ) : (
-              <h2
-                className={`ec-chat-header--channelDescription ${stylesSheet.nospace}`}
-              >
+              <h2 className="ec-chat-header--channelDescription" css={nospace}>
                 {channelName || 'Login to chat'}
               </h2>
             )}
