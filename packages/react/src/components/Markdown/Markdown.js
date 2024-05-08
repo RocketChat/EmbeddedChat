@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Markup } from '../Markup/index';
 import { Box } from '../Box';
-import {} from './Markdown.css';
 import EmojiReaction from '../EmojiReaction/EmojiReaction';
 
 const Markdown = ({ body, isReaction = false }) => {
