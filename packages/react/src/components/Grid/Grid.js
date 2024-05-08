@@ -1,21 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import PropTypes from 'prop-types';
 import { Box } from '../Box';
 
 import GridItem from './GridItem';
 
-const GridContainer = ({
-  xs,
-  md,
-  lg,
-  xl,
-  xxl,
-  cols,
-  gap,
-  gapX,
-  gapY,
-  children,
-}) => (
+const Grid = ({ xs, md, lg, xl, xxl, cols, gap, gapX, gapY, children }) => (
   <Box
     css={css`
       display: grid;
@@ -57,23 +47,35 @@ const GridContainer = ({
   </Box>
 );
 
-const Grid = ({ xs, md, lg, xl, xxl, cols, gap, gapX, gapY, children }) => (
-  <GridContainer
-    xs={xs}
-    md={md}
-    lg={lg}
-    xl={xl}
-    xxl={xxl}
-    cols={cols}
-    gap={gap}
-    gapX={gapX}
-    gapY={gapY}
-  >
-    {children}
-  </GridContainer>
-);
-
 Grid.Item = GridItem;
+
+Grid.propTypes = {
+  xs: PropTypes.shape({
+    cols: PropTypes.number,
+    gapX: PropTypes.string,
+  }),
+  md: PropTypes.shape({
+    cols: PropTypes.number,
+    gapX: PropTypes.string,
+  }),
+  lg: PropTypes.shape({
+    cols: PropTypes.number,
+    gapX: PropTypes.string,
+  }),
+  xl: PropTypes.shape({
+    cols: PropTypes.number,
+    gapX: PropTypes.string,
+  }),
+  xxl: PropTypes.shape({
+    cols: PropTypes.number,
+    gapX: PropTypes.string,
+  }),
+  cols: PropTypes.number,
+  gap: PropTypes.string,
+  gapX: PropTypes.string,
+  gapY: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 export default Grid;
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import PropTypes from 'prop-types';
 import { Box } from '../Box';
 
 const GridItem = ({ xs, md, lg, xl, xxl, children }) => (
@@ -54,5 +55,49 @@ const GridItem = ({ xs, md, lg, xl, xxl, children }) => (
     {children}
   </Box>
 );
+
+GridItem.propTypes = {
+  xs: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  md: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  lg: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  xl: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  xxl: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  children: PropTypes.node.isRequired,
+};
 
 export default GridItem;
