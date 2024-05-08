@@ -5,7 +5,6 @@ import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import classes from './Message.module.css';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../Box';
@@ -44,6 +43,11 @@ const MessageEditingCss = css`
   &:hover {
     background-color: #fff8e0;
   }
+`;
+
+const PendingMessageBody = css`
+  opacity: 0.4 !important;
+  white-space: pre-line;
 `;
 
 const Message = ({
@@ -182,9 +186,7 @@ const Message = ({
           {shouldShowHeader && <MessageHeader message={message} />}
           {!message.t ? (
             <>
-              <MessageBody
-                className={message.isPending ? classes.PendingMessageBody : ''}
-              >
+              <MessageBody css={message.isPending && PendingMessageBody}>
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
