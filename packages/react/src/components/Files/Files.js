@@ -15,7 +15,6 @@ import { Button } from '../Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../Sidebar/Sidebar';
 import { Throbber } from '../Throbber';
-import { Input } from '../Input';
 
 const MessageCss = css`
   display: flex;
@@ -33,27 +32,6 @@ const MessageCss = css`
   cursor: pointer;
   &:hover {
     background: #f2f3f5;
-  }
-`;
-
-const searchContainer = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: #fff;
-  border: 2px solid #ddd;
-  border-radius: 0.25rem;
-  position: relative;
-  margin: 0 1rem 1rem;
-`;
-
-const textInput = css`
-  border: none;
-  flex: none;
-  padding: none;
-  &:focus {
-    border: none;
-    box-shadow: none;
   }
 `;
 
@@ -192,21 +170,12 @@ const Files = () => {
         title="Files"
         iconName="attachment"
         setShowWindow={setShowAllFiles}
+        searchProps={{
+          isSearch: true,
+          handleInputChange,
+          placeholder: 'Search Files',
+        }}
       >
-        <Box css={searchContainer}>
-          <Input
-            placeholder="Search Files"
-            onChange={handleInputChange}
-            css={textInput}
-          />
-
-          <Icon
-            name="magnifier"
-            size="1.25rem"
-            style={{ padding: '0.125em', cursor: 'pointer' }}
-          />
-        </Box>
-
         {isFilesFetched ? (
           <Box
             style={{

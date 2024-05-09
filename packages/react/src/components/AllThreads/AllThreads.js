@@ -34,27 +34,6 @@ const MessageCss = css`
   }
 `;
 
-const searchContainer = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: #fff;
-  border: 2px solid #ddd;
-  border-radius: 0.25rem;
-  position: relative;
-  margin: 0 1rem 1rem;
-`;
-
-const textInput = css`
-  border: none;
-  flex: none;
-  padding: none;
-  &:focus {
-    border: none;
-    box-shadow: none;
-  }
-`;
-
 const AllThreads = () => {
   const showAvatar = useUserStore((state) => state.showAvatar);
   const messages = useMessageStore((state) => state.messages);
@@ -92,21 +71,12 @@ const AllThreads = () => {
       title="Threads"
       iconName="thread"
       setShowWindow={setShowAllThreads}
+      searchProps={{
+        isSearch: true,
+        handleInputChange,
+        placeholder: 'Search Threads',
+      }}
     >
-      <Box css={searchContainer}>
-        <Input
-          placeholder="Search Messages"
-          onChange={handleInputChange}
-          css={textInput}
-        />
-
-        <Icon
-          name="magnifier"
-          size="1.25rem"
-          style={{ padding: '0.125em', cursor: 'pointer' }}
-        />
-      </Box>
-
       <Box
         style={{
           flex: '1',

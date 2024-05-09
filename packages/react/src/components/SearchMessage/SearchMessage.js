@@ -9,28 +9,6 @@ import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import Sidebar from '../Sidebar/Sidebar';
-import { Input } from '../Input';
-
-const searchContainer = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: #fff;
-  border: 2px solid #ddd;
-  border-radius: 0.25rem;
-  position: relative;
-  margin: 0 1rem 1rem;
-`;
-
-const textInput = css`
-  border: none;
-  flex: none;
-  padding: none;
-  &:focus {
-    border: none;
-    box-shadow: none;
-  }
-`;
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -73,27 +51,12 @@ const Search = () => {
       title="Search Messages"
       iconName="magnifier"
       setShowWindow={setShowSearch}
+      searchProps={{
+        isSearch: true,
+        handleInputChange,
+        placeholder: 'Search Messages',
+      }}
     >
-      <Box
-        css={searchContainer}
-        style={{
-          border: '2px solid #ddd',
-          position: 'relative',
-          marginBottom: '1rem',
-        }}
-      >
-        <Input
-          placeholder="Search Message"
-          onChange={handleInputChange}
-          css={textInput}
-        />
-
-        <Icon
-          name="magnifier"
-          size="1.25rem"
-          style={{ padding: '0.125em', cursor: 'pointer' }}
-        />
-      </Box>
       <Box
         style={{
           flex: '1',
