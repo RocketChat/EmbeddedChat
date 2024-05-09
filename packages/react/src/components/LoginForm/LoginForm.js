@@ -7,6 +7,7 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Input } from '../Input';
 import { Icon } from '../Icon';
+import styles from './LoginForm.styles';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -61,46 +62,6 @@ export default function LoginForm() {
   };
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
 
-  const fieldCSS = css`
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: stretch;
-    flex-shrink: 0;
-    width: 100%;
-  `;
-
-  const fieldLabel = css`
-    flex: 1 1 0;
-    align-self: flex-start;
-    margin-top: 0.125rem;
-    margin-bottom: 0.125rem;
-    margin-block: 0.125rem;
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    color: #2f343d;
-  `;
-
-  const fieldRow = css`
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.25rem;
-    -webkit-margin-before: 0.25rem;
-    margin-block-start: 0.25rem;
-    margin-bottom: 0.125rem;
-    -webkit-margin-after: 0.125rem;
-    margin-block-end: 0.125rem;
-  `;
-
-  const passwordEyeCss = css`
-    cursor: pointer;
-    position: absolute;
-    right: 1em;
-  `;
-
   return isLoginModalOpen ? (
     <>
       <GenericModal
@@ -110,9 +71,9 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          <Box css={fieldCSS}>
-            <Box css={fieldLabel}> Email or username</Box>
-            <Box css={fieldRow}>
+          <Box css={styles.fieldContainer}>
+            <Box css={styles.fieldLabel}> Email or username</Box>
+            <Box css={styles.fieldRow}>
               <Input
                 type="text"
                 onChange={handleEdituserOrEmail}
@@ -128,9 +89,9 @@ export default function LoginForm() {
             )}
           </Box>
 
-          <Box css={fieldCSS}>
-            <Box css={fieldLabel}>Password</Box>
-            <Box css={fieldRow}>
+          <Box css={styles.fieldContainer}>
+            <Box css={styles.fieldLabel}>Password</Box>
+            <Box css={styles.fieldRow}>
               <Input
                 type={showPassword ? 'text' : 'password'}
                 onChange={handleEditPassword}
@@ -139,32 +100,30 @@ export default function LoginForm() {
               />
               <Box
                 type="button"
-                css={passwordEyeCss}
+                css={styles.passwordEye}
                 onClick={handleTogglePassword}
               >
                 <Icon name={iconName} size="1.25rem" />
               </Box>
             </Box>
             {passwordError && (
-              <span style={{ color: 'red', fontSize: '13px' }}>
+              <span
+                css={css`
+                  color: red;
+                  font-size: 13px;
+                `}
+              >
                 This field is required
               </span>
             )}
           </Box>
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+          <Box>
             <Button
               color="primary"
               onClick={handleSubmit}
-              style={{
-                margin: '10px 0',
-              }}
+              css={css`
+                margin: 10px 0;
+              `}
             >
               Login
             </Button>
