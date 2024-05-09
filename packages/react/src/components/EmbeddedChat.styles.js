@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const styles = {
+const styles = {
   embeddedchat: css`
     background: #fff;
     display: flex;
@@ -19,3 +19,5 @@ export const styles = {
     background: #fff;
   `,
 };
+
+export default styles;
