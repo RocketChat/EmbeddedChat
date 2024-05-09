@@ -1,51 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
-import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
+import styles from './MembersList.styles';
 
 function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
-  const listStyle = css`
-    margin-bottom: 5px;
-    display: block;
-    max-height: 10rem;
-    overflow: scroll;
-    overflow-x: hidden;
-    max-height: 145px;
-    scrollbar-width: thin;
-    scrollbar-color: #e0e0e1 transparent;
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #e0e0e1;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #e0e0e1;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-  `;
-
-  const listItemStyle = css`
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 0;
-    padding-right: 2px;
-
-    &:hover {
-      background-color: #e8e8e8;
-    }
-  `;
-
-  const listTextStyle = css`
-    color: #000000;
-    font-weight: 600;
-  `;
-
   const handleMemberClick = useCallback(
     (selectedItem) => {
       onMemberClick(selectedItem);
@@ -82,13 +40,13 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 
   return (
-    <Box css={listStyle}>
+    <Box css={styles.list}>
       <ul style={{ listStyle: 'none' }}>
         {filteredMembers.map((member, index) => (
           <li
             key={member._id}
             role="presentation"
-            css={listItemStyle}
+            css={styles.listItem}
             onClick={() => handleMemberClick(member)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -100,7 +58,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
             }}
           >
             <span style={{ justifyContent: 'space-evenly' }}>
-              <span css={listTextStyle}>{member.name}</span>
+              <span css={styles.listText}>{member.name}</span>
               &nbsp;&nbsp;&nbsp;
               <span>@{member.username}</span>
             </span>
@@ -109,7 +67,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
         <li
           key="all"
           role="presentation"
-          css={listItemStyle}
+          css={styles.listItem}
           onClick={() => handleMemberClick('all')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -121,12 +79,12 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               mentionIndex === filteredMembers.length && '#dddddd',
           }}
         >
-          <span css={listTextStyle}>all</span>
+          <span css={styles.listText}>all</span>
         </li>
         <li
           key="here"
           role="presentation"
-          css={listItemStyle}
+          css={styles.listItem}
           onClick={() => handleMemberClick('here')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -138,7 +96,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               mentionIndex === filteredMembers.length + 1 && '#dddddd',
           }}
         >
-          <span css={listTextStyle}>here</span>
+          <span css={styles.listText}>here</span>
         </li>
       </ul>
     </Box>
