@@ -1,18 +1,17 @@
 import { css } from '@emotion/react';
 
 const styles = {
-  threadListContainer: (containsThreads, filteredThreads) => css`
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: ${!containsThreads || filteredThreads.length === 0
-      ? 'center'
-      : 'initial'};
-    align-items: ${!containsThreads || filteredThreads.length === 0
-      ? 'center'
-      : 'initial'};
-  `,
+  threadListContainer: (containsThreads, filteredThreads) => {
+    const centerAlign = !containsThreads || filteredThreads.length === 0;
+    return css`
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: ${centerAlign ? 'center' : 'initial'};
+      align-items: ${centerAlign ? 'center' : 'initial'};
+    `;
+  },
 
   noThreadInfoContainer: css`
     display: flex;
