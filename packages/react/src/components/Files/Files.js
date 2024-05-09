@@ -109,14 +109,7 @@ const Files = () => {
               </Modal.Title>
               <Modal.Close onClick={handleOnClose} />
             </Modal.Header>
-            <Modal.Content
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                padding: '0 0.5rem 0.5rem',
-              }}
-            >
+            <Modal.Content css={styles.modalContent}>
               Deleting a file will delete it forever. This cannot be undone.
             </Modal.Content>
             <Modal.Footer>
@@ -146,25 +139,9 @@ const Files = () => {
         }}
       >
         {isFilesFetched ? (
-          <Box
-            style={{
-              flex: '1',
-              overflow: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: filteredFiles.length === 0 ? 'center' : 'initial',
-              alignItems: filteredFiles.length === 0 ? 'center' : 'initial',
-            }}
-          >
+          <Box css={styles.fileListContainer(filteredFiles)}>
             {filteredFiles.length === 0 ? (
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  color: '#4a4a4a',
-                }}
-              >
+              <Box css={styles.centeredColumnStyles}>
                 <Icon
                   name="magnifier"
                   size="3rem"
@@ -213,14 +190,7 @@ const Files = () => {
             )}
           </Box>
         ) : (
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: '#4a4a4a',
-            }}
-          >
+          <Box css={styles.centeredColumnStyles}>
             <Throbber />
           </Box>
         )}

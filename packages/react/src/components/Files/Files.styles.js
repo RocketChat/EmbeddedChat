@@ -112,4 +112,30 @@ export const fileStyles = {
     flex-shrink: 1;
     color: #6c727a;
   `,
+
+  modalContent: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 0.5rem 0.5rem;
+  `,
+
+  centeredColumnStyles: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #4a4a4a;
+  `,
+
+  fileListContainer: (filteredFiles) => {
+    const centerAlign = filteredFiles.length === 0;
+    return css`
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: ${centerAlign ? 'center' : 'initial'};
+      align-items: ${centerAlign ? 'center' : 'initial'};
+    `;
+  },
 };
