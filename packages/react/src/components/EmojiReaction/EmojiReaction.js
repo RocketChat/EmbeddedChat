@@ -4,14 +4,15 @@ import emojione from 'emoji-toolkit';
 import { css } from '@emotion/react';
 
 const EmojiReaction = ({ body }) => {
-  const containerStyle = css`
-    font-size: 1rem;
-  `;
-
   const emojiHtml = emojione.toImage(body);
 
   return (
-    <div css={containerStyle} dangerouslySetInnerHTML={{ __html: emojiHtml }} />
+    <div
+      css={css`
+        font-size: 1rem;
+      `}
+      dangerouslySetInnerHTML={{ __html: emojiHtml }}
+    />
   );
 };
 
