@@ -6,7 +6,6 @@ import RCContext from '../../context/RCInstance';
 const Attachments = ({ attachments }) => {
   const { RCInstance } = useContext(RCContext);
   let host = RCInstance.getHost();
-  // removce single trailing slash
   host = host.replace(/\/$/, '');
   return attachments.map((attachment, idx) => (
     <Attachment key={idx} attachment={attachment} host={host} />

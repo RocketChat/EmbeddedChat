@@ -1,10 +1,10 @@
-import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { AvatarContainer } from './AvatarContainer';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { useUserStore } from '../../store';
+import { avatarStyles as styles } from './Avatar.styles';
 
 export const Avatar = ({
   size = '2.25rem',
@@ -16,22 +16,6 @@ export const Avatar = ({
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
-  const AvatarCss = css`
-    border-radius: 0.25rem;
-    height: ${size};
-    width: ${size};
-  `;
-
-  const FallBackBoxCss = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #007fff;
-    color: #ffffff;
-    border-radius: 0.25rem;
-    height: ${size};
-    width: ${size};
-  `;
 
   const { classNames, styleOverrides } = useComponentOverrides(
     'Avatar',
@@ -53,7 +37,7 @@ export const Avatar = ({
         <img
           role="presentation"
           src={`${url}`}
-          css={AvatarCss}
+          css={styles.imageAvatar(size)}
           className={classNames}
           style={styleOverrides}
           onError={() => setImgError(true)}
@@ -63,7 +47,7 @@ export const Avatar = ({
           }}
         />
       ) : (
-        <Box css={FallBackBoxCss}>
+        <Box css={styles.fallbackContainer(size)}>
           <Icon name={fallbackIcon} size="1.25rem" />
         </Box>
       )}

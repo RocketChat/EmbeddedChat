@@ -1,8 +1,8 @@
-import { css } from '@emotion/react';
 import React from 'react';
 import { appendClassNames } from '../../lib/appendClassNames';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
+import { avatarContainerStyles as styles } from './Avatar.styles';
 
 export const AvatarContainer = ({
   title,
@@ -11,11 +11,6 @@ export const AvatarContainer = ({
   style = {},
   ...props
 }) => {
-  const AvatarContainerCSS = css`
-    display: inline-flex;
-    vertical-align: middle;
-    cursor: pointer;
-  `;
   const { classNames, styleOverrides } = useComponentOverrides(
     'AvatarContainer',
     className,
@@ -26,7 +21,7 @@ export const AvatarContainer = ({
   props.style = styleOverrides;
 
   return (
-    <Box is="figure" css={AvatarContainerCSS} aria-label={title} {...props}>
+    <Box is="figure" css={styles.avatarContainer} aria-label={title} {...props}>
       {children}
     </Box>
   );
