@@ -6,25 +6,7 @@ import MenuItem from './MenuItem';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
-
-const MenuWrapperCss = css`
-  position: relative;
-  display: inline-block;
-`;
-
-const MenuCss = css`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  height: fit-content;
-  z-index: 1100;
-  border-radius: 0.2em;
-  padding: 0.2em 0;
-  background-color: #fff;
-`;
+import { MenuStyles as styles } from './Menu.styles';
 
 const Menu = ({
   options = [],
@@ -34,9 +16,7 @@ const Menu = ({
   isToolTip = true,
 }) => {
   const theme = useTheme();
-  const shadowCss = css`
-    box-shadow: ${theme.shadows[2]};
-  `;
+
   const { classNames, styleOverrides } = useComponentOverrides(
     'Menu',
     className,
@@ -81,7 +61,7 @@ const Menu = ({
 
   return (
     <div
-      css={MenuWrapperCss}
+      css={styles.wrapper}
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
     >
@@ -95,7 +75,12 @@ const Menu = ({
       )}
       {isOpen ? (
         <Box
-          css={[MenuCss, shadowCss]}
+          css={[
+            styles.container,
+            css`
+              box-shadow: ${theme.shadows[2]};
+            `,
+          ]}
           className={appendClassNames('ec-menu', classNames)}
           style={finalStyle}
         >
