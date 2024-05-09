@@ -13,6 +13,7 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../Sidebar/Sidebar';
+import { Input } from '../Input';
 
 const MessageCss = css`
   display: flex;
@@ -36,21 +37,21 @@ const MessageCss = css`
 const searchContainer = css`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   background-color: #fff;
   border: 2px solid #ddd;
+  border-radius: 0.25rem;
   position: relative;
   margin: 0 1rem 1rem;
 `;
 
 const textInput = css`
-  width: 75%;
-  height: 2.5rem;
   border: none;
-  outline: none;
-
-  &::placeholder {
-    padding-left: 5px;
+  flex: none;
+  padding: none;
+  &:focus {
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -93,7 +94,7 @@ const AllThreads = () => {
       setShowWindow={setShowAllThreads}
     >
       <Box css={searchContainer}>
-        <input
+        <Input
           placeholder="Search Messages"
           onChange={handleInputChange}
           css={textInput}
@@ -154,7 +155,11 @@ const AllThreads = () => {
                     />
                   )}
                   <MessageBodyContainer>
-                    <MessageHeader message={message} isTimeStamped={false} />
+                    <MessageHeader
+                      message={message}
+                      isTimeStamped={false}
+                      isRoles={false}
+                    />
 
                     <MessageBody>
                       {message.attachments && message.attachments.length > 0

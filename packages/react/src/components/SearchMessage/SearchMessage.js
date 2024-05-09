@@ -9,24 +9,26 @@ import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import Sidebar from '../Sidebar/Sidebar';
+import { Input } from '../Input';
 
-const containerStyles = css`
+const searchContainer = css`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   background-color: #fff;
   border: 2px solid #ddd;
+  border-radius: 0.25rem;
   position: relative;
   margin: 0 1rem 1rem;
 `;
 
-const textInputStyles = css`
-  width: 75%;
-  height: 2.5rem;
+const textInput = css`
   border: none;
-  outline: none;
-  &::placeholder {
-    padding-left: 5px;
+  flex: none;
+  padding: none;
+  &:focus {
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -73,17 +75,17 @@ const Search = () => {
       setShowWindow={setShowSearch}
     >
       <Box
-        css={containerStyles}
+        css={searchContainer}
         style={{
           border: '2px solid #ddd',
           position: 'relative',
           marginBottom: '1rem',
         }}
       >
-        <input
+        <Input
           placeholder="Search Message"
           onChange={handleInputChange}
-          css={textInputStyles}
+          css={textInput}
         />
 
         <Icon

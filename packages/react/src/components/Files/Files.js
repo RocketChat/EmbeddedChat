@@ -15,6 +15,7 @@ import { Button } from '../Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../Sidebar/Sidebar';
 import { Throbber } from '../Throbber';
+import { Input } from '../Input';
 
 const MessageCss = css`
   display: flex;
@@ -35,23 +36,24 @@ const MessageCss = css`
   }
 `;
 
-const searchContainerStyle = css`
+const searchContainer = css`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   background-color: #fff;
   border: 2px solid #ddd;
+  border-radius: 0.25rem;
   position: relative;
   margin: 0 1rem 1rem;
 `;
 
-const textInputStyle = css`
-  width: 75%;
-  height: 2.5rem;
+const textInput = css`
   border: none;
-  outline: none;
-  &::placeholder {
-    padding-left: 5px;
+  flex: none;
+  padding: none;
+  &:focus {
+    border: none;
+    box-shadow: none;
   }
 `;
 
@@ -191,11 +193,11 @@ const Files = () => {
         iconName="attachment"
         setShowWindow={setShowAllFiles}
       >
-        <Box css={searchContainerStyle}>
-          <input
+        <Box css={searchContainer}>
+          <Input
             placeholder="Search Files"
             onChange={handleInputChange}
-            css={textInputStyle}
+            css={textInput}
           />
 
           <Icon

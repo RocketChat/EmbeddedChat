@@ -163,7 +163,7 @@ export default function LoginForm() {
               color="primary"
               onClick={handleSubmit}
               style={{
-                margin: '10px',
+                margin: '10px 0',
               }}
             >
               Login

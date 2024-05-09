@@ -9,7 +9,7 @@ const Box = forwardRef(
     ref
   ) => {
     const { classNames, styleOverrides } = useComponentOverrides('Box');
-    const classNameBox = css`
+    const BoxCss = css`
       margin: 0;
       padding: 0;
       border-width: 0;
@@ -25,7 +25,7 @@ const Box = forwardRef(
     return (
       <Element
         ref={ref}
-        css={classNameBox}
+        css={BoxCss}
         className={`ec-box ${className} ${classNames}`}
         style={{ ...styleOverrides, ...style }}
         {...props}

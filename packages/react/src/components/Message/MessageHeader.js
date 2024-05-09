@@ -73,7 +73,7 @@ const MessageHeaderTimestapCss = css`
   color: #9ea2a8;
 `;
 
-const MessageHeader = ({ message, isTimeStamped = true }) => {
+const MessageHeader = ({ message, isTimeStamped = true, isRoles = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
@@ -141,7 +141,7 @@ const MessageHeader = ({ message, isTimeStamped = true }) => {
         >
           @{message.u.username}
         </Box>
-        {showRoles && (
+        {showRoles && isRoles && (
           <>
             {admins.includes(message?.u?.username) && (
               <Box
