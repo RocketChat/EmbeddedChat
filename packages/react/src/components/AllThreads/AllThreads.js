@@ -44,7 +44,9 @@ const AllThreads = () => {
     [messages, text]
   );
 
-  const containsThreads = messages.some((message) => message.tcount > 0);
+  const containsThreads = messages.some(
+    (message) => !message.t && message.tcount > 0
+  );
 
   return (
     <Sidebar
@@ -59,7 +61,7 @@ const AllThreads = () => {
     >
       <Box css={styles.threadListContainer(containsThreads, filteredThreads)}>
         {!containsThreads || filteredThreads.length === 0 ? (
-          <Box css={styles.noThreadInfo}>
+          <Box css={styles.noThreadInfoContainer}>
             <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
               No threads found

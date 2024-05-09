@@ -14,7 +14,7 @@ const styles = {
       : 'initial'};
   `,
 
-  noThreadInfo: css`
+  noThreadInfoContainer: css`
     display: flex;
     flex-direction: column;
     align-items: center;
