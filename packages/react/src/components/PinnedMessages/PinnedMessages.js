@@ -90,6 +90,7 @@ const PinnedMessages = () => {
                     variant="default"
                     showAvatar
                     showToolbox={false}
+                    showRoles={false}
                   />
                 </Box>
               );

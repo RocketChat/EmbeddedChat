@@ -99,6 +99,7 @@ const StarredMessages = () => {
                     variant="default"
                     showAvatar
                     showToolbox={false}
+                    showRoles={false}
                   />
                 </Box>
               );

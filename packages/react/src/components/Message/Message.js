@@ -59,6 +59,7 @@ const Message = ({
   className = '',
   style = {},
   showToolbox = true,
+  showRoles = true,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -183,7 +184,9 @@ const Message = ({
           />
         )}
         <MessageBodyContainer>
-          {shouldShowHeader && <MessageHeader message={message} />}
+          {shouldShowHeader && (
+            <MessageHeader message={message} isRoles={showRoles} />
+          )}
           {!message.t ? (
             <>
               <MessageBody css={message.isPending && PendingMessageBody}>

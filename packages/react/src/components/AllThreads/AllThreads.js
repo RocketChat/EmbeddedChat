@@ -125,11 +125,7 @@ const AllThreads = () => {
                     />
                   )}
                   <MessageBodyContainer>
-                    <MessageHeader
-                      message={message}
-                      isTimeStamped={false}
-                      isRoles={false}
-                    />
+                    <MessageHeader message={message} isTimeStamped={false} />
 
                     <MessageBody>
                       {message.attachments && message.attachments.length > 0

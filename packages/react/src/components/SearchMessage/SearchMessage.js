@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { css } from '@emotion/react';
 import { isSameDay, format } from 'date-fns';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
@@ -103,6 +102,7 @@ const Search = () => {
                   variant="default"
                   showAvatar
                   showToolbox={false}
+                  showRoles={false}
                 />
               </Box>
             );
