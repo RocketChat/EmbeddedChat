@@ -7,6 +7,7 @@ import GridItem from './GridItem';
 
 const Grid = ({ xs, md, lg, xl, xxl, cols, gap, gapX, gapY, children }) => (
   <Box
+    className="ec-grid"
     css={css`
       display: grid;
       height: 100%;
