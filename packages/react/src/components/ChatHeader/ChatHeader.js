@@ -25,17 +25,7 @@ import { Menu } from '../Menu';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
-
-const container = css`
-  width: 100%;
-  z-index: 100;
-  background-color: #fff;
-`;
-
-const nospace = css`
-  margin: 0;
-  padding: 0;
-`;
+import styles from './ChatHeader.styles';
 
 const ChatHeader = ({
   isClosable,
@@ -45,7 +35,7 @@ const ChatHeader = ({
   setFullScreen,
   channelName,
   className = '',
-  styles = {},
+  style = {},
   anonymousMode,
   showRoles,
 }) => {
@@ -335,34 +325,12 @@ const ChatHeader = ({
 
   return (
     <Box
-      css={css`
-        ${container}
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        padding: 0.75rem;
-        border: 1px solid rgba(0, 0, 0, 0.5);
-      `}
+      css={styles.chatHeaderParent}
       className={`ec-chat-header ${classNames} ${className}`}
-      style={{ ...styleOverrides, ...styles }}
+      style={{ ...styleOverrides, ...style }}
     >
-      <Box
-        css={css`
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-        `}
-      >
-        <Box
-          css={css`
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-            align-items: center;
-          `}
-        >
+      <Box css={styles.chatHeaderChild}>
+        <Box css={styles.channelDescription}>
           <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
           <Box
             css={css`
@@ -371,33 +339,32 @@ const ChatHeader = ({
           >
             {isUserAuthenticated ? (
               <>
-                <h2 className="ec-chat-header--channelName" css={nospace}>
+                <h2
+                  className="ec-chat-header--channelName"
+                  css={styles.clearSpacing}
+                >
                   {channelInfo.name || channelName || 'channelName'}
                 </h2>
                 {fullScreen && (
                   <p
                     className="ec-chat-header--channelDescription"
-                    css={nospace}
-                    style={{ fontSize: 14 }}
+                    css={styles.clearSpacing}
                   >
                     {channelInfo.description || ''}
                   </p>
                 )}
               </>
             ) : (
-              <h2 className="ec-chat-header--channelDescription" css={nospace}>
+              <h2
+                className="ec-chat-header--channelDescription"
+                css={styles.clearSpacing}
+              >
                 {channelName || 'Login to chat'}
               </h2>
             )}
           </Box>
         </Box>
-        <Box
-          css={css`
-            display: flex;
-            align-items: center;
-            gap: 0.125em;
-          `}
-        >
+        <Box css={styles.chatHeaderIconRow}>
           {avatarUrl && (
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
@@ -469,5 +436,5 @@ ChatHeader.propTypes = {
   moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
   className: PropTypes.string,
-  styles: PropTypes.object,
+  style: PropTypes.object,
 };
