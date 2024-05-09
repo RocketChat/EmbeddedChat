@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useCallback } from 'react';
-import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import styles from './CommandList.style';
 
 function CommandsList({
   className = '',
@@ -15,43 +16,6 @@ function CommandsList({
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
-
-  const listStyle = css`
-    margin-bottom: 5px;
-    display: block;
-    max-height: 10rem;
-    overflow: scroll;
-    overflow-x: hidden;
-    max-height: 145px;
-    scrollbar-width: thin;
-    scrollbar-color: #e0e0e1 transparent;
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #e0e0e1;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #e0e0e1;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-  `;
-
-  const listItemStyle = css`
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 0;
-    padding-right: 2px;
-
-    &:hover {
-      background-color: #dddddd;
-    }
-  `;
 
   const handleCommandClick = useCallback(
     (command) => {
@@ -82,20 +46,34 @@ function CommandsList({
 
   return (
     <Box
-      css={listStyle}
+      css={styles.list}
       className={`ec-commands-list ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
-      <ul style={{ listStyle: 'none' }}>
+      <ul
+        css={css`
+          liststyle: none;
+        `}
+      >
         {filteredCommands.map((command) => (
           <li
             key={command.command}
-            css={listItemStyle}
+            css={styles.listItem}
             onClick={() => handleCommandClick(command)}
           >
-            <span style={{ justifyContent: 'space-evenly' }}>
-              <span style={{ color: '#000000' }}>{command.command}</span>
+            <span
+              css={css`
+                justify-content: space-evenly;
+              `}
+            >
+              <span
+                css={css`
+                  color: #000000;
+                `}
+              >
+                {command.command}
+              </span>
               &nbsp;&nbsp;&nbsp;
               <span>{command.params}</span>
             </span>
