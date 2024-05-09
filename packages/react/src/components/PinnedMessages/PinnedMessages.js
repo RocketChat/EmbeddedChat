@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
+import { css } from '@emotion/react';
 import { usePinnedMessageStore, useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
@@ -7,6 +8,7 @@ import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import { Throbber } from '../Throbber';
 import Sidebar from '../Sidebar/Sidebar';
+import styles from './PinnedMessages.styles';
 
 const PinnedMessages = () => {
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
@@ -33,40 +35,26 @@ const PinnedMessages = () => {
       setShowWindow={setShowPinned}
     >
       {loading ? (
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            color: '#4a4a4a',
-          }}
-        >
+        <Box css={styles.centeredColumnStyles}>
           <Throbber />
         </Box>
       ) : (
-        <Box
-          style={{
-            flex: '1',
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: messageList?.length === 0 ? 'center' : 'initial',
-            alignItems: messageList?.length === 0 ? 'center' : 'initial',
-            overflowX: 'hidden',
-            maxWidth: '100%',
-          }}
-        >
+        <Box css={styles.pinnedListContainer(messageList)}>
           {messageList?.length === 0 ? (
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                color: '#4a4a4a',
-              }}
-            >
-              <Icon name="pin" size="3rem" style={{ padding: '0.5rem' }} />
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            <Box css={styles.centeredColumnStyles}>
+              <Icon
+                name="pin"
+                size="3rem"
+                css={css`
+                  padding: 0.5rem;
+                `}
+              />
+              <span
+                css={css`
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                `}
+              >
                 No pinned messages
               </span>
             </Box>
@@ -77,7 +65,11 @@ const PinnedMessages = () => {
               return (
                 <Box key={msg._id}>
                   {newDay && (
-                    <Box style={{ paddingTop: '0.5rem' }}>
+                    <Box
+                      css={css`
+                        padding-top: 0.5rem;
+                      `}
+                    >
                       <MessageDivider>
                         {format(new Date(msg.ts), 'MMMM d, yyyy')}
                       </MessageDivider>
