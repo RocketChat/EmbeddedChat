@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import {
@@ -13,26 +12,7 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../Sidebar/Sidebar';
-import { Input } from '../Input';
-
-const MessageCss = css`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding-top: 0.5rem;
-  -webkit-padding-before: 0.5rem;
-  padding-block-start: 0.5rem;
-  padding-bottom: 0.25rem;
-  -webkit-padding-after: 0.25rem;
-  padding-block-end: 0.25rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-inline: 1.25rem;
-  cursor: pointer;
-  &:hover {
-    background: #f2f3f5;
-  }
-`;
+import styles from './AllThreads.styles';
 
 const AllThreads = () => {
   const showAvatar = useUserStore((state) => state.showAvatar);
@@ -77,31 +57,9 @@ const AllThreads = () => {
         placeholder: 'Search Threads',
       }}
     >
-      <Box
-        style={{
-          flex: '1',
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent:
-            !containsThreads || filteredThreads.length === 0
-              ? 'center'
-              : 'initial',
-          alignItems:
-            !containsThreads || filteredThreads.length === 0
-              ? 'center'
-              : 'initial',
-        }}
-      >
+      <Box css={styles.threadListContainer(containsThreads, filteredThreads)}>
         {!containsThreads || filteredThreads.length === 0 ? (
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: '#4a4a4a',
-            }}
-          >
+          <Box css={styles.noThreadInfo}>
             <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
               No threads found
@@ -114,7 +72,7 @@ const AllThreads = () => {
               message.tcount && (
                 <Box
                   key={message._id}
-                  css={MessageCss}
+                  css={styles.threadMessageContainer}
                   onClick={handleOpenThread(message)}
                 >
                   {showAvatar && (
