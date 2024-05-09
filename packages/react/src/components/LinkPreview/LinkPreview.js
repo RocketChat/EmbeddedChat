@@ -5,6 +5,7 @@ import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 import { Icon } from '../Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import styles from './LinkPreview.styles';
 
 const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
@@ -20,35 +21,13 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const isThumbnail = meta.oembedThumbnailUrl || meta.ogImage;
   const isSiteName = meta.ogSiteName || meta.oembedProviderName;
 
-  const ArrowDropDownCss = css`
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  `;
-
-  const LinkPreviewBoxCss = css`
-    max-width: 22rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    margin-bottom: 0.75rem;
-    overflow: hidden;
-  `;
-
-  const TextCss = css`
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    margin-block-start: 0rem;
-    margin-block-end: 0rem;
-  `;
-
   const handleTogglePreview = () => {
     setIsPreviewOpen((prev) => !prev);
   };
 
   return (
     <>
-      <Box css={ArrowDropDownCss}>
+      <Box css={styles.arrowDropDown}>
         Link Preview
         <ActionButton
           onClick={handleTogglePreview}
@@ -67,7 +46,7 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
 
       {isPreviewOpen && (
         <Box
-          css={LinkPreviewBoxCss}
+          css={styles.linkPreviewContainer}
           className={`ec-linkpreview ${className} ${classNames}`}
           style={{ ...styleOverrides, ...style }}
           {...props}
@@ -94,17 +73,21 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
           <Box style={{ padding: '8px' }}>
             <a
               href={url}
-              style={{ color: 'blue' }}
+              css={css`
+                color: blue;
+              `}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {isTitle && <p css={TextCss}>{isTitle}</p>}
+              {isTitle && <p css={styles.textStyle}>{isTitle}</p>}
             </a>
-            {isDescription && <p css={TextCss}>{isDescription}</p>}
+            {isDescription && <p css={styles.textStyle}>{isDescription}</p>}
             {isSiteName && (
               <a
                 href={url}
-                style={{ color: 'rgba(97, 97, 97, 1)' }}
+                css={css`
+                  color: rgba(97, 97, 97, 1);
+                `}
                 target="_blank"
                 rel="noopener noreferrer"
               >
