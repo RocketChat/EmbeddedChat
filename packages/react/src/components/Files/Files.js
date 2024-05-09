@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { useChannelStore, useFileStore, useMessageStore } from '../../store';
@@ -15,37 +14,7 @@ import { Button } from '../Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../Sidebar/Sidebar';
 import { Throbber } from '../Throbber';
-
-const MessageCss = css`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding-top: 0.5rem;
-  -webkit-padding-before: 0.5rem;
-  padding-block-start: 0.5rem;
-  padding-bottom: 0.25rem;
-  -webkit-padding-after: 0.25rem;
-  padding-block-end: 0.25rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-inline: 1.25rem;
-  cursor: pointer;
-  &:hover {
-    background: #f2f3f5;
-  }
-`;
-
-const FilePreviewUsernameCss = css`
-  letter-spacing: 0rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 1;
-  color: #6c727a;
-`;
+import { fileStyles as styles } from './Files.styles';
 
 const Files = () => {
   const { RCInstance } = useRCContext();
@@ -209,16 +178,12 @@ const Files = () => {
               filteredFiles.map(
                 (file) =>
                   file.path && (
-                    <Box key={file._id} css={MessageCss}>
-                      <FilePreviewContainer
-                        file={file}
-                        sequential={false}
-                        isStarred={false}
-                      />
+                    <Box key={file._id} css={styles.message}>
+                      <FilePreviewContainer file={file} />
                       <MessageBodyContainer style={{ width: '75%' }}>
                         <FilePreviewHeader file={file} isTimeStamped={false} />
                         <MessageBody>
-                          <div css={FilePreviewUsernameCss}>
+                          <div css={styles.previewUsername}>
                             @{file.user.username}
                           </div>
                         </MessageBody>
