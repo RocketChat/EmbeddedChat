@@ -7,12 +7,12 @@ import EmojiReaction from '../EmojiReaction/EmojiReaction';
 
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
-    const containerStyle = css`
-      font-size: 1rem;
-    `;
-
     return (
-      <div css={containerStyle}>
+      <div
+        css={css`
+          font-size: 1rem;
+        `}
+      >
         <EmojiReaction body={body} />
       </div>
     );
