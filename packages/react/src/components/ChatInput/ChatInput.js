@@ -26,7 +26,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
-import ChatInfo from '../ChatInfo/ChatInfo';
+import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 
 const editingMessageCss = css`
@@ -557,7 +557,7 @@ const ChatInput = ({ scrollToBottom }) => {
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
-        <ChatInfo
+        <ChannelState
           status={
             editMessage.msg || editMessage.attachments
               ? 'Editing Message'
