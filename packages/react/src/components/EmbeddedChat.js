@@ -18,7 +18,7 @@ import { Box } from './Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from './ToastBar';
-import { DropBoxOverlay, dropBoxStyles } from './DropBox';
+import { DropBoxOverlay, DropBox } from './DropBox';
 import { styles } from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
@@ -250,13 +250,7 @@ const EmbeddedChat = ({
 
             {onDrag ? (
               <>
-                <Box
-                  css={[
-                    onDrag && dropBoxStyles.dropBoxCss,
-                    onDrag && dropBoxStyles.borderCss,
-                  ]}
-                  style={{ height: !fullScreen ? height : '90vh' }}
-                >
+                <DropBox fullScreen height={height}>
                   {isUserAuthenticated || anonymousMode ? (
                     <ChatBody
                       height={!fullScreen ? height : '88vh'}
@@ -268,7 +262,7 @@ const EmbeddedChat = ({
                   ) : (
                     <Home height={!fullScreen ? height : '88vh'} />
                   )}
-                </Box>
+                </DropBox>
                 <ChatInput scrollToBottom={scrollToBottom} />
               </>
             ) : (

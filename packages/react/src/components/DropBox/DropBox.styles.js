@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
-const dropBoxStyles = {
-  dropBoxCss: css`
+export const dropBoxStyles = {
+  dropBox: css`
     z-index: 300;
     opacity: 25%;
     flex-direction: column;
@@ -16,7 +16,7 @@ const dropBoxStyles = {
     pointer-events: none;
   `,
 
-  borderCss: css`
+  border: css`
     position: relative;
     top: 0;
     left: 0;
@@ -25,4 +25,14 @@ const dropBoxStyles = {
   `,
 };
 
-export default dropBoxStyles;
+export const dropBoxOverlayStyles = {
+  overlay: css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #007fff;
+    z-index: 10000;
+  `,
+};
