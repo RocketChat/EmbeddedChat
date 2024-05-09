@@ -1,7 +1,6 @@
 /* eslint-disable no-shadow */
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
@@ -34,6 +33,7 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Files } from '../Files';
 import UserInformation from '../UserInformation/UserInformation';
+import { chatbodyStyles as styles } from './ChatBody.styles';
 
 const ChatBody = ({
   height,
@@ -43,31 +43,6 @@ const ChatBody = ({
   messageListRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-  const ChatBodyCss = css`
-    word-break: break-all;
-    overflow: scroll;
-    overflow: auto;
-    display: flex;
-    flex-direction: column-reverse;
-    width: 100%;
-    height: 100vh;
-    max-height: 600px;
-    position: relative;
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #8d8d8d;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
-  `;
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -266,11 +241,8 @@ const ChatBody = ({
     <>
       <Box
         ref={messageListRef}
-        css={ChatBodyCss}
+        css={styles.chatbodyContainer}
         style={{
-          borderLeft: '1px solid #b1b1b1',
-          borderRight: '1px solid #b1b1b1',
-          paddingTop: '70px',
           ...styleOverrides,
         }}
         className={`ec-chat-body ${classNames}`}
