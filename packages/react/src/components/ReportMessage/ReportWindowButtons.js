@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Button } from '../Button';
@@ -45,7 +46,9 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
           <Icon
             name="report"
             size="1.25rem"
-            style={{ marginRight: '0.5rem' }}
+            css={css`
+              margin-right: 0.5rem;
+            `}
           />
           Report this message?
         </Modal.Title>

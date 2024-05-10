@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import ReportWindowButtons from './ReportWindowButtons';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
 import { ModalBackdrop } from '../Modal';
 import { Input } from '../Input';
+import styles from './ReportMessage.styles';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
@@ -22,17 +24,12 @@ const MessageReportWindow = ({ messageId }) => {
         messageId={messageId}
       >
         <Box>{JSON.stringify(messageText)}</Box>
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: '0.125rem',
-            padding: '0.6rem 0',
-          }}
-        >
+        <Box css={styles.conatiner}>
           <Input
             textArea
-            style={{ width: '90%' }}
+            css={css`
+              width: 90%;
+            `}
             placeholder="Why do you want to report this message?"
             onChange={(e) => {
               setDescription(e.target.value);
