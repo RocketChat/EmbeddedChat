@@ -1,32 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import emojione from 'emoji-toolkit';
-
-const emojiInMessageCss = css`
-  img.joypixels {
-    height: 1.5rem;
-    width: 1.5rem;
-    image-rendering: pixelated;
-    font-size: inherit;
-    vertical-align: middle;
-  }
-
-  img.joypixels_BigEmoji {
-    height: 2.25rem;
-    width: 2.25rem;
-    image-rendering: pixelated;
-    font-size: inherit;
-  }
-`;
-
-const emojioneCss = css`
-  margin: 0 0.15em;
-  vertical-align: middle;
-  white-space: nowrap;
-  font-size: inherit;
-  line-height: normal;
-`;
+import { EmojiStyles as styles } from './elements.styles';
 
 const Emoji = ({ big = false, emoji }) => {
   const fallback = useMemo(
@@ -43,7 +18,7 @@ const Emoji = ({ big = false, emoji }) => {
 
   return (
     <span
-      css={[emojioneCss, emojiInMessageCss]}
+      css={[styles.emojione, styles.emojiInMessage]}
       dangerouslySetInnerHTML={{ __html: emojiHtml }}
     />
   );

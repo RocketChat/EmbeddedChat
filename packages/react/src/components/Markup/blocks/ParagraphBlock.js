@@ -3,12 +3,12 @@ import React from 'react';
 import { css } from '@emotion/react';
 import InlineElements from '../elements/InlineElements';
 
-const ParagraphBlockCss = css`
-  margin: 0;
-`;
-
 const ParagraphBlock = ({ contents }) => (
-  <p css={ParagraphBlockCss}>
+  <p
+    css={css`
+      margin: 0;
+    `}
+  >
     <InlineElements contents={contents} />
   </p>
 );

@@ -1,20 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Box } from '../../Box';
+import { ColorElementStyles as styles } from './elements.styles';
 
 const ColorElement = ({ r, g, b, a }) => (
-  <span>
-    <span
-      style={{
-        backgroundColor: `rgba(${r}, ${g}, ${b}, ${(a / 255) * 100}%)`,
-        display: 'inline-block',
-        width: '1em',
-        height: '1em',
-        verticalAlign: 'middle',
-        marginInlineEnd: '0.5em',
-      }}
-    />
+  <Box is="span">
+    <Box is="span" css={styles.colorBox(r, g, b, a)} />
     rgba({r}, {g}, {b}, {(a / 255) * 100}%)
-  </span>
+  </Box>
 );
 
 export default ColorElement;

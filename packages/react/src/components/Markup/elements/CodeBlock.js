@@ -1,23 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
-
-const copyonly = css`
-  display: none;
-  width: 100%;
-  height: 0;
-  user-select: none;
-  vertical-align: baseline;
-  font-size: 0;
-  -moz-box-orient: vertical;
-`;
-
-const prestyle = css`
-  display: inline-block;
-  max-width: 100%;
-  overflow-x: auto;
-  white-space: pre-wrap;
-`;
+import { CodeBlockStyles as styles } from './elements.styles';
 
 const CodeBlock = ({ lines }) => {
   const code = useMemo(
@@ -26,10 +9,10 @@ const CodeBlock = ({ lines }) => {
   );
 
   return (
-    <pre role="region" css={prestyle}>
-      <span css={copyonly}>```</span>
+    <pre role="region" css={styles.prestyle}>
+      <span css={styles.copyonly}>```</span>
       <code>{code}</code>
-      <span css={copyonly}>```</span>
+      <span css={styles.copyonly}>```</span>
     </pre>
   );
 };
