@@ -161,7 +161,7 @@ export const MessageHeaderStyles = {
     color: #2f343d;
   `,
 
-  username: css`
+  userName: css`
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -173,7 +173,7 @@ export const MessageHeaderStyles = {
     color: #6c727a;
   `,
 
-  headerTimestap: css`
+  headerTimestamp: css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -195,7 +195,7 @@ export const MessageMetricsStyles = {
     margin-top: 0.5rem;
   `,
 
-  metricsItem: (isFirstMessage) => css`
+  metricsItem: (isFirstMessage = false) => css`
     letter-spacing: 0rem;
     font-size: 0.625rem;
     font-weight: 700;

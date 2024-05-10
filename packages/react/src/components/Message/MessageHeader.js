@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import { format } from 'date-fns';
 import { useMemberStore, useUserStore } from '../../store';
 import { Icon } from '../Icon';
@@ -8,70 +7,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
-
-const MessageHeaderCss = css`
-  display: flex;
-  flex-direction: row;
-  flex-grow: 0;
-  flex-shrink: 1;
-  min-width: 1px;
-  margin-top: 0.125rem;
-  margin-bottom: 0.125rem;
-  margin-block: 0.125rem;
-  gap: 0.125rem;
-  align-items: center;
-`;
-
-const MessageHeaderNameCss = css`
-  letter-spacing: 0rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 1;
-  color: #2f343d;
-`;
-
-const MessageUserRoleCss = css`
-  background-color: #cbced1;
-  letter-spacing: 0rem;
-  font-size: 0.75rem;
-  padding: 0 0.25rem;
-  margin: 0 0.1rem;
-  border-radius: 2px;
-  font-weight: 700;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #2f343d;
-`;
-
-const MessageHeaderUsernameCss = css`
-  letter-spacing: 0rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-shrink: 1;
-  color: #6c727a;
-`;
-
-const MessageHeaderTimestapCss = css`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  letter-spacing: 0rem;
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1rem;
-  flex-shrink: 0;
-  color: #9ea2a8;
-`;
+import { MessageHeaderStyles as styles } from './Message.styles';
 
 const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
@@ -123,20 +59,20 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
   if (!message.t) {
     return (
       <Box
-        css={MessageHeaderCss}
+        css={styles.header}
         className={appendClassNames('ec-message-header', classNames)}
         style={styleOverrides}
       >
         <Box
           is="span"
-          css={MessageHeaderNameCss}
+          css={styles.headerName}
           className={appendClassNames('ec-message-header-name')}
         >
           {message.u?.name}
         </Box>
         <Box
           is="span"
-          css={MessageHeaderUsernameCss}
+          css={styles.userName}
           className={appendClassNames('ec-message-header-username')}
         >
           @{message.u.username}
@@ -146,7 +82,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
             {admins.includes(message?.u?.username) && (
               <Box
                 as="span"
-                css={MessageUserRoleCss}
+                css={styles.userRole}
                 className={appendClassNames('ec-message-user-role')}
               >
                 Admin
@@ -158,7 +94,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
                 <Box
                   key={index}
                   as="span"
-                  css={MessageUserRoleCss}
+                  css={styles.userRole}
                   className={appendClassNames('ec-message-user-role')}
                 >
                   {role}
@@ -171,7 +107,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
         {isTimeStamped && (
           <Box
             is="span"
-            css={MessageHeaderTimestapCss}
+            css={styles.headerTimestamp}
             className={appendClassNames('ec-message-header-timestamp')}
           >
             {format(new Date(message.ts), 'h:mm a')}
@@ -208,20 +144,20 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
 
   return (
     <Box
-      css={MessageHeaderCss}
+      css={styles.header}
       className={appendClassNames('ec-message-header', classNames)}
       style={styleOverrides}
     >
       <Box
         is="span"
-        css={MessageHeaderNameCss}
+        css={styles.headerName}
         className={appendClassNames('ec-message-header-name')}
       >
         @{message.u.username}{' '}
       </Box>
       <Box
         is="span"
-        css={MessageHeaderUsernameCss}
+        css={styles.userName}
         className={appendClassNames('ec-message-header-username')}
         style={{ marginLeft: '2px' }}
       >
@@ -229,7 +165,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
       </Box>
       <Box
         is="span"
-        css={MessageHeaderTimestapCss}
+        css={styles.headerTimestamp}
         className={appendClassNames('ec-message-header-timestamp')}
       >
         {format(new Date(message.ts), 'h:mm a')}
