@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { css } from '@emotion/react';
 import { Avatar } from '../Avatar';
 import { Box } from '../Box';
 import { Icon } from '../Icon';

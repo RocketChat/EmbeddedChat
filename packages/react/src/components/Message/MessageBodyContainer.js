@@ -11,14 +11,13 @@ const MessageBodyContainer = ({ children, className = '', style = {} }) => {
     style
   );
 
-  const classNameMBC = css`
-    margin-left: 5px;
-    position: relative;
-    width: 100%;
-  `;
   return (
     <Box
-      css={classNameMBC}
+      css={css`
+        margin-left: 5px;
+        position: relative;
+        width: 100%;
+      `}
       className={appendClassNames('ec-message-body-container', classNames)}
       style={styleOverrides}
     >
