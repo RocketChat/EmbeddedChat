@@ -8,10 +8,6 @@ import { Box } from '../Box';
 import { Modal } from '../Modal';
 import { Input } from '../Input';
 
-const FooterCss = css`
-  display: flex;
-  justify-content: space-around;
-`;
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
   const isModalOpen = totpModalStore((state) => state.isModalOpen);
@@ -43,16 +39,27 @@ export default function TotpModal({ handleLogin }) {
         onClose={handleClose}
       >
         <Box>
-          <Box style={{ margin: '1px 110px' }}>
+          <Box
+            css={css`
+              margin: 1px 110px;
+            `}
+          >
             <Input
-              style={{ width: '270px' }}
+              css={css`
+                width: 270px;
+              `}
               type="password"
               onChange={handleEdit}
               placeholder="123456"
             />
           </Box>
           <Modal.Footer>
-            <Box css={FooterCss}>
+            <Box
+              css={css`
+                display: flex;
+                justify-content: space-around;
+              `}
+            >
               <Button color="secondary" onClick={handleClose}>
                 Cancel
               </Button>
