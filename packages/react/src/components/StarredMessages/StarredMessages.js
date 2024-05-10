@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
+import { css } from '@emotion/react';
 import {
   useStarredMessageStore,
   useMessageStore,
@@ -11,6 +12,7 @@ import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import { Throbber } from '../Throbber';
 import Sidebar from '../Sidebar/Sidebar';
+import styles from './StarredMessages.styles';
 
 const StarredMessages = () => {
   const setShowStarred = useStarredMessageStore(
@@ -42,42 +44,29 @@ const StarredMessages = () => {
       setShowWindow={setShowStarred}
     >
       {loading ? (
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            color: '#4a4a4a',
-          }}
-        >
+        <Box css={styles.centeredColumnStyles}>
           <Throbber />
         </Box>
       ) : (
-        <Box
-          style={{
-            flex: '1',
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: messageList?.length === 0 ? 'center' : 'initial',
-            alignItems: messageList?.length === 0 ? 'center' : 'initial',
-            overflowX: 'hidden',
-            maxWidth: '100%',
-          }}
-        >
+        <Box css={styles.starredListContainer(messageList)}>
           {messageList?.length === 0 ? (
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                color: '#4a4a4a',
-              }}
-            >
-              <Icon name="star" size="3rem" style={{ padding: '0.5rem' }} />
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            <Box css={styles.centeredColumnStyles}>
+              <Icon
+                name="star"
+                size="3rem"
+                css={css`
+                  padding: 0.5rem;
+                `}
+              />
+              <Box
+                is="span"
+                css={css`
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                `}
+              >
                 No starred messages
-              </span>
+              </Box>
             </Box>
           ) : (
             messageList?.map((msg, index, arr) => {
