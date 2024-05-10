@@ -1,33 +1,12 @@
 import React, { useContext, useMemo, useCallback } from 'react';
-import { css, useTheme, keyframes } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import ToastContext from '../../context/ToastContext';
 import { Box } from '../Box';
 import ToastBar from './ToastBar';
+import { toastBarContainerStyles as styles } from './ToastBar.styles';
 
 const ToastContainer = () => {
   const theme = useTheme();
-
-  const animation = keyframes`
-    0% {
-      opacity: 0;
-    }
-    20% {
-      opacity: 1;
-    }
-    80% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  `;
-  const ToastContainerCss = css`
-    position: fixed;
-    z-index: ${theme.zIndex.toastbar};
-    border-radius: 0.25em;
-    background-color: white;
-    animation: ${animation} ${2000}ms ease-in-out forwards;
-  `;
 
   const { position, toasts, setToasts } = useContext(ToastContext);
   const positionStyle = useMemo(() => {
@@ -50,7 +29,7 @@ const ToastContainer = () => {
     return null;
   }
   return (
-    <Box css={ToastContainerCss} style={positionStyle}>
+    <Box css={styles.container(theme)} style={positionStyle}>
       <ToastBar toast={currentToast} onClose={onClose} />
     </Box>
   );

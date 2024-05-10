@@ -1,12 +1,13 @@
 /* eslint-disable no-shadow */
 import React, { useMemo, useRef, useEffect } from 'react';
-import { css, useTheme, keyframes } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import alpha from 'color-alpha';
 import { appendClassNames } from '../../lib/appendClassNames';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
+import { toastbarStyles as styles } from './ToastBar.styles';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
@@ -34,37 +35,6 @@ const ToastBar = ({ toast, onClose }) => {
     return { iconName, color, bgColor };
   }, [theme.palette, type]);
 
-  const animation = keyframes`
-    0% {
-      opacity: 0;
-    }
-    20% {
-      opacity: 1;
-    }
-    80% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  `;
-
-  const ToastBarCSS = css`
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    align-items: center;
-    justify-content: space-between;
-    width: fit-content;
-    max-width: 20rem;
-    color: ${color};
-    background-color: ${bgColor};
-    border-radius: 0.25em;
-    padding: 0.75em 1em;
-    z-index: ${theme.zIndex?.toastbar};
-    animation: ${animation} ${time}ms ease-in-out forwards;
-  `;
-
   useEffect(() => {
     setTimeout(onClose, time);
   }, [onClose, time]);
@@ -72,7 +42,7 @@ const ToastBar = ({ toast, onClose }) => {
   return (
     <Box
       ref={toastRef}
-      css={ToastBarCSS}
+      css={styles.toastbar(theme, color, bgColor, time)}
       className={appendClassNames('ec-toast-bar', classNames)}
       style={styleOverrides}
     >
