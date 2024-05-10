@@ -279,7 +279,6 @@ export const MessageToolboxStyles = {
     padding: 0.25rem;
     border: 1px solid #dfdfdf;
     border-radius: 0.25rem;
-
     background: #fff;
   `,
 };

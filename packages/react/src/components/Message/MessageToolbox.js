@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { css } from '@emotion/react';
 import Popup from 'reactjs-popup';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
@@ -11,32 +10,7 @@ import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../Tooltip';
-
-const MessageToolboxWrapperCss = css`
-  display: none;
-  .ec-message:hover & {
-    display: flex;
-    position: absolute;
-    bottom: 100%;
-    z-index: 90;
-    right: 2rem;
-  }
-`;
-
-const MessageToolboxCss = css`
-  display: flex;
-  margin-left: -0.25rem;
-  margin-right: -0.25rem;
-  margin-inline: -0.25rem;
-  margin-top: 0.125rem;
-  font-size: 1.25rem !important;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  border: 1px solid #dfdfdf;
-  border-radius: 0.25rem;
-
-  background: #fff;
-`;
+import { MessageToolboxStyles as styles } from './Message.styles';
 
 const popupStyle = {
   margin: '0',
@@ -82,9 +56,9 @@ export const MessageToolbox = ({
 
   return (
     <>
-      <Box css={MessageToolboxWrapperCss}>
+      <Box css={styles.container}>
         <Box
-          css={MessageToolboxCss}
+          css={styles.toolbox}
           className={appendClassNames('ec-message-toolbox', classNames)}
           style={styleOverrides}
           {...props}
