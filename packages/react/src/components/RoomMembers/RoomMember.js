@@ -5,7 +5,7 @@ import RoomMemberItem from './RoomMemberItem';
 import { useMemberStore } from '../../store';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
-import InviteMembers from './inviteMembers/InviteMembers';
+import InviteMembers from './InviteMembers';
 import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';

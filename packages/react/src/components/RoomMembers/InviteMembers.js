@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import useInviteStore from '../../../store/inviteStore';
-import { useToastBarDispatch } from '../../../hooks/useToastBarDispatch';
-import { Box } from '../../Box';
-import { Icon } from '../../Icon';
-import { Input } from '../../Input';
-import { ActionButton } from '../../ActionButton';
+import useInviteStore from '../../store/inviteStore';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import { Box } from '../Box';
+import { Icon } from '../Icon';
+import { Input } from '../Input';
+import { ActionButton } from '../ActionButton';
 
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
