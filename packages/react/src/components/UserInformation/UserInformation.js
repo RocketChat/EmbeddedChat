@@ -9,6 +9,7 @@ import { Icon } from '../Icon';
 import { Throbber } from '../Throbber';
 import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
+import UserInfoField from './UserInfoField';
 import styles from './UserInformation.styles';
 
 const UserInformation = () => {
@@ -26,8 +27,7 @@ const UserInformation = () => {
 
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
-    const URL = `${host}/avatar/${username}`;
-    return URL;
+    return `${host}/avatar/${username}`;
   };
 
   useEffect(() => {
@@ -79,29 +79,11 @@ const UserInformation = () => {
               />
               {currentUserInfo?.username}
             </Box>
-            {currentUserInfo?.roles?.length &&
-              (isAdmin || authenticatedUserId === currentUserInfo._id) && (
-                <Box
-                  css={css`
-                    margin-block: 15px;
-                  `}
-                >
-                  <Box
-                    css={css`
-                      margin-block: 5px;
-                      font-weight: bold;
-                    `}
-                  >
-                    Roles
-                  </Box>
-                  <Box
-                    css={css`
-                      display: flex;
-                      flex-wrap: wrap;
-                      gap: 0.5rem;
-                      width: 100%;
-                    `}
-                  >
+            {currentUserInfo?.roles?.length && (
+              <UserInfoField
+                label="Roles"
+                value={
+                  <Box css={styles.roleContainer}>
                     {currentUserInfo?.roles?.map((role, index) => (
                       <Box
                         key={index}
@@ -113,154 +95,63 @@ const UserInformation = () => {
                       </Box>
                     ))}
                   </Box>
-                </Box>
-              )}
-            <Box
-              css={css`
-                margin-block: 15px;
-              `}
-            >
-              <Box
-                css={css`
-                  margin-block: 5px;
-                  font-weight: bold;
-                `}
-              >
-                Username
-              </Box>
-              <Box
-                css={css`
-                  opacity: 0.5rem;
-                `}
-              >
-                {currentUserInfo?.username}
-              </Box>
-            </Box>
-
-            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
-              <Box
-                css={css`
-                  margin-block: 15px;
-                `}
-              >
-                <Box
-                  css={css`
-                    margin-block: 5px;
-                    font-weight: bold;
-                  `}
-                >
-                  Last login
-                </Box>
-                <Box
-                  css={css`
-                    opacity: 0.5rem;
-                  `}
-                >
-                  {formatTimestamp(currentUserInfo.lastLogin)}
-                </Box>
-              </Box>
+                }
+                isAdmin={isAdmin}
+                authenticatedUserId={authenticatedUserId}
+                currentUserInfo={currentUserInfo}
+              />
             )}
-
-            <Box
-              css={css`
-                margin-block: 15px;
-              `}
-            >
-              <Box
-                css={css`
-                  margin-block: 5px;
-                  font-weight: bold;
-                `}
-              >
-                Full Name
-              </Box>
-              <Box
-                css={css`
-                  opacity: 0.5rem;
-                `}
-              >
-                {currentUserInfo.name}
-              </Box>
-            </Box>
-
-            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
-              <Box
-                css={css`
-                  margin-block: 15px;
-                `}
-              >
-                <Box
-                  css={css`
-                    margin-block: 5px;
-                    font-weight: bold;
-                  `}
-                >
-                  Email
+            <UserInfoField
+              label="Username"
+              value={currentUserInfo?.username}
+              isAdmin={isAdmin}
+              authenticatedUserId={authenticatedUserId}
+              currentUserInfo={currentUserInfo}
+            />
+            <UserInfoField
+              label="Last login"
+              value={formatTimestamp(currentUserInfo.lastLogin)}
+              isAdmin={isAdmin}
+              authenticatedUserId={authenticatedUserId}
+              currentUserInfo={currentUserInfo}
+            />
+            <UserInfoField
+              label="Full Name"
+              value={currentUserInfo.name}
+              isAdmin={isAdmin}
+              authenticatedUserId={authenticatedUserId}
+              currentUserInfo={currentUserInfo}
+            />
+            <UserInfoField
+              label="Email"
+              value={currentUserInfo.emails?.map((email, index) => (
+                <Box key={index} css={styles.emailContainer}>
+                  <a
+                    href={`mailto:${email.address}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    {email.address}
+                  </a>
+                  <Box css={styles.userRole}>
+                    {email.verified ? 'Verified' : 'Not Verified'}
+                  </Box>
                 </Box>
-                <Box
-                  css={css`
-                    opacity: 0.5rem;
-                  `}
-                >
-                  {currentUserInfo.emails?.map((email, index) => (
-                    <Box
-                      key={index}
-                      css={css`
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        margin-block: 5px;
-                      `}
-                    >
-                      <a
-                        href={`mailto:${email.address}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                      >
-                        {email.address}
-                      </a>
-                      <Box css={styles.userRole}>
-                        {email.verified ? 'Verified' : 'Not Verified'}
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-            )}
-
-            {(isAdmin || authenticatedUserId === currentUserInfo._id) && (
-              <Box
-                css={css`
-                  margin-block: 15px;
-                `}
-              >
-                <Box
-                  css={css`
-                    margin-block: 5px;
-                    font-weight: bold;
-                  `}
-                >
-                  Created at
-                </Box>
-                <Box
-                  css={css`
-                    opacity: 0.5rem;
-                  `}
-                >
-                  {formatTimestamp(currentUserInfo.createdAt)}
-                </Box>
-              </Box>
-            )}
+              ))}
+              isAdmin={isAdmin}
+              authenticatedUserId={authenticatedUserId}
+              currentUserInfo={currentUserInfo}
+            />
+            <UserInfoField
+              label="Created at"
+              value={formatTimestamp(currentUserInfo.createdAt)}
+              isAdmin={isAdmin}
+              authenticatedUserId={authenticatedUserId}
+              currentUserInfo={currentUserInfo}
+            />
           </Box>
         </Box>
       ) : (
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            color: '#4a4a4a',
-          }}
-        >
+        <Box css={styles.centeredColumnStyles}>
           <Throbber />
         </Box>
       )}

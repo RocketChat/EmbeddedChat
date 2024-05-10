@@ -6,6 +6,13 @@ const styles = {
     margin: 0 auto;
   `,
 
+  roleContainer: css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  `,
+
   userRole: css`
     background-color: #cbced1;
     letter-spacing: 0rem;
@@ -19,6 +26,20 @@ const styles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #2f343d;
+  `,
+
+  emailContainer: css`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block: 5px;
+  `,
+
+  centeredColumnStyles: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #4a4a4a;
   `,
 };
 

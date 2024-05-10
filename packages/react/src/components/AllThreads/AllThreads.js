@@ -61,7 +61,7 @@ const AllThreads = () => {
     >
       <Box css={styles.threadListContainer(containsThreads, filteredThreads)}>
         {!containsThreads || filteredThreads.length === 0 ? (
-          <Box css={styles.noThreadInfoContainer}>
+          <Box css={styles.centeredColumnStyles}>
             <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
               No threads found
