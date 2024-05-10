@@ -8,6 +8,7 @@ import { Icon } from '../Icon';
 import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import Sidebar from '../Sidebar/Sidebar';
+import styles from './SearchMessage.styles';
 
 const Search = () => {
   const { RCInstance } = useContext(RCContext);
@@ -56,27 +57,9 @@ const Search = () => {
         placeholder: 'Search Messages',
       }}
     >
-      <Box
-        style={{
-          flex: '1',
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: messageList.length === 0 ? 'center' : 'initial',
-          alignItems: messageList.length === 0 ? 'center' : 'initial',
-          overflowX: 'hidden',
-          maxWidth: '100%',
-        }}
-      >
+      <Box css={styles.searchListContainer(messageList)}>
         {messageList.length === 0 ? (
-          <Box
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: '#4a4a4a',
-            }}
-          >
+          <Box css={styles.centeredColumnStyles}>
             <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
               No results found
