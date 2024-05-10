@@ -5,6 +5,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { Tooltip } from '../Tooltip';
 import RCContext from '../../context/RCInstance';
+import { MessageAvatarContainerStyles as styles } from './Message.styles';
 
 const MessageAvatarContainer = ({
   message,
@@ -18,16 +19,9 @@ const MessageAvatarContainer = ({
     const URL = `${host}/avatar/${username}`;
     return URL;
   };
-  const MessageAvatarContainerCss = css`
-    margin: 3px;
-    width: 2.25em;
-    max-height: 2.25em;
-    display: flex;
-    justify-content: flex-end;
-  `;
 
   return (
-    <Box css={MessageAvatarContainerCss}>
+    <Box css={styles.container}>
       {!sequential ? (
         <Avatar
           url={getUserAvatarUrl(message.u.username)}
