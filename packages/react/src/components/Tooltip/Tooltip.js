@@ -28,7 +28,7 @@ const Tooltip = ({ children, text, position }) => {
   };
 
   return (
-    <div
+    <Box
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -45,7 +45,7 @@ const Tooltip = ({ children, text, position }) => {
           <Box css={styles.tooltipArrow(position)} />
         </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
