@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const MessageGenericPreviewCoverImage = ({
@@ -14,20 +15,18 @@ const MessageGenericPreviewCoverImage = ({
     'MessageGenericPreviewCoverImage'
   );
 
-  const previewCoverImageCss = css`
-    background-image: url(${url});
-    max-width: 100%;
-  `;
-
   return (
-    <div
-      css={previewCoverImageCss}
+    <Box
+      css={css`
+        background-image: url(${url});
+        max-width: 100%;
+      `}
       className={`ec-message-generic-preview__preview ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}
     >
-      <div style={{ paddingTop: `${(height / width) * 100}%` }} />
-    </div>
+      <Box style={{ paddingTop: `${(height / width) * 100}%` }} />
+    </Box>
   );
 };
 

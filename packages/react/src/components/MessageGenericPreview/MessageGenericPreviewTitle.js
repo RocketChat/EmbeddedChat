@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const MessageGenericPreviewTitle = ({
@@ -27,13 +28,14 @@ const MessageGenericPreviewTitle = ({
     );
   }
   return (
-    <span
+    <Box
+      is="span"
       className={`ec-message-generic-preview__title ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}
     >
       {children}
-    </span>
+    </Box>
   );
 };
 

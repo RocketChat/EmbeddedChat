@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const MessageGenericPreviewDescription = ({
@@ -13,7 +14,7 @@ const MessageGenericPreviewDescription = ({
   );
 
   return (
-    <div
+    <Box
       className={`ec-message-generic-preview__description ${
         clamp ? 'ec-message-generic-preview__description--clamp' : ''
       } ${className} ${classNames}`}
@@ -21,7 +22,7 @@ const MessageGenericPreviewDescription = ({
       {...props}
     >
       {children}
-    </div>
+    </Box>
   );
 };
 

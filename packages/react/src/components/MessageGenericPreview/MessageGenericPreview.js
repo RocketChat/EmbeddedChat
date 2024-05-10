@@ -1,23 +1,15 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import { MessageGenericPreviewStyles as styles } from './MessageGenericPreview.styles';
 
 const MessageGenericPreview = (props, className = '', style = {}) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'MessageGenericPreview'
   );
-  const messageGenericPreviewStyles = css`
-    display: flex;
-    overflow: hidden;
-    flex-direction: column;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #eff0f1;
-  `;
+
   return (
     <div
-      css={messageGenericPreviewStyles}
+      css={styles.container}
       className={`ec-message-generic-preview ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}

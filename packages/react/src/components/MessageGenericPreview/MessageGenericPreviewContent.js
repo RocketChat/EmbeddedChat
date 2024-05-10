@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { Box } from '../Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
 const MessageGenericPreviewContent = ({
@@ -12,20 +13,18 @@ const MessageGenericPreviewContent = ({
     'MessageGenericPreviewContent'
   );
 
-  const MessageGenericPreviewContentCss = css`
-    display: flex;
-    flex-direction: row;
-  `;
-
   return (
-    <div
-      css={MessageGenericPreviewContentCss}
+    <Box
+      css={css`
+        display: flex;
+        flex-direction: row;
+      `}
       className={`ec-message-generic-preview__content ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
     >
       {thumb}
-      <div className="ec-message-generic-preview__content-wrapper" {...props} />
-    </div>
+      <Box className="ec-message-generic-preview__content-wrapper" {...props} />
+    </Box>
   );
 };
 
