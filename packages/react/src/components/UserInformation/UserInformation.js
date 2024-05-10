@@ -9,26 +9,7 @@ import { Icon } from '../Icon';
 import { Throbber } from '../Throbber';
 import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
-
-const userSidebarCss = css`
-  padding: 0 1rem 1rem;
-  margin: 0 auto;
-`;
-
-const userRoleCss = css`
-  background-color: #cbced1;
-  letter-spacing: 0rem;
-  font-size: 0.75rem;
-  padding: 0 0.25rem;
-  margin: 0 0.1rem;
-  border-radius: 2px;
-  font-weight: 700;
-  line-height: 1.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #2f343d;
-`;
+import styles from './UserInformation.styles';
 
 const UserInformation = () => {
   const { RCInstance } = useContext(RCContext);
@@ -72,7 +53,7 @@ const UserInformation = () => {
       setShowWindow={setShowCurrentUserInfo}
     >
       {isUserInfoFetched ? (
-        <Box css={userSidebarCss}>
+        <Box css={styles.userSidebar}>
           <Avatar
             size="100%"
             url={getUserAvatarUrl(currentUserInfo.username)}
@@ -125,7 +106,7 @@ const UserInformation = () => {
                       <Box
                         key={index}
                         as="span"
-                        css={userRoleCss}
+                        css={styles.userRole}
                         className={appendClassNames('ec-message-user-role')}
                       >
                         {role === 'admin' ? 'Admin' : role}
@@ -237,7 +218,7 @@ const UserInformation = () => {
                       >
                         {email.address}
                       </a>
-                      <Box css={userRoleCss}>
+                      <Box css={styles.userRole}>
                         {email.verified ? 'Verified' : 'Not Verified'}
                       </Box>
                     </Box>

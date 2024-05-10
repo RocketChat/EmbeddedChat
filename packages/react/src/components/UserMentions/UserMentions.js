@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { css } from '@emotion/react';
 import { isSameDay, format } from 'date-fns';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
@@ -14,24 +13,7 @@ import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../Sidebar/Sidebar';
 import { Throbber } from '../Throbber';
-
-const MessageCss = css`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding-top: 0.5rem;
-  -webkit-padding-before: 0.5rem;
-  padding-block-start: 0.5rem;
-  padding-bottom: 0.25rem;
-  -webkit-padding-after: 0.25rem;
-  padding-block-end: 0.25rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-inline: 1.25rem;
-  &:hover {
-    background: #f2f3f5;
-  }
-`;
+import styles from './UserMentions.styles';
 
 const UserMentions = () => {
   const showAvatar = useUserStore((state) => state.showAvatar);
@@ -67,28 +49,9 @@ const UserMentions = () => {
   return (
     <Sidebar title="Mentions" iconName="at" setShowWindow={setShowMentions}>
       {isLoaded ? (
-        <Box
-          style={{
-            flex: '1',
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent:
-              mentionedMessages.length === 0 ? 'center' : 'initial',
-            alignItems: mentionedMessages.length === 0 ? 'center' : 'initial',
-            overflowX: 'hidden',
-            maxWidth: '100%',
-          }}
-        >
+        <Box css={styles.userMentionsListContainer(mentionedMessages)}>
           {mentionedMessages.length === 0 ? (
-            <Box
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                color: '#4a4a4a',
-              }}
-            >
+            <Box css={styles.centeredColumnStyles}>
               <Icon
                 name="magnifier"
                 size="3rem"
@@ -109,7 +72,7 @@ const UserMentions = () => {
                       {format(new Date(message.ts), 'MMMM d, yyyy')}
                     </MessageDivider>
                   ) : null}
-                  <Box css={MessageCss}>
+                  <Box css={styles.message}>
                     {showAvatar && (
                       <MessageAvatarContainer
                         message={message}
@@ -146,14 +109,7 @@ const UserMentions = () => {
           )}
         </Box>
       ) : (
-        <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            color: '#4a4a4a',
-          }}
-        >
+        <Box css={styles.centeredColumnStyles}>
           <Throbber />
         </Box>
       )}
