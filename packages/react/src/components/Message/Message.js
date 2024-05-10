@@ -1,7 +1,6 @@
 import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { css } from '@emotion/react';
 import { Attachments } from '../Attachments';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
@@ -20,35 +19,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
-
-const MessageCss = css`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding-top: 0.5rem;
-  -webkit-padding-before: 0.5rem;
-  padding-block-start: 0.5rem;
-  padding-bottom: 0.25rem;
-  -webkit-padding-after: 0.25rem;
-  padding-block-end: 0.25rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-inline: 1.25rem;
-  &:hover {
-    background: #f2f3f5;
-  }
-`;
-const MessageEditingCss = css`
-  background-color: #fff8e0;
-  &:hover {
-    background-color: #fff8e0;
-  }
-`;
-
-const PendingMessageBody = css`
-  opacity: 0.4 !important;
-  white-space: pre-line;
-`;
+import { MessageStyles as styles } from './Message.styles';
 
 const Message = ({
   message,
@@ -172,7 +143,10 @@ const Message = ({
     <>
       <Box
         className={appendClassNames('ec-message', classNames)}
-        css={[MessageCss, editMessage._id === message._id && MessageEditingCss]}
+        css={[
+          styles.message,
+          editMessage._id === message._id && styles.messageEditing,
+        ]}
         style={styleOverrides}
       >
         {showAvatar && (
@@ -189,7 +163,7 @@ const Message = ({
           )}
           {!message.t ? (
             <>
-              <MessageBody css={message.isPending && PendingMessageBody}>
+              <MessageBody css={message.isPending && styles.pendingMessageBody}>
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
