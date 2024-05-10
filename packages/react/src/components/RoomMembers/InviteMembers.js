@@ -7,6 +7,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { Input } from '../Input';
 import { ActionButton } from '../ActionButton';
+import { InviteMemberStyles as styles } from './RoomMembers.styles';
 
 const InviteMembers = ({ inviteData }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
@@ -39,7 +40,9 @@ const InviteMembers = ({ inviteData }) => {
           <Icon
             name="link"
             size="1.25rem"
-            style={{ padding: '0px 20px 20px 0px' }}
+            css={css`
+              padding: 0px 20px 20px 0px;
+            `}
           />
           <Box
             css={css`
@@ -55,21 +58,8 @@ const InviteMembers = ({ inviteData }) => {
         </h3>
       </Box>
       {inviteData && (
-        <Box
-          css={css`
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-          `}
-        >
-          <Box
-            css={css`
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 10px;
-            `}
-          >
+        <Box css={styles.parentContainer}>
+          <Box css={styles.childContainer}>
             <span>
               <b>Invite Link</b>
             </span>

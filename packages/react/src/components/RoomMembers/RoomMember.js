@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
 import { useMemberStore } from '../../store';
@@ -10,16 +9,8 @@ import { Button } from '../Button';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import Sidebar from '../Sidebar/Sidebar';
+import { RoomMemberStyles as styles } from './RoomMembers.styles';
 
-const roomMemberSidebarCSS = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  padding: 0 1rem 1rem;
-`;
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
@@ -55,7 +46,7 @@ const RoomMembers = ({ members }) => {
       iconName="members"
       setShowWindow={toggleShowMembers}
     >
-      <Box css={roomMemberSidebarCSS}>
+      <Box css={styles.container}>
         {showInvite ? (
           <InviteMembers inviteData={inviteData} />
         ) : (

@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { Icon } from '../Icon';
+import { Box } from '../Box';
+import { Avatar } from '../Avatar';
+import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
 
 const RoomMemberItem = ({ user, host }) => {
   const { RCInstance } = useContext(RCContext);
@@ -24,68 +28,29 @@ const RoomMemberItem = ({ user, host }) => {
   }, [RCInstance]);
 
   return (
-    <div
-      style={{
-        width: '100%',
-        paddingBottom: '8px',
-        paddingTop: '8px',
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
-      <img
-        src={avatarUrl}
+    <Box css={styles.container}>
+      <Avatar
+        url={avatarUrl}
         alt="avatar"
-        style={{ height: '1.5rem', marginRight: '0.5rem' }}
+        size="1.5rem"
+        css={css`
+          margin-right: 0.5rem;
+        `}
       />
-      <span style={{ display: 'flex', alignItems: 'center' }}>
-        {userStatus === 'online' && (
-          <Icon
-            name="online"
-            size="1.25rem"
-            style={{
-              padding: '0.125em',
-              marginRight: '0.5rem',
-              alignSelf: 'center',
-            }}
-          />
+
+      <Box
+        is="span"
+        css={css`
+          display: flex;
+          align-items: center;
+        `}
+      >
+        {userStatus && (
+          <Icon name={userStatus} size="1.25rem" css={styles.icon} />
         )}
-        {userStatus === 'offline' && (
-          <Icon
-            name="offline"
-            size="1.25rem"
-            style={{
-              padding: '0.125em',
-              marginRight: '0.5rem',
-              alignSelf: 'center',
-            }}
-          />
-        )}
-        {userStatus === 'away' && (
-          <Icon
-            name="away"
-            size="1.25rem"
-            style={{
-              padding: '0.125em',
-              marginRight: '0.5rem',
-              alignSelf: 'center',
-            }}
-          />
-        )}
-        {userStatus === 'busy' && (
-          <Icon
-            name="busy"
-            size="1.25rem"
-            style={{
-              padding: '0.125em',
-              marginRight: '0.5rem',
-              alignSelf: 'center',
-            }}
-          />
-        )}
-        <span>{user.username}</span>
-      </span>
-    </div>
+        <Box is="span">{user.username}</Box>
+      </Box>
+    </Box>
   );
 };
 
