@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
 import { useMessageStore, useUserStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
+import { Box } from '../Box';
 
 import { Icon } from '../Icon';
 
@@ -27,12 +29,26 @@ const MessageList = ({ messages }) => {
   }
   if (messages.length === 0) {
     return (
-      <div style={{ margin: 'auto' }}>
-        <div style={{ textAlign: 'center' }}>
+      <Box
+        css={css`
+          margin: auto;
+        `}
+      >
+        <Box
+          css={css`
+            text-align: center;
+          `}
+        >
           <Icon name={iconType} size="2rem" />
-        </div>
-        <div style={{ textAlign: 'center' }}>No {msgType}</div>
-      </div>
+        </Box>
+        <Box
+          css={css`
+            text-align: center;
+          `}
+        >
+          No {msgType}
+        </Box>
+      </Box>
     );
   }
   return (
