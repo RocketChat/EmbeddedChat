@@ -13,7 +13,7 @@ import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { searchToMentionUser } from '../../lib/searchToMentionUser';
-import TypingUsers from '../TypingUsers';
+import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../Button';
