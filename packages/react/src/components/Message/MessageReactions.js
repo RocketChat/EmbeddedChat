@@ -1,50 +1,10 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Markdown } from '../Markdown';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
-
-const MessageReactionsCss = css`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  margin: -0.125rem;
-`;
-
-const MessageReactionCss = css`
-  letter-spacing: 0rem;
-  font-size: 0.85rem;
-  font-weight: 400;
-  line-height: 1rem;
-  display: inline-flex;
-  gap: 0.125rem;
-  align-items: center;
-  margin: 0.125rem;
-  padding: 0.125rem;
-  cursor: pointer;
-  color: #6c727a;
-  border: 1px solid #cbced1;
-  border-radius: 0.25rem;
-  background-color: #f7f8fa;
-  &:hover {
-    border-color: #6c727a;
-    background-color: #f2f3f5;
-  }
-  img.joypixels {
-    height: 1.25em;
-    width: 1.25em;
-  }
-  p {
-    margin: 0;
-  }
-`;
-
-const MessageReactionMineCss = css`
-  color: #2f343d;
-  border-width: 1px;
-`;
+import { MessageReactionsStyles as styles } from './Message.styles';
 
 export const MessageReactions = ({
   message,
@@ -61,7 +21,7 @@ export const MessageReactions = ({
   );
   return (
     <Box
-      css={MessageReactionsCss}
+      css={styles.container}
       className={appendClassNames('ec-message-reactions', classNames)}
       style={styleOverrides}
       {...props}
@@ -71,8 +31,8 @@ export const MessageReactions = ({
           <Box
             css={
               isSameUser(reaction, authenticatedUserUsername)
-                ? [MessageReactionCss, MessageReactionMineCss]
-                : [MessageReactionCss]
+                ? [styles.reaction, styles.reactionMine]
+                : [styles.reaction]
             }
             key={reaction.name}
             mine={isSameUser(reaction, authenticatedUserUsername)}
