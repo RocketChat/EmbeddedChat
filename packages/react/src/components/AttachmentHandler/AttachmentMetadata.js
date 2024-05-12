@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/react';
 import { ActionButton } from '../ActionButton';
 import { Box } from '../Box';
 
@@ -24,21 +25,38 @@ const AttachmentMetadata = ({ attachment, url }) => {
 
   return (
     <>
-      <p style={{ margin: 0 }}>{attachment.description}</p>
-      <Box
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      <p
+        css={css`
+          margin: 0;
+        `}
       >
-        <p style={{ margin: 0, color: 'grey' }}>{attachment.title}</p>
+        {attachment.description}
+      </p>
+      <Box
+        css={css`
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        `}
+      >
+        <p
+          css={css`
+            margin: 0;
+            color: grey;
+          `}
+        >
+          {attachment.title}
+        </p>
         <ActionButton
           ghost
           icon="download"
           size="small"
           onClick={handleDownload}
-          style={{
-            marginLeft: '10px',
-            marginTop: '5px',
-            color: 'grey',
-          }}
+          css={css`
+            margin-left: 10px;
+            margin-top: 5px;
+            color: grey;
+          `}
         />
       </Box>
     </>

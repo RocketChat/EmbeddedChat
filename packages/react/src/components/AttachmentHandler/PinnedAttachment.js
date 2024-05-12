@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import { Avatar } from '../Avatar';
@@ -13,16 +14,16 @@ const PinnedAttachment = ({ attachment }) => {
   };
   return (
     <Box
-      style={{
-        borderInlineStart: '1px solid currentColor',
-        paddingLeft: '0.8rem',
-      }}
+      css={css`
+        border-inline-start: 1px solid currentColor;
+        padding-left: 0.8rem;
+      `}
     >
       <Box
-        style={{
-          display: 'flex',
-          gap: '0.3rem',
-        }}
+        css={css`
+          display: flex;
+          gap: 0.3rem;
+        `}
       >
         <Avatar
           url={getUserAvatarUrl(attachment?.author_icon)}
@@ -32,9 +33,9 @@ const PinnedAttachment = ({ attachment }) => {
         <Box>{attachment?.author_name}</Box>
       </Box>
       <Box
-        style={{
-          marginTop: '0.7rem',
-        }}
+        css={css`
+          margin-top: 0.7rem;
+        `}
       >
         {attachment?.text}
       </Box>
