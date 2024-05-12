@@ -1,5 +1,6 @@
 import React from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
+import { Box } from '../Box';
 import { MessageGenericPreviewStyles as styles } from './MessageGenericPreview.styles';
 
 const MessageGenericPreview = (props, className = '', style = {}) => {
@@ -8,7 +9,7 @@ const MessageGenericPreview = (props, className = '', style = {}) => {
   );
 
   return (
-    <div
+    <Box
       css={styles.container}
       className={`ec-message-generic-preview ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}

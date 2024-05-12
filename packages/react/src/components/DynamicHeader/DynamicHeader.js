@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
@@ -14,12 +15,12 @@ const DynamicHeader = ({
 }) => (
   <Box css={styles.container}>
     <Box
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: '0.5rem',
-      }}
+      css={css`
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 0.5rem;
+      `}
     >
       <ActionButton
         onClick={handleClose}

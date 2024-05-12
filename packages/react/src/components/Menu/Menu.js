@@ -60,7 +60,7 @@ const Menu = ({
   }, [isOpen]);
 
   return (
-    <div
+    <Box
       css={styles.wrapper}
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
@@ -93,7 +93,7 @@ const Menu = ({
           ))}
         </Box>
       ) : null}
-    </div>
+    </Box>
   );
 };
 

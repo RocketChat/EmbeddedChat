@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { css } from '@emotion/react';
+import { Box } from '../Box';
 
 const EmojiReaction = ({ body }) => {
   const emojiHtml = emojione.toImage(body);
 
   return (
-    <div
+    <Box
       css={css`
         font-size: 1rem;
       `}

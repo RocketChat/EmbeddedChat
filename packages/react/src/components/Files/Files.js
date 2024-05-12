@@ -163,9 +163,9 @@ const Files = () => {
                       <MessageBodyContainer style={{ width: '75%' }}>
                         <FilePreviewHeader file={file} isTimeStamped={false} />
                         <MessageBody>
-                          <div css={styles.previewUsername}>
+                          <Box css={styles.previewUsername}>
                             @{file.user.username}
-                          </div>
+                          </Box>
                         </MessageBody>
                         <FileMetrics file={file} />
                       </MessageBodyContainer>

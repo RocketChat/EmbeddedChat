@@ -8,13 +8,13 @@ import EmojiReaction from '../EmojiReaction/EmojiReaction';
 const Markdown = ({ body, isReaction = false }) => {
   if (isReaction) {
     return (
-      <div
+      <Box
         css={css`
           font-size: 1rem;
         `}
       >
         <EmojiReaction body={body} />
-      </div>
+      </Box>
     );
   }
 

@@ -70,7 +70,7 @@ const InviteMembers = ({ inviteData }) => {
           <Input readOnly value={inviteData.url} />
         </Box>
       )}
-      <div
+      <Box
         css={css`
           margin-top: 8px;
         `}
@@ -88,7 +88,7 @@ const InviteMembers = ({ inviteData }) => {
             </b>
           </p>
         )}
-      </div>
+      </Box>
     </Box>
   );
 };

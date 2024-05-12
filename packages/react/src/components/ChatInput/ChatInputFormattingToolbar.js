@@ -88,7 +88,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
       {isUserAuthenticated && (
         <>
           <Tooltip text="Emoji" position="top">
-            <div>
+            <Box>
               <ActionButton
                 square
                 ghost
@@ -97,7 +97,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               >
                 <Icon name="emoji" size="1.25rem" />
               </ActionButton>
-            </div>
+            </Box>
           </Tooltip>
           <Popup
             modal

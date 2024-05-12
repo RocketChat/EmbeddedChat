@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { Box } from '../../Box';
 
 // eslint-disable-next-line react/prop-types
 export const Image = ({ imageUrl, width, height, ...props }) => {
@@ -15,5 +16,5 @@ export const Image = ({ imageUrl, width, height, ...props }) => {
     overflow: hidden;
   `;
 
-  return <div css={ImageCss} {...props} />;
+  return <Box css={ImageCss} {...props} />;
 };

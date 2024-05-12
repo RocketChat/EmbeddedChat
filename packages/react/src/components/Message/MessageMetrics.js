@@ -34,7 +34,7 @@ export const MessageMetrics = ({
       )}
       <Box css={styles.metricsItem(true)} title="Replies">
         <Icon size="1.25rem" name="thread" />
-        <div css={styles.metricsItemLabel}>{message.tcount}</div>
+        <Box css={styles.metricsItemLabel}>{message.tcount}</Box>
       </Box>
       {!!message.tcount && (
         <Box css={styles.metricsItem} title="Participants">

@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import React from 'react';
+import { Box } from '../../Box';
 
 export const Element = ({ imageUrl, size }) => {
   const ElementCss = css`
@@ -15,5 +16,5 @@ export const Element = ({ imageUrl, size }) => {
     overflow: hidden;
     margin-inline-start: 4px;
   `;
-  return <div css={ElementCss} />;
+  return <Box css={ElementCss} />;
 };

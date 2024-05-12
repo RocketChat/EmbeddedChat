@@ -20,17 +20,17 @@ export const FileMetrics = ({ className = '', file, style = {}, ...props }) => {
       style={styleOverrides}
       {...props}
     >
-      <div
+      <Box
         css={styles.metricsItem}
         title={new Date(file.uploadedAt).toLocaleString()}
       >
         <Icon size="1.25rem" name="clock" />
-        <div css={styles.metricsItemLabel}>
+        <Box css={styles.metricsItemLabel}>
           {formatDistance(new Date(file.uploadedAt), new Date(), {
             addSuffix: true,
           })}
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Box>
   );
 };
