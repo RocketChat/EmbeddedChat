@@ -1,4 +1,5 @@
 import React, { useMemo, memo } from 'react';
+import { css } from '@emotion/react';
 import { Menu } from '../../Menu';
 import { Box } from '../../Box';
 import { useUiKitState } from '../hooks/useUiKitState';
@@ -25,17 +26,19 @@ const OverflowElement = ({ block, context, surfaceRenderer }) => {
 
   return (
     <Box
-      style={{
-        textAlign: 'right',
-        position: 'absolute',
-        right: '0',
-        top: '0',
-      }}
+      css={css`
+        text-align: right;
+        position: absolute;
+        right: 0;
+        top: 0;
+      `}
     >
       <Menu
         options={options}
         isToolTip={false}
-        style={{ padding: '0 0.25rem' }}
+        css={css`
+          padding: 0 0.25rem;
+        `}
       />
     </Box>
   );

@@ -1,9 +1,7 @@
 import { css } from '@emotion/react';
-import React from 'react';
-import { Box } from '../../Box';
 
-export const Element = ({ imageUrl, size }) => {
-  const ElementCss = css`
+export const ImageElementStyles = {
+  container: (imageUrl, size) => css`
     box-shadow: 0 0 0px 1px rgba(204, 204, 204, 38%);
     background-repeat: no-repeat;
     background-position: 50%;
@@ -15,6 +13,23 @@ export const Element = ({ imageUrl, size }) => {
     border-radius: 4px;
     overflow: hidden;
     margin-inline-start: 4px;
-  `;
-  return <Box css={ElementCss} />;
+  `,
+};
+
+export const LinearScaleElementStyles = {
+  parentContainer: css`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+  `,
+
+  childContainer: css`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-inline: -0.25rem;
+    min-width: 0;
+  `,
 };

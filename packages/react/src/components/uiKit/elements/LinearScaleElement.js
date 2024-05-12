@@ -1,7 +1,9 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useMemo } from 'react';
+import { css } from '@emotion/react';
 import { Box } from '../../Box';
 import { Button } from '../../Button';
+import { LinearScaleElementStyles as styles } from './elements.styles';
 
 import { useUiKitState } from '../hooks/useUiKitState';
 
@@ -28,14 +30,7 @@ const LinearScaleElement = ({ className, block, context, surfaceRenderer }) => {
   );
 
   return (
-    <Box
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        alignItems: 'center',
-      }}
-    >
+    <Box css={styles.parentContainer}>
       {preLabel && (
         <Box fontScale="c2" paddingInlineEnd={8} textAlign="start">
           {surfaceRenderer.renderTextObject(
@@ -46,17 +41,7 @@ const LinearScaleElement = ({ className, block, context, surfaceRenderer }) => {
         </Box>
       )}
       <Box>
-        <Box
-          className={className}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            marginInline: '-0.25rem',
-            minWidth: 0,
-          }}
-        >
+        <Box className={className} css={styles.childContainer}>
           {points.map((point, i) => (
             <Button
               key={i}
@@ -64,10 +49,10 @@ const LinearScaleElement = ({ className, block, context, surfaceRenderer }) => {
               disabled={loading}
               size="small"
               color={error ? 'error' : 'secondary'}
-              style={{
-                marginInline: '0.25rem',
-                flexShrink: 1,
-              }}
+              css={css`
+                margin-inline: 0.25rem;
+                flex-shrink: 1;
+              `}
               value={point}
               onClick={action}
             >

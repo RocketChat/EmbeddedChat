@@ -1,5 +1,6 @@
 import React from 'react';
 import * as UiKit from '@rocket.chat/ui-kit';
+import { css } from '@emotion/react';
 import { Button } from '../../Button';
 import { Throbber } from '../../Throbber';
 
@@ -14,7 +15,9 @@ const ButtonElement = ({ block, context, surfaceRenderer }) => {
         <Button
           disabled={loading}
           color={block.style === 'danger' ? 'error' : 'secondary'}
-          style={{ minWidth: '4ch' }}
+          css={css`
+            min-width: 4ch;
+          `}
           size="small"
           onClick={action}
         >

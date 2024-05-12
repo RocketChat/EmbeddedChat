@@ -1,6 +1,7 @@
 import React from 'react';
 import * as UiKit from '@rocket.chat/ui-kit';
-import { Element } from './ImageElement.styles';
+import { Box } from '../../Box';
+import { ImageElementStyles as styles } from './elements.styles';
 
 const ImageElement = ({ block, context }) => {
   const size =
@@ -12,7 +13,13 @@ const ImageElement = ({ block, context }) => {
     return null;
   }
 
-  return <Element imageUrl={block.imageUrl} size={size} />;
+  return (
+    <Box
+      css={styles.container(block.imageUrl, size)}
+      imageUrl={block.imageUrl}
+      size={size}
+    />
+  );
 };
 
 export default ImageElement;
