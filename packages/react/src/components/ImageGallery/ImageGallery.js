@@ -116,11 +116,12 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
             size="3rem"
             style={{ padding: '0.5rem', color: '#FF99A2' }}
           />
-          <span
+          <Box
+            is="span"
             style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}
           >
             Something went wrong
-          </span>
+          </Box>
           <Button
             color="primary"
             onClick={() => setShowGallery(false)}

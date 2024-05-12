@@ -62,22 +62,24 @@ function CommandsList({
             css={styles.listItem}
             onClick={() => handleCommandClick(command)}
           >
-            <span
+            <Box
+              is="span"
               css={css`
                 justify-content: space-evenly;
               `}
             >
-              <span
+              <Box
+                is="span"
                 css={css`
                   color: #000000;
                 `}
               >
                 {command.command}
-              </span>
+              </Box>
               &nbsp;&nbsp;&nbsp;
-              <span>{command.params}</span>
-            </span>
-            <span>{command.description}</span>
+              <Box is="span">{command.params}</Box>
+            </Box>
+            <Box>{command.description}</Box>
           </li>
         ))}
       </ul>

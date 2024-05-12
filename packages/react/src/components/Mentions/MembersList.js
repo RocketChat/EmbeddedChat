@@ -57,11 +57,13 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               backgroundColor: index === mentionIndex && '#dddddd',
             }}
           >
-            <span style={{ justifyContent: 'space-evenly' }}>
-              <span css={styles.listText}>{member.name}</span>
+            <Box is="span" style={{ justifyContent: 'space-evenly' }}>
+              <Box is="span" css={styles.listText}>
+                {member.name}
+              </Box>
               &nbsp;&nbsp;&nbsp;
-              <span>@{member.username}</span>
-            </span>
+              <Box is="span">@{member.username}</Box>
+            </Box>
           </li>
         ))}
         <li
@@ -79,7 +81,9 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               mentionIndex === filteredMembers.length && '#dddddd',
           }}
         >
-          <span css={styles.listText}>all</span>
+          <Box is="span" css={styles.listText}>
+            all
+          </Box>
         </li>
         <li
           key="here"
@@ -96,7 +100,9 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               mentionIndex === filteredMembers.length + 1 && '#dddddd',
           }}
         >
-          <span css={styles.listText}>here</span>
+          <Box is="span" css={styles.listText}>
+            here
+          </Box>
         </li>
       </ul>
     </Box>

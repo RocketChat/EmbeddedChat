@@ -200,8 +200,8 @@ const VideoMessageRecorder = () => {
                 <Icon size="1.25rem" name="circle-cross" />
               </ActionButton>
               <Box css={record}>
-                <span css={videoDot} />
-                <span css={timer}>{time}</span>
+                <Box is="span" css={videoDot} />
+                <Box css={timer}>{time}</Box>
               </Box>
               <ActionButton ghost onClick={handleStopRecordButton}>
                 <Icon name="circle-check" size="1.25rem" />

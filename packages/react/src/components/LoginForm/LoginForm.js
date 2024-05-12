@@ -83,9 +83,9 @@ export default function LoginForm() {
               />
             </Box>
             {usernameError && (
-              <span style={{ color: 'red', fontSize: '13px' }}>
+              <Box is="span" style={{ color: 'red', fontSize: '13px' }}>
                 This field is required
-              </span>
+              </Box>
             )}
           </Box>
 
@@ -107,14 +107,15 @@ export default function LoginForm() {
               </Box>
             </Box>
             {passwordError && (
-              <span
+              <Box
+                is="span"
                 css={css`
                   color: red;
                   font-size: 13px;
                 `}
               >
                 This field is required
-              </span>
+              </Box>
             )}
           </Box>
           <Box>

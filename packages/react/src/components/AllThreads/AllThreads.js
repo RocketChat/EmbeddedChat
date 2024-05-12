@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { css } from '@emotion/react';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import {
@@ -62,10 +63,22 @@ const AllThreads = () => {
       <Box css={styles.threadListContainer(containsThreads, filteredThreads)}>
         {!containsThreads || filteredThreads.length === 0 ? (
           <Box css={styles.centeredColumnStyles}>
-            <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
-            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            <Icon
+              name="magnifier"
+              size="3rem"
+              css={css`
+                padding: 0.5rem;
+              `}
+            />
+            <Box
+              is="span"
+              css={css`
+                fontsize: 1.2rem;
+                font-weight: bold;
+              `}
+            >
               No threads found
-            </span>
+            </Box>
           </Box>
         ) : (
           filteredThreads.map(

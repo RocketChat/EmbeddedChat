@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
+import { Box } from '../../Box';
 import { EmojiStyles as styles } from './elements.styles';
 
 const Emoji = ({ big = false, emoji }) => {
@@ -17,7 +18,8 @@ const Emoji = ({ big = false, emoji }) => {
     : emojione.toImage(fallback);
 
   return (
-    <span
+    <Box
+      is="span"
       css={[styles.emojione, styles.emojiInMessage]}
       dangerouslySetInnerHTML={{ __html: emojiHtml }}
     />

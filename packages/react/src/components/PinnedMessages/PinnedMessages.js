@@ -49,14 +49,15 @@ const PinnedMessages = () => {
                   padding: 0.5rem;
                 `}
               />
-              <span
+              <Box
+                is="span"
                 css={css`
                   font-size: 1.2rem;
                   font-weight: bold;
                 `}
               >
                 No pinned messages
-              </span>
+              </Box>
             </Box>
           ) : (
             messageList?.map((msg, index, arr) => {

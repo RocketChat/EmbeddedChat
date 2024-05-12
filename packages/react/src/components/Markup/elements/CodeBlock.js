@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { Box } from '../../Box';
 import { CodeBlockStyles as styles } from './elements.styles';
 
 const CodeBlock = ({ lines }) => {
@@ -10,9 +11,13 @@ const CodeBlock = ({ lines }) => {
 
   return (
     <pre role="region" css={styles.prestyle}>
-      <span css={styles.copyonly}>```</span>
+      <Box is="span" css={styles.copyonly}>
+        ```
+      </Box>
       <code>{code}</code>
-      <span css={styles.copyonly}>```</span>
+      <Box is="span" css={styles.copyonly}>
+        ```
+      </Box>
     </pre>
   );
 };

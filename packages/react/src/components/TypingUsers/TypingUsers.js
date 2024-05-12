@@ -20,27 +20,27 @@ export default function TypingUsers() {
     if (typingUsers.length === 0) return '';
     if (typingUsers.length === 1)
       return (
-        <span>
+        <Box is="span">
           <b>{typingUsers[0]}</b>
           {' is typing...'}
-        </span>
+        </Box>
       );
     if (typingUsers.length === 2)
       return (
-        <span>
+        <Box is="span">
           <b>{typingUsers[0]}</b>
           {' and '}
           <b>{typingUsers[1]}</b>
           {' are typing...'}
-        </span>
+        </Box>
       );
     return (
-      <span>
+      <Box is="span">
         <b>{typingUsers[0]} </b>
         {', '}
         <b>{typingUsers[1]} </b>
         {`and ${typingUsers.length - 2} more are typing...`}
-      </span>
+      </Box>
     );
   }, [typingUsers]);
 

@@ -8,7 +8,7 @@ function PreviewDefault({ data }) {
     <Box>
       <p>
         <Icon name="file" size="1.25rem" />
-        <span>{data.name}</span>
+        <Box is="span">{data.name}</Box>
       </p>
     </Box>
   );

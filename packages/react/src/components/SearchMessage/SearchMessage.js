@@ -61,9 +61,9 @@ const Search = () => {
         {messageList.length === 0 ? (
           <Box css={styles.centeredColumnStyles}>
             <Icon name="magnifier" size="3rem" style={{ padding: '0.5rem' }} />
-            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            <Box is="span" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
               No results found
-            </span>
+            </Box>
           </Box>
         ) : (
           messageList.map((msg, index, arr) => {

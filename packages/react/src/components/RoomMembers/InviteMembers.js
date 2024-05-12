@@ -60,9 +60,9 @@ const InviteMembers = ({ inviteData }) => {
       {inviteData && (
         <Box css={styles.parentContainer}>
           <Box css={styles.childContainer}>
-            <span>
+            <Box is="span">
               <b>Invite Link</b>
-            </span>
+            </Box>
             <ActionButton onClick={copyToClipboard} ghost size="small">
               <Icon name="copy" size="1.25rem" />
             </ActionButton>

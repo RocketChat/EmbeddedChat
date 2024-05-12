@@ -20,10 +20,10 @@ const ChannelState = ({
     >
       <Box css={styles.channelStateMessage}>
         {iconName && <Icon name={iconName} size="10" />}
-        <span>{status}</span>
+        <Box is="span">{status}</Box>
       </Box>
       <Box>
-        <span>{instructions}</span>
+        <Box is="span">{instructions}</Box>
       </Box>
     </Box>
   );

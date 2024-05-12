@@ -147,9 +147,12 @@ const Files = () => {
                   size="3rem"
                   style={{ padding: '0.5rem' }}
                 />
-                <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                <Box
+                  is="span"
+                  style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+                >
                   No files found
-                </span>
+                </Box>
               </Box>
             ) : (
               filteredFiles.map(

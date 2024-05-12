@@ -175,8 +175,10 @@ const AudioMessageRecorder = () => {
             <Icon size="1.25rem" name="circle-cross" />
           </ActionButton>
           <Box css={record}>
-            <span css={audioDot} />
-            <span css={timer}>{time}</span>
+            <Box is="span" css={audioDot} />
+            <Box is="span" css={timer}>
+              {time}
+            </Box>
           </Box>
           <ActionButton ghost onClick={handleStopRecordButton}>
             <Icon name="circle-check" size="1.25rem" />
