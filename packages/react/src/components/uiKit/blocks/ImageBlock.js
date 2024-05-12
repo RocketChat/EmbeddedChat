@@ -34,10 +34,6 @@ const fetchImageState = (img) => {
 
 const ImageBlock = ({ className, block, surfaceRenderer }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ImageBlock');
-  const surface = useSurfaceType();
-
-  const alignment =
-    surface === 'banner' || surface === 'message' ? 'flex-start' : 'center';
 
   const [{ loading, width, height }, setState] = useState(() => {
     const img = document.createElement('img');

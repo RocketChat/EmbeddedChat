@@ -28,3 +28,13 @@ export const ImageBlockStyles = {
     width: ${width};
   `,
 };
+
+export const ContextBlockItemStyles = {
+  ContextBlock: css`
+    display: inline-block;
+    padding: 0 0.75rem;
+    font-size: 0.8rem;
+    color: #3d3d3d;
+    margin: -0.25rem;
+  `,
+};

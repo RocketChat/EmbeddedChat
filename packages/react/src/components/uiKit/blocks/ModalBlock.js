@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
 import React, { useEffect, useMemo, useRef } from 'react';
+import { css } from '@emotion/react';
 import { UiKitComponent, UiKitModal, modalParser } from '..';
 import { Box } from '../../Box';
 import { Button } from '../../Button';
@@ -65,10 +66,10 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
       open
       id={id}
       ref={ref}
-      style={{
-        maxWidth: '600px',
-        maxHeight: '80vh',
-      }}
+      css={css`
+        max-width: 600px,
+        max-height: 80vh,
+      `}
     >
       <Modal.Header>
         <Modal.Title>{modalParser.text(view.title)}</Modal.Title>

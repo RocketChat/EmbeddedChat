@@ -3,17 +3,12 @@ import { css } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
 import useComponentOverrides from '../../../theme/useComponentOverrides';
 import { Box } from '../../Box';
+import { ContextBlockItemStyles as styles } from './blocks.styles';
 
 const Item = ({ block: element, surfaceRenderer: parser, index }) => {
   const { classNames, styleOverrides } =
     useComponentOverrides('ContextBlockItem');
-  const ContextBlockCss = css`
-    display: inline-block;
-    padding: 0 0.75rem;
-    font-size: 0.8rem;
-    color: #3d3d3d;
-    margin: -0.25rem;
-  `;
+
   const renderedElement = parser.renderContextBlockElement(element, index);
 
   if (!renderedElement) {
@@ -25,7 +20,7 @@ const Item = ({ block: element, surfaceRenderer: parser, index }) => {
     case UiKit.TextObjectType.MARKDOWN:
       return (
         <Box
-          css={ContextBlockCss}
+          css={styles.ContextBlock}
           className={`ec-context-block-item ${classNames}`}
           style={styleOverrides}
         >

@@ -3,15 +3,11 @@ import React, { memo, useMemo } from 'react';
 import useComponentOverrides from '../../../theme/useComponentOverrides';
 import { Box } from '../../Box';
 
-import Item from './ContextBlock.Item';
+import Item from './ContextBlockItem';
 
 const ContextBlock = ({ className, block, surfaceRenderer }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ContextBlock');
-  const ContextBlockCss = css`
-    display: flex;
-    align-items: center;
-    margin: -0.25rem;
-  `;
+
   const itemElements = useMemo(
     () =>
       block.elements.map((element) => ({
@@ -24,7 +20,11 @@ const ContextBlock = ({ className, block, surfaceRenderer }) => {
 
   return (
     <Box
-      css={ContextBlockCss}
+      css={css`
+        display: flex;
+        align-items: center;
+        margin: -0.25rem;
+      `}
       className={`ec-context-block ${className} ${classNames}`}
       style={styleOverrides}
     >
