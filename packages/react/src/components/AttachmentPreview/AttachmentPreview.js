@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
-import ValidateComponent from './AttachmentWindow/validateComponent';
-import Backdrop from './AttachmentWindow/Backdrop';
+import ValidateComponent from './validateComponent';
+import Backdrop from './Backdrop';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import { Box } from '../Box';
@@ -136,7 +136,7 @@ const attachmentWindowCancelButton = css`
   }
 `;
 
-function AttachmentWindow() {
+const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
@@ -269,6 +269,6 @@ function AttachmentWindow() {
       </Box>
     </Backdrop>
   );
-}
+};
 
-export default AttachmentWindow;
+export default AttachmentPreview;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
-import { Attachments } from '../Attachments';
+import { Attachments } from '../AttachmentHandler';
 import { useMessageStore, useUserStore, useMentionsStore } from '../../store';
 import { MessageBody } from '../Message/MessageBody';
 import { MessageMetrics } from '../Message/MessageMetrics';

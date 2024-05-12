@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import AttachmentMetadata from './AttachmentMetadata';
 import { Button } from '../Button';
-import ImageGallery from './ImageGallery';
+import ImageGallery from '../ImageGallery/ImageGallery';
 
 const ImageAttachment = ({ attachment, host }) => {
   const [showGallery, setShowGallery] = useState(false);

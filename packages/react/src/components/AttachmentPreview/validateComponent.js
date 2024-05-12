@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PreviewImage from './preview/image';
 import PreviewAudio from './preview/audio';
 import PreviewDefault from './preview/default';
-import { useToastBarDispatch } from '../../../hooks/useToastBarDispatch';
+import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ValidateComponent = ({ data }) => {
   const type = data ? data.type.split('/')[0] : '';

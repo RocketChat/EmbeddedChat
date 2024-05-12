@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '../../../Box';
-import { Icon } from '../../../Icon';
+import { Box } from '../../Box';
+import { Icon } from '../../Icon';
 
 function PreviewDefault({ data }) {
   return (

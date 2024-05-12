@@ -9,8 +9,8 @@ import { ChatInput } from './ChatInput';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
-import AttachmentWindow from './Attachments/AttachmentWindow';
-import ValidateComponent from './Attachments/AttachmentWindow/validateComponent';
+import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
+import ValidateComponent from './AttachmentPreview/validateComponent';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -211,7 +211,7 @@ const EmbeddedChat = ({
           {attachmentWindowOpen ? (
             data ? (
               <>
-                <AttachmentWindow />
+                <AttachmentPreview />
               </>
             ) : (
               <ValidateComponent data={data} />

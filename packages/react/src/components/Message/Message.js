@@ -1,7 +1,7 @@
 import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { Attachments } from '../Attachments';
+import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { useMessageStore, useUserStore } from '../../store';
