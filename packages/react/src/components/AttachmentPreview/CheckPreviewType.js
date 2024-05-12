@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import PreviewImage from './preview/image';
-import PreviewAudio from './preview/audio';
-import PreviewDefault from './preview/default';
+import PreviewImage from './PreviewType/image';
+import PreviewAudio from './PreviewType/audio';
+import PreviewDefault from './PreviewType/default';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
-const ValidateComponent = ({ data }) => {
+const CheckPreviewType = ({ data }) => {
   const type = data ? data.type.split('/')[0] : '';
 
   const [previewURL, setPreviewURL] = useState('');
@@ -47,8 +47,8 @@ const ValidateComponent = ({ data }) => {
   }
 };
 
-export default ValidateComponent;
+export default CheckPreviewType;
 
-ValidateComponent.propTypes = {
+CheckPreviewType.propTypes = {
   data: PropTypes.object,
 };

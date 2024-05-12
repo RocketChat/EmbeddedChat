@@ -13,7 +13,7 @@ export const Modalstyles = {
     max-width: 600px;
     padding: 0.5rem;
     background: ${theme?.palette?.background?.modal || '#fff'};
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
   `,
 };
 

@@ -10,7 +10,7 @@ import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore } from '../store';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
-import ValidateComponent from './AttachmentPreview/validateComponent';
+import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
 import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
@@ -214,7 +214,7 @@ const EmbeddedChat = ({
                 <AttachmentPreview />
               </>
             ) : (
-              <ValidateComponent data={data} />
+              <CheckPreviewType CheckPreviewType data={data} />
             )
           ) : null}
           <Box
