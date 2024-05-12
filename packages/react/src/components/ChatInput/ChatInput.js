@@ -28,54 +28,7 @@ import { Modal } from '../Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
-
-const editingMessageCss = css`
-  background-color: #fff8e0;
-  & textarea {
-    background-color: inherit;
-  }
-`;
-
-const chatInputIconCursor = css`
-  cursor: pointer;
-`;
-
-const textInput = css`
-  padding: 12px;
-  width: 100%;
-  border: none;
-  outline: none;
-  resize: none;
-  overflow-x: hidden;
-  overflow-y: auto;
-  font-size: 0.875rem;
-  font-family: var(
-    --rcx-font-family-sans,
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Helvetica Neue',
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Meiryo UI',
-    Arial,
-    sans-serif
-  );
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-
-  &::placeholder {
-    padding-left: 5px;
-  }
-`;
+import { ChatInputStyles as styles } from './ChatInput.styles';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -609,7 +562,8 @@ const ChatInput = ({ scrollToBottom }) => {
               justify-content: center;
               flex-direction: row;
             `,
-            (editMessage.msg || editMessage.attachments) && editingMessageCss,
+            (editMessage.msg || editMessage.attachments) &&
+              styles.editingMessage,
           ]}
         >
           <textarea
@@ -622,7 +576,7 @@ const ChatInput = ({ scrollToBottom }) => {
                 ? 'This room is read only'
                 : 'Sign in to chat'
             }
-            css={textInput}
+            css={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
             onBlur={sendTypingStop}
@@ -639,7 +593,7 @@ const ChatInput = ({ scrollToBottom }) => {
                 onClick={() => sendMessage()}
                 disabled={disableButton || isRecordingMessage}
               >
-                <Icon css={chatInputIconCursor} name="send" />
+                <Icon css={styles.iconCursor} name="send" />
               </ActionButton>
             ) : (
               <Button onClick={onJoin} color="primary">

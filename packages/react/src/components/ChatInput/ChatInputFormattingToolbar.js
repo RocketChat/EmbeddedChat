@@ -12,14 +12,7 @@ import { ActionButton } from '../ActionButton';
 import { Tooltip } from '../Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
-
-const chatFormat = css`
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-`;
+import { ChatInputFormattingToolbarStyles as styles } from './ChatInput.styles';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -88,15 +81,7 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
 
   return (
     <Box
-      css={css`
-        ${chatFormat}
-        background-color: #cbced1;
-        display: flex;
-        position: relative;
-        flex-direction: row;
-        gap: 0.375rem;
-        align-items: center;
-      `}
+      css={styles.chatFormat}
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >

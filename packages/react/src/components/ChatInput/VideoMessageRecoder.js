@@ -13,31 +13,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Modal } from '../Modal';
-
-const videoDot = css`
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background-color: red;
-  margin: auto;
-  margin-right: 8px;
-`;
-
-const videoBox = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-`;
-
-const timer = css`
-  margin: auto;
-`;
-
-const record = css`
-  display: flex;
-  margin: auto;
-`;
+import { VideoMessageRecorderStyles as styles } from './ChatInput.styles';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -195,13 +171,20 @@ const VideoMessageRecorder = () => {
             }}
           >
             <video muted autoPlay playsInline ref={videoRef} />
-            <Box css={videoBox}>
+            <Box
+              css={[
+                css`
+                  color: white;
+                `,
+                styles.container,
+              ]}
+            >
               <ActionButton ghost onClick={handleCancelRecordButton}>
                 <Icon size="1.25rem" name="circle-cross" />
               </ActionButton>
-              <Box css={record}>
-                <Box is="span" css={videoDot} />
-                <Box css={timer}>{time}</Box>
+              <Box css={styles.record}>
+                <Box is="span" css={styles.dot} />
+                <Box css={styles.timer}>{time}</Box>
               </Box>
               <ActionButton ghost onClick={handleStopRecordButton}>
                 <Icon name="circle-check" size="1.25rem" />

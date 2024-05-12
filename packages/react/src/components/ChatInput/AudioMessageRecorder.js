@@ -12,28 +12,7 @@ import useMessageStore from '../../store/messageStore';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-
-const audioDot = css`
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background-color: red;
-  margin: auto;
-  margin-right: 8px;
-`;
-
-const audioBox = css`
-  display: flex;
-`;
-
-const timer = css`
-  margin: auto;
-`;
-
-const record = css`
-  display: flex;
-  margin: auto;
-`;
+import { AudioMessageRecorderStyles as styles } from './ChatInput.styles';
 
 const AudioMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -168,15 +147,15 @@ const AudioMessageRecorder = () => {
   }
 
   return (
-    <Box css={audioBox}>
+    <Box css={styles.container}>
       {state === 'recording' && (
         <>
           <ActionButton ghost onClick={handleCancelRecordButton}>
             <Icon size="1.25rem" name="circle-cross" />
           </ActionButton>
-          <Box css={record}>
-            <Box is="span" css={audioDot} />
-            <Box is="span" css={timer}>
+          <Box css={styles.record}>
+            <Box is="span" css={styles.dot} />
+            <Box is="span" css={styles.timer}>
               {time}
             </Box>
           </Box>
