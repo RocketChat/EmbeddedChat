@@ -1,1 +1,1 @@
-export { default as EmbeddedChat } from './components/EmbeddedChat';
+export { default as EmbeddedChat } from './views/EmbeddedChat';
