@@ -4,9 +4,8 @@ import React, { memo, useEffect, useState } from 'react';
 import useComponentOverrides from '../../../theme/useComponentOverrides';
 import { Box } from '../../Box';
 import { Skeleton } from '../../Skeleton';
-
 import { useSurfaceType } from '../contexts/SurfaceContext';
-import { Image } from './ImageBlock.styles';
+import { ImageBlockStyles as styles } from './blocks.styles';
 
 const maxSize = 360;
 
@@ -66,29 +65,15 @@ const ImageBlock = ({ className, block, surfaceRenderer }) => {
     };
   }, [block.imageUrl]);
 
-  const ImageBlockCss = css`
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: ${alignment};
-  `;
-  const ImageTitleCss = css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.8rem;
-    color: #ffffff3f;
-    margin-block-end: -0.25rem;
-    width: ${width};
-  `;
   return (
     <Box
-      css={ImageBlockCss}
+      css={styles.imageBlock}
       className={`ec-image-block ${className} ${classNames}`}
       style={styleOverrides}
     >
       <Box style={{ overflow: 'hidden', width }}>
         {block.title && (
-          <Box css={ImageTitleCss}>
+          <Box css={styles.imageTitle}>
             {surfaceRenderer.renderTextObject(
               block.title,
               0,
@@ -99,7 +84,8 @@ const ImageBlock = ({ className, block, surfaceRenderer }) => {
         {loading ? (
           <Skeleton variant="rect" width={width} height={height} />
         ) : (
-          <Image
+          <Box
+            css={styles.image(block.imageUrl, width, height)}
             imageUrl={block.imageUrl}
             width={width}
             height={height}
