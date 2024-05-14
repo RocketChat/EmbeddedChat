@@ -1,24 +1,13 @@
 import React from 'react';
-import { css } from '@emotion/react';
+import { Box } from '../Box';
+import { dropBoxOverlayStyles as styles } from './DropBox.styles';
 
-const DropBoxOverlay = () => {
-  const overlayCss = css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    color: #007fff;
-    z-index: 10000;
-  `;
-
-  return (
-    <div css={overlayCss}>
-      <h1 style={{ textDecoration: 'solid' }}>
-        <b>Drop to upload file</b>
-      </h1>
-    </div>
-  );
-};
+const DropBoxOverlay = () => (
+  <Box css={styles.overlay}>
+    <h1 style={{ textDecoration: 'solid' }}>
+      <b>Drop to upload file</b>
+    </h1>
+  </Box>
+);
 
 export default DropBoxOverlay;

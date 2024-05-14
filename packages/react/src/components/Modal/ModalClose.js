@@ -13,12 +13,12 @@ export const ModalClose = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ModalClose');
-  const ModalCloseCss = css`
-    margin: 0.25rem !important;
-  `;
+
   return (
     <Box
-      css={ModalCloseCss}
+      css={css`
+        margin: 0.25rem !important;
+      `}
       className={`ec-modal-close ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}

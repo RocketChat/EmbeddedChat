@@ -1,14 +1,54 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Box } from '../Box';
-import classes from './Grid.module.css';
+import { gridItemStyles as styles } from './Grid.styles';
 
-const getClassNames = (breakPoints) =>
-  Object.keys(breakPoints)
-    .filter((key) => !!breakPoints[key])
-    .map((key) => classes[`ec-grid__item--${key}`])
-    .concat(classes['ec-grid__item '])
-    .join(' ');
-
-export const GridItem = ({ xs, sm, md, lg, xl, ...props }) => (
-  <Box className={`${getClassNames({ xs, sm, md, lg, xl })}`} {...props} />
+const GridItem = ({ xs, md, lg, xl, xxl, children }) => (
+  <Box css={styles.dynamicItem(xs, md, lg, xl, xxl)}>{children}</Box>
 );
+
+GridItem.propTypes = {
+  xs: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  md: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  lg: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  xl: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  xxl: PropTypes.shape({
+    colSpan: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colStart: PropTypes.number,
+    colEnd: PropTypes.number,
+    rowStart: PropTypes.number,
+    rowEnd: PropTypes.number,
+  }),
+  children: PropTypes.node.isRequired,
+};
+
+export default GridItem;
