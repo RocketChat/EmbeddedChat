@@ -2,7 +2,7 @@ import { EmbeddedChat } from '..';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/Managed',
+  title: 'EmbeddedChat/Simple',
   component: EmbeddedChat,
 };
 
@@ -19,6 +19,7 @@ export const Simple = {
     showRoles: true,
     showAvatar: true,
     enableThreads: true,
+    hideHeader: false,
     auth: {
       flow: 'PASSWORD',
     },
