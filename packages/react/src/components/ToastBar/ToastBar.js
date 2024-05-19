@@ -1,13 +1,13 @@
 /* eslint-disable no-shadow */
 import React, { useMemo, useRef, useEffect } from 'react';
 import { useTheme } from '@emotion/react';
-import alpha from 'color-alpha';
 import { appendClassNames } from '../../lib/appendClassNames';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { toastbarStyles as styles } from './ToastBar.styles';
+import { alpha } from '../../lib/color';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;

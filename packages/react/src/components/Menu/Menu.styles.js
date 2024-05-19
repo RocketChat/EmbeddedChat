@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { alpha } from '../../lib/color';
 
 export const MenuStyles = {
   wrapper: css`
@@ -32,7 +33,7 @@ export const MenuItemStyles = {
     gap: 0.2rem;
   `,
 
-  themed: (theme, color, alpha) => css`
+  themed: (theme, color) => css`
     color: ${theme.palette?.[color]?.main || color};
     &:hover {
       background-color: ${theme.palette?.grey?.main || '#E7EBF0'};

@@ -1,5 +1,4 @@
 import React from 'react';
-import alpha from 'color-alpha';
 import { useTheme } from '@emotion/react';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
@@ -19,7 +18,7 @@ const MenuItem = ({ icon, label, action, disabled, color }) => {
     <Box
       css={[
         styles.item,
-        styles.themed(theme, color, alpha),
+        styles.themed(theme, color),
         disabled && styles.disabled,
       ]}
       className={appendClassNames('ec-menu-item', classNames)}
