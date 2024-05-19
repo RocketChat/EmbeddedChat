@@ -71,6 +71,10 @@ const ButtonStyles = (color, size, getSquareSize) => {
       filter: brightness(90%);
     }
 
+    &.disabled:not(.ghost):hover {
+      filter: none;
+    }
+
     &.disabled:not(.ghost) {
       background-color: ${theme.schemes[mode].muted};
       color: ${theme.schemes[mode].mutedForeground};
