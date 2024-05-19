@@ -19,7 +19,6 @@ const styles = {
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.25rem;
-    color: #2f343d;
   `,
 
   fieldRow: css`

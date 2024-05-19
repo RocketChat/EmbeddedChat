@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { GenericModal } from '../../components/GenericModal';
-import { loginModalStore } from '../../store';
+import { loginModalStore, useUserStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
@@ -20,6 +20,10 @@ export default function LoginForm() {
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();
+  const theme = useTheme();
+  const dark = useUserStore((state) => state.dark);
+  const mode = dark ? 'dark' : 'light';
+  const errorColor = theme.schemes[mode].destructive;
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {
@@ -79,11 +83,13 @@ export default function LoginForm() {
                 onChange={handleEdituserOrEmail}
                 placeholder="example@example.com"
                 onKeyPress={handleKeyPress}
-                style={{ borderColor: usernameError ? 'red' : '' }}
+                style={{
+                  borderColor: usernameError ? errorColor : '',
+                }}
               />
             </Box>
             {usernameError && (
-              <Box is="span" style={{ color: 'red', fontSize: '13px' }}>
+              <Box is="span" style={{ color: errorColor, fontSize: '13px' }}>
                 This field is required
               </Box>
             )}
@@ -96,7 +102,7 @@ export default function LoginForm() {
                 type={showPassword ? 'text' : 'password'}
                 onChange={handleEditPassword}
                 onKeyPress={handleKeyPress}
-                style={{ borderColor: passwordError ? 'red' : '' }}
+                style={{ borderColor: passwordError ? errorColor : '' }}
               />
               <Box
                 type="button"
@@ -110,7 +116,7 @@ export default function LoginForm() {
               <Box
                 is="span"
                 css={css`
-                  color: red;
+                  color: ${errorColor};
                   font-size: 13px;
                 `}
               >
