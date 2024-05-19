@@ -119,7 +119,7 @@ const AttachmentPreview = () => {
           margin-top: 1.5rem;
         `}
       >
-        <Button color="secondary" onClick={toggle}>
+        <Button type="secondary" onClick={toggle}>
           Cancel
         </Button>
         <Button

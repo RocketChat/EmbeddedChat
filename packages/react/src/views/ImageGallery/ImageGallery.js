@@ -123,7 +123,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
             Something went wrong
           </Box>
           <Button
-            color="primary"
+            type="primary"
             onClick={() => setShowGallery(false)}
             style={{
               alignSelf: 'auto',

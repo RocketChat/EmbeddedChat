@@ -60,10 +60,10 @@ export default function TotpModal({ handleLogin }) {
                 justify-content: space-around;
               `}
             >
-              <Button color="secondary" onClick={handleClose}>
+              <Button type="secondary" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button color="primary" onClick={handleSubmit}>
+              <Button type="primary" onClick={handleSubmit}>
                 Submit
               </Button>
             </Box>

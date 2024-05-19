@@ -1,7 +1,7 @@
 import { css, useTheme } from '@emotion/react';
 import { useUserStore } from '../../store';
 
-const ButtonStyles = (color, size, getSquareSize) => {
+const ButtonStyles = (type, size, getSquareSize) => {
   const theme = useTheme();
   const dark = useUserStore((state) => state.dark);
   const mode = dark ? 'dark' : 'light';
@@ -9,8 +9,8 @@ const ButtonStyles = (color, size, getSquareSize) => {
   return css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.schemes[mode][color] || 'currentColor'};
-    color: ${theme.schemes[mode][`${color}Foreground`] || 'currentColor'};
+    background-color: ${theme.schemes[mode][type] || 'currentColor'};
+    color: ${theme.schemes[mode][`${type}Foreground`] || 'currentColor'};
     border-color: ${theme.schemes[mode].border || 'currentColor'};
     border-style: solid;
     border-width: 1px;

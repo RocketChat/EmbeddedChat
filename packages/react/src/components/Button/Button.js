@@ -15,7 +15,7 @@ const getSquareSize = (size) => {
 
 const Button = ({
   children,
-  color = 'primary',
+  type = 'primary',
   className = '',
   style = {},
   size = 'medium',
@@ -29,7 +29,7 @@ const Button = ({
   return (
     <button
       type="button"
-      css={ButtonStyles(color, size, getSquareSize)}
+      css={ButtonStyles(type, size, getSquareSize)}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
       } ${ghost ? 'ghost' : ''} ${

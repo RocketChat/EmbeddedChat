@@ -113,11 +113,11 @@ const Files = () => {
               Deleting a file will delete it forever. This cannot be undone.
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={handleOnClose}>
+              <Button type="secondary" onClick={handleOnClose}>
                 Cancel
               </Button>
               <Button
-                color="destructive"
+                type="destructive"
                 onClick={() => {
                   deleteFile(fileToDelete);
                 }}

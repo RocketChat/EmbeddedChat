@@ -33,8 +33,8 @@ export const Default = {
           </Box>
         </Modal.Content>
         <Modal.Footer>
-          <Button color="secondary">Cancel</Button>
-          <Button color="primary">Submit</Button>
+          <Button type="secondary">Cancel</Button>
+          <Button type="primary">Submit</Button>
         </Modal.Footer>
       </Modal>
     </ThemeProvider>

@@ -596,7 +596,7 @@ const ChatInput = ({ scrollToBottom }) => {
                 <Icon css={styles.iconCursor} name="send" />
               </ActionButton>
             ) : (
-              <Button onClick={onJoin} color="primary">
+              <Button onClick={onJoin} type="primary">
                 JOIN
               </Button>
             )}
@@ -633,10 +633,10 @@ const ChatInput = ({ scrollToBottom }) => {
               Send it as attachment instead?{' '}
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={closeMsgLongModal}>
+              <Button type="secondary" onClick={closeMsgLongModal}>
                 Cancel
               </Button>
-              <Button onClick={handleConvertToAttachment} color="primary">
+              <Button onClick={handleConvertToAttachment} type="primary">
                 Ok
               </Button>
             </Modal.Footer>

@@ -152,7 +152,7 @@ export const MessageToolbox = ({
                   ghost
                   size="small"
                   icon="trash"
-                  color="destructive"
+                  type="destructive"
                   onClick={() => handleClickDelete(message)}
                 />
               </Tooltip>
@@ -163,7 +163,7 @@ export const MessageToolbox = ({
               ghost
               size="small"
               icon="report"
-              color="destructive"
+              type="destructive"
               onClick={() => handlerReportMessage(message)}
             />
           </Tooltip>
@@ -193,11 +193,11 @@ export const MessageToolbox = ({
             {parseEmoji(message.msg)}
           </Modal.Content>
           <Modal.Footer>
-            <Button color="secondary" onClick={handleOnClose}>
+            <Button type="secondary" onClick={handleOnClose}>
               Cancel
             </Button>
             <Button
-              color="destructive"
+              type="destructive"
               onClick={() => {
                 handleDeleteMessage(message);
                 handleOnClose();

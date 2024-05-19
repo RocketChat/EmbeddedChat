@@ -120,7 +120,7 @@ export default function LoginForm() {
           </Box>
           <Box>
             <Button
-              color="primary"
+              type="primary"
               onClick={handleSubmit}
               css={css`
                 margin: 10px 0;

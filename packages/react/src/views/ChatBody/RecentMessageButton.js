@@ -10,7 +10,7 @@ const RecentMessageButton = ({ visible, onClick, text }) => {
   return (
     <Button
       css={[styles.button, !visible && 'not', clicked && 'clicked']}
-      color="primary"
+      type="primary"
       size="small"
       onClick={() => {
         onClick();
