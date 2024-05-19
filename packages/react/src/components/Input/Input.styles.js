@@ -18,19 +18,18 @@ const InputStyles = () => {
     white-space: nowrap;
     word-break: break-all;
     outline: 0;
-    background-color: transparent;
+    background-color: ${theme.schemes[mode].background};
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: inherit;
+    color:${theme.schemes[mode].foreground};
     border-width: 1px;
     border-color: ${theme.schemes[mode].input}
     border-style: solid;
     border-radius: 0.25rem;
-    background-color: white;
     box-shadow: none;
     transition: all 230ms;
     &:focus {
