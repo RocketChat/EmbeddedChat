@@ -23,5 +23,6 @@ export const Simple = {
     auth: {
       flow: 'PASSWORD',
     },
+    dark: false,
   },
 };

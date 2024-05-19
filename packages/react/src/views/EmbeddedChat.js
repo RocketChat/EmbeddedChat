@@ -42,12 +42,15 @@ const EmbeddedChat = ({
   auth = {
     flow: 'PASSWORD',
   },
+  dark = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
   const setShowRoles = useUserStore((state) => state.setShowRoles);
+  const setDark = useUserStore((state) => state.setDark);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
@@ -173,6 +176,7 @@ const EmbeddedChat = ({
       showAvatar,
       hideHeader,
       anonymousMode,
+      dark,
     }),
     [
       enableThreads,
@@ -186,6 +190,7 @@ const EmbeddedChat = ({
       showAvatar,
       hideHeader,
       anonymousMode,
+      dark,
     ]
   );
 
@@ -314,6 +319,7 @@ EmbeddedChat.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
+  dark: PropTypes.bool,
 };
 
 export default memo(EmbeddedChat);
