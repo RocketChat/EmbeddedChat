@@ -65,6 +65,20 @@ export default function LoginForm() {
     }
   };
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
+  const fields = [
+    {
+      label: 'Email or username',
+      onChange: handleEdituserOrEmail,
+      placeholder: 'example@example.com',
+      error: usernameError,
+    },
+    {
+      label: 'Password',
+      type: showPassword ? 'text' : 'password',
+      onChange: handleEditPassword,
+      error: passwordError,
+    },
+  ];
 
   return isLoginModalOpen ? (
     <>
@@ -75,66 +89,49 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          <Box css={styles.fieldContainer}>
-            <Box css={styles.fieldLabel}> Email or username</Box>
-            <Box css={styles.fieldRow}>
-              <Input
-                type="text"
-                onChange={handleEdituserOrEmail}
-                placeholder="example@example.com"
-                onKeyPress={handleKeyPress}
-                style={{
-                  borderColor: usernameError ? errorColor : '',
-                }}
-              />
+          {fields.map((field, index) => (
+            <Box key={index} css={styles.fieldContainer}>
+              <Box css={styles.fieldLabel}>{field.label}</Box>
+              <Box css={styles.fieldRow}>
+                <Input
+                  type={field.type || 'text'}
+                  onChange={field.onChange}
+                  placeholder={field.placeholder}
+                  onKeyPress={handleKeyPress}
+                  style={{ borderColor: field.error ? errorColor : '' }}
+                />
+                {field.label === 'Password' && (
+                  <Box
+                    type="button"
+                    css={styles.passwordEye}
+                    onClick={handleTogglePassword}
+                  >
+                    <Icon name={iconName} size="1.25rem" />
+                  </Box>
+                )}
+              </Box>
+              {field.error && (
+                <Box
+                  is="span"
+                  css={css`
+                    color: ${errorColor};
+                    font-size: 13px;
+                  `}
+                >
+                  This field is required
+                </Box>
+              )}
             </Box>
-            {usernameError && (
-              <Box is="span" style={{ color: errorColor, fontSize: '13px' }}>
-                This field is required
-              </Box>
-            )}
-          </Box>
-
-          <Box css={styles.fieldContainer}>
-            <Box css={styles.fieldLabel}>Password</Box>
-            <Box css={styles.fieldRow}>
-              <Input
-                type={showPassword ? 'text' : 'password'}
-                onChange={handleEditPassword}
-                onKeyPress={handleKeyPress}
-                style={{ borderColor: passwordError ? errorColor : '' }}
-              />
-              <Box
-                type="button"
-                css={styles.passwordEye}
-                onClick={handleTogglePassword}
-              >
-                <Icon name={iconName} size="1.25rem" />
-              </Box>
-            </Box>
-            {passwordError && (
-              <Box
-                is="span"
-                css={css`
-                  color: ${errorColor};
-                  font-size: 13px;
-                `}
-              >
-                This field is required
-              </Box>
-            )}
-          </Box>
-          <Box>
-            <Button
-              type="primary"
-              onClick={handleSubmit}
-              css={css`
-                margin: 10px 0;
-              `}
-            >
-              Login
-            </Button>
-          </Box>
+          ))}
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            css={css`
+              margin: 10px 0;
+            `}
+          >
+            Login
+          </Button>
         </Box>
       </GenericModal>
     </>
