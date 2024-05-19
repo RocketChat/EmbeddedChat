@@ -1,4 +1,12 @@
 /* eslint-disable no-cond-assign */
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+// Replace 'SampleTheme' with name of your theme
+
+const themeName = 'SampleTheme';
+
 function parseCSS(cssString) {
   const schemes = {
     light: {},
@@ -35,6 +43,8 @@ function parseCSS(cssString) {
 
   return { schemes };
 }
+
+// Replace cssString with the your exported ShadnCn Theme
 
 const cssString = `
   @layer base {
@@ -85,4 +95,23 @@ const cssString = `
   }
   `;
 
-console.log(parseCSS(cssString));
+const themeObject = parseCSS(cssString);
+const themeObjectString = `const ${themeName} = ${JSON.stringify(
+  themeObject,
+  null,
+  4
+)};
+  export default ${themeName};`;
+
+const themePath = path.join(__dirname, `../src/theme/${themeName}.js`);
+
+if (!fs.existsSync(themePath)) {
+  console.log('Theme file created successfully.');
+} else {
+  console.log('Theme file already exists.');
+}
+
+fs.writeFileSync(themePath, themeObjectString);
+
+execSync(`npx prettier --write '${themePath}'`);
+console.log('Theme file formatted successfully.');
