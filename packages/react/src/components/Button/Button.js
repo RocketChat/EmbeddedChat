@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import styles from './Button.styles';
@@ -26,12 +25,11 @@ const Button = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
-  const theme = useTheme();
 
   return (
     <button
       type="button"
-      css={styles.button(theme, color, size, getSquareSize)}
+      css={styles(color, size, getSquareSize)}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
       } ${ghost ? 'ghost' : ''} ${

@@ -26,7 +26,7 @@ const ToastBarContainer = () => {
         Show Success Toast
       </Button>
       <Button
-        color="error"
+        color="destructive"
         onClick={() =>
           dispatchToast({
             message: 'Error Message',

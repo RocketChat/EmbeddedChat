@@ -152,7 +152,7 @@ export const MessageToolbox = ({
                   ghost
                   size="small"
                   icon="trash"
-                  color="error"
+                  color="destructive"
                   onClick={() => handleClickDelete(message)}
                 />
               </Tooltip>
@@ -163,7 +163,7 @@ export const MessageToolbox = ({
               ghost
               size="small"
               icon="report"
-              color="error"
+              color="destructive"
               onClick={() => handlerReportMessage(message)}
             />
           </Tooltip>
@@ -197,7 +197,7 @@ export const MessageToolbox = ({
               Cancel
             </Button>
             <Button
-              color="error"
+              color="destructive"
               onClick={() => {
                 handleDeleteMessage(message);
                 handleOnClose();

@@ -1,12 +1,17 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useUserStore } from '../../store';
 
-const styles = {
-  button: (theme, color, size, getSquareSize) => css`
+const ButtonStyles = (color, size, getSquareSize) => {
+  const theme = useTheme();
+  const dark = useUserStore((state) => state.dark);
+  const mode = dark ? 'dark' : 'light';
+
+  return css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.palette[color]?.main};
-    color: ${theme.palette[color]?.contrastText || 'currentColor'};
-    border-color: ${theme.palette[color]?.main || 'currentColor'};
+    background-color: ${theme.schemes[mode][color] || 'currentColor'};
+    color: ${theme.schemes[mode][`${color}Foreground`] || 'currentColor'};
+    border-color: ${theme.schemes[mode].border || 'currentColor'};
     border-style: solid;
     border-width: 1px;
     font-size: 0.875rem;
@@ -47,9 +52,7 @@ const styles = {
       padding-inline: 22px;
       border-radius: 0.36rem;
     }
-    &:hover {
-      filter: brightness(90%);
-    }
+
     &.ec-button-square {
       display: inline-flex;
       align-items: center;
@@ -63,25 +66,30 @@ const styles = {
       align-items: center;
       flex-shrink: 0;
     }
+
+    &:hover {
+      filter: brightness(90%);
+    }
+
     &.disabled:not(.ghost) {
-      background: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      background-color: ${theme.schemes[mode].muted};
+      color: ${theme.schemes[mode].mutedForeground};
       border: none;
-      color: ${theme?.palette?.secondary?.contrastText || '#000'};
     }
     &.ghost {
       background: none;
-      color: ${theme?.palette?.[color]?.main || 'currentColor'};
+      color: ${theme.schemes[mode].accentForeground};
       border: none;
     }
     &.disabled.ghost {
-      color: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      color: ${theme.schemes[mode].mutedForeground};
       border: none;
       background: none;
     }
     &.ghost:not(.disabled):hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: ${theme.schemes[mode].accent};
     }
-  `,
+  `;
 };
 
-export default styles;
+export default ButtonStyles;

@@ -117,7 +117,7 @@ const Files = () => {
                 Cancel
               </Button>
               <Button
-                color="error"
+                color="destructive"
                 onClick={() => {
                   deleteFile(fileToDelete);
                 }}

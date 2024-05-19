@@ -59,7 +59,7 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
         <Button color="secondary" onClick={handleOnClose}>
           Cancel
         </Button>
-        <Button onClick={handleReportMessage} color="error">
+        <Button onClick={handleReportMessage} color="destructive">
           Report message
         </Button>
       </Modal.Footer>

@@ -55,6 +55,7 @@ const EmbeddedChat = ({
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
     setShowRoles(showRoles);
+    setDark(dark);
   }, [
     toastBarPosition,
     showAvatar,
@@ -62,6 +63,8 @@ const EmbeddedChat = ({
     setToastbarPosition,
     showRoles,
     setShowRoles,
+    dark,
+    setDark,
   ]);
 
   const {
