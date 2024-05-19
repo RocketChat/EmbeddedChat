@@ -1,7 +1,12 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useUserStore } from '../../store';
 
-export const Modalstyles = {
-  modal: (theme) => css`
+export const Modalstyles = () => {
+  const theme = useTheme();
+  const dark = useUserStore((state) => state.dark);
+  const mode = dark ? 'dark' : 'light';
+
+  return css`
     background: none;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -12,10 +17,16 @@ export const Modalstyles = {
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
-    background: ${theme?.palette?.background?.modal || '#fff'};
+    color: ${theme.schemes[mode].foreground};
+    background: ${theme.schemes[mode].background};
     border-radius: 0.5rem;
-  `,
+  `;
 };
+
+export const ModalContentStyles = () => css`
+  position: relative;
+  overflow-y: auto !important;
+`;
 
 export const ModalBackdropStyles = {
   modalBackdrop: css`
@@ -33,17 +44,8 @@ export const ModalBackdropStyles = {
   `,
 };
 
-export const ModalContentStyles = {
-  modalContent: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
-    position: relative;
-    overflow-y: auto !important;
-  `,
-};
-
 export const ModalFooterStyles = {
-  modalFooter: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
+  modalFooter: () => css`
     -webkit-box-pack: end !important;
     -ms-flex-pack: end !important;
     -webkit-justify-content: end !important;
@@ -71,7 +73,6 @@ export const ModalHeaderStyles = {
 
 export const ModalTitleStyles = {
   modalTitle: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
     margin: 0.25rem !important;
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;

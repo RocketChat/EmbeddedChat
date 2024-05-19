@@ -3,7 +3,7 @@ import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
-import { Modalstyles as styles } from './Modal.styles';
+import { Modalstyles } from './Modal.styles';
 
 export const Modal = forwardRef(
   (
@@ -56,7 +56,7 @@ export const Modal = forwardRef(
         <Box
           ref={ref}
           is="dialog"
-          css={styles.modal(theme)}
+          css={Modalstyles}
           className={`ec-modal ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
           {...props}
