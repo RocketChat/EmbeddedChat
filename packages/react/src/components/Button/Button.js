@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import ButtonStyles from './Button.styles';
+import useButtonStyles from './Button.styles';
 
 const getSquareSize = (size) => {
   if (size === 'small') {
@@ -25,11 +25,11 @@ const Button = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
-
+  const styles = useButtonStyles(type, size, getSquareSize);
   return (
     <button
       type="button"
-      css={ButtonStyles(type, size, getSquareSize)}
+      css={styles.main}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
       } ${ghost ? 'ghost' : ''} ${

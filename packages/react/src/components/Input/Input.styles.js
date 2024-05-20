@@ -1,11 +1,11 @@
 import { css, useTheme } from '@emotion/react';
 import { useUserStore } from '../../store';
 
-const InputStyles = () => {
+const useInputStyles = () => {
   const theme = useTheme();
   const dark = useUserStore((state) => state.dark);
   const mode = dark ? 'dark' : 'light';
-  return css`
+  const main = css`
     position: relative;
     display: inline-flex;
     flex: 1 0 auto;
@@ -39,6 +39,8 @@ const InputStyles = () => {
       };
     }
   `;
+
+  return { main };
 };
 
-export default InputStyles;
+export default useInputStyles;

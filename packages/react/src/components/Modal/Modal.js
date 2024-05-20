@@ -1,9 +1,8 @@
-import { useTheme } from '@emotion/react';
 import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
-import { Modalstyles } from './Modal.styles';
+import { useModalstyles } from './Modal.styles';
 
 export const Modal = forwardRef(
   (
@@ -19,7 +18,7 @@ export const Modal = forwardRef(
   ) => {
     const { classNames, styleOverrides } = useComponentOverrides('Modal');
     const backDropRef = useRef(null);
-    const theme = useTheme();
+    const styles = useModalstyles();
 
     const handleClick = useCallback(
       (e) => {
@@ -56,7 +55,7 @@ export const Modal = forwardRef(
         <Box
           ref={ref}
           is="dialog"
-          css={Modalstyles}
+          css={styles.main}
           className={`ec-modal ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
           {...props}

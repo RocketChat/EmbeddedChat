@@ -1,12 +1,12 @@
 import { css, useTheme } from '@emotion/react';
 import { useUserStore } from '../../store';
 
-const ButtonStyles = (type, size, getSquareSize) => {
+const useButtonStyles = (type, size, getSquareSize) => {
   const theme = useTheme();
   const dark = useUserStore((state) => state.dark);
   const mode = dark ? 'dark' : 'light';
 
-  return css`
+  const main = css`
     cursor: pointer;
     display: inline-block;
     background-color: ${theme.schemes[mode][type] || 'currentColor'};
@@ -94,6 +94,8 @@ const ButtonStyles = (type, size, getSquareSize) => {
       background: ${theme.schemes[mode].accent};
     }
   `;
+
+  return { main };
 };
 
-export default ButtonStyles;
+export default useButtonStyles;

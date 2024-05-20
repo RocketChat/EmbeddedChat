@@ -1,12 +1,12 @@
 import { css, useTheme } from '@emotion/react';
 import { useUserStore } from '../../store';
 
-export const Modalstyles = () => {
+export const useModalstyles = () => {
   const theme = useTheme();
   const dark = useUserStore((state) => state.dark);
   const mode = dark ? 'dark' : 'light';
 
-  return css`
+  const main = css`
     background: none;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -21,6 +21,7 @@ export const Modalstyles = () => {
     background: ${theme.schemes[mode].background};
     border-radius: 0.5rem;
   `;
+  return { main };
 };
 
 export const ModalContentStyles = () => css`
@@ -72,7 +73,7 @@ export const ModalHeaderStyles = {
 };
 
 export const ModalTitleStyles = {
-  modalTitle: (theme) => css`
+  modalTitle: css`
     margin: 0.25rem !important;
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;
