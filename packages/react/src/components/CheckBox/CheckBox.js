@@ -1,18 +1,18 @@
 import React from 'react';
-import { useTheme } from '@emotion/react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Icon } from '../Icon';
+import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import styles from './CheckBox.styles';
+import useCheckBoxStyles from './CheckBox.styles';
 
 const CheckBox = ({ checked, ...props }) => {
-  const theme = useTheme();
+  const styles = useCheckBoxStyles(checked);
   const { classNames, styleOverrides } = useComponentOverrides('CheckBox');
 
   return (
     // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <label
-      css={styles.checkBox(theme, checked)}
+      css={styles.main}
       className={appendClassNames('ec-check-box', classNames)}
       style={styleOverrides}
     >
@@ -22,9 +22,12 @@ const CheckBox = ({ checked, ...props }) => {
         checked={checked}
         style={{ display: 'none' }}
       />
-      {checked ? (
-        <Icon name="check" size="1.12rem" style={{ display: 'inline-block' }} />
-      ) : null}
+      <Box
+        is="span"
+        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      >
+        {checked && <Icon name="check" size="1rem" />}
+      </Box>
     </label>
   );
 };

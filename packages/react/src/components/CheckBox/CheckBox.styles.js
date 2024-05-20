@@ -10,13 +10,15 @@ const useCheckBoxStyles = (checked) => {
     display: inline-block;
     color: ${colors.primaryForeground};
     background-color: ${checked ? colors.primary : 'none'};
-    height: 1.12rem;
-    width: 1.12rem;
+    height: 1rem;
+    width: 1rem;
     box-sizing: border-box;
     border: ${!checked ? `1px solid ${colors.primary}` : `none`};
+    border-radius: 4px;
     cursor: pointer;
+    outline: none;
     &:active {
-      outline: 2px solid ${colors.ring};
+      outline: 0.3px solid ${colors.ring};
     }
   `;
 
