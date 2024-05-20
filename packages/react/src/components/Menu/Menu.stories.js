@@ -60,7 +60,7 @@ export const Default = {
         color: 'error',
       },
     ],
-    anchor: 'right bottom',
+    anchor: 'left bottom',
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>

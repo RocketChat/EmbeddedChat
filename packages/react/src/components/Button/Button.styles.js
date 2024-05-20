@@ -82,7 +82,7 @@ const useButtonStyles = (type, size, getSquareSize) => {
     }
     &.ghost {
       background: none;
-      color: ${colors.accentForeground};
+      color: ${colors[`${type}`] || colors.accentForeground};
       border: none;
     }
     &.disabled.ghost {

@@ -6,24 +6,10 @@ const DefaultTheme = {
     lg: 1200,
     xl: 1536,
   },
-  components: {
-    ChatBody: {
-      styleOverrides: {
-        border: 'none',
-      },
-    },
-    ChatInput: {
-      styleOverrides: {
-        fontWeight: 400,
-        color: 'gray',
-      },
-    },
-    Message: {
-      classNames: 'myCustomClass',
-    },
-  },
+  components: {},
 
   schemes: {
+    radius: '0.5rem',
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(240, 10%, 3.9%)',

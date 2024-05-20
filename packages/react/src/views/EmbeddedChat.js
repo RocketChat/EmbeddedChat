@@ -26,7 +26,7 @@ const EmbeddedChat = ({
   setClosableState = () => {},
   moreOpts = false,
   width = '100%',
-  height = '50vh',
+  height = '95vh',
   host = 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,

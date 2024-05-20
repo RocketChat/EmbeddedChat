@@ -15,7 +15,7 @@ const getSize = ({ small, large }) => {
 
 const ActionButton = forwardRef(
   ({ icon, size = 'medium', color = 'default', children, ...props }, ref) => (
-    <Button ref={ref} square size={size} color={color} {...props}>
+    <Button ref={ref} square size={size} type={color} {...props}>
       {children}
       <Icon name={icon} size={getSize(props)} />
     </Button>
