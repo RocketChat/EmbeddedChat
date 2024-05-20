@@ -2,10 +2,7 @@ import { css } from '@emotion/react';
 
 const styles = {
   parent: css`
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 370px;
+    width: 450px;
     height: 100%;
     background-color: white;
     box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);

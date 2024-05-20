@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
+import { ChatLayout } from './ChatLayout';
 import { ChatBody } from './ChatBody';
 import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
@@ -245,13 +246,15 @@ const EmbeddedChat = ({
             )}
 
             {isUserAuthenticated || anonymousMode ? (
-              <ChatBody
-                height={!fullScreen ? height : '88vh'}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-                scrollToBottom={scrollToBottom}
-              />
+              <ChatLayout>
+                <ChatBody
+                  height={!fullScreen ? height : '88vh'}
+                  anonymousMode={anonymousMode}
+                  showRoles={showRoles}
+                  messageListRef={messageListRef}
+                  scrollToBottom={scrollToBottom}
+                />
+              </ChatLayout>
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
             )}

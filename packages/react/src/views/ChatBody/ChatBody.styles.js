@@ -3,8 +3,8 @@ import { css } from '@emotion/react';
 export const chatbodyStyles = {
   chatbodyContainer: css`
     word-break: break-all;
-    overflow: scroll;
     overflow: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column-reverse;
     width: 100%;
@@ -15,7 +15,7 @@ export const chatbodyStyles = {
     border-right: 1px solid #b1b1b1;
     padding-top: 70px;
     ::-webkit-scrollbar {
-      width: 7px;
+      width: 4px;
       height: 7.7px;
     }
     ::-webkit-scrollbar-thumb {
