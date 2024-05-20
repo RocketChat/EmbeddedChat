@@ -233,16 +233,6 @@ const EmbeddedChat = ({
           onDrop={(e) => handleDragDrop(e)}
         >
           <ToastBarProvider position={toastBarPosition}>
-            {attachmentWindowOpen ? (
-              data ? (
-                <>
-                  <AttachmentPreview />
-                </>
-              ) : (
-                <CheckPreviewType data={data} />
-              )
-            ) : null}
-
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -268,6 +258,15 @@ const EmbeddedChat = ({
               <Home height={!fullScreen ? height : '88vh'} />
             )}
             <ChatInput scrollToBottom={scrollToBottom} />
+            {attachmentWindowOpen ? (
+              data ? (
+                <>
+                  <AttachmentPreview />
+                </>
+              ) : (
+                <CheckPreviewType data={data} />
+              )
+            ) : null}
             <div id="modal-on-parent" />
           </ToastBarProvider>
         </Box>
