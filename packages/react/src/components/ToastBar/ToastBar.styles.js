@@ -35,7 +35,7 @@ export const toastbarStyles = {
 
 export const toastBarContainerStyles = {
   container: (theme) => css`
-    position: fixed;
+    position: absolute;
     z-index: ${theme.zIndex.toastbar};
     border-radius: 0.25em;
     background-color: white;

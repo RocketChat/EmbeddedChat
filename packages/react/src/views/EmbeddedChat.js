@@ -216,34 +216,34 @@ const EmbeddedChat = ({
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
-      <ToastBarProvider position={toastBarPosition}>
-        <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (
-            data ? (
-              <>
-                <AttachmentPreview />
-              </>
-            ) : (
-              <CheckPreviewType CheckPreviewType data={data} />
-            )
-          ) : null}
-          <Box
-            css={[
-              styles.embeddedchat,
-              css`
-                width: ${width};
-                height: ${height};
-                position: relative;
-              `,
-              fullScreen && styles.fullscreen,
-            ]}
-            className={`ec-embedded-chat ${className} ${classNames}`}
-            style={{ ...style, ...styleOverrides }}
-            onDragOver={(e) => handleDrag(e)}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDragDrop(e)}
-          >
+      <RCInstanceProvider value={RCContextValue}>
+        {attachmentWindowOpen ? (
+          data ? (
+            <>
+              <AttachmentPreview />
+            </>
+          ) : (
+            <CheckPreviewType CheckPreviewType data={data} />
+          )
+        ) : null}
+        <Box
+          css={[
+            styles.embeddedchat,
+            css`
+              width: ${width};
+              height: ${height};
+              position: relative;
+            `,
+            fullScreen && styles.fullscreen,
+          ]}
+          className={`ec-embedded-chat ${className} ${classNames}`}
+          style={{ ...style, ...styleOverrides }}
+          onDragOver={(e) => handleDrag(e)}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDrop={(e) => handleDragDrop(e)}
+        >
+          <ToastBarProvider position={toastBarPosition}>
             {onDrag && <DropBoxOverlay />}
             {hideHeader ? null : (
               <ChatHeader
@@ -292,9 +292,9 @@ const EmbeddedChat = ({
                 <div id="modal-on-parent" />
               </>
             )}
-          </Box>
-        </RCInstanceProvider>
-      </ToastBarProvider>
+          </ToastBarProvider>
+        </Box>
+      </RCInstanceProvider>
     </ThemeProvider>
   );
 };
