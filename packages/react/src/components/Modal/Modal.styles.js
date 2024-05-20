@@ -7,7 +7,7 @@ export const useModalstyles = () => {
   const colors = theme.schemes[mode];
 
   const main = css`
-    position: fixed;
+    position: absolute;
     display: flex;
     display: -ms-flexbox;
     flex-direction: column;
@@ -34,7 +34,7 @@ export const ModalContentStyles = () => css`
 
 export const ModalBackdropStyles = {
   modalBackdrop: css`
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     z-index: 10000;

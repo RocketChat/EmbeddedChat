@@ -3,6 +3,7 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
 import { useModalstyles } from './Modal.styles';
+import ReactPortal from '../../lib/reactPortal';
 
 export const Modal = forwardRef(
   (
@@ -51,18 +52,20 @@ export const Modal = forwardRef(
     }
 
     return (
-      <ModalBackdrop ref={backDropRef} onClick={handleClick}>
-        <Box
-          ref={ref}
-          is="dialog"
-          css={styles.main}
-          className={`ec-modal ${className} ${classNames}`}
-          style={{ ...style, ...styleOverrides }}
-          {...props}
-        >
-          {children}
-        </Box>
-      </ModalBackdrop>
+      <ReactPortal wrapperId="modal-on-parent">
+        <ModalBackdrop ref={backDropRef} onClick={handleClick}>
+          <Box
+            ref={ref}
+            is="dialog"
+            css={styles.main}
+            className={`ec-modal ${className} ${classNames}`}
+            style={{ ...style, ...styleOverrides }}
+            {...props}
+          >
+            {children}
+          </Box>
+        </ModalBackdrop>
+      </ReactPortal>
     );
   }
 );

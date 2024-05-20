@@ -289,7 +289,7 @@ const EmbeddedChat = ({
                   <Home height={!fullScreen ? height : '88vh'} />
                 )}
                 <ChatInput scrollToBottom={scrollToBottom} />
-                <div id="ec-modal" />
+                <div id="modal-on-parent" />
               </>
             )}
           </Box>
