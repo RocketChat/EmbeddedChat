@@ -32,15 +32,3 @@ export const Password = {
     </ThemeProvider>
   ),
 };
-
-export const SuccessColor = {
-  args: {
-    type: 'text',
-    color: 'success',
-  },
-  render: (args) => (
-    <ThemeProvider theme={DefaultTheme}>
-      <Input {...args} />
-    </ThemeProvider>
-  ),
-};

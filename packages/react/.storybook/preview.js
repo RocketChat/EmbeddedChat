@@ -1,4 +1,4 @@
-import 'normalize.css'
+import 'normalize.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {

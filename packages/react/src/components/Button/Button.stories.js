@@ -12,7 +12,7 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Primary = {
   args: {
-    color: 'primary',
+    type: 'primary',
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>
@@ -23,7 +23,7 @@ export const Primary = {
 
 export const Secondary = {
   args: {
-    color: 'secondary',
+    type: 'secondary',
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>
@@ -34,7 +34,7 @@ export const Secondary = {
 
 export const Large = {
   args: {
-    color: 'primary',
+    type: 'primary',
     size: 'large',
   },
   render: (args) => (
@@ -46,7 +46,7 @@ export const Large = {
 
 export const Small = {
   args: {
-    color: 'primary',
+    type: 'primary',
     size: 'small',
   },
   render: (args) => (
