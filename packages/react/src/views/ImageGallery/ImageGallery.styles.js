@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 
 const styles = {
   overlay: css`
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 1000;
     background-color: rgba(51, 51, 51, 0.7);
   `,

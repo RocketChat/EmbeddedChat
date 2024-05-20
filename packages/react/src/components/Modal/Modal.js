@@ -52,7 +52,7 @@ export const Modal = forwardRef(
     }
 
     return (
-      <ReactPortal wrapperId="modal-on-parent">
+      <ReactPortal wrapperId="overlay-items">
         <ModalBackdrop ref={backDropRef} onClick={handleClick}>
           <Box
             ref={ref}

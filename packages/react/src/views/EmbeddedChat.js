@@ -267,7 +267,7 @@ const EmbeddedChat = ({
                 <CheckPreviewType data={data} />
               )
             ) : null}
-            <div id="modal-on-parent" />
+            <div id="overlay-items" />
           </ToastBarProvider>
         </Box>
       </RCInstanceProvider>
