@@ -22,7 +22,7 @@ export const useMenuStyles = () => {
     height: fit-content;
     z-index: 1100;
     border-radius: 0.2em;
-    padding: 0.2em 0;
+    padding: 0.5em 0;
     background-color: ${colors.background};
   `;
 
@@ -39,13 +39,13 @@ export const useMenuItemStyles = () => {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    padding: 0.25em;
+    padding: 0.25em 0.75em;
     white-space: nowrap;
     gap: 0.2rem;
     color: ${colors.foreground};
     &:hover {
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.2)
+        ? darken(colors.background, 0.05)
         : lighten(colors.background, 2)};
       cursor: pointer;
     }
