@@ -7,19 +7,22 @@ export const useModalstyles = () => {
   const colors = theme.schemes[mode];
 
   const main = css`
-    background: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    position: fixed;
     display: flex;
+    display: -ms-flexbox;
     flex-direction: column;
+    align-content: stretch;
+    justify-content: strech;
     max-height: 100%;
-    position: static;
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
     color: ${colors.foreground};
     background: ${colors.background};
     border-radius: 0.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   `;
   return { main };
 };
@@ -32,13 +35,9 @@ export const ModalContentStyles = () => css`
 export const ModalBackdropStyles = {
   modalBackdrop: css`
     position: fixed;
+    top: 0;
+    right: 0;
     z-index: 10000;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #333333b3;
     width: 100%;
     height: 100%;
