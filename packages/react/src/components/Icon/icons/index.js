@@ -42,7 +42,6 @@ import Copy from './Copy';
 import Clipboard from './Clipboard';
 import Clip from './Clip';
 import Download from './Download';
-import At from './At';
 import ChevronDown from './ChevronDown';
 import ChevronLeft from './ChevronLeft';
 import Key from './Key';
@@ -55,6 +54,7 @@ import Busy from './Busy';
 import Quote from './Quote';
 import EyeOpen from './EyeOpen';
 import EyeClose from './EyeClose';
+import At from './At';
 
 const icons = {
   file: File,
@@ -101,7 +101,6 @@ const icons = {
   clipboard: Clipboard,
   clip: Clip,
   download: Download,
-  at: At,
   'chevron-down': ChevronDown,
   'chevron-left': ChevronLeft,
   key: Key,
@@ -114,6 +113,7 @@ const icons = {
   quote: Quote,
   eyeopen: EyeOpen,
   eyeclose: EyeClose,
+  at: At,
 };
 
 export default icons;
