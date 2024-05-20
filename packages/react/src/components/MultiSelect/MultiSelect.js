@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useTheme } from '@emotion/react';
+import { useTheme, css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
-import styles from './MultiSelect.styles';
+import useMultiSelectStyles from './MultiSelect.styles';
+import { CheckBox } from '../CheckBox';
 
 const MultiSelect = ({
   className = '',
@@ -15,6 +16,7 @@ const MultiSelect = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('MultiSelect');
   const theme = useTheme();
+  const styles = useMultiSelectStyles();
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleOptionToggle = (value) => {
@@ -28,22 +30,29 @@ const MultiSelect = ({
 
   return (
     <Box
-      css={styles.multiSelect(theme, color)}
+      css={styles.main}
       className={`ec-multi-select ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
-      <Box>
+      <Box css={styles.mainBox}>
         {options.map((option) => (
           // eslint-disable-next-line jsx-a11y/label-has-associated-control
-          <label key={option.value} css={styles.checkbox}>
-            <input
+          <label key={option.value} css={styles.checkContainer}>
+            <CheckBox
               type="checkbox"
               value={option.value}
               checked={selectedOptions.includes(option.value)}
               onChange={() => handleOptionToggle(option.value)}
+              css={styles.checkbox}
             />
-            {option.label}
+            <Box
+              css={css`
+                padding: 0 0.3rem;
+              `}
+            >
+              {option.label}
+            </Box>
           </label>
         ))}
       </Box>
