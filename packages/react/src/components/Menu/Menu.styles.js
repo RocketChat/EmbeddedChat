@@ -1,13 +1,17 @@
-import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
+import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
-export const MenuStyles = {
-  wrapper: css`
+export const useMenuStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const wrapper = css`
     position: relative;
     display: inline-block;
-  `,
+  `;
 
-  container: css`
+  const container = css`
     position: absolute;
     top: 100%;
     right: 0;
@@ -18,12 +22,18 @@ export const MenuStyles = {
     z-index: 1100;
     border-radius: 0.2em;
     padding: 0.2em 0;
-    background-color: #fff;
-  `,
+    background-color: ${colors.background};
+  `;
+
+  return { wrapper, container };
 };
 
-export const MenuItemStyles = {
-  item: css`
+export const useMenuItemStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const item = css`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -31,23 +41,17 @@ export const MenuItemStyles = {
     padding: 0.25em;
     white-space: nowrap;
     gap: 0.2rem;
-  `,
-
-  themed: (theme, color) => css`
-    color: ${theme.palette?.[color]?.main || color};
+    color: ${colors.accentForeground};
     &:hover {
-      background-color: ${theme.palette?.grey?.main || '#E7EBF0'};
-      ${theme.palette?.[color]?.main || color
-        ? `background-color: ${alpha(
-            theme.palette?.[color]?.main || color,
-            0.075
-          )}`
-        : ''};
+      background-color: ${colors.accentBackground};
       cursor: pointer;
     }
-  `,
-  disabled: (theme) => css`
+  `;
+
+  const disabled = css`
     cursor: not-allowed !important;
     color: ${theme.palette?.grey?.contrastText || '#6F7E8C'};
-  `,
+  `;
+
+  return { item, disabled };
 };
