@@ -1,5 +1,6 @@
 import { css, useTheme } from '@emotion/react';
 import { useThemeStore } from '../../store';
+import { lighten, darken } from '../../lib/color';
 
 export const useMenuStyles = () => {
   const theme = useTheme();
@@ -41,16 +42,18 @@ export const useMenuItemStyles = () => {
     padding: 0.25em;
     white-space: nowrap;
     gap: 0.2rem;
-    color: ${colors.accentForeground};
+    color: ${colors.foreground};
     &:hover {
-      background-color: ${colors.accentBackground};
+      background-color: ${mode === 'light'
+        ? darken(colors.background, 0.2)
+        : lighten(colors.background, 2)};
       cursor: pointer;
     }
   `;
 
   const disabled = css`
     cursor: not-allowed !important;
-    color: ${theme.palette?.grey?.contrastText || '#6F7E8C'};
+    color: ${colors.mutedForeground};
   `;
 
   return { item, disabled };
