@@ -18,7 +18,6 @@ import { Box } from '../components/Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
-import { DropBoxOverlay, DropBox } from '../components/DropBox';
 import styles from './EmbeddedChat.styles';
 
 const EmbeddedChat = ({
@@ -134,6 +133,9 @@ const EmbeddedChat = ({
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
   const setAuthenticatedUserRoles = useUserStore((state) => state.setRoles);
+  const attachmentWindowOpen = useAttachmentWindowStore(
+    (state) => state.attachmentWindowOpen
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -165,8 +167,6 @@ const EmbeddedChat = ({
     setAuthenticatedUserRoles,
     setIsUserAuthenticated,
   ]);
-
-  const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
 
   const ECOptions = useMemo(
     () => ({
@@ -217,15 +217,6 @@ const EmbeddedChat = ({
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <RCInstanceProvider value={RCContextValue}>
-        {attachmentWindowOpen ? (
-          data ? (
-            <>
-              <AttachmentPreview />
-            </>
-          ) : (
-            <CheckPreviewType CheckPreviewType data={data} />
-          )
-        ) : null}
         <Box
           css={[
             styles.embeddedchat,
@@ -239,12 +230,19 @@ const EmbeddedChat = ({
           className={`ec-embedded-chat ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
           onDragOver={(e) => handleDrag(e)}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
           onDrop={(e) => handleDragDrop(e)}
         >
           <ToastBarProvider position={toastBarPosition}>
-            {onDrag && <DropBoxOverlay />}
+            {attachmentWindowOpen ? (
+              data ? (
+                <>
+                  <AttachmentPreview />
+                </>
+              ) : (
+                <CheckPreviewType data={data} />
+              )
+            ) : null}
+
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -258,40 +256,19 @@ const EmbeddedChat = ({
               />
             )}
 
-            {onDrag ? (
-              <>
-                <DropBox fullScreen height={height}>
-                  {isUserAuthenticated || anonymousMode ? (
-                    <ChatBody
-                      height={!fullScreen ? height : '88vh'}
-                      anonymousMode={anonymousMode}
-                      showRoles={showRoles}
-                      messageListRef={messageListRef}
-                      scrollToBottom={scrollToBottom}
-                    />
-                  ) : (
-                    <Home height={!fullScreen ? height : '88vh'} />
-                  )}
-                </DropBox>
-                <ChatInput scrollToBottom={scrollToBottom} />
-              </>
+            {isUserAuthenticated || anonymousMode ? (
+              <ChatBody
+                height={!fullScreen ? height : '88vh'}
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
+                messageListRef={messageListRef}
+                scrollToBottom={scrollToBottom}
+              />
             ) : (
-              <>
-                {isUserAuthenticated || anonymousMode ? (
-                  <ChatBody
-                    height={!fullScreen ? height : '88vh'}
-                    anonymousMode={anonymousMode}
-                    showRoles={showRoles}
-                    messageListRef={messageListRef}
-                    scrollToBottom={scrollToBottom}
-                  />
-                ) : (
-                  <Home height={!fullScreen ? height : '88vh'} />
-                )}
-                <ChatInput scrollToBottom={scrollToBottom} />
-                <div id="modal-on-parent" />
-              </>
+              <Home height={!fullScreen ? height : '88vh'} />
             )}
+            <ChatInput scrollToBottom={scrollToBottom} />
+            <div id="modal-on-parent" />
           </ToastBarProvider>
         </Box>
       </RCInstanceProvider>
