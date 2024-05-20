@@ -18,24 +18,21 @@ const useInputStyles = () => {
     vertical-align: baseline;
     white-space: nowrap;
     word-break: break-all;
-    outline: 0;
     background-color: ${colors.background};
+    color: ${colors.foreground};
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    color:${colors.foreground};
-    border-width: 1px;
-    border-color: ${colors.input}
-    border-style: solid;
     border-radius: 0.25rem;
     box-shadow: none;
-    transition: all 230ms;
+    border: 1px solid ${colors.input};
+    outline: none;
+
     &:focus {
-      border-color: ${colors.ring};
-      box-shadow: 0px 0px 2.5px ${colors.primary || 'currentColor'};
+      outline: ${colors.ring} solid 1px;
     }
   `;
 

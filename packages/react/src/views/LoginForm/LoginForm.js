@@ -98,7 +98,12 @@ export default function LoginForm() {
                   onChange={field.onChange}
                   placeholder={field.placeholder}
                   onKeyPress={handleKeyPress}
-                  style={{ borderColor: field.error ? errorColor : '' }}
+                  style={{
+                    ...(field.error && {
+                      borderColor: errorColor,
+                      outline: 'none',
+                    }),
+                  }}
                 />
                 {field.label === 'Password' && (
                   <Box
