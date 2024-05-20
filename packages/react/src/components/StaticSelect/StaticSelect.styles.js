@@ -1,7 +1,12 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  select: (theme, color) => css`
+const useStaticSelectStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const main = css`
     position: relative;
     display: inline-flex;
     flex: 1 0 auto;
@@ -15,10 +20,10 @@ const styles = {
     font-weight: 400;
     line-height: 1.25rem;
     overflow: hidden;
-    color: #2f343d;
+    color: ${colors.foreground};
     border-right: 0.9375rem transparent;
     border-width: 1px;
-    border-color: #cbced1;
+    border-color: ${colors.border};
     border-style: solid;
     border-radius: 0.25rem;
     background-color: white;
@@ -26,15 +31,14 @@ const styles = {
     -webkit-appearance: none;
     appearance: none;
     transition: all 230ms;
-    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23111111" width="24px" height="24px"%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3Cpath d="M7 10l5 5 5-5z" /%3E%3C/svg%3E');
-    background-size: 24px;
-    background-repeat: no-repeat;
-    background-position: calc(100% - 8px) center;
+    background-color: ${colors.background};
+
     &:focus {
-      border-color: ${theme.palette[color].main || 'currentColor'};
-      box-shadow: 0px 0px 2.5px ${theme.palette[color].light || 'currentColor'};
+      border-color: ${colors.ring};
     }
-  `,
+  `;
+
+  return { main };
 };
 
-export default styles;
+export default useStaticSelectStyles;
