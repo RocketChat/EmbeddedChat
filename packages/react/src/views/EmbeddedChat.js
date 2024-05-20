@@ -69,11 +69,9 @@ const EmbeddedChat = ({
   ]);
 
   const {
-    onDrag,
     data,
     handleDrag,
-    handleDragEnter,
-    handleDragLeave,
+
     handleDragDrop,
   } = useDropBox();
 
