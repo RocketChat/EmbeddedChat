@@ -7,16 +7,23 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { toastbarStyles as styles } from './ToastBar.styles';
-import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
   const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const { iconName, bgColor, color } = useMemo(() => {
-    const color = theme.palette?.[type]?.main;
-    const bgColor = alpha(color, 0.3);
+    const color =
+      type === 'error'
+        ? colors.destructiveForeground
+        : colors[`${type}Foreground`];
+    const bgColor = type === 'error' ? colors.destructive : colors[type];
+
     let iconName = 'success';
     switch (type) {
       case 'info':
@@ -33,7 +40,7 @@ const ToastBar = ({ toast, onClose }) => {
         iconName = 'check';
     }
     return { iconName, color, bgColor };
-  }, [theme.palette, type]);
+  }, [colors, type]);
 
   useEffect(() => {
     setTimeout(onClose, time);
