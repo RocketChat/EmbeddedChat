@@ -1,19 +1,26 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  checkBox: (theme, checked) => css`
+const useCheckBoxStyles = (checked) => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const main = css`
     display: inline-block;
-    color: ${theme.palette?.primary?.contrastText};
-    background-color: ${checked ? theme.palette?.primary?.main : 'none'};
+    color: ${colors.primaryForeground};
+    background-color: ${checked ? colors.primary : 'none'};
     height: 1.12rem;
     width: 1.12rem;
     box-sizing: border-box;
-    border: ${!checked ? `1px solid #6c727a` : `none`};
+    border: ${!checked ? `1px solid ${colors.primary}` : `none`};
     cursor: pointer;
     &:active {
-      outline: 2px solid #6c727a33;
+      outline: 2px solid ${colors.ring};
     }
-  `,
+  `;
+
+  return { main };
 };
 
-export default styles;
+export default useCheckBoxStyles;
