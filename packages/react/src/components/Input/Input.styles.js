@@ -1,10 +1,11 @@
 import { css, useTheme } from '@emotion/react';
-import { useUserStore } from '../../store';
+import { useThemeStore } from '../../store';
 
 const useInputStyles = () => {
   const theme = useTheme();
-  const dark = useUserStore((state) => state.dark);
-  const mode = dark ? 'dark' : 'light';
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
   const main = css`
     position: relative;
     display: inline-flex;
@@ -18,25 +19,23 @@ const useInputStyles = () => {
     white-space: nowrap;
     word-break: break-all;
     outline: 0;
-    background-color: ${theme.schemes[mode].background};
+    background-color: ${colors.background};
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    color:${theme.schemes[mode].foreground};
+    color:${colors.foreground};
     border-width: 1px;
-    border-color: ${theme.schemes[mode].input}
+    border-color: ${colors.input}
     border-style: solid;
     border-radius: 0.25rem;
     box-shadow: none;
     transition: all 230ms;
     &:focus {
-      border-color: ${theme.schemes[mode].ring};
-      box-shadow: 0px 0px 2.5px ${
-        theme.schemes[mode].primary || 'currentColor'
-      };
+      border-color: ${colors.ring};
+      box-shadow: 0px 0px 2.5px ${colors.primary || 'currentColor'};
     }
   `;
 

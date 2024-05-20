@@ -1,17 +1,17 @@
 import { css, useTheme } from '@emotion/react';
-import { useUserStore } from '../../store';
+import { useThemeStore } from '../../store';
 
 const useButtonStyles = (type, size, getSquareSize) => {
   const theme = useTheme();
-  const dark = useUserStore((state) => state.dark);
-  const mode = dark ? 'dark' : 'light';
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
 
   const main = css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.schemes[mode][type] || 'currentColor'};
-    color: ${theme.schemes[mode][`${type}Foreground`] || 'currentColor'};
-    border-color: ${theme.schemes[mode].border || 'currentColor'};
+    background-color: ${colors[type] || 'currentColor'};
+    color: ${colors[`${type}Foreground`] || 'currentColor'};
+    border-color: ${colors.border || 'currentColor'};
     border-style: solid;
     border-width: 1px;
     font-size: 0.875rem;
@@ -76,22 +76,22 @@ const useButtonStyles = (type, size, getSquareSize) => {
     }
 
     &.disabled:not(.ghost) {
-      background-color: ${theme.schemes[mode].muted};
-      color: ${theme.schemes[mode].mutedForeground};
+      background-color: ${colors.muted};
+      color: ${colors.mutedForeground};
       border: none;
     }
     &.ghost {
       background: none;
-      color: ${theme.schemes[mode].accentForeground};
+      color: ${colors.accentForeground};
       border: none;
     }
     &.disabled.ghost {
-      color: ${theme.schemes[mode].mutedForeground};
+      color: ${colors.mutedForeground};
       border: none;
       background: none;
     }
     &.ghost:not(.disabled):hover {
-      background: ${theme.schemes[mode].accent};
+      background: ${colors.accent};
     }
   `;
 

@@ -1,10 +1,10 @@
 import { css, useTheme } from '@emotion/react';
-import { useUserStore } from '../../store';
+import { useThemeStore } from '../../store';
 
 export const useModalstyles = () => {
   const theme = useTheme();
-  const dark = useUserStore((state) => state.dark);
-  const mode = dark ? 'dark' : 'light';
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
 
   const main = css`
     background: none;
@@ -17,8 +17,8 @@ export const useModalstyles = () => {
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
-    color: ${theme.schemes[mode].foreground};
-    background: ${theme.schemes[mode].background};
+    color: ${colors.foreground};
+    background: ${colors.background};
     border-radius: 0.5rem;
   `;
   return { main };

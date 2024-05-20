@@ -8,7 +8,7 @@ import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useToastStore, useUserStore } from '../store';
+import { useToastStore, useUserStore, useThemeStore } from '../store';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
 import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
 import useAttachmentWindowStore from '../store/attachmentwindow';
@@ -49,13 +49,14 @@ const EmbeddedChat = ({
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
   const setShowRoles = useUserStore((state) => state.setShowRoles);
-  const setDark = useUserStore((state) => state.setDark);
+  const setDarkMode = useThemeStore((state) => state.setDark);
+  const setLightMode = useThemeStore((state) => state.setLight);
 
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
     setShowRoles(showRoles);
-    setDark(dark);
+    dark ? setDarkMode() : setLightMode();
   }, [
     toastBarPosition,
     showAvatar,
@@ -64,7 +65,8 @@ const EmbeddedChat = ({
     showRoles,
     setShowRoles,
     dark,
-    setDark,
+    setDarkMode,
+    setLightMode,
   ]);
 
   const {

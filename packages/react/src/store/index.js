@@ -11,3 +11,4 @@ export { default as useFileStore } from './fileStore';
 export { default as useMentionsStore } from './mentionsStore';
 export { default as usePinnedMessageStore } from './pinnedMessageStore';
 export { default as useStarredMessageStore } from './starredMessageStore';
+export { default as useThemeStore } from './themeStore';
