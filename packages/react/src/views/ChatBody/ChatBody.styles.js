@@ -1,7 +1,13 @@
 import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
+import { alpha } from '../../lib/color';
 
-export const chatbodyStyles = {
-  chatbodyContainer: css`
+export const useChatbodyStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const chatbodyContainer = css`
     flex: 1;
     word-break: break-all;
     overflow: auto;
@@ -16,21 +22,22 @@ export const chatbodyStyles = {
       height: 7.7px;
     }
     ::-webkit-scrollbar-thumb {
-      background: #8d8d8d;
+      background: ${alpha(colors.primary, 0.5)};
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #555;
+      background: ${colors.primary};
     }
     ::-webkit-scrollbar-button {
       display: none;
     }
-  `,
+  `;
+
+  return { chatbodyContainer };
 };
 
 export const useRecentMessageStyles = () => {
   const theme = useTheme();
-
   const button = css`
     position: relative;
     z-index: ${theme.zIndex.body};

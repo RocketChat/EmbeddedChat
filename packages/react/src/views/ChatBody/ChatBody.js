@@ -13,7 +13,7 @@ import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
-import { chatbodyStyles as styles } from './ChatBody.styles';
+import { useChatbodyStyles } from './ChatBody.styles';
 
 const ChatBody = ({
   anonymousMode,
@@ -22,7 +22,7 @@ const ChatBody = ({
   messageListRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-
+  const styles = useChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
   const [, setIsUserScrolledUp] = useState(false);
