@@ -198,7 +198,6 @@ export const MessageToolbox = ({
               Cancel
             </Button>
             <Button
-              type="info"
               onClick={() => {
                 handleDeleteMessage(message);
                 handleOnClose();

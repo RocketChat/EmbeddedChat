@@ -2,24 +2,24 @@ import { css, useTheme } from '@emotion/react';
 import { useThemeStore } from '../../store';
 import { lighten, darken } from '../../lib/color';
 
-export const useMessageStyles = () => {
+const useCommonTheme = () => {
   const theme = useTheme();
   const mode = useThemeStore((state) => state.mode);
   const colors = theme.schemes[mode];
+  return { theme, mode, colors };
+};
+
+export const useMessageStyles = () => {
+  const { mode, colors } = useCommonTheme();
 
   const main = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     padding-top: 0.5rem;
-    -webkit-padding-before: 0.5rem;
-    padding-block-start: 0.5rem;
     padding-bottom: 0.25rem;
-    -webkit-padding-after: 0.25rem;
-    padding-block-end: 0.25rem;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    padding-inline: 1.25rem;
     color: ${colors.foreground};
 
     &:hover {
@@ -44,9 +44,7 @@ export const useMessageStyles = () => {
 };
 
 export const useMessageAvatarContainerStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { colors } = useCommonTheme();
 
   const container = css`
     margin: 3px;
@@ -72,7 +70,6 @@ export const MessageBodyStyles = {
     opacity: 1;
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
-    margin-block: 0.125rem;
   `,
 };
 
@@ -87,17 +84,13 @@ export const MessageContainerStyles = {
     min-width: 1px;
     margin-top: -0.125rem;
     margin-bottom: -0.125rem;
-    margin-block: -0.125rem;
     margin-left: 0.25rem;
     margin-right: 0.25rem;
-    margin-inline: 0.25rem;
   `,
 };
 
 export const useMessageDividerStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { theme, colors } = useCommonTheme();
 
   const divider = css`
     letter-spacing: 0rem;
@@ -112,16 +105,13 @@ export const useMessageDividerStyles = () => {
     margin-bottom: 0.5rem;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    padding-inline: 1.25rem;
   `;
 
   const dividerContent = css`
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    margin-block: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    padding-inline: 0.5rem;
     background-color: ${colors.secondary};
     color: ${colors.secondaryForeground};
     position: absolute;
@@ -142,9 +132,7 @@ export const useMessageDividerStyles = () => {
 };
 
 export const useMessageHeaderStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { colors } = useCommonTheme();
 
   const header = css`
     display: flex;
@@ -154,7 +142,6 @@ export const useMessageHeaderStyles = () => {
     min-width: 1px;
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
-    margin-block: 0.125rem;
     gap: 0.125rem;
     align-items: center;
   `;
@@ -216,7 +203,6 @@ export const MessageMetricsStyles = {
     display: flex;
     margin-left: -0.25rem;
     margin-right: -0.25rem;
-    margin-inline: -0.25rem;
     margin-top: 0.5rem;
   `,
 
@@ -273,9 +259,7 @@ export const MessageReactionsStyles = {
 };
 
 export const useMessageToolboxStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { theme, colors } = useCommonTheme();
 
   const container = css`
     display: none;
@@ -292,7 +276,6 @@ export const useMessageToolboxStyles = () => {
     display: flex;
     margin-left: -0.25rem;
     margin-right: -0.25rem;
-    margin-inline: -0.25rem;
     margin-top: 0.125rem;
     font-size: 1.25rem !important;
     background-color: ${colors.background};
