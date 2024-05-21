@@ -34,6 +34,7 @@ const useChatHeaderStyles = () => {
     flex-direction: column;
     padding: 0.75rem;
     box-shadow: ${theme.shadows[1]};
+    border-radius: ${theme.schemes.radius} ${theme.schemes.radius} 0 0;
   `;
 
   const channelDescription = css`

@@ -11,9 +11,7 @@ const useButtonStyles = (type, size, getSquareSize) => {
     display: inline-block;
     background-color: ${colors[type] || 'currentColor'};
     color: ${colors[`${type}Foreground`] || 'currentColor'};
-    border-color: ${colors.border || 'currentColor'};
-    border-style: solid;
-    border-width: 1px;
+    border: none;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0;
