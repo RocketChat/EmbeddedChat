@@ -116,16 +116,28 @@ const ChatHeader = ({
     });
   };
 
-  const stateSetters = [
-    setShowStarred,
-    setShowPinned,
-    setShowMembers,
-    setShowSearch,
-    setShowChannelinfo,
-    setShowAllThreads,
-    setShowAllFiles,
-    setShowMentions,
-  ];
+  const stateSetters = useMemo(
+    () => [
+      setShowStarred,
+      setShowPinned,
+      setShowMembers,
+      setShowSearch,
+      setShowChannelinfo,
+      setShowAllThreads,
+      setShowAllFiles,
+      setShowMentions,
+    ],
+    [
+      setShowStarred,
+      setShowPinned,
+      setShowMembers,
+      setShowSearch,
+      setShowChannelinfo,
+      setShowAllThreads,
+      setShowAllFiles,
+      setShowMentions,
+    ]
+  );
 
   const showStarredMessage = useCallback(async () => {
     setExclusiveState(stateSetters, setShowStarred);
