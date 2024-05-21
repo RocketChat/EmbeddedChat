@@ -1,7 +1,12 @@
 import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
-export const MessageStyles = {
-  message: css`
+export const useMessageStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const message = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -14,21 +19,21 @@ export const MessageStyles = {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
-    &:hover {
-      background: #f2f3f5;
-    }
-  `,
-  messageEditing: css`
+    color: ${colors.foreground};
+  `;
+  const messageEditing = css`
     background-color: #fff8e0;
     &:hover {
       background-color: #fff8e0;
     }
-  `,
+  `;
 
-  pendingMessageBody: css`
+  const pendingMessageBody = css`
     opacity: 0.4 !important;
     white-space: pre-line;
-  `,
+  `;
+
+  return { message, messageEditing, pendingMessageBody };
 };
 
 export const MessageAvatarContainerStyles = {
@@ -51,7 +56,6 @@ export const MessageBodyStyles = {
     transition: opacity 0.3s linear;
     word-break: break-word;
     opacity: 1;
-    color: #2f343d;
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
     margin-block: 0.125rem;
@@ -73,9 +77,6 @@ export const MessageContainerStyles = {
     margin-left: 0.25rem;
     margin-right: 0.25rem;
     margin-inline: 0.25rem;
-    &:hover {
-      background: #f2f3f5;
-    }
   `,
 };
 
@@ -96,7 +97,6 @@ export const useMessageDividerStyles = () => {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
-    color: #2f343d;
   `;
 
   const bar = css`
@@ -104,7 +104,6 @@ export const useMessageDividerStyles = () => {
     justify-content: flex-end;
     align-items: center;
     flex-grow: 1;
-    background-color: #2f343d;
     height: 1px;
   `;
 
@@ -115,7 +114,6 @@ export const useMessageDividerStyles = () => {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-inline: 0.5rem;
-    background-color: white;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -147,11 +145,9 @@ export const MessageHeaderStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
-    color: #2f343d;
   `,
 
   userRole: css`
-    background-color: #cbced1;
     letter-spacing: 0rem;
     font-size: 0.75rem;
     padding: 0 0.25rem;
@@ -162,7 +158,6 @@ export const MessageHeaderStyles = {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #2f343d;
   `,
 
   userName: css`
@@ -174,7 +169,6 @@ export const MessageHeaderStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
-    color: #6c727a;
   `,
 
   headerTimestamp: css`
@@ -186,7 +180,6 @@ export const MessageHeaderStyles = {
     font-weight: 400;
     line-height: 1rem;
     flex-shrink: 0;
-    color: #9ea2a8;
   `,
 };
 
@@ -208,7 +201,6 @@ export const MessageMetricsStyles = {
     justify-content: center;
     align-items: center;
     margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
-    color: #6c727a;
   `,
 
   metricsItemLabel: css`
@@ -237,14 +229,7 @@ export const MessageReactionsStyles = {
     margin: 0.125rem;
     padding: 0.125rem;
     cursor: pointer;
-    color: #6c727a;
-    border: 1px solid #cbced1;
     border-radius: 0.25rem;
-    background-color: #f7f8fa;
-    &:hover {
-      border-color: #6c727a;
-      background-color: #f2f3f5;
-    }
     img.joypixels {
       height: 1.25em;
       width: 1.25em;
@@ -255,7 +240,6 @@ export const MessageReactionsStyles = {
   `,
 
   reactionMine: css`
-    color: #2f343d;
     border-width: 1px;
   `,
 };
@@ -282,9 +266,7 @@ export const useMessageToolboxStyles = () => {
     font-size: 1.25rem !important;
     gap: 0.25rem;
     padding: 0.25rem;
-    border: 1px solid #dfdfdf;
     border-radius: 0.25rem;
-    background: #fff;
   `;
 
   return { container, toolbox };
