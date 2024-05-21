@@ -16,7 +16,7 @@ const RoomMembers = ({ members }) => {
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;
 
-  const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
+  const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
 
@@ -41,11 +41,7 @@ const RoomMembers = ({ members }) => {
   const [inviteData, setInviteData] = useState(null);
 
   return (
-    <Sidebar
-      title="Members"
-      iconName="members"
-      setShowWindow={toggleShowMembers}
-    >
+    <Sidebar title="Members" iconName="members" setShowWindow={setShowMembers}>
       <Box css={styles.container}>
         {showInvite ? (
           <InviteMembers inviteData={inviteData} />
