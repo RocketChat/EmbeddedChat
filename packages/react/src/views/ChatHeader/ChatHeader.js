@@ -259,14 +259,7 @@ const ChatHeader = ({
 
   const menuOptions = useMemo(() => {
     const options = [];
-    if (fullScreen) {
-      options.push({
-        id: 'minimize',
-        action: () => setFullScreen((prev) => !prev),
-        icon: 'mobile',
-        label: 'Minimize',
-      });
-    }
+
     if (moreOpts) {
       options.push(
         ...[
@@ -332,11 +325,9 @@ const ChatHeader = ({
     }
     return options;
   }, [
-    fullScreen,
     handleLogout,
     isUserAuthenticated,
     moreOpts,
-    setFullScreen,
     showAllFiles,
     showAllThreads,
     showMentions,
@@ -392,26 +383,29 @@ const ChatHeader = ({
           {avatarUrl && (
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
-          {fullScreen ? (
-            <Menu options={menuOptions} />
-          ) : (
-            <>
-              <Tooltip text="Maximize" position="bottom">
-                <ActionButton
-                  onClick={() => {
-                    setFullScreen((prev) => !prev);
-                  }}
-                  ghost
-                  display="inline"
-                  square
-                  size="medium"
-                >
-                  <Icon name="computer" size="1.25rem" />
-                </ActionButton>
-              </Tooltip>
-              <Menu options={menuOptions} />
-            </>
-          )}
+
+          <Tooltip
+            text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
+            position="bottom"
+          >
+            <ActionButton
+              onClick={() => {
+                setFullScreen((prev) => !prev);
+              }}
+              ghost
+              display="inline"
+              square
+              size="medium"
+            >
+              <Icon
+                name={`${fullScreen ? 'collapse' : 'expand'}`}
+                size="1.25rem"
+              />
+            </ActionButton>
+          </Tooltip>
+
+          <Menu options={menuOptions} />
+
           {isClosable && (
             <ActionButton
               onClick={() => {

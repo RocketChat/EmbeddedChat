@@ -55,6 +55,8 @@ import Quote from './Quote';
 import EyeOpen from './EyeOpen';
 import EyeClose from './EyeClose';
 import At from './At';
+import Expand from './ArrowExpand';
+import Collapse from './ArrowCollapse';
 
 const icons = {
   file: File,
@@ -114,6 +116,8 @@ const icons = {
   eyeopen: EyeOpen,
   eyeclose: EyeClose,
   at: At,
+  expand: Expand,
+  collapse: Collapse,
 };
 
 export default icons;

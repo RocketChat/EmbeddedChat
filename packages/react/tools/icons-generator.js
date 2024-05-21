@@ -45,6 +45,8 @@ const iconsList = [
   'attachment',
   'quote',
   'at',
+  'arrow-collapse',
+  'arrow-expand',
 ];
 const svgDirPath = path.join(
   __dirname,
