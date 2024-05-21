@@ -23,7 +23,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     padding: 0.75rem;
-    border-bottom: 1px solid black;
+    box-shadow: 0 3px 2px -2px grey;
   `,
 
   channelDescription: css`

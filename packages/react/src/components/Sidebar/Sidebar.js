@@ -3,6 +3,7 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Input } from '../Input';
+import Heading from '../Heading/Heading';
 import styles from './Sidebar.styles';
 
 const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
@@ -16,7 +17,7 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
     <Box css={styles.parent} className="ec-sidebar">
       <Box css={styles.container}>
         <Box css={styles.header}>
-          <h3 style={{ display: 'contents' }}>
+          <Heading level={3} style={{ display: 'contents' }}>
             <Icon css={styles.icon} name={iconName} size="1.25rem" />
             <Box css={styles.title}>{title}</Box>
             <ActionButton
@@ -26,7 +27,7 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
             >
               <Icon name="cross" />
             </ActionButton>
-          </h3>
+          </Heading>
         </Box>
         {isSearch && (
           <Box

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
+import Heading from '../../components/Heading/Heading';
 import {
   useUserStore,
   useMessageStore,
@@ -347,19 +347,16 @@ const ChatHeader = ({
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>
           <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
-          <Box
-            css={css`
-              margin: 0 1rem;
-            `}
-          >
+          <Box>
             {isUserAuthenticated ? (
               <>
-                <h2
+                <Heading
+                  level={3}
                   className="ec-chat-header--channelName"
                   css={styles.clearSpacing}
                 >
                   {channelInfo.name || channelName || 'channelName'}
-                </h2>
+                </Heading>
                 {fullScreen && (
                   <p
                     className="ec-chat-header--channelDescription"
@@ -370,12 +367,13 @@ const ChatHeader = ({
                 )}
               </>
             ) : (
-              <h2
+              <Heading
+                level={2}
                 className="ec-chat-header--channelDescription"
                 css={styles.clearSpacing}
               >
                 {channelName || 'Login to chat'}
-              </h2>
+              </Heading>
             )}
           </Box>
         </Box>

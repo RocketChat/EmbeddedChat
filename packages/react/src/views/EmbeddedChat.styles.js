@@ -6,7 +6,7 @@ const styles = {
     color: ${theme.schemes[dark ? 'dark' : 'light'].foreground};
     display: flex;
     flex-direction: column;
-    border: ${`1px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
+    border: ${`1.5px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
     border-radius: ${theme.schemes.radius};
   `,
   fullscreen: css`

@@ -68,8 +68,7 @@ const DefaultTheme = {
 
   typography: {
     default: {
-      fontFamily:
-        '"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetca Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"',
+      fontFamily: "'Times New Roman', serif",
       fontSize: 14,
       fontWeightLight: 300,
       fontWeightRegular: 400,
@@ -77,40 +76,28 @@ const DefaultTheme = {
       fontWeightBold: 700,
     },
     h1: {
-      fontSize: 'clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem)',
+      fontSize: '2.625rem',
       fontWeight: 800,
-      lineHeight: 1.1142857142857143,
     },
     h2: {
-      fontSize: 'clamp(1.5rem, 0.9643rem + 1.4286vw, 2.25rem)',
+      fontSize: '1.875rem',
       fontWeight: 800,
-      lineHeight: 1.2222222222222223,
     },
     h3: {
-      fontSize: '2.25rem',
-      lineHeight: 1.2222222222222223,
+      fontSize: '1.5rem',
       fontWeight: 400,
     },
     h4: {
-      fontSize: '1.75rem',
-      lineHeight: 1.5,
+      fontSize: '1.25rem',
       fontWeight: 400,
     },
     h5: {
-      fontSize: '1.5rem',
-      lineHeight: 1.5,
-
+      fontSize: '1rem',
       fontWeight: 400,
     },
     h6: {
-      fontSize: '1.25rem',
-      lineHeight: 1.5,
-      fontWeight: 500,
-    },
-    button: {
-      fontWeight: 700,
       fontSize: '0.875rem',
-      lineHeight: 1.75,
+      fontWeight: 500,
     },
   },
   shadows: [

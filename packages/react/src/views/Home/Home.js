@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Box } from '../../components/Box';
+import Heading from '../../components/Heading/Heading';
 import styles from './Home.styles';
 
 const Home = ({ height }) => (
@@ -14,7 +15,9 @@ const Home = ({ height }) => (
       align-items: center;
     `}
   >
-    <h2 style={{ display: 'inline' }}>EmbeddedChat | Home</h2>
+    <Heading level={2} style={{ display: 'inline' }}>
+      EmbeddedChat | Home
+    </Heading>
     <p>
       For more documentation visit:{' '}
       <a

@@ -18,6 +18,7 @@ import useComponentOverrides from '../theme/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
 import styles from './EmbeddedChat.styles';
+import GlobalStyles from '../theme/GlobalStyles';
 
 const EmbeddedChat = ({
   isClosable = false,
@@ -212,6 +213,7 @@ const EmbeddedChat = ({
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
+      <GlobalStyles />
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[

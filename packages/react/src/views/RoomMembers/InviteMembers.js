@@ -7,6 +7,7 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import { Input } from '../../components/Input';
 import { ActionButton } from '../../components/ActionButton';
+import Heading from '../../components/Heading/Heading';
 import { InviteMemberStyles as styles } from './RoomMembers.styles';
 
 const InviteMembers = ({ inviteData }) => {
@@ -36,7 +37,7 @@ const InviteMembers = ({ inviteData }) => {
           display: flex;
         `}
       >
-        <h3 style={{ display: 'contents' }}>
+        <Heading level={3} style={{ display: 'contents' }}>
           <Icon
             name="link"
             size="1.25rem"
@@ -55,7 +56,7 @@ const InviteMembers = ({ inviteData }) => {
           <ActionButton onClick={() => toggleInviteView()} ghost size="small">
             <Icon name="back" size="1.25rem" />
           </ActionButton>
-        </h3>
+        </Heading>
       </Box>
       {inviteData && (
         <Box css={styles.parentContainer}>

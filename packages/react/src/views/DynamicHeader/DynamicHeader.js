@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { Icon } from '../../components/Icon';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
+import Heading from '../../components/Heading/Heading';
 import styles from './DynamicHeader.styles';
 
 const DynamicHeader = ({
@@ -32,7 +33,9 @@ const DynamicHeader = ({
         <Icon name={iconName} size="1.25rem" />
       </ActionButton>
 
-      <h4 css={styles.clearSpacing}>{title}</h4>
+      <Heading level={4} css={styles.clearSpacing}>
+        {title}
+      </Heading>
       {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
     </Box>
   </Box>
