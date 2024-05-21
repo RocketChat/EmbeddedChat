@@ -20,7 +20,6 @@ const styles = {
   chatHeaderParent: css`
     width: 100%;
     z-index: 100;
-    background-color: #fff;
     display: flex;
     flex-direction: column;
     padding: 0.75rem;

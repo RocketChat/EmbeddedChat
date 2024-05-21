@@ -9,7 +9,7 @@ const DefaultTheme = {
   components: {},
 
   schemes: {
-    radius: '0.5rem',
+    radius: '0.3rem',
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(240, 10%, 3.9%)',

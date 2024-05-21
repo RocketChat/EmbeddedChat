@@ -136,7 +136,6 @@ const EmbeddedChat = ({
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
-      // getUserEssentials();
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -216,7 +215,7 @@ const EmbeddedChat = ({
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[
-            styles.embeddedchat,
+            styles.embeddedchat(theme || DefaultTheme, dark),
             css`
               width: ${width};
               height: ${height};

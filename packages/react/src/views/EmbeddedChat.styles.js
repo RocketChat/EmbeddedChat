@@ -1,11 +1,13 @@
 import { css } from '@emotion/react';
 
 const styles = {
-  embeddedchat: css`
-    background: #fff;
+  embeddedchat: (theme, dark) => css`
+    background: ${theme.schemes[dark ? 'dark' : 'light'].background};
+    color: ${theme.schemes[dark ? 'dark' : 'light'].foreground};
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    border: ${`1px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
+    border-radius: ${theme.schemes.radius};
   `,
   fullscreen: css`
     position: fixed;
@@ -15,6 +17,7 @@ const styles = {
     height: 100vh !important;
     max-width: unset !important;
     max-height: unset !important;
+    border-radius: 0;
   `,
 };
 
