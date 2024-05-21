@@ -29,7 +29,7 @@ export const MessageDivider = ({
         <>
           <Box css={styles.bar} className="ec-message-divider-bar" />
           <Box
-            css={styles.dividerwrapper}
+            css={styles.dividerContent}
             className="ec-message-divider-content"
           >
             {children}

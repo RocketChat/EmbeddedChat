@@ -91,7 +91,7 @@ const UserInformation = () => {
                         css={styles.userRole}
                         className={appendClassNames('ec-message-user-role')}
                       >
-                        {role === 'admin' ? 'Admin' : role}
+                        {role === 'admin' ? 'admin' : role}
                       </Box>
                     ))}
                   </Box>

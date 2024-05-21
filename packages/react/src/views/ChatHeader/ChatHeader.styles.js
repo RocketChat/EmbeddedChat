@@ -27,7 +27,7 @@ const useChatHeaderStyles = () => {
   const chatHeaderParent = css`
     background-color: ${mode === 'light'
       ? darken(colors.background, 0.03)
-      : lighten(colors.background, 3)};
+      : colors.secondary};
     width: 100%;
     z-index: ${theme.zIndex.general};
     display: flex;

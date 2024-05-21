@@ -23,6 +23,7 @@ export const useMenuStyles = () => {
     z-index: ${theme.zIndex.menu};
     border-radius: 0.2em;
     padding: 0.5em 0;
+    box-shadow: ${theme.shadows[1]};
     background-color: ${colors.background};
   `;
 

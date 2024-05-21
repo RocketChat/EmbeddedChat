@@ -145,7 +145,7 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          styles.message,
+          styles.main,
           editMessage._id === message._id && styles.messageEditing,
         ]}
         style={styleOverrides}

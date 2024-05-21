@@ -1,16 +1,22 @@
 import React from 'react';
+import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { useMemberStore, useUserStore } from '../../store';
+import { useMemberStore, useUserStore, useThemeStore } from '../../store';
 import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../../components/Tooltip';
-import { MessageHeaderStyles as styles } from './Message.styles';
+import { useMessageHeaderStyles } from './Message.styles';
 
 const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+  const styles = useMessageHeaderStyles();
+
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
 
@@ -85,7 +91,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
                 css={styles.userRole}
                 className={appendClassNames('ec-message-user-role')}
               >
-                Admin
+                admin
               </Box>
             )}
 
@@ -113,31 +119,37 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
             {format(new Date(message.ts), 'h:mm a')}
           </Box>
         )}
-        {message.editedAt && (
-          <Icon
-            style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-            name="edit"
-            size="1em"
-          />
-        )}
-        {isStarred ? (
-          <Tooltip text="Starred" position="top">
+
+        <Box css={styles.messageStatus}>
+          {message.editedAt && (
             <Icon
               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-              name="star-filled"
+              name="edit"
               size="1em"
+              color={colors.primary}
             />
-          </Tooltip>
-        ) : null}
-        {isPinned ? (
-          <Tooltip text="Pinned" position="top">
-            <Icon
-              style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
-              name="pin"
-              size="1em"
-            />
-          </Tooltip>
-        ) : null}
+          )}
+          {isStarred ? (
+            <Tooltip text="Starred" position="top">
+              <Icon
+                style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+                name="star-filled"
+                size="1em"
+                color={colors.primary}
+              />
+            </Tooltip>
+          ) : null}
+          {isPinned ? (
+            <Tooltip text="Pinned" position="top">
+              <Icon
+                style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
+                name="pin"
+                size="1em"
+                color={colors.primary}
+              />
+            </Tooltip>
+          ) : null}
+        </Box>
       </Box>
     );
   }
