@@ -4,7 +4,7 @@ import DefaultTheme from '../../theme/DefaultTheme';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/Variant/RCVariant/Simplistic',
+  title: 'EmbeddedChat/Design Variants/RCVariant/Simplistic',
   component: EmbeddedChat,
 };
 

@@ -270,42 +270,52 @@ const ChatHeader = ({
             label: 'Threads',
             icon: 'thread',
           },
+
           {
             id: 'mentions',
             action: showMentions,
             label: 'Mentions',
             icon: 'at',
           },
-          {
-            id: 'members',
-            action: showChannelMembers,
-            label: 'Members',
-            icon: 'members',
-          },
-          {
-            id: 'files',
-            action: showAllFiles,
-            label: 'Files',
-            icon: 'clip',
-          },
+
           {
             id: 'starred',
             action: showStarredMessage,
             label: 'Starred',
             icon: 'star',
           },
+
           {
             id: 'pinned',
             action: showPinnedMessage,
             label: 'Pinned',
             icon: 'pin',
           },
+
+          {
+            id: 'members',
+            action: showChannelMembers,
+            label: 'Members',
+            icon: 'members',
+            disabled: !isUserAuthenticated,
+          },
+
+          {
+            id: 'files',
+            action: showAllFiles,
+            label: 'Files',
+            icon: 'clip',
+            disabled: !isUserAuthenticated,
+          },
+
           {
             id: 'search',
             action: showSearchMessage,
             label: 'Search',
             icon: 'magnifier',
+            disabled: !isUserAuthenticated,
           },
+
           {
             id: 'rInfo',
             action: showChannelinformation,
@@ -369,8 +379,8 @@ const ChatHeader = ({
               </>
             ) : (
               <Heading
-                level={2}
-                className="ec-chat-header--channelDescription"
+                level={3}
+                className="ec-chat-header--channelName"
                 css={styles.clearSpacing}
               >
                 {channelName || 'Login to chat'}

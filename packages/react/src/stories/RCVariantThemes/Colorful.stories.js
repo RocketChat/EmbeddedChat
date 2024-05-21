@@ -3,7 +3,7 @@ import MintMeadow from '../../theme/MintMeadow';
 import RoseEmber from '../../theme/RoseEmber';
 
 export default {
-  title: 'EmbeddedChat/Variant/RCVariant/Colorful',
+  title: 'EmbeddedChat/Design Variants/RCVariant/Colorful',
   component: EmbeddedChat,
 };
 
