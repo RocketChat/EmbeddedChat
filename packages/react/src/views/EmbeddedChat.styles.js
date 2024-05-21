@@ -5,8 +5,7 @@ const styles = {
     background: #fff;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    text-align: initial;
+    border: 1px solid black;
   `,
   fullscreen: css`
     position: fixed;
@@ -16,7 +15,6 @@ const styles = {
     height: 100vh !important;
     max-width: unset !important;
     max-height: unset !important;
-    background: #fff;
   `,
 };
 

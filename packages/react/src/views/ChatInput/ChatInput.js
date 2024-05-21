@@ -532,7 +532,6 @@ const ChatInput = ({ scrollToBottom }) => {
       </Box>
       <Box
         css={css`
-          margin-top: 5px;
           border: 2px solid #ddd;
         `}
       >

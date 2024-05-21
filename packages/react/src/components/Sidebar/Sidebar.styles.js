@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 
 const styles = {
   parent: css`
-    width: 450px;
-    height: 100%;
     background-color: white;
+    width: 350px;
+    height: 100%;
     box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
     z-index: 100;
   `,

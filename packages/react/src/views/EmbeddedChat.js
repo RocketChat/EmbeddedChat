@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatLayout } from './ChatLayout';
-import { ChatBody } from './ChatBody';
 import { ChatHeader } from './ChatHeader';
-import { ChatInput } from './ChatInput';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useToastStore, useUserStore, useThemeStore } from '../store';
@@ -246,19 +244,16 @@ const EmbeddedChat = ({
             )}
 
             {isUserAuthenticated || anonymousMode ? (
-              <ChatLayout>
-                <ChatBody
-                  height={!fullScreen ? height : '88vh'}
-                  anonymousMode={anonymousMode}
-                  showRoles={showRoles}
-                  messageListRef={messageListRef}
-                  scrollToBottom={scrollToBottom}
-                />
-              </ChatLayout>
+              <ChatLayout
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
+                messageListRef={messageListRef}
+                scrollToBottom={scrollToBottom}
+              />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
             )}
-            <ChatInput scrollToBottom={scrollToBottom} />
+
             {attachmentWindowOpen ? (
               data ? (
                 <>

@@ -24,7 +24,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     padding: 0.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid black;
   `,
 
   channelDescription: css`

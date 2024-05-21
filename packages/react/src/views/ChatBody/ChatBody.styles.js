@@ -7,12 +7,8 @@ export const chatbodyStyles = {
     overflow-x: hidden;
     display: flex;
     flex-direction: column-reverse;
-    width: 100%;
-    height: 100vh;
     max-height: 600px;
     position: relative;
-    border-left: 1px solid #b1b1b1;
-    border-right: 1px solid #b1b1b1;
     padding-top: 70px;
     ::-webkit-scrollbar {
       width: 4px;

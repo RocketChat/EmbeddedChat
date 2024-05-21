@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import styles from './ChatLayout.styles';
@@ -23,8 +24,15 @@ import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Files } from '../Files';
 import UserInformation from '../UserInformation/UserInformation';
+import ChatBody from '../ChatBody/ChatBody';
+import ChatInput from '../ChatInput/ChatInput';
 
-const ChatLayout = ({ children }) => {
+const ChatLayout = ({
+  anonymousMode,
+  showRoles,
+  messageListRef,
+  scrollToBottom,
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
@@ -43,24 +51,40 @@ const ChatLayout = ({ children }) => {
 
   return (
     <Box
-      css={styles.main}
+      css={styles.layout}
       style={{
         ...styleOverrides,
       }}
       className={`ec-chat-layout ${classNames}`}
     >
-      {children}
-      {showMembers && <RoomMembers members={members} />}
-      {showSearch && <SearchMessage />}
-      {showChannelinfo && <Roominfo />}
-      {showAllThreads && <AllThreads />}
-      {showAllFiles && <Files />}
-      {showMentions && <UserMentions />}
-      {showPinned && <PinnedMessages />}
-      {showStarred && <StarredMessages />}
-      {showCurrentUserInfo && <UserInformation />}
+      <Box css={styles.chatMain}>
+        <ChatBody
+          anonymousMode={anonymousMode}
+          showRoles={showRoles}
+          messageListRef={messageListRef}
+          scrollToBottom={scrollToBottom}
+        />
+        <ChatInput scrollToBottom={scrollToBottom} />
+      </Box>
+
+      <Box>
+        {showMembers && <RoomMembers members={members} />}
+        {showSearch && <SearchMessage />}
+        {showChannelinfo && <Roominfo />}
+        {showAllThreads && <AllThreads />}
+        {showAllFiles && <Files />}
+        {showMentions && <UserMentions />}
+        {showPinned && <PinnedMessages />}
+        {showStarred && <StarredMessages />}
+        {showCurrentUserInfo && <UserInformation />}
+      </Box>
     </Box>
   );
+};
+
+ChatLayout.propTypes = {
+  anonymousMode: PropTypes.bool,
+  showRoles: PropTypes.bool,
 };
 
 export default ChatLayout;

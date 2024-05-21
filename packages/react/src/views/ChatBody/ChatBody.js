@@ -16,7 +16,6 @@ import useFetchChatData from '../../hooks/useFetchChatData';
 import { chatbodyStyles as styles } from './ChatBody.styles';
 
 const ChatBody = ({
-  height,
   anonymousMode,
   showRoles,
   scrollToBottom,
@@ -246,7 +245,6 @@ const ChatBody = ({
 export default ChatBody;
 
 ChatBody.propTypes = {
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
 };
