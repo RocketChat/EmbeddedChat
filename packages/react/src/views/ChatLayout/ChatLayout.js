@@ -49,9 +49,6 @@ const ChatLayout = ({
     (state) => state.showCurrentUserInfo
   );
 
-  console.log(showMembers);
-  console.log(showChannelinfo);
-
   return (
     <Box
       css={styles.layout}

@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 export const chatbodyStyles = {
   chatbodyContainer: css`
+    flex: 1;
     word-break: break-all;
     overflow: auto;
     overflow-x: hidden;

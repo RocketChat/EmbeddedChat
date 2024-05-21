@@ -10,7 +10,7 @@ const styles = {
   chatMain: css`
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex-grow: 1;
   `,
 };
 
