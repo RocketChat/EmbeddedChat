@@ -1,4 +1,6 @@
 import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
+import { lighten, darken } from '../../lib/color';
 
 const rowCentreAlign = css`
   display: flex;
@@ -8,6 +10,8 @@ const rowCentreAlign = css`
 
 const useChatHeaderStyles = () => {
   const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
 
   const clearSpacing = css`
     margin: 0;
@@ -21,12 +25,15 @@ const useChatHeaderStyles = () => {
   `;
 
   const chatHeaderParent = css`
+    background-color: ${mode === 'light'
+      ? darken(colors.background, 0.03)
+      : lighten(colors.background, 3)};
     width: 100%;
     z-index: ${theme.zIndex.general};
     display: flex;
     flex-direction: column;
     padding: 0.75rem;
-    box-shadow: 0 3px 2px -2px grey;
+    box-shadow: ${theme.shadows[1]};
   `;
 
   const channelDescription = css`
