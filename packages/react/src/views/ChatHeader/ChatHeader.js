@@ -25,7 +25,7 @@ import { Menu } from '../../components/Menu';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
-import styles from './ChatHeader.styles';
+import useChatHeaderStyles from './ChatHeader.styles';
 
 const ChatHeader = ({
   isClosable,
@@ -40,6 +40,7 @@ const ChatHeader = ({
   showRoles,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
+  const styles = useChatHeaderStyles();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(

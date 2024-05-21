@@ -1,40 +1,42 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
-const styles = {
-  parent: css`
+const useSidebarStyles = () => {
+  const theme = useTheme();
+
+  const parent = css`
     background-color: white;
     width: 350px;
     height: 100%;
     box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
-    z-index: 100;
-  `,
+    z-index: ${theme.zIndex.general};
+  `;
 
-  container: css`
+  const container = css`
     display: flex;
     flex-direction: column;
     height: 100%;
-  `,
+  `;
 
-  header: css`
+  const header = css`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
     padding: 1rem;
     margin-bottom: 0.5rem;
-  `,
+  `;
 
-  title: css`
+  const title = css`
     color: #4a4a4a;
     width: 80%;
-  `,
+  `;
 
-  icon: css`
+  const icon = css`
     font-size: 1.25rem;
     padding: 0 0.5rem 0.5rem 0;
-  `,
+  `;
 
-  searchContainer: css`
+  const searchContainer = css`
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -43,9 +45,9 @@ const styles = {
     border-radius: 0.25rem;
     position: relative;
     margin: 0 1rem 1rem;
-  `,
+  `;
 
-  textInput: css`
+  const textInput = css`
     border: none;
     flex: none;
     padding: none;
@@ -53,12 +55,23 @@ const styles = {
       border: none;
       box-shadow: none;
     }
-  `,
+  `;
 
-  noInfoIcon: css`
+  const noInfoIcon = css`
     padding: 0.125em;
     cursor: pointer;
-  `,
+  `;
+
+  return {
+    parent,
+    container,
+    header,
+    title,
+    icon,
+    searchContainer,
+    textInput,
+    noInfoIcon,
+  };
 };
 
-export default styles;
+export default useSidebarStyles;

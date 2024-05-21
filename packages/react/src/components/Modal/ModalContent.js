@@ -13,7 +13,7 @@ export const ModalContent = ({
 
   return (
     <Box
-      css={styles}
+      css={styles.content}
       className={`ec-modal-content ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}

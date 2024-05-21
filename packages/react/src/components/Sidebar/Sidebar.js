@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Input } from '../Input';
 import Heading from '../Heading/Heading';
-import styles from './Sidebar.styles';
+import useSidebarStyles from './Sidebar.styles';
 
 const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
   const {
@@ -12,6 +12,7 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
     handleInputChange,
     placeholder,
   } = searchProps || {};
+  const styles = useSidebarStyles();
 
   return (
     <Box css={styles.parent} className="ec-sidebar">

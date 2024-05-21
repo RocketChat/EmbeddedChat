@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { Box } from '../Box';
-import styles from './Tooltip.styles';
+import useToolTipStyles from './Tooltip.styles';
 
 const Tooltip = ({ children, text, position }) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
+  const styles = useToolTipStyles(position);
 
   const handleMouseEnter = () => {
     setTooltipVisible(true);
@@ -40,9 +41,9 @@ const Tooltip = ({ children, text, position }) => {
     >
       {children}
       {isTooltipVisible && (
-        <Box css={styles.tooltip(position)}>
+        <Box css={styles.tooltip}>
           {text.charAt(0).toUpperCase() + text.slice(1)}
-          <Box css={styles.tooltipArrow(position)} />
+          <Box css={styles.tooltipArrow} />
         </Box>
       )}
     </Box>

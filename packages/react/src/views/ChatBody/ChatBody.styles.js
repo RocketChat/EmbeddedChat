@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 export const chatbodyStyles = {
   chatbodyContainer: css`
@@ -28,10 +28,12 @@ export const chatbodyStyles = {
   `,
 };
 
-export const recentMessageStyles = {
-  button: css`
+export const useRecentMessageStyles = () => {
+  const theme = useTheme();
+
+  const button = css`
     position: relative;
-    z-index: 90;
+    z-index: ${theme.zIndex.body};
     left: 50%;
     transform: translateX(-50%);
     user-select: none;
@@ -69,12 +71,14 @@ export const recentMessageStyles = {
         visibility: hidden;
       }
     }
-  `,
+  `;
 
-  textIconContainer: css`
+  const textIconContainer = css`
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 200;
-  `,
+  `;
+
+  return { button, textIconContainer };
 };

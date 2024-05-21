@@ -27,21 +27,26 @@ export const useModalstyles = () => {
   return { main };
 };
 
-export const ModalContentStyles = () => css`
-  position: relative;
-  overflow-y: auto !important;
-`;
+export const ModalContentStyles = {
+  content: css`
+    position: relative;
+    overflow-y: auto !important;
+  `,
+};
 
-export const ModalBackdropStyles = {
-  modalBackdrop: css`
+export const useModalBackdropStyles = () => {
+  const theme = useTheme();
+
+  const modalBackdrop = css`
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 10000;
+    z-index: ${theme.zIndex.modal};
     background: #333333b3;
     width: 100%;
     height: 100%;
-  `,
+  `;
+  return { modalBackdrop };
 };
 
 export const ModalFooterStyles = {

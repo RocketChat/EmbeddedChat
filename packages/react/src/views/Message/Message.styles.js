@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
 export const MessageStyles = {
   message: css`
@@ -79,15 +79,17 @@ export const MessageContainerStyles = {
   `,
 };
 
-export const MessageDividerStyles = {
-  divider: css`
+export const useMessageDividerStyles = () => {
+  const theme = useTheme();
+
+  const divider = css`
     letter-spacing: 0rem;
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1rem;
     position: relative;
-    z-index: 1;
     display: flex;
+    z-index: ${theme.zIndex.divider};
     align-items: center;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -95,18 +97,18 @@ export const MessageDividerStyles = {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     color: #2f343d;
-  `,
+  `;
 
-  bar: css`
+  const bar = css`
     display: flex;
     justify-content: flex-end;
     align-items: center;
     flex-grow: 1;
     background-color: #2f343d;
     height: 1px;
-  `,
+  `;
 
-  dividerwrapper: css`
+  const dividerwrapper = css`
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     margin-block: 0.5rem;
@@ -117,7 +119,9 @@ export const MessageDividerStyles = {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-  `,
+  `;
+
+  return { divider, bar, dividerwrapper };
 };
 
 export const MessageHeaderStyles = {
@@ -256,19 +260,20 @@ export const MessageReactionsStyles = {
   `,
 };
 
-export const MessageToolboxStyles = {
-  container: css`
+export const useMessageToolboxStyles = () => {
+  const theme = useTheme();
+  const container = css`
     display: none;
     .ec-message:hover & {
       display: flex;
       position: absolute;
       bottom: 100%;
-      z-index: 90;
+      z-index: ${theme.zIndex.body};
       right: 2rem;
     }
-  `,
+  `;
 
-  toolbox: css`
+  const toolbox = css`
     display: flex;
     margin-left: -0.25rem;
     margin-right: -0.25rem;
@@ -280,5 +285,7 @@ export const MessageToolboxStyles = {
     border: 1px solid #dfdfdf;
     border-radius: 0.25rem;
     background: #fff;
-  `,
+  `;
+
+  return { container, toolbox };
 };

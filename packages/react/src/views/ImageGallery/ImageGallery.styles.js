@@ -1,17 +1,19 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
-const styles = {
-  overlay: css`
+const useImageGalleryStyles = () => {
+  const theme = useTheme();
+
+  const overlay = css`
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    z-index: ${theme.zIndex.modal};
     background-color: rgba(51, 51, 51, 0.7);
-  `,
+  `;
 
-  exit: css`
+  const exit = css`
     position: absolute;
     top: 16px;
     right: 16px;
@@ -21,36 +23,45 @@ const styles = {
     border-radius: 4px;
     padding: 8px 16px;
     cursor: pointer;
-    z-index: 1001;
-  `,
+    z-index: ${theme.zIndex.modal + 1};
+  `;
 
-  imageContainer: css`
+  const imageContainer = css`
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
-  `,
+  `;
 
-  image: css`
+  const image = css`
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-  `,
+  `;
 
-  throbberContainer: css`
+  const throbberContainer = css`
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-  `,
+  `;
 
-  fetchErrorContainer: css`
+  const fetchErrorContainer = css`
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  `,
+  `;
+
+  return {
+    overlay,
+    exit,
+    imageContainer,
+    image,
+    throbberContainer,
+    fetchErrorContainer,
+  };
 };
 
-export default styles;
+export default useImageGalleryStyles;

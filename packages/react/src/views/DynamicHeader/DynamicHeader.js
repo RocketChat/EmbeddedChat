@@ -5,7 +5,7 @@ import { Icon } from '../../components/Icon';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
 import Heading from '../../components/Heading/Heading';
-import styles from './DynamicHeader.styles';
+import useDynamicHeaderStyles from './DynamicHeader.styles';
 
 const DynamicHeader = ({
   title,
@@ -13,33 +13,36 @@ const DynamicHeader = ({
   handleClose = () => {},
   iconName,
   headerIconName,
-}) => (
-  <Box css={styles.container}>
-    <Box
-      css={css`
-        display: flex;
-        align-items: center;
-        flex-direction: row;
-        gap: 0.5rem;
-      `}
-    >
-      <ActionButton
-        onClick={handleClose}
-        ghost
-        display="inline"
-        square
-        size="small"
+}) => {
+  const styles = useDynamicHeaderStyles();
+  return (
+    <Box css={styles.container}>
+      <Box
+        css={css`
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          gap: 0.5rem;
+        `}
       >
-        <Icon name={iconName} size="1.25rem" />
-      </ActionButton>
+        <ActionButton
+          onClick={handleClose}
+          ghost
+          display="inline"
+          square
+          size="small"
+        >
+          <Icon name={iconName} size="1.25rem" />
+        </ActionButton>
 
-      <Heading level={4} css={styles.clearSpacing}>
-        {title}
-      </Heading>
-      {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
+        <Heading level={4} css={styles.clearSpacing}>
+          {title}
+        </Heading>
+        {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default DynamicHeader;
 

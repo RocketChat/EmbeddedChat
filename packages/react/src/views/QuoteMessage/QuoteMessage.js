@@ -7,7 +7,7 @@ import { Avatar } from '../../components/Avatar';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
 import { useMessageStore } from '../../store';
-import styles from './QuoteMessage.styles';
+import useQuoteMessageStyles from './QuoteMessage.styles';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -16,6 +16,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
     const URL = `${host}/avatar/${username}`;
     return URL;
   };
+  const styles = useQuoteMessageStyles();
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');

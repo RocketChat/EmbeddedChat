@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './ChannelState.styles';
+import useChannelStateStyles from './ChannelState.styles';
 
 const ChannelState = ({
   className = '',
@@ -12,6 +12,7 @@ const ChannelState = ({
   instructions,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChannelState');
+  const styles = useChannelStateStyles();
   return (
     <Box
       className={`ec-chat-info ${className} ${classNames}`}

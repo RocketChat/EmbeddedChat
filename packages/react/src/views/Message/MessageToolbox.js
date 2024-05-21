@@ -10,7 +10,7 @@ import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
-import { MessageToolboxStyles as styles } from './Message.styles';
+import { useMessageToolboxStyles } from './Message.styles';
 
 const popupStyle = {
   margin: '0',
@@ -41,6 +41,7 @@ export const MessageToolbox = ({
     className,
     style
   );
+  const styles = useMessageToolboxStyles();
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 

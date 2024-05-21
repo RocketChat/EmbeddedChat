@@ -111,11 +111,13 @@ const DefaultTheme = {
     '0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12)',
   ],
   zIndex: {
-    header: 1100,
-    popup: 1200,
-    modal: 1300,
-    tooltip: 1500,
-    toastbar: 10001,
+    divider: 1000,
+    body: 1100,
+    general: 1200,
+    menu: 1300,
+    tooltip: 1400,
+    modal: 1500,
+    toastbar: 1600,
   },
 };
 

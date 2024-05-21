@@ -7,9 +7,10 @@ import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import ReactPortal from '../../lib/reactPortal';
-import styles from './ImageGallery.styles';
+import useImageGalleryStyles from './ImageGallery.styles';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
+  const styles = useImageGalleryStyles();
   const { RCInstance } = useRCContext();
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
@@ -40,7 +41,6 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
     <ReactPortal wrapperId="overlay-items">
       <Box css={styles.overlay}>
         <ActionButton
-          ghost
           css={styles.exit}
           onClick={() => setShowGallery(false)}
           size="medium"

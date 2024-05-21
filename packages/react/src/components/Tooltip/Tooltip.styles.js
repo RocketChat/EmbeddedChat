@@ -1,7 +1,9 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 
-const styles = {
-  tooltip: (position) => css`
+const useTooltipStyles = (position) => {
+  const theme = useTheme();
+
+  const tooltip = css`
     position: absolute;
     left: 64%;
     transform: translateX(-50%);
@@ -10,13 +12,13 @@ const styles = {
     padding: 4px;
     border-radius: 3px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: ${theme.zIndex.tooltip};
     font-size: 12.5px;
     white-space: nowrap;
     font-family: sans-serif;
     top: ${position === 'top' ? 'calc(-100% - 10px)' : '100%'};
-  `,
-  tooltipArrow: (position) => css`
+  `;
+  const tooltipArrow = css`
     content: '';
     position: absolute;
     left: 50%;
@@ -29,7 +31,9 @@ const styles = {
     transform: ${position === 'bottom'
       ? 'translateX(-50%) rotate(180deg)'
       : 'translateX(-50%)'};
-  `,
+  `;
+
+  return { tooltip, tooltipArrow };
 };
 
-export default styles;
+export default useTooltipStyles;

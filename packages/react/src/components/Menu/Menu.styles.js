@@ -20,7 +20,7 @@ export const useMenuStyles = () => {
     flex-direction: column;
     width: fit-content;
     height: fit-content;
-    z-index: 1100;
+    z-index: ${theme.zIndex.menu};
     border-radius: 0.2em;
     padding: 0.5em 0;
     background-color: ${colors.background};
