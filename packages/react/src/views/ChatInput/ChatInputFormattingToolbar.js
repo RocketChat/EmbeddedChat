@@ -1,7 +1,4 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import Popup from 'reactjs-popup';
-import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
@@ -72,13 +69,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     }
   };
 
-  const popupStyle = {
-    margin: '0',
-    position: 'absolute',
-    left: '0.375rem',
-    top: '9.5rem',
-  };
-
   return (
     <Box
       css={styles.chatFormat}
@@ -99,22 +89,14 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               </ActionButton>
             </Box>
           </Tooltip>
-          <Popup
-            modal
-            open={isEmojiOpen}
-            onClose={() => setEmojiOpen(false)}
-            closeOnEscape
-            disabled={isRecordingMessage}
-            closeOnDocumentClick
-            contentStyle={popupStyle}
-          >
+          {isEmojiOpen && (
             <EmojiPicker
               handleEmojiClick={(emoji) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji);
               }}
             />
-          </Popup>
+          )}
         </>
       )}
       {formatter.map((item, index) => (

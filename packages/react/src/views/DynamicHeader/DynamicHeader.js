@@ -35,7 +35,7 @@ const DynamicHeader = ({
           <Icon name={iconName} size="1.25rem" />
         </ActionButton>
 
-        <Heading level={4} css={styles.clearSpacing}>
+        <Heading level={6} css={styles.clearSpacing}>
           {title}
         </Heading>
         {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}

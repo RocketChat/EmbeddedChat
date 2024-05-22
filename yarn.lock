@@ -2359,7 +2359,6 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-virtuoso: ^4.3.10
-    reactjs-popup: ^2.0.5
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -26286,16 +26285,6 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
-  languageName: node
-  linkType: hard
-
-"reactjs-popup@npm:^2.0.5":
-  version: 2.0.6
-  resolution: "reactjs-popup@npm:2.0.6"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 3c9af4670529ebea6bdfe8423e30eb7a74025df1e589c5ef96a7da05165dc63015959c5ffb60cd3e5cadfd0d3b6a807b75ed5f80543629f530fab1433c3986d0
   languageName: node
   linkType: hard
 

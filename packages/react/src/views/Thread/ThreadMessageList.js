@@ -14,7 +14,7 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
   return (
     <>
-      {threadMessages.concat(threadMainMessage).map((msg, index, arr) => {
+      {threadMessages?.concat(threadMainMessage).map((msg, index, arr) => {
         const prev = arr[index + 1];
         const newDay = isMessageNewDay(msg, prev);
         const sequential = isMessageSequential(msg, prev, 300);

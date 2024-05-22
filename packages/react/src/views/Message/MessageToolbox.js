@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Popup from 'reactjs-popup';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
@@ -11,13 +10,6 @@ import { Button } from '../../components/Button';
 import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
 import { useMessageToolboxStyles } from './Message.styles';
-
-const popupStyle = {
-  margin: '0',
-  position: 'absolute',
-  right: '2rem',
-  top: '7.5rem',
-};
 
 export const MessageToolbox = ({
   className = '',
@@ -113,20 +105,22 @@ export const MessageToolbox = ({
               onClick={() => setEmojiOpen(true)}
             />
           </Tooltip>
-          <Popup
-            modal
-            open={isEmojiOpen}
-            onClose={() => setEmojiOpen(false)}
-            closeOnEscape
-            contentStyle={popupStyle}
-          >
+
+          {isEmojiOpen && (
             <EmojiPicker
               handleEmojiClick={(emoji) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji, message, true);
               }}
             />
-          </Popup>
+          )}
+          {/* <Popup
+            modal
+            open={isEmojiOpen}
+            onClose={() => setEmojiOpen(false)}
+            closeOnEscape
+            contentStyle={popupStyle}
+          ></Popup> */}
           {!isThreadMessage && (
             <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
