@@ -224,38 +224,40 @@ export const MessageMetricsStyles = {
   `,
 };
 
-export const MessageReactionsStyles = {
-  container: css`
+export const useMessageReactionsStyles = () => {
+  const { theme, colors } = useCommonTheme();
+  const container = css`
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-    margin: -0.125rem;
-  `,
+  `;
 
-  reaction: css`
+  const reaction = css`
     letter-spacing: 0rem;
-    font-size: 0.85rem;
-    font-weight: 400;
-    line-height: 1rem;
+    font-size: 0.6rem;
     display: inline-flex;
     gap: 0.125rem;
     align-items: center;
+    justify-content: center;
+    padding: 0.1rem;
     margin: 0.125rem;
-    padding: 0.125rem;
     cursor: pointer;
-    border-radius: 0.25rem;
     img.joypixels {
-      height: 1.25em;
-      width: 1.25em;
+      height: 0.75em;
+      width: 0.75em;
     }
     p {
       margin: 0;
     }
-  `,
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+  `;
 
-  reactionMine: css`
-    border-width: 1px;
-  `,
+  const reactionMine = css`
+    background: ${colors.secondary};
+  `;
+
+  return { container, reaction, reactionMine };
 };
 
 export const useMessageToolboxStyles = () => {
