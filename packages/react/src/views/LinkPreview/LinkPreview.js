@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './LinkPreview.styles';
+import { useThemeStore } from '../../store';
+import useLinkPreviewStyles from './LinkPreview.styles';
 
 const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
+  const theme = useTheme();
+  const styles = useLinkPreviewStyles();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
   if (!meta || (typeof meta === 'object' && Object.keys(meta).length === 0)) {
@@ -35,6 +40,7 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
           display="inline"
           square
           size="small"
+          style={{ marginLeft: '2px' }}
         >
           {isPreviewOpen ? (
             <Icon name="chevron-left" size="1.25rem" />
@@ -74,7 +80,7 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
             <a
               href={url}
               css={css`
-                color: blue;
+                color: ${colors.foreground};
               `}
               target="_blank"
               rel="noopener noreferrer"
@@ -86,7 +92,7 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
               <a
                 href={url}
                 css={css`
-                  color: rgba(97, 97, 97, 1);
+                  color: ${colors.foreground};
                 `}
                 target="_blank"
                 rel="noopener noreferrer"
