@@ -19,7 +19,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
   `,
 };
 

@@ -9,12 +9,13 @@ import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { RoomMemberStyles as styles } from './RoomMembers.styles';
+import { useRoomMemberStyles } from './RoomMembers.styles';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;
+  const styles = useRoomMemberStyles();
 
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);

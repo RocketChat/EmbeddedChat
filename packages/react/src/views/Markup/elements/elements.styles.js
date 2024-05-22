@@ -1,4 +1,5 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../../store';
 
 export const CodeBlockStyles = {
   copyonly: css`
@@ -57,27 +58,29 @@ export const EmojiStyles = {
   `,
 };
 
-export const MentionStyles = {
-  mention: (contents, username) => css`
+const useMentionStyles = (contents, username) => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const mention = css`
     background-color: ${contents.value === 'all' || contents.value === 'here'
-      ? '#f38c39'
+      ? colors.warning
       : contents.value === username
-      ? '#ec0d2a'
-      : '#e4e7ea'};
+      ? colors.destructive
+      : colors.muted};
     color: ${contents.value === 'all' || contents.value === 'here'
-      ? '#ffffff'
+      ? colors.warningForeground
       : contents.value === username
-      ? '#ffffff'
-      : '#2f343d'};
+      ? colors.destructiveForeground
+      : colors.mutedForeground};
     font-weight: bold;
     cursor: pointer;
     padding: 1.5px;
     border-radius: 3px;
+  `;
 
-    &:hover {
-      text-decoration: ${contents.value === 'all' || contents.value === 'here'
-        ? 'none'
-        : 'underline'};
-    }
-  `,
+  return { mention };
 };
+
+export default useMentionStyles;

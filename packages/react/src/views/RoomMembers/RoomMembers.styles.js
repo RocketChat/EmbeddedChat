@@ -1,14 +1,36 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-export const RoomMemberStyles = {
-  container: css`
+export const useRoomMemberStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const container = css`
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: center;
     justify-content: center;
     padding: 0 1rem 1rem;
-  `,
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 7.7px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
+    }
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
+  `;
+
+  return { container };
 };
 
 export const RoomMemberItemStyles = {

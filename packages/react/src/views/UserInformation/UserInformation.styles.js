@@ -1,5 +1,6 @@
 import { css, useTheme } from '@emotion/react';
 import { useThemeStore } from '../../store';
+import { alpha } from '../../lib/color';
 
 const useUserInformationStyles = () => {
   const theme = useTheme();
@@ -9,6 +10,21 @@ const useUserInformationStyles = () => {
   const userSidebar = css`
     padding: 0 1rem 1rem;
     margin: 0 auto;
+    overflow: auto;
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 7.7px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
+    }
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
   `;
 
   const roleContainer = css`

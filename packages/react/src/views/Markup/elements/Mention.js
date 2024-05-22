@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../../../components/Box';
-import { MentionStyles as styles } from './elements.styles';
 import { useMemberStore, useUserStore } from '../../../store';
+import useMentionStyles from './elements.styles';
 
 const Mention = ({ contents }) => {
   const members = useMemberStore((state) => state.members);
@@ -18,10 +18,11 @@ const Mention = ({ contents }) => {
     });
     return found;
   };
+  const styles = useMentionStyles(contents, username);
   return (
     <>
       {hasMember(contents.value) === true ? (
-        <Box is="span" css={styles.mention(contents, username)}>
+        <Box is="span" css={styles.mention}>
           {contents.value}
         </Box>
       ) : (
