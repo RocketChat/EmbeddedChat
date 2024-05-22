@@ -1,4 +1,5 @@
-import { keyframes, css } from '@emotion/react';
+import { keyframes, css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
 const BounceFrames = keyframes`
 0%,
@@ -12,28 +13,34 @@ const BounceFrames = keyframes`
 }
 `;
 
-const styles = {
-  circle: (theme, size, circleCount, iteration) => css`
+const useThrobberStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const circle = (size, circleCount, iteration) => css`
     height: ${size};
     width: ${size};
     margin-inline: 0.125rem;
     animation: ${BounceFrames} 1.4s infinite ease-in-out both;
     border-radius: 100%;
-    background-color: ${theme?.palette?.primary?.main || '#007FFF'};
+    background-color: ${colors.primary};
     animation-duration: ${circleCount * 0.466}s;
     animation-delay: ${iteration * 0.16}s;
     &.disabled {
-      background-color: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      background-color: ${colors.muted};
     }
     &.inherit-color {
       background-color: currentColor;
     }
-  `,
+  `;
 
-  throbber: css`display: flex;
+  const throbber = css`display: flex;
   width: fit-content
   margin-block: -0.125rem;
-  `,
+  `;
+
+  return { circle, throbber };
 };
 
-export default styles;
+export default useThrobberStyles;
