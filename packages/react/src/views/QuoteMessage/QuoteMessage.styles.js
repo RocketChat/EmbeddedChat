@@ -1,17 +1,21 @@
 import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
 const useQuoteMessageStyles = () => {
   const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
 
   const messageContainer = css`
-    margin: 1.25rem 0.5rem 0.25rem 0.5rem;
+    margin: 0 2rem;
     position: relative;
     font-size: 0.85rem;
-    background-color: #f2f3f5;
+    background-color: ${colors.background};
+    color: ${colors.foreground};
     padding: 0.5rem;
     z-index: ${theme.zIndex.general};
-    border: 0.5px solid currentColor;
-    border-radius: 0.15rem;
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
   `;
 
   const avatarContainer = css`

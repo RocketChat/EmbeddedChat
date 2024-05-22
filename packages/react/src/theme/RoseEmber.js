@@ -9,7 +9,7 @@ const RoseEmber = {
   components: {},
 
   schemes: {
-    radius: '0.3rem',
+    radius: '0.2rem',
     light: {
       background: 'hsl(343.4, 63%, 95%)',
       foreground: 'hsl(343.4, 5%, 10%)',

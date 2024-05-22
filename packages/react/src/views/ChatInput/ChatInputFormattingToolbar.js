@@ -100,8 +100,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               }}
               positionStyles={css`
                 position: absolute;
-                bottom: 5rem;
-                left: 0.75rem;
+                bottom: 7rem;
+                left: 1.85rem;
               `}
               onClose={() => setEmojiOpen(false)}
             />

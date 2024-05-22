@@ -1,6 +1,6 @@
 const AzureSky = {
   schemes: {
-    radius: '0.3rem',
+    radius: '0.2rem',
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(222.2, 84%, 4.9%)',

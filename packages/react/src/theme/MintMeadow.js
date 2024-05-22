@@ -9,7 +9,7 @@ const MintMeadow = {
   components: {},
 
   schemes: {
-    radius: '0.3rem',
+    radius: '0.2rem',
     light: {
       background: 'hsl(98, 28%, 95%)',
       foreground: 'hsl(98, 5%, 8%)',
