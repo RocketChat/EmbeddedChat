@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './CommandList.style';
+import useCommandListStyles from './CommandList.style';
 
 function CommandsList({
   className = '',
@@ -16,6 +16,7 @@ function CommandsList({
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
+  const styles = useCommandListStyles();
 
   const handleCommandClick = useCallback(
     (command) => {
@@ -46,16 +47,12 @@ function CommandsList({
 
   return (
     <Box
-      css={styles.list}
+      css={styles.main}
       className={`ec-commands-list ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       {...props}
     >
-      <ul
-        css={css`
-          liststyle: none;
-        `}
-      >
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {filteredCommands.map((command) => (
           <li
             key={command.command}
@@ -68,14 +65,7 @@ function CommandsList({
                 justify-content: space-evenly;
               `}
             >
-              <Box
-                is="span"
-                css={css`
-                  color: #000000;
-                `}
-              >
-                {command.command}
-              </Box>
+              <Box is="span">{command.command}</Box>
               &nbsp;&nbsp;&nbsp;
               <Box is="span">{command.params}</Box>
             </Box>

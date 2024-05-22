@@ -1,42 +1,54 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  list: css`
-    margin-bottom: 5px;
+const useCommandListStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+  const main = css`
+    margin: 0.2rem 2rem;
+    padding: 0.5rem 0.3rem;
     display: block;
     max-height: 10rem;
     overflow: scroll;
     overflow-x: hidden;
     max-height: 145px;
-    scrollbar-width: thin;
-    scrollbar-color: #e0e0e1 transparent;
-    &::-webkit-scrollbar {
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+    color: ${colors.secondaryForeground};
+    ::-webkit-scrollbar {
       width: 4px;
+      height: 7.7px;
     }
-    &::-webkit-scrollbar-thumb {
-      background-color: #e0e0e1;
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
       border-radius: 4px;
     }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #e0e0e1;
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
     }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
+    ::-webkit-scrollbar-button {
+      display: none;
     }
-  `,
+  `;
 
-  listItem: css`
+  const listItem = css`
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 0;
-    padding-right: 2px;
 
     &:hover {
-      background-color: #dddddd;
+      background-color: ${colors.secondary};
     }
-  `,
+  `;
+
+  const listText = css`
+    font-weight: 600;
+  `;
+
+  return { main, listItem, listText };
 };
 
-export default styles;
+export default useCommandListStyles;
