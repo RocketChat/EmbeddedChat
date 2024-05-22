@@ -1,7 +1,13 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  starredListContainer: (messageList) => {
+const useStarredMessageStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const starredListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`
       flex: 1;
@@ -12,15 +18,30 @@ const styles = {
       align-items: ${centerAlign ? 'center' : 'initial'};
       overflow-x: hidden;
       max-width: 100%;
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 7.7px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: ${alpha(colors.primary, 0.5)};
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: ${colors.primary};
+      }
+      ::-webkit-scrollbar-button {
+        display: none;
+      }
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
+
+  return { starredListContainer, centeredColumnStyles };
 };
 
-export default styles;
+export default useStarredMessageStyles;

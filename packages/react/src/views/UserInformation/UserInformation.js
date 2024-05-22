@@ -10,11 +10,11 @@ import { Throbber } from '../../components/Throbber';
 import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
 import UserInfoField from './UserInfoField';
-import styles from './UserInformation.styles';
+import useUserInformationStyles from './UserInformation.styles';
 
 const UserInformation = () => {
   const { RCInstance } = useContext(RCContext);
-
+  const styles = useUserInformationStyles();
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
   const setShowCurrentUserInfo = useUserStore(

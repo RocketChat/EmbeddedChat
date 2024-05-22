@@ -48,7 +48,6 @@ const InviteMembers = ({ inviteData }) => {
           <Box
             css={css`
               width: 80%;
-              color: #4a4a4a;
             `}
           >
             Invite Members
@@ -79,7 +78,6 @@ const InviteMembers = ({ inviteData }) => {
         {inviteData && (
           <p
             css={css`
-              color: #9ea2a8;
               font-size: 0.78em;
             `}
           >

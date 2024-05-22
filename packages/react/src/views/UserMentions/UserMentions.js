@@ -13,9 +13,10 @@ import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { Throbber } from '../../components/Throbber';
-import styles from './UserMentions.styles';
+import useUserMentionStyles from './UserMentions.styles';
 
 const UserMentions = () => {
+  const styles = useUserMentionStyles();
   const showAvatar = useUserStore((state) => state.showAvatar);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const messages = useMessageStore((state) => state.messages);

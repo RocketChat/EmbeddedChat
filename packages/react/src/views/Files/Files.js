@@ -14,10 +14,11 @@ import { Button } from '../../components/Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { Throbber } from '../../components/Throbber';
-import { fileStyles as styles } from './Files.styles';
+import { useFileStyles } from './Files.styles';
 
 const Files = () => {
   const { RCInstance } = useRCContext();
+  const styles = useFileStyles();
   const dispatchToastMessage = useToastBarDispatch();
 
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);

@@ -1,13 +1,15 @@
 import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
 
 const useSidebarStyles = () => {
   const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
 
   const parent = css`
-    background-color: white;
     width: 350px;
     height: 100%;
-    box-shadow: -1px 0px 5px rgb(0 0 0 / 25%);
+    box-shadow: ${theme.shadows[2]};
     z-index: ${theme.zIndex.general};
   `;
 
@@ -27,7 +29,6 @@ const useSidebarStyles = () => {
   `;
 
   const title = css`
-    color: #4a4a4a;
     width: 80%;
   `;
 
@@ -40,9 +41,8 @@ const useSidebarStyles = () => {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background-color: #fff;
-    border: 2px solid #ddd;
-    border-radius: 0.25rem;
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
     position: relative;
     margin: 0 1rem 1rem;
   `;
@@ -54,6 +54,7 @@ const useSidebarStyles = () => {
     &:focus {
       border: none;
       box-shadow: none;
+      outline: none;
     }
   `;
 

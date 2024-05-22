@@ -1,7 +1,13 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  threadListContainer: (containsThreads, filteredThreads) => {
+const useAllThreadStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const threadListContainer = (containsThreads, filteredThreads) => {
     const centerAlign = !containsThreads || filteredThreads.length === 0;
     return css`
       flex: 1;
@@ -10,17 +16,30 @@ const styles = {
       flex-direction: column;
       justify-content: ${centerAlign ? 'center' : 'initial'};
       align-items: ${centerAlign ? 'center' : 'initial'};
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 7.7px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: ${alpha(colors.primary, 0.5)};
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: ${colors.primary};
+      }
+      ::-webkit-scrollbar-button {
+        display: none;
+      }
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
 
-  threadMessageContainer: css`
+  const threadMessageContainer = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -34,10 +53,8 @@ const styles = {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     cursor: pointer;
-    &:hover {
-      background: #f2f3f5;
-    }
-  `,
+  `;
+  return { threadListContainer, centeredColumnStyles, threadMessageContainer };
 };
 
-export default styles;
+export default useAllThreadStyles;

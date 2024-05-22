@@ -8,9 +8,10 @@ import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import { Throbber } from '../../components/Throbber';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import styles from './PinnedMessages.styles';
+import usePinnedMessageStyles from './PinnedMessages.styles';
 
 const PinnedMessages = () => {
+  const styles = usePinnedMessageStyles();
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
   const messages = useMessageStore((state) => state.messages);
   const [loading, setLoading] = useState(true);

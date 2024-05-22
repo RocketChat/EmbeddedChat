@@ -7,7 +7,6 @@ export const RoomMemberStyles = {
     width: 100%;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
     padding: 0 1rem 1rem;
   `,
 };

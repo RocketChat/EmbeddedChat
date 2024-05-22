@@ -34,7 +34,6 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
           <Box
             css={styles.searchContainer}
             style={{
-              border: '2px solid #ddd',
               position: 'relative',
               marginBottom: '1rem',
             }}

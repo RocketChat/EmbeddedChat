@@ -1,7 +1,13 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  message: css`
+const useUserMentionsStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const message = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -14,12 +20,24 @@ const styles = {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
-    &:hover {
-      background: #f2f3f5;
-    }
-  `,
 
-  userMentionsListContainer: (messageList) => {
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 7.7px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
+    }
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
+  `;
+
+  const userMentionsListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`
       flex: 1;
@@ -31,14 +49,15 @@ const styles = {
       overflow-x: hidden;
       max-width: 100%;
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
+
+  return { message, userMentionsListContainer, centeredColumnStyles };
 };
 
-export default styles;
+export default useUserMentionsStyles;
