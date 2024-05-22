@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
@@ -13,6 +13,19 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
     placeholder,
   } = searchProps || {};
   const styles = useSidebarStyles();
+  const searchContainerRef = useRef(null);
+
+  const handleFocus = () => {
+    if (searchContainerRef.current) {
+      searchContainerRef.current.classList.add('focused');
+    }
+  };
+
+  const handleBlur = () => {
+    if (searchContainerRef.current) {
+      searchContainerRef.current.classList.remove('focused');
+    }
+  };
 
   return (
     <Box css={styles.parent} className="ec-sidebar">
@@ -37,11 +50,14 @@ const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
               position: 'relative',
               marginBottom: '1rem',
             }}
+            ref={searchContainerRef}
           >
             <Input
               placeholder={placeholder}
               onChange={handleInputChange}
               css={styles.textInput}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
 
             <Icon name="magnifier" size="1.25rem" css={styles.noInfoIcon} />

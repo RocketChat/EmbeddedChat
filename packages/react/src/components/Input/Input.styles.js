@@ -29,7 +29,7 @@ const useInputStyles = () => {
     text-overflow: ellipsis;
     border-radius: 0.25rem;
     box-shadow: none;
-    border: 1px solid ${colors.input};
+    border: 1px solid ${colors.border};
     outline: none;
 
     &:focus {

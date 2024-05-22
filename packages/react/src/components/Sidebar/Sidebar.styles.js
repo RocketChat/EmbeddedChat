@@ -45,6 +45,9 @@ const useSidebarStyles = () => {
     border-radius: ${theme.schemes.radius};
     position: relative;
     margin: 0 1rem 1rem;
+    &.focused {
+      outline: 1px solid ${colors.ring};
+    }
   `;
 
   const textInput = css`
@@ -52,8 +55,6 @@ const useSidebarStyles = () => {
     flex: none;
     padding: none;
     &:focus {
-      border: none;
-      box-shadow: none;
       outline: none;
     }
   `;
