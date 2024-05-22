@@ -1,5 +1,6 @@
 import { css, useTheme } from '@emotion/react';
 import { useThemeStore } from '../../store';
+import { alpha } from '../../lib/color';
 
 const useInputStyles = () => {
   const theme = useTheme();
@@ -33,6 +34,10 @@ const useInputStyles = () => {
 
     &:focus {
       outline: ${colors.ring} solid 1px;
+    }
+
+    &::placeholder {
+      color: ${alpha(colors.foreground, 0.8)};
     }
   `;
 

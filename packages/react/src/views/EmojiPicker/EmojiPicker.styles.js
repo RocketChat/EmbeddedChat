@@ -21,6 +21,7 @@ const useEmojiPickerStyles = () => {
       --epr-emoji-size: 20px;
       --epr-category-navigation-button-size: 20px;
       --epr-emoji-gap: 10px;
+
       --epr-hover-bg-color: ${calculatedColors};
       --epr-highlight-color: ${calculatedColors};
       --epr-focus-bg-color: ${calculatedColors};
@@ -82,6 +83,10 @@ const useEmojiPickerStyles = () => {
       --epr-dark-category-icon-active-color:'theme-color';
       --epr-dark-skin-tone-picker-menu-color: 'theme-color';
       */
+    }
+
+    .EmojiPickerReact li.epr-emoji-category > .epr-emoji-category-label {
+      font-size: 12px;
     }
 
     .EmojiPickerReact.epr-dark-theme {

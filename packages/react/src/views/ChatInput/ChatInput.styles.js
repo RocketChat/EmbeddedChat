@@ -1,44 +1,22 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { useThemeStore } from '../../store';
+import { darken } from '../../lib/color';
 
 export const ChatInputStyles = {
-  editingMessage: css`
-    background-color: #fff8e0;
-    & textarea {
-      background-color: inherit;
-    }
-  `,
-
   iconCursor: css`
     cursor: pointer;
   `,
 
   textInput: css`
-    padding: 12px;
-    width: 100%;
+    resize: none;
     border: none;
     outline: none;
-    resize: none;
-    overflow-x: hidden;
-    overflow-y: auto;
-    font-size: 0.875rem;
-    font-family: var(
-      --rcx-font-family-sans,
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      'Helvetica Neue',
-      'Apple Color Emoji',
-      'Segoe UI Emoji',
-      'Segoe UI Symbol',
-      'Meiryo UI',
-      Arial,
-      sans-serif
-    );
+    font-size: 14px;
+
+    &:focus {
+      border: none;
+      outline: none;
+    }
 
     &:disabled {
       cursor: not-allowed;
@@ -50,16 +28,25 @@ export const ChatInputStyles = {
   `,
 };
 
-export const ChatInputFormattingToolbarStyles = {
-  chatFormat: css`
+export const useChatInputFormattingToolbarStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const chatFormat = css`
     bottom: 0;
     align-items: center;
-    background-color: #cbced1;
+    background-color: ${mode === 'light'
+      ? darken(colors.background, 0.03)
+      : colors.secondary};
     display: flex;
     position: relative;
     flex-direction: row;
     gap: 0.375rem;
-  `,
+    border-radius: ${theme.schemes.radius};
+  `;
+
+  return { chatFormat };
 };
 
 const commonRecorderStyles = {

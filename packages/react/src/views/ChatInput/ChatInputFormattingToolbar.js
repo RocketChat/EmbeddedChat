@@ -10,12 +10,14 @@ import { ActionButton } from '../../components/ActionButton';
 import { Tooltip } from '../../components/Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
-import { ChatInputFormattingToolbarStyles as styles } from './ChatInput.styles';
+import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
+
+  const styles = useChatInputFormattingToolbarStyles();
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );

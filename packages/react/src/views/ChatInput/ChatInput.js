@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useToastStore,
@@ -8,6 +8,7 @@ import {
   loginModalStore,
   useChannelStore,
   useMemberStore,
+  useThemeStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -18,6 +19,7 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
+import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../../components/ActionButton';
@@ -32,6 +34,9 @@ import { ChatInputStyles as styles } from './ChatInput.styles';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
   const { RCInstance, ECOptions } = useRCContext();
   const [commands, setCommands] = useState([]);
   const isUserAuthenticated = useUserStore(
@@ -79,6 +84,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef(null);
+  const boxRef = useRef(null);
 
   const [disableButton, setDisableButton] = useState(true);
 
@@ -504,6 +510,19 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     }
   };
+
+  const handleFocus = () => {
+    if (boxRef.current) {
+      boxRef.current.classList.add('focused');
+    }
+  };
+
+  const handleBlur = () => {
+    if (boxRef.current) {
+      boxRef.current.classList.remove('focused');
+    }
+  };
+
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box>
@@ -531,9 +550,21 @@ const ChatInput = ({ scrollToBottom }) => {
         <TypingUsers />
       </Box>
       <Box
-        css={css`
-          border: 2px solid #ddd;
-        `}
+        ref={boxRef}
+        css={[
+          css`
+            border: 1px solid ${colors.border};
+            border-radius: ${theme.schemes.radius};
+            margin: 1rem 2rem;
+            &.focused {
+              border: ${`1.5px solid ${colors.ring}`};
+            }
+          `,
+          (editMessage.msg || editMessage.attachments) &&
+            css`
+              border: 2px solid ${colors.border};
+            `,
+        ]}
       >
         {showMembersList ? (
           <>
@@ -561,11 +592,10 @@ const ChatInput = ({ scrollToBottom }) => {
               justify-content: center;
               flex-direction: row;
             `,
-            (editMessage.msg || editMessage.attachments) &&
-              styles.editingMessage,
           ]}
         >
-          <textarea
+          <Input
+            textArea
             rows={1}
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
@@ -578,22 +608,30 @@ const ChatInput = ({ scrollToBottom }) => {
             css={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
-            onBlur={sendTypingStop}
+            onBlur={() => {
+              sendTypingStop();
+              handleBlur();
+            }}
+            onFocus={handleFocus}
             onKeyDown={onKeyDown}
             ref={messageRef}
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          <Box>
+          <Box
+            css={css`
+              padding: 0.25rem;
+            `}
+          >
             {isUserAuthenticated ? (
               <ActionButton
                 ghost
-                size="medium"
+                size="large"
                 onClick={() => sendMessage()}
+                type="primary"
                 disabled={disableButton || isRecordingMessage}
-              >
-                <Icon css={styles.iconCursor} name="send" />
-              </ActionButton>
+                icon="send"
+              />
             ) : (
               <Button onClick={onJoin} type="primary">
                 JOIN
