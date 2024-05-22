@@ -1,56 +1,45 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useThemeStore } from '../../store';
 
-const styles = {
-  inputContainer: css`
+const useAttachmentPreviewStyles = () => {
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
+  const inputContainer = css`
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: start;
     margin: 20px 0 0 0 !important;
-  `,
+  `;
 
-  input: css`
-    margin-top: 5px;
-    border: 1px solid rgb(184, 184, 184);
+  const input = css`
     width: 95.5%;
-    padding: 10px !important;
-    border-radius: 5px;
-  `,
+  `;
 
-  submitBtn: css`
-    &:hover {
-      background-color: #005bb6;
-    }
-
-    &:active {
-      background-color: #003f7e;
-    }
-
-    &.disabled:not(.ghost) {
-      background-color: rgb(148, 157, 161);
-    }
-  `,
-
-  modalContent: css`
+  const modalContent = css`
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 350px;
-    scrollbar-width: thin;
-    scrollbar-color: #e0e0e1 transparent;
-    &::-webkit-scrollbar {
+    ::-webkit-scrollbar {
       width: 4px;
+      height: 7.7px;
     }
-    &::-webkit-scrollbar-thumb {
-      background-color: #e0e0e1;
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
       border-radius: 4px;
     }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #e0e0e1;
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
     }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
+    ::-webkit-scrollbar-button {
+      display: none;
     }
-  `,
+  `;
+
+  return { inputContainer, input, modalContent };
 };
 
-export default styles;
+export default useAttachmentPreviewStyles;

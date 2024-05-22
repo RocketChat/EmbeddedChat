@@ -9,10 +9,11 @@ import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Modal } from '../../components/Modal';
-import styles from './AttachmentPreview.styles';
+import useAttachmentPreviewStyles from './AttachmentPreview.styles';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const styles = useAttachmentPreviewStyles();
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
@@ -123,7 +124,6 @@ const AttachmentPreview = () => {
           Cancel
         </Button>
         <Button
-          css={styles.submitBtn}
           disabled={isPending}
           onClick={() => {
             submit();
