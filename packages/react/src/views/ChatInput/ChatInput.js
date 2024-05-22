@@ -84,7 +84,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef(null);
-  const boxRef = useRef(null);
+  const chatInputContainer = useRef(null);
 
   const [disableButton, setDisableButton] = useState(true);
 
@@ -512,14 +512,14 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleFocus = () => {
-    if (boxRef.current) {
-      boxRef.current.classList.add('focused');
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.add('focused');
     }
   };
 
   const handleBlur = () => {
-    if (boxRef.current) {
-      boxRef.current.classList.remove('focused');
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.remove('focused');
     }
   };
 
@@ -529,33 +529,35 @@ const ChatInput = ({ scrollToBottom }) => {
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
-        <ChannelState
-          status={
-            editMessage.msg || editMessage.attachments
-              ? 'Editing Message'
-              : isChannelReadOnly
-              ? 'This room is read only'
-              : undefined
-          }
-          iconName={
-            editMessage.msg || editMessage.attachments ? 'edit' : undefined
-          }
-          instructions={
-            editMessage.msg || editMessage.attachments
-              ? 'esc to cancel · enter to save'
-              : undefined
-          }
-        />
+        {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
+          <ChannelState
+            status={
+              editMessage.msg || editMessage.attachments
+                ? 'Editing Message'
+                : isChannelReadOnly
+                ? 'This room is read only'
+                : undefined
+            }
+            iconName={
+              editMessage.msg || editMessage.attachments ? 'edit' : undefined
+            }
+            instructions={
+              editMessage.msg || editMessage.attachments
+                ? 'esc to cancel · enter to save'
+                : undefined
+            }
+          />
+        ) : null}
 
         <TypingUsers />
       </Box>
       <Box
-        ref={boxRef}
+        ref={chatInputContainer}
         css={[
           css`
             border: 1px solid ${colors.border};
             border-radius: ${theme.schemes.radius};
-            margin: 1rem 2rem;
+            margin: 0.5rem 2rem 1rem 2rem;
             &.focused {
               border: ${`1.5px solid ${colors.ring}`};
             }

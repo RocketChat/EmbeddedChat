@@ -7,7 +7,7 @@ const useQuoteMessageStyles = () => {
   const colors = theme.schemes[mode];
 
   const messageContainer = css`
-    margin: 0 2rem;
+    margin: 0.2rem 2rem;
     position: relative;
     font-size: 0.85rem;
     background-color: ${colors.background};
