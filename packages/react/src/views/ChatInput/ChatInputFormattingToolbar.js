@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
@@ -95,6 +96,12 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji);
               }}
+              positionStyles={css`
+                position: absolute;
+                bottom: 5rem;
+                left: 0.75rem;
+              `}
+              onClose={() => setEmojiOpen(false)}
             />
           )}
         </>

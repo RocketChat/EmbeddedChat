@@ -105,6 +105,8 @@ const useEmojiPickerStyles = () => {
     .EmojiPickerReact .epr-emoji-list::-webkit-scrollbar-thumb:hover {
       background: ${colors.primary};
     }
+    z-index: ${theme.zIndex.modal};
+    box-shadow: ${theme.shadows[2]};
   `;
 
   return { emojiPicker };

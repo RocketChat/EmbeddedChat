@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
@@ -6,8 +6,34 @@ import { Box } from '../../components/Box';
 import ReactPortal from '../../lib/reactPortal';
 import useEmojiPickerStyles from './EmojiPicker.styles';
 
-const CustomEmojiPicker = ({ handleEmojiClick }) => {
+const CustomEmojiPicker = ({
+  handleEmojiClick,
+  positionStyles = css`
+    position: absolute;
+    top: 0;
+    right: 0;
+  `,
+  onClose = () => {},
+}) => {
   const styles = useEmojiPickerStyles();
+  const emojiPickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const previewConfig = {
     defaultEmoji: '1f60d',
@@ -17,16 +43,7 @@ const CustomEmojiPicker = ({ handleEmojiClick }) => {
 
   return (
     <ReactPortal wrapperId="overlay-items">
-      <Box
-        css={[
-          styles.emojiPicker,
-          css`
-            position: absolute;
-            top: 5rem;
-            right: 1.5rem;
-          `,
-        ]}
-      >
+      <Box ref={emojiPickerRef} css={[styles.emojiPicker, positionStyles]}>
         <EmojiPicker
           height={350}
           width={300}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
@@ -112,15 +113,15 @@ export const MessageToolbox = ({
                 setEmojiOpen(false);
                 handleEmojiClick(emoji, message, true);
               }}
+              onClose={() => setEmojiOpen(false)}
+              positionStyles={css`
+                position: absolute;
+                top: 5rem;
+                right: 1.5rem;
+              `}
             />
           )}
-          {/* <Popup
-            modal
-            open={isEmojiOpen}
-            onClose={() => setEmojiOpen(false)}
-            closeOnEscape
-            contentStyle={popupStyle}
-          ></Popup> */}
+
           {!isThreadMessage && (
             <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
