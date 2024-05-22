@@ -1,9 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '@emotion/react';
 import { Box } from '../../components/Box';
-import styles from './MembersList.styles';
+import useMemberListStyles from './MembersList.styles';
+import { useThemeStore } from '../../store';
 
 function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
+  const styles = useMemberListStyles();
+  const theme = useTheme();
+  const mode = useThemeStore((state) => state.mode);
+  const colors = theme.schemes[mode];
+
   const handleMemberClick = useCallback(
     (selectedItem) => {
       onMemberClick(selectedItem);
@@ -40,8 +47,8 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 
   return (
-    <Box css={styles.list}>
-      <ul style={{ listStyle: 'none' }}>
+    <Box css={styles.main}>
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {filteredMembers.map((member, index) => (
           <li
             key={member._id}
@@ -54,10 +61,11 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
               }
             }}
             style={{
-              backgroundColor: index === mentionIndex && '#dddddd',
+              backgroundColor: index === mentionIndex && colors.primary,
+              color: index === mentionIndex && colors.primaryForeground,
             }}
           >
-            <Box is="span" style={{ justifyContent: 'space-evenly' }}>
+            <Box is="span">
               <Box is="span" css={styles.listText}>
                 {member.name}
               </Box>
@@ -78,7 +86,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           }}
           style={{
             backgroundColor:
-              mentionIndex === filteredMembers.length && '#dddddd',
+              mentionIndex === filteredMembers.length && colors.primary,
+            color:
+              mentionIndex === filteredMembers.length &&
+              colors.primaryForeground,
           }}
         >
           <Box is="span" css={styles.listText}>
@@ -97,7 +108,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           }}
           style={{
             backgroundColor:
-              mentionIndex === filteredMembers.length + 1 && '#dddddd',
+              mentionIndex === filteredMembers.length + 1 && colors.primary,
+            color:
+              mentionIndex === filteredMembers.length + 1 &&
+              colors.primaryForeground,
           }}
         >
           <Box is="span" css={styles.listText}>

@@ -549,6 +549,24 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         ) : null}
 
+        {showMembersList ? (
+          <>
+            <MembersList
+              mentionIndex={mentionIndex}
+              filteredMembers={filteredMembers}
+              onMemberClick={handleMemberClick}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+        {filteredCommands.length === 0 ? null : (
+          <CommandsList
+            filteredCommands={filteredCommands}
+            onCommandClick={onCommandClick}
+          />
+        )}
+
         <TypingUsers />
       </Box>
       <Box
@@ -568,24 +586,6 @@ const ChatInput = ({ scrollToBottom }) => {
             `,
         ]}
       >
-        {showMembersList ? (
-          <>
-            <MembersList
-              mentionIndex={mentionIndex}
-              filteredMembers={filteredMembers}
-              onMemberClick={handleMemberClick}
-            />
-            <Divider />
-          </>
-        ) : (
-          <></>
-        )}
-        {filteredCommands.length === 0 ? null : (
-          <CommandsList
-            filteredCommands={filteredCommands}
-            onCommandClick={onCommandClick}
-          />
-        )}
         <Box
           css={[
             css`
