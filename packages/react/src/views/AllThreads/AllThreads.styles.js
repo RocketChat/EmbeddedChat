@@ -1,6 +1,6 @@
 import { css, useTheme } from '@emotion/react';
-import { alpha } from '../../lib/color';
 import { useThemeStore } from '../../store';
+import { lighten, darken, alpha } from '../../lib/color';
 
 const useAllThreadStyles = () => {
   const theme = useTheme();
@@ -53,6 +53,12 @@ const useAllThreadStyles = () => {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     cursor: pointer;
+
+    &:hover {
+      background-color: ${mode === 'light'
+        ? darken(colors.background, 0.03)
+        : lighten(colors.background, 1)};
+    }
   `;
   return { threadListContainer, centeredColumnStyles, threadMessageContainer };
 };

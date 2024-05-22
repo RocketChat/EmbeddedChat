@@ -1,5 +1,5 @@
 import { css, useTheme } from '@emotion/react';
-import { alpha } from '../../lib/color';
+import { alpha, lighten, darken } from '../../lib/color';
 import { useThemeStore } from '../../store';
 
 const useUserMentionsStyles = () => {
@@ -20,20 +20,10 @@ const useUserMentionsStyles = () => {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
-
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
+    &:hover {
+      background-color: ${mode === 'light'
+        ? darken(colors.background, 0.03)
+        : lighten(colors.background, 1)};
     }
   `;
 
@@ -48,6 +38,20 @@ const useUserMentionsStyles = () => {
       align-items: ${centerAlign ? 'center' : 'initial'};
       overflow-x: hidden;
       max-width: 100%;
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 7.7px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: ${alpha(colors.primary, 0.5)};
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: ${colors.primary};
+      }
+      ::-webkit-scrollbar-button {
+        display: none;
+      }
     `;
   };
 
