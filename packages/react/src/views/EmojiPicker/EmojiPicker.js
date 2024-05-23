@@ -51,6 +51,7 @@ const CustomEmojiPicker = ({
           previewConfig={previewConfig}
           searchDisabled
           emojiStyle="facebook"
+          lazyLoadEmojis
         />
       </Box>
     </ReactPortal>
