@@ -18,6 +18,7 @@ const useChatHeaderStyles = () => {
 
   const chatHeaderChild = css`
     ${rowCentreAlign}
+    padding: 0 0.75rem;
     justify-content: space-between;
     width: 100%;
   `;

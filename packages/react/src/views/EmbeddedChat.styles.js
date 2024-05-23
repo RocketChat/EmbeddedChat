@@ -21,6 +21,7 @@ export const styles = {
     max-width: unset !important;
     max-height: unset !important;
     border-radius: 0;
+    border: none;
   `,
 };
 

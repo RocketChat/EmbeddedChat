@@ -116,7 +116,7 @@ export const MessageToolbox = ({
               onClose={() => setEmojiOpen(false)}
               positionStyles={css`
                 position: absolute;
-                top: 5rem;
+                top: 7rem;
                 right: 1.5rem;
               `}
             />
@@ -193,6 +193,7 @@ export const MessageToolbox = ({
               Cancel
             </Button>
             <Button
+              type="destructive"
               onClick={() => {
                 handleDeleteMessage(message);
                 handleOnClose();
