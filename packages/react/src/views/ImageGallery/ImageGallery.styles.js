@@ -62,6 +62,13 @@ const useImageGalleryStyles = () => {
     overflow: hidden;
   `;
 
+  const swiperInject = `
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: ${colors.primary};
+    }
+  `;
+
   return {
     overlay,
     exit,
@@ -70,6 +77,7 @@ const useImageGalleryStyles = () => {
     throbberContainer,
     fetchErrorContainer,
     swiperContainer,
+    swiperInject,
   };
 };
 

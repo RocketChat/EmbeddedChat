@@ -97,6 +97,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
               pagination={{ clickable: true }}
               keyboard
               initialSlide={currentFileIndex}
+              injectStyles={[styles.swiperInject]}
             >
               {files.map(({ _id, url }) => (
                 <SwiperSlide key={_id}>
