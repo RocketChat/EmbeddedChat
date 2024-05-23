@@ -23,7 +23,6 @@ export const ImageBlockStyles = {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem;
-    color: #ffffff3f;
     margin-block-end: -0.25rem;
     width: ${width};
   `,
@@ -34,7 +33,6 @@ export const ContextBlockItemStyles = {
     display: inline-block;
     padding: 0 0.75rem;
     font-size: 0.8rem;
-    color: #3d3d3d;
     margin: -0.25rem;
   `,
 };

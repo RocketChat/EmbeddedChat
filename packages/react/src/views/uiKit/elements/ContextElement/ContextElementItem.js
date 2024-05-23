@@ -18,7 +18,6 @@ export const ContextElementItem = ({ element, surfaceRenderer, index }) => {
   const MarkdownCSS = css`
     display: inline-block;
     font-size: 0.8rem;
-    color: #ffffff3f;
     margin: -0.25rem;
   `;
 
