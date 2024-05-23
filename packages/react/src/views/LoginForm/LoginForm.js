@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { GenericModal } from '../../components/GenericModal';
-import { loginModalStore, useUserStore } from '../../store';
+import { loginModalStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
 import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import styles from './LoginForm.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -20,10 +21,8 @@ export default function LoginForm() {
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();
-  const theme = useTheme();
-  const dark = useUserStore((state) => state.dark);
-  const mode = dark ? 'dark' : 'light';
-  const errorColor = theme.schemes[mode].destructive;
+
+  const { colors } = useCustomTheme();
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {
@@ -100,7 +99,7 @@ export default function LoginForm() {
                   onKeyPress={handleKeyPress}
                   style={{
                     ...(field.error && {
-                      borderColor: errorColor,
+                      borderColor: colors.destructive,
                       outline: 'none',
                     }),
                   }}
@@ -119,7 +118,7 @@ export default function LoginForm() {
                 <Box
                   is="span"
                   css={css`
-                    color: ${errorColor};
+                    color: ${colors.destructive};
                     font-size: 13px;
                   `}
                 >

@@ -1,12 +1,9 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
-import { useThemeStore } from '../../store';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useMemberListStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { theme, colors } = useCustomTheme();
   const main = css`
     margin: 0.2rem 2rem;
     padding: 0.5rem 0;

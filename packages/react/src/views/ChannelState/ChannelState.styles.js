@@ -1,11 +1,8 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useChannelStateStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { theme, colors } = useCustomTheme();
   const channelStateContainer = css`
     font-size: 0.75rem;
     padding: 0.2rem 2rem;

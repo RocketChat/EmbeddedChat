@@ -1,16 +1,9 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
 import { lighten, darken } from '../../lib/color';
-
-const useCommonTheme = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-  return { theme, mode, colors };
-};
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useMessageStyles = () => {
-  const { mode, colors } = useCommonTheme();
+  const { mode, colors } = useCustomTheme();
 
   const main = css`
     display: flex;
@@ -44,7 +37,7 @@ export const useMessageStyles = () => {
 };
 
 export const useMessageAvatarContainerStyles = () => {
-  const { colors } = useCommonTheme();
+  const { colors } = useCustomTheme();
 
   const container = css`
     margin: 3px;
@@ -90,7 +83,7 @@ export const MessageContainerStyles = {
 };
 
 export const useMessageDividerStyles = () => {
-  const { theme, colors } = useCommonTheme();
+  const { theme, colors } = useCustomTheme();
 
   const divider = css`
     letter-spacing: 0rem;
@@ -132,7 +125,7 @@ export const useMessageDividerStyles = () => {
 };
 
 export const useMessageHeaderStyles = () => {
-  const { colors } = useCommonTheme();
+  const { colors } = useCustomTheme();
 
   const header = css`
     display: flex;
@@ -225,7 +218,7 @@ export const MessageMetricsStyles = {
 };
 
 export const useMessageReactionsStyles = () => {
-  const { theme, colors } = useCommonTheme();
+  const { theme, colors } = useCustomTheme();
   const container = css`
     display: flex;
     flex-flow: row wrap;
@@ -261,7 +254,7 @@ export const useMessageReactionsStyles = () => {
 };
 
 export const useMessageToolboxStyles = () => {
-  const { theme, colors } = useCommonTheme();
+  const { theme, colors } = useCustomTheme();
 
   const container = css`
     display: none;

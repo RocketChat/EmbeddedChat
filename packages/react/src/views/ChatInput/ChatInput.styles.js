@@ -1,13 +1,34 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
 import { darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-export const ChatInputStyles = {
-  iconCursor: css`
+export const useChatInputStyles = () => {
+  const { theme, colors } = useCustomTheme();
+  const inputWithFormattingBox = css`
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+    margin: 0.5rem 2rem 1rem 2rem;
+    &.focused {
+      border: ${`1.5px solid ${colors.ring}`};
+    }
+  `;
+
+  const editMessage = css`
+    border: 2px solid ${colors.border};
+  `;
+
+  const inputBox = css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+  `;
+
+  const iconCursor = css`
     cursor: pointer;
-  `,
+  `;
 
-  textInput: css`
+  const textInput = css`
     resize: none;
     border: none;
     outline: none;
@@ -25,13 +46,19 @@ export const ChatInputStyles = {
     &::placeholder {
       padding-left: 5px;
     }
-  `,
+  `;
+
+  return {
+    inputWithFormattingBox,
+    editMessage,
+    inputBox,
+    iconCursor,
+    textInput,
+  };
 };
 
 export const useChatInputFormattingToolbarStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { theme, mode, colors } = useCustomTheme();
 
   const chatFormat = css`
     bottom: 0;

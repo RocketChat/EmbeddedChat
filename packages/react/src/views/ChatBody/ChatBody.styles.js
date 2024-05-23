@@ -1,12 +1,9 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useChatbodyStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { colors } = useCustomTheme();
   const chatbodyContainer = css`
     flex: 1;
     word-break: break-all;
@@ -37,7 +34,7 @@ export const useChatbodyStyles = () => {
 };
 
 export const useRecentMessageStyles = () => {
-  const theme = useTheme();
+  const { theme } = useCustomTheme();
   const button = css`
     position: relative;
     z-index: ${theme.zIndex.body};

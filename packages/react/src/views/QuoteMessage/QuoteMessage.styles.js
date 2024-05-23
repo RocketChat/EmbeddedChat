@@ -1,11 +1,8 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useQuoteMessageStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { theme, colors } = useCustomTheme();
   const messageContainer = css`
     margin: 0.2rem 2rem;
     position: relative;

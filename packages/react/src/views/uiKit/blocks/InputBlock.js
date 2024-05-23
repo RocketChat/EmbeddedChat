@@ -1,16 +1,12 @@
-import { useTheme } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useMemo } from 'react';
 import { Box } from '../../../components/Box';
-import { useThemeStore } from '../../../store';
 
 import { useUiKitState } from '../hooks/useUiKitState';
+import { useCustomTheme } from '../../../hooks/useCustomTheme';
 
 const InputBlock = ({ className, block, surfaceRenderer, context }) => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { colors } = useCustomTheme();
   const inputElement = useMemo(
     () => ({
       ...block.element,

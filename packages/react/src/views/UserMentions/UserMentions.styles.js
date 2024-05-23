@@ -1,12 +1,9 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { alpha, lighten, darken } from '../../lib/color';
-import { useThemeStore } from '../../store';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useUserMentionsStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { mode, colors } = useCustomTheme();
   const message = css`
     display: flex;
     flex-direction: row;

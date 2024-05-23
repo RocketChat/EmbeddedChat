@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import { useThemeStore } from '../../store';
 import useLinkPreviewStyles from './LinkPreview.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
-  const theme = useTheme();
   const styles = useLinkPreviewStyles();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { colors } = useCustomTheme();
+
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
   if (!meta || (typeof meta === 'object' && Object.keys(meta).length === 0)) {

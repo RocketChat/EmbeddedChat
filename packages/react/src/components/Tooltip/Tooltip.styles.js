@@ -1,19 +1,14 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
-
-const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
+import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useTooltipStyles = (position) => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const invertColors = theme.schemes[invertMode(mode)];
-
+  const { theme, invertedColors } = useCustomTheme();
   const tooltip = css`
     position: absolute;
     left: 64%;
     transform: translateX(-50%);
-    background-color: ${invertColors.secondary};
-    color: ${invertColors.secondaryForeground};
+    background-color: ${invertedColors.secondary};
+    color: ${invertedColors.secondaryForeground};
     padding: 8.5px;
     border-radius: 3px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -31,7 +26,8 @@ const useTooltipStyles = (position) => {
     margin-left: -4px;
     border-width: 6px;
     border-style: solid;
-    border-color: ${invertColors.secondary} transparent transparent transparent;
+    border-color: ${invertedColors.secondary} transparent transparent
+      transparent;
     top: ${position === 'top' ? '100%' : 'auto'};
     bottom: ${position === 'bottom' ? '100%' : 'auto'};
     transform: ${position === 'bottom'

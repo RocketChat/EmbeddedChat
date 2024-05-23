@@ -1,12 +1,9 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
-import { useThemeStore } from '../../store';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useStarredMessageStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { colors } = useCustomTheme();
   const starredListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`

@@ -1,11 +1,10 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
+
 import { lighten, darken, alpha } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useAllThreadStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { mode, colors } = useCustomTheme();
 
   const threadListContainer = (containsThreads, filteredThreads) => {
     const centerAlign = !containsThreads || filteredThreads.length === 0;

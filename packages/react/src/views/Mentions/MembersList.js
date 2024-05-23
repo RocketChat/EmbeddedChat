@@ -1,15 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@emotion/react';
 import { Box } from '../../components/Box';
 import useMemberListStyles from './MembersList.styles';
-import { useThemeStore } from '../../store';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
   const styles = useMemberListStyles();
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { colors } = useCustomTheme();
 
   const handleMemberClick = useCallback(
     (selectedItem) => {

@@ -1,11 +1,8 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useSidebarStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { theme, colors } = useCustomTheme();
   const parent = css`
     width: 350px;
     height: 100%;

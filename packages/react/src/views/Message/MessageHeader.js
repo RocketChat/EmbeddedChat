@@ -1,21 +1,20 @@
 import React from 'react';
-import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { useMemberStore, useUserStore, useThemeStore } from '../../store';
+import { useMemberStore, useUserStore } from '../../store';
 import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+
   const styles = useMessageHeaderStyles();
+  const colors = useCustomTheme();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);

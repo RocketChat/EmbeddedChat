@@ -1,11 +1,9 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
 import { lighten, darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useMenuStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { theme, colors } = useCustomTheme();
 
   const wrapper = css`
     position: relative;
@@ -31,9 +29,7 @@ export const useMenuStyles = () => {
 };
 
 export const useMenuItemStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { mode, colors } = useCustomTheme();
 
   const item = css`
     display: flex;

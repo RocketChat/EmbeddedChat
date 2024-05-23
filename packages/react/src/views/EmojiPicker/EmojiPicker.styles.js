@@ -1,11 +1,9 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
 import { alpha, lighten, darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useEmojiPickerStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+  const { theme, mode, colors } = useCustomTheme();
   const calculatedColors =
     mode === 'light'
       ? darken(colors.background, 0.03)

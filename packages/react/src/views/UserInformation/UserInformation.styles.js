@@ -1,12 +1,10 @@
-import { css, useTheme } from '@emotion/react';
-import { useThemeStore } from '../../store';
+import { css } from '@emotion/react';
+
 import { alpha } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useUserInformationStyles = () => {
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
-
+  const { colors } = useCustomTheme();
   const userSidebar = css`
     padding: 0 1rem 1rem;
     margin: 0 auto;

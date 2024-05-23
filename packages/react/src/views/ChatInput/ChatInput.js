@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useToastStore,
@@ -8,7 +8,6 @@ import {
   loginModalStore,
   useChannelStore,
   useMemberStore,
-  useThemeStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -23,21 +22,19 @@ import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../../components/ActionButton';
-import { Divider } from '../../components/Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../../components/Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
-import { ChatInputStyles as styles } from './ChatInput.styles';
+import { useChatInputStyles } from './ChatInput.styles';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
-  const theme = useTheme();
-  const mode = useThemeStore((state) => state.mode);
-  const colors = theme.schemes[mode];
+
   const { RCInstance, ECOptions } = useRCContext();
+  const styles = useChatInputStyles();
   const [commands, setCommands] = useState([]);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -572,30 +569,11 @@ const ChatInput = ({ scrollToBottom }) => {
       <Box
         ref={chatInputContainer}
         css={[
-          css`
-            border: 1px solid ${colors.border};
-            border-radius: ${theme.schemes.radius};
-            margin: 0.5rem 2rem 1rem 2rem;
-            &.focused {
-              border: ${`1.5px solid ${colors.ring}`};
-            }
-          `,
-          (editMessage.msg || editMessage.attachments) &&
-            css`
-              border: 2px solid ${colors.border};
-            `,
+          styles.inputWithFormattingBox,
+          (editMessage.msg || editMessage.attachments) && styles.editMessage,
         ]}
       >
-        <Box
-          css={[
-            css`
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              flex-direction: row;
-            `,
-          ]}
-        >
+        <Box css={styles.inputBox}>
           <Input
             textArea
             rows={1}
