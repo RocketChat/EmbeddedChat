@@ -5,7 +5,7 @@ const Heading = ({ level = 1, children, ...props }) => {
   const theme = useTheme();
   const Tag = `h${level}`;
   const style = theme.typography[Tag];
-
+  console.log(props);
   return (
     <Tag
       css={css`

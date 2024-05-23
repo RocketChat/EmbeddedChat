@@ -10,6 +10,7 @@ export const styles = {
     flex-direction: column;
     border: ${`1.5px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
     border-radius: ${theme.schemes.radius};
+    overflow: hidden;
   `,
   fullscreen: css`
     position: fixed;

@@ -37,7 +37,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
       }
     };
     fetchAllImages();
-  }, [RCInstance, setFiles, setCurrentFileIndex]);
+  }, [RCInstance, setFiles, setCurrentFileIndex, currentFileId]);
 
   return (
     <ReactPortal wrapperId="overlay-items">
@@ -55,7 +55,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
           </Box>
         )}
 
-        {imgFetchErr ? (
+        {imgFetchErr || currentFileIndex === -1 ? (
           <Box
             css={styles.fetchErrorContainer}
             style={{
@@ -107,6 +107,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
                 </SwiperSlide>
               ))}
             </Swiper>
+            )
           </Box>
         )}
       </Box>
