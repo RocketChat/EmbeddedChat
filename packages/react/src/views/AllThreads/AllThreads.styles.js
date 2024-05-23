@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 
-import { lighten, darken, alpha } from '../../lib/color';
+import { lighten, darken } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useAllThreadStyles = () => {
   const { mode, colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
 
   const threadListContainer = (containsThreads, filteredThreads) => {
     const centerAlign = !containsThreads || filteredThreads.length === 0;
@@ -15,20 +17,7 @@ const useAllThreadStyles = () => {
       flex-direction: column;
       justify-content: ${centerAlign ? 'center' : 'initial'};
       align-items: ${centerAlign ? 'center' : 'initial'};
-      ::-webkit-scrollbar {
-        width: 4px;
-        height: 7.7px;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: ${alpha(colors.primary, 0.5)};
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: ${colors.primary};
-      }
-      ::-webkit-scrollbar-button {
-        display: none;
-      }
+      ${scrollStyles};
     `;
   };
 

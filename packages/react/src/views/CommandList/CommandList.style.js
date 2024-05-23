@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useCommandListStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
   const { theme, colors } = useCustomTheme();
   const main = css`
     margin: 0.2rem 2rem;
@@ -15,20 +16,7 @@ const useCommandListStyles = () => {
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
     color: ${colors.secondaryForeground};
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
+    ${scrollStyles};
   `;
 
   const listItem = css`

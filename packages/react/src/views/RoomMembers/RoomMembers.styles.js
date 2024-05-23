@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useRoomMemberStyles = () => {
-  const { colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
   const container = css`
     display: flex;
     flex-direction: column;
@@ -11,20 +10,7 @@ export const useRoomMemberStyles = () => {
     align-items: center;
     justify-content: center;
     padding: 0 1rem 1rem;
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
+    ${scrollStyles};
   `;
 
   return { container };

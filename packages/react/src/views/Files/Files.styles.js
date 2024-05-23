@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const fileMetricsStyles = {
   metrics: css`
@@ -81,7 +80,7 @@ export const filePreviewHeaderStyles = {
 };
 
 export const useFileStyles = () => {
-  const { colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
   const message = css`
     display: flex;
     flex-direction: row;
@@ -131,20 +130,7 @@ export const useFileStyles = () => {
       flex-direction: column;
       justify-content: ${centerAlign ? 'center' : 'initial'};
       align-items: ${centerAlign ? 'center' : 'initial'};
-      ::-webkit-scrollbar {
-        width: 4px;
-        height: 7.7px;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: ${alpha(colors.primary, 0.5)};
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: ${colors.primary};
-      }
-      ::-webkit-scrollbar-button {
-        display: none;
-      }
+      ${scrollStyles};
     `;
   };
 

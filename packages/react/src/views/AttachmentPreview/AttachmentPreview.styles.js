@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useAttachmentPreviewStyles = () => {
-  const { colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
   const inputContainer = css`
     display: flex;
     flex-direction: column;
@@ -20,20 +19,7 @@ const useAttachmentPreviewStyles = () => {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 350px;
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
+    ${scrollStyles};
   `;
 
   return { inputContainer, input, modalContent };

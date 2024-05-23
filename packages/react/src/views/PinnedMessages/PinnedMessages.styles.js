@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const usePinnedMessageStyles = () => {
-  const { colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
   const pinnedListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`
@@ -15,21 +14,7 @@ const usePinnedMessageStyles = () => {
       align-items: ${centerAlign ? 'center' : 'initial'};
       overflow-x: hidden;
       max-width: 100%;
-
-      ::-webkit-scrollbar {
-        width: 4px;
-        height: 7.7px;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: ${alpha(colors.primary, 0.5)};
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: ${colors.primary};
-      }
-      ::-webkit-scrollbar-button {
-        display: none;
-      }
+      ${scrollStyles};
     `;
   };
 

@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useChatbodyStyles = () => {
-  const { colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
+
   const chatbodyContainer = css`
     flex: 1;
     word-break: break-all;
@@ -14,20 +15,7 @@ export const useChatbodyStyles = () => {
     max-height: 600px;
     position: relative;
     padding-top: 70px;
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
+    ${scrollStyles};
   `;
 
   return { chatbodyContainer };
