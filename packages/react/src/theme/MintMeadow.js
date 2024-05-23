@@ -10,6 +10,10 @@ const MintMeadow = {
 
   schemes: {
     radius: '0.2rem',
+    common: {
+      black: 'hsl(0, 100%, 0%)',
+      white: 'hsl(0, 100%, 100%)',
+    },
     light: {
       background: 'hsl(98, 28%, 95%)',
       foreground: 'hsl(98, 5%, 8%)',

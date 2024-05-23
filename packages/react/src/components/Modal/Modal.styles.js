@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { alpha } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useModalstyles = () => {
@@ -39,7 +40,7 @@ export const useModalBackdropStyles = () => {
     top: 0;
     right: 0;
     z-index: ${theme.zIndex.modal};
-    background: #333333b3;
+    background: ${alpha(theme.schemes.common.black, 0.5)};
     width: 100%;
     height: 100%;
   `;

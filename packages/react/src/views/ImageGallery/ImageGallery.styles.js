@@ -1,7 +1,9 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { alpha } from '../../lib/color';
 
 const useImageGalleryStyles = () => {
-  const theme = useTheme();
+  const { theme, colors } = useCustomTheme();
 
   const overlay = css`
     position: absolute;
@@ -10,15 +12,15 @@ const useImageGalleryStyles = () => {
     width: 100%;
     height: 100%;
     z-index: ${theme.zIndex.modal};
-    background-color: rgba(51, 51, 51, 0.7);
+    background-color: ${alpha(theme.schemes.common.black, 0.5)};
   `;
 
   const exit = css`
     position: absolute;
     top: 16px;
     right: 16px;
-    background: #fff;
-    color: #333;
+    background: ${colors.primary};
+    color: ${colors.primaryForeground};
     border: none;
     border-radius: 4px;
     padding: 8px 16px;

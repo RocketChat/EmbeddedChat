@@ -8,6 +8,7 @@ import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import ReactPortal from '../../lib/reactPortal';
 import useImageGalleryStyles from './ImageGallery.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const styles = useImageGalleryStyles();
@@ -16,6 +17,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [imgFetchErr, setImgFetchErr] = useState(false);
+  const { colors } = useCustomTheme();
 
   useEffect(() => {
     const fetchAllImages = async () => {
@@ -65,11 +67,15 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
             <Icon
               name="magnifier"
               size="3rem"
-              style={{ padding: '0.5rem', color: '#FF99A2' }}
+              style={{ padding: '0.5rem', color: colors.destructive }}
             />
             <Box
               is="span"
-              style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}
+              style={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: colors.primaryForeground,
+              }}
             >
               Something went wrong
             </Box>

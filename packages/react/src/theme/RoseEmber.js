@@ -10,6 +10,10 @@ const RoseEmber = {
 
   schemes: {
     radius: '0.2rem',
+    common: {
+      black: 'hsl(0, 100%, 0%)',
+      white: 'hsl(0, 100%, 100%)',
+    },
     light: {
       background: 'hsl(343.4, 63%, 95%)',
       foreground: 'hsl(343.4, 5%, 10%)',

@@ -15,7 +15,7 @@ const Home = ({ height }) => (
       align-items: center;
     `}
   >
-    <Heading level={2} style={{ display: 'inline' }}>
+    <Heading level={3} style={{ display: 'inline' }}>
       EmbeddedChat | Home
     </Heading>
     <p>
