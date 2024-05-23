@@ -1,13 +1,17 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  divider: css`
+const useDividerStyles = () => {
+  const { colors } = useCustomTheme();
+  const divider = css`
     height: 2px;
     margin: 0 8px 8px;
     border: 0;
     border-radius: 2px;
-    background-color: #e4e7ea;
-  `,
+    background-color: ${colors.secondary};
+  `;
+
+  return { divider };
 };
 
-export default styles;
+export default useDividerStyles;
