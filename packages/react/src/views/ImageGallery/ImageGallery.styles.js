@@ -56,6 +56,12 @@ const useImageGalleryStyles = () => {
     align-items: center;
   `;
 
+  const swiperContainer = css`
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  `;
+
   return {
     overlay,
     exit,
@@ -63,6 +69,7 @@ const useImageGalleryStyles = () => {
     image,
     throbberContainer,
     fetchErrorContainer,
+    swiperContainer,
   };
 };
 

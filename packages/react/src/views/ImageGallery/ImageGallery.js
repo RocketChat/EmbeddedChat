@@ -91,20 +91,22 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
             </Button>
           </Box>
         ) : (
-          <Swiper
-            navigation
-            pagination={{ clickable: true }}
-            keyboard
-            initialSlide={currentFileIndex}
-          >
-            {files.map(({ _id, url }) => (
-              <SwiperSlide key={_id}>
-                <Box css={styles.imageContainer}>
-                  <img src={url} css={styles.image} />
-                </Box>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <Box css={styles.swiperContainer}>
+            <Swiper
+              navigation
+              pagination={{ clickable: true }}
+              keyboard
+              initialSlide={currentFileIndex}
+            >
+              {files.map(({ _id, url }) => (
+                <SwiperSlide key={_id}>
+                  <Box css={styles.imageContainer}>
+                    <img src={url} css={styles.image} />
+                  </Box>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
         )}
       </Box>
     </ReactPortal>
