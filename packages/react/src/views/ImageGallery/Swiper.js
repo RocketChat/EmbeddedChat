@@ -6,8 +6,6 @@ export function Swiper(props) {
   const swiperRef = useRef(null);
   const { children, ...rest } = props;
 
-  console.log(props);
-
   useEffect(() => {
     register();
     const params = {
