@@ -38,8 +38,6 @@ const useUserStore = create((set) => ({
     set(() => ({ showCurrentUserInfo })),
   currentUser: {},
   setCurrentUser: (currentUser) => set({ currentUser }),
-  dark: false,
-  setDark: (dark) => set(() => ({ dark })),
 }));
 
 export default useUserStore;
