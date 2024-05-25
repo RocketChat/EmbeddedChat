@@ -3,16 +3,6 @@ import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import useButtonStyles from './Button.styles';
 
-const getSquareSize = (size) => {
-  if (size === 'small') {
-    return '1.25rem';
-  }
-  if (size === 'large') {
-    return '2.75rem';
-  }
-  return '2rem';
-};
-
 const Button = ({
   children,
   type = 'primary',
@@ -25,7 +15,7 @@ const Button = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
-  const styles = useButtonStyles(type, size, getSquareSize);
+  const styles = useButtonStyles(type, size);
   return (
     <button
       type="button"

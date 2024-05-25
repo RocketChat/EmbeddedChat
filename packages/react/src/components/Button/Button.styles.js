@@ -1,7 +1,17 @@
 import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const useButtonStyles = (type, size, getSquareSize) => {
+const getSquareSize = (size) => {
+  if (size === 'small') {
+    return '1.25rem';
+  }
+  if (size === 'large') {
+    return '2.75rem';
+  }
+  return '2rem';
+};
+
+const useButtonStyles = (type, size) => {
   const { colors } = useCustomTheme();
 
   const main = css`
