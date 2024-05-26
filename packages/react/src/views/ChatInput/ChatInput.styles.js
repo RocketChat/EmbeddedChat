@@ -76,29 +76,30 @@ export const useChatInputFormattingToolbarStyles = () => {
   return { chatFormat };
 };
 
-const commonRecorderStyles = {
-  dot: css`
+export const useCommonRecorderStyles = () => {
+  const { colors } = useCustomTheme();
+  const dot = css`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: red;
+    background-color: ${colors.destructive};
     margin: auto;
     margin-right: 8px;
-  `,
+  `;
 
-  controller: css`
+  const controller = css`
     display: flex;
-  `,
+    gap: 0.15rem;
+  `;
 
-  timer: css`
+  const timer = css`
     margin: auto;
-  `,
+  `;
 
-  record: css`
+  const record = css`
     display: flex;
     margin: auto;
-  `,
+  `;
+
+  return { dot, controller, timer, record };
 };
-
-export const AudioMessageRecorderStyles = { ...commonRecorderStyles };
-export const VideoMessageRecorderStyles = { ...commonRecorderStyles };

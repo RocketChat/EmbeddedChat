@@ -5,6 +5,7 @@ import React, {
   useContext,
   useRef,
 } from 'react';
+import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
@@ -12,10 +13,11 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import { ActionButton } from '../../components/ActionButton';
 import { Modal } from '../../components/Modal';
-import { VideoMessageRecorderStyles as styles } from './ChatInput.styles';
+import { useCommonRecorderStyles } from './ChatInput.styles';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
+  const styles = useCommonRecorderStyles();
 
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage
@@ -167,7 +169,15 @@ const VideoMessageRecorder = () => {
               width: '28rem',
             }}
           >
-            <video muted autoPlay playsInline ref={videoRef} />
+            <video
+              muted
+              autoPlay
+              playsInline
+              ref={videoRef}
+              css={css`
+                margin-bottom: 2px;
+              `}
+            />
             <Box css={styles.controller}>
               <ActionButton ghost onClick={handleCancelRecordButton}>
                 <Icon size="1.25rem" name="circle-cross" />

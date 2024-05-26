@@ -5,17 +5,17 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import { ActionButton } from '../../components/ActionButton';
-import { AudioMessageRecorderStyles as styles } from './ChatInput.styles';
+import { useCommonRecorderStyles } from './ChatInput.styles';
 
 const AudioMessageRecorder = () => {
   const videoRef = useRef(null);
+  const styles = useCommonRecorderStyles();
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage
   );
