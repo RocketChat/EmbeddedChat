@@ -8,6 +8,7 @@ import { Box } from '../../components/Box';
 import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import styles from './LoginForm.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -20,6 +21,8 @@ export default function LoginForm() {
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();
+
+  const { colors } = useCustomTheme();
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {
@@ -61,6 +64,20 @@ export default function LoginForm() {
     }
   };
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
+  const fields = [
+    {
+      label: 'Email or username',
+      onChange: handleEdituserOrEmail,
+      placeholder: 'example@example.com',
+      error: usernameError,
+    },
+    {
+      label: 'Password',
+      type: showPassword ? 'text' : 'password',
+      onChange: handleEditPassword,
+      error: passwordError,
+    },
+  ];
 
   return isLoginModalOpen ? (
     <>
@@ -71,64 +88,54 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          <Box css={styles.fieldContainer}>
-            <Box css={styles.fieldLabel}> Email or username</Box>
-            <Box css={styles.fieldRow}>
-              <Input
-                type="text"
-                onChange={handleEdituserOrEmail}
-                placeholder="example@example.com"
-                onKeyPress={handleKeyPress}
-                style={{ borderColor: usernameError ? 'red' : '' }}
-              />
+          {fields.map((field, index) => (
+            <Box key={index} css={styles.fieldContainer}>
+              <Box css={styles.fieldLabel}>{field.label}</Box>
+              <Box css={styles.fieldRow}>
+                <Input
+                  type={field.type || 'text'}
+                  onChange={field.onChange}
+                  placeholder={field.placeholder}
+                  onKeyPress={handleKeyPress}
+                  style={{
+                    ...(field.error && {
+                      borderColor: colors.destructive,
+                      outline: 'none',
+                    }),
+                  }}
+                />
+                {field.label === 'Password' && (
+                  <Box
+                    type="button"
+                    css={styles.passwordEye}
+                    onClick={handleTogglePassword}
+                  >
+                    <Icon name={iconName} size="1.25rem" />
+                  </Box>
+                )}
+              </Box>
+              {field.error && (
+                <Box
+                  is="span"
+                  css={css`
+                    color: ${colors.destructive};
+                    font-size: 13px;
+                  `}
+                >
+                  This field is required
+                </Box>
+              )}
             </Box>
-            {usernameError && (
-              <Box is="span" style={{ color: 'red', fontSize: '13px' }}>
-                This field is required
-              </Box>
-            )}
-          </Box>
-
-          <Box css={styles.fieldContainer}>
-            <Box css={styles.fieldLabel}>Password</Box>
-            <Box css={styles.fieldRow}>
-              <Input
-                type={showPassword ? 'text' : 'password'}
-                onChange={handleEditPassword}
-                onKeyPress={handleKeyPress}
-                style={{ borderColor: passwordError ? 'red' : '' }}
-              />
-              <Box
-                type="button"
-                css={styles.passwordEye}
-                onClick={handleTogglePassword}
-              >
-                <Icon name={iconName} size="1.25rem" />
-              </Box>
-            </Box>
-            {passwordError && (
-              <Box
-                is="span"
-                css={css`
-                  color: red;
-                  font-size: 13px;
-                `}
-              >
-                This field is required
-              </Box>
-            )}
-          </Box>
-          <Box>
-            <Button
-              color="primary"
-              onClick={handleSubmit}
-              css={css`
-                margin: 10px 0;
-              `}
-            >
-              Login
-            </Button>
-          </Box>
+          ))}
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            css={css`
+              margin: 10px 0;
+            `}
+          >
+            Login
+          </Button>
         </Box>
       </GenericModal>
     </>

@@ -4,7 +4,7 @@ import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Markdown } from '../Markdown';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
-import { MessageReactionsStyles as styles } from './Message.styles';
+import { useMessageReactionsStyles } from './Message.styles';
 
 export const MessageReactions = ({
   message,
@@ -19,6 +19,7 @@ export const MessageReactions = ({
     className,
     style
   );
+  const styles = useMessageReactionsStyles();
   return (
     <Box
       css={styles.container}

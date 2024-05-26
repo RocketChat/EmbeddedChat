@@ -2,7 +2,7 @@ import React from 'react';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import { MessageDividerStyles as styles } from './Message.styles';
+import { useMessageDividerStyles } from './Message.styles';
 
 export const MessageDivider = ({
   children,
@@ -16,6 +16,7 @@ export const MessageDivider = ({
     className,
     style
   );
+  const styles = useMessageDividerStyles();
   return (
     <Box
       role="separator"
@@ -28,7 +29,7 @@ export const MessageDivider = ({
         <>
           <Box css={styles.bar} className="ec-message-divider-bar" />
           <Box
-            css={styles.dividerwrapper}
+            css={styles.dividerContent}
             className="ec-message-divider-content"
           >
             {children}

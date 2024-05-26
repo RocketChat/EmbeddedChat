@@ -1,19 +1,26 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  checkBox: (theme, checked) => css`
+const useCheckBoxStyles = (checked) => {
+  const { colors } = useCustomTheme();
+
+  const main = css`
     display: inline-block;
-    color: ${theme.palette?.primary?.contrastText};
-    background-color: ${checked ? theme.palette?.primary?.main : 'none'};
-    height: 1.12rem;
-    width: 1.12rem;
+    color: ${colors.primaryForeground};
+    background-color: ${checked ? colors.primary : 'none'};
+    height: 1rem;
+    width: 1rem;
     box-sizing: border-box;
-    border: ${!checked ? `1px solid #6c727a` : `none`};
+    border: ${!checked ? `1px solid ${colors.primary}` : `none`};
+    border-radius: 4px;
     cursor: pointer;
+    outline: none;
     &:active {
-      outline: 2px solid #6c727a33;
+      outline: 0.3px solid ${colors.ring};
     }
-  `,
+  `;
+
+  return { main };
 };
 
-export default styles;
+export default useCheckBoxStyles;

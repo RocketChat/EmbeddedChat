@@ -1,35 +1,41 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  tooltip: (position) => css`
+const useTooltipStyles = (position) => {
+  const { theme, invertedColors } = useCustomTheme();
+  const tooltip = css`
     position: absolute;
     left: 64%;
     transform: translateX(-50%);
-    background-color: rgba(97, 97, 97, 1);
-    color: white;
-    padding: 4px;
+    background-color: ${invertedColors.secondary};
+    color: ${invertedColors.secondaryForeground};
+    padding: 8.5px;
     border-radius: 3px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
+    z-index: ${theme.zIndex.tooltip};
     font-size: 12.5px;
+    font-weight: 500;
     white-space: nowrap;
     font-family: sans-serif;
-    top: ${position === 'top' ? 'calc(-100% - 10px)' : '100%'};
-  `,
-  tooltipArrow: (position) => css`
+    top: ${position === 'top' ? 'calc(-100% - 20px)' : 'calc(100% + 10px)'};
+  `;
+  const tooltipArrow = css`
     content: '';
     position: absolute;
     left: 50%;
-    margin-left: -5px;
+    margin-left: -4px;
     border-width: 6px;
     border-style: solid;
-    border-color: rgba(97, 97, 97, 1) transparent transparent transparent;
+    border-color: ${invertedColors.secondary} transparent transparent
+      transparent;
     top: ${position === 'top' ? '100%' : 'auto'};
     bottom: ${position === 'bottom' ? '100%' : 'auto'};
     transform: ${position === 'bottom'
       ? 'translateX(-50%) rotate(180deg)'
       : 'translateX(-50%)'};
-  `,
+  `;
+
+  return { tooltip, tooltipArrow };
 };
 
-export default styles;
+export default useTooltipStyles;

@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const fileMetricsStyles = {
   metrics: css`
@@ -18,7 +19,6 @@ export const fileMetricsStyles = {
     justify-content: center;
     align-items: center;
     margin-left: 0.25rem;
-    color: #6c727a;
   `,
 
   metricsItemLabel: css`
@@ -65,7 +65,6 @@ export const filePreviewHeaderStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
-    color: #2f343d;
   `,
 
   previewHeaderTimestap: css`
@@ -77,12 +76,12 @@ export const filePreviewHeaderStyles = {
     font-weight: 400;
     line-height: 1rem;
     flex-shrink: 0;
-    color: #9ea2a8;
   `,
 };
 
-export const fileStyles = {
-  message: css`
+export const useFileStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
+  const message = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -96,12 +95,9 @@ export const fileStyles = {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     cursor: pointer;
-    &:hover {
-      background: #f2f3f5;
-    }
-  `,
+  `;
 
-  previewUsername: css`
+  const previewUsername = css`
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -110,24 +106,22 @@ export const fileStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
-    color: #6c727a;
-  `,
+  `;
 
-  modalContent: css`
+  const modalContent = css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0 0.5rem 0.5rem;
-  `,
+  `;
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
 
-  fileListContainer: (filteredFiles) => {
+  const fileListContainer = (filteredFiles) => {
     const centerAlign = filteredFiles.length === 0;
     return css`
       flex: 1;
@@ -136,6 +130,15 @@ export const fileStyles = {
       flex-direction: column;
       justify-content: ${centerAlign ? 'center' : 'initial'};
       align-items: ${centerAlign ? 'center' : 'initial'};
+      ${scrollStyles};
     `;
-  },
+  };
+
+  return {
+    message,
+    previewUsername,
+    modalContent,
+    centeredColumnStyles,
+    fileListContainer,
+  };
 };

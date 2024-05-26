@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Popup from 'reactjs-popup';
+import { css } from '@emotion/react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
@@ -10,14 +10,7 @@ import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
 import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
-import { MessageToolboxStyles as styles } from './Message.styles';
-
-const popupStyle = {
-  margin: '0',
-  position: 'absolute',
-  right: '2rem',
-  top: '7.5rem',
-};
+import { useMessageToolboxStyles } from './Message.styles';
 
 export const MessageToolbox = ({
   className = '',
@@ -41,6 +34,7 @@ export const MessageToolbox = ({
     className,
     style
   );
+  const styles = useMessageToolboxStyles();
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
@@ -112,20 +106,22 @@ export const MessageToolbox = ({
               onClick={() => setEmojiOpen(true)}
             />
           </Tooltip>
-          <Popup
-            modal
-            open={isEmojiOpen}
-            onClose={() => setEmojiOpen(false)}
-            closeOnEscape
-            contentStyle={popupStyle}
-          >
+
+          {isEmojiOpen && (
             <EmojiPicker
               handleEmojiClick={(emoji) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji, message, true);
               }}
+              onClose={() => setEmojiOpen(false)}
+              positionStyles={css`
+                position: absolute;
+                top: 7rem;
+                right: 1.5rem;
+              `}
             />
-          </Popup>
+          )}
+
           {!isThreadMessage && (
             <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
               <ActionButton
@@ -152,7 +148,7 @@ export const MessageToolbox = ({
                   ghost
                   size="small"
                   icon="trash"
-                  color="error"
+                  type="destructive"
                   onClick={() => handleClickDelete(message)}
                 />
               </Tooltip>
@@ -163,7 +159,7 @@ export const MessageToolbox = ({
               ghost
               size="small"
               icon="report"
-              color="error"
+              type="destructive"
               onClick={() => handlerReportMessage(message)}
             />
           </Tooltip>
@@ -193,11 +189,11 @@ export const MessageToolbox = ({
             {parseEmoji(message.msg)}
           </Modal.Content>
           <Modal.Footer>
-            <Button color="secondary" onClick={handleOnClose}>
+            <Button type="secondary" onClick={handleOnClose}>
               Cancel
             </Button>
             <Button
-              color="error"
+              type="destructive"
               onClick={() => {
                 handleDeleteMessage(message);
                 handleOnClose();

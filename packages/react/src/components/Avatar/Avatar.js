@@ -4,7 +4,7 @@ import { AvatarContainer } from './AvatarContainer';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { useUserStore } from '../../store';
-import { avatarStyles as styles } from './Avatar.styles';
+import { useAvatarStyles } from './Avatar.styles';
 
 export const Avatar = ({
   size = '2.25rem',
@@ -16,7 +16,7 @@ export const Avatar = ({
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
-
+  const styles = useAvatarStyles();
   const { classNames, styleOverrides } = useComponentOverrides(
     'Avatar',
     className,

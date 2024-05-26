@@ -1,9 +1,9 @@
-import { useTheme } from '@emotion/react';
 import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
-import { Modalstyles as styles } from './Modal.styles';
+import { useModalstyles } from './Modal.styles';
+import ReactPortal from '../../lib/reactPortal';
 
 export const Modal = forwardRef(
   (
@@ -19,7 +19,7 @@ export const Modal = forwardRef(
   ) => {
     const { classNames, styleOverrides } = useComponentOverrides('Modal');
     const backDropRef = useRef(null);
-    const theme = useTheme();
+    const styles = useModalstyles();
 
     const handleClick = useCallback(
       (e) => {
@@ -52,18 +52,20 @@ export const Modal = forwardRef(
     }
 
     return (
-      <ModalBackdrop ref={backDropRef} onClick={handleClick}>
-        <Box
-          ref={ref}
-          is="dialog"
-          css={styles.modal(theme)}
-          className={`ec-modal ${className} ${classNames}`}
-          style={{ ...style, ...styleOverrides }}
-          {...props}
-        >
-          {children}
-        </Box>
-      </ModalBackdrop>
+      <ReactPortal wrapperId="overlay-items">
+        <ModalBackdrop ref={backDropRef} onClick={handleClick}>
+          <Box
+            ref={ref}
+            is="dialog"
+            css={styles.main}
+            className={`ec-modal ${className} ${classNames}`}
+            style={{ ...style, ...styleOverrides }}
+            {...props}
+          >
+            {children}
+          </Box>
+        </ModalBackdrop>
+      </ReactPortal>
     );
   }
 );

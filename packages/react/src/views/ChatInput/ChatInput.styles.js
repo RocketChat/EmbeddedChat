@@ -1,44 +1,43 @@
 import { css } from '@emotion/react';
+import { darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-export const ChatInputStyles = {
-  editingMessage: css`
-    background-color: #fff8e0;
-    & textarea {
-      background-color: inherit;
+export const useChatInputStyles = () => {
+  const { theme, colors } = useCustomTheme();
+  const inputWithFormattingBox = css`
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+    margin: 0.5rem 2rem 1rem 2rem;
+    &.focused {
+      border: ${`1.5px solid ${colors.ring}`};
     }
-  `,
+  `;
 
-  iconCursor: css`
+  const editMessage = css`
+    border: 2px solid ${colors.border};
+  `;
+
+  const inputBox = css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+  `;
+
+  const iconCursor = css`
     cursor: pointer;
-  `,
+  `;
 
-  textInput: css`
-    padding: 12px;
-    width: 100%;
+  const textInput = css`
+    resize: none;
     border: none;
     outline: none;
-    resize: none;
-    overflow-x: hidden;
-    overflow-y: auto;
-    font-size: 0.875rem;
-    font-family: var(
-      --rcx-font-family-sans,
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      'Helvetica Neue',
-      'Apple Color Emoji',
-      'Segoe UI Emoji',
-      'Segoe UI Symbol',
-      'Meiryo UI',
-      Arial,
-      sans-serif
-    );
+    font-size: 14px;
+
+    &:focus {
+      border: none;
+      outline: none;
+    }
 
     &:disabled {
       cursor: not-allowed;
@@ -47,19 +46,34 @@ export const ChatInputStyles = {
     &::placeholder {
       padding-left: 5px;
     }
-  `,
+  `;
+
+  return {
+    inputWithFormattingBox,
+    editMessage,
+    inputBox,
+    iconCursor,
+    textInput,
+  };
 };
 
-export const ChatInputFormattingToolbarStyles = {
-  chatFormat: css`
+export const useChatInputFormattingToolbarStyles = () => {
+  const { theme, mode, colors } = useCustomTheme();
+
+  const chatFormat = css`
     bottom: 0;
     align-items: center;
-    background-color: #cbced1;
+    background-color: ${mode === 'light'
+      ? darken(colors.background, 0.03)
+      : colors.secondary};
     display: flex;
     position: relative;
     flex-direction: row;
     gap: 0.375rem;
-  `,
+    border-radius: ${theme.schemes.radius};
+  `;
+
+  return { chatFormat };
 };
 
 const commonRecorderStyles = {

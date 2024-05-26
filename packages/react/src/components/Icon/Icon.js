@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import svgIcons from './icons';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 
-const Icon = ({ size = 24, name, className = '', style = {}, ...props }) => {
+const Icon = ({
+  size = 24,
+  name,
+  className = '',
+  style = {},
+  color = 'currentColor',
+  ...props
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Button',
     className,
@@ -24,7 +31,7 @@ const Icon = ({ size = 24, name, className = '', style = {}, ...props }) => {
       y="0"
       width={size}
       height={size}
-      color="currentColor"
+      color={color}
       className={`ec-icon ${classNames}`}
       style={styleOverrides}
       {...props}

@@ -18,21 +18,23 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
+import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../../components/ActionButton';
-import { Divider } from '../../components/Divider';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../../components/Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
-import { ChatInputStyles as styles } from './ChatInput.styles';
+import { useChatInputStyles } from './ChatInput.styles';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
+
   const { RCInstance, ECOptions } = useRCContext();
+  const styles = useChatInputStyles();
   const [commands, setCommands] = useState([]);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -79,6 +81,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const inputRef = useRef(null);
   const typingRef = useRef();
   const messageRef = useRef(null);
+  const chatInputContainer = useRef(null);
 
   const [disableButton, setDisableButton] = useState(true);
 
@@ -504,38 +507,45 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     }
   };
+
+  const handleFocus = () => {
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.add('focused');
+    }
+  };
+
+  const handleBlur = () => {
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.remove('focused');
+    }
+  };
+
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box>
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
-        <ChannelState
-          status={
-            editMessage.msg || editMessage.attachments
-              ? 'Editing Message'
-              : isChannelReadOnly
-              ? 'This room is read only'
-              : undefined
-          }
-          iconName={
-            editMessage.msg || editMessage.attachments ? 'edit' : undefined
-          }
-          instructions={
-            editMessage.msg || editMessage.attachments
-              ? 'esc to cancel · enter to save'
-              : undefined
-          }
-        />
+        {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
+          <ChannelState
+            status={
+              editMessage.msg || editMessage.attachments
+                ? 'Editing Message'
+                : isChannelReadOnly
+                ? 'This room is read only'
+                : undefined
+            }
+            iconName={
+              editMessage.msg || editMessage.attachments ? 'edit' : undefined
+            }
+            instructions={
+              editMessage.msg || editMessage.attachments
+                ? 'esc to cancel · enter to save'
+                : undefined
+            }
+          />
+        ) : null}
 
-        <TypingUsers />
-      </Box>
-      <Box
-        css={css`
-          margin-top: 5px;
-          border: 2px solid #ddd;
-        `}
-      >
         {showMembersList ? (
           <>
             <MembersList
@@ -543,7 +553,6 @@ const ChatInput = ({ scrollToBottom }) => {
               filteredMembers={filteredMembers}
               onMemberClick={handleMemberClick}
             />
-            <Divider />
           </>
         ) : (
           <></>
@@ -554,19 +563,19 @@ const ChatInput = ({ scrollToBottom }) => {
             onCommandClick={onCommandClick}
           />
         )}
-        <Box
-          css={[
-            css`
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              flex-direction: row;
-            `,
-            (editMessage.msg || editMessage.attachments) &&
-              styles.editingMessage,
-          ]}
-        >
-          <textarea
+
+        <TypingUsers />
+      </Box>
+      <Box
+        ref={chatInputContainer}
+        css={[
+          styles.inputWithFormattingBox,
+          (editMessage.msg || editMessage.attachments) && styles.editMessage,
+        ]}
+      >
+        <Box css={styles.inputBox}>
+          <Input
+            textArea
             rows={1}
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
@@ -579,24 +588,32 @@ const ChatInput = ({ scrollToBottom }) => {
             css={styles.textInput}
             onChange={onTextChange}
             onKeyUp={showCommands}
-            onBlur={sendTypingStop}
+            onBlur={() => {
+              sendTypingStop();
+              handleBlur();
+            }}
+            onFocus={handleFocus}
             onKeyDown={onKeyDown}
             ref={messageRef}
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          <Box>
+          <Box
+            css={css`
+              padding: 0.25rem;
+            `}
+          >
             {isUserAuthenticated ? (
               <ActionButton
                 ghost
-                size="medium"
+                size="large"
                 onClick={() => sendMessage()}
+                type="primary"
                 disabled={disableButton || isRecordingMessage}
-              >
-                <Icon css={styles.iconCursor} name="send" />
-              </ActionButton>
+                icon="send"
+              />
             ) : (
-              <Button onClick={onJoin} color="primary">
+              <Button onClick={onJoin} type="primary">
                 JOIN
               </Button>
             )}
@@ -633,10 +650,10 @@ const ChatInput = ({ scrollToBottom }) => {
               Send it as attachment instead?{' '}
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={closeMsgLongModal}>
+              <Button type="secondary" onClick={closeMsgLongModal}>
                 Cancel
               </Button>
-              <Button onClick={handleConvertToAttachment} color="primary">
+              <Button onClick={handleConvertToAttachment} type="primary">
                 Ok
               </Button>
             </Modal.Footer>

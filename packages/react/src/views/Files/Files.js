@@ -14,10 +14,11 @@ import { Button } from '../../components/Button';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { Throbber } from '../../components/Throbber';
-import { fileStyles as styles } from './Files.styles';
+import { useFileStyles } from './Files.styles';
 
 const Files = () => {
   const { RCInstance } = useRCContext();
+  const styles = useFileStyles();
   const dispatchToastMessage = useToastBarDispatch();
 
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
@@ -113,11 +114,11 @@ const Files = () => {
               Deleting a file will delete it forever. This cannot be undone.
             </Modal.Content>
             <Modal.Footer>
-              <Button color="secondary" onClick={handleOnClose}>
+              <Button type="secondary" onClick={handleOnClose}>
                 Cancel
               </Button>
               <Button
-                color="error"
+                type="destructive"
                 onClick={() => {
                   deleteFile(fileToDelete);
                 }}

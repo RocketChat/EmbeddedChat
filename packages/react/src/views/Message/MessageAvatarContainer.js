@@ -4,7 +4,7 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import { Tooltip } from '../../components/Tooltip';
 import RCContext from '../../context/RCInstance';
-import { MessageAvatarContainerStyles as styles } from './Message.styles';
+import { useMessageAvatarContainerStyles } from './Message.styles';
 
 const MessageAvatarContainer = ({
   message,
@@ -13,6 +13,7 @@ const MessageAvatarContainer = ({
   isPinned,
 }) => {
   const { RCInstance } = useContext(RCContext);
+  const styles = useMessageAvatarContainerStyles();
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     const URL = `${host}/avatar/${username}`;

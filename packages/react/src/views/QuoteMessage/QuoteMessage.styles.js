@@ -1,32 +1,37 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  messageContainer: css`
-    margin: 1.25rem 0.5rem 0.25rem 0.5rem;
+const useQuoteMessageStyles = () => {
+  const { theme, colors } = useCustomTheme();
+  const messageContainer = css`
+    margin: 0.2rem 2rem;
     position: relative;
     font-size: 0.85rem;
-    background-color: #f2f3f5;
+    background-color: ${colors.background};
+    color: ${colors.foreground};
     padding: 0.5rem;
-    z-index: 100;
-    border: 0.5px solid currentColor;
-    border-radius: 0.15rem;
-  `,
+    z-index: ${theme.zIndex.general};
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+  `;
 
-  avatarContainer: css`
+  const avatarContainer = css`
     padding: 0.25rem;
     display: flex;
     gap: 0.5rem;
-  `,
+  `;
 
-  message: css`
+  const message = css`
     padding: 0.25rem;
-  `,
+  `;
 
-  actionBtn: css`
+  const actionBtn = css`
     position: absolute;
     top: 0.25rem;
     right: 0.25rem;
-  `,
+  `;
+
+  return { messageContainer, avatarContainer, message, actionBtn };
 };
 
-export default styles;
+export default useQuoteMessageStyles;

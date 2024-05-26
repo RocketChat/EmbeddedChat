@@ -1,7 +1,12 @@
 import { css } from '@emotion/react';
+import { lighten, darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
-const styles = {
-  message: css`
+const useUserMentionsStyles = () => {
+  const { mode, colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
+  const message = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -15,11 +20,13 @@ const styles = {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     &:hover {
-      background: #f2f3f5;
+      background-color: ${mode === 'light'
+        ? darken(colors.background, 0.03)
+        : lighten(colors.background, 1)};
     }
-  `,
+  `;
 
-  userMentionsListContainer: (messageList) => {
+  const userMentionsListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`
       flex: 1;
@@ -30,15 +37,17 @@ const styles = {
       align-items: ${centerAlign ? 'center' : 'initial'};
       overflow-x: hidden;
       max-width: 100%;
+      ${scrollStyles};
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
+
+  return { message, userMentionsListContainer, centeredColumnStyles };
 };
 
-export default styles;
+export default useUserMentionsStyles;

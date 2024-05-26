@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
-const styles = {
-  pinnedListContainer: (messageList) => {
+const usePinnedMessageStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
+  const pinnedListContainer = (messageList) => {
     const centerAlign = messageList.length === 0;
     return css`
       flex: 1;
@@ -12,15 +14,17 @@ const styles = {
       align-items: ${centerAlign ? 'center' : 'initial'};
       overflow-x: hidden;
       max-width: 100%;
+      ${scrollStyles};
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
+
+  return { pinnedListContainer, centeredColumnStyles };
 };
 
-export default styles;
+export default usePinnedMessageStyles;

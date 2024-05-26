@@ -10,7 +10,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Menu = {
+export const Default = {
   args: {
     options: [
       {
@@ -60,7 +60,7 @@ export const Menu = {
         color: 'error',
       },
     ],
-    anchor: 'right bottom',
+    anchor: 'left bottom',
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>

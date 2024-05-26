@@ -1,22 +1,26 @@
 /* eslint-disable no-shadow */
 import React, { useMemo, useRef, useEffect } from 'react';
-import { useTheme } from '@emotion/react';
-import alpha from 'color-alpha';
 import { appendClassNames } from '../../lib/appendClassNames';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { toastbarStyles as styles } from './ToastBar.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
-  const theme = useTheme();
+  const { theme, colors } = useCustomTheme();
+
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const { iconName, bgColor, color } = useMemo(() => {
-    const color = theme.palette?.[type]?.main;
-    const bgColor = alpha(color, 0.3);
+    const color =
+      type === 'error'
+        ? colors.destructiveForeground
+        : colors[`${type}Foreground`];
+    const bgColor = type === 'error' ? colors.destructive : colors[type];
+
     let iconName = 'success';
     switch (type) {
       case 'info':
@@ -33,7 +37,7 @@ const ToastBar = ({ toast, onClose }) => {
         iconName = 'check';
     }
     return { iconName, color, bgColor };
-  }, [theme.palette, type]);
+  }, [colors, type]);
 
   useEffect(() => {
     setTimeout(onClose, time);

@@ -1,22 +1,11 @@
 import React from 'react';
-import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './Button.styles';
-
-const getSquareSize = (size) => {
-  if (size === 'small') {
-    return '1.25rem';
-  }
-  if (size === 'large') {
-    return '2.75rem';
-  }
-  return '2rem';
-};
+import useButtonStyles from './Button.styles';
 
 const Button = ({
   children,
-  color = 'primary',
+  type = 'primary',
   className = '',
   style = {},
   size = 'medium',
@@ -26,12 +15,11 @@ const Button = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
-  const theme = useTheme();
-
+  const styles = useButtonStyles(type, size);
   return (
     <button
       type="button"
-      css={styles.button(theme, color, size, getSquareSize)}
+      css={styles.main}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
       } ${ghost ? 'ghost' : ''} ${

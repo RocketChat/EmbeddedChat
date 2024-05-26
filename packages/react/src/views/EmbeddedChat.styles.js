@@ -1,12 +1,16 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../hooks/useCustomTheme';
+import { alpha } from '../lib/color';
 
-const styles = {
-  embeddedchat: css`
-    background: #fff;
+export const styles = {
+  embeddedchat: (theme, dark) => css`
+    background: ${theme.schemes[dark ? 'dark' : 'light'].background};
+    color: ${theme.schemes[dark ? 'dark' : 'light'].foreground};
     display: flex;
     flex-direction: column;
+    border: ${`1.5px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
+    border-radius: ${theme.schemes.radius};
     overflow: hidden;
-    text-align: initial;
   `,
   fullscreen: css`
     position: fixed;
@@ -16,8 +20,29 @@ const styles = {
     height: 100vh !important;
     max-width: unset !important;
     max-height: unset !important;
-    background: #fff;
+    border-radius: 0;
+    border: none;
   `,
 };
 
-export default styles;
+export const useGlobalStyles = () => {
+  const { colors } = useCustomTheme();
+  const scrollStyles = css`
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 7.7px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: ${alpha(colors.primary, 0.5)};
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${colors.primary};
+    }
+    ::-webkit-scrollbar-button {
+      display: none;
+    }
+  `;
+
+  return { scrollStyles };
+};

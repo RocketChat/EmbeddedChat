@@ -1,7 +1,5 @@
-import { useTheme } from '@emotion/react';
 import React, { forwardRef } from 'react';
-import styles from './Throbber.styles';
-
+import useThrobberStyles from './Throbber.styles';
 import { Box } from '../Box';
 
 function Circle({
@@ -12,11 +10,10 @@ function Circle({
   size,
   ...props
 }) {
-  const theme = useTheme();
-
+  const styles = useThrobberStyles();
   return (
     <Box
-      css={styles.circle(theme, size, circleCount, iteration)}
+      css={styles.circle(size, circleCount, iteration)}
       className={`${disabled ? 'disabled' : ''} ${
         inheritColor ? 'inherit-color' : ''
       }`}
@@ -29,20 +26,23 @@ const Throbber = forwardRef(
   (
     { disabled, size = '16px', circleCount = 3, inheritColor, ...props },
     ref
-  ) => (
-    <Box css={styles.throbber} ref={ref} {...props}>
-      {Array.from({ length: circleCount || 3 }, (_, iteration) => (
-        <Circle
-          key={iteration}
-          circleCount={circleCount}
-          iteration={iteration}
-          disabled={!!disabled}
-          size={size}
-          inheritColor={!!inheritColor}
-        />
-      ))}
-    </Box>
-  )
+  ) => {
+    const styles = useThrobberStyles();
+    return (
+      <Box css={styles.throbber} ref={ref} {...props}>
+        {Array.from({ length: circleCount || 3 }, (_, iteration) => (
+          <Circle
+            key={iteration}
+            circleCount={circleCount}
+            iteration={iteration}
+            disabled={!!disabled}
+            size={size}
+            inheritColor={!!inheritColor}
+          />
+        ))}
+      </Box>
+    );
+  }
 );
 Throbber.displayName = 'Throbber';
 

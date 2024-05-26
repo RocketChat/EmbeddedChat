@@ -30,7 +30,6 @@ const ContextBlock = ({ className, block, surfaceRenderer }) => {
     >
       {itemElements.map((element, i) => (
         <Item
-          style={{ color: '#ccc' }}
           key={i}
           block={element}
           surfaceRenderer={surfaceRenderer}

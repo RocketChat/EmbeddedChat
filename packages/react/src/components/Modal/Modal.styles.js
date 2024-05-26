@@ -1,49 +1,54 @@
 import { css } from '@emotion/react';
+import { alpha } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-export const Modalstyles = {
-  modal: (theme) => css`
-    background: none;
-    display: -webkit-box;
-    display: -ms-flexbox;
+export const useModalstyles = () => {
+  const { colors } = useCustomTheme();
+  const main = css`
+    position: absolute;
     display: flex;
+    display: -ms-flexbox;
     flex-direction: column;
+    align-content: stretch;
+    justify-content: strech;
     max-height: 100%;
-    position: static;
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
-    background: ${theme?.palette?.background?.modal || '#fff'};
+    color: ${colors.foreground};
+    background: ${colors.background};
     border-radius: 0.5rem;
-  `,
-};
-
-export const ModalBackdropStyles = {
-  modalBackdrop: css`
-    position: fixed;
-    z-index: 10000;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #333333b3;
-    width: 100%;
-    height: 100%;
-  `,
+  `;
+  return { main };
 };
 
 export const ModalContentStyles = {
-  modalContent: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
+  content: css`
     position: relative;
     overflow-y: auto !important;
   `,
 };
 
+export const useModalBackdropStyles = () => {
+  const { theme } = useCustomTheme();
+
+  const modalBackdrop = css`
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: ${theme.zIndex.modal};
+    background: ${alpha(theme.schemes.common.black, 0.5)};
+    width: 100%;
+    height: 100%;
+  `;
+  return { modalBackdrop };
+};
+
 export const ModalFooterStyles = {
-  modalFooter: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
+  modalFooter: () => css`
     -webkit-box-pack: end !important;
     -ms-flex-pack: end !important;
     -webkit-justify-content: end !important;
@@ -70,8 +75,7 @@ export const ModalHeaderStyles = {
 };
 
 export const ModalTitleStyles = {
-  modalTitle: (theme) => css`
-    color: ${theme?.palette?.text?.primary || '#2f343d'};
+  modalTitle: css`
     margin: 0.25rem !important;
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;

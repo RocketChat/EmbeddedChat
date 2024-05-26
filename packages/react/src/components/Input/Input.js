@@ -1,29 +1,24 @@
-import React from 'react';
-import { useTheme } from '@emotion/react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './Input.styles';
+import useInputStyles from './Input.styles';
 
-const Input = ({
-  className = '',
-  style = {},
-  color = 'primary',
-  textArea = false,
-  ...props
-}) => {
-  const { classNames, styleOverrides } = useComponentOverrides('Button');
-  const theme = useTheme();
-
-  const InputElement = textArea ? 'textarea' : 'input';
-  return (
-    <InputElement
-      css={styles.input(theme, color)}
-      className={`ec-input ${className} ${classNames}`}
-      style={{ ...styleOverrides, ...style }}
-      {...props}
-    />
-  );
-};
+const Input = forwardRef(
+  ({ className = '', style = {}, textArea = false, ...props }, ref) => {
+    const { classNames, styleOverrides } = useComponentOverrides('Input');
+    const styles = useInputStyles();
+    const InputElement = textArea ? 'textarea' : 'input';
+    return (
+      <InputElement
+        css={styles.main}
+        className={`ec-${InputElement} ${className} ${classNames}`}
+        style={{ ...styleOverrides, ...style }}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
 
 Input.propTypes = {
   className: PropTypes.string,
@@ -31,5 +26,7 @@ Input.propTypes = {
   color: PropTypes.string,
   textArea: PropTypes.bool,
 };
+
+Input.displayName = 'Input';
 
 export default Input;

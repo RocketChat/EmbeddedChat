@@ -1,12 +1,12 @@
-import { useTheme } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useMemo } from 'react';
 import { Box } from '../../../components/Box';
 
 import { useUiKitState } from '../hooks/useUiKitState';
+import { useCustomTheme } from '../../../hooks/useCustomTheme';
 
 const InputBlock = ({ className, block, surfaceRenderer, context }) => {
-  const theme = useTheme();
+  const { colors } = useCustomTheme();
   const inputElement = useMemo(
     () => ({
       ...block.element,
@@ -35,16 +35,8 @@ const InputBlock = ({ className, block, surfaceRenderer, context }) => {
       <Box style={{ display: 'flex' }}>
         {surfaceRenderer.renderInputBlockElement(inputElement, 0)}
       </Box>
-      {error && (
-        <Box style={{ color: theme.palette?.error?.main || 'red' }}>
-          {error}
-        </Box>
-      )}
-      {block.hint && (
-        <Box style={{ color: theme.palette?.info?.main || 'black' }}>
-          {block.hint}
-        </Box>
-      )}
+      {error && <Box style={{ color: colors.destructive }}>{error}</Box>}
+      {block.hint && <Box style={{ color: colors.info }}>{block.hint}</Box>}
     </Box>
   );
 };

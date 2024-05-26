@@ -1,7 +1,14 @@
 import { css } from '@emotion/react';
 
-const styles = {
-  threadListContainer: (containsThreads, filteredThreads) => {
+import { lighten, darken } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
+
+const useAllThreadStyles = () => {
+  const { mode, colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
+
+  const threadListContainer = (containsThreads, filteredThreads) => {
     const centerAlign = !containsThreads || filteredThreads.length === 0;
     return css`
       flex: 1;
@@ -10,17 +17,17 @@ const styles = {
       flex-direction: column;
       justify-content: ${centerAlign ? 'center' : 'initial'};
       align-items: ${centerAlign ? 'center' : 'initial'};
+      ${scrollStyles};
     `;
-  },
+  };
 
-  centeredColumnStyles: css`
+  const centeredColumnStyles = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #4a4a4a;
-  `,
+  `;
 
-  threadMessageContainer: css`
+  const threadMessageContainer = css`
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -34,10 +41,14 @@ const styles = {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     cursor: pointer;
+
     &:hover {
-      background: #f2f3f5;
+      background-color: ${mode === 'light'
+        ? darken(colors.background, 0.03)
+        : lighten(colors.background, 1)};
     }
-  `,
+  `;
+  return { threadListContainer, centeredColumnStyles, threadMessageContainer };
 };
 
-export default styles;
+export default useAllThreadStyles;

@@ -1,24 +1,21 @@
 import React from 'react';
-import { useTheme } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../theme/useComponentOverrides';
-import styles from './StaticSelect.styles';
+import useStaticSelectStyles from './StaticSelect.styles';
 
 const StaticSelect = ({
   className = '',
   style = {},
-  color = 'primary',
   options = [],
   placeholder = '',
   onChange,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('StaticSelect');
-  const theme = useTheme();
-
+  const styles = useStaticSelectStyles();
   return (
     <select
-      css={styles.select(theme, color)}
+      css={styles.main}
       className={`ec-static-select ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
       onChange={onChange}

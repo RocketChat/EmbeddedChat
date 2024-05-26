@@ -1,14 +1,25 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  button: (theme, color, size, getSquareSize) => css`
+const getSquareSize = (size) => {
+  if (size === 'small') {
+    return '1.25rem';
+  }
+  if (size === 'large') {
+    return '2.75rem';
+  }
+  return '2rem';
+};
+
+const useButtonStyles = (type, size) => {
+  const { colors } = useCustomTheme();
+
+  const main = css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${theme.palette[color]?.main};
-    color: ${theme.palette[color]?.contrastText || 'currentColor'};
-    border-color: ${theme.palette[color]?.main || 'currentColor'};
-    border-style: solid;
-    border-width: 1px;
+    background-color: ${colors[type] || 'currentColor'};
+    color: ${colors[`${type}Foreground`] || 'currentColor'};
+    border: none;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0;
@@ -47,9 +58,7 @@ const styles = {
       padding-inline: 22px;
       border-radius: 0.36rem;
     }
-    &:hover {
-      filter: brightness(90%);
-    }
+
     &.ec-button-square {
       display: inline-flex;
       align-items: center;
@@ -63,25 +72,36 @@ const styles = {
       align-items: center;
       flex-shrink: 0;
     }
+
+    &:hover {
+      filter: brightness(90%);
+    }
+
+    &.disabled:not(.ghost):hover {
+      filter: none;
+    }
+
     &.disabled:not(.ghost) {
-      background: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      background-color: ${colors.muted};
+      color: ${colors.mutedForeground};
       border: none;
-      color: ${theme?.palette?.secondary?.contrastText || '#000'};
     }
     &.ghost {
       background: none;
-      color: ${theme?.palette?.[color]?.main || 'currentColor'};
+      color: ${colors[`${type}`] || colors.accentForeground};
       border: none;
     }
     &.disabled.ghost {
-      color: ${theme?.palette?.secondary?.main || '#e4e7ea'};
+      color: ${colors.mutedForeground};
       border: none;
       background: none;
     }
     &.ghost:not(.disabled):hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: ${colors.accent};
     }
-  `,
+  `;
+
+  return { main };
 };
 
-export default styles;
+export default useButtonStyles;

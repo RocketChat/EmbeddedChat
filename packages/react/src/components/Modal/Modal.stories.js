@@ -12,7 +12,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const SimpleModal = {
+export const Default = {
   args: {},
   render: () => (
     <ThemeProvider theme={DefaultTheme}>
@@ -33,8 +33,8 @@ export const SimpleModal = {
           </Box>
         </Modal.Content>
         <Modal.Footer>
-          <Button color="secondary">Cancel</Button>
-          <Button color="primary">Submit</Button>
+          <Button type="secondary">Cancel</Button>
+          <Button type="primary">Submit</Button>
         </Modal.Footer>
       </Modal>
     </ThemeProvider>

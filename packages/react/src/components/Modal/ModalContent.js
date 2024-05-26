@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import React from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../Box';
@@ -11,11 +10,10 @@ export const ModalContent = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ModalContent');
-  const theme = useTheme();
 
   return (
     <Box
-      css={styles.modalContent(theme)}
+      css={styles.content}
       className={`ec-modal-content ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}
       {...props}

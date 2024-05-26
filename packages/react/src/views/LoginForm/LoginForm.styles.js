@@ -3,15 +3,11 @@ import { css } from '@emotion/react';
 const styles = {
   fieldContainer: css`
     display: flex;
-    flex-flow: column nowrap;
-    align-items: stretch;
-    flex-shrink: 0;
-    width: 100%;
+    flex-direction: column;
+    padding: 0.2rem;
   `,
 
   fieldLabel: css`
-    flex: 1 1 0;
-    align-self: flex-start;
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
     margin-block: 0.125rem;
@@ -19,7 +15,6 @@ const styles = {
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.25rem;
-    color: #2f343d;
   `,
 
   fieldRow: css`

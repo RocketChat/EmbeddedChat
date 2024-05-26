@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
+import Heading from '../../components/Heading/Heading';
 import {
   useUserStore,
   useMessageStore,
@@ -25,7 +25,7 @@ import { Menu } from '../../components/Menu';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
-import styles from './ChatHeader.styles';
+import useChatHeaderStyles from './ChatHeader.styles';
 
 const ChatHeader = ({
   isClosable,
@@ -40,6 +40,7 @@ const ChatHeader = ({
   showRoles,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
+  const styles = useChatHeaderStyles();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(
@@ -65,17 +66,19 @@ const ChatHeader = ({
 
   const dispatchToastMessage = useToastBarDispatch();
   const getMessagesAndRoles = useFetchChatData(showRoles);
+  const toastPosition = useToastStore((state) => state.position);
+  const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
+  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const closeThread = useMessageStore((state) => state.closeThread);
-  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+
   const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
-  const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
-  const showMembers = useMemberStore((state) => state.showMembers);
+  const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
   const setShowStarred = useStarredMessageStore(
@@ -86,8 +89,6 @@ const ChatHeader = ({
   );
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
-  const toastPosition = useToastStore((state) => state.position);
-  const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
 
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
@@ -110,54 +111,76 @@ const ChatHeader = ({
     }
   }, [RCInstance, setIsUserAuthenticated]);
 
+  const setExclusiveState = (stateSetters, activeSetter) => {
+    stateSetters.forEach((setter) => {
+      setter(setter === activeSetter);
+    });
+  };
+
+  const stateSetters = useMemo(
+    () => [
+      setShowStarred,
+      setShowPinned,
+      setShowMembers,
+      setShowSearch,
+      setShowChannelinfo,
+      setShowAllThreads,
+      setShowAllFiles,
+      setShowMentions,
+    ],
+    [
+      setShowStarred,
+      setShowPinned,
+      setShowMembers,
+      setShowSearch,
+      setShowChannelinfo,
+      setShowAllThreads,
+      setShowAllFiles,
+      setShowMentions,
+    ]
+  );
+
   const showStarredMessage = useCallback(async () => {
-    setShowStarred(true);
-  }, [RCInstance, setShowStarred]);
+    setExclusiveState(stateSetters, setShowStarred);
+  }, [setShowStarred, stateSetters]);
 
   const showPinnedMessage = useCallback(async () => {
-    setShowPinned(true);
-  }, [RCInstance, setShowPinned]);
+    setExclusiveState(stateSetters, setShowPinned);
+  }, [setShowPinned, stateSetters]);
 
   const showChannelMembers = useCallback(async () => {
     const { members = [] } = await RCInstance.getChannelMembers(
       isChannelPrivate
     );
     setMembersHandler(members);
-    toggleShowMembers();
-    setShowSearch(false);
+    setExclusiveState(stateSetters, setShowMembers);
   }, [
     RCInstance,
-    setMembersHandler,
-    toggleShowMembers,
-    setShowSearch,
     isChannelPrivate,
+    setMembersHandler,
+    stateSetters,
+    setShowMembers,
   ]);
 
   const showSearchMessage = useCallback(() => {
-    setShowSearch(true);
-    if (showMembers) toggleShowMembers();
-  }, [setShowSearch, showMembers, toggleShowMembers]);
+    setExclusiveState(stateSetters, setShowSearch);
+  }, [setShowSearch, stateSetters]);
 
   const showChannelinformation = useCallback(async () => {
-    setShowChannelinfo(true);
-    setShowSearch(false);
-    if (showMembers) toggleShowMembers();
-  }, [setShowChannelinfo, setShowSearch, showMembers, toggleShowMembers]);
+    setExclusiveState(stateSetters, setShowChannelinfo);
+  }, [setShowChannelinfo, stateSetters]);
 
   const showAllThreads = useCallback(async () => {
-    setShowAllThreads(true);
-    setShowSearch(false);
-  }, [setShowAllThreads, setShowSearch]);
+    setExclusiveState(stateSetters, setShowAllThreads);
+  }, [setShowAllThreads, stateSetters]);
 
   const showAllFiles = useCallback(async () => {
-    setShowAllFiles(true);
-    setShowSearch(false);
-  }, [setShowAllFiles, setShowSearch]);
+    setExclusiveState(stateSetters, setShowAllFiles);
+  }, [setShowAllFiles, stateSetters]);
 
   const showMentions = useCallback(async () => {
-    setShowMentions(true);
-    setShowSearch(false);
-  }, [setShowMentions, setShowSearch]);
+    setExclusiveState(stateSetters, setShowMentions);
+  }, [setShowMentions, stateSetters]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -231,18 +254,13 @@ const ChatHeader = ({
     setCanSendMsg,
     authenticatedUserId,
     setMessageLimit,
+    workspaceLevelRoles,
+    setIsChannelReadOnly,
   ]);
 
   const menuOptions = useMemo(() => {
     const options = [];
-    if (fullScreen) {
-      options.push({
-        id: 'minimize',
-        action: () => setFullScreen((prev) => !prev),
-        icon: 'mobile',
-        label: 'Minimize',
-      });
-    }
+
     if (moreOpts) {
       options.push(
         ...[
@@ -252,42 +270,52 @@ const ChatHeader = ({
             label: 'Threads',
             icon: 'thread',
           },
+
           {
             id: 'mentions',
             action: showMentions,
             label: 'Mentions',
             icon: 'at',
           },
-          {
-            id: 'members',
-            action: showChannelMembers,
-            label: 'Members',
-            icon: 'members',
-          },
-          {
-            id: 'files',
-            action: showAllFiles,
-            label: 'Files',
-            icon: 'clip',
-          },
+
           {
             id: 'starred',
             action: showStarredMessage,
             label: 'Starred',
             icon: 'star',
           },
+
           {
             id: 'pinned',
             action: showPinnedMessage,
             label: 'Pinned',
             icon: 'pin',
           },
+
+          {
+            id: 'members',
+            action: showChannelMembers,
+            label: 'Members',
+            icon: 'members',
+            disabled: !isUserAuthenticated,
+          },
+
+          {
+            id: 'files',
+            action: showAllFiles,
+            label: 'Files',
+            icon: 'clip',
+            disabled: !isUserAuthenticated,
+          },
+
           {
             id: 'search',
             action: showSearchMessage,
             label: 'Search',
             icon: 'magnifier',
+            disabled: !isUserAuthenticated,
           },
+
           {
             id: 'rInfo',
             action: showChannelinformation,
@@ -308,11 +336,9 @@ const ChatHeader = ({
     }
     return options;
   }, [
-    fullScreen,
     handleLogout,
     isUserAuthenticated,
     moreOpts,
-    setFullScreen,
     showAllFiles,
     showAllThreads,
     showMentions,
@@ -332,19 +358,16 @@ const ChatHeader = ({
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>
           <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
-          <Box
-            css={css`
-              margin: 0 1rem;
-            `}
-          >
+          <Box>
             {isUserAuthenticated ? (
               <>
-                <h2
+                <Heading
+                  level={3}
                   className="ec-chat-header--channelName"
                   css={styles.clearSpacing}
                 >
                   {channelInfo.name || channelName || 'channelName'}
-                </h2>
+                </Heading>
                 {fullScreen && (
                   <p
                     className="ec-chat-header--channelDescription"
@@ -355,12 +378,13 @@ const ChatHeader = ({
                 )}
               </>
             ) : (
-              <h2
-                className="ec-chat-header--channelDescription"
+              <Heading
+                level={3}
+                className="ec-chat-header--channelName"
                 css={styles.clearSpacing}
               >
                 {channelName || 'Login to chat'}
-              </h2>
+              </Heading>
             )}
           </Box>
         </Box>
@@ -368,26 +392,29 @@ const ChatHeader = ({
           {avatarUrl && (
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
-          {fullScreen ? (
-            <Menu options={menuOptions} />
-          ) : (
-            <>
-              <Tooltip text="Maximize" position="bottom">
-                <ActionButton
-                  onClick={() => {
-                    setFullScreen((prev) => !prev);
-                  }}
-                  ghost
-                  display="inline"
-                  square
-                  size="medium"
-                >
-                  <Icon name="computer" size="1.25rem" />
-                </ActionButton>
-              </Tooltip>
-              <Menu options={menuOptions} />
-            </>
-          )}
+
+          <Tooltip
+            text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
+            position="bottom"
+          >
+            <ActionButton
+              onClick={() => {
+                setFullScreen((prev) => !prev);
+              }}
+              ghost
+              display="inline"
+              square
+              size="medium"
+            >
+              <Icon
+                name={`${fullScreen ? 'collapse' : 'expand'}`}
+                size="1.25rem"
+              />
+            </ActionButton>
+          </Tooltip>
+
+          <Menu options={menuOptions} />
+
           {isClosable && (
             <ActionButton
               onClick={() => {

@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import Popup from 'reactjs-popup';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore, useUserStore } from '../../store';
@@ -12,12 +10,14 @@ import { ActionButton } from '../../components/ActionButton';
 import { Tooltip } from '../../components/Tooltip';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
-import { ChatInputFormattingToolbarStyles as styles } from './ChatInput.styles';
+import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
 
 const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
+
+  const styles = useChatInputFormattingToolbarStyles();
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -72,13 +72,6 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     }
   };
 
-  const popupStyle = {
-    margin: '0',
-    position: 'absolute',
-    left: '0.375rem',
-    top: '9.5rem',
-  };
-
   return (
     <Box
       css={styles.chatFormat}
@@ -99,22 +92,20 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
               </ActionButton>
             </Box>
           </Tooltip>
-          <Popup
-            modal
-            open={isEmojiOpen}
-            onClose={() => setEmojiOpen(false)}
-            closeOnEscape
-            disabled={isRecordingMessage}
-            closeOnDocumentClick
-            contentStyle={popupStyle}
-          >
+          {isEmojiOpen && (
             <EmojiPicker
               handleEmojiClick={(emoji) => {
                 setEmojiOpen(false);
                 handleEmojiClick(emoji);
               }}
+              positionStyles={css`
+                position: absolute;
+                bottom: 7rem;
+                left: 1.85rem;
+              `}
+              onClose={() => setEmojiOpen(false)}
             />
-          </Popup>
+          )}
         </>
       )}
       {formatter.map((item, index) => (

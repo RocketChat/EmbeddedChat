@@ -1,4 +1,6 @@
 import React from 'react';
+import { ThemeProvider } from '@emotion/react';
+import DefaultTheme from '../../theme/DefaultTheme';
 
 import { Skeleton } from '.';
 
@@ -7,9 +9,11 @@ export default {
   component: Skeleton,
 };
 
-const Template = (args) => <Skeleton {...args} />;
-
-export const Default = Template.bind({});
+const Template = (args) => (
+  <ThemeProvider theme={DefaultTheme}>
+    <Skeleton {...args} />
+  </ThemeProvider>
+);
 
 export const RectVariant = Template.bind({});
 RectVariant.args = {

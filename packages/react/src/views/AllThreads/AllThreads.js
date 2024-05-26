@@ -13,9 +13,10 @@ import MessageAvatarContainer from '../Message/MessageAvatarContainer';
 import MessageBodyContainer from '../Message/MessageBodyContainer';
 import MessageHeader from '../Message/MessageHeader';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import styles from './AllThreads.styles';
+import useAllThreadsStyles from './AllThreads.styles';
 
 const AllThreads = () => {
+  const styles = useAllThreadsStyles();
   const showAvatar = useUserStore((state) => state.showAvatar);
   const messages = useMessageStore((state) => state.messages);
   const setShowAllThreads = useThreadsMessageStore(

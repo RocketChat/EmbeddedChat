@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const styles = {
-  multiSelect: (theme, color) => css`
+const useMultiSelectStyles = () => {
+  const { colors } = useCustomTheme();
+  const main = css`
     position: relative;
     display: inline-flex;
     flex: 1 0 auto;
@@ -15,27 +17,38 @@ const styles = {
     font-weight: 400;
     line-height: 1.25rem;
     overflow: hidden;
-    color: #2f343d;
+    color: ${colors.foreground};
     border-right: 0.9375rem transparent;
     border-width: 1px;
-    border-color: #cbced1;
+    border-color: ${colors.border};
     border-style: solid;
     border-radius: 0.25rem;
-    background-color: white;
+    background-color: ${colors.background};
     box-shadow: none;
     -webkit-appearance: none;
     appearance: none;
     transition: all 230ms;
     &:focus {
-      border-color: ${theme.palette[color].main || 'currentColor'};
-      box-shadow: 0px 0px 2.5px ${theme.palette[color].light || 'currentColor'};
+      border-color: ${colors.ring};
     }
-  `,
+  `;
 
-  checkbox: css`
-    margin-right: 8px;
+  const checkbox = css`
     cursor: pointer;
-  `,
+  `;
+
+  const checkContainer = css`
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  const mainBox = css`
+    display: flex;
+  `;
+
+  return { main, checkbox, checkContainer, mainBox };
 };
 
-export default styles;
+export default useMultiSelectStyles;

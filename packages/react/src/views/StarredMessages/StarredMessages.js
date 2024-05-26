@@ -12,9 +12,10 @@ import { MessageDivider } from '../Message/MessageDivider';
 import { Message } from '../Message';
 import { Throbber } from '../../components/Throbber';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import styles from './StarredMessages.styles';
+import useStarredMessageStyles from './StarredMessages.styles';
 
 const StarredMessages = () => {
+  const styles = useStarredMessageStyles();
   const setShowStarred = useStarredMessageStore(
     (state) => state.setShowStarred
   );

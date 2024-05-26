@@ -2,18 +2,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import {
-  useMessageStore,
-  useUserStore,
-  useChannelStore,
-  usePinnedMessageStore,
-  useStarredMessageStore,
-  useSearchMessageStore,
-  useFileStore,
-  useMentionsStore,
-  useThreadsMessageStore,
-  useMemberStore,
-} from '../../store';
+import { useMessageStore, useUserStore, useChannelStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../../components/Box';
@@ -24,26 +13,16 @@ import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
-import RoomMembers from '../RoomMembers/RoomMember';
-import UserMentions from '../UserMentions/UserMentions';
-import AllThreads from '../AllThreads/AllThreads';
-import PinnedMessages from '../PinnedMessages/PinnedMessages';
-import StarredMessages from '../StarredMessages/StarredMessages';
-import SearchMessage from '../SearchMessage/SearchMessage';
-import Roominfo from '../RoomInformation/RoomInformation';
-import { Files } from '../Files';
-import UserInformation from '../UserInformation/UserInformation';
-import { chatbodyStyles as styles } from './ChatBody.styles';
+import { useChatbodyStyles } from './ChatBody.styles';
 
 const ChatBody = ({
-  height,
   anonymousMode,
   showRoles,
   scrollToBottom,
   messageListRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-
+  const styles = useChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
   const [, setIsUserScrolledUp] = useState(false);
@@ -57,21 +36,6 @@ const ChatBody = ({
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-
-  const showMentions = useMentionsStore((state) => state.showMentions);
-  const showAllFiles = useFileStore((state) => state.showAllFiles);
-  const showAllThreads = useThreadsMessageStore(
-    (state) => state.showAllThreads
-  );
-  const showPinned = usePinnedMessageStore((state) => state.showPinned);
-  const showStarred = useStarredMessageStore((state) => state.showStarred);
-  const showSearch = useSearchMessageStore((state) => state.showSearch);
-  const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
-  const showMembers = useMemberStore((state) => state.showMembers);
-  const members = useMemberStore((state) => state.members);
-  const showCurrentUserInfo = useUserStore(
-    (state) => state.showCurrentUserInfo
-  );
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -246,7 +210,6 @@ const ChatBody = ({
           ...styleOverrides,
         }}
         className={`ec-chat-body ${classNames}`}
-        height={height}
       >
         {isThreadOpen ? (
           <ThreadMessageList
@@ -275,16 +238,6 @@ const ChatBody = ({
           onClick={handlePopupClick}
         />
       )}
-
-      {showMembers && <RoomMembers members={members} />}
-      {showSearch && <SearchMessage />}
-      {showChannelinfo && <Roominfo />}
-      {showAllThreads && <AllThreads />}
-      {showAllFiles && <Files />}
-      {showMentions && <UserMentions />}
-      {showPinned && <PinnedMessages />}
-      {showStarred && <StarredMessages />}
-      {showCurrentUserInfo && <UserInformation />}
     </>
   );
 };
@@ -292,7 +245,6 @@ const ChatBody = ({
 export default ChatBody;
 
 ChatBody.propTypes = {
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
 };

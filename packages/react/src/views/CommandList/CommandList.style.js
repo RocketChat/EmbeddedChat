@@ -1,42 +1,40 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
-const styles = {
-  list: css`
-    margin-bottom: 5px;
+const useCommandListStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
+  const { theme, colors } = useCustomTheme();
+  const main = css`
+    margin: 0.2rem 2rem;
+    padding: 0.5rem 0.3rem;
     display: block;
     max-height: 10rem;
     overflow: scroll;
     overflow-x: hidden;
     max-height: 145px;
-    scrollbar-width: thin;
-    scrollbar-color: #e0e0e1 transparent;
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #e0e0e1;
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #e0e0e1;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-  `,
+    border: 1px solid ${colors.border};
+    border-radius: ${theme.schemes.radius};
+    color: ${colors.secondaryForeground};
+    ${scrollStyles};
+  `;
 
-  listItem: css`
+  const listItem = css`
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 0;
-    padding-right: 2px;
 
     &:hover {
-      background-color: #dddddd;
+      background-color: ${colors.secondary};
     }
-  `,
+  `;
+
+  const listText = css`
+    font-weight: 600;
+  `;
+
+  return { main, listItem, listText };
 };
 
-export default styles;
+export default useCommandListStyles;

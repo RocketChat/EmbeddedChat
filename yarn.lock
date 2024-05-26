@@ -2331,7 +2331,6 @@ __metadata:
     "@testing-library/react": ^12.1.4
     babel-jest: ^27.5.1
     color: ^4.2.3
-    color-alpha: ^1.1.3
     concurrently: ^7.2.0
     cross-env: ^7.0.3
     date-fns: ^2.30.0
@@ -2360,7 +2359,6 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-virtuoso: ^4.3.10
-    reactjs-popup: ^2.0.5
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -12959,15 +12957,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-alpha@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "color-alpha@npm:1.1.3"
-  dependencies:
-    color-parse: ^1.4.1
-  checksum: 7c47fa16e1ceffd567731439e4c84f7c971767eb522fa3ba74be1f5a4f22b204962b02a969ce32c40b0f2358b63ec44ddf1115f29264d07369c6103c0fed97e7
-  languageName: node
-  linkType: hard
-
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -12997,15 +12986,6 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: b0445859521eb4021cd0fb0cc1a75cecf67fceecae89b63f62b201cca8d345baf8b952c966862a9d9a2632987d4f6581f0ec8d957dfacece86f0a7919316f610
-  languageName: node
-  linkType: hard
-
-"color-parse@npm:^1.4.1":
-  version: 1.4.3
-  resolution: "color-parse@npm:1.4.3"
-  dependencies:
-    color-name: ^1.0.0
-  checksum: 3fb417857664c3f16250e60cf97a2b48b36b414c2ea6b163719fb4632879d98505ce4fe1c2a4afd870a399abcf1a794f9a0366556cb3f8eaebd41fddeebddc38
   languageName: node
   linkType: hard
 
@@ -26305,16 +26285,6 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
-  languageName: node
-  linkType: hard
-
-"reactjs-popup@npm:^2.0.5":
-  version: 2.0.6
-  resolution: "reactjs-popup@npm:2.0.6"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 3c9af4670529ebea6bdfe8423e30eb7a74025df1e589c5ef96a7da05165dc63015959c5ffb60cd3e5cadfd0d3b6a807b75ed5f80543629f530fab1433c3986d0
   languageName: node
   linkType: hard
 

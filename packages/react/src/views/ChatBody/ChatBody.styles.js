@@ -1,40 +1,31 @@
 import { css } from '@emotion/react';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
-export const chatbodyStyles = {
-  chatbodyContainer: css`
+export const useChatbodyStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
+
+  const chatbodyContainer = css`
+    flex: 1;
     word-break: break-all;
-    overflow: scroll;
     overflow: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column-reverse;
-    width: 100%;
-    height: 100vh;
     max-height: 600px;
     position: relative;
-    border-left: 1px solid #b1b1b1;
-    border-right: 1px solid #b1b1b1;
     padding-top: 70px;
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #8d8d8d;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
-  `,
+    ${scrollStyles};
+  `;
+
+  return { chatbodyContainer };
 };
 
-export const recentMessageStyles = {
-  button: css`
+export const useRecentMessageStyles = () => {
+  const { theme } = useCustomTheme();
+  const button = css`
     position: relative;
-    z-index: 90;
+    z-index: ${theme.zIndex.body};
     left: 50%;
     transform: translateX(-50%);
     user-select: none;
@@ -72,12 +63,14 @@ export const recentMessageStyles = {
         visibility: hidden;
       }
     }
-  `,
+  `;
 
-  textIconContainer: css`
+  const textIconContainer = css`
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 200;
-  `,
+  `;
+
+  return { button, textIconContainer };
 };

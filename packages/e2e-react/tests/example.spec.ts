@@ -7,7 +7,7 @@ test('EmbeddedChat should render', async ({ page }) => {
 
 test('EmbeddedChat has a title', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.ec-chat-header--channelDescription')).toHaveText('Login to chat');
+  await expect(page.locator('.ec-chat-header--channelName')).toHaveText('Login to chat');
 });
 
 test('EmbeddedChat has messages', async ({ page }) => {

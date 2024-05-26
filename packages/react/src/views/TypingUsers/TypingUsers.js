@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
@@ -8,6 +8,7 @@ export default function TypingUsers() {
   const { RCInstance } = useContext(RCContext);
   const currentUserName = useUserStore((state) => state.username);
   const [typingUsers, setTypingUsers] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     RCInstance?.addTypingStatusListener((t) => {
@@ -50,7 +51,7 @@ export default function TypingUsers() {
         height: ${typingUsers.length !== 0 ? '15px' : '0px'};
         font-size: 0.75rem;
         margin-inline-start: 0.25rem;
-        z-index: 100;
+        z-index: ${theme.zIndex.general};
       `}
     >
       {typingStatusMessage}

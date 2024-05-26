@@ -9,14 +9,15 @@ import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { RoomMemberStyles as styles } from './RoomMembers.styles';
+import { useRoomMemberStyles } from './RoomMembers.styles';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;
+  const styles = useRoomMemberStyles();
 
-  const toggleShowMembers = useMemberStore((state) => state.toggleShowMembers);
+  const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
 
@@ -41,11 +42,7 @@ const RoomMembers = ({ members }) => {
   const [inviteData, setInviteData] = useState(null);
 
   return (
-    <Sidebar
-      title="Members"
-      iconName="members"
-      setShowWindow={toggleShowMembers}
-    >
+    <Sidebar title="Members" iconName="members" setShowWindow={setShowMembers}>
       <Box css={styles.container}>
         {showInvite ? (
           <InviteMembers inviteData={inviteData} />

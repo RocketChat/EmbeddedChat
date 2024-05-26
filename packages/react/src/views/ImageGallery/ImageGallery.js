@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
 import { Box } from '../../components/Box';
 import { Swiper, SwiperSlide } from './Swiper';
@@ -7,64 +6,18 @@ import { Throbber } from '../../components/Throbber';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
 import { Button } from '../../components/Button';
-
-const overlay = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
-  background-color: rgba(51, 51, 51, 0.7);
-`;
-
-const exit = css`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #fff;
-  color: #333;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  z-index: 1001;
-`;
-
-const imageWrapper = css`
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-`;
-
-const image = css`
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-`;
-
-const throbberWrapper = css`
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const fetchErrorWrapper = css`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+import ReactPortal from '../../lib/reactPortal';
+import useImageGalleryStyles from './ImageGallery.styles';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
+  const styles = useImageGalleryStyles();
   const { RCInstance } = useRCContext();
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [imgFetchErr, setImgFetchErr] = useState(false);
+  const { colors } = useCustomTheme();
 
   useEffect(() => {
     const fetchAllImages = async () => {
@@ -84,72 +37,81 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
       }
     };
     fetchAllImages();
-  }, [RCInstance, setFiles, setCurrentFileIndex]);
+  }, [RCInstance, setFiles, setCurrentFileIndex, currentFileId]);
 
   return (
-    <Box css={overlay}>
-      <ActionButton
-        ghost
-        css={exit}
-        onClick={() => setShowGallery(false)}
-        size="medium"
-      >
-        <Icon name="cross" />
-      </ActionButton>
-      {loading && (
-        <Box css={throbberWrapper}>
-          <Throbber />
-        </Box>
-      )}
-
-      {imgFetchErr ? (
-        <Box
-          css={fetchErrorWrapper}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+    <ReactPortal wrapperId="overlay-items">
+      <Box css={styles.overlay}>
+        <ActionButton
+          css={styles.exit}
+          onClick={() => setShowGallery(false)}
+          size="medium"
         >
-          <Icon
-            name="magnifier"
-            size="3rem"
-            style={{ padding: '0.5rem', color: '#FF99A2' }}
-          />
-          <Box
-            is="span"
-            style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#fff' }}
-          >
-            Something went wrong
+          <Icon name="cross" />
+        </ActionButton>
+        {loading && (
+          <Box css={styles.throbberContainer}>
+            <Throbber />
           </Box>
-          <Button
-            color="primary"
-            onClick={() => setShowGallery(false)}
+        )}
+
+        {imgFetchErr || currentFileIndex === -1 ? (
+          <Box
+            css={styles.fetchErrorContainer}
             style={{
-              alignSelf: 'auto',
-              margin: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
-            Close
-          </Button>
-        </Box>
-      ) : (
-        <Swiper
-          navigation
-          pagination={{ clickable: true }}
-          keyboard
-          initialSlide={currentFileIndex}
-        >
-          {files.map(({ _id, url }) => (
-            <SwiperSlide key={_id}>
-              <Box css={imageWrapper}>
-                <img src={url} css={image} />
-              </Box>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-    </Box>
+            <Icon
+              name="magnifier"
+              size="3rem"
+              style={{ padding: '0.5rem', color: colors.destructive }}
+            />
+            <Box
+              is="span"
+              style={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: colors.primaryForeground,
+              }}
+            >
+              Something went wrong
+            </Box>
+            <Button
+              type="primary"
+              onClick={() => setShowGallery(false)}
+              style={{
+                alignSelf: 'auto',
+                margin: '10px',
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        ) : (
+          <Box css={styles.swiperContainer}>
+            <Swiper
+              navigation
+              pagination={{ clickable: true }}
+              keyboard
+              initialSlide={currentFileIndex}
+              injectStyles={[styles.swiperInject]}
+            >
+              {files.map(({ _id, url }) => (
+                <SwiperSlide key={_id}>
+                  <Box css={styles.imageContainer}>
+                    <img src={url} css={styles.image} />
+                  </Box>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            )
+          </Box>
+        )}
+      </Box>
+    </ReactPortal>
   );
 };
 

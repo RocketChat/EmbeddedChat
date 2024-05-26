@@ -1,32 +1,27 @@
-import { ThemeProvider } from '@emotion/react';
 import React from 'react';
+import { ThemeProvider } from '@emotion/react';
 import DefaultTheme from '../../theme/DefaultTheme';
-import { Button } from '../Button';
 import { Throbber } from '.';
 
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
   title: 'Components/Throbber',
   component: Throbber,
 };
 
-const Template = (args) => <Throbber {...args} />;
-
-export const Default = Template.bind({});
-
-export const Disabled = Template.bind({});
-Disabled.args = {
-  disabled: true,
-  size: '16px',
+// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+export const Default = {
+  render: () => (
+    <ThemeProvider theme={DefaultTheme}>
+      <Throbber />
+    </ThemeProvider>
+  ),
 };
 
-const Default2 = (args) => (
-  <ThemeProvider theme={DefaultTheme}>
-    <Button disabled>
-      <Throbber {...args} />
-    </Button>
-  </ThemeProvider>
-);
-export const InsideButton = Default2.bind({});
-InsideButton.args = {
-  size: '16px',
+export const Disabled = {
+  render: () => (
+    <ThemeProvider theme={DefaultTheme}>
+      <Throbber disabled />
+    </ThemeProvider>
+  ),
 };

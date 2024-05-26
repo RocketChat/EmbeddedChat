@@ -1,4 +1,6 @@
 import { css, keyframes } from '@emotion/react';
+import { lighten } from '../../lib/color';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const animation = keyframes`
 0% {
@@ -14,12 +16,13 @@ const animation = keyframes`
 }
 `;
 
-const styles = {
-  skeleton: css`
+const useSkeletonStyles = () => {
+  const { theme } = useCustomTheme();
+  const skeleton = css`
     height: 1.2em;
     animation: ${animation} 1s linear 0s infinite running;
     border-radius: 0.25rem;
-    background: #bcbbbb;
+    background: ${lighten(theme.schemes.common.black, 2)};
 
     &.text {
       height: auto;
@@ -30,7 +33,9 @@ const styles = {
     &.circle {
       border-radius: 50%;
     }
-  `,
+  `;
+
+  return { skeleton };
 };
 
-export default styles;
+export default useSkeletonStyles;

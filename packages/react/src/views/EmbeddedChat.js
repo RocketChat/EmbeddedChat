@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
-import { ChatBody } from './ChatBody';
+import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
-import { ChatInput } from './ChatInput';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useToastStore, useUserStore } from '../store';
+import { useToastStore, useUserStore, useThemeStore } from '../store';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
 import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
 import useAttachmentWindowStore from '../store/attachmentwindow';
@@ -18,15 +17,15 @@ import { Box } from '../components/Box';
 import useComponentOverrides from '../theme/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
-import { DropBoxOverlay, DropBox } from '../components/DropBox';
-import styles from './EmbeddedChat.styles';
+import { styles } from './EmbeddedChat.styles';
+import GlobalStyles from '../theme/GlobalStyles';
 
 const EmbeddedChat = ({
   isClosable = false,
   setClosableState = () => {},
   moreOpts = false,
   width = '100%',
-  height = '50vh',
+  height = '95vh',
   host = 'http://localhost:3000',
   roomId = 'GENERAL',
   channelName,
@@ -42,16 +41,21 @@ const EmbeddedChat = ({
   auth = {
     flow: 'PASSWORD',
   },
+  dark = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
   const setShowRoles = useUserStore((state) => state.setShowRoles);
+  const setDarkMode = useThemeStore((state) => state.setDark);
+  const setLightMode = useThemeStore((state) => state.setLight);
+
   useEffect(() => {
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
     setShowRoles(showRoles);
+    dark ? setDarkMode() : setLightMode();
   }, [
     toastBarPosition,
     showAvatar,
@@ -59,14 +63,15 @@ const EmbeddedChat = ({
     setToastbarPosition,
     showRoles,
     setShowRoles,
+    dark,
+    setDarkMode,
+    setLightMode,
   ]);
 
   const {
-    onDrag,
     data,
     handleDrag,
-    handleDragEnter,
-    handleDragLeave,
+
     handleDragDrop,
   } = useDropBox();
 
@@ -126,10 +131,12 @@ const EmbeddedChat = ({
   const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
   const setAuthenticatedName = useUserStore((state) => state.setName);
   const setAuthenticatedUserRoles = useUserStore((state) => state.setRoles);
+  const attachmentWindowOpen = useAttachmentWindowStore(
+    (state) => state.attachmentWindowOpen
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
-      // getUserEssentials();
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -158,8 +165,6 @@ const EmbeddedChat = ({
     setIsUserAuthenticated,
   ]);
 
-  const attachmentWindowOpen = useAttachmentWindowStore((state) => state.open);
-
   const ECOptions = useMemo(
     () => ({
       enableThreads,
@@ -173,6 +178,7 @@ const EmbeddedChat = ({
       showAvatar,
       hideHeader,
       anonymousMode,
+      dark,
     }),
     [
       enableThreads,
@@ -186,6 +192,7 @@ const EmbeddedChat = ({
       showAvatar,
       hideHeader,
       anonymousMode,
+      dark,
     ]
   );
 
@@ -206,35 +213,24 @@ const EmbeddedChat = ({
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
-      <ToastBarProvider position={toastBarPosition}>
-        <RCInstanceProvider value={RCContextValue}>
-          {attachmentWindowOpen ? (
-            data ? (
-              <>
-                <AttachmentPreview />
-              </>
-            ) : (
-              <CheckPreviewType CheckPreviewType data={data} />
-            )
-          ) : null}
-          <Box
-            css={[
-              styles.embeddedchat,
-              css`
-                width: ${width};
-                height: ${height};
-                position: relative;
-              `,
-              fullScreen && styles.fullscreen,
-            ]}
-            className={`ec-embedded-chat ${className} ${classNames}`}
-            style={{ ...style, ...styleOverrides }}
-            onDragOver={(e) => handleDrag(e)}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDragDrop(e)}
-          >
-            {onDrag && <DropBoxOverlay />}
+      <GlobalStyles />
+      <RCInstanceProvider value={RCContextValue}>
+        <Box
+          css={[
+            styles.embeddedchat(theme || DefaultTheme, dark),
+            css`
+              width: ${width};
+              height: ${height};
+              position: relative;
+            `,
+            fullScreen && styles.fullscreen,
+          ]}
+          className={`ec-embedded-chat ${className} ${classNames}`}
+          style={{ ...style, ...styleOverrides }}
+          onDragOver={(e) => handleDrag(e)}
+          onDrop={(e) => handleDragDrop(e)}
+        >
+          <ToastBarProvider position={toastBarPosition}>
             {hideHeader ? null : (
               <ChatHeader
                 channelName={channelName}
@@ -248,42 +244,30 @@ const EmbeddedChat = ({
               />
             )}
 
-            {onDrag ? (
-              <>
-                <DropBox fullScreen height={height}>
-                  {isUserAuthenticated || anonymousMode ? (
-                    <ChatBody
-                      height={!fullScreen ? height : '88vh'}
-                      anonymousMode={anonymousMode}
-                      showRoles={showRoles}
-                      messageListRef={messageListRef}
-                      scrollToBottom={scrollToBottom}
-                    />
-                  ) : (
-                    <Home height={!fullScreen ? height : '88vh'} />
-                  )}
-                </DropBox>
-                <ChatInput scrollToBottom={scrollToBottom} />
-              </>
+            {isUserAuthenticated || anonymousMode ? (
+              <ChatLayout
+                anonymousMode={anonymousMode}
+                showRoles={showRoles}
+                messageListRef={messageListRef}
+                scrollToBottom={scrollToBottom}
+              />
             ) : (
-              <>
-                {isUserAuthenticated || anonymousMode ? (
-                  <ChatBody
-                    height={!fullScreen ? height : '88vh'}
-                    anonymousMode={anonymousMode}
-                    showRoles={showRoles}
-                    messageListRef={messageListRef}
-                    scrollToBottom={scrollToBottom}
-                  />
-                ) : (
-                  <Home height={!fullScreen ? height : '88vh'} />
-                )}
-                <ChatInput scrollToBottom={scrollToBottom} />
-              </>
+              <Home height={!fullScreen ? height : '88vh'} />
             )}
-          </Box>
-        </RCInstanceProvider>
-      </ToastBarProvider>
+
+            {attachmentWindowOpen ? (
+              data ? (
+                <>
+                  <AttachmentPreview />
+                </>
+              ) : (
+                <CheckPreviewType data={data} />
+              )
+            ) : null}
+            <div id="overlay-items" />
+          </ToastBarProvider>
+        </Box>
+      </RCInstanceProvider>
     </ThemeProvider>
   );
 };
@@ -314,6 +298,7 @@ EmbeddedChat.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
+  dark: PropTypes.bool,
 };
 
 export default memo(EmbeddedChat);

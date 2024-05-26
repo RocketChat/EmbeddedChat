@@ -19,7 +19,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
-import { MessageStyles as styles } from './Message.styles';
+import { useMessageStyles } from './Message.styles';
 
 const Message = ({
   message,
@@ -37,6 +37,7 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
+  const styles = useMessageStyles();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -144,7 +145,7 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          styles.message,
+          styles.main,
           editMessage._id === message._id && styles.messageEditing,
         ]}
         style={styleOverrides}

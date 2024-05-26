@@ -92,7 +92,7 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
           </Button>
         )}
         {view.submit && (
-          <Button {...getButtonStyle(view)} onClick={onSubmit} color="primary">
+          <Button {...getButtonStyle(view)} onClick={onSubmit} type="primary">
             {modalParser.text(view.submit.text)}
           </Button>
         )}

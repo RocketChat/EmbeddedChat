@@ -1,15 +1,19 @@
 import { css } from '@emotion/react';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
-export const RoomMemberStyles = {
-  container: css`
+export const useRoomMemberStyles = () => {
+  const { scrollStyles } = useGlobalStyles();
+  const container = css`
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
     padding: 0 1rem 1rem;
-  `,
+    ${scrollStyles};
+  `;
+
+  return { container };
 };
 
 export const RoomMemberItemStyles = {
