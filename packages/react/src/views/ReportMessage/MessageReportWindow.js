@@ -27,9 +27,6 @@ const MessageReportWindow = ({ messageId }) => {
         <Box css={styles.conatiner}>
           <Input
             textArea
-            css={css`
-              width: 90%;
-            `}
             placeholder="Why do you want to report this message?"
             onChange={(e) => {
               setDescription(e.target.value);
