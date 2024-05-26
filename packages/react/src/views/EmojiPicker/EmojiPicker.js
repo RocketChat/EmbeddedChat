@@ -42,7 +42,7 @@ const CustomEmojiPicker = ({
   };
 
   return (
-    <ReactPortal wrapperId="overlay-items">
+    <ReactPortal wrapperId="popup">
       <Box ref={emojiPickerRef} css={[styles.emojiPicker, positionStyles]}>
         <EmojiPicker
           height={350}

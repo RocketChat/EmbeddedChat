@@ -11,6 +11,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    position: relative;
   `,
 };
 

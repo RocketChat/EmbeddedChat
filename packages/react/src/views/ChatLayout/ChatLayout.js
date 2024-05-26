@@ -65,6 +65,7 @@ const ChatLayout = ({
           scrollToBottom={scrollToBottom}
         />
         <ChatInput scrollToBottom={scrollToBottom} />
+        <div id="popup" />
       </Box>
 
       <Box>
