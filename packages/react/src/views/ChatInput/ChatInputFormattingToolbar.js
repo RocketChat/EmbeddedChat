@@ -27,7 +27,8 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
-  const handleClickToOpenFiles = () => {
+
+  const handleClickToOpenFiles = (e) => {
     inputRef.current.click();
   };
 
@@ -86,7 +87,9 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
                 square
                 ghost
                 disabled={isRecordingMessage}
-                onClick={() => setEmojiOpen((t) => !t)}
+                onClick={() => {
+                  setEmojiOpen(true);
+                }}
               >
                 <Icon name="emoji" size="1.25rem" />
               </ActionButton>
