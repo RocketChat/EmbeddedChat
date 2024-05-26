@@ -11,8 +11,8 @@ export const useMessageStyles = () => {
     align-items: flex-start;
     padding-top: 0.5rem;
     padding-bottom: 0.25rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
     color: ${colors.foreground};
 
     &:hover {
