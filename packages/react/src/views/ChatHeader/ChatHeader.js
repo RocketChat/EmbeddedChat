@@ -321,6 +321,7 @@ const ChatHeader = ({
             action: showChannelinformation,
             label: 'Room Information',
             icon: 'info',
+            disabled: !isUserAuthenticated,
           },
         ]
       );
