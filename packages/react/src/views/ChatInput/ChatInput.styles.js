@@ -86,7 +86,7 @@ const commonRecorderStyles = {
     margin-right: 8px;
   `,
 
-  container: css`
+  controller: css`
     display: flex;
   `,
 

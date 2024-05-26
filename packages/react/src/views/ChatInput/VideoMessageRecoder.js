@@ -5,7 +5,6 @@ import React, {
   useContext,
   useRef,
 } from 'react';
-import { css } from '@emotion/react';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
@@ -166,19 +165,10 @@ const VideoMessageRecorder = () => {
             style={{
               display: 'flex',
               width: '28rem',
-              boxShadow: '0px 1px 1px 1px rgb(203, 203, 203)',
-              backgroundColor: 'rgb(39, 39, 39)',
             }}
           >
             <video muted autoPlay playsInline ref={videoRef} />
-            <Box
-              css={[
-                css`
-                  color: white;
-                `,
-                styles.container,
-              ]}
-            >
+            <Box css={styles.controller}>
               <ActionButton ghost onClick={handleCancelRecordButton}>
                 <Icon size="1.25rem" name="circle-cross" />
               </ActionButton>

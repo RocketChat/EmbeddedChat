@@ -38,7 +38,6 @@ export const toastBarContainerStyles = {
     position: absolute;
     z-index: ${theme.zIndex.toastbar};
     border-radius: 0.25em;
-    background-color: white;
     animation: ${animation} ${2000}ms ease-in-out forwards;
   `,
 };

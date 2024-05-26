@@ -24,7 +24,6 @@ const useStaticSelectStyles = () => {
     border-color: ${colors.border};
     border-style: solid;
     border-radius: 0.25rem;
-    background-color: white;
     box-shadow: none;
     -webkit-appearance: none;
     appearance: none;

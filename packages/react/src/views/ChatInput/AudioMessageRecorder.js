@@ -147,7 +147,7 @@ const AudioMessageRecorder = () => {
   }
 
   return (
-    <Box css={styles.container}>
+    <Box css={styles.controller}>
       {state === 'recording' && (
         <>
           <ActionButton ghost onClick={handleCancelRecordButton}>
