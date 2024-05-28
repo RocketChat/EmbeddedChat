@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import { Box } from '../../components/Box';
@@ -12,15 +12,16 @@ import useComponentOverrides from '../../theme/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
 
-const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
+const ChatInputFormattingToolbar = ({
+  messageRef,
+  inputRef,
+  order = ['emoji', 'formatter', 'audio', 'video', 'file'],
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
 
   const styles = useChatInputFormattingToolbarStyles();
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
@@ -73,76 +74,83 @@ const ChatInputFormattingToolbar = ({ messageRef, inputRef }) => {
     }
   };
 
+  const chatToolMap = {
+    emoji: (
+      <>
+        <Tooltip text="Emoji" position="top" key="emoji">
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage}
+            onClick={() => {
+              setEmojiOpen(true);
+            }}
+          >
+            <Icon name="emoji" size="1.25rem" />
+          </ActionButton>
+        </Tooltip>
+        {isEmojiOpen && (
+          <EmojiPicker
+            key="emoji-picker"
+            handleEmojiClick={(emoji) => {
+              setEmojiOpen(false);
+              handleEmojiClick(emoji);
+            }}
+            positionStyles={css`
+              position: absolute;
+              bottom: 7rem;
+              left: 1.85rem;
+            `}
+            onClose={() => setEmojiOpen(false)}
+          />
+        )}
+      </>
+    ),
+    audio: (
+      <Tooltip text="Audio Message" position="top" key="audio">
+        <AudioMessageRecorder />
+      </Tooltip>
+    ),
+    video: (
+      <Tooltip text="Video Message" position="top" key="video">
+        <VideoMessageRecorder />
+      </Tooltip>
+    ),
+    file: (
+      <Tooltip text="Upload File" position="top" key="file">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={handleClickToOpenFiles}
+        >
+          <Icon name="attachment" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+    formatter: formatter.map((item, index) => (
+      <Tooltip text={item.name} position="top" key={`formatter-${index}`}>
+        <ActionButton
+          square
+          disabled={isRecordingMessage}
+          ghost
+          onClick={() => {
+            wrapSelection(item.pattern);
+          }}
+        >
+          <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    )),
+  };
+
   return (
     <Box
       css={styles.chatFormat}
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >
-      {isUserAuthenticated && (
-        <>
-          <Tooltip text="Emoji" position="top">
-            <Box>
-              <ActionButton
-                square
-                ghost
-                disabled={isRecordingMessage}
-                onClick={() => {
-                  setEmojiOpen(true);
-                }}
-              >
-                <Icon name="emoji" size="1.25rem" />
-              </ActionButton>
-            </Box>
-          </Tooltip>
-          {isEmojiOpen && (
-            <EmojiPicker
-              handleEmojiClick={(emoji) => {
-                setEmojiOpen(false);
-                handleEmojiClick(emoji);
-              }}
-              positionStyles={css`
-                position: absolute;
-                bottom: 7rem;
-                left: 1.85rem;
-              `}
-              onClose={() => setEmojiOpen(false)}
-            />
-          )}
-        </>
-      )}
-      {formatter.map((item, index) => (
-        <Tooltip text={item.name} position="top" key={index}>
-          <ActionButton
-            square
-            disabled={isRecordingMessage}
-            ghost
-            onClick={() => {
-              wrapSelection(item.pattern);
-            }}
-          >
-            <Icon
-              disabled={isRecordingMessage}
-              name={item.name}
-              size="1.25rem"
-            />
-          </ActionButton>
-        </Tooltip>
-      ))}
-      <Tooltip text="Audio Message" position="top">
-        <AudioMessageRecorder />
-      </Tooltip>
-      <Tooltip text="Video Message" position="top">
-        <VideoMessageRecorder />
-      </Tooltip>
-      <ActionButton
-        square
-        ghost
-        disabled={isRecordingMessage}
-        onClick={handleClickToOpenFiles}
-      >
-        <Icon name="plus" size="1.25rem" style={{ padding: '0.5em' }} />
-      </ActionButton>
+      {order.map((key) => chatToolMap[key])}
     </Box>
   );
 };
