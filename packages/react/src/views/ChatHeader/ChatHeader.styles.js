@@ -43,7 +43,8 @@ const useChatHeaderStyles = () => {
 
   const chatHeaderIconRow = css`
     ${rowCentreAlign}
-    gap:0.5rem
+    position:relative;
+    gap: 0.5rem;
   `;
 
   return {

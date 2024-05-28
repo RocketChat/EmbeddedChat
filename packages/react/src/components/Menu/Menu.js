@@ -13,7 +13,8 @@ const Menu = ({
   className = '',
   style = {},
   anchor = 'right bottom',
-  isToolTip = true,
+  tooltip = { isToolTip: true, position: 'bottom', text: 'Options' },
+  size = 'medium,',
 }) => {
   const theme = useTheme();
   const styles = useMenuStyles();
@@ -36,9 +37,6 @@ const Menu = ({
     [anchorStyle, styleOverrides]
   );
 
-  const { classNames: wrapperClasses, styleOverrides: wrapperStyles } =
-    useComponentOverrides('MenuWrapper');
-
   const [isOpen, setOpen] = useState(false);
 
   const onClick = (action, disabled) => () => {
@@ -60,18 +58,23 @@ const Menu = ({
   }, [isOpen]);
 
   return (
-    <Box
-      css={styles.wrapper}
-      className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
-      style={wrapperStyles}
-    >
-      {isToolTip ? (
-        <Tooltip text="Options" position="bottom">
-          {' '}
-          <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+    <>
+      {tooltip.isToolTip ? (
+        <Tooltip text={tooltip.text} position={tooltip.position}>
+          <ActionButton
+            ghost
+            icon="kebab"
+            size={size}
+            onClick={() => setOpen(!isOpen)}
+          />
         </Tooltip>
       ) : (
-        <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+        <ActionButton
+          ghost
+          icon="kebab"
+          size={size}
+          onClick={() => setOpen(!isOpen)}
+        />
       )}
       {isOpen ? (
         <Box
@@ -93,7 +96,7 @@ const Menu = ({
           ))}
         </Box>
       ) : null}
-    </Box>
+    </>
   );
 };
 

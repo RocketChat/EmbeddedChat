@@ -7,7 +7,6 @@ export const useMenuStyles = () => {
 
   const wrapper = css`
     position: relative;
-    display: inline-block;
   `;
 
   const container = css`
@@ -20,7 +19,7 @@ export const useMenuStyles = () => {
     height: fit-content;
     z-index: ${theme.zIndex.menu};
     border-radius: 0.2em;
-    padding: 0.5em 0;
+    padding: 0.5rem 0;
     box-shadow: ${theme.shadows[1]};
     background-color: ${colors.background};
   `;

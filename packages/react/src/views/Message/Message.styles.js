@@ -272,7 +272,6 @@ export const useMessageToolboxStyles = () => {
     margin-left: -0.25rem;
     margin-right: -0.25rem;
     margin-top: 0.125rem;
-    font-size: 1.25rem !important;
     background-color: ${colors.background};
     box-shadow: 0 0 2px ${colors.foreground};
     gap: 0.25rem;
