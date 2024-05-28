@@ -58,7 +58,7 @@ export const MessageToolbox = ({
   const toolMap = useMemo(
     () => ({
       reply: !isThreadMessage && (
-        <Tooltip text="Reply in thread" position="top">
+        <Tooltip text="Reply in thread" position="top" key="reply">
           <ActionButton
             ghost
             size="small"
@@ -68,7 +68,7 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       quote: (
-        <Tooltip text="Quote" position="top">
+        <Tooltip text="Quote" position="top" key="quote">
           <ActionButton
             ghost
             size="small"
@@ -86,6 +86,7 @@ export const MessageToolbox = ({
               : 'Star'
           }
           position="top"
+          key="star"
         >
           <ActionButton
             ghost
@@ -101,7 +102,7 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       reaction: (
-        <Tooltip text="Add reaction" position="top">
+        <Tooltip text="Add reaction" position="top" key="reaction">
           <ActionButton
             ghost
             size="small"
@@ -111,7 +112,11 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       pin: !isThreadMessage && (
-        <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top">
+        <Tooltip
+          text={message.pinned ? 'Unpin' : 'Pin'}
+          position="top"
+          key="pin"
+        >
           <ActionButton
             ghost
             size="small"
@@ -121,7 +126,7 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       edit: message.u._id === authenticatedUserId && (
-        <Tooltip text="Edit" position="top">
+        <Tooltip text="Edit" position="top" key="edit">
           <ActionButton
             ghost={!isEditing}
             color={isEditing ? 'secondary' : 'default'}
@@ -132,7 +137,7 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       delete: message.u._id === authenticatedUserId && (
-        <Tooltip text="Delete" position="top">
+        <Tooltip text="Delete" position="top" key="delete">
           <ActionButton
             ghost
             size="small"
@@ -143,7 +148,7 @@ export const MessageToolbox = ({
         </Tooltip>
       ),
       report: (
-        <Tooltip text="Report" position="top">
+        <Tooltip text="Report" position="top" key="report">
           <ActionButton
             ghost
             size="small"

@@ -89,6 +89,7 @@ const ChatInputFormattingToolbar = ({
             <Icon name="emoji" size="1.25rem" />
           </ActionButton>
         </Tooltip>
+
         {isEmojiOpen && (
           <EmojiPicker
             key="emoji-picker"
@@ -128,8 +129,8 @@ const ChatInputFormattingToolbar = ({
         </ActionButton>
       </Tooltip>
     ),
-    formatter: formatter.map((item, index) => (
-      <Tooltip text={item.name} position="top" key={`formatter-${index}`}>
+    formatter: formatter.map((item) => (
+      <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
         <ActionButton
           square
           disabled={isRecordingMessage}
