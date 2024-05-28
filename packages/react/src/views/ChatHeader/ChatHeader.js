@@ -30,7 +30,6 @@ import useChatHeaderStyles from './ChatHeader.styles';
 const ChatHeader = ({
   isClosable,
   setClosableState,
-  moreOpts,
   fullScreen,
   setFullScreen,
   channelName,
@@ -503,12 +502,8 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          {moreOpts && (
-            <>
-              {order.slice(0, threshold).map((key) => menuMap[key])}
-              {menuOptions.length > 0 && <Menu options={menuOptions} />}
-            </>
-          )}
+          {order.slice(0, threshold).map((key) => menuMap[key])}
+          {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>
       {isThreadOpen && (
@@ -541,7 +536,6 @@ ChatHeader.propTypes = {
   fullScreen: PropTypes.bool,
   setClosableState: PropTypes.func,
   setFullScreen: PropTypes.func,
-  moreOpts: PropTypes.bool,
   channelName: PropTypes.string,
   className: PropTypes.string,
   style: PropTypes.object,

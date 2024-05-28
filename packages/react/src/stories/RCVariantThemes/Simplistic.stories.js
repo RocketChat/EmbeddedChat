@@ -15,7 +15,6 @@ export const Default = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',
@@ -37,7 +36,6 @@ export const Azure_Sky = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',

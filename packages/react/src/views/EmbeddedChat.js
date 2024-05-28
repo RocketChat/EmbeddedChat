@@ -23,7 +23,6 @@ import GlobalStyles from '../theme/GlobalStyles';
 const EmbeddedChat = ({
   isClosable = false,
   setClosableState = () => {},
-  moreOpts = false,
   width = '100%',
   height = '95vh',
   host = 'http://localhost:3000',
@@ -236,7 +235,6 @@ const EmbeddedChat = ({
                 channelName={channelName}
                 isClosable={isClosable}
                 setClosableState={setClosableState}
-                moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
                 anonymousMode={anonymousMode}
@@ -277,7 +275,6 @@ EmbeddedChat.propTypes = {
   height: PropTypes.string,
   isClosable: PropTypes.bool,
   setClosableState: PropTypes.func,
-  moreOpts: PropTypes.bool,
   host: PropTypes.string,
   roomId: PropTypes.string,
   channelName: PropTypes.string,
