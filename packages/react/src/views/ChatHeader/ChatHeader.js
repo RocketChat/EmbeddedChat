@@ -38,6 +38,21 @@ const ChatHeader = ({
   style = {},
   anonymousMode,
   showRoles,
+  order = [
+    'minmax',
+    'close',
+    'thread',
+    'mentions',
+    'starred',
+    'pinned',
+    'files',
+    'members',
+    'search',
+    'rInfo',
+    'logout',
+  ],
+
+  threshold = 2,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
   const styles = useChatHeaderStyles();
@@ -258,97 +273,191 @@ const ChatHeader = ({
     setIsChannelReadOnly,
   ]);
 
-  const menuOptions = useMemo(() => {
-    const options = [];
+  const menuMap = {
+    minmax: (
+      <Tooltip
+        text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
+        position="bottom"
+      >
+        <ActionButton
+          onClick={() => {
+            setFullScreen((prev) => !prev);
+          }}
+          ghost
+          display="inline"
+          square
+          size="medium"
+        >
+          <Icon name={`${fullScreen ? 'collapse' : 'expand'}`} size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-    if (moreOpts) {
-      options.push(
-        ...[
-          {
-            id: 'thread',
-            action: showAllThreads,
-            label: 'Threads',
-            icon: 'thread',
-          },
+    close: isClosable && (
+      <ActionButton
+        onClick={() => {
+          setClosableState((prev) => !prev);
+        }}
+        ghost
+        display="inline"
+        square
+        size="medium"
+      >
+        <Icon name="cross" size="1.25rem" />
+      </ActionButton>
+    ),
+    thread: (
+      <Tooltip text="Threads" position="bottom" key="thread">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showAllThreads();
+          }}
+        >
+          <Icon name="thread" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'mentions',
-            action: showMentions,
-            label: 'Mentions',
-            icon: 'at',
-          },
+    mentions: (
+      <Tooltip text="Mentions" position="bottom" key="mention">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showMentions();
+          }}
+        >
+          <Icon name="at" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'starred',
-            action: showStarredMessage,
-            label: 'Starred',
-            icon: 'star',
-          },
+    starred: (
+      <Tooltip text="Starred Messages" position="bottom" key="starred">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showStarredMessage();
+          }}
+        >
+          <Icon name="star" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'pinned',
-            action: showPinnedMessage,
-            label: 'Pinned',
-            icon: 'pin',
-          },
+    pinned: (
+      <Tooltip text="Pinned Messages" position="bottom" key="pinned">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showPinnedMessage();
+          }}
+        >
+          <Icon name="pin" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'members',
-            action: showChannelMembers,
-            label: 'Members',
-            icon: 'members',
-            disabled: !isUserAuthenticated,
-          },
+    members: isUserAuthenticated && (
+      <Tooltip text="Members" position="bottom" key="members">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showChannelMembers();
+          }}
+        >
+          <Icon name="members" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'files',
-            action: showAllFiles,
-            label: 'Files',
-            icon: 'clip',
-            disabled: !isUserAuthenticated,
-          },
+    files: isUserAuthenticated && (
+      <Tooltip text="Files" position="bottom" key="files">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showAllFiles();
+          }}
+        >
+          <Icon name="clip" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'search',
-            action: showSearchMessage,
-            label: 'Search',
-            icon: 'magnifier',
-            disabled: !isUserAuthenticated,
-          },
+    search: isUserAuthenticated && (
+      <Tooltip text="Search Messages" position="bottom" key="search">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showSearchMessage();
+          }}
+        >
+          <Icon name="magnifier" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
 
-          {
-            id: 'rInfo',
-            action: showChannelinformation,
-            label: 'Room Information',
-            icon: 'info',
-            disabled: !isUserAuthenticated,
-          },
-        ]
-      );
-    }
-    if (isUserAuthenticated) {
-      options.push({
-        id: 'logout',
-        action: handleLogout,
-        label: 'Logout',
-        icon: 'reply-directly',
-        color: 'error',
-      });
-    }
-    return options;
-  }, [
-    handleLogout,
-    isUserAuthenticated,
-    moreOpts,
-    showAllFiles,
-    showAllThreads,
-    showMentions,
-    showChannelMembers,
-    showChannelinformation,
-    showPinnedMessage,
-    showSearchMessage,
-    showStarredMessage,
-  ]);
+    rInfo: isUserAuthenticated && (
+      <Tooltip text="Room Information" position="bottom" key="rInfo">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            showChannelinformation();
+          }}
+        >
+          <Icon name="info" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+
+    logout: isUserAuthenticated && (
+      <Tooltip text="Logout" position="bottom" key="logout">
+        <ActionButton
+          square
+          ghost
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          <Icon name="reply-directly" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+  };
+
+  const menuOptions = order
+    .slice(threshold)
+    .map((key) => {
+      const tool = menuMap[key];
+
+      if (!tool) {
+        return null;
+      }
+
+      const { onClick } = tool.props.children.props;
+      const { name: icon } = tool.props.children.props.children.props;
+      const { text } = tool.props;
+
+      if (onClick && icon && text) {
+        return {
+          id: key,
+          action: onClick,
+          label: text,
+          icon,
+        };
+      }
+
+      return null;
+    })
+    .filter((option) => option !== null);
 
   return (
     <Box
@@ -394,40 +503,11 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          <Tooltip
-            text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
-            position="bottom"
-          >
-            <ActionButton
-              onClick={() => {
-                setFullScreen((prev) => !prev);
-              }}
-              ghost
-              display="inline"
-              square
-              size="medium"
-            >
-              <Icon
-                name={`${fullScreen ? 'collapse' : 'expand'}`}
-                size="1.25rem"
-              />
-            </ActionButton>
-          </Tooltip>
-
-          <Menu options={menuOptions} />
-
-          {isClosable && (
-            <ActionButton
-              onClick={() => {
-                setClosableState((prev) => !prev);
-              }}
-              ghost
-              display="inline"
-              square
-              size="medium"
-            >
-              <Icon name="cross" size="1.25rem" />
-            </ActionButton>
+          {moreOpts && (
+            <>
+              {order.slice(0, threshold).map((key) => menuMap[key])}
+              {menuOptions.length > 0 && <Menu options={menuOptions} />}
+            </>
           )}
         </Box>
       </Box>

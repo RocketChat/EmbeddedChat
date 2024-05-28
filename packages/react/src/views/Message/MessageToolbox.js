@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import useComponentOverrides from '../../theme/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
@@ -55,150 +55,131 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const toolMap = useMemo(
-    () => ({
-      reply: !isThreadMessage && (
-        <Tooltip text="Reply in thread" position="top" key="reply">
-          <ActionButton
-            ghost
-            size="small"
-            icon="thread"
-            onClick={handleOpenThread(message)}
-          />
-        </Tooltip>
-      ),
-      quote: (
-        <Tooltip text="Quote" position="top" key="quote">
-          <ActionButton
-            ghost
-            size="small"
-            icon="quote"
-            onClick={() => handleQuoteMessage(message)}
-          />
-        </Tooltip>
-      ),
-      star: (
-        <Tooltip
-          text={
+  const toolMap = {
+    reply: !isThreadMessage && (
+      <Tooltip text="Reply in thread" position="top" key="reply">
+        <ActionButton
+          ghost
+          size="small"
+          icon="thread"
+          onClick={handleOpenThread(message)}
+        />
+      </Tooltip>
+    ),
+    quote: (
+      <Tooltip text="Quote" position="top" key="quote">
+        <ActionButton
+          ghost
+          size="small"
+          icon="quote"
+          onClick={() => handleQuoteMessage(message)}
+        />
+      </Tooltip>
+    ),
+    star: (
+      <Tooltip
+        text={
+          message.starred &&
+          message.starred.find((u) => u._id === authenticatedUserId)
+            ? 'Unstar'
+            : 'Star'
+        }
+        position="top"
+        key="star"
+      >
+        <ActionButton
+          ghost
+          size="small"
+          icon={`${
             message.starred &&
             message.starred.find((u) => u._id === authenticatedUserId)
-              ? 'Unstar'
-              : 'Star'
-          }
-          position="top"
-          key="star"
-        >
-          <ActionButton
-            ghost
-            size="small"
-            icon={`${
-              message.starred &&
-              message.starred.find((u) => u._id === authenticatedUserId)
-                ? 'star-filled'
-                : 'star'
-            }`}
-            onClick={() => handleStarMessage(message)}
-          />
-        </Tooltip>
-      ),
-      reaction: (
-        <Tooltip text="Add reaction" position="top" key="reaction">
-          <ActionButton
-            ghost
-            size="small"
-            icon="emoji"
-            onClick={() => setEmojiOpen(true)}
-          />
-        </Tooltip>
-      ),
-      pin: !isThreadMessage && (
-        <Tooltip
-          text={message.pinned ? 'Unpin' : 'Pin'}
-          position="top"
-          key="pin"
-        >
-          <ActionButton
-            ghost
-            size="small"
-            icon={`${message.pinned ? 'pin-filled' : 'pin'}`}
-            onClick={() => handlePinMessage(message)}
-          />
-        </Tooltip>
-      ),
-      edit: message.u._id === authenticatedUserId && (
-        <Tooltip text="Edit" position="top" key="edit">
-          <ActionButton
-            ghost={!isEditing}
-            color={isEditing ? 'secondary' : 'default'}
-            size="small"
-            icon="edit"
-            onClick={() => handleEditMessage(message)}
-          />
-        </Tooltip>
-      ),
-      delete: message.u._id === authenticatedUserId && (
-        <Tooltip text="Delete" position="top" key="delete">
-          <ActionButton
-            ghost
-            size="small"
-            icon="trash"
-            type="destructive"
-            onClick={() => setShowDeleteModal(true)}
-          />
-        </Tooltip>
-      ),
-      report: (
-        <Tooltip text="Report" position="top" key="report">
-          <ActionButton
-            ghost
-            size="small"
-            icon="report"
-            type="destructive"
-            onClick={() => handlerReportMessage(message)}
-          />
-        </Tooltip>
-      ),
-    }),
-    [
-      isThreadMessage,
-      message,
-      authenticatedUserId,
-      handleOpenThread,
-      handleQuoteMessage,
-      handleStarMessage,
-      handlePinMessage,
-      handleEditMessage,
-      handlerReportMessage,
-      setEmojiOpen,
-      isEditing,
-    ]
-  );
+              ? 'star-filled'
+              : 'star'
+          }`}
+          onClick={() => handleStarMessage(message)}
+        />
+      </Tooltip>
+    ),
+    reaction: (
+      <Tooltip text="Add reaction" position="top" key="reaction">
+        <ActionButton
+          ghost
+          size="small"
+          icon="emoji"
+          onClick={() => setEmojiOpen(true)}
+        />
+      </Tooltip>
+    ),
+    pin: !isThreadMessage && (
+      <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top" key="pin">
+        <ActionButton
+          ghost
+          size="small"
+          icon={`${message.pinned ? 'pin-filled' : 'pin'}`}
+          onClick={() => handlePinMessage(message)}
+        />
+      </Tooltip>
+    ),
+    edit: message.u._id === authenticatedUserId && (
+      <Tooltip text="Edit" position="top" key="edit">
+        <ActionButton
+          ghost={!isEditing}
+          color={isEditing ? 'secondary' : 'default'}
+          size="small"
+          icon="edit"
+          onClick={() => handleEditMessage(message)}
+        />
+      </Tooltip>
+    ),
+    delete: message.u._id === authenticatedUserId && (
+      <Tooltip text="Delete" position="top" key="delete">
+        <ActionButton
+          ghost
+          size="small"
+          icon="trash"
+          type="destructive"
+          onClick={() => setShowDeleteModal(true)}
+        />
+      </Tooltip>
+    ),
+    report: (
+      <Tooltip text="Report" position="top" key="report">
+        <ActionButton
+          ghost
+          size="small"
+          icon="report"
+          type="destructive"
+          onClick={() => handlerReportMessage(message)}
+        />
+      </Tooltip>
+    ),
+  };
 
-  const menuOptions = useMemo(
-    () =>
-      order
-        .slice(threshold)
-        .map((key) => {
-          const tool = toolMap[key];
+  const menuOptions = order
+    .slice(threshold)
+    .map((key) => {
+      const tool = toolMap[key];
 
-          if (!tool) {
-            return null;
-          }
+      if (!tool) {
+        return null;
+      }
 
-          const { onClick } = tool.props.children.props;
-          const { icon } = tool.props.children.props;
-          const { text } = tool.props;
+      const { onClick } = tool.props.children.props;
+      const { icon } = tool.props.children.props;
+      const { text } = tool.props;
 
-          return {
-            id: key,
-            action: onClick,
-            label: text,
-            icon,
-          };
-        })
-        .filter((option) => option !== null),
-    [order, threshold, toolMap]
-  );
+      if (onClick && icon && text) {
+        return {
+          id: key,
+          action: onClick,
+          label: text,
+          icon,
+        };
+      }
+
+      return null;
+    })
+    .filter((option) => option !== null);
 
   return (
     <>

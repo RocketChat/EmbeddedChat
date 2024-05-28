@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';

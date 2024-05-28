@@ -85,6 +85,7 @@ const useButtonStyles = (type, size) => {
       background-color: ${colors.muted};
       color: ${colors.mutedForeground};
       border: none;
+      cursor: not-allowed;
     }
     &.ghost {
       background: none;
@@ -95,6 +96,7 @@ const useButtonStyles = (type, size) => {
       color: ${colors.mutedForeground};
       border: none;
       background: none;
+      cursor: not-allowed;
     }
     &.ghost:not(.disabled):hover {
       background: ${colors.accent};
