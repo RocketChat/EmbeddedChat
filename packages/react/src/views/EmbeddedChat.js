@@ -32,6 +32,8 @@ const EmbeddedChat = ({
   toastBarPosition = 'bottom right',
   showRoles = false,
   showAvatar = false,
+  showUsername = true,
+  showName = true,
   enableThreads = false,
   theme = null,
   className = '',
@@ -47,6 +49,8 @@ const EmbeddedChat = ({
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
   const setShowRoles = useUserStore((state) => state.setShowRoles);
+  const setShowUsername = useUserStore((state) => state.setShowUsername);
+  const setShowName = useUserStore((state) => state.setShowName);
   const setDarkMode = useThemeStore((state) => state.setDark);
   const setLightMode = useThemeStore((state) => state.setLight);
 
@@ -54,6 +58,8 @@ const EmbeddedChat = ({
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
     setShowRoles(showRoles);
+    setShowUsername(showUsername);
+    setShowName(showName);
     dark ? setDarkMode() : setLightMode();
   }, [
     toastBarPosition,
@@ -65,6 +71,10 @@ const EmbeddedChat = ({
     dark,
     setDarkMode,
     setLightMode,
+    showUsername,
+    setShowUsername,
+    setShowName,
+    showName,
   ]);
 
   const {

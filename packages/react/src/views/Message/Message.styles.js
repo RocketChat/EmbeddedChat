@@ -186,7 +186,7 @@ export const useMessageHeaderStyles = () => {
     font-weight: 400;
     line-height: 1rem;
     flex-shrink: 0;
-    margin-right: 0.5rem;
+    margin-left: 0.25rem;
   `;
 
   return { header, headerName, userRole, userName, headerTimestamp };

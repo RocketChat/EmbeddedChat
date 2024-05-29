@@ -18,6 +18,8 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
+  const showUsername = useUserStore((state) => state.showUsername);
+  const showName = useUserStore((state) => state.showName);
 
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
@@ -68,20 +70,24 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
         className={appendClassNames('ec-message-header', classNames)}
         style={styleOverrides}
       >
-        <Box
-          is="span"
-          css={styles.headerName}
-          className={appendClassNames('ec-message-header-name')}
-        >
-          {message.u?.name}
-        </Box>
-        <Box
-          is="span"
-          css={styles.userName}
-          className={appendClassNames('ec-message-header-username')}
-        >
-          @{message.u.username}
-        </Box>
+        {showName && (
+          <Box
+            is="span"
+            css={styles.headerName}
+            className={appendClassNames('ec-message-header-name')}
+          >
+            {message.u?.name}
+          </Box>
+        )}
+        {showUsername && (
+          <Box
+            is="span"
+            css={styles.userName}
+            className={appendClassNames('ec-message-header-username')}
+          >
+            @{message.u.username}
+          </Box>
+        )}
         {showRoles && isRoles && (
           <>
             {admins.includes(message?.u?.username) && (
