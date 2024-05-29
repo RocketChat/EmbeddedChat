@@ -77,8 +77,8 @@ const ChatInputFormattingToolbar = ({
 
   const chatToolMap = {
     emoji: (
-      <>
-        <Tooltip text="Emoji" position="top" key="emoji">
+      <Box key="emoji">
+        <Tooltip text="Emoji" position="top" key="emoji-btn">
           <ActionButton
             square
             ghost
@@ -106,7 +106,7 @@ const ChatInputFormattingToolbar = ({
             onClose={() => setEmojiOpen(false)}
           />
         )}
-      </>
+      </Box>
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
