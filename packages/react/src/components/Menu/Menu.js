@@ -15,6 +15,7 @@ const Menu = ({
   anchor = 'right bottom',
   tooltip = { isToolTip: true, position: 'bottom', text: 'Options' },
   size = 'medium',
+  useWrapper = true,
 }) => {
   const theme = useTheme();
   const styles = useMenuStyles();
@@ -36,6 +37,8 @@ const Menu = ({
     () => ({ ...styleOverrides, ...anchorStyle }),
     [anchorStyle, styleOverrides]
   );
+  const { classNames: wrapperClasses, styleOverrides: wrapperStyles } =
+    useComponentOverrides('MenuWrapper');
 
   const [isOpen, setOpen] = useState(false);
 
@@ -57,7 +60,7 @@ const Menu = ({
     return () => document.body.removeEventListener('click', onBodyClick);
   }, [isOpen]);
 
-  return (
+  const content = (
     <>
       {tooltip.isToolTip ? (
         <Tooltip text={tooltip.text} position={tooltip.position}>
@@ -97,6 +100,17 @@ const Menu = ({
         </Box>
       ) : null}
     </>
+  );
+  return useWrapper ? (
+    <Box
+      css={styles.wrapper}
+      className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
+      style={wrapperStyles}
+    >
+      {content}
+    </Box>
+  ) : (
+    content
   );
 };
 
