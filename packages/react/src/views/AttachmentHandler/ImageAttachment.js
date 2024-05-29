@@ -26,6 +26,7 @@ const ImageAttachment = ({ attachment, host }) => {
         css={css`
           cursor: pointer;
           border-radius: ${theme.schemes.radius};
+          width: 40%;
         `}
       >
         <img
