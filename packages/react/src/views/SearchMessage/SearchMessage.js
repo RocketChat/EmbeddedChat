@@ -86,6 +86,8 @@ const Search = () => {
                   showAvatar
                   showToolbox={false}
                   showRoles={false}
+                  isLinkPreview={false}
+                  style={{ paddingRight: '1.25rem', paddingLeft: '1.25rem' }}
                 />
               </Box>
             );

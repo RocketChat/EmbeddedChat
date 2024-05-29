@@ -31,6 +31,7 @@ const Message = ({
   style = {},
   showToolbox = true,
   showRoles = true,
+  isLinkPreview = true,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -174,7 +175,8 @@ const Message = ({
                   <Markdown body={message} isReaction={false} />
                 )}
 
-                {message.urls &&
+                {isLinkPreview &&
+                  message.urls &&
                   message.urls.map(
                     (url, index) =>
                       url.meta && (
