@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
-import { Button } from '../../components/Button';
 import ImageGallery from '../ImageGallery/ImageGallery';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageAttachment = ({ attachment, host }) => {
   const [showGallery, setShowGallery] = useState(false);
+  const { theme } = useCustomTheme();
 
   const extractIdFromUrl = (url) => {
     const match = url.match(/\/file-upload\/(.*?)\//);
@@ -19,12 +21,22 @@ const ImageAttachment = ({ attachment, host }) => {
         attachment={attachment}
         url={host + (attachment.title_link || attachment.image_url)}
       />
-      <Button ghost onClick={() => setShowGallery(true)}>
+      <Box
+        onClick={() => setShowGallery(true)}
+        css={css`
+          cursor: pointer;
+          border-radius: ${theme.schemes.radius};
+        `}
+      >
         <img
           src={host + attachment.image_url}
-          style={{ maxWidth: '100%', objectFit: 'contain' }}
+          style={{
+            maxWidth: '100%',
+            objectFit: 'contain',
+            borderRadius: theme.schemes.radius,
+          }}
         />
-      </Button>
+      </Box>
       {showGallery && (
         <ImageGallery
           currentFileId={extractIdFromUrl(attachment.title_link)}

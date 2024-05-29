@@ -42,7 +42,6 @@ const AttachmentMetadata = ({ attachment, url }) => {
         <p
           css={css`
             margin: 0;
-            color: grey;
           `}
         >
           {attachment.title}
@@ -55,7 +54,6 @@ const AttachmentMetadata = ({ attachment, url }) => {
           css={css`
             margin-left: 10px;
             margin-top: 5px;
-            color: grey;
           `}
         />
       </Box>
