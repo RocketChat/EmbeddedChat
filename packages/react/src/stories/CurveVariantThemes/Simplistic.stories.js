@@ -1,10 +1,10 @@
 import { EmbeddedChat } from '../..';
-import AzureSky from '../../theme/AzureSky';
-import DefaultTheme from '../../theme/DefaultTheme';
+import AzureSky from '../../theme/CurveVariant/AzureSky';
+import Simple from '../../theme/CurveVariant/Simple';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/Design Variants/RCVariant/Simplistic',
+  title: 'EmbeddedChat/Design Variants/CurveVariant/Simplistic',
   component: EmbeddedChat,
 };
 
@@ -22,7 +22,7 @@ export const Default = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: DefaultTheme,
+    theme: Simple,
     auth: {
       flow: 'PASSWORD',
     },

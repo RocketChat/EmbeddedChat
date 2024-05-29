@@ -1,16 +1,13 @@
 import { EmbeddedChat } from '../..';
-import AzureSky from '../../theme/AzureSky';
-import DefaultTheme from '../../theme/DefaultTheme';
+import MintMeadow from '../../theme/CurveVariant/MintMeadow';
+import RoseEmber from '../../theme/CurveVariant/RoseEmber';
 
-// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/Design Variants/RCVariant/Simplistic',
+  title: 'EmbeddedChat/Design Variants/CurveVariant/Colorful',
   component: EmbeddedChat,
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-
-export const Default = {
+export const Mint_Meadow = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -22,7 +19,7 @@ export const Default = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: DefaultTheme,
+    theme: MintMeadow,
     auth: {
       flow: 'PASSWORD',
     },
@@ -30,7 +27,7 @@ export const Default = {
   },
 };
 
-export const Azure_Sky = {
+export const Rose_Ember = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -42,7 +39,7 @@ export const Azure_Sky = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: AzureSky,
+    theme: RoseEmber,
     auth: {
       flow: 'PASSWORD',
     },
