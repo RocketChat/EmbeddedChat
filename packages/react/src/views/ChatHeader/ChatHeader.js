@@ -286,6 +286,7 @@ const ChatHeader = ({
       <Tooltip
         text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
         position="bottom"
+        key="minmax"
       >
         <ActionButton
           onClick={() => {
@@ -303,6 +304,7 @@ const ChatHeader = ({
 
     close: isClosable && (
       <ActionButton
+        key="close"
         onClick={() => {
           setClosableState((prev) => !prev);
         }}
