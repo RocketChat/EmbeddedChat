@@ -15,13 +15,14 @@ import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
-  order = ['emoji', 'formatter', 'audio', 'video', 'file'],
+  toolConfig = ['emoji', 'formatter', 'audio', 'video', 'file'],
 }) => {
-  const { classNames, styleOverrides } = useComponentOverrides(
+  const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
 
   const styles = useChatInputFormattingToolbarStyles();
+  const toolOptions = configOverrides.optionConfig?.toolOptions || toolConfig;
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
@@ -151,7 +152,7 @@ const ChatInputFormattingToolbar = ({
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >
-      {order.map((key) => chatToolMap[key])}
+      {toolOptions.map((key) => chatToolMap[key])}
     </Box>
   );
 };

@@ -37,23 +37,32 @@ const ChatHeader = ({
   style = {},
   anonymousMode,
   showRoles,
-  order = [
-    'minmax',
-    'close',
-    'thread',
-    'mentions',
-    'starred',
-    'pinned',
-    'files',
-    'members',
-    'search',
-    'rInfo',
-    'logout',
-  ],
+  optionConfig = {
+    chatOptions: [
+      'minmax',
+      'close',
+      'thread',
+      'mentions',
+      'starred',
+      'pinned',
+      'files',
+      'members',
+      'search',
+      'rInfo',
+      'logout',
+    ],
 
-  threshold = 2,
+    threshold: 2,
+  },
 }) => {
-  const { classNames, styleOverrides } = useComponentOverrides('ChatHeader');
+  const { classNames, styleOverrides, configOverrides } =
+    useComponentOverrides('ChatHeader');
+
+  const chatOptions =
+    configOverrides.optionConfig?.chatOptions || optionConfig.chatOptions;
+  const threshold =
+    configOverrides.optionConfig?.threshold || optionConfig.threshold;
+
   const styles = useChatHeaderStyles();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
@@ -432,7 +441,7 @@ const ChatHeader = ({
     ),
   };
 
-  const menuOptions = order
+  const menuOptions = chatOptions
     .slice(threshold)
     .map((key) => {
       const tool = menuMap[key];
@@ -502,7 +511,7 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          {order.slice(0, threshold).map((key) => menuMap[key])}
+          {chatOptions.slice(0, threshold).map((key) => menuMap[key])}
           {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>

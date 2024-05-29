@@ -27,25 +27,32 @@ export const MessageToolbox = ({
   handleEditMessage,
   handleQuoteMessage,
   isEditing = false,
-  order = [
-    'reaction',
-    'reply',
-    'quote',
-    'star',
-    'pin',
-    'edit',
-    'delete',
-    'report',
-  ],
-  threshold = 4,
+  optionConfig = {
+    toolOptions: [
+      'reaction',
+      'reply',
+      'quote',
+      'star',
+      'pin',
+      'edit',
+      'delete',
+      'report',
+    ],
+    threshold: 4,
+  },
+
   ...props
 }) => {
-  const { styleOverrides, classNames } = useComponentOverrides(
+  const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
     'MessageToolbox',
     className,
     style
   );
   const styles = useMessageToolboxStyles();
+  const toolOptions =
+    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
+  const threshold =
+    configOverrides.optionConfig?.threshold || optionConfig.threshold;
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
@@ -155,7 +162,7 @@ export const MessageToolbox = ({
     ),
   };
 
-  const menuOptions = order
+  const menuOptions = toolOptions
     .slice(threshold)
     .map((key) => {
       const tool = toolMap[key];
@@ -190,7 +197,7 @@ export const MessageToolbox = ({
           style={styleOverrides}
           {...props}
         >
-          {order.slice(0, threshold).map((key) => toolMap[key])}
+          {toolOptions.slice(0, threshold).map((key) => toolMap[key])}
 
           {menuOptions.length > 0 && (
             <Menu
