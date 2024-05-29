@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useMessageGenericPreviewStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const container = css`
     display: flex;
@@ -10,7 +10,7 @@ export const useMessageGenericPreviewStyles = () => {
     flex-direction: column;
     padding: 0.75rem;
     border: 1px solid ${colors.border};
-    border-radius: 5px;
+    border-radius: ${theme.schemes.radius};
     background-color: ${colors.background};
   `;
 

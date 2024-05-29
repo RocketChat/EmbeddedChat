@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useCheckBoxStyles = (checked) => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const main = css`
     display: inline-block;
@@ -12,7 +12,7 @@ const useCheckBoxStyles = (checked) => {
     width: 1rem;
     box-sizing: border-box;
     border: ${!checked ? `1px solid ${colors.primary}` : `none`};
-    border-radius: 4px;
+    border-radius: ${theme.schemes.radius};
     cursor: pointer;
     outline: none;
     &:active {

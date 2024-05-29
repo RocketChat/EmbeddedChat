@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useMultiSelectStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
   const main = css`
     position: relative;
     display: inline-flex;
@@ -22,7 +22,7 @@ const useMultiSelectStyles = () => {
     border-width: 1px;
     border-color: ${colors.border};
     border-style: solid;
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
     background-color: ${colors.background};
     box-shadow: none;
     -webkit-appearance: none;

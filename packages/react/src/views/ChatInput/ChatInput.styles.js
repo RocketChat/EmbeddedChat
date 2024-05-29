@@ -70,6 +70,7 @@ export const useChatInputFormattingToolbarStyles = () => {
     position: relative;
     flex-direction: row;
     gap: 0.375rem;
+    overflow: hidden;
     border-radius: ${theme.schemes.radius};
   `;
 

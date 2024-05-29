@@ -3,7 +3,7 @@ import { alpha } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useModalstyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
   const main = css`
     position: absolute;
     display: flex;
@@ -17,7 +17,7 @@ export const useModalstyles = () => {
     padding: 0.5rem;
     color: ${colors.foreground};
     background: ${colors.background};
-    border-radius: 0.5rem;
+    border-radius: ${theme.schemes.radius};
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

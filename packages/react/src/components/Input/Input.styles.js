@@ -3,7 +3,7 @@ import { alpha } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useInputStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const main = css`
     position: relative;
@@ -25,7 +25,7 @@ const useInputStyles = () => {
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
     box-shadow: none;
     border: 1px solid ${colors.border};
     outline: none;

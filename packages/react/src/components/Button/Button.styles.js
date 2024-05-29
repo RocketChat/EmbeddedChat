@@ -12,7 +12,7 @@ const getSquareSize = (size) => {
 };
 
 const useButtonStyles = (type, size) => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const main = css`
     cursor: pointer;
@@ -34,8 +34,8 @@ const useButtonStyles = (type, size) => {
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-radius: 0.25rem;
     align-self: flex-start;
+    border-radius: ${theme.schemes.radius};
     &.ec-button--small {
       font-size: 0.75rem;
       font-weight: 700;
@@ -45,7 +45,6 @@ const useButtonStyles = (type, size) => {
       padding-block: calc(12px - 0.5rem);
       padding: calc(12px - 0.5rem) 6px;
       padding-inline: 6px;
-      border-radius: 0.25rem;
     }
     &.ec-button--large {
       font-size: 1rem;
@@ -56,7 +55,6 @@ const useButtonStyles = (type, size) => {
       padding-block: calc(22px - 0.75rem);
       padding: calc(22px - 0.75rem) 22px;
       padding-inline: 22px;
-      border-radius: 0.36rem;
     }
 
     &.ec-button-square {

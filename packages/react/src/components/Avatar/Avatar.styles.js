@@ -15,7 +15,7 @@ export const useAvatarStyles = () => {
     align-items: center;
     background-color: ${colors.primary};
     color: ${colors.primaryForeground};
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
     height: ${size};
     width: ${size};
   `;

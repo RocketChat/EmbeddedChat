@@ -110,6 +110,7 @@ export const useMessageDividerStyles = () => {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    border-radius: ${theme.schemes.radius};
   `;
 
   const bar = css`
@@ -125,7 +126,7 @@ export const useMessageDividerStyles = () => {
 };
 
 export const useMessageHeaderStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const header = css`
     display: flex;
@@ -155,7 +156,7 @@ export const useMessageHeaderStyles = () => {
     font-size: 0.75rem;
     padding: 0 0.25rem;
     margin: 0 0.1rem;
-    border-radius: 2px;
+    border-radius: ${theme.schemes.radius};
     font-weight: 700;
     line-height: 1rem;
     overflow: hidden;
@@ -276,7 +277,7 @@ export const useMessageToolboxStyles = () => {
     box-shadow: 0 0 2px ${colors.foreground};
     gap: 0.25rem;
     padding: 0.25rem;
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
   `;
 
   return { container, toolbox };

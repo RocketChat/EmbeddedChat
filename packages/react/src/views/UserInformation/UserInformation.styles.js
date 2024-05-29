@@ -3,7 +3,7 @@ import { useCustomTheme } from '../../hooks/useCustomTheme';
 import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useUserInformationStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
   const { scrollStyles } = useGlobalStyles();
   const userSidebar = css`
     padding: 0 1rem 1rem;
@@ -24,7 +24,7 @@ const useUserInformationStyles = () => {
     font-size: 0.75rem;
     padding: 0 0.25rem;
     margin: 0 0.1rem;
-    border-radius: 2px;
+    border-radius: ${theme.schemes.radius};
     font-weight: 700;
     line-height: 1rem;
     overflow: hidden;

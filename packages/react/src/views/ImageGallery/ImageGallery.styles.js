@@ -22,7 +22,7 @@ const useImageGalleryStyles = () => {
     background: ${colors.primary};
     color: ${colors.primaryForeground};
     border: none;
-    border-radius: 4px;
+    border-radius: ${theme.schemes.radius};
     padding: 8px 16px;
     cursor: pointer;
     z-index: ${theme.zIndex.modal + 1};
