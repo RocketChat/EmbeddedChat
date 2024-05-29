@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import React, { useMemo, useRef, useEffect } from 'react';
 import { appendClassNames } from '../../lib/appendClassNames';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';

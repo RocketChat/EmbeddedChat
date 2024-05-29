@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useLinkPreviewStyles from './LinkPreview.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 

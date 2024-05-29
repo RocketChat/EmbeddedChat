@@ -18,7 +18,7 @@ import {
 import { DynamicHeader } from '../DynamicHeader';
 import { Tooltip } from '../../components/Tooltip';
 import { Box } from '../../components/Box';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Icon } from '../../components/Icon';
 import { ActionButton } from '../../components/ActionButton';
 import { Menu } from '../../components/Menu';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { AvatarContainer } from './AvatarContainer';
 import { Icon } from '../Icon';
 import { Box } from '../Box';

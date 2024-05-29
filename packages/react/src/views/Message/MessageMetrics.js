@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDistance } from 'date-fns';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Button } from '../../components/Button';

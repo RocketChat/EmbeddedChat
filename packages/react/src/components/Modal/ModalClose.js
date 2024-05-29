@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import React from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { ActionButton } from '../ActionButton';
 import { Box } from '../Box';
 

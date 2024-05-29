@@ -22,7 +22,7 @@ import { Input } from '../../components/Input';
 import { Icon } from '../../components/Icon';
 import { CommandsList } from '../CommandList';
 import { ActionButton } from '../../components/ActionButton';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { Modal } from '../../components/Modal';
 import useSettingsStore from '../../store/settingsStore';

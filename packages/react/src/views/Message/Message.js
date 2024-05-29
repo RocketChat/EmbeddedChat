@@ -8,7 +8,7 @@ import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../../components/Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';

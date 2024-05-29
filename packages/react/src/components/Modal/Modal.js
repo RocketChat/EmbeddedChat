@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
 import { useModalstyles } from './Modal.styles';

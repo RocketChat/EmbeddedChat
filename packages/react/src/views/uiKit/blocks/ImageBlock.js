@@ -1,6 +1,6 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useEffect, useState } from 'react';
-import useComponentOverrides from '../../../theme/useComponentOverrides';
+import useComponentOverrides from '../../../hooks/useComponentOverrides';
 import { Box } from '../../../components/Box';
 import { Skeleton } from '../../../components/Skeleton';
 import { ImageBlockStyles as styles } from './blocks.styles';

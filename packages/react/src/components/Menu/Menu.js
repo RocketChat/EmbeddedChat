@@ -3,7 +3,7 @@ import { css, useTheme } from '@emotion/react';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 import MenuItem from './MenuItem';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
 import { useMenuStyles } from './Menu.styles';

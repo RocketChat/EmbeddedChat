@@ -1,7 +1,7 @@
 import React from 'react';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Box } from '../../components/Box';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { useMessageDividerStyles } from './Message.styles';
 
 export const MessageDivider = ({

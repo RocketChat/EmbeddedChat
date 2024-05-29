@@ -1,5 +1,5 @@
 import React from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { appendClassNames } from '../../lib/appendClassNames';

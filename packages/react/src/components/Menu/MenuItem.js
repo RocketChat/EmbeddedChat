@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { useMenuItemStyles } from './Menu.styles';
 

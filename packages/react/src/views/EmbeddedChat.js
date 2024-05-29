@@ -14,7 +14,7 @@ import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from '../components/Box';
-import useComponentOverrides from '../theme/useComponentOverrides';
+import useComponentOverrides from '../hooks/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';

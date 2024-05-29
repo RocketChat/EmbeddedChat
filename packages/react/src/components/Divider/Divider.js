@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useDividerStyles from './Divider.styles';
 
 // eslint-disable-next-line react/prop-types

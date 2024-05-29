@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useChannelStateStyles from './ChannelState.styles';
 
 const ChannelState = ({

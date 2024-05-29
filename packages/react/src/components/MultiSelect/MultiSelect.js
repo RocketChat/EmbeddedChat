@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme, css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import useMultiSelectStyles from './MultiSelect.styles';
 import { CheckBox } from '../CheckBox';

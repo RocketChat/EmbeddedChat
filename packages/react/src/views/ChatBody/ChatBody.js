@@ -10,7 +10,7 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';
