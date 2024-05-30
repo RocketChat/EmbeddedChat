@@ -23,7 +23,7 @@ import { useMessageStyles } from './Message.styles';
 
 const Message = ({
   message,
-  variant = 'default',
+  type = 'default',
   sequential = false,
   newDay = false,
   showAvatar = false,
@@ -32,12 +32,17 @@ const Message = ({
   showToolbox = true,
   showRoles = true,
   isLinkPreview = true,
+  variant = 'flat',
 }) => {
-  const { classNames, styleOverrides } = useComponentOverrides(
-    'Message',
-    [message.messageParentBox, className],
-    style
-  );
+  const { classNames, styleOverrides, variantOverrides } =
+    useComponentOverrides(
+      'Message',
+      [message.messageParentBox, className],
+      style
+    );
+
+  variant = variantOverrides || variant;
+
   const styles = useMessageStyles();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -211,7 +216,7 @@ const Message = ({
               )}
             </>
           )}
-          {message.tcount && variant !== 'thread' ? (
+          {message.tcount && type !== 'thread' ? (
             <MessageMetrics
               message={message}
               handleOpenThread={handleOpenThread}
@@ -239,7 +244,7 @@ const Message = ({
                 setMessageToReport(message._id);
                 toggletoggleShowReportMessage();
               }}
-              isThreadMessage={variant === 'thread'}
+              isThreadMessage={type === 'thread'}
             />
           ) : (
             <></>
@@ -259,7 +264,8 @@ Message.propTypes = {
   message: PropTypes.any,
   sequential: PropTypes.bool,
   newDay: PropTypes.bool,
-  variant: PropTypes.oneOf(['thread', 'default']),
+  type: PropTypes.oneOf(['thread', 'default']),
+  variant: PropTypes.oneOf(['flat', 'bubble']),
   showAvatar: PropTypes.bool,
 };
 

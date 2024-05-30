@@ -65,7 +65,7 @@ const MessageList = ({ messages }) => {
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}
-                variant="default"
+                type="default"
                 showAvatar={showAvatar}
               />
             )

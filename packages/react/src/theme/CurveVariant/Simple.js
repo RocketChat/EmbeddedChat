@@ -68,6 +68,11 @@ const DefaultTheme = {
     lg: 1200,
     xl: 1536,
   },
+
+  variants: {
+    Message: 'bubble',
+  },
+
   components: {},
 
   typography: {

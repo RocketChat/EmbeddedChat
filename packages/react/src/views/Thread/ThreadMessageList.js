@@ -26,7 +26,7 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               message={msg}
               newDay={newDay}
               sequential={sequential}
-              variant="thread"
+              type="thread"
               showAvatar={showAvatar}
             />
           )

@@ -86,7 +86,7 @@ const StarredMessages = () => {
                     key={msg._id}
                     message={msg}
                     newDay={false}
-                    variant="default"
+                    type="default"
                     showAvatar
                     showToolbox={false}
                     showRoles={false}

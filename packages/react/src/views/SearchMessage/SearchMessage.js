@@ -82,7 +82,7 @@ const Search = () => {
                   message={msg}
                   newDay={false}
                   sequential={false}
-                  variant="default"
+                  type="default"
                   showAvatar
                   showToolbox={false}
                   showRoles={false}
