@@ -47,7 +47,7 @@ const Message = ({
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
+  const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
   const dispatchToastMessage = useToastBarDispatch();
@@ -147,119 +147,122 @@ const Message = ({
   const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
   return (
-    <>
-      <Box
-        className={appendClassNames('ec-message', classNames)}
-        css={[
-          styles.main,
-          editMessage._id === message._id && styles.messageEditing,
-        ]}
-        style={styleOverrides}
-      >
-        {showAvatar && (
-          <MessageAvatarContainer
-            message={message}
-            sequential={sequential}
-            isStarred={isStarred}
-            isPinned={isPinned}
-          />
-        )}
-        <MessageBodyContainer>
-          {shouldShowHeader && (
-            <MessageHeader message={message} isRoles={showRoles} />
+    variant === 'flat' && (
+      <>
+        <Box
+          className={appendClassNames('ec-message', classNames)}
+          css={[
+            styles.main,
+            editMessage._id === message._id && styles.messageEditing,
+          ]}
+          style={styleOverrides}
+        >
+          {showAvatar && (
+            <MessageAvatarContainer
+              message={message}
+              sequential={sequential}
+              isStarred={isStarred}
+              isPinned={isPinned}
+            />
           )}
-          {!message.t ? (
-            <>
-              <MessageBody css={message.isPending && styles.pendingMessageBody}>
-                {message.attachments && message.attachments.length > 0 ? (
-                  <>
+          <MessageBodyContainer>
+            {shouldShowHeader && (
+              <MessageHeader message={message} isRoles={showRoles} />
+            )}
+            {!message.t ? (
+              <>
+                <MessageBody
+                  css={message.isPending && styles.pendingMessageBody}
+                >
+                  {message.attachments && message.attachments.length > 0 ? (
+                    <>
+                      <Markdown body={message} isReaction={false} />
+                      <Attachments attachments={message.attachments} />
+                    </>
+                  ) : (
                     <Markdown body={message} isReaction={false} />
-                    <Attachments attachments={message.attachments} />
-                  </>
-                ) : (
-                  <Markdown body={message} isReaction={false} />
-                )}
-
-                {isLinkPreview &&
-                  message.urls &&
-                  message.urls.map(
-                    (url, index) =>
-                      url.meta && (
-                        <LinkPreview
-                          key={index}
-                          url={url.url}
-                          meta={url.meta}
-                        />
-                      )
                   )}
 
-                {message.blocks && (
-                  <kitContext.Provider value={context} mid={message.mid}>
-                    <UiKitComponent
-                      render={UiKitMessage}
-                      blocks={message.blocks}
-                    />
-                  </kitContext.Provider>
-                )}
-              </MessageBody>
+                  {isLinkPreview &&
+                    message.urls &&
+                    message.urls.map(
+                      (url, index) =>
+                        url.meta && (
+                          <LinkPreview
+                            key={index}
+                            url={url.url}
+                            meta={url.meta}
+                          />
+                        )
+                    )}
 
-              <MessageReactions
-                authenticatedUserUsername={authenticatedUserUsername}
+                  {message.blocks && (
+                    <kitContext.Provider value={context} mid={message.mid}>
+                      <UiKitComponent
+                        render={UiKitMessage}
+                        blocks={message.blocks}
+                      />
+                    </kitContext.Provider>
+                  )}
+                </MessageBody>
+
+                <MessageReactions
+                  authenticatedUserUsername={authenticatedUserUsername}
+                  message={message}
+                  handleEmojiClick={handleEmojiClick}
+                />
+              </>
+            ) : (
+              <>
+                {message.attachments && (
+                  <Attachments attachments={message.attachments} />
+                )}
+              </>
+            )}
+            {message.tcount && type !== 'thread' ? (
+              <MessageMetrics
                 message={message}
-                handleEmojiClick={handleEmojiClick}
+                handleOpenThread={handleOpenThread}
               />
-            </>
-          ) : (
-            <>
-              {message.attachments && (
-                <Attachments attachments={message.attachments} />
-              )}
-            </>
-          )}
-          {message.tcount && type !== 'thread' ? (
-            <MessageMetrics
-              message={message}
-              handleOpenThread={handleOpenThread}
-            />
-          ) : null}
-          {!message.t && showToolbox ? (
-            <MessageToolbox
-              message={message}
-              isEditing={editMessage._id === message._id}
-              authenticatedUserId={authenticatedUserId}
-              handleOpenThread={handleOpenThread}
-              handleDeleteMessage={handleDeleteMessage}
-              handleStarMessage={handleStarMessage}
-              handlePinMessage={handlePinMessage}
-              handleEditMessage={() => {
-                if (editMessage._id === message._id) {
-                  setEditMessage({});
-                } else {
-                  setEditMessage(message);
-                }
-              }}
-              handleQuoteMessage={() => setQuoteMessage(message)}
-              handleEmojiClick={handleEmojiClick}
-              handlerReportMessage={() => {
-                setMessageToReport(message._id);
-                toggletoggleShowReportMessage();
-              }}
-              isThreadMessage={type === 'thread'}
-            />
-          ) : (
-            <></>
-          )}
-        </MessageBodyContainer>
-      </Box>
-      {newDay ? (
-        <MessageDivider>
-          {format(new Date(message.ts), 'MMMM d, yyyy')}
-        </MessageDivider>
-      ) : null}
-    </>
+            ) : null}
+            {!message.t && showToolbox ? (
+              <MessageToolbox
+                message={message}
+                isEditing={editMessage._id === message._id}
+                authenticatedUserId={authenticatedUserId}
+                handleOpenThread={handleOpenThread}
+                handleDeleteMessage={handleDeleteMessage}
+                handleStarMessage={handleStarMessage}
+                handlePinMessage={handlePinMessage}
+                handleEditMessage={() => {
+                  if (editMessage._id === message._id) {
+                    setEditMessage({});
+                  } else {
+                    setEditMessage(message);
+                  }
+                }}
+                handleQuoteMessage={() => setQuoteMessage(message)}
+                handleEmojiClick={handleEmojiClick}
+                handlerReportMessage={() => {
+                  setMessageToReport(message._id);
+                  toggleShowReportMessage();
+                }}
+                isThreadMessage={type === 'thread'}
+              />
+            ) : (
+              <></>
+            )}
+          </MessageBodyContainer>
+        </Box>
+        {newDay ? (
+          <MessageDivider>
+            {format(new Date(message.ts), 'MMMM d, yyyy')}
+          </MessageDivider>
+        ) : null}
+      </>
+    )
   );
 };
-
 Message.propTypes = {
   message: PropTypes.any,
   sequential: PropTypes.bool,

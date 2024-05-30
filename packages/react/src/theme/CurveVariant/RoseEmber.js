@@ -7,7 +7,9 @@ const RoseEmber = {
     xl: 1536,
   },
   components: {},
-
+  variants: {
+    Message: 'bubble',
+  },
   schemes: {
     radius: '1.5rem',
     common: {
