@@ -20,6 +20,7 @@ import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
+import { useBubbleMessageStyles } from './Bubble/Bubble.styles';
 
 const Message = ({
   message,
@@ -44,6 +45,7 @@ const Message = ({
   variant = variantOverrides || variant;
 
   const styles = useMessageStyles();
+  const bubbleStyle = useBubbleMessageStyles();
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -147,8 +149,8 @@ const Message = ({
   const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
   return (
-    variant === 'flat' && (
-      <>
+    <>
+      {variant === 'flat' && (
         <Box
           className={appendClassNames('ec-message', classNames)}
           css={[
@@ -254,13 +256,60 @@ const Message = ({
             )}
           </MessageBodyContainer>
         </Box>
-        {newDay ? (
-          <MessageDivider>
-            {format(new Date(message.ts), 'MMMM d, yyyy')}
-          </MessageDivider>
-        ) : null}
-      </>
-    )
+      )}
+
+      {variant === 'bubble' && (
+        <Box
+          className={appendClassNames('ec-bubble-message', classNames)}
+          css={[
+            bubbleStyle.main,
+            message.u._id === authenticatedUserId && bubbleStyle.me,
+          ]}
+          style={styleOverrides}
+        >
+          {showAvatar && (
+            <MessageAvatarContainer
+              message={message}
+              sequential={sequential}
+              isStarred={isStarred}
+              isPinned={isPinned}
+            />
+          )}
+          {message.u._id !== authenticatedUserId ? (
+            <Box css={bubbleStyle.body}>
+              {shouldShowHeader && (
+                <MessageHeader message={message} isRoles={showRoles} />
+              )}
+              <Box
+                css={[
+                  bubbleStyle.messageContainer,
+                  message.u._id === authenticatedUserId &&
+                    bubbleStyle.messageContainerMe,
+                ]}
+              >
+                <Markdown body={message} isReaction={false} />
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              css={[
+                bubbleStyle.messageContainer,
+                message.u._id === authenticatedUserId &&
+                  bubbleStyle.messageContainerMe,
+              ]}
+            >
+              <Markdown body={message} isReaction={false} />
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {newDay && (
+        <MessageDivider>
+          {format(new Date(message.ts), 'MMMM d, yyyy')}
+        </MessageDivider>
+      )}
+    </>
   );
 };
 Message.propTypes = {
