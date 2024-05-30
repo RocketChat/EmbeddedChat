@@ -26,6 +26,7 @@ const Message = ({
   message,
   type = 'default',
   sequential = false,
+  lastSequential = false,
   newDay = false,
   showAvatar = false,
   className = '',
@@ -275,32 +276,37 @@ const Message = ({
               isPinned={isPinned}
             />
           )}
-          {message.u._id !== authenticatedUserId ? (
-            <Box css={bubbleStyle.body}>
-              {shouldShowHeader && (
-                <MessageHeader message={message} isRoles={showRoles} />
-              )}
-              <Box
-                css={[
-                  bubbleStyle.messageContainer,
-                  message.u._id === authenticatedUserId &&
-                    bubbleStyle.messageContainerMe,
-                ]}
-              >
-                <Markdown body={message} isReaction={false} />
-              </Box>
-            </Box>
-          ) : (
+          <Box
+            css={[
+              bubbleStyle.body,
+              message.u._id === authenticatedUserId && bubbleStyle.bodyMe,
+            ]}
+          >
+            {shouldShowHeader && (
+              <MessageHeader
+                message={message}
+                isRoles={showRoles}
+                showName={!(message.u._id === authenticatedUserId)}
+              />
+            )}
             <Box
               css={[
                 bubbleStyle.messageContainer,
                 message.u._id === authenticatedUserId &&
                   bubbleStyle.messageContainerMe,
+                sequential && bubbleStyle.sequential,
+                message.u._id === authenticatedUserId &&
+                  sequential &&
+                  bubbleStyle.sequentialMe,
+                lastSequential && bubbleStyle.lastSequential,
+                message.u._id === authenticatedUserId &&
+                  lastSequential &&
+                  bubbleStyle.lastSequentialMe,
               ]}
             >
               <Markdown body={message} isReaction={false} />
             </Box>
-          )}
+          </Box>
         </Box>
       )}
 

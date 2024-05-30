@@ -33,7 +33,7 @@ const useUserStore = create((set) => ({
   setShowRoles: (showRoles) => set(() => ({ showRoles })),
   showUsername: false,
   setShowUsername: (showUsername) => set(() => ({ showUsername })),
-  showName: false,
+  showName: true,
   setShowName: (showName) => set(() => ({ showName })),
   roles: {},
   setRoles: (roles) => set((state) => ({ ...state, roles })),

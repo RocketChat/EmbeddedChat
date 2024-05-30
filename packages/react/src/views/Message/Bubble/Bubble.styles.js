@@ -9,21 +9,23 @@ export const useBubbleMessageStyles = () => {
     gap: 0.25rem;
     flex-direction: row;
     align-items: center;
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
-    padding-left: 2.25rem;
-    padding-right: 2.25rem;
+    padding: 0 2.25rem 0.25rem 2.25rem;
     color: ${colors.foreground};
-  `;
-
-  const body = css`
-    display: flex;
-    justify-self: flex-start;
-    flex-direction: column;
   `;
 
   const me = css`
     flex-direction: row-reverse;
+  `;
+
+  const body = css`
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    flex-direction: column;
+  `;
+
+  const bodyMe = css`
+    align-items: flex-end;
   `;
 
   const messageContainer = css`
@@ -31,7 +33,6 @@ export const useBubbleMessageStyles = () => {
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.25rem;
-    flex-shrink: 1;
     transition: opacity 0.3s linear;
     word-break: break-word;
     opacity: 1;
@@ -41,7 +42,8 @@ export const useBubbleMessageStyles = () => {
     width: fit-content;
     max-width: 80%;
     padding: 0.5rem 0.75rem;
-    border-radius: 0 ${theme.schemes.radius} ${theme.schemes.radius};
+    border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
+      ${theme.schemes.radius} 0.2rem;
     background: ${colors.primary};
     color: ${colors.primaryForeground};
   `;
@@ -49,8 +51,24 @@ export const useBubbleMessageStyles = () => {
   const messageContainerMe = css`
     background: ${colors.secondary};
     color: ${colors.secondaryForeground};
-    border-radius: ${theme.schemes.radius} 0 ${theme.schemes.radius}
+    border-radius: ${theme.schemes.radius} ${theme.schemes.radius} 0.2rem
       ${theme.schemes.radius};
+  `;
+
+  const lastSequentialMe = css`
+    border-radius: ${theme.schemes.radius} 0.2rem ${theme.schemes.radius}
+      ${theme.schemes.radius};
+  `;
+
+  const sequentialMe = css`
+    border-radius: ${theme.schemes.radius} 0.2rem 0.2rem ${theme.schemes.radius};
+  `;
+
+  const sequential = css`
+    border-radius: 0.2rem ${theme.schemes.radius} ${theme.schemes.radius} 0.2rem;
+  `;
+  const lastSequential = css`
+    border-radius: 0.2rem ${theme.schemes.radius} ${theme.schemes.radius};
   `;
 
   return {
@@ -59,5 +77,10 @@ export const useBubbleMessageStyles = () => {
     messageContainer,
     messageContainerMe,
     body,
+    lastSequentialMe,
+    sequentialMe,
+    sequential,
+    lastSequential,
+    bodyMe,
   };
 };

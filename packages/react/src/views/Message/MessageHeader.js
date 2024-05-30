@@ -10,7 +10,12 @@ import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
+const MessageHeader = ({
+  message,
+  isTimeStamped = true,
+  isRoles = false,
+  showName = true,
+}) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
 
   const styles = useMessageHeaderStyles();
@@ -19,7 +24,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
   const showUsername = useUserStore((state) => state.showUsername);
-  const showName = useUserStore((state) => state.showName);
+  const showNameState = useUserStore((state) => state.showName);
 
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
@@ -70,7 +75,7 @@ const MessageHeader = ({ message, isTimeStamped = true, isRoles = false }) => {
         className={appendClassNames('ec-message-header', classNames)}
         style={styleOverrides}
       >
-        {showName && (
+        {showName && showNameState && (
           <Box
             is="span"
             css={styles.headerName}

@@ -9,6 +9,7 @@ import { Message } from '../Message';
 import { Box } from '../../components/Box';
 
 import { Icon } from '../../components/Icon';
+import isMessageLastSequential from '../../lib/isMessageLastSequential';
 
 const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
@@ -56,8 +57,11 @@ const MessageList = ({ messages }) => {
       {messages &&
         messages.map((msg, index, arr) => {
           const prev = arr[index + 1];
+          const next = arr[index - 1];
           const newDay = isMessageNewDay(msg, prev);
           const sequential = isMessageSequential(msg, prev, 300);
+          const lastSequential =
+            sequential && isMessageLastSequential(msg, next);
           return (
             msg && (
               <Message
@@ -65,6 +69,7 @@ const MessageList = ({ messages }) => {
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}
+                lastSequential={lastSequential}
                 type="default"
                 showAvatar={showAvatar}
               />
