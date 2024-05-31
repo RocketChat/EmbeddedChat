@@ -386,13 +386,20 @@ const Message = ({
                       />
                     </kitContext.Provider>
                   )}
-
-                  <MessageReactions
-                    authenticatedUserUsername={authenticatedUserUsername}
-                    message={message}
-                    handleEmojiClick={handleEmojiClick}
-                  />
                 </Box>
+
+                <MessageReactions
+                  authenticatedUserUsername={authenticatedUserUsername}
+                  message={message}
+                  handleEmojiClick={handleEmojiClick}
+                />
+
+                {message.tcount && type !== 'thread' ? (
+                  <MessageMetrics
+                    message={message}
+                    handleOpenThread={handleOpenThread}
+                  />
+                ) : null}
               </>
             ) : (
               <>
