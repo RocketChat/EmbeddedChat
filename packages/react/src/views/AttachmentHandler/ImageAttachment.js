@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const ImageAttachment = ({ attachment, host }) => {
+const ImageAttachment = ({ attachment, host, variant }) => {
   const [showGallery, setShowGallery] = useState(false);
-
+  const { colors } = useCustomTheme();
   const extractIdFromUrl = (url) => {
     const match = url.match(/\/file-upload\/(.*?)\//);
     return match ? match[1] : null;
@@ -15,19 +16,26 @@ const ImageAttachment = ({ attachment, host }) => {
 
   return (
     <Box
-      css={css`
-        border-radius: inherit;
-      `}
+      css={
+        variant === 'bubble' &&
+        css`
+          border: 1px solid ${colors.border};
+          border-radius: inherit;
+          overflow: hidden;
+        `
+      }
     >
       <AttachmentMetadata
         attachment={attachment}
         url={host + (attachment.title_link || attachment.image_url)}
+        variant={variant}
       />
       <Box
         onClick={() => setShowGallery(true)}
         css={css`
           cursor: pointer;
           border-radius: inherit;
+          line-height: 0;
         `}
       >
         <img
@@ -35,7 +43,8 @@ const ImageAttachment = ({ attachment, host }) => {
           style={{
             maxWidth: '100%',
             objectFit: 'contain',
-            borderRadius: 'inherit',
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
           }}
         />
       </Box>

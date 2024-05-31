@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { ActionButton } from '../../components/ActionButton';
 import { Box } from '../../components/Box';
 
-const AttachmentMetadata = ({ attachment, url }) => {
+const AttachmentMetadata = ({ attachment, url, variant }) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -24,11 +24,25 @@ const AttachmentMetadata = ({ attachment, url }) => {
   };
 
   return (
-    <>
+    <Box
+      css={[
+        css`
+          display: flex;
+          flex-direction: column;
+        `,
+
+        variant === 'bubble' &&
+          css`
+            padding: 2.5% 2.5% 0;
+          `,
+      ]}
+    >
       <p
-        css={css`
-          margin: 0;
-        `}
+        css={[
+          css`
+            margin: 0;
+          `,
+        ]}
       >
         {attachment.description}
       </p>
@@ -42,6 +56,8 @@ const AttachmentMetadata = ({ attachment, url }) => {
         <p
           css={css`
             margin: 0;
+            font-size: 14px;
+            opacity: 0.7;
           `}
         >
           {attachment.title}
@@ -57,7 +73,7 @@ const AttachmentMetadata = ({ attachment, url }) => {
           `}
         />
       </Box>
-    </>
+    </Box>
   );
 };
 

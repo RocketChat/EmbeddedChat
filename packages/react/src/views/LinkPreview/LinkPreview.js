@@ -64,7 +64,6 @@ const LinkPreview = ({
             styles.linkPreviewContainer,
             variant === 'bubble' &&
               css`
-                border: none;
                 border-radius: inherit;
                 background-color: inherit;
               `,

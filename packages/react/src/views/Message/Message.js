@@ -358,7 +358,10 @@ const Message = ({
                   ]}
                 >
                   {message.attachments && message.attachments.length > 0 && (
-                    <Attachments attachments={message.attachments} />
+                    <Attachments
+                      attachments={message.attachments}
+                      variant="bubble"
+                    />
                   )}
 
                   {isLinkPreview &&
