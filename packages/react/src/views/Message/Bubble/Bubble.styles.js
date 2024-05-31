@@ -73,7 +73,6 @@ export const useBubbleMessageStyles = () => {
   `;
 
   const attachmentContainer = css`
-    line-height: 0;
     border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
       ${theme.schemes.radius} 0.2rem;
     border: 1px solid ${colors.border};

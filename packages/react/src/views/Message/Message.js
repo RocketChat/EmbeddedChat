@@ -370,6 +370,7 @@ const Message = ({
                             key={index}
                             url={url.url}
                             meta={url.meta}
+                            variant="bubble"
                           />
                         )
                     )}

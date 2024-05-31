@@ -8,7 +8,14 @@ import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useLinkPreviewStyles from './LinkPreview.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
+const LinkPreview = ({
+  className = '',
+  style = {},
+  url,
+  meta,
+  variant,
+  ...props
+}) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
   const { colors } = useCustomTheme();
@@ -31,27 +38,37 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
 
   return (
     <>
-      <Box css={styles.arrowDropDown}>
-        Link Preview
-        <ActionButton
-          onClick={handleTogglePreview}
-          ghost
-          display="inline"
-          square
-          size="small"
-          style={{ marginLeft: '2px' }}
-        >
-          {isPreviewOpen ? (
-            <Icon name="chevron-left" size="1.25rem" />
-          ) : (
-            <Icon name="chevron-down" size="1.25rem" />
-          )}
-        </ActionButton>
-      </Box>
+      {variant !== 'bubble' && (
+        <Box css={styles.arrowDropDown}>
+          Link Preview
+          <ActionButton
+            onClick={handleTogglePreview}
+            ghost
+            display="inline"
+            square
+            size="small"
+            style={{ marginLeft: '2px' }}
+          >
+            {isPreviewOpen ? (
+              <Icon name="chevron-left" size="1.25rem" />
+            ) : (
+              <Icon name="chevron-down" size="1.25rem" />
+            )}
+          </ActionButton>
+        </Box>
+      )}
 
       {isPreviewOpen && (
         <Box
-          css={styles.linkPreviewContainer}
+          css={[
+            styles.linkPreviewContainer,
+            variant === 'bubble' &&
+              css`
+                border: none;
+                border-radius: inherit;
+                background-color: inherit;
+              `,
+          ]}
           className={`ec-linkpreview ${className} ${classNames}`}
           style={{ ...styleOverrides, ...style }}
           {...props}
