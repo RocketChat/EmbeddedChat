@@ -386,6 +386,12 @@ const Message = ({
                       />
                     </kitContext.Provider>
                   )}
+
+                  <MessageReactions
+                    authenticatedUserUsername={authenticatedUserUsername}
+                    message={message}
+                    handleEmojiClick={handleEmojiClick}
+                  />
                 </Box>
               </>
             ) : (

@@ -62,6 +62,12 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
+  const emojiPickerStyles = !isBubble
+    ? { position: 'absolute', top: '7rem', right: '1.5rem' }
+    : isBubble?.me
+    ? { position: 'absolute', top: '7rem', right: '1.5rem' }
+    : { position: 'absolute', top: '7rem', left: '1.5rem' };
+
   const toolMap = {
     reply: !isThreadMessage && (
       <Tooltip text="Reply in thread" position="top" key="reply">
@@ -221,11 +227,7 @@ export const MessageToolbox = ({
                 handleEmojiClick(emoji, message, true);
               }}
               onClose={() => setEmojiOpen(false)}
-              positionStyles={{
-                position: 'absolute',
-                top: '7rem',
-                right: '1.5rem',
-              }}
+              positionStyles={emojiPickerStyles}
             />
           )}
         </Box>

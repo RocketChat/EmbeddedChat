@@ -244,7 +244,7 @@ export const useMessageReactionsStyles = () => {
       margin: 0;
     }
     border: 1px solid ${colors.border};
-    border-radius: ${theme.schemes.radius};
+    border-radius: 0.2rem;
   `;
 
   const reactionMine = css`
