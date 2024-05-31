@@ -289,55 +289,108 @@ const Message = ({
                 showName={!(message.u._id === authenticatedUserId)}
               />
             )}
-            <Box
-              className="ec-bubble"
-              css={[
-                bubbleStyle.messageContainer,
-                message.u._id === authenticatedUserId &&
-                  bubbleStyle.messageContainerMe,
-                sequential && bubbleStyle.sequential,
-                message.u._id === authenticatedUserId &&
-                  sequential &&
-                  bubbleStyle.sequentialMe,
-                lastSequential && bubbleStyle.lastSequential,
-                message.u._id === authenticatedUserId &&
-                  lastSequential &&
-                  bubbleStyle.lastSequentialMe,
-              ]}
-            >
-              <Markdown body={message} isReaction={false} />
+            {!message.t ? (
+              <>
+                {message.md && (
+                  <Box
+                    className="ec-bubble"
+                    css={[
+                      bubbleStyle.messageContainer,
+                      message.u._id === authenticatedUserId &&
+                        bubbleStyle.messageContainerMe,
+                      sequential && bubbleStyle.sequential,
+                      message.u._id === authenticatedUserId &&
+                        sequential &&
+                        bubbleStyle.sequentialMe,
+                      lastSequential && bubbleStyle.lastSequential,
+                      message.u._id === authenticatedUserId &&
+                        lastSequential &&
+                        bubbleStyle.lastSequentialMe,
+                    ]}
+                  >
+                    <Markdown body={message} isReaction={false} />
 
-              {!message.t && showToolbox ? (
-                <MessageToolbox
-                  message={message}
-                  isEditing={editMessage._id === message._id}
-                  authenticatedUserId={authenticatedUserId}
-                  handleOpenThread={handleOpenThread}
-                  handleDeleteMessage={handleDeleteMessage}
-                  handleStarMessage={handleStarMessage}
-                  handlePinMessage={handlePinMessage}
-                  handleEditMessage={() => {
-                    if (editMessage._id === message._id) {
-                      setEditMessage({});
-                    } else {
-                      setEditMessage(message);
-                    }
-                  }}
-                  handleQuoteMessage={() => setQuoteMessage(message)}
-                  handleEmojiClick={handleEmojiClick}
-                  handlerReportMessage={() => {
-                    setMessageToReport(message._id);
-                    toggleShowReportMessage();
-                  }}
-                  isThreadMessage={type === 'thread'}
-                  isBubble={{
-                    me: message.u._id === authenticatedUserId,
-                  }}
-                />
-              ) : (
-                <></>
-              )}
-            </Box>
+                    {showToolbox ? (
+                      <MessageToolbox
+                        message={message}
+                        isEditing={editMessage._id === message._id}
+                        authenticatedUserId={authenticatedUserId}
+                        handleOpenThread={handleOpenThread}
+                        handleDeleteMessage={handleDeleteMessage}
+                        handleStarMessage={handleStarMessage}
+                        handlePinMessage={handlePinMessage}
+                        handleEditMessage={() => {
+                          if (editMessage._id === message._id) {
+                            setEditMessage({});
+                          } else {
+                            setEditMessage(message);
+                          }
+                        }}
+                        handleQuoteMessage={() => setQuoteMessage(message)}
+                        handleEmojiClick={handleEmojiClick}
+                        handlerReportMessage={() => {
+                          setMessageToReport(message._id);
+                          toggleShowReportMessage();
+                        }}
+                        isThreadMessage={type === 'thread'}
+                        isBubble={{
+                          me: message.u._id === authenticatedUserId,
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </Box>
+                )}
+                <Box
+                  css={[
+                    bubbleStyle.attachmentContainer,
+                    message.u._id === authenticatedUserId &&
+                      bubbleStyle.attachmentContainerMe,
+                    sequential && bubbleStyle.sequential,
+                    message.u._id === authenticatedUserId &&
+                      sequential &&
+                      bubbleStyle.sequentialMe,
+                    lastSequential && bubbleStyle.lastSequential,
+                    message.u._id === authenticatedUserId &&
+                      lastSequential &&
+                      bubbleStyle.lastSequentialMe,
+                  ]}
+                >
+                  {message.attachments && message.attachments.length > 0 && (
+                    <Attachments attachments={message.attachments} />
+                  )}
+
+                  {isLinkPreview &&
+                    message.urls &&
+                    message.urls.map(
+                      (url, index) =>
+                        url.meta && (
+                          <LinkPreview
+                            key={index}
+                            url={url.url}
+                            meta={url.meta}
+                          />
+                        )
+                    )}
+
+                  {message.blocks && (
+                    <kitContext.Provider value={context} mid={message.mid}>
+                      <UiKitComponent
+                        render={UiKitMessage}
+                        blocks={message.blocks}
+                      />
+                    </kitContext.Provider>
+                  )}
+                </Box>
+              </>
+            ) : (
+              <>
+                {message.attachments && (
+                  <Attachments attachments={message.attachments} />
+                )}
+              </>
+            )}
           </Box>
         </Box>
       )}

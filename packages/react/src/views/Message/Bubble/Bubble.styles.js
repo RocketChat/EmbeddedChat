@@ -8,7 +8,7 @@ export const useBubbleMessageStyles = () => {
     display: flex;
     gap: 0.25rem;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     padding: 0 2.25rem 0.25rem 2.25rem;
     color: ${colors.foreground};
   `;
@@ -72,6 +72,19 @@ export const useBubbleMessageStyles = () => {
     border-radius: 0.2rem ${theme.schemes.radius} ${theme.schemes.radius};
   `;
 
+  const attachmentContainer = css`
+    display: flex;
+    flex-direction: column;
+    border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
+      ${theme.schemes.radius} 0.2rem;
+    border: 1px solid ${colors.border};
+  `;
+
+  const attachmentContainerMe = css`
+    border-radius: ${theme.schemes.radius} ${theme.schemes.radius} 0.2rem
+      ${theme.schemes.radius};
+  `;
+
   return {
     main,
     me,
@@ -83,5 +96,7 @@ export const useBubbleMessageStyles = () => {
     sequential,
     lastSequential,
     bodyMe,
+    attachmentContainer,
+    attachmentContainerMe,
   };
 };

@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageAttachment = ({ attachment, host }) => {
   const [showGallery, setShowGallery] = useState(false);
-  const { theme } = useCustomTheme();
 
   const extractIdFromUrl = (url) => {
     const match = url.match(/\/file-upload\/(.*?)\//);
@@ -16,7 +14,11 @@ const ImageAttachment = ({ attachment, host }) => {
   };
 
   return (
-    <Box>
+    <Box
+      css={css`
+        border-radius: inherit;
+      `}
+    >
       <AttachmentMetadata
         attachment={attachment}
         url={host + (attachment.title_link || attachment.image_url)}
@@ -25,8 +27,7 @@ const ImageAttachment = ({ attachment, host }) => {
         onClick={() => setShowGallery(true)}
         css={css`
           cursor: pointer;
-          border-radius: ${theme.schemes.radius};
-          width: 40%;
+          border-radius: inherit;
         `}
       >
         <img
@@ -34,7 +35,7 @@ const ImageAttachment = ({ attachment, host }) => {
           style={{
             maxWidth: '100%',
             objectFit: 'contain',
-            borderRadius: theme.schemes.radius,
+            borderRadius: 'inherit',
           }}
         />
       </Box>
