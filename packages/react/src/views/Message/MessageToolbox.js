@@ -40,7 +40,7 @@ export const MessageToolbox = ({
     ],
     threshold: 4,
   },
-
+  isBubble,
   ...props
 }) => {
   const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
@@ -190,7 +190,13 @@ export const MessageToolbox = ({
 
   return (
     <>
-      <Box css={styles.container}>
+      <Box
+        css={[
+          styles.container,
+          isBubble ? styles.containerBubble : styles.containerFlat,
+          isBubble && isBubble.me && styles.containerBubbleMe,
+        ]}
+      >
         <Box
           css={styles.toolbox}
           className={appendClassNames('ec-message-toolbox', classNames)}

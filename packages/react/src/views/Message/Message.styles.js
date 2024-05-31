@@ -259,12 +259,32 @@ export const useMessageToolboxStyles = () => {
 
   const container = css`
     display: none;
+  `;
+
+  const containerFlat = css`
     .ec-message:hover & {
       display: flex;
       position: absolute;
       bottom: 100%;
       z-index: ${theme.zIndex.body + 1};
       right: 2rem;
+    }
+  `;
+
+  const containerBubble = css`
+    .ec-bubble:hover & {
+      display: flex;
+      position: absolute;
+      bottom: 80%;
+      left: 80%;
+      z-index: ${theme.zIndex.body + 1};
+    }
+  `;
+
+  const containerBubbleMe = css`
+    .ec-bubble:hover & {
+      left: auto;
+      right: 80%;
     }
   `;
 
@@ -280,5 +300,11 @@ export const useMessageToolboxStyles = () => {
     border-radius: ${theme.schemes.radius};
   `;
 
-  return { container, toolbox };
+  return {
+    container,
+    containerBubble,
+    containerFlat,
+    toolbox,
+    containerBubbleMe,
+  };
 };
