@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../../hooks/useCustomTheme';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useBubbleMessageStyles = () => {
   const { theme, colors } = useCustomTheme();

@@ -20,7 +20,7 @@ import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
-import { useBubbleMessageStyles } from './Bubble/Bubble.styles';
+import { useBubbleMessageStyles } from './Bubble.styles';
 import { Icon } from '../../components/Icon';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
