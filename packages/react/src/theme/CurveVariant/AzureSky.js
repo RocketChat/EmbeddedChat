@@ -70,7 +70,26 @@ const AzureSky = {
   variants: {
     ChatBody: 'bubble',
   },
-  components: {},
+
+  components: {
+    MessageToolbox: {
+      configOverrides: {
+        optionConfig: {
+          toolOptions: [
+            'reaction',
+            'reply',
+            'quote',
+            'star',
+            'pin',
+            'edit',
+            'delete',
+            'report',
+          ],
+          threshold: 4,
+        },
+      },
+    },
+  },
 
   typography: {
     default: {

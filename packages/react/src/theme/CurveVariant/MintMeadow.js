@@ -6,7 +6,26 @@ const MintMeadow = {
     lg: 1200,
     xl: 1536,
   },
-  components: {},
+  components: {
+    MessageToolbox: {
+      configOverrides: {
+        optionConfig: {
+          toolOptions: [
+            'reaction',
+            'reply',
+            'quote',
+            'star',
+            'pin',
+            'edit',
+            'delete',
+            'report',
+          ],
+          threshold: 4,
+        },
+      },
+    },
+  },
+
   variants: {
     ChatBody: 'bubble',
   },

@@ -38,7 +38,7 @@ export const MessageToolbox = ({
       'delete',
       'report',
     ],
-    threshold: 4,
+    threshold: 8,
   },
   isBubble,
   ...props
