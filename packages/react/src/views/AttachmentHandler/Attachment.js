@@ -7,19 +7,15 @@ import PinnedAttachment from './PinnedAttachment';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 
-const Attachment = ({ attachment, host, variant }) => {
+const Attachment = ({ attachment, host }) => {
   if (attachment && attachment.audio_url) {
     return <AudioAttachment attachment={attachment} host={host} />;
   }
   if (attachment && attachment.video_url) {
-    return (
-      <VideoAttachment attachment={attachment} host={host} variant={variant} />
-    );
+    return <VideoAttachment attachment={attachment} host={host} />;
   }
   if (attachment && attachment.image_url) {
-    return (
-      <ImageAttachment attachment={attachment} host={host} variant={variant} />
-    );
+    return <ImageAttachment attachment={attachment} host={host} />;
   }
   if (attachment && attachment.text) {
     return <PinnedAttachment attachment={attachment} />;

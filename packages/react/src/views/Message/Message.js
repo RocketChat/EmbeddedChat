@@ -20,9 +20,7 @@ import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
-import { useBubbleMessageStyles } from './BubbleVariant.styles';
-import { Icon } from '../../components/Icon';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 const Message = ({
   message,
@@ -42,11 +40,9 @@ const Message = ({
     [message.messageParentBox, className],
     style
   );
-  const { colors } = useCustomTheme();
 
   const styles = useMessageStyles();
-  const bubbleStyle = useBubbleMessageStyles();
-  const variant = useThemeStore((state) => state.messageVariant);
+  const isBubble = useThemeStore((state) => state.isBubble);
 
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -63,6 +59,9 @@ const Message = ({
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
 
   const openThread = useMessageStore((state) => state.openThread);
+
+  const isMe = message.u._id === authenticatedUserId;
+  const { getBubbleStyles } = useBubbleStyles(isMe, sequential, lastSequential);
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -150,267 +149,51 @@ const Message = ({
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
+
   return (
     <>
-      {variant === 'flat' && (
-        <Box
-          className={appendClassNames('ec-message', classNames)}
-          css={[
-            styles.main,
-            editMessage._id === message._id && styles.messageEditing,
-          ]}
-          style={styleOverrides}
-        >
-          {showAvatar && (
-            <MessageAvatarContainer
-              message={message}
-              sequential={sequential}
-              isStarred={isStarred}
-              isPinned={isPinned}
-            />
+      <Box
+        className={appendClassNames('ec-message', classNames)}
+        css={[
+          isBubble
+            ? getBubbleStyles('messageParent')
+            : [
+                styles.main,
+                editMessage._id === message._id && styles.messageEditing,
+              ],
+        ]}
+        style={styleOverrides}
+      >
+        {showAvatar && (
+          <MessageAvatarContainer
+            message={message}
+            sequential={sequential}
+            isStarred={isStarred}
+            isPinned={isPinned}
+          />
+        )}
+        <MessageBodyContainer isMe={isMe}>
+          {shouldShowHeader && (
+            <MessageHeader message={message} isRoles={showRoles} />
           )}
-          <MessageBodyContainer>
-            {shouldShowHeader && (
-              <MessageHeader message={message} isRoles={showRoles} />
-            )}
-            {!message.t ? (
-              <>
-                <MessageBody
-                  css={message.isPending && styles.pendingMessageBody}
-                >
-                  {message.attachments && message.attachments.length > 0 ? (
-                    <>
-                      <Markdown body={message} isReaction={false} />
-                      <Attachments attachments={message.attachments} />
-                    </>
-                  ) : (
+          {!message.t ? (
+            <>
+              <MessageBody
+                className="ec-message-body"
+                css={message.isPending && styles.pendingMessageBody}
+                isMe={isMe}
+                isText={message.md}
+                sequential={sequential}
+                lastSequential={lastSequential}
+              >
+                {message.attachments && message.attachments.length > 0 ? (
+                  <>
                     <Markdown body={message} isReaction={false} />
-                  )}
-
-                  {isLinkPreview &&
-                    message.urls &&
-                    message.urls.map(
-                      (url, index) =>
-                        url.meta && (
-                          <LinkPreview
-                            key={index}
-                            url={url.url}
-                            meta={url.meta}
-                          />
-                        )
-                    )}
-
-                  {message.blocks && (
-                    <kitContext.Provider value={context} mid={message.mid}>
-                      <UiKitComponent
-                        render={UiKitMessage}
-                        blocks={message.blocks}
-                      />
-                    </kitContext.Provider>
-                  )}
-                </MessageBody>
-
-                <MessageReactions
-                  authenticatedUserUsername={authenticatedUserUsername}
-                  message={message}
-                  handleEmojiClick={handleEmojiClick}
-                />
-              </>
-            ) : (
-              <>
-                {message.attachments && (
-                  <Attachments attachments={message.attachments} />
+                    <Attachments attachments={message.attachments} />
+                  </>
+                ) : (
+                  <Markdown body={message} isReaction={false} />
                 )}
-              </>
-            )}
-            {message.tcount && type !== 'thread' ? (
-              <MessageMetrics
-                message={message}
-                handleOpenThread={handleOpenThread}
-              />
-            ) : null}
-            {!message.t && showToolbox ? (
-              <MessageToolbox
-                message={message}
-                isEditing={editMessage._id === message._id}
-                authenticatedUserId={authenticatedUserId}
-                handleOpenThread={handleOpenThread}
-                handleDeleteMessage={handleDeleteMessage}
-                handleStarMessage={handleStarMessage}
-                handlePinMessage={handlePinMessage}
-                handleEditMessage={() => {
-                  if (editMessage._id === message._id) {
-                    setEditMessage({});
-                  } else {
-                    setEditMessage(message);
-                  }
-                }}
-                handleQuoteMessage={() => setQuoteMessage(message)}
-                handleEmojiClick={handleEmojiClick}
-                handlerReportMessage={() => {
-                  setMessageToReport(message._id);
-                  toggleShowReportMessage();
-                }}
-                isThreadMessage={type === 'thread'}
-              />
-            ) : (
-              <></>
-            )}
-          </MessageBodyContainer>
-        </Box>
-      )}
-
-      {variant === 'bubble' && (
-        <Box
-          className={appendClassNames('ec-bubble-message', classNames)}
-          css={[
-            bubbleStyle.main,
-            message.u._id === authenticatedUserId && bubbleStyle.me,
-          ]}
-          style={styleOverrides}
-        >
-          {showAvatar && (
-            <MessageAvatarContainer
-              message={message}
-              sequential={sequential}
-              isStarred={isStarred}
-              isPinned={isPinned}
-            />
-          )}
-          <Box
-            css={[
-              bubbleStyle.body,
-              message.u._id === authenticatedUserId && bubbleStyle.bodyMe,
-            ]}
-          >
-            {shouldShowHeader && (
-              <MessageHeader
-                message={message}
-                isRoles={showRoles}
-                showName={!(message.u._id === authenticatedUserId)}
-              />
-            )}
-            {!message.t ? (
-              <>
-                {message.md && (
-                  <Box
-                    className="ec-bubble"
-                    css={[
-                      bubbleStyle.messageContainer,
-                      message.u._id === authenticatedUserId &&
-                        bubbleStyle.messageContainerMe,
-                      sequential && bubbleStyle.sequential,
-                      message.u._id === authenticatedUserId &&
-                        sequential &&
-                        bubbleStyle.sequentialMe,
-                      lastSequential && bubbleStyle.lastSequential,
-                      message.u._id === authenticatedUserId &&
-                        lastSequential &&
-                        bubbleStyle.lastSequentialMe,
-                    ]}
-                  >
-                    <Markdown body={message} isReaction={false} />
-
-                    {showToolbox ? (
-                      <MessageToolbox
-                        message={message}
-                        isEditing={editMessage._id === message._id}
-                        authenticatedUserId={authenticatedUserId}
-                        handleOpenThread={handleOpenThread}
-                        handleDeleteMessage={handleDeleteMessage}
-                        handleStarMessage={handleStarMessage}
-                        handlePinMessage={handlePinMessage}
-                        handleEditMessage={() => {
-                          if (editMessage._id === message._id) {
-                            setEditMessage({});
-                          } else {
-                            setEditMessage(message);
-                          }
-                        }}
-                        handleQuoteMessage={() => setQuoteMessage(message)}
-                        handleEmojiClick={handleEmojiClick}
-                        handlerReportMessage={() => {
-                          setMessageToReport(message._id);
-                          toggleShowReportMessage();
-                        }}
-                        isThreadMessage={type === 'thread'}
-                        isBubble={{
-                          me: message.u._id === authenticatedUserId,
-                        }}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </Box>
-                )}
-                <Box
-                  className="ec-bubble-attachment"
-                  css={[
-                    bubbleStyle.attachmentContainer,
-                    message.u._id === authenticatedUserId &&
-                      bubbleStyle.attachmentContainerMe,
-                    sequential && bubbleStyle.sequential,
-                    message.u._id === authenticatedUserId &&
-                      sequential &&
-                      bubbleStyle.sequentialMe,
-                    lastSequential && bubbleStyle.lastSequential,
-                    message.u._id === authenticatedUserId &&
-                      lastSequential &&
-                      bubbleStyle.lastSequentialMe,
-                  ]}
-                >
-                  {message.attachments && message.attachments.length > 0 && (
-                    <Attachments
-                      attachments={message.attachments}
-                      variant="bubble"
-                    />
-                  )}
-
-                  {showToolbox ? (
-                    <MessageToolbox
-                      message={message}
-                      isEditing={editMessage._id === message._id}
-                      authenticatedUserId={authenticatedUserId}
-                      handleOpenThread={handleOpenThread}
-                      handleDeleteMessage={handleDeleteMessage}
-                      handleStarMessage={handleStarMessage}
-                      handlePinMessage={handlePinMessage}
-                      handleEditMessage={() => {
-                        if (editMessage._id === message._id) {
-                          setEditMessage({});
-                        } else {
-                          setEditMessage(message);
-                        }
-                      }}
-                      handleQuoteMessage={() => setQuoteMessage(message)}
-                      handleEmojiClick={handleEmojiClick}
-                      handlerReportMessage={() => {
-                        setMessageToReport(message._id);
-                        toggleShowReportMessage();
-                      }}
-                      isThreadMessage={type === 'thread'}
-                      isBubble={{
-                        me: message.u._id === authenticatedUserId,
-                      }}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </Box>
-
-                {isLinkPreview &&
-                  message.urls &&
-                  message.urls.map(
-                    (url, index) =>
-                      url.meta && (
-                        <LinkPreview
-                          key={index}
-                          url={url.url}
-                          meta={url.meta}
-                          variant="bubble"
-                        />
-                      )
-                  )}
 
                 {message.blocks && (
                   <kitContext.Provider value={context} mid={message.mid}>
@@ -421,48 +204,67 @@ const Message = ({
                   </kitContext.Provider>
                 )}
 
-                <MessageReactions
-                  authenticatedUserUsername={authenticatedUserUsername}
-                  message={message}
-                  handleEmojiClick={handleEmojiClick}
-                />
-
-                {message.tcount && type !== 'thread' ? (
-                  <Box
-                    css={[
-                      bubbleStyle.metricContainer,
-                      message.u._id === authenticatedUserId &&
-                        bubbleStyle.metricContainerMe,
-                    ]}
-                  >
-                    <Icon
-                      name="arc"
-                      size="30"
-                      fill="none"
-                      color={`${colors.accent}`}
-                      css={
-                        message.u._id === authenticatedUserId &&
-                        bubbleStyle.flipIcon
+                {!message.t && showToolbox ? (
+                  <MessageToolbox
+                    message={message}
+                    isEditing={editMessage._id === message._id}
+                    authenticatedUserId={authenticatedUserId}
+                    handleOpenThread={handleOpenThread}
+                    handleDeleteMessage={handleDeleteMessage}
+                    handleStarMessage={handleStarMessage}
+                    handlePinMessage={handlePinMessage}
+                    handleEditMessage={() => {
+                      if (editMessage._id === message._id) {
+                        setEditMessage({});
+                      } else {
+                        setEditMessage(message);
                       }
-                    />
-                    <MessageMetrics
-                      variant="bubble"
-                      message={message}
-                      handleOpenThread={handleOpenThread}
-                    />
-                  </Box>
-                ) : null}
-              </>
-            ) : (
-              <>
-                {message.attachments && (
-                  <Attachments attachments={message.attachments} />
+                    }}
+                    handleQuoteMessage={() => setQuoteMessage(message)}
+                    handleEmojiClick={handleEmojiClick}
+                    handlerReportMessage={() => {
+                      setMessageToReport(message._id);
+                      toggleShowReportMessage();
+                    }}
+                    isThreadMessage={type === 'thread'}
+                    isMe={isMe}
+                  />
+                ) : (
+                  <></>
                 )}
-              </>
-            )}
-          </Box>
-        </Box>
-      )}
+              </MessageBody>
+
+              {isLinkPreview &&
+                message.urls &&
+                message.urls.map(
+                  (url, index) =>
+                    url.meta && (
+                      <LinkPreview key={index} url={url.url} meta={url.meta} />
+                    )
+                )}
+
+              <MessageReactions
+                authenticatedUserUsername={authenticatedUserUsername}
+                message={message}
+                handleEmojiClick={handleEmojiClick}
+              />
+            </>
+          ) : (
+            <>
+              {message.attachments && (
+                <Attachments attachments={message.attachments} />
+              )}
+            </>
+          )}
+          {message.tcount && type !== 'thread' ? (
+            <MessageMetrics
+              message={message}
+              handleOpenThread={handleOpenThread}
+              isMe={isMe}
+            />
+          ) : null}
+        </MessageBodyContainer>
+      </Box>
 
       {newDay && (
         <MessageDivider>

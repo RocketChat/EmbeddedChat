@@ -2,8 +2,9 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton } from '../../components/ActionButton';
 import { Box } from '../../components/Box';
+import { useThemeStore } from '../../store';
 
-const AttachmentMetadata = ({ attachment, url, variant }) => {
+const AttachmentMetadata = ({ attachment, url }) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -23,6 +24,8 @@ const AttachmentMetadata = ({ attachment, url, variant }) => {
     }
   };
 
+  const isBubble = useThemeStore((state) => state.isBubble);
+
   return (
     <Box
       css={[
@@ -31,7 +34,7 @@ const AttachmentMetadata = ({ attachment, url, variant }) => {
           flex-direction: column;
         `,
 
-        variant === 'bubble' &&
+        isBubble &&
           css`
             padding: 2.5% 2.5% 0;
           `,

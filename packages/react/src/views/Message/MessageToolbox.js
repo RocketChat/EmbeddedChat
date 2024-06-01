@@ -11,6 +11,8 @@ import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
 import { Menu } from '../../components/Menu';
 import { useMessageToolboxStyles } from './Message.styles';
+import { useThemeStore } from '../../store';
+import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 export const MessageToolbox = ({
   className = '',
@@ -40,7 +42,7 @@ export const MessageToolbox = ({
     ],
     threshold: 8,
   },
-  isBubble,
+  isMe,
   ...props
 }) => {
   const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
@@ -48,6 +50,10 @@ export const MessageToolbox = ({
     className,
     style
   );
+  const isBubble = useThemeStore((state) => state.isBubble);
+
+  const { getBubbleStyles } = useBubbleStyles(isMe);
+
   const styles = useMessageToolboxStyles();
   const toolOptions =
     configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
@@ -62,11 +68,11 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const emojiPickerStyles = !isBubble
-    ? { position: 'absolute', top: '7rem', right: '1.5rem' }
-    : isBubble?.me
-    ? { position: 'absolute', top: '7rem', right: '1.5rem' }
-    : { position: 'absolute', top: '7rem', left: '1.5rem' };
+  const emojiPickerStyles = {
+    position: 'absolute',
+    top: '7rem',
+    ...(isBubble && !isMe ? { left: '1.5rem' } : { right: '1.5rem' }),
+  };
 
   const toolMap = {
     reply: !isThreadMessage && (
@@ -198,9 +204,9 @@ export const MessageToolbox = ({
     <>
       <Box
         css={[
-          styles.container,
-          isBubble ? styles.containerBubble : styles.containerFlat,
-          isBubble && isBubble.me && styles.containerBubbleMe,
+          isBubble
+            ? getBubbleStyles('toolboxContainer')
+            : styles.toolboxContainer,
         ]}
       >
         <Box

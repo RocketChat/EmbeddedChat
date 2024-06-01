@@ -1,5 +1,4 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import { formatDistance, format } from 'date-fns';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../../components/Box';
@@ -8,6 +7,8 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useThemeStore } from '../../store';
+import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 export const MessageMetrics = ({
   className = '',
@@ -15,7 +16,7 @@ export const MessageMetrics = ({
   style = {},
   handleOpenThread = () => {},
   isReplyButton = true,
-  variant,
+  isMe = false,
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(
@@ -25,62 +26,72 @@ export const MessageMetrics = ({
   );
 
   const { colors } = useCustomTheme();
+  const isBubble = useThemeStore((state) => state.isBubble);
+  const { getBubbleStyles } = useBubbleStyles(isMe);
+
   return (
     <Box
-      css={styles.metrics}
+      css={isBubble ? getBubbleStyles('metricsContainer') : styles.metrics}
       className={appendClassNames('ec-message-metrics', classNames)}
       style={styleOverrides}
       {...props}
     >
       {isReplyButton && (
-        <Button
-          size="small"
-          onClick={handleOpenThread(message)}
-          css={
-            variant === 'bubble' &&
-            css`
-              background-color: ${colors.accent};
-              color: ${colors.accentForeground};
-              border-radius: 0.2rem;
-            `
-          }
-        >
-          {variant === 'bubble' ? (
-            <>
-              {message.tcount} Replies
-              <span style={{ margin: '0 0.25rem' }}>
-                {format(new Date(message.tlm), 'hh:mm a')}
-              </span>
-            </>
-          ) : (
-            'Reply'
+        <>
+          {isBubble && (
+            <Icon
+              name="arc"
+              size="30"
+              fill="none"
+              color={`${colors.accent}`}
+              css={getBubbleStyles('arcIcon')}
+            />
           )}
-        </Button>
+          <Button
+            size="small"
+            onClick={handleOpenThread(message)}
+            css={isBubble && getBubbleStyles('threadReplyButton')}
+          >
+            {isBubble ? (
+              <>
+                {message.tcount} Replies
+                <span style={{ margin: '0 0.25rem' }}>
+                  {format(new Date(message.tlm), 'hh:mm a')}
+                </span>
+              </>
+            ) : (
+              'Reply'
+            )}
+          </Button>
+        </>
       )}
-      {variant !== 'bubble' && (
-        <Box css={styles.metricsItem(true)} title="Replies">
-          <Icon size="1.25rem" name="thread" />
-          <Box css={styles.metricsItemLabel}>{message.tcount}</Box>
-        </Box>
-      )}
-      {!!message.tcount && variant !== 'bubble' && (
-        <Box css={styles.metricsItem} title="Participants">
-          <Icon size="1.25rem" name="user" />
-          <Box css={styles.metricsItemLabel}>{message.replies.length}</Box>
-        </Box>
-      )}
-      {variant !== 'bubble' && (
-        <Box
-          css={styles.metricsItem}
-          title={new Date(message.tlm).toLocaleString()}
-        >
-          <Icon size="1.25rem" name="clock" />
-          <Box css={styles.metricsItemLabel}>
-            {formatDistance(new Date(message.tlm), new Date(), {
-              addSuffix: true,
-            })}
+
+      {!isBubble && (
+        <>
+          <Box css={styles.metricsItem(true)} title="Replies">
+            <Icon size="1.25rem" name="thread" />
+            <Box css={styles.metricsItemLabel}>{message.tcount}</Box>
           </Box>
-        </Box>
+
+          {!!message.tcount && (
+            <Box css={styles.metricsItem} title="Participants">
+              <Icon size="1.25rem" name="user" />
+              <Box css={styles.metricsItemLabel}>{message.replies.length}</Box>
+            </Box>
+          )}
+
+          <Box
+            css={styles.metricsItem}
+            title={new Date(message.tlm).toLocaleString()}
+          >
+            <Icon size="1.25rem" name="clock" />
+            <Box css={styles.metricsItemLabel}>
+              {formatDistance(new Date(message.tlm), new Date(), {
+                addSuffix: true,
+              })}
+            </Box>
+          </Box>
+        </>
       )}
     </Box>
   );

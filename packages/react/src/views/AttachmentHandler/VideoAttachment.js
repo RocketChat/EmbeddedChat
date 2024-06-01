@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useThemeStore } from '../../store';
+import useBubbleStyles from '../Message/BubbleVariant/useBubbleStyles';
 
 const userAgentMIMETypeFallback = (type) => {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
@@ -15,26 +16,20 @@ const userAgentMIMETypeFallback = (type) => {
   return type;
 };
 
-const VideoAttachment = ({ attachment, host, variant }) => {
-  const { colors } = useCustomTheme();
+const VideoAttachment = ({ attachment, host }) => {
+  const isBubble = useThemeStore((state) => state.isBubble);
+
+  const { getBubbleStyles } = useBubbleStyles();
   return (
-    <Box
-      css={
-        variant === 'bubble' &&
-        css`
-          border: 1px solid ${colors.border};
-          border-radius: inherit;
-        `
-      }
-    >
+    <Box css={isBubble && getBubbleStyles('videoAttachmentContainer')}>
       <AttachmentMetadata
-        variant={variant}
         attachment={attachment}
         url={host + (attachment.title_url || attachment.video_url)}
       />
       <Box
         css={css`
           line-height: 0;
+          border-radius: inherit;
         `}
       >
         <video

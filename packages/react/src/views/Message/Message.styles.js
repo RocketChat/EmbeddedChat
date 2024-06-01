@@ -66,22 +66,6 @@ export const MessageBodyStyles = {
   `,
 };
 
-export const MessageContainerStyles = {
-  messageContainer: css`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 100%;
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-width: 1px;
-    margin-top: -0.125rem;
-    margin-bottom: -0.125rem;
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-  `,
-};
-
 export const useMessageDividerStyles = () => {
   const { theme, colors } = useCustomTheme();
 
@@ -219,7 +203,7 @@ export const MessageMetricsStyles = {
 };
 
 export const useMessageReactionsStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { colors } = useCustomTheme();
   const container = css`
     display: flex;
     flex-flow: row wrap;
@@ -257,47 +241,14 @@ export const useMessageReactionsStyles = () => {
 export const useMessageToolboxStyles = () => {
   const { theme, colors } = useCustomTheme();
 
-  const container = css`
+  const toolboxContainer = css`
     display: none;
-  `;
-
-  const containerFlat = css`
     .ec-message:hover & {
       display: flex;
       position: absolute;
       bottom: 100%;
       z-index: ${theme.zIndex.body + 1};
       right: 2rem;
-    }
-  `;
-
-  const containerBubble = css`
-    .ec-bubble:hover & {
-      display: flex;
-      position: absolute;
-      bottom: calc(100% - 20px);
-      left: calc(100% - 20px);
-      z-index: ${theme.zIndex.body + 1};
-    }
-
-    .ec-bubble-attachment:hover & {
-      display: flex;
-      position: absolute;
-      bottom: calc(100% - 20px);
-      left: calc(100% - 20px);
-      z-index: ${theme.zIndex.body + 1};
-    }
-  `;
-
-  const containerBubbleMe = css`
-    .ec-bubble:hover & {
-      left: auto;
-      right: calc(100% - 20px);
-    }
-
-    .ec-bubble-attachment:hover & {
-      left: auto;
-      right: calc(100% - 20px);
     }
   `;
 
@@ -314,10 +265,17 @@ export const useMessageToolboxStyles = () => {
   `;
 
   return {
-    container,
-    containerBubble,
-    containerFlat,
+    toolboxContainer,
     toolbox,
-    containerBubbleMe,
   };
+};
+
+export const useMessageBodyContainerStyles = () => {
+  const bodyContainer = css`
+    margin-left: 5px;
+    position: relative;
+    width: 100%;
+  `;
+
+  return { bodyContainer };
 };

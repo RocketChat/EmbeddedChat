@@ -7,18 +7,13 @@ import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useLinkPreviewStyles from './LinkPreview.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useThemeStore } from '../../store';
 
-const LinkPreview = ({
-  className = '',
-  style = {},
-  url,
-  meta,
-  variant,
-  ...props
-}) => {
+const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
   const { colors } = useCustomTheme();
+  const isBubble = useThemeStore((state) => state.isBubble);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
@@ -38,7 +33,7 @@ const LinkPreview = ({
 
   return (
     <>
-      {variant !== 'bubble' && (
+      {!isBubble && (
         <Box css={styles.arrowDropDown}>
           Link Preview
           <ActionButton
