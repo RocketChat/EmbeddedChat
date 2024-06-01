@@ -363,30 +363,30 @@ const Message = ({
                       variant="bubble"
                     />
                   )}
-
-                  {isLinkPreview &&
-                    message.urls &&
-                    message.urls.map(
-                      (url, index) =>
-                        url.meta && (
-                          <LinkPreview
-                            key={index}
-                            url={url.url}
-                            meta={url.meta}
-                            variant="bubble"
-                          />
-                        )
-                    )}
-
-                  {message.blocks && (
-                    <kitContext.Provider value={context} mid={message.mid}>
-                      <UiKitComponent
-                        render={UiKitMessage}
-                        blocks={message.blocks}
-                      />
-                    </kitContext.Provider>
-                  )}
                 </Box>
+
+                {isLinkPreview &&
+                  message.urls &&
+                  message.urls.map(
+                    (url, index) =>
+                      url.meta && (
+                        <LinkPreview
+                          key={index}
+                          url={url.url}
+                          meta={url.meta}
+                          variant="bubble"
+                        />
+                      )
+                  )}
+
+                {message.blocks && (
+                  <kitContext.Provider value={context} mid={message.mid}>
+                    <UiKitComponent
+                      render={UiKitMessage}
+                      blocks={message.blocks}
+                    />
+                  </kitContext.Provider>
+                )}
 
                 <MessageReactions
                   authenticatedUserUsername={authenticatedUserUsername}

@@ -60,14 +60,7 @@ const LinkPreview = ({
 
       {isPreviewOpen && (
         <Box
-          css={[
-            styles.linkPreviewContainer,
-            variant === 'bubble' &&
-              css`
-                border-radius: inherit;
-                background-color: inherit;
-              `,
-          ]}
+          css={[styles.linkPreviewContainer]}
           className={`ec-linkpreview ${className} ${classNames}`}
           style={{ ...styleOverrides, ...style }}
           {...props}
