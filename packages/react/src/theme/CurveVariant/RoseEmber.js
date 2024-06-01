@@ -8,7 +8,7 @@ const RoseEmber = {
   },
   components: {},
   variants: {
-    Message: 'bubble',
+    ChatBody: 'bubble',
   },
   schemes: {
     radius: '1.5rem',

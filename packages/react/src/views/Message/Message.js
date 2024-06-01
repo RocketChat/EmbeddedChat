@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useThemeStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../../components/Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
@@ -20,7 +20,7 @@ import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
-import { useBubbleMessageStyles } from './Bubble.styles';
+import { useBubbleMessageStyles } from './BubbleVariant.styles';
 import { Icon } from '../../components/Icon';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
@@ -36,20 +36,18 @@ const Message = ({
   showToolbox = true,
   showRoles = true,
   isLinkPreview = true,
-  variant = 'flat',
 }) => {
-  const { classNames, styleOverrides, variantOverrides } =
-    useComponentOverrides(
-      'Message',
-      [message.messageParentBox, className],
-      style
-    );
+  const { classNames, styleOverrides } = useComponentOverrides(
+    'Message',
+    [message.messageParentBox, className],
+    style
+  );
   const { colors } = useCustomTheme();
-
-  variant = variantOverrides || variant;
 
   const styles = useMessageStyles();
   const bubbleStyle = useBubbleMessageStyles();
+  const variant = useThemeStore((state) => state.messageVariant);
+
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -479,7 +477,6 @@ Message.propTypes = {
   sequential: PropTypes.bool,
   newDay: PropTypes.bool,
   type: PropTypes.oneOf(['thread', 'default']),
-  variant: PropTypes.oneOf(['flat', 'bubble']),
   showAvatar: PropTypes.bool,
 };
 

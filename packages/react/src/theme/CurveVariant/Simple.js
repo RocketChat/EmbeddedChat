@@ -70,7 +70,7 @@ const DefaultTheme = {
   },
 
   variants: {
-    Message: 'bubble',
+    ChatBody: 'bubble',
   },
 
   components: {},
