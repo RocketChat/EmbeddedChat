@@ -28,6 +28,7 @@ const ChatBody = ({
 }) => {
   const { classNames, styleOverrides, variantOverrides } =
     useComponentOverrides('ChatBody');
+  const variant = variantOverrides || 'flat';
   const styles = useChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -85,7 +86,7 @@ const ChatBody = ({
   ]);
 
   useEffect(() => {
-    variantOverrides && setMessageVariant(variantOverrides);
+    setMessageVariant(variant);
   }, [setMessageVariant, variantOverrides]);
 
   useEffect(() => {
