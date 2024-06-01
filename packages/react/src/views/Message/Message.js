@@ -21,6 +21,8 @@ import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
 import { useBubbleMessageStyles } from './Bubble/Bubble.styles';
+import { Icon } from '../../components/Icon';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const Message = ({
   message,
@@ -42,6 +44,7 @@ const Message = ({
       [message.messageParentBox, className],
       style
     );
+  const { colors } = useCustomTheme();
 
   variant = variantOverrides || variant;
 
@@ -427,10 +430,29 @@ const Message = ({
                 />
 
                 {message.tcount && type !== 'thread' ? (
-                  <MessageMetrics
-                    message={message}
-                    handleOpenThread={handleOpenThread}
-                  />
+                  <Box
+                    css={[
+                      bubbleStyle.metricContainer,
+                      message.u._id === authenticatedUserId &&
+                        bubbleStyle.metricContainerMe,
+                    ]}
+                  >
+                    <Icon
+                      name="arc"
+                      size="30"
+                      fill="none"
+                      color={`${colors.accent}`}
+                      css={
+                        message.u._id === authenticatedUserId &&
+                        bubbleStyle.flipIcon
+                      }
+                    />
+                    <MessageMetrics
+                      variant="bubble"
+                      message={message}
+                      handleOpenThread={handleOpenThread}
+                    />
+                  </Box>
                 ) : null}
               </>
             ) : (

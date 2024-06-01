@@ -57,6 +57,7 @@ import EyeClose from './EyeClose';
 import At from './At';
 import Expand from './ArrowExpand';
 import Collapse from './ArrowCollapse';
+import Arc from './Arc';
 
 const icons = {
   file: File,
@@ -118,6 +119,7 @@ const icons = {
   at: At,
   expand: Expand,
   collapse: Collapse,
+  arc: Arc,
 };
 
 export default icons;

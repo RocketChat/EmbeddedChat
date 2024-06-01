@@ -83,6 +83,18 @@ export const useBubbleMessageStyles = () => {
       ${theme.schemes.radius};
   `;
 
+  const metricContainer = css`
+    display: flex;
+  `;
+
+  const metricContainerMe = css`
+    flex-direction: row-reverse;
+  `;
+
+  const flipIcon = css`
+    transform: scaleX(-1);
+  `;
+
   return {
     main,
     me,
@@ -96,5 +108,8 @@ export const useBubbleMessageStyles = () => {
     bodyMe,
     attachmentContainer,
     attachmentContainerMe,
+    metricContainer,
+    metricContainerMe,
+    flipIcon,
   };
 };
