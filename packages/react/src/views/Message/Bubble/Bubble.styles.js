@@ -73,6 +73,7 @@ export const useBubbleMessageStyles = () => {
   `;
 
   const attachmentContainer = css`
+    position: relative;
     border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
       ${theme.schemes.radius} 0.2rem;
   `;

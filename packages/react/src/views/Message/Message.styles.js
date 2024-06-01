@@ -275,8 +275,16 @@ export const useMessageToolboxStyles = () => {
     .ec-bubble:hover & {
       display: flex;
       position: absolute;
-      bottom: 80%;
-      left: 80%;
+      bottom: calc(100% - 20px);
+      left: calc(100% - 20px);
+      z-index: ${theme.zIndex.body + 1};
+    }
+
+    .ec-bubble-attachment:hover & {
+      display: flex;
+      position: absolute;
+      bottom: calc(100% - 20px);
+      left: calc(100% - 20px);
       z-index: ${theme.zIndex.body + 1};
     }
   `;
@@ -284,7 +292,12 @@ export const useMessageToolboxStyles = () => {
   const containerBubbleMe = css`
     .ec-bubble:hover & {
       left: auto;
-      right: 80%;
+      right: calc(100% - 20px);
+    }
+
+    .ec-bubble-attachment:hover & {
+      left: auto;
+      right: calc(100% - 20px);
     }
   `;
 

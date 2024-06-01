@@ -343,6 +343,7 @@ const Message = ({
                   </Box>
                 )}
                 <Box
+                  className="ec-bubble-attachment"
                   css={[
                     bubbleStyle.attachmentContainer,
                     message.u._id === authenticatedUserId &&
@@ -362,6 +363,37 @@ const Message = ({
                       attachments={message.attachments}
                       variant="bubble"
                     />
+                  )}
+
+                  {showToolbox ? (
+                    <MessageToolbox
+                      message={message}
+                      isEditing={editMessage._id === message._id}
+                      authenticatedUserId={authenticatedUserId}
+                      handleOpenThread={handleOpenThread}
+                      handleDeleteMessage={handleDeleteMessage}
+                      handleStarMessage={handleStarMessage}
+                      handlePinMessage={handlePinMessage}
+                      handleEditMessage={() => {
+                        if (editMessage._id === message._id) {
+                          setEditMessage({});
+                        } else {
+                          setEditMessage(message);
+                        }
+                      }}
+                      handleQuoteMessage={() => setQuoteMessage(message)}
+                      handleEmojiClick={handleEmojiClick}
+                      handlerReportMessage={() => {
+                        setMessageToReport(message._id);
+                        toggleShowReportMessage();
+                      }}
+                      isThreadMessage={type === 'thread'}
+                      isBubble={{
+                        me: message.u._id === authenticatedUserId,
+                      }}
+                    />
+                  ) : (
+                    <></>
                   )}
                 </Box>
 
