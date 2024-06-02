@@ -5,13 +5,19 @@ import { Box } from '../../components/Box';
 import { Avatar } from '../../components/Avatar';
 import RCContext from '../../context/RCInstance';
 
-const PinnedAttachment = ({ attachment }) => {
+const TextAttachment = ({ attachment }) => {
   const { RCInstance } = useContext(RCContext);
   const getUserAvatarUrl = (authorIcon) => {
     const host = RCInstance.getHost();
     const URL = `${host}${authorIcon}`;
     return URL;
   };
+
+  let attachmentText = attachment?.text;
+  if (attachmentText.includes(')')) {
+    attachmentText = attachmentText.split(')')[1] || '';
+  }
+
   return (
     <Box
       css={css`
@@ -37,14 +43,14 @@ const PinnedAttachment = ({ attachment }) => {
           margin-top: 0.7rem;
         `}
       >
-        {attachment?.text}
+        {attachmentText}
       </Box>
     </Box>
   );
 };
 
-export default PinnedAttachment;
+export default TextAttachment;
 
-PinnedAttachment.propTypes = {
+TextAttachment.propTypes = {
   attachment: PropTypes.object,
 };

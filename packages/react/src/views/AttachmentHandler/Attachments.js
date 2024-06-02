@@ -7,6 +7,7 @@ const Attachments = ({ attachments, isBubble }) => {
   const { RCInstance } = useContext(RCContext);
   let host = RCInstance.getHost();
   host = host.replace(/\/$/, '');
+
   return attachments.map((attachment, idx) => (
     <Attachment
       key={idx}

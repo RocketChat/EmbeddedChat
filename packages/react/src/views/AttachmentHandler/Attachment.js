@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
-import PinnedAttachment from './PinnedAttachment';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
+import TextAttachment from './TextAttachment';
 
 const Attachment = ({ attachment, host, isBubble }) => {
   if (attachment && attachment.audio_url) {
@@ -30,15 +31,18 @@ const Attachment = ({ attachment, host, isBubble }) => {
     );
   }
   if (attachment && attachment.text) {
-    return <PinnedAttachment attachment={attachment} />;
+    return <TextAttachment attachment={attachment} />;
   }
   return (
-    <Box>
-      <p>{attachment?.description}</p>
-      <p>
-        <Icon name="file" size="20px" />
-        <a href={`${host}${attachment.title_link}`}>{attachment.title}</a>
-      </p>
+    <Box
+      css={css`
+        display: flex;
+      `}
+    >
+      {attachment?.description}
+
+      <Icon name="file" size="20px" />
+      <a href={`${host}${attachment.title_link}`}>{attachment.title}</a>
     </Box>
   );
 };
