@@ -37,7 +37,7 @@ const Files = () => {
   const filteredFiles = useMemo(
     () =>
       files.filter((file) =>
-        file.name.toLowerCase().includes(text.toLowerCase())
+        file.name?.toLowerCase().includes(text.toLowerCase())
       ),
     [files, text]
   );
