@@ -62,6 +62,7 @@ const MessageList = ({ messages }) => {
           const sequential = isMessageSequential(msg, prev, 300);
           const lastSequential =
             sequential && isMessageLastSequential(msg, next);
+
           return (
             msg && (
               <Message

@@ -4,6 +4,7 @@ import { isSameDay } from 'date-fns';
 import { useMessageStore, useUserStore, useThemeStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
+import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { Message } from '../Message';
 
 const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
@@ -18,8 +19,10 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
     <>
       {threadMessages?.concat(threadMainMessage).map((msg, index, arr) => {
         const prev = arr[index + 1];
+        const next = arr[index - 1];
         const newDay = isMessageNewDay(msg, prev);
         const sequential = isMessageSequential(msg, prev, 300);
+        const lastSequential = sequential && isMessageLastSequential(msg, next);
 
         return (
           msg && (
@@ -28,6 +31,7 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               message={msg}
               newDay={newDay}
               sequential={sequential}
+              lastSequential={lastSequential}
               type="thread"
               showAvatar={showAvatar}
               isBubble={isBubble}
