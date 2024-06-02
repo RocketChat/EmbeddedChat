@@ -1,13 +1,13 @@
 import { EmbeddedChat } from '../..';
-import MintMeadow from '../../theme/CurveVariant/MintMeadow';
-import RoseEmber from '../../theme/CurveVariant/RoseEmber';
+import AquaBreeze from '../../theme/CurveVariant/AquaBreeze';
+import BlushCandy from '../../theme/CurveVariant/BlushCandy';
 
 export default {
   title: 'EmbeddedChat/Design Variants/CurveVariant/Colorful',
   component: EmbeddedChat,
 };
 
-export const Mint_Meadow = {
+export const Aqua_Breeze = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -20,7 +20,7 @@ export const Mint_Meadow = {
     showUsername: false,
     enableThreads: true,
     hideHeader: false,
-    theme: MintMeadow,
+    theme: AquaBreeze,
     auth: {
       flow: 'PASSWORD',
     },
@@ -28,7 +28,7 @@ export const Mint_Meadow = {
   },
 };
 
-export const Rose_Ember = {
+export const Blush_Candy = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -41,7 +41,7 @@ export const Rose_Ember = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: RoseEmber,
+    theme: BlushCandy,
     auth: {
       flow: 'PASSWORD',
     },

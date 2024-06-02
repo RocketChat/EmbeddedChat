@@ -1,7 +1,6 @@
 import { EmbeddedChat } from '../..';
 import AzureSky from '../../theme/CurveVariant/AzureSky';
-import Simple from '../../theme/CurveVariant/Simple';
-
+import PineWhisper from '../../theme/CurveVariant/PineWhisper';
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
   title: 'EmbeddedChat/Design Variants/CurveVariant/Simplistic',
@@ -10,7 +9,7 @@ export default {
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 
-export const Default = {
+export const Pine_Whisper = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -23,7 +22,7 @@ export const Default = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: Simple,
+    theme: PineWhisper,
     auth: {
       flow: 'PASSWORD',
     },
