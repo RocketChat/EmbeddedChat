@@ -4,17 +4,14 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
-import { useThemeStore } from '../../store';
 import useBubbleStyles from '../Message/BubbleVariant/useBubbleStyles';
 
-const ImageAttachment = ({ attachment, host }) => {
+const ImageAttachment = ({ attachment, host, isBubble }) => {
   const [showGallery, setShowGallery] = useState(false);
   const extractIdFromUrl = (url) => {
     const match = url.match(/\/file-upload\/(.*?)\//);
     return match ? match[1] : null;
   };
-
-  const isBubble = useThemeStore((state) => state.isBubble);
 
   const { getBubbleStyles } = useBubbleStyles();
 

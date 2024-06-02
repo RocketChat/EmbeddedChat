@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore, useThemeStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../../components/Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
@@ -34,6 +34,7 @@ const Message = ({
   showToolbox = true,
   showRoles = true,
   isLinkPreview = true,
+  isBubble = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
@@ -42,7 +43,6 @@ const Message = ({
   );
 
   const styles = useMessageStyles();
-  const isBubble = useThemeStore((state) => state.isBubble);
 
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -172,7 +172,7 @@ const Message = ({
             isPinned={isPinned}
           />
         )}
-        <MessageBodyContainer isMe={isMe}>
+        <MessageBodyContainer isBubble={isBubble} isMe={isMe}>
           {shouldShowHeader && (
             <MessageHeader message={message} isRoles={showRoles} />
           )}
@@ -181,6 +181,7 @@ const Message = ({
               <MessageBody
                 className="ec-message-body"
                 css={message.isPending && styles.pendingMessageBody}
+                isBubble={isBubble}
                 isMe={isMe}
                 isText={message.md}
                 sequential={sequential}
@@ -189,7 +190,10 @@ const Message = ({
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
-                    <Attachments attachments={message.attachments} />
+                    <Attachments
+                      attachments={message.attachments}
+                      isBubble={isBubble}
+                    />
                   </>
                 ) : (
                   <Markdown body={message} isReaction={false} />
@@ -227,6 +231,7 @@ const Message = ({
                       toggleShowReportMessage();
                     }}
                     isThreadMessage={type === 'thread'}
+                    isBubble={isBubble}
                     isMe={isMe}
                   />
                 ) : (
@@ -260,6 +265,7 @@ const Message = ({
             <MessageMetrics
               message={message}
               handleOpenThread={handleOpenThread}
+              isBubble={isBubble}
               isMe={isMe}
             />
           ) : null}

@@ -7,7 +7,6 @@ import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useThemeStore } from '../../store';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 export const MessageMetrics = ({
@@ -16,6 +15,7 @@ export const MessageMetrics = ({
   style = {},
   handleOpenThread = () => {},
   isReplyButton = true,
+  isBubble,
   isMe = false,
   ...props
 }) => {
@@ -26,7 +26,6 @@ export const MessageMetrics = ({
   );
 
   const { colors } = useCustomTheme();
-  const isBubble = useThemeStore((state) => state.isBubble);
   const { getBubbleStyles } = useBubbleStyles(isMe);
 
   return (

@@ -11,7 +11,6 @@ import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
 import { Menu } from '../../components/Menu';
 import { useMessageToolboxStyles } from './Message.styles';
-import { useThemeStore } from '../../store';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 export const MessageToolbox = ({
@@ -42,6 +41,7 @@ export const MessageToolbox = ({
     ],
     threshold: 8,
   },
+  isBubble,
   isMe,
   ...props
 }) => {
@@ -50,7 +50,6 @@ export const MessageToolbox = ({
     className,
     style
   );
-  const isBubble = useThemeStore((state) => state.isBubble);
 
   const { getBubbleStyles } = useBubbleStyles(isMe);
 

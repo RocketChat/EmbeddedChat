@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
-import { useThemeStore } from '../../store';
 import useBubbleStyles from '../Message/BubbleVariant/useBubbleStyles';
 
 const userAgentMIMETypeFallback = (type) => {
@@ -16,9 +15,7 @@ const userAgentMIMETypeFallback = (type) => {
   return type;
 };
 
-const VideoAttachment = ({ attachment, host }) => {
-  const isBubble = useThemeStore((state) => state.isBubble);
-
+const VideoAttachment = ({ attachment, host, isBubble }) => {
   const { getBubbleStyles } = useBubbleStyles();
   return (
     <Box css={isBubble && getBubbleStyles('videoAttachmentContainer')}>

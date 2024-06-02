@@ -7,15 +7,27 @@ import PinnedAttachment from './PinnedAttachment';
 import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 
-const Attachment = ({ attachment, host }) => {
+const Attachment = ({ attachment, host, isBubble }) => {
   if (attachment && attachment.audio_url) {
     return <AudioAttachment attachment={attachment} host={host} />;
   }
   if (attachment && attachment.video_url) {
-    return <VideoAttachment attachment={attachment} host={host} />;
+    return (
+      <VideoAttachment
+        attachment={attachment}
+        host={host}
+        isBubble={isBubble}
+      />
+    );
   }
   if (attachment && attachment.image_url) {
-    return <ImageAttachment attachment={attachment} host={host} />;
+    return (
+      <ImageAttachment
+        attachment={attachment}
+        host={host}
+        isBubble={isBubble}
+      />
+    );
   }
   if (attachment && attachment.text) {
     return <PinnedAttachment attachment={attachment} />;

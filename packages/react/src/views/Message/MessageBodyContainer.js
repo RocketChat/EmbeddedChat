@@ -2,7 +2,6 @@ import React from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { useThemeStore } from '../../store';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import { useMessageBodyContainerStyles } from './Message.styles';
 
@@ -10,6 +9,7 @@ const MessageBodyContainer = ({
   children,
   className = '',
   style = {},
+  isBubble,
   isMe,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -19,7 +19,6 @@ const MessageBodyContainer = ({
   );
 
   const styles = useMessageBodyContainerStyles();
-  const isBubble = useThemeStore((state) => state.isBubble);
   const { getBubbleStyles } = useBubbleStyles(isMe);
 
   return (
