@@ -8,7 +8,7 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import TextAttachment from './TextAttachment';
 
-const Attachment = ({ attachment, host, isBubble }) => {
+const Attachment = ({ attachment, host, type, isBubble }) => {
   if (attachment && attachment.audio_url) {
     return <AudioAttachment attachment={attachment} host={host} />;
   }
@@ -31,7 +31,7 @@ const Attachment = ({ attachment, host, isBubble }) => {
     );
   }
   if (attachment && attachment.text) {
-    return <TextAttachment attachment={attachment} />;
+    return <TextAttachment attachment={attachment} type={type} />;
   }
   return (
     <Box

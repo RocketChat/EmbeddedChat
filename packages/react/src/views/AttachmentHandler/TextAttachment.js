@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import { Avatar } from '../../components/Avatar';
 import RCContext from '../../context/RCInstance';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const TextAttachment = ({ attachment }) => {
+const TextAttachment = ({ attachment, type }) => {
   const { RCInstance } = useContext(RCContext);
   const getUserAvatarUrl = (authorIcon) => {
     const host = RCInstance.getHost();
@@ -18,11 +19,14 @@ const TextAttachment = ({ attachment }) => {
     attachmentText = attachmentText.split(')')[1] || '';
   }
 
+  const { colors } = useCustomTheme();
+
   return (
     <Box
       css={css`
-        border-inline-start: 1px solid currentColor;
-        padding-left: 0.8rem;
+        ${type ? 'border-inline-start' : 'border'}: 3px solid ${colors.border};
+        margin-top: 0.75rem;
+        padding: 0.5rem;
       `}
     >
       <Box
@@ -36,11 +40,11 @@ const TextAttachment = ({ attachment }) => {
           alt="avatar"
           size="1.2em"
         />
-        <Box>{attachment?.author_name}</Box>
+        <Box>@{attachment?.author_name}</Box>
       </Box>
       <Box
         css={css`
-          margin-top: 0.7rem;
+          margin-top: 0.5rem;
         `}
       >
         {attachmentText}

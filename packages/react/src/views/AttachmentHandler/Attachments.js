@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Attachment from './Attachment';
 import RCContext from '../../context/RCInstance';
 
-const Attachments = ({ attachments, isBubble }) => {
+const Attachments = ({ attachments, type, isBubble }) => {
   const { RCInstance } = useContext(RCContext);
   let host = RCInstance.getHost();
   host = host.replace(/\/$/, '');
@@ -14,6 +14,7 @@ const Attachments = ({ attachments, isBubble }) => {
       attachment={attachment}
       host={host}
       isBubble={isBubble}
+      type={type}
     />
   ));
 };

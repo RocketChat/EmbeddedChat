@@ -257,7 +257,10 @@ const Message = ({
           ) : (
             <>
               {message.attachments && (
-                <Attachments attachments={message.attachments} />
+                <Attachments
+                  attachments={message.attachments}
+                  type={message.t}
+                />
               )}
             </>
           )}
