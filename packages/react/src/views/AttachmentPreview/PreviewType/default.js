@@ -5,7 +5,6 @@ import { Box } from '../../../components/Box';
 import { Icon } from '../../../components/Icon';
 
 function PreviewDefault({ data }) {
-  console.log(data);
   return (
     <Box>
       <Box

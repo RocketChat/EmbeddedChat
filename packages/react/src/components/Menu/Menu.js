@@ -60,7 +60,7 @@ const Menu = ({
     return () => document.body.removeEventListener('click', onBodyClick);
   }, [isOpen]);
 
-  const content = (
+  const optionJsx = (
     <>
       {tooltip.isToolTip ? (
         <Tooltip text={tooltip.text} position={tooltip.position}>
@@ -107,10 +107,10 @@ const Menu = ({
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
     >
-      {content}
+      {optionJsx}
     </Box>
   ) : (
-    content
+    optionJsx
   );
 };
 

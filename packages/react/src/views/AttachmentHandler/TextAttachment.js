@@ -52,7 +52,6 @@ const TextAttachment = ({ attachment, isBubble, isMe, type }) => {
             display: flex;
             gap: 0.3rem;
             align-items: center;
-            justify-content: center;
           `,
 
           isBubble && getBubbleStyles('textUserInfo'),

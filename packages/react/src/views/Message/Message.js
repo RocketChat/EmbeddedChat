@@ -174,7 +174,11 @@ const Message = ({
         )}
         <MessageBodyContainer isBubble={isBubble} isMe={isMe}>
           {shouldShowHeader && (
-            <MessageHeader message={message} isRoles={showRoles} />
+            <MessageHeader
+              message={message}
+              isRoles={showRoles}
+              showName={!isBubble || (isBubble && !isMe)}
+            />
           )}
           {!message.t ? (
             <>
