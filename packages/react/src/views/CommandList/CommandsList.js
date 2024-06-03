@@ -4,7 +4,7 @@ import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useCommandListStyles from './CommandList.style';
 
 function CommandsList({

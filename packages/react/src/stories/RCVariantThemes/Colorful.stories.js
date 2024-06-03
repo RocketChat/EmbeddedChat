@@ -12,7 +12,6 @@ export const Mint_Meadow = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',
@@ -34,7 +33,6 @@ export const Rose_Ember = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',

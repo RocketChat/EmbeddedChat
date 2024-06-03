@@ -2,7 +2,12 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore, useChannelStore } from '../../store';
+import {
+  useMessageStore,
+  useUserStore,
+  useChannelStore,
+  useThemeStore,
+} from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../../components/Box';
@@ -10,7 +15,7 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import ModalBlock from '../uiKit/blocks/ModalBlock';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';
@@ -21,7 +26,9 @@ const ChatBody = ({
   scrollToBottom,
   messageListRef,
 }) => {
-  const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
+  const { classNames, styleOverrides, variantOverrides } =
+    useComponentOverrides('ChatBody');
+  const variant = variantOverrides || 'flat';
   const styles = useChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -41,6 +48,8 @@ const ChatBody = ({
     state.isThreadOpen,
     state.threadMainMessage,
   ]);
+
+  const setMessageVariant = useThemeStore((state) => state.setMessageVariant);
 
   const { handleLogin } = useRCAuth();
 
@@ -75,6 +84,10 @@ const ChatBody = ({
     setThreadMessages,
     isChannelPrivate,
   ]);
+
+  useEffect(() => {
+    setMessageVariant(variant);
+  }, [setMessageVariant, variantOverrides]);
 
   useEffect(() => {
     if (isThreadOpen && ECOptions.enableThreads) {

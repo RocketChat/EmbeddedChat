@@ -11,8 +11,8 @@ export const useMessageStyles = () => {
     align-items: flex-start;
     padding-top: 0.5rem;
     padding-bottom: 0.25rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
     color: ${colors.foreground};
 
     &:hover {
@@ -66,22 +66,6 @@ export const MessageBodyStyles = {
   `,
 };
 
-export const MessageContainerStyles = {
-  messageContainer: css`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 100%;
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-width: 1px;
-    margin-top: -0.125rem;
-    margin-bottom: -0.125rem;
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-  `,
-};
-
 export const useMessageDividerStyles = () => {
   const { theme, colors } = useCustomTheme();
 
@@ -110,6 +94,7 @@ export const useMessageDividerStyles = () => {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    border-radius: ${theme.schemes.radius};
   `;
 
   const bar = css`
@@ -125,7 +110,7 @@ export const useMessageDividerStyles = () => {
 };
 
 export const useMessageHeaderStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const header = css`
     display: flex;
@@ -155,7 +140,7 @@ export const useMessageHeaderStyles = () => {
     font-size: 0.75rem;
     padding: 0 0.25rem;
     margin: 0 0.1rem;
-    border-radius: 2px;
+    border-radius: ${theme.schemes.radius};
     font-weight: 700;
     line-height: 1rem;
     overflow: hidden;
@@ -185,7 +170,7 @@ export const useMessageHeaderStyles = () => {
     font-weight: 400;
     line-height: 1rem;
     flex-shrink: 0;
-    margin-right: 0.5rem;
+    margin-left: 0.25rem;
   `;
 
   return { header, headerName, userRole, userName, headerTimestamp };
@@ -218,7 +203,7 @@ export const MessageMetricsStyles = {
 };
 
 export const useMessageReactionsStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { colors } = useCustomTheme();
   const container = css`
     display: flex;
     flex-flow: row wrap;
@@ -243,7 +228,7 @@ export const useMessageReactionsStyles = () => {
       margin: 0;
     }
     border: 1px solid ${colors.border};
-    border-radius: ${theme.schemes.radius};
+    border-radius: 0.2rem;
   `;
 
   const reactionMine = css`
@@ -256,7 +241,7 @@ export const useMessageReactionsStyles = () => {
 export const useMessageToolboxStyles = () => {
   const { theme, colors } = useCustomTheme();
 
-  const container = css`
+  const toolboxContainer = css`
     display: none;
     .ec-message:hover & {
       display: flex;
@@ -272,13 +257,25 @@ export const useMessageToolboxStyles = () => {
     margin-left: -0.25rem;
     margin-right: -0.25rem;
     margin-top: 0.125rem;
-    font-size: 1.25rem !important;
     background-color: ${colors.background};
     box-shadow: 0 0 2px ${colors.foreground};
     gap: 0.25rem;
     padding: 0.25rem;
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
   `;
 
-  return { container, toolbox };
+  return {
+    toolboxContainer,
+    toolbox,
+  };
+};
+
+export const useMessageBodyContainerStyles = () => {
+  const bodyContainer = css`
+    margin-left: 5px;
+    position: relative;
+    width: 100%;
+  `;
+
+  return { bodyContainer };
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalContentStyles as styles } from './Modal.styles';
 

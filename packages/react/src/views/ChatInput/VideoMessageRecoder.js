@@ -13,10 +13,11 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import { ActionButton } from '../../components/ActionButton';
 import { Modal } from '../../components/Modal';
-import { VideoMessageRecorderStyles as styles } from './ChatInput.styles';
+import { useCommonRecorderStyles } from './ChatInput.styles';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
+  const styles = useCommonRecorderStyles();
 
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage
@@ -166,19 +167,18 @@ const VideoMessageRecorder = () => {
             style={{
               display: 'flex',
               width: '28rem',
-              boxShadow: '0px 1px 1px 1px rgb(203, 203, 203)',
-              backgroundColor: 'rgb(39, 39, 39)',
             }}
           >
-            <video muted autoPlay playsInline ref={videoRef} />
-            <Box
-              css={[
-                css`
-                  color: white;
-                `,
-                styles.container,
-              ]}
-            >
+            <video
+              muted
+              autoPlay
+              playsInline
+              ref={videoRef}
+              css={css`
+                margin-bottom: 2px;
+              `}
+            />
+            <Box css={styles.controller}>
               <ActionButton ghost onClick={handleCancelRecordButton}>
                 <Icon size="1.25rem" name="circle-cross" />
               </ActionButton>

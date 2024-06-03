@@ -50,7 +50,7 @@ export default function TypingUsers() {
       css={css`
         height: ${typingUsers.length !== 0 ? '15px' : '0px'};
         font-size: 0.75rem;
-        margin-inline-start: 0.25rem;
+        margin-inline-start: 2.25rem;
         z-index: ${theme.zIndex.general};
       `}
     >

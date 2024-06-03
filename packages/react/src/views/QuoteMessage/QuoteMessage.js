@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { format } from 'date-fns';
 import { Box } from '../../components/Box';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RCContext from '../../context/RCInstance';
 import { Avatar } from '../../components/Avatar';
 import { ActionButton } from '../../components/ActionButton';

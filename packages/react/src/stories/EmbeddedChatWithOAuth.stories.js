@@ -11,7 +11,6 @@ export const WithOAuth = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',

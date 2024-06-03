@@ -9,14 +9,6 @@ const isMessageSequential = (current, previous, groupingRange) => {
     return false;
   }
 
-  if (current.tmid) {
-    return [previous.tmid, previous._id].includes(current.tmid);
-  }
-
-  if (previous.tmid) {
-    return false;
-  }
-
   if (current.groupable === false) {
     return false;
   }

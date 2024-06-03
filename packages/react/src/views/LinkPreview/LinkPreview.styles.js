@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useLinkPreviewStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
   const arrowDropDown = css`
     cursor: pointer;
     display: flex;
@@ -12,7 +12,7 @@ const useLinkPreviewStyles = () => {
   const linkPreviewContainer = css`
     max-width: 22rem;
     border: 1px solid ${colors.border};
-    border-radius: 0.25rem;
+    border-radius: ${theme.schemes.radius};
     margin-bottom: 0.75rem;
     overflow: hidden;
   `;

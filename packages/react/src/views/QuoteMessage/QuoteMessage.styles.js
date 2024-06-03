@@ -27,8 +27,8 @@ const useQuoteMessageStyles = () => {
 
   const actionBtn = css`
     position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
+    top: 0.75rem;
+    right: 0.75rem;
   `;
 
   return { messageContainer, avatarContainer, message, actionBtn };

@@ -8,7 +8,7 @@ import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../../components/Box';
 import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -20,28 +20,34 @@ import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
+import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 const Message = ({
   message,
-  variant = 'default',
+  type = 'default',
   sequential = false,
+  lastSequential = false,
   newDay = false,
   showAvatar = false,
   className = '',
   style = {},
   showToolbox = true,
   showRoles = true,
+  isLinkPreview = true,
+  isBubble = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'Message',
     [message.messageParentBox, className],
     style
   );
+
   const styles = useMessageStyles();
+
   const { RCInstance } = useContext(RCContext);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
-  const [setMessageToReport, toggletoggleShowReportMessage] = useMessageStore(
+  const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
   const dispatchToastMessage = useToastBarDispatch();
@@ -53,6 +59,9 @@ const Message = ({
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
 
   const openThread = useMessageStore((state) => state.openThread);
+
+  const isMe = message.u._id === authenticatedUserId;
+  const { getBubbleStyles } = useBubbleStyles(isMe, sequential, lastSequential);
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -140,13 +149,18 @@ const Message = ({
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
+
   return (
     <>
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          styles.main,
-          editMessage._id === message._id && styles.messageEditing,
+          isBubble
+            ? getBubbleStyles('messageParent')
+            : [
+                styles.main,
+                editMessage._id === message._id && styles.messageEditing,
+              ],
         ]}
         style={styleOverrides}
       >
@@ -158,33 +172,36 @@ const Message = ({
             isPinned={isPinned}
           />
         )}
-        <MessageBodyContainer>
+        <MessageBodyContainer isBubble={isBubble} isMe={isMe}>
           {shouldShowHeader && (
-            <MessageHeader message={message} isRoles={showRoles} />
+            <MessageHeader
+              message={message}
+              isRoles={showRoles}
+              showName={!isBubble || (isBubble && !isMe)}
+            />
           )}
           {!message.t ? (
             <>
-              <MessageBody css={message.isPending && styles.pendingMessageBody}>
+              <MessageBody
+                className="ec-message-body"
+                css={message.isPending && styles.pendingMessageBody}
+                isBubble={isBubble}
+                isMe={isMe}
+                isText={message.md}
+                sequential={sequential}
+                lastSequential={lastSequential}
+              >
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
-                    <Attachments attachments={message.attachments} />
+                    <Attachments
+                      attachments={message.attachments}
+                      isBubble={isBubble}
+                    />
                   </>
                 ) : (
                   <Markdown body={message} isReaction={false} />
                 )}
-
-                {message.urls &&
-                  message.urls.map(
-                    (url, index) =>
-                      url.meta && (
-                        <LinkPreview
-                          key={index}
-                          url={url.url}
-                          meta={url.meta}
-                        />
-                      )
-                  )}
 
                 {message.blocks && (
                   <kitContext.Provider value={context} mid={message.mid}>
@@ -194,7 +211,46 @@ const Message = ({
                     />
                   </kitContext.Provider>
                 )}
+
+                {!message.t && showToolbox ? (
+                  <MessageToolbox
+                    message={message}
+                    isEditing={editMessage._id === message._id}
+                    authenticatedUserId={authenticatedUserId}
+                    handleOpenThread={handleOpenThread}
+                    handleDeleteMessage={handleDeleteMessage}
+                    handleStarMessage={handleStarMessage}
+                    handlePinMessage={handlePinMessage}
+                    handleEditMessage={() => {
+                      if (editMessage._id === message._id) {
+                        setEditMessage({});
+                      } else {
+                        setEditMessage(message);
+                      }
+                    }}
+                    handleQuoteMessage={() => setQuoteMessage(message)}
+                    handleEmojiClick={handleEmojiClick}
+                    handlerReportMessage={() => {
+                      setMessageToReport(message._id);
+                      toggleShowReportMessage();
+                    }}
+                    isThreadMessage={type === 'thread'}
+                    isBubble={isBubble}
+                    isMe={isMe}
+                  />
+                ) : (
+                  <></>
+                )}
               </MessageBody>
+
+              {isLinkPreview &&
+                message.urls &&
+                message.urls.map(
+                  (url, index) =>
+                    url.meta && (
+                      <LinkPreview key={index} url={url.url} meta={url.meta} />
+                    )
+                )}
 
               <MessageReactions
                 authenticatedUserUsername={authenticatedUserUsername}
@@ -205,59 +261,39 @@ const Message = ({
           ) : (
             <>
               {message.attachments && (
-                <Attachments attachments={message.attachments} />
+                <Attachments
+                  attachments={message.attachments}
+                  type={message.t}
+                  isBubble={isBubble}
+                  isMe={isMe}
+                />
               )}
             </>
           )}
-          {message.tcount && variant !== 'thread' ? (
+          {message.tcount && type !== 'thread' ? (
             <MessageMetrics
               message={message}
               handleOpenThread={handleOpenThread}
+              isBubble={isBubble}
+              isMe={isMe}
             />
           ) : null}
-          {!message.t && showToolbox ? (
-            <MessageToolbox
-              message={message}
-              isEditing={editMessage._id === message._id}
-              authenticatedUserId={authenticatedUserId}
-              handleOpenThread={handleOpenThread}
-              handleDeleteMessage={handleDeleteMessage}
-              handleStarMessage={handleStarMessage}
-              handlePinMessage={handlePinMessage}
-              handleEditMessage={() => {
-                if (editMessage._id === message._id) {
-                  setEditMessage({});
-                } else {
-                  setEditMessage(message);
-                }
-              }}
-              handleQuoteMessage={() => setQuoteMessage(message)}
-              handleEmojiClick={handleEmojiClick}
-              handlerReportMessage={() => {
-                setMessageToReport(message._id);
-                toggletoggleShowReportMessage();
-              }}
-              isThreadMessage={variant === 'thread'}
-            />
-          ) : (
-            <></>
-          )}
         </MessageBodyContainer>
       </Box>
-      {newDay ? (
+
+      {newDay && (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}
         </MessageDivider>
-      ) : null}
+      )}
     </>
   );
 };
-
 Message.propTypes = {
   message: PropTypes.any,
   sequential: PropTypes.bool,
   newDay: PropTypes.bool,
-  variant: PropTypes.oneOf(['thread', 'default']),
+  type: PropTypes.oneOf(['thread', 'default']),
   showAvatar: PropTypes.bool,
 };
 

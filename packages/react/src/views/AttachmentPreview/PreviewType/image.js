@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../../../components/Box';
+import { useCustomTheme } from '../../../hooks/useCustomTheme';
 
 function PreviewImage({ previewURL }) {
+  const { theme } = useCustomTheme();
   return (
     <Box>
-      <img src={previewURL} style={{ maxWidth: '90%', objectFit: 'contain' }} />
+      <img
+        src={previewURL}
+        style={{
+          maxWidth: '90%',
+          objectFit: 'contain',
+          borderRadius: theme.schemes.radius,
+        }}
+      />
     </Box>
   );
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { useUserStore } from '../../store';
 import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { filePreviewHeaderStyles as styles } from './Files.styles';

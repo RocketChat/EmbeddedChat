@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import useComponentOverrides from '../../../theme/useComponentOverrides';
+import useComponentOverrides from '../../../hooks/useComponentOverrides';
 import { Box } from '../../../components/Box';
 import { Button } from '../../../components/Button';
 

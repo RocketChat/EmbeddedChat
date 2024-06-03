@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useThemeStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
 import { Box } from '../../components/Box';
-
 import { Icon } from '../../components/Icon';
+import isMessageLastSequential from '../../lib/isMessageLastSequential';
 
 const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
   const headerTitle = useMessageStore((state) => state.headerTitle);
+  const isBubble = useThemeStore((state) => state.isBubble);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -56,8 +57,12 @@ const MessageList = ({ messages }) => {
       {messages &&
         messages.map((msg, index, arr) => {
           const prev = arr[index + 1];
+          const next = arr[index - 1];
           const newDay = isMessageNewDay(msg, prev);
           const sequential = isMessageSequential(msg, prev, 300);
+          const lastSequential =
+            sequential && isMessageLastSequential(msg, next);
+
           return (
             msg && (
               <Message
@@ -65,8 +70,10 @@ const MessageList = ({ messages }) => {
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}
-                variant="default"
+                lastSequential={lastSequential}
+                type="default"
                 showAvatar={showAvatar}
+                isBubble={isBubble}
               />
             )
           );

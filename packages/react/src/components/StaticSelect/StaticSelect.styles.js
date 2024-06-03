@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useStaticSelectStyles = () => {
-  const { colors } = useCustomTheme();
+  const { theme, colors } = useCustomTheme();
 
   const main = css`
     position: relative;
@@ -23,8 +23,7 @@ const useStaticSelectStyles = () => {
     border-width: 1px;
     border-color: ${colors.border};
     border-style: solid;
-    border-radius: 0.25rem;
-    background-color: white;
+    border-radius: ${theme.schemes.radius};
     box-shadow: none;
     -webkit-appearance: none;
     appearance: none;

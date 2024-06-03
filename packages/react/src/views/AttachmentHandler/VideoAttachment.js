@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import AttachmentMetadata from './AttachmentMetadata';
+import useBubbleStyles from '../Message/BubbleVariant/useBubbleStyles';
 
 const userAgentMIMETypeFallback = (type) => {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
@@ -13,20 +15,37 @@ const userAgentMIMETypeFallback = (type) => {
   return type;
 };
 
-const VideoAttachment = ({ attachment, host }) => (
-  <Box>
-    <AttachmentMetadata
-      attachment={attachment}
-      url={host + (attachment.title_url || attachment.video_url)}
-    />
-    <video width={300} controls>
-      <source
-        src={host + attachment.video_url}
-        type={userAgentMIMETypeFallback(attachment.video_type)}
+const VideoAttachment = ({ attachment, host, isBubble }) => {
+  const { getBubbleStyles } = useBubbleStyles();
+  return (
+    <Box css={isBubble && getBubbleStyles('videoAttachmentContainer')}>
+      <AttachmentMetadata
+        attachment={attachment}
+        url={host + (attachment.title_url || attachment.video_url)}
       />
-    </video>
-  </Box>
-);
+      <Box
+        css={css`
+          line-height: 0;
+          border-radius: inherit;
+        `}
+      >
+        <video
+          width={300}
+          controls
+          style={{
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
+          }}
+        >
+          <source
+            src={host + attachment.video_url}
+            type={userAgentMIMETypeFallback(attachment.video_type)}
+          />
+        </video>
+      </Box>
+    </Box>
+  );
+};
 
 export default VideoAttachment;
 

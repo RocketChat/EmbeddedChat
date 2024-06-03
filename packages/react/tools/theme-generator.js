@@ -3,8 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Replace 'SampleTheme' with name of your theme
-
+// Replace 'SampleTheme' with the name of your theme
 const themeName = 'SampleTheme';
 
 function parseCSS(cssString) {
@@ -44,66 +43,153 @@ function parseCSS(cssString) {
   return { schemes };
 }
 
-// Replace cssString with the your exported ShadnCn Theme
-
+// Replace cssString with your exported ShadnCn Theme
 const cssString = `
-  
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
-  }
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
+
+
+:root  {
+  --background: 252.5 0% 100%;
+  --foreground: 252.5 0% 10%;
+  --card: 252.5 0% 100%;
+  --card-foreground: 252.5 0% 15%;
+  --popover: 252.5 0% 100%;
+  --popover-foreground: 252.5 95% 10%;
+  --primary: 252.5 94.7% 85.1%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 252.5 10% 90%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 214.5 10% 95%;
+  --muted-foreground: 252.5 0% 40%;
+  --accent: 214.5 10% 90%;
+  --accent-foreground: 252.5 0% 15%;
+  --destructive: 0 50% 50%;
+  --destructive-foreground: 252.5 0% 100%;
+  --border: 252.5 20% 82%;
+  --input: 252.5 20% 50%;
+  --ring: 252.5 94.7% 85.1%;
+  --radius: 1rem;
+}
+.dark  {
+  --background: 252.5 10% 10%;
+  --foreground: 252.5 0% 100%;
+  --card: 252.5 0% 10%;
+  --card-foreground: 252.5 0% 100%;
+  --popover: 252.5 10% 5%;
+  --popover-foreground: 252.5 0% 100%;
+  --primary: 252.5 94.7% 85.1%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 252.5 10% 20%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 214.5 10% 25%;
+  --muted-foreground: 252.5 0% 65%;
+  --accent: 214.5 10% 25%;
+  --accent-foreground: 252.5 0% 95%;
+  --destructive: 0 50% 50%;
+  --destructive-foreground: 252.5 0% 100%;
+  --border: 252.5 20% 50%;
+  --input: 252.5 20% 50%;
+  --ring: 252.5 94.7% 85.1%;
+  --radius: 1rem;
 }
 
-  `;
+
+`;
+
+// Add hardcoded colors and other properties
+const otherProps = {
+  common: {
+    black: 'hsl(0, 0%, 0%)',
+    white: 'hsl(0, 0%, 100%)',
+  },
+  light: {
+    warning: 'hsl(38, 92%, 50%)',
+    warningForeground: 'hsl(48, 96%, 89%)',
+    success: 'hsl(91, 60.4%, 81.2%)',
+    successForeground: 'hsl(90, 61.1%, 14.1%)',
+    info: 'hsl(214, 76.4%, 50.2%)',
+    infoForeground: 'hsl(214.3, 77.8%, 92.9%)',
+  },
+  dark: {
+    warning: 'hsl(48, 96%, 89%)',
+    warningForeground: 'hsl(38, 92%, 50%)',
+    success: 'hsl(90, 61.1%, 14.1%)',
+    successForeground: 'hsl(90, 60%, 90.2%)',
+    info: 'hsl(214.3, 77.8%, 92.9%)',
+    infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
+  },
+  radius: '0.2rem',
+  typography: {
+    default: {
+      fontFamily: "'Times New Roman', serif",
+      fontSize: 14,
+      fontWeightLight: 300,
+      fontWeightRegular: 400,
+      fontWeightMedium: 500,
+      fontWeightBold: 700,
+    },
+    h1: {
+      fontSize: '2.625rem',
+      fontWeight: 800,
+    },
+    h2: {
+      fontSize: '1.875rem',
+      fontWeight: 800,
+    },
+    h3: {
+      fontSize: '1.5rem',
+      fontWeight: 400,
+    },
+    h4: {
+      fontSize: '1.25rem',
+      fontWeight: 400,
+    },
+    h5: {
+      fontSize: '1rem',
+      fontWeight: 400,
+    },
+    h6: {
+      fontSize: '0.875rem',
+      fontWeight: 500,
+    },
+  },
+  shadows: [
+    'none',
+    'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
+    'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+  ],
+  zIndex: {
+    divider: 1000,
+    body: 1100,
+    general: 1200,
+    menu: 1300,
+    tooltip: 1400,
+    modal: 1500,
+    toastbar: 1600,
+  },
+};
 
 const themeObject = parseCSS(cssString);
+themeObject.schemes.common = otherProps.common;
+themeObject.schemes.light = {
+  ...themeObject.schemes.light,
+  ...otherProps.light,
+};
+themeObject.schemes.dark = {
+  ...themeObject.schemes.dark,
+  ...otherProps.dark,
+};
+themeObject.schemes.radius = otherProps.radius;
+themeObject.typography = otherProps.typography;
+themeObject.shadows = otherProps.shadows;
+themeObject.zIndex = otherProps.zIndex;
+
 const themeObjectString = `const ${themeName} = ${JSON.stringify(
   themeObject,
   null,
   4
 )};
-  export default ${themeName};`;
+export default ${themeName};`;
 
 const themePath = path.join(__dirname, `../src/theme/${themeName}.js`);
 

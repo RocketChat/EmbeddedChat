@@ -26,7 +26,7 @@ export const toastbarStyles = {
     max-width: 20rem;
     color: ${color};
     background-color: ${bgColor};
-    border-radius: 0.25em;
+    border-radius: ${theme.schemes.radius};
     padding: 0.75em 1em;
     z-index: ${theme.zIndex?.toastbar};
     animation: ${animation} ${time}ms ease-in-out forwards;
@@ -37,8 +37,7 @@ export const toastBarContainerStyles = {
   container: (theme) => css`
     position: absolute;
     z-index: ${theme.zIndex.toastbar};
-    border-radius: 0.25em;
-    background-color: white;
+    border-radius: ${theme.schemes.radius};
     animation: ${animation} ${2000}ms ease-in-out forwards;
   `,
 };

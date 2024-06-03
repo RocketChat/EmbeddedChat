@@ -24,14 +24,14 @@ const useEmojiPickerStyles = () => {
       --epr-highlight-color: ${calculatedColors};
       --epr-focus-bg-color: ${calculatedColors};
       --epr-horizontal-padding: 10px;
-      --epr-picker-border-radius: 8px;
+      --epr-picker-border-radius: ${theme.schemes.radius};
       --epr-search-border-color: var(--epr-highlight-color);
       --epr-header-padding: 15px var(--epr-horizontal-padding);
       --epr-active-skin-tone-indicator-border-color: var(--epr-highlight-color);
       --epr-active-skin-hover-color: var(--epr-hover-bg-color);
       --epr-search-input-bg-color-active: var(--epr-search-input-bg-color);
       --epr-search-input-padding: 0 30px;
-      --epr-search-input-border-radius: 8px;
+      --epr-search-input-border-radius: ${theme.schemes.radius};
       --epr-search-input-height: 40px;
       --epr-search-input-text-color: var(--epr-text-color);
       --epr-search-input-placeholder-color: var(--epr-text-color);

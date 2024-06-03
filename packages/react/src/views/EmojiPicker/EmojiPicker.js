@@ -28,10 +28,10 @@ const CustomEmojiPicker = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [onClose]);
 
@@ -42,7 +42,7 @@ const CustomEmojiPicker = ({
   };
 
   return (
-    <ReactPortal wrapperId="overlay-items">
+    <ReactPortal wrapperId="popup">
       <Box ref={emojiPickerRef} css={[styles.emojiPicker, positionStyles]}>
         <EmojiPicker
           height={350}

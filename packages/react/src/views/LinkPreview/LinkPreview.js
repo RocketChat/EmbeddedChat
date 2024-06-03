@@ -4,14 +4,16 @@ import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import { ActionButton } from '../../components/ActionButton';
 import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useLinkPreviewStyles from './LinkPreview.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useThemeStore } from '../../store';
 
 const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
   const { colors } = useCustomTheme();
+  const isBubble = useThemeStore((state) => state.isBubble);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
@@ -31,27 +33,29 @@ const LinkPreview = ({ className = '', style = {}, url, meta, ...props }) => {
 
   return (
     <>
-      <Box css={styles.arrowDropDown}>
-        Link Preview
-        <ActionButton
-          onClick={handleTogglePreview}
-          ghost
-          display="inline"
-          square
-          size="small"
-          style={{ marginLeft: '2px' }}
-        >
-          {isPreviewOpen ? (
-            <Icon name="chevron-left" size="1.25rem" />
-          ) : (
-            <Icon name="chevron-down" size="1.25rem" />
-          )}
-        </ActionButton>
-      </Box>
+      {!isBubble && (
+        <Box css={styles.arrowDropDown}>
+          Link Preview
+          <ActionButton
+            onClick={handleTogglePreview}
+            ghost
+            display="inline"
+            square
+            size="small"
+            style={{ marginLeft: '2px' }}
+          >
+            {isPreviewOpen ? (
+              <Icon name="chevron-left" size="1.25rem" />
+            ) : (
+              <Icon name="chevron-down" size="1.25rem" />
+            )}
+          </ActionButton>
+        </Box>
+      )}
 
       {isPreviewOpen && (
         <Box
-          css={styles.linkPreviewContainer}
+          css={[styles.linkPreviewContainer]}
           className={`ec-linkpreview ${className} ${classNames}`}
           style={{ ...styleOverrides, ...style }}
           {...props}

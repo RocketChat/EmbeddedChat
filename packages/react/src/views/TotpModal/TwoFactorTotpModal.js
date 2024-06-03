@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import PropTypes from 'prop-types';
 import { totpModalStore, useUserStore } from '../../store';
 import { GenericModal } from '../../components/GenericModal';
 import { Button } from '../../components/Button';
@@ -41,32 +41,19 @@ export default function TotpModal({ handleLogin }) {
         <Box>
           <Box
             css={css`
-              margin: 1px 110px;
+              display: flex;
+              padding: 0.6rem 0.4rem;
             `}
           >
-            <Input
-              css={css`
-                width: 270px;
-              `}
-              type="password"
-              onChange={handleEdit}
-              placeholder="123456"
-            />
+            <Input type="password" onChange={handleEdit} placeholder="123456" />
           </Box>
           <Modal.Footer>
-            <Box
-              css={css`
-                display: flex;
-                justify-content: space-around;
-              `}
-            >
-              <Button type="secondary" onClick={handleClose}>
-                Cancel
-              </Button>
-              <Button type="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
-            </Box>
+            <Button type="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="primary" onClick={handleSubmit}>
+              Submit
+            </Button>
           </Modal.Footer>
         </Box>
       </GenericModal>

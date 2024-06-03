@@ -3,7 +3,7 @@ import { css, useTheme } from '@emotion/react';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 import MenuItem from './MenuItem';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
 import { useMenuStyles } from './Menu.styles';
@@ -13,7 +13,9 @@ const Menu = ({
   className = '',
   style = {},
   anchor = 'right bottom',
-  isToolTip = true,
+  tooltip = { isToolTip: true, position: 'bottom', text: 'Options' },
+  size = 'medium',
+  useWrapper = true,
 }) => {
   const theme = useTheme();
   const styles = useMenuStyles();
@@ -35,7 +37,6 @@ const Menu = ({
     () => ({ ...styleOverrides, ...anchorStyle }),
     [anchorStyle, styleOverrides]
   );
-
   const { classNames: wrapperClasses, styleOverrides: wrapperStyles } =
     useComponentOverrides('MenuWrapper');
 
@@ -59,19 +60,24 @@ const Menu = ({
     return () => document.body.removeEventListener('click', onBodyClick);
   }, [isOpen]);
 
-  return (
-    <Box
-      css={styles.wrapper}
-      className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
-      style={wrapperStyles}
-    >
-      {isToolTip ? (
-        <Tooltip text="Options" position="bottom">
-          {' '}
-          <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+  const optionJsx = (
+    <>
+      {tooltip.isToolTip ? (
+        <Tooltip text={tooltip.text} position={tooltip.position}>
+          <ActionButton
+            ghost
+            icon="kebab"
+            size={size}
+            onClick={() => setOpen(!isOpen)}
+          />
         </Tooltip>
       ) : (
-        <ActionButton ghost icon="kebab" onClick={() => setOpen(!isOpen)} />
+        <ActionButton
+          ghost
+          icon="kebab"
+          size={size}
+          onClick={() => setOpen(!isOpen)}
+        />
       )}
       {isOpen ? (
         <Box
@@ -93,7 +99,18 @@ const Menu = ({
           ))}
         </Box>
       ) : null}
+    </>
+  );
+  return useWrapper ? (
+    <Box
+      css={styles.wrapper}
+      className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
+      style={wrapperStyles}
+    >
+      {optionJsx}
     </Box>
+  ) : (
+    optionJsx
   );
 };
 

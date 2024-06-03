@@ -11,11 +11,9 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 
 export const Default = {
-  title: 'EmbeddedChat/Variant/RCVariant/Simplistic/Default',
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',
@@ -33,11 +31,9 @@ export const Default = {
 };
 
 export const Azure_Sky = {
-  title: 'EmbeddedChat/Variant/RCVariant/Simplistic/AzureSky',
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-    moreOpts: true,
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',

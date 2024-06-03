@@ -103,7 +103,7 @@ const AllThreads = () => {
 
                     <MessageBody>
                       {message.attachments && message.attachments.length > 0
-                        ? message.file.name
+                        ? message.file?.name
                         : message.msg}
                     </MessageBody>
 

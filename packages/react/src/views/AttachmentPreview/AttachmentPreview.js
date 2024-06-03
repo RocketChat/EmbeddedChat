@@ -79,6 +79,7 @@ const AttachmentPreview = () => {
                 is="span"
                 css={css`
                   font-weight: 550;
+                  margin-bottom: 0.5rem;
                 `}
               >
                 File name
@@ -98,6 +99,7 @@ const AttachmentPreview = () => {
                 is="span"
                 css={css`
                   font-weight: 550;
+                  margin-bottom: 0.5rem;
                 `}
               >
                 File description

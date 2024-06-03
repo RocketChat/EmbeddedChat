@@ -1,6 +1,6 @@
 import React from 'react';
 import { appendClassNames } from '../../lib/appendClassNames';
-import useComponentOverrides from '../../theme/useComponentOverrides';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { avatarContainerStyles as styles } from './Avatar.styles';
 

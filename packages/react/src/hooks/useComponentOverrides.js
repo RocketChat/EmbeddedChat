@@ -18,7 +18,22 @@ const useComponentOverrides = (component, className = '', style = {}) => {
     }),
     [component, style, theme?.components]
   );
-  return { styleOverrides, classNames };
+
+  const configOverrides = useMemo(
+    () => ({
+      ...((theme?.components &&
+        theme?.components[component]?.configOverrides) ||
+        {}),
+    }),
+    [component, theme?.components]
+  );
+
+  const variantOverrides = useMemo(
+    () => (theme?.variants && theme?.variants[component]) || '',
+
+    [component, theme?.variants]
+  );
+  return { styleOverrides, classNames, configOverrides, variantOverrides };
 };
 
 export default useComponentOverrides;

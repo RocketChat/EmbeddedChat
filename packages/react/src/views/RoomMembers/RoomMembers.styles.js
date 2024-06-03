@@ -6,6 +6,7 @@ export const useRoomMemberStyles = () => {
   const container = css`
     display: flex;
     flex-direction: column;
+    overflow: auto;
     width: 100%;
     align-items: center;
     justify-content: center;

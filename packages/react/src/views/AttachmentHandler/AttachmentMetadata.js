@@ -2,6 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton } from '../../components/ActionButton';
 import { Box } from '../../components/Box';
+import { useThemeStore } from '../../store';
 
 const AttachmentMetadata = ({ attachment, url }) => {
   const handleDownload = async () => {
@@ -23,12 +24,28 @@ const AttachmentMetadata = ({ attachment, url }) => {
     }
   };
 
+  const isBubble = useThemeStore((state) => state.isBubble);
+
   return (
-    <>
+    <Box
+      css={[
+        css`
+          display: flex;
+          flex-direction: column;
+        `,
+
+        isBubble &&
+          css`
+            padding: 2.5% 2.5% 0;
+          `,
+      ]}
+    >
       <p
-        css={css`
-          margin: 0;
-        `}
+        css={[
+          css`
+            margin: 0;
+          `,
+        ]}
       >
         {attachment.description}
       </p>
@@ -42,7 +59,8 @@ const AttachmentMetadata = ({ attachment, url }) => {
         <p
           css={css`
             margin: 0;
-            color: grey;
+            font-size: 14px;
+            opacity: 0.7;
           `}
         >
           {attachment.title}
@@ -55,11 +73,10 @@ const AttachmentMetadata = ({ attachment, url }) => {
           css={css`
             margin-left: 10px;
             margin-top: 5px;
-            color: grey;
           `}
         />
       </Box>
-    </>
+    </Box>
   );
 };
 

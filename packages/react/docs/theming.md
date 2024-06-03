@@ -34,7 +34,7 @@ In the above example:
 We provide a `useComponentsOverrides` hook that returns the necessary data for component customization.
 
 ```jsx
-import { useComponentOverrides } from '../../theme/useComponentOverrides'; 
+import { useComponentOverrides } from '../../hooks/useComponentOverrides'; 
 
 export const MessageBody = ({
   children,

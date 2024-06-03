@@ -82,10 +82,12 @@ const Search = () => {
                   message={msg}
                   newDay={false}
                   sequential={false}
-                  variant="default"
+                  type="default"
                   showAvatar
                   showToolbox={false}
                   showRoles={false}
+                  isLinkPreview={false}
+                  style={{ paddingRight: '1.25rem', paddingLeft: '1.25rem' }}
                 />
               </Box>
             );

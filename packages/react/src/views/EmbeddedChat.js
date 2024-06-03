@@ -14,16 +14,15 @@ import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from '../components/Box';
-import useComponentOverrides from '../theme/useComponentOverrides';
+import useComponentOverrides from '../hooks/useComponentOverrides';
 import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
-import GlobalStyles from '../theme/GlobalStyles';
+import GlobalStyles from './GlobalStyles';
 
 const EmbeddedChat = ({
   isClosable = false,
   setClosableState = () => {},
-  moreOpts = false,
   width = '100%',
   height = '95vh',
   host = 'http://localhost:3000',
@@ -33,6 +32,8 @@ const EmbeddedChat = ({
   toastBarPosition = 'bottom right',
   showRoles = false,
   showAvatar = false,
+  showUsername = true,
+  showName = true,
   enableThreads = false,
   theme = null,
   className = '',
@@ -48,6 +49,8 @@ const EmbeddedChat = ({
   const setToastbarPosition = useToastStore((state) => state.setPosition);
   const setShowAvatar = useUserStore((state) => state.setShowAvatar);
   const setShowRoles = useUserStore((state) => state.setShowRoles);
+  const setShowUsername = useUserStore((state) => state.setShowUsername);
+  const setShowName = useUserStore((state) => state.setShowName);
   const setDarkMode = useThemeStore((state) => state.setDark);
   const setLightMode = useThemeStore((state) => state.setLight);
 
@@ -55,6 +58,8 @@ const EmbeddedChat = ({
     setToastbarPosition(toastBarPosition);
     setShowAvatar(showAvatar);
     setShowRoles(showRoles);
+    setShowUsername(showUsername);
+    setShowName(showName);
     dark ? setDarkMode() : setLightMode();
   }, [
     toastBarPosition,
@@ -66,6 +71,10 @@ const EmbeddedChat = ({
     dark,
     setDarkMode,
     setLightMode,
+    showUsername,
+    setShowUsername,
+    setShowName,
+    showName,
   ]);
 
   const {
@@ -236,7 +245,6 @@ const EmbeddedChat = ({
                 channelName={channelName}
                 isClosable={isClosable}
                 setClosableState={setClosableState}
-                moreOpts={moreOpts}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
                 anonymousMode={anonymousMode}
@@ -277,7 +285,6 @@ EmbeddedChat.propTypes = {
   height: PropTypes.string,
   isClosable: PropTypes.bool,
   setClosableState: PropTypes.func,
-  moreOpts: PropTypes.bool,
   host: PropTypes.string,
   roomId: PropTypes.string,
   channelName: PropTypes.string,
