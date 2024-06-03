@@ -129,6 +129,33 @@ const bubbleStyles = (customTheme) => {
     overflow: hidden;
   `;
 
+  const pinnedContainer = css`
+    max-width: 80%;
+  `;
+
+  const pinnedContainerMe = css`
+    border-inline-start: none;
+    border-inline-end: 3px solid ${colors.border};
+  `;
+
+  const quoteContainer = css`
+    background-color: ${colors.background};
+    color: ${colors.foreground};
+    flex: 1;
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    border: 2px solid ${colors.border};
+    margin: 0.2rem -0.75rem -0.5rem;
+  `;
+
+  const textUserInfo = css`
+    align-self: flex-start;
+  `;
+
+  const textUserInfoMe = css`
+    align-self: flex-end;
+  `;
+
   return {
     messageParent,
     messageParentMe,
@@ -150,6 +177,11 @@ const bubbleStyles = (customTheme) => {
     toolboxContainerMe,
     videoAttachmentContainer,
     imageAttachmentContainer,
+    pinnedContainer,
+    pinnedContainerMe,
+    quoteContainer,
+    textUserInfo,
+    textUserInfoMe,
   };
 };
 

@@ -260,6 +260,8 @@ const Message = ({
                 <Attachments
                   attachments={message.attachments}
                   type={message.t}
+                  isBubble={isBubble}
+                  isMe={isMe}
                 />
               )}
             </>
