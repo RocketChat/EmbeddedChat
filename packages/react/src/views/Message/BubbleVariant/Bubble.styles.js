@@ -115,6 +115,12 @@ export const bubbleStyles = (customTheme) => {
     attachmentMetaContainer: css`
       padding: 2.5% 2.5% 0;
     `,
+
+    emojiPickerStyles: css`
+      position: absolute;
+      top: 0;
+      left: calc(100% + 5px);
+    `,
   };
 
   return styles;
@@ -178,6 +184,11 @@ export const bubbleStylesMe = (customTheme) => {
 
     textUserInfoMe: css`
       align-self: flex-end;
+    `,
+
+    emojiPickerStylesMe: css`
+      left: auto;
+      right: calc(100% + 5px);
     `,
   };
 

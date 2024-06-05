@@ -53,6 +53,7 @@ export const useMessageAvatarContainerStyles = () => {
 
 export const MessageBodyStyles = {
   messageBody: css`
+    position: relative;
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -264,9 +265,16 @@ export const useMessageToolboxStyles = () => {
     border-radius: ${theme.schemes.radius};
   `;
 
+  const emojiPickerStyles = css`
+    position: absolute;
+    top: 0.5rem;
+    right: 1.5rem;
+  `;
+
   return {
     toolboxContainer,
     toolbox,
+    emojiPickerStyles,
   };
 };
 

@@ -184,6 +184,7 @@ const Message = ({
             <>
               <MessageBody
                 className="ec-message-body"
+                id={`ec-message-body-${message._id}`}
                 css={message.isPending && styles.pendingMessageBody}
                 variantStyles={variantStyles}
                 isText={!!message.md}

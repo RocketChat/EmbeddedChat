@@ -13,6 +13,7 @@ const CustomEmojiPicker = ({
     top: 0;
     right: 0;
   `,
+  wrapperId = 'popup',
   onClose = () => {},
 }) => {
   const styles = useEmojiPickerStyles();
@@ -42,7 +43,7 @@ const CustomEmojiPicker = ({
   };
 
   return (
-    <ReactPortal wrapperId="popup">
+    <ReactPortal wrapperId={wrapperId}>
       <Box ref={emojiPickerRef} css={[styles.emojiPicker, positionStyles]}>
         <EmojiPicker
           height={350}

@@ -64,12 +64,6 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const emojiPickerStyles = {
-    position: 'absolute',
-    top: '7rem',
-    right: '1.5rem',
-  };
-
   const toolMap = {
     reply: !isThreadMessage && (
       <Tooltip text="Reply in thread" position="top" key="reply">
@@ -223,7 +217,10 @@ export const MessageToolbox = ({
                 handleEmojiClick(emoji, message, true);
               }}
               onClose={() => setEmojiOpen(false)}
-              positionStyles={emojiPickerStyles}
+              positionStyles={
+                variantStyles.emojiPickerStyles || styles.emojiPickerStyles
+              }
+              wrapperId={`ec-message-body-${message._id}`}
             />
           )}
         </Box>
