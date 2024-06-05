@@ -16,10 +16,10 @@ import {
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
-import UserMentions from '../UserMentions/UserMentions';
-import AllThreads from '../AllThreads/AllThreads';
-import PinnedMessages from '../PinnedMessages/PinnedMessages';
-import StarredMessages from '../StarredMessages/StarredMessages';
+import MentionedMessages from '../MessageAggregators/MentionedMessages';
+import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
+import StarredMessages from '../MessageAggregators/StarredMessages';
+import PinnedMessages from '../MessageAggregators/PinnedMessages';
 import SearchMessage from '../SearchMessage/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Files } from '../Files';
@@ -72,9 +72,9 @@ const ChatLayout = ({
         {showMembers && <RoomMembers members={members} />}
         {showSearch && <SearchMessage />}
         {showChannelinfo && <Roominfo />}
-        {showAllThreads && <AllThreads />}
+        {showAllThreads && <ThreadedMessages />}
         {showAllFiles && <Files />}
-        {showMentions && <UserMentions />}
+        {showMentions && <MentionedMessages />}
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}
         {showCurrentUserInfo && <UserInformation />}

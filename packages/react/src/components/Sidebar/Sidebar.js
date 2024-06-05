@@ -6,7 +6,13 @@ import { Input } from '../Input';
 import Heading from '../Heading/Heading';
 import useSidebarStyles from './Sidebar.styles';
 
-const Sidebar = ({ title, iconName, setShowWindow, children, searchProps }) => {
+const Sidebar = ({
+  title,
+  iconName,
+  setShowWindow,
+  children,
+  searchProps = {},
+}) => {
   const {
     isSearch = false,
     handleInputChange,
