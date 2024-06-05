@@ -18,6 +18,7 @@ const MessageList = ({ messages }) => {
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
   let iconType = 'thread';
   let msgType = headerTitle;
   if (msgType === 'Pinned Messages') {

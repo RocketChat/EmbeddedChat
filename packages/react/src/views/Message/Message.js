@@ -284,7 +284,6 @@ const Message = ({
           ) : null}
         </MessageBodyContainer>
       </Box>
-
       {newDay && (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}
