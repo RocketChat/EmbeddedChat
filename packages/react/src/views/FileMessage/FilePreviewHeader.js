@@ -12,7 +12,7 @@ const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
   const authenticatedUserId = useUserStore((state) => state.userId);
   const isStarred =
-    file.starred && file.starred.find((u) => u._id === authenticatedUserId);
+    file?.starred && file?.starred?.find((u) => u._id === authenticatedUserId);
 
   return (
     <Box
@@ -25,7 +25,7 @@ const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
         css={styles.previewHeaderName}
         className={appendClassNames('ec-file-header-name')}
       >
-        {file.name}
+        {file?.name}
       </Box>
 
       {isTimeStamped && (
@@ -34,7 +34,7 @@ const FilePreviewHeader = ({ file, isTimeStamped = true }) => {
           css={styles.previewHeaderTimestap}
           className={appendClassNames('ec-file-header-timestamp')}
         >
-          {format(new Date(file.ts), 'h:mm a')}
+          {format(new Date(file?.ts), 'h:mm a')}
         </Box>
       )}
       {isStarred ? (

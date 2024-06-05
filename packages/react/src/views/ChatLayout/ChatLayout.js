@@ -20,9 +20,10 @@ import MentionedMessages from '../MessageAggregators/MentionedMessages';
 import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
 import StarredMessages from '../MessageAggregators/StarredMessages';
 import PinnedMessages from '../MessageAggregators/PinnedMessages';
-import Search from '../MessageAggregators/SearchMessage';
+import SearchMessages from '../MessageAggregators/SearchMessages';
+import FileMessages from '../MessageAggregators/FileMessages';
 import Roominfo from '../RoomInformation/RoomInformation';
-import { Files } from '../Files';
+
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
@@ -70,10 +71,10 @@ const ChatLayout = ({
 
       <Box>
         {showMembers && <RoomMembers members={members} />}
-        {showSearch && <Search />}
+        {showSearch && <SearchMessages />}
         {showChannelinfo && <Roominfo />}
         {showAllThreads && <ThreadedMessages />}
-        {showAllFiles && <Files />}
+        {showAllFiles && <FileMessages />}
         {showMentions && <MentionedMessages />}
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}

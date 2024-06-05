@@ -9,6 +9,7 @@ import { useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
+import FileDisplay from '../../FileMessage/FileDisplay';
 
 export const MessageAggregator = ({
   title,
@@ -18,6 +19,8 @@ export const MessageAggregator = ({
   shouldRender,
   searchProps,
   searchFiltered,
+  fetching,
+  type = 'message',
 }) => {
   const styles = useMessageAggregatorStyles();
   const messages = useMessageStore((state) => state.messages);
@@ -41,7 +44,7 @@ export const MessageAggregator = ({
       setShowWindow={setShowWindow}
       searchProps={searchProps}
     >
-      {loading ? (
+      {fetching || loading ? (
         <LoadingIndicator />
       ) : (
         <Box
@@ -61,26 +64,32 @@ export const MessageAggregator = ({
             }
             return (
               <React.Fragment key={msg._id}>
-                {newDay && (
+                {type === 'message' && newDay && (
                   <MessageDivider>
                     {format(new Date(msg.ts), 'MMMM d, yyyy')}
                   </MessageDivider>
                 )}
-
-                <Message
-                  key={`${msg._id}-aggregated`}
-                  message={msg}
-                  newDay={false}
-                  type="default"
-                  showAvatar
-                  showToolbox={false}
-                  showRoles={false}
-                  isInSidebar
-                  style={{
-                    paddingLeft: '0.75rem',
-                    paddingRight: '0.75rem',
-                  }}
-                />
+                {type === 'file' ? (
+                  <FileDisplay
+                    key={`${msg._id}-aggregated`}
+                    fileMessage={msg}
+                  />
+                ) : (
+                  <Message
+                    key={`${msg._id}-aggregated`}
+                    message={msg}
+                    newDay={false}
+                    type="default"
+                    showAvatar
+                    showToolbox={false}
+                    showRoles={false}
+                    isInSidebar
+                    style={{
+                      paddingLeft: '0.75rem',
+                      paddingRight: '0.75rem',
+                    }}
+                  />
+                )}
               </React.Fragment>
             );
           })}

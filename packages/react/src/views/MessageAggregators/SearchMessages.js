@@ -4,10 +4,9 @@ import RCContext from '../../context/RCInstance';
 import { useSearchMessageStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';
 
-const Search = () => {
+const SearchMessages = () => {
   const { RCInstance } = useContext(RCContext);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
-
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
 
@@ -53,4 +52,4 @@ const Search = () => {
     />
   );
 };
-export default Search;
+export default SearchMessages;
