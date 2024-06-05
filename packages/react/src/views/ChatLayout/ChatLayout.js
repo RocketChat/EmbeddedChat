@@ -20,7 +20,7 @@ import MentionedMessages from '../MessageAggregators/MentionedMessages';
 import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
 import StarredMessages from '../MessageAggregators/StarredMessages';
 import PinnedMessages from '../MessageAggregators/PinnedMessages';
-import SearchMessage from '../SearchMessage/SearchMessage';
+import Search from '../MessageAggregators/SearchMessage';
 import Roominfo from '../RoomInformation/RoomInformation';
 import { Files } from '../Files';
 import UserInformation from '../UserInformation/UserInformation';
@@ -70,7 +70,7 @@ const ChatLayout = ({
 
       <Box>
         {showMembers && <RoomMembers members={members} />}
-        {showSearch && <SearchMessage />}
+        {showSearch && <Search />}
         {showChannelinfo && <Roominfo />}
         {showAllThreads && <ThreadedMessages />}
         {showAllFiles && <Files />}
