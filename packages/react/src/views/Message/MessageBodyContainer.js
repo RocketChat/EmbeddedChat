@@ -2,15 +2,13 @@ import React from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import { useMessageBodyContainerStyles } from './Message.styles';
 
 const MessageBodyContainer = ({
   children,
   className = '',
+  variantStyles = {},
   style = {},
-  isBubble,
-  isMe,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'MessageBodyContainer',
@@ -19,15 +17,10 @@ const MessageBodyContainer = ({
   );
 
   const styles = useMessageBodyContainerStyles();
-  const { getBubbleStyles } = useBubbleStyles(isMe);
 
   return (
     <Box
-      css={
-        isBubble
-          ? getBubbleStyles('messageBodyContainer')
-          : styles.bodyContainer
-      }
+      css={variantStyles.messageBodyContainer || styles.bodyContainer}
       className={appendClassNames('ec-message-body-container', classNames)}
       style={styleOverrides}
     >

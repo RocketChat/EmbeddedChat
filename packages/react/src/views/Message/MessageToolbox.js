@@ -11,11 +11,11 @@ import { parseEmoji } from '../../lib/emoji';
 import { Tooltip } from '../../components/Tooltip';
 import { Menu } from '../../components/Menu';
 import { useMessageToolboxStyles } from './Message.styles';
-import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 
 export const MessageToolbox = ({
   className = '',
   message,
+  variantStyles = {},
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
@@ -41,8 +41,7 @@ export const MessageToolbox = ({
     ],
     threshold: 8,
   },
-  isBubble,
-  isMe,
+
   ...props
 }) => {
   const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
@@ -50,8 +49,6 @@ export const MessageToolbox = ({
     className,
     style
   );
-
-  const { getBubbleStyles } = useBubbleStyles(isMe);
 
   const styles = useMessageToolboxStyles();
   const toolOptions =
@@ -70,7 +67,7 @@ export const MessageToolbox = ({
   const emojiPickerStyles = {
     position: 'absolute',
     top: '7rem',
-    ...(isBubble && !isMe ? { left: '1.5rem' } : { right: '1.5rem' }),
+    right: '1.5rem',
   };
 
   const toolMap = {
@@ -201,13 +198,7 @@ export const MessageToolbox = ({
 
   return (
     <>
-      <Box
-        css={[
-          isBubble
-            ? getBubbleStyles('toolboxContainer')
-            : styles.toolboxContainer,
-        ]}
-      >
+      <Box css={variantStyles.toolboxContainer || styles.toolboxContainer}>
         <Box
           css={styles.toolbox}
           className={appendClassNames('ec-message-toolbox', classNames)}

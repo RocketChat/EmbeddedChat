@@ -68,7 +68,7 @@ const AzureSky = {
     xl: 1536,
   },
   variants: {
-    ChatBody: 'bubble',
+    Message: 'bubble',
   },
 
   components: {

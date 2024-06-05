@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
-import { useMessageStore, useUserStore, useThemeStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
@@ -15,7 +15,6 @@ const MessageList = ({ messages }) => {
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const showAvatar = useUserStore((state) => state.showAvatar);
   const headerTitle = useMessageStore((state) => state.headerTitle);
-  const isBubble = useThemeStore((state) => state.isBubble);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -73,7 +72,6 @@ const MessageList = ({ messages }) => {
                 lastSequential={lastSequential}
                 type="default"
                 showAvatar={showAvatar}
-                isBubble={isBubble}
               />
             )
           );

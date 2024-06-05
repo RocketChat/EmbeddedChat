@@ -91,6 +91,7 @@ const StarredMessages = () => {
                     showToolbox={false}
                     showRoles={false}
                     isLinkPreview={false}
+                    isInSidebar
                     style={{ paddingRight: '1.25rem', paddingLeft: '1.25rem' }}
                   />
                 </Box>

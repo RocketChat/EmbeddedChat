@@ -5,9 +5,8 @@ import { Box } from '../../components/Box';
 import { Avatar } from '../../components/Avatar';
 import RCContext from '../../context/RCInstance';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import useBubbleStyles from '../Message/BubbleVariant/useBubbleStyles';
 
-const TextAttachment = ({ attachment, isBubble, isMe, type }) => {
+const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
   const getUserAvatarUrl = (authorIcon) => {
     const host = RCInstance.getHost();
@@ -21,7 +20,6 @@ const TextAttachment = ({ attachment, isBubble, isMe, type }) => {
   }
 
   const { colors } = useCustomTheme();
-  const { getBubbleStyles } = useBubbleStyles(isMe);
 
   return (
     <Box
@@ -37,13 +35,10 @@ const TextAttachment = ({ attachment, isBubble, isMe, type }) => {
           margin-top: 0.75rem;
           padding: 0.5rem;
         `,
-        isBubble
-          ? type
-            ? getBubbleStyles('pinnedContainer')
-            : getBubbleStyles('quoteContainer')
-          : css`
-              ${!type ? `border: 3px solid ${colors.border};` : ''}
-            `,
+        (type ? variantStyles.pinnedContainer : variantStyles.quoteContainer) ||
+          css`
+            ${!type ? `border: 3px solid ${colors.border};` : ''}
+          `,
       ]}
     >
       <Box
@@ -54,7 +49,7 @@ const TextAttachment = ({ attachment, isBubble, isMe, type }) => {
             align-items: center;
           `,
 
-          isBubble && getBubbleStyles('textUserInfo'),
+          variantStyles.textUserInfo,
         ]}
       >
         <>

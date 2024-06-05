@@ -8,16 +8,22 @@ import { Box } from '../../components/Box';
 import { Icon } from '../../components/Icon';
 import TextAttachment from './TextAttachment';
 
-const Attachment = ({ attachment, host, type, isBubble, isMe }) => {
+const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
   if (attachment && attachment.audio_url) {
-    return <AudioAttachment attachment={attachment} host={host} />;
+    return (
+      <AudioAttachment
+        attachment={attachment}
+        host={host}
+        variantStyles={variantStyles}
+      />
+    );
   }
   if (attachment && attachment.video_url) {
     return (
       <VideoAttachment
         attachment={attachment}
         host={host}
-        isBubble={isBubble}
+        variantStyles={variantStyles}
       />
     );
   }
@@ -26,8 +32,7 @@ const Attachment = ({ attachment, host, type, isBubble, isMe }) => {
       <ImageAttachment
         attachment={attachment}
         host={host}
-        isBubble={isBubble}
-        isMe={isMe}
+        variantStyles={variantStyles}
       />
     );
   }
@@ -35,9 +40,8 @@ const Attachment = ({ attachment, host, type, isBubble, isMe }) => {
     return (
       <TextAttachment
         attachment={attachment}
-        isBubble={isBubble}
-        isMe={isMe}
         type={type}
+        variantStyles={variantStyles}
       />
     );
   }
