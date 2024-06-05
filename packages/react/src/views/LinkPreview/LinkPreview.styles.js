@@ -10,7 +10,7 @@ const useLinkPreviewStyles = () => {
   `;
 
   const linkPreviewContainer = css`
-    max-width: 22rem;
+    max-width: 16rem;
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
     margin-bottom: 0.75rem;

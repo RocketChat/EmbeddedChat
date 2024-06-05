@@ -85,9 +85,8 @@ const PinnedMessages = () => {
                     showAvatar
                     showToolbox={false}
                     showRoles={false}
-                    isLinkPreview={false}
                     isInSidebar
-                    style={{ paddingRight: '1.25rem', paddingLeft: '1.25rem' }}
+                    style={{ paddingLeft: '0.75rem', paddingRight: '0.75rem' }}
                   />
                 </Box>
               );

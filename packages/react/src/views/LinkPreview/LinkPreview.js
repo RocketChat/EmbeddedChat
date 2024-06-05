@@ -47,7 +47,6 @@ const LinkPreview = ({
             display="inline"
             square
             size="small"
-            style={{ marginLeft: '2px' }}
           >
             {isPreviewOpen ? (
               <Icon name="chevron-left" size="1.25rem" />
