@@ -21,9 +21,8 @@ import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
 import StarredMessages from '../MessageAggregators/StarredMessages';
 import PinnedMessages from '../MessageAggregators/PinnedMessages';
 import SearchMessages from '../MessageAggregators/SearchMessages';
-import FileMessages from '../MessageAggregators/FileMessages';
+import FileGallery from '../MessageAggregators/FileGallery';
 import Roominfo from '../RoomInformation/RoomInformation';
-
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
@@ -74,7 +73,7 @@ const ChatLayout = ({
         {showSearch && <SearchMessages />}
         {showChannelinfo && <Roominfo />}
         {showAllThreads && <ThreadedMessages />}
-        {showAllFiles && <FileMessages />}
+        {showAllFiles && <FileGallery />}
         {showMentions && <MentionedMessages />}
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}

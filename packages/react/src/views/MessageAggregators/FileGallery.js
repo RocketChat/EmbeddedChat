@@ -3,7 +3,7 @@ import { useChannelStore, useFileStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
 
-const FileMessages = () => {
+const FileGallery = () => {
   const { RCInstance } = useRCContext();
 
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
@@ -58,4 +58,4 @@ const FileMessages = () => {
   );
 };
 
-export default FileMessages;
+export default FileGallery;

@@ -9,7 +9,7 @@ import { useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
-import FileDisplay from '../../FileMessage/FileDisplay';
+import FileDisplay from '../../FileMessage/FileMessage';
 
 export const MessageAggregator = ({
   title,
@@ -62,6 +62,7 @@ export const MessageAggregator = ({
             if (!messageRendered && shouldRender(msg)) {
               setMessageRendered(true);
             }
+
             return (
               <React.Fragment key={msg._id}>
                 {type === 'message' && newDay && (
@@ -84,10 +85,7 @@ export const MessageAggregator = ({
                     showToolbox={false}
                     showRoles={false}
                     isInSidebar
-                    style={{
-                      paddingLeft: '0.75rem',
-                      paddingRight: '0.75rem',
-                    }}
+                    style={{ paddingLeft: '0.75rem', paddingRight: '0.75rem' }}
                   />
                 )}
               </React.Fragment>

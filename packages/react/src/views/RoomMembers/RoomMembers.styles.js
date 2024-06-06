@@ -36,6 +36,7 @@ export const RoomMemberItemStyles = {
 export const InviteMemberStyles = {
   parentContainer: css`
     width: 100%;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
   `,

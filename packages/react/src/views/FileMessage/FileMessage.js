@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import FilePreviewContainer from './FilePreviewContainer';
-import MessageBodyContainer from '../Message/MessageBodyContainer';
+import FileBodyContainer from '../Message/MessageBodyContainer';
+
 import FilePreviewHeader from './FilePreviewHeader';
-import { MessageBody } from '../Message/MessageBody';
+import { MessageBody as FileBody } from '../Message/MessageBody';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { FileMetrics } from './FileMetrics';
 import { Menu } from '../../components/Menu';
@@ -29,7 +30,6 @@ const FileMessage = ({ fileMessage }) => {
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = title;
-
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
@@ -64,60 +64,27 @@ const FileMessage = ({ fileMessage }) => {
 
   return (
     <>
-      {fileToDelete &&
-        typeof fileToDelete === 'object' &&
-        Object.keys(fileToDelete).length > 0 && (
-          <Modal onClose={handleOnClose}>
-            <Modal.Header>
-              <Modal.Title>
-                <Icon
-                  name="trash"
-                  size="1.25rem"
-                  style={{ marginRight: '0.5rem' }}
-                />
-                Are you sure?
-              </Modal.Title>
-              <Modal.Close onClick={handleOnClose} />
-            </Modal.Header>
-            <Modal.Content css={styles.modalContent}>
-              Deleting a file will delete it forever. This cannot be undone.
-            </Modal.Content>
-            <Modal.Footer>
-              <Button type="secondary" onClick={handleOnClose}>
-                Cancel
-              </Button>
-              <Button
-                type="destructive"
-                onClick={() => {
-                  deleteFile(fileToDelete);
-                }}
-              >
-                Delete
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        )}
       <Box
         className={appendClassNames('ec-file', classNames)}
         style={styleOverrides}
         css={styles.message}
       >
         <FilePreviewContainer file={fileMessage} />
-        <MessageBodyContainer style={{ width: '75%' }}>
+        <FileBodyContainer style={{ width: '75%' }}>
           <FilePreviewHeader file={fileMessage} isTimeStamped={false} />
-          <MessageBody>
+          <FileBody>
             <Box css={styles.previewUsername}>
               @{fileMessage.user?.username}
             </Box>
-          </MessageBody>
+          </FileBody>
           <FileMetrics file={fileMessage} />
-        </MessageBodyContainer>
+        </FileBodyContainer>
         <Menu
           isToolTip={false}
           options={[
             {
               id: 'download',
-              action: () => downloadFile(fileMessage?.url, fileMessage.title),
+              action: () => downloadFile(fileMessage?.url, fileMessage?.title),
               label: 'Download',
               icon: 'circle-arrow-down',
             },
@@ -130,6 +97,33 @@ const FileMessage = ({ fileMessage }) => {
           ]}
         />
       </Box>
+
+      {fileToDelete && Object.keys(fileToDelete).length > 0 && (
+        <Modal onClose={handleOnClose}>
+          <Modal.Header>
+            <Modal.Title>
+              <Icon
+                name="trash"
+                size="1.25rem"
+                style={{ marginRight: '0.5rem' }}
+              />
+              Are you sure?
+            </Modal.Title>
+            <Modal.Close onClick={handleOnClose} />
+          </Modal.Header>
+          <Modal.Content css={styles.modalContent}>
+            Deleting a file will delete it forever. This cannot be undone.
+          </Modal.Content>
+          <Modal.Footer>
+            <Button type="secondary" onClick={handleOnClose}>
+              Cancel
+            </Button>
+            <Button type="destructive" onClick={() => deleteFile(fileToDelete)}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   );
 };

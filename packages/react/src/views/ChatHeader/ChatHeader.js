@@ -172,18 +172,8 @@ const ChatHeader = ({
   }, [setShowPinned, stateSetters]);
 
   const showChannelMembers = useCallback(async () => {
-    const { members = [] } = await RCInstance.getChannelMembers(
-      isChannelPrivate
-    );
-    setMembersHandler(members);
     setExclusiveState(stateSetters, setShowMembers);
-  }, [
-    RCInstance,
-    isChannelPrivate,
-    setMembersHandler,
-    stateSetters,
-    setShowMembers,
-  ]);
+  }, [stateSetters, setShowMembers]);
 
   const showSearchMessage = useCallback(() => {
     setExclusiveState(stateSetters, setShowSearch);
