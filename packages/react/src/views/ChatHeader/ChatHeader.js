@@ -26,6 +26,7 @@ import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import useChatHeaderStyles from './ChatHeader.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const ChatHeader = ({
   isClosable,
@@ -64,6 +65,7 @@ const ChatHeader = ({
     configOverrides.optionConfig?.threshold || optionConfig.threshold;
 
   const styles = useChatHeaderStyles();
+  const setExclusiveState = useSetExclusiveState();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
   const setShowChannelinfo = useChannelStore(
@@ -100,7 +102,6 @@ const ChatHeader = ({
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const closeThread = useMessageStore((state) => state.closeThread);
 
-  const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
@@ -133,67 +134,6 @@ const ChatHeader = ({
       setIsUserAuthenticated(false);
     }
   }, [RCInstance, setIsUserAuthenticated]);
-
-  const setExclusiveState = (stateSetters, activeSetter) => {
-    stateSetters.forEach((setter) => {
-      setter(setter === activeSetter);
-    });
-  };
-
-  const stateSetters = useMemo(
-    () => [
-      setShowStarred,
-      setShowPinned,
-      setShowMembers,
-      setShowSearch,
-      setShowChannelinfo,
-      setShowAllThreads,
-      setShowAllFiles,
-      setShowMentions,
-    ],
-    [
-      setShowStarred,
-      setShowPinned,
-      setShowMembers,
-      setShowSearch,
-      setShowChannelinfo,
-      setShowAllThreads,
-      setShowAllFiles,
-      setShowMentions,
-    ]
-  );
-
-  const showStarredMessage = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowStarred);
-  }, [setShowStarred, stateSetters]);
-
-  const showPinnedMessage = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowPinned);
-  }, [setShowPinned, stateSetters]);
-
-  const showChannelMembers = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowMembers);
-  }, [stateSetters, setShowMembers]);
-
-  const showSearchMessage = useCallback(() => {
-    setExclusiveState(stateSetters, setShowSearch);
-  }, [setShowSearch, stateSetters]);
-
-  const showChannelinformation = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowChannelinfo);
-  }, [setShowChannelinfo, stateSetters]);
-
-  const showAllThreads = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowAllThreads);
-  }, [setShowAllThreads, stateSetters]);
-
-  const showAllFiles = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowAllFiles);
-  }, [setShowAllFiles, stateSetters]);
-
-  const showMentions = useCallback(async () => {
-    setExclusiveState(stateSetters, setShowMentions);
-  }, [setShowMentions, stateSetters]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -312,7 +252,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showAllThreads();
+            setExclusiveState(setShowAllThreads);
           }}
         >
           <Icon name="thread" size="1.25rem" />
@@ -326,7 +266,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showMentions();
+            setExclusiveState(setShowMentions);
           }}
         >
           <Icon name="at" size="1.25rem" />
@@ -340,7 +280,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showStarredMessage();
+            setExclusiveState(setShowStarred);
           }}
         >
           <Icon name="star" size="1.25rem" />
@@ -354,7 +294,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showPinnedMessage();
+            setExclusiveState(setShowPinned);
           }}
         >
           <Icon name="pin" size="1.25rem" />
@@ -368,7 +308,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showChannelMembers();
+            setExclusiveState(setShowMembers);
           }}
         >
           <Icon name="members" size="1.25rem" />
@@ -382,7 +322,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showAllFiles();
+            setExclusiveState(setShowAllFiles);
           }}
         >
           <Icon name="clip" size="1.25rem" />
@@ -396,7 +336,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showSearchMessage();
+            setExclusiveState(setShowSearch);
           }}
         >
           <Icon name="magnifier" size="1.25rem" />
@@ -410,7 +350,7 @@ const ChatHeader = ({
           square
           ghost
           onClick={() => {
-            showChannelinformation();
+            setExclusiveState(setShowChannelinfo);
           }}
         >
           <Icon name="info" size="1.25rem" />

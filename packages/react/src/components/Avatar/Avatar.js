@@ -5,6 +5,7 @@ import { Icon } from '../Icon';
 import { Box } from '../Box';
 import { useUserStore } from '../../store';
 import { useAvatarStyles } from './Avatar.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 export const Avatar = ({
   size = '2.25rem',
@@ -23,9 +24,8 @@ export const Avatar = ({
     style
   );
 
-  const showCurrentUserInfo = useUserStore(
-    (state) => state.showCurrentUserInfo
-  );
+  const setExclusiveState = useSetExclusiveState();
+
   const setShowCurrentUserInfo = useUserStore(
     (state) => state.setShowCurrentUserInfo
   );
@@ -42,7 +42,7 @@ export const Avatar = ({
           style={styleOverrides}
           onError={() => setImgError(true)}
           onClick={() => {
-            setShowCurrentUserInfo(!showCurrentUserInfo);
+            setExclusiveState(setShowCurrentUserInfo);
             setCurrentUser(user);
           }}
         />
