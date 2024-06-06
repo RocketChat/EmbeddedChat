@@ -62,6 +62,7 @@ export const useChatInputFormattingToolbarStyles = () => {
 
   const chatFormat = css`
     bottom: 0;
+    padding: 0.2rem;
     align-items: center;
     background-color: ${mode === 'light'
       ? darken(colors.background, 0.03)
