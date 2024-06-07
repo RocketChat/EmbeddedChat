@@ -67,7 +67,29 @@ const AzureSky = {
     lg: 1200,
     xl: 1536,
   },
-  components: {},
+  components: {
+    ChatHeader: {
+      configOverrides: {
+        optionConfig: {
+          chatOptions: [
+            'minmax',
+            'close',
+            'thread',
+            'mentions',
+            'starred',
+            'pinned',
+            'files',
+            'members',
+            'search',
+            'rInfo',
+            'logout',
+          ],
+
+          threshold: 6,
+        },
+      },
+    },
+  },
 
   typography: {
     default: {

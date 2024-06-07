@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useRCContext } from '../../context/RCInstance';
 import Heading from '../../components/Heading/Heading';
