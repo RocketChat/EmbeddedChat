@@ -14,7 +14,7 @@ const MessageHeader = ({
   message,
   isTimeStamped = true,
   isRoles = false,
-  showName = true,
+  showDisplayName = true,
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
 
@@ -24,7 +24,7 @@ const MessageHeader = ({
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
   const showUsername = useUserStore((state) => state.showUsername);
-  const showNameGlobal = useUserStore((state) => state.showName);
+  const showName = useUserStore((state) => state.showName);
 
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
@@ -75,7 +75,7 @@ const MessageHeader = ({
         className={appendClassNames('ec-message-header', classNames)}
         style={styleOverrides}
       >
-        {showName && showNameGlobal && (
+        {showDisplayName && showName && (
           <Box
             is="span"
             css={styles.headerName}
@@ -84,7 +84,7 @@ const MessageHeader = ({
             {message.u?.name}
           </Box>
         )}
-        {showUsername && (
+        {showDisplayName && showUsername && (
           <Box
             is="span"
             css={styles.userName}

@@ -176,7 +176,7 @@ const Message = ({
               message={message}
               isRoles={showRoles}
               {...(variantStyles?.name?.includes('bubble') && {
-                showName: !isMe,
+                showDisplayName: !isMe,
               })}
             />
           )}

@@ -16,7 +16,6 @@ export const Simple = {
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: true,
-    showAvatar: true,
     enableThreads: true,
     hideHeader: false,
     auth: {
