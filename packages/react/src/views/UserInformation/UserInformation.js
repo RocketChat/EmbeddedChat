@@ -23,7 +23,7 @@ const UserInformation = () => {
   const currentUser = useUserStore((state) => state.currentUser);
   const authenticatedUserRoles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const isAdmin = authenticatedUserRoles.includes('admin');
+  const isAdmin = authenticatedUserRoles?.includes('admin');
 
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
