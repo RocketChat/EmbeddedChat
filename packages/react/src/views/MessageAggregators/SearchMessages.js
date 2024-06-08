@@ -1,12 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
-import { useSearchMessageStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';
 
 const SearchMessages = () => {
   const { RCInstance } = useContext(RCContext);
-  const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
 
@@ -41,7 +39,6 @@ const SearchMessages = () => {
       title="Search Messages"
       iconName="magnifier"
       noMessageInfo="No results found"
-      setShowWindow={setShowSearch}
       searchProps={{
         isSearch: true,
         handleInputChange,

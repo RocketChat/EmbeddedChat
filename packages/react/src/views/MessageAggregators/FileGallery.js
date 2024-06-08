@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useChannelStore, useFileStore } from '../../store';
+import { useChannelStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
 
 const FileGallery = () => {
   const { RCInstance } = useRCContext();
 
-  const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
   const [text, setText] = useState('');
@@ -44,7 +43,6 @@ const FileGallery = () => {
       title="Files"
       iconName="attachment"
       noMessageInfo="No Files Found"
-      setShowWindow={setShowAllFiles}
       searchProps={{
         isSearch: true,
         handleInputChange,

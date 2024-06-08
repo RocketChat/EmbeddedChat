@@ -11,21 +11,13 @@ const Roominfo = () => {
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
 
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
-
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
 
   return (
-    <Sidebar
-      title="Room Information"
-      iconName="info"
-      setShowWindow={setShowChannelinfo}
-    >
+    <Sidebar title="Room Information" iconName="info">
       <Box
         css={css`
           padding: 0 1rem 1rem;

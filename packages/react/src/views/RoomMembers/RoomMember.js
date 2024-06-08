@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomMemberItem from './RoomMemberItem';
-import { useMemberStore } from '../../store';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './InviteMembers';
@@ -18,7 +17,6 @@ const RoomMembers = ({ members }) => {
   const { host } = ECOptions;
   const styles = useRoomMemberStyles();
 
-  const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +41,7 @@ const RoomMembers = ({ members }) => {
   const isAdmin = roles.includes('admin');
 
   return (
-    <Sidebar title="Members" iconName="members" setShowWindow={setShowMembers}>
+    <Sidebar title="Members" iconName="members">
       {isLoading ? (
         <LoadingIndicator />
       ) : (

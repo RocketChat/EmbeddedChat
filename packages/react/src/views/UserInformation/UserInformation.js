@@ -17,9 +17,6 @@ const UserInformation = () => {
   const styles = useUserInformationStyles();
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
-  const setShowCurrentUserInfo = useUserStore(
-    (state) => state.setShowCurrentUserInfo
-  );
   const currentUser = useUserStore((state) => state.currentUser);
   const authenticatedUserRoles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -47,11 +44,7 @@ const UserInformation = () => {
   }, [RCInstance, setCurrentUserInfo]);
 
   return (
-    <Sidebar
-      title="User Info"
-      iconName="user"
-      setShowWindow={setShowCurrentUserInfo}
-    >
+    <Sidebar title="User Info" iconName="user">
       {isUserInfoFetched ? (
         <Box css={styles.userSidebar}>
           <Avatar

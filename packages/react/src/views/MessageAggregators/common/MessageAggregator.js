@@ -5,19 +5,16 @@ import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import useMessageAggregatorStyles from './MessageAggregator.styles';
 import Sidebar from '../../../components/Sidebar/Sidebar';
-import Popup from '../../../components/Popup/Popup';
 import { useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
-import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 
 export const MessageAggregator = ({
   title,
   iconName,
   noMessageInfo,
-  setShowWindow,
   shouldRender,
   searchProps,
   searchFiltered,
@@ -25,7 +22,6 @@ export const MessageAggregator = ({
   type = 'message',
 }) => {
   const styles = useMessageAggregatorStyles();
-  const setExclusiveState = useSetExclusiveState();
   const messages = useMessageStore((state) => state.messages);
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
@@ -41,14 +37,7 @@ export const MessageAggregator = ({
   const noMessages = messageList?.length === 0 || !messageRendered;
 
   return (
-    <Popup
-      title={title}
-      iconName={iconName}
-      setShowWindow={setShowWindow}
-      searchProps={searchProps}
-      isPopupHeader
-      onClose={() => setExclusiveState(false)}
-    >
+    <Sidebar title={title} iconName={iconName} searchProps={searchProps}>
       {fetching || loading ? (
         <LoadingIndicator />
       ) : (
@@ -101,6 +90,6 @@ export const MessageAggregator = ({
           })}
         </Box>
       )}
-    </Popup>
+    </Sidebar>
   );
 };

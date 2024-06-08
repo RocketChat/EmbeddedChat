@@ -1,13 +1,10 @@
 import React, { useState, useMemo } from 'react';
 
-import { useThreadsMessageStore, useMessageStore } from '../../store';
+import { useMessageStore } from '../../store';
 
 import { MessageAggregator } from './common/MessageAggregator';
 
 const ThreadedMessages = () => {
-  const setShowAllThreads = useThreadsMessageStore(
-    (state) => state.setShowAllThreads
-  );
   const messages = useMessageStore((state) => state.messages);
   const [text, setText] = useState('');
 
@@ -28,7 +25,6 @@ const ThreadedMessages = () => {
       title="Threads"
       iconName="thread"
       noMessageInfo="No threads found"
-      setShowWindow={setShowAllThreads}
       searchProps={{
         isSearch: true,
         handleInputChange,
