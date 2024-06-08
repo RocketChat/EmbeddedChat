@@ -6,20 +6,18 @@ export const usePopupStyles = () => {
   const { theme, colors } = useCustomTheme();
 
   const styles = {
-    popup: css`
+    popup: (width, height) => css`
       display: flex;
       flex-direction: column;
       z-index: ${theme.zIndex.modal};
       box-shadow: ${theme.shadows[2]};
       border-radius: ${theme.schemes.radius};
       background: ${colors.background};
-      width: 400px;
-      height: 300px;
-      max-width: 100%;
-      max-height: 100%;
+      border: 1px solid ${colors.border};
+      width: ${width};
+      height: ${height};
     `,
   };
-
   return styles;
 };
 
@@ -34,6 +32,9 @@ export const usePopupHeaderStyles = () => {
       display: flex;
       justify-content: space-between;
       padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
     `,
 
     titleContainer: css`

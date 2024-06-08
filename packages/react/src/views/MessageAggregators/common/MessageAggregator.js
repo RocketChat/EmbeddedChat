@@ -10,6 +10,8 @@ import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
+import Popup from '../../../components/Popup/Popup';
+import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 
 export const MessageAggregator = ({
   title,
@@ -20,8 +22,10 @@ export const MessageAggregator = ({
   searchFiltered,
   fetching,
   type = 'message',
+  isPopup = false,
 }) => {
   const styles = useMessageAggregatorStyles();
+  const setExclusiveState = useSetExclusiveState();
   const messages = useMessageStore((state) => state.messages);
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
@@ -35,9 +39,20 @@ export const MessageAggregator = ({
     !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
+  const ViewComponent = isPopup ? Popup : Sidebar;
 
   return (
-    <Sidebar title={title} iconName={iconName} searchProps={searchProps}>
+    <ViewComponent
+      title={title}
+      iconName={iconName}
+      searchProps={searchProps}
+      {...(isPopup
+        ? {
+            isPopupHeader: true,
+            onClose: () => setExclusiveState(null),
+          }
+        : {})}
+    >
       {fetching || loading ? (
         <LoadingIndicator />
       ) : (
@@ -90,6 +105,6 @@ export const MessageAggregator = ({
           })}
         </Box>
       )}
-    </Sidebar>
+    </ViewComponent>
   );
 };

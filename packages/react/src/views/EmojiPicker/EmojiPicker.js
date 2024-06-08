@@ -13,7 +13,7 @@ const CustomEmojiPicker = ({
     top: 0;
     right: 0;
   `,
-  wrapperId = 'popup',
+  wrapperId = 'emoji-popup',
   onClose = () => {},
 }) => {
   const styles = useEmojiPickerStyles();
@@ -29,6 +29,8 @@ const CustomEmojiPicker = ({
       positionStyles={positionStyles}
       wrapperId={wrapperId}
       onClose={onClose}
+      height="auto"
+      width="auto"
     >
       <Box css={styles.emojiPicker}>
         <EmojiPicker

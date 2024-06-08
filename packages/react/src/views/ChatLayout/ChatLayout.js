@@ -65,10 +65,10 @@ const ChatLayout = ({
           scrollToBottom={scrollToBottom}
         />
         <ChatInput scrollToBottom={scrollToBottom} />
-        <div id="popup" />
+        <div id="emoji-popup" />
       </Box>
 
-      <Box>
+      <Box className="ec-sidebar-view">
         {showMembers && <RoomMembers members={members} />}
         {showSearch && <SearchMessages />}
         {showChannelinfo && <Roominfo />}

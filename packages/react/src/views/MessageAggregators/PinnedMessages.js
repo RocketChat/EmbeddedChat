@@ -7,6 +7,7 @@ const PinnedMessages = () => (
     iconName="pin"
     noMessageInfo="No Pinned Messages"
     shouldRender={(msg) => msg.pinned}
+    isPopup
   />
 );
 

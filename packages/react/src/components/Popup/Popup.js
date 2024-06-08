@@ -10,10 +10,10 @@ import { PopupHeader } from './PopupHeader';
 const Popup = ({
   positionStyles = css`
     position: absolute;
-    top: 2rem;
+    top: 2.75rem;
     right: 2rem;
   `,
-  wrapperId = 'popup',
+  wrapperId = 'overlay-items',
   isPopupHeader = false,
   searchProps = {},
   children,
@@ -21,6 +21,8 @@ const Popup = ({
   title,
   iconName,
   style = {},
+  width = '400px',
+  height = '300px',
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Popup');
   const styles = usePopupStyles();
@@ -29,7 +31,11 @@ const Popup = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !event.target.classList.contains('ec-menu-item')
+      ) {
         onClose();
       }
     };
@@ -45,7 +51,7 @@ const Popup = ({
     <ReactPortal wrapperId={wrapperId}>
       <Box
         ref={popupRef}
-        css={[styles.popup, positionStyles]}
+        css={[styles.popup(width, height), positionStyles]}
         className={`ec-popup ${classNames}`}
         style={{ ...styleOverrides, ...style }}
       >
