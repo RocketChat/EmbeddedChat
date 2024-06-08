@@ -10,6 +10,9 @@ import { Icon } from '../../components/Icon';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import Popup from '../../components/Popup/Popup';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -20,8 +23,11 @@ const RoomMembers = ({ members }) => {
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
   const [isLoading, setIsLoading] = useState(true);
+  const { variantOverrides } = useComponentOverrides('RoomMember');
+  const viewType = variantOverrides.viewType || 'Sidebar';
 
   const [userInfo, setUserInfo] = useState(null);
+  const setExclusiveState = useSetExclusiveState();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -39,9 +45,18 @@ const RoomMembers = ({ members }) => {
 
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
-
+  const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
   return (
-    <Sidebar title="Members" iconName="members">
+    <ViewComponent
+      title="Members"
+      iconName="members"
+      {...(viewType === 'Popup'
+        ? {
+            isPopupHeader: true,
+            onClose: () => setExclusiveState(null),
+          }
+        : {})}
+    >
       {isLoading ? (
         <LoadingIndicator />
       ) : (
@@ -68,7 +83,7 @@ const RoomMembers = ({ members }) => {
           )}
         </Box>
       )}
-    </Sidebar>
+    </ViewComponent>
   );
 };
 export default RoomMembers;

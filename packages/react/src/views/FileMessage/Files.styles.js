@@ -81,8 +81,10 @@ export const filePreviewHeaderStyles = {
 export const fileDisplayStyles = {
   message: css`
     display: flex;
+    position: relative;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: space-around;
     padding-top: 0.5rem;
     -webkit-padding-before: 0.5rem;
     padding-block-start: 0.5rem;

@@ -81,6 +81,7 @@ const FileMessage = ({ fileMessage }) => {
         </FileBodyContainer>
         <Menu
           isToolTip={false}
+          useWrapper={false}
           options={[
             {
               id: 'download',
