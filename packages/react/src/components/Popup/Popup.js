@@ -11,16 +11,20 @@ const Popup = ({
   positionStyles = css`
     position: absolute;
     top: 2rem;
-    right: 0;
+    right: 2rem;
   `,
   wrapperId = 'popup',
-  isPopupHeader = true,
+  isPopupHeader = false,
+  searchProps = {},
   children,
   onClose = () => {},
+  title,
+  iconName,
   style = {},
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Popup');
   const styles = usePopupStyles();
+
   const popupRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +49,14 @@ const Popup = ({
         className={`ec-popup ${classNames}`}
         style={{ ...styleOverrides, ...style }}
       >
-        {isPopupHeader && <PopupHeader />}
+        {isPopupHeader && (
+          <PopupHeader
+            title={title}
+            iconName={iconName}
+            searchProps={searchProps}
+            onClose={onClose}
+          />
+        )}
         {children}
       </Box>
     </ReactPortal>

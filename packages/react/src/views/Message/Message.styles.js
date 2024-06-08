@@ -79,8 +79,8 @@ export const useMessageDividerStyles = () => {
     display: flex;
     z-index: ${theme.zIndex.divider};
     align-items: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   `;

@@ -5,14 +5,9 @@ import { ActionButton } from '../ActionButton';
 import { Input } from '../Input';
 import Heading from '../Heading/Heading';
 import useSidebarStyles from './Sidebar.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
-const Sidebar = ({
-  title,
-  iconName,
-  setShowWindow,
-  children,
-  searchProps = {},
-}) => {
+const Sidebar = ({ title, iconName, children, searchProps = {} }) => {
   const {
     isSearch = false,
     handleInputChange,
@@ -33,6 +28,8 @@ const Sidebar = ({
     }
   };
 
+  const setExclusiveState = useSetExclusiveState();
+
   return (
     <Box css={styles.parent} className="ec-sidebar">
       <Box css={styles.container}>
@@ -41,7 +38,7 @@ const Sidebar = ({
             <Icon css={styles.icon} name={iconName} size="1.25rem" />
             <Box css={styles.title}>{title}</Box>
             <ActionButton
-              onClick={() => setShowWindow(false)}
+              onClick={() => setExclusiveState(false)}
               ghost
               size="small"
             >

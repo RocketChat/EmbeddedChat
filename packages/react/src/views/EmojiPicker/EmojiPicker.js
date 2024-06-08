@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import useEmojiPickerStyles from './EmojiPicker.styles';
 import Popup from '../../components/Popup/Popup';
-import { PopupContent } from '../../components/Popup/PopupContent';
 
 const CustomEmojiPicker = ({
   handleEmojiClick,
@@ -30,21 +29,18 @@ const CustomEmojiPicker = ({
       positionStyles={positionStyles}
       wrapperId={wrapperId}
       onClose={onClose}
-      style={{ padding: 0 }}
     >
-      <PopupContent>
-        <Box css={styles.emojiPicker}>
-          <EmojiPicker
-            height={350}
-            width={300}
-            onEmojiClick={handleEmojiClick}
-            previewConfig={previewConfig}
-            searchDisabled
-            emojiStyle="facebook"
-            lazyLoadEmojis
-          />
-        </Box>
-      </PopupContent>
+      <Box css={styles.emojiPicker}>
+        <EmojiPicker
+          height={350}
+          width={300}
+          onEmojiClick={handleEmojiClick}
+          previewConfig={previewConfig}
+          searchDisabled
+          emojiStyle="facebook"
+          lazyLoadEmojis
+        />
+      </Box>
     </Popup>
   );
 };
