@@ -5,11 +5,13 @@ import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import useMessageAggregatorStyles from './MessageAggregator.styles';
 import Sidebar from '../../../components/Sidebar/Sidebar';
+import Popup from '../../../components/Popup/Popup';
 import { useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
+import { PopupContent } from '../../../components/Popup/PopupContent';
 
 export const MessageAggregator = ({
   title,
@@ -38,61 +40,69 @@ export const MessageAggregator = ({
   const noMessages = messageList?.length === 0 || !messageRendered;
 
   return (
-    <Sidebar
+    <Popup
       title={title}
       iconName={iconName}
       setShowWindow={setShowWindow}
       searchProps={searchProps}
     >
-      {fetching || loading ? (
-        <LoadingIndicator />
-      ) : (
-        <Box
-          css={[
-            styles.listContainerStyles,
-            noMessages && styles.noMessageStyles,
-          ]}
-        >
-          {noMessages && (
-            <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
-          )}
+      <PopupContent>
+        {fetching || loading ? (
+          <LoadingIndicator />
+        ) : (
+          <Box
+            css={[
+              styles.listContainerStyles,
+              noMessages && styles.noMessageStyles,
+            ]}
+          >
+            {noMessages && (
+              <NoMessagesIndicator
+                iconName={iconName}
+                message={noMessageInfo}
+              />
+            )}
 
-          {messageList.map((msg, index, arr) => {
-            const newDay = isMessageNewDay(msg, arr[index - 1]);
-            if (!messageRendered && shouldRender(msg)) {
-              setMessageRendered(true);
-            }
+            {messageList.map((msg, index, arr) => {
+              const newDay = isMessageNewDay(msg, arr[index - 1]);
+              if (!messageRendered && shouldRender(msg)) {
+                setMessageRendered(true);
+              }
 
-            return (
-              <React.Fragment key={msg._id}>
-                {type === 'message' && newDay && (
-                  <MessageDivider>
-                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                  </MessageDivider>
-                )}
-                {type === 'file' ? (
-                  <FileDisplay
-                    key={`${msg._id}-aggregated`}
-                    fileMessage={msg}
-                  />
-                ) : (
-                  <Message
-                    key={`${msg._id}-aggregated`}
-                    message={msg}
-                    newDay={false}
-                    type="default"
-                    showAvatar
-                    showToolbox={false}
-                    showRoles={false}
-                    isInSidebar
-                    style={{ paddingLeft: '0.75rem', paddingRight: '0.75rem' }}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
-        </Box>
-      )}
-    </Sidebar>
+              return (
+                <React.Fragment key={msg._id}>
+                  {type === 'message' && newDay && (
+                    <MessageDivider>
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                    </MessageDivider>
+                  )}
+                  {type === 'file' ? (
+                    <FileDisplay
+                      key={`${msg._id}-aggregated`}
+                      fileMessage={msg}
+                    />
+                  ) : (
+                    <Message
+                      key={`${msg._id}-aggregated`}
+                      message={msg}
+                      newDay={false}
+                      type="default"
+                      showAvatar
+                      showToolbox={false}
+                      showRoles={false}
+                      isInSidebar
+                      style={{
+                        paddingLeft: '0.75rem',
+                        paddingRight: '0.75rem',
+                      }}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </Box>
+        )}
+      </PopupContent>
+    </Popup>
   );
 };

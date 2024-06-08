@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
-import ReactPortal from '../../lib/reactPortal';
 import useEmojiPickerStyles from './EmojiPicker.styles';
+import Popup from '../../components/Popup/Popup';
+import { PopupContent } from '../../components/Popup/PopupContent';
 
 const CustomEmojiPicker = ({
   handleEmojiClick,
@@ -17,24 +18,6 @@ const CustomEmojiPicker = ({
   onClose = () => {},
 }) => {
   const styles = useEmojiPickerStyles();
-  const emojiPickerRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(event.target)
-      ) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [onClose]);
 
   const previewConfig = {
     defaultEmoji: '1f60d',
@@ -43,19 +26,26 @@ const CustomEmojiPicker = ({
   };
 
   return (
-    <ReactPortal wrapperId={wrapperId}>
-      <Box ref={emojiPickerRef} css={[styles.emojiPicker, positionStyles]}>
-        <EmojiPicker
-          height={350}
-          width={300}
-          onEmojiClick={handleEmojiClick}
-          previewConfig={previewConfig}
-          searchDisabled
-          emojiStyle="facebook"
-          lazyLoadEmojis
-        />
-      </Box>
-    </ReactPortal>
+    <Popup
+      positionStyles={positionStyles}
+      wrapperId={wrapperId}
+      onClose={onClose}
+      style={{ padding: 0 }}
+    >
+      <PopupContent>
+        <Box css={styles.emojiPicker}>
+          <EmojiPicker
+            height={350}
+            width={300}
+            onEmojiClick={handleEmojiClick}
+            previewConfig={previewConfig}
+            searchDisabled
+            emojiStyle="facebook"
+            lazyLoadEmojis
+          />
+        </Box>
+      </PopupContent>
+    </Popup>
   );
 };
 
