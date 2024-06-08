@@ -2,9 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useChannelStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const FileGallery = () => {
   const { RCInstance } = useRCContext();
+  const { variantOverrides } = useComponentOverrides('FileGallery');
+  const viewType = variantOverrides.viewType || 'Sidebar';
 
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
 
@@ -52,6 +55,7 @@ const FileGallery = () => {
       shouldRender={(file) => file.path}
       type="file"
       searchFiltered={filteredFiles}
+      viewType={viewType}
     />
   );
 };

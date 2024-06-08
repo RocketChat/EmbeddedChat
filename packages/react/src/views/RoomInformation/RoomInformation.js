@@ -5,7 +5,6 @@ import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import { Box } from '../../components/Box';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import Popup from '../../components/Popup/Popup';
 import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const Roominfo = () => {

@@ -67,6 +67,27 @@ const AzureSky = {
     lg: 1200,
     xl: 1536,
   },
+
+  variants: {
+    PinnedMessages: {
+      viewType: 'Popup',
+    },
+    ThreadedMessages: {
+      viewType: 'Popup',
+    },
+
+    MentionedMessages: {
+      viewType: 'Popup',
+    },
+    StarredMessages: {
+      viewType: 'Popup',
+    },
+
+    FileGallery: {
+      viewType: 'Popup',
+    },
+  },
+
   components: {
     ChatHeader: {
       configOverrides: {
@@ -85,7 +106,7 @@ const AzureSky = {
             'logout',
           ],
 
-          threshold: 6,
+          threshold: 7,
         },
       },
     },

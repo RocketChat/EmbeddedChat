@@ -1,9 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { debounce } from 'lodash';
 import RCContext from '../../context/RCInstance';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { MessageAggregator } from './common/MessageAggregator';
 
 const SearchMessages = () => {
+  const { variantOverrides } = useComponentOverrides('SearchMessages');
+  const viewType = variantOverrides.viewType || 'Sidebar';
   const { RCInstance } = useContext(RCContext);
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
@@ -46,6 +49,7 @@ const SearchMessages = () => {
       }}
       searchFiltered={messageList}
       shouldRender={(msg) => !!msg}
+      viewType={viewType}
     />
   );
 };

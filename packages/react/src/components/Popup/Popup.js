@@ -21,8 +21,8 @@ const Popup = ({
   title,
   iconName,
   style = {},
-  width = '400px',
-  height = '300px',
+  width = '420px',
+  height = '350px',
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Popup');
   const styles = usePopupStyles();

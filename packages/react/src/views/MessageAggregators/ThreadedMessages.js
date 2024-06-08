@@ -3,9 +3,12 @@ import React, { useState, useMemo } from 'react';
 import { useMessageStore } from '../../store';
 
 import { MessageAggregator } from './common/MessageAggregator';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const ThreadedMessages = () => {
   const messages = useMessageStore((state) => state.messages);
+  const { variantOverrides } = useComponentOverrides('ThreadedMessages');
+  const viewType = variantOverrides.viewType || 'Sidebar';
   const [text, setText] = useState('');
 
   const handleInputChange = (e) => {
@@ -32,6 +35,7 @@ const ThreadedMessages = () => {
       }}
       searchFiltered={searchFiltered}
       shouldRender={(msg) => !msg.t && msg.tcount}
+      viewType={viewType}
     />
   );
 };

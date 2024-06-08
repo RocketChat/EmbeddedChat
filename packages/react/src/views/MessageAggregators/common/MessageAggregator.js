@@ -22,7 +22,7 @@ export const MessageAggregator = ({
   searchFiltered,
   fetching,
   type = 'message',
-  isPopup = false,
+  viewType = 'Sidebar',
 }) => {
   const styles = useMessageAggregatorStyles();
   const setExclusiveState = useSetExclusiveState();
@@ -39,14 +39,14 @@ export const MessageAggregator = ({
     !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
-  const ViewComponent = isPopup ? Popup : Sidebar;
+  const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
   return (
     <ViewComponent
       title={title}
       iconName={iconName}
       searchProps={searchProps}
-      {...(isPopup
+      {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
             onClose: () => setExclusiveState(null),
