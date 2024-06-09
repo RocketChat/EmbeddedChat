@@ -12,7 +12,9 @@ export const bubbleStyles = (customTheme) => {
       flex-direction: row;
       align-items: flex-start;
       padding: 0 2.25rem 0.25rem 2.25rem;
-      color: ${colors.foreground};
+      a {
+        color: ${colors.primaryForeground};
+      }
     `,
 
     messageBodyContainer: css`
