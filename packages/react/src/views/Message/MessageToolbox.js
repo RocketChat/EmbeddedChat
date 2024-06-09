@@ -207,6 +207,7 @@ export const MessageToolbox = ({
               options={menuOptions}
               tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
               useWrapper={false}
+              style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
             />
           )}
 

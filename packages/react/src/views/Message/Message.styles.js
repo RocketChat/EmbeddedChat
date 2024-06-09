@@ -279,7 +279,7 @@ export const useMessageToolboxStyles = () => {
 
   const emojiPickerStyles = css`
     position: absolute;
-    top: 0.5rem;
+    bottom: 100%;
     right: 1.5rem;
   `;
 

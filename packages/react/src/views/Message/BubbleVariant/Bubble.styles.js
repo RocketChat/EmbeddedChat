@@ -120,7 +120,7 @@ export const bubbleStyles = (customTheme) => {
 
     emojiPickerStyles: css`
       position: absolute;
-      top: 0;
+      bottom: 100%;
       left: calc(100% + 5px);
     `,
   };
