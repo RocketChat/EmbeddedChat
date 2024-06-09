@@ -1,6 +1,16 @@
 const StormySeas = {
   schemes: {
     radius: '0.2rem',
+    contrastParams: {
+      light: {
+        saturation: 70,
+        luminance: 19,
+      },
+      dark: {
+        saturation: 72,
+        luminance: 84,
+      },
+    },
     common: {
       black: 'hsl(0, 100%, 0%)',
       white: 'hsl(0, 100%, 100%)',
