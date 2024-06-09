@@ -1,5 +1,5 @@
 import { EmbeddedChat } from '../..';
-import AzureSky from '../../theme/ModernVariant/AzureSky';
+import StormySeas from '../../theme/ModernVariant/StormySeas';
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
   title: 'EmbeddedChat/Design Variants/ModernVariant/Simplistic',
@@ -8,7 +8,7 @@ export default {
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 
-export const Azure_Sky = {
+export const Stormy_Seas = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -22,10 +22,10 @@ export const Azure_Sky = {
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: AzureSky,
+    theme: StormySeas,
     auth: {
       flow: 'PASSWORD',
     },
-    dark: false,
+    dark: true,
   },
 };
