@@ -7,8 +7,8 @@ const StormySeas = {
         luminance: 19,
       },
       dark: {
-        saturation: 99,
-        luminance: 84,
+        saturation: 88,
+        luminance: 77,
       },
     },
     common: {
@@ -70,6 +70,7 @@ const StormySeas = {
       infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
     },
   },
+
   breakpoints: {
     xs: 0,
     sm: 600,
@@ -79,6 +80,7 @@ const StormySeas = {
   },
 
   variants: {
+    MessageHeader: 'Colorize',
     PinnedMessages: {
       viewType: 'Popup',
     },

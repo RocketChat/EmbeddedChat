@@ -11,17 +11,17 @@ const simpleHash = (str) => {
   return hash;
 };
 
-const useUsernameColor = () => {
+const useDisplayNameColor = () => {
   const { theme, mode } = useCustomTheme();
 
-  const getRandomColor = (username) => {
+  const getDisplayNameColor = (username) => {
     const hash = simpleHash(username);
     const { saturation, luminance } = theme.schemes.contrastParams[mode];
     const hue = Math.abs(hash) % 360;
     return `hsl(${hue}, ${saturation}%, ${luminance}%)`;
   };
 
-  return getRandomColor;
+  return getDisplayNameColor;
 };
 
-export default useUsernameColor;
+export default useDisplayNameColor;
