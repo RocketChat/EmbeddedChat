@@ -78,7 +78,7 @@ const MessageHeader = ({
         {showDisplayName && showName && (
           <Box
             is="span"
-            css={styles.headerName}
+            css={styles.name}
             className={appendClassNames('ec-message-header-name')}
           >
             {message.u?.name}
@@ -123,7 +123,7 @@ const MessageHeader = ({
         {isTimeStamped && (
           <Box
             is="span"
-            css={styles.headerTimestamp}
+            css={styles.timestamp}
             className={appendClassNames('ec-message-header-timestamp')}
           >
             {format(new Date(message.ts), 'h:mm a')}
@@ -172,14 +172,14 @@ const MessageHeader = ({
     >
       <Box
         is="span"
-        css={styles.headerName}
+        css={styles.userName}
         className={appendClassNames('ec-message-header-name')}
       >
         @{message.u.username}{' '}
       </Box>
       <Box
         is="span"
-        css={styles.userName}
+        css={styles.userActions}
         className={appendClassNames('ec-message-header-username')}
         style={{ marginLeft: '2px' }}
       >
@@ -187,7 +187,7 @@ const MessageHeader = ({
       </Box>
       <Box
         is="span"
-        css={styles.headerTimestamp}
+        css={styles.timestamp}
         className={appendClassNames('ec-message-header-timestamp')}
       >
         {format(new Date(message.ts), 'h:mm a')}

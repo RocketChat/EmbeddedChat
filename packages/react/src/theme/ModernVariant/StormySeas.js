@@ -7,7 +7,7 @@ const StormySeas = {
         luminance: 19,
       },
       dark: {
-        saturation: 72,
+        saturation: 99,
         luminance: 84,
       },
     },

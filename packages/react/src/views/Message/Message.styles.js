@@ -125,10 +125,22 @@ export const useMessageHeaderStyles = () => {
     align-items: center;
   `;
 
-  const headerName = css`
+  const name = css`
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 700;
+    line-height: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+  `;
+
+  const userName = css`
+    color: ${colors.accentForeground};
+    font-weight: 700;
+    letter-spacing: 0rem;
+    font-size: 1rem;
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -150,7 +162,7 @@ export const useMessageHeaderStyles = () => {
     background-color: ${colors.secondary};
   `;
 
-  const userName = css`
+  const userActions = css`
     color: ${colors.accentForeground};
     letter-spacing: 0rem;
     font-size: 0.875rem;
@@ -161,7 +173,7 @@ export const useMessageHeaderStyles = () => {
     flex-shrink: 1;
   `;
 
-  const headerTimestamp = css`
+  const timestamp = css`
     color: ${colors.accentForeground};
     overflow: hidden;
     text-overflow: ellipsis;
@@ -174,7 +186,7 @@ export const useMessageHeaderStyles = () => {
     margin-left: 0.25rem;
   `;
 
-  return { header, headerName, userRole, userName, headerTimestamp };
+  return { header, name, userRole, userName, timestamp, userActions };
 };
 
 export const MessageMetricsStyles = {
