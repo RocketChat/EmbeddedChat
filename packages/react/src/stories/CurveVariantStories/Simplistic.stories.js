@@ -1,13 +1,15 @@
 import { EmbeddedChat } from '../..';
-import AquaBreeze from '../../theme/CurveVariant/AquaBreeze';
-import BlushCandy from '../../theme/CurveVariant/BlushCandy';
-
+import AzureSky from '../../theme/CurveVariant/AzureSky';
+import PineWhisper from '../../theme/CurveVariant/PineWhisper';
+// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/Design Variants/CurveVariant/Colorful',
+  title: 'EmbeddedChat/Design Variants/CurveVariant/Simplistic',
   component: EmbeddedChat,
 };
 
-export const Aqua_Breeze = {
+// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
+
+export const Pine_Whisper = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -17,10 +19,9 @@ export const Aqua_Breeze = {
     toastBarPosition: 'bottom right',
     showRoles: false,
     showAvatar: true,
-    showUsername: false,
     enableThreads: true,
     hideHeader: false,
-    theme: AquaBreeze,
+    theme: PineWhisper,
     auth: {
       flow: 'PASSWORD',
     },
@@ -28,7 +29,7 @@ export const Aqua_Breeze = {
   },
 };
 
-export const Blush_Candy = {
+export const Azure_Sky = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -37,11 +38,10 @@ export const Blush_Candy = {
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: false,
-    showUsername: false,
     showAvatar: true,
     enableThreads: true,
     hideHeader: false,
-    theme: BlushCandy,
+    theme: AzureSky,
     auth: {
       flow: 'PASSWORD',
     },

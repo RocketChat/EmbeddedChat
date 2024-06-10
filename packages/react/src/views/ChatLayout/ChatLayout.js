@@ -16,13 +16,13 @@ import {
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
-import UserMentions from '../UserMentions/UserMentions';
-import AllThreads from '../AllThreads/AllThreads';
-import PinnedMessages from '../PinnedMessages/PinnedMessages';
-import StarredMessages from '../StarredMessages/StarredMessages';
-import SearchMessage from '../SearchMessage/SearchMessage';
+import MentionedMessages from '../MessageAggregators/MentionedMessages';
+import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
+import StarredMessages from '../MessageAggregators/StarredMessages';
+import PinnedMessages from '../MessageAggregators/PinnedMessages';
+import SearchMessages from '../MessageAggregators/SearchMessages';
+import FileGallery from '../MessageAggregators/FileGallery';
 import Roominfo from '../RoomInformation/RoomInformation';
-import { Files } from '../Files';
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
@@ -65,16 +65,16 @@ const ChatLayout = ({
           scrollToBottom={scrollToBottom}
         />
         <ChatInput scrollToBottom={scrollToBottom} />
-        <div id="popup" />
+        <div id="emoji-popup" />
       </Box>
 
-      <Box>
+      <Box className="ec-sidebar-view">
         {showMembers && <RoomMembers members={members} />}
-        {showSearch && <SearchMessage />}
+        {showSearch && <SearchMessages />}
         {showChannelinfo && <Roominfo />}
-        {showAllThreads && <AllThreads />}
-        {showAllFiles && <Files />}
-        {showMentions && <UserMentions />}
+        {showAllThreads && <ThreadedMessages />}
+        {showAllFiles && <FileGallery />}
+        {showMentions && <MentionedMessages />}
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}
         {showCurrentUserInfo && <UserInformation />}

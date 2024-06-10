@@ -34,34 +34,36 @@ const Message = ({
   showToolbox = true,
   showRoles = true,
   isLinkPreview = true,
-  isBubble = false,
+  isInSidebar = false,
 }) => {
-  const { classNames, styleOverrides } = useComponentOverrides(
-    'Message',
-    [message.messageParentBox, className],
-    style
-  );
-
-  const styles = useMessageStyles();
+  const { classNames, styleOverrides, variantOverrides } =
+    useComponentOverrides(
+      'Message',
+      [message.messageParentBox, className],
+      style
+    );
 
   const { RCInstance } = useContext(RCContext);
+
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
+  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+  const openThread = useMessageStore((state) => state.openThread);
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
 
-  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
-
-  const openThread = useMessageStore((state) => state.openThread);
-
   const isMe = message.u._id === authenticatedUserId;
-  const { getBubbleStyles } = useBubbleStyles(isMe, sequential, lastSequential);
+  const styles = useMessageStyles();
+  const bubbleStyles = useBubbleStyles(isMe);
+
+  const variantStyles =
+    !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -155,12 +157,8 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          isBubble
-            ? getBubbleStyles('messageParent')
-            : [
-                styles.main,
-                editMessage._id === message._id && styles.messageEditing,
-              ],
+          variantStyles.messageParent || styles.main,
+          editMessage._id === message._id && styles.messageEditing,
         ]}
         style={styleOverrides}
       >
@@ -172,22 +170,24 @@ const Message = ({
             isPinned={isPinned}
           />
         )}
-        <MessageBodyContainer isBubble={isBubble} isMe={isMe}>
+        <MessageBodyContainer variantStyles={variantStyles}>
           {shouldShowHeader && (
             <MessageHeader
               message={message}
               isRoles={showRoles}
-              showName={!isBubble || (isBubble && !isMe)}
+              {...(variantStyles?.name?.includes('bubble') && {
+                showDisplayName: !isMe,
+              })}
             />
           )}
           {!message.t ? (
             <>
               <MessageBody
                 className="ec-message-body"
+                id={`ec-message-body-${message._id}`}
                 css={message.isPending && styles.pendingMessageBody}
-                isBubble={isBubble}
-                isMe={isMe}
-                isText={message.md}
+                variantStyles={variantStyles}
+                isText={!!message.md}
                 sequential={sequential}
                 lastSequential={lastSequential}
               >
@@ -196,7 +196,7 @@ const Message = ({
                     <Markdown body={message} isReaction={false} />
                     <Attachments
                       attachments={message.attachments}
-                      isBubble={isBubble}
+                      variantStyles={variantStyles}
                     />
                   </>
                 ) : (
@@ -235,8 +235,7 @@ const Message = ({
                       toggleShowReportMessage();
                     }}
                     isThreadMessage={type === 'thread'}
-                    isBubble={isBubble}
-                    isMe={isMe}
+                    variantStyles={variantStyles}
                   />
                 ) : (
                   <></>
@@ -248,7 +247,14 @@ const Message = ({
                 message.urls.map(
                   (url, index) =>
                     url.meta && (
-                      <LinkPreview key={index} url={url.url} meta={url.meta} />
+                      <LinkPreview
+                        key={index}
+                        url={url.url}
+                        meta={url.meta}
+                        {...(variantStyles?.name?.includes('bubble') && {
+                          showDropdown: false,
+                        })}
+                      />
                     )
                 )}
 
@@ -264,8 +270,7 @@ const Message = ({
                 <Attachments
                   attachments={message.attachments}
                   type={message.t}
-                  isBubble={isBubble}
-                  isMe={isMe}
+                  variantStyles={variantStyles}
                 />
               )}
             </>
@@ -274,13 +279,11 @@ const Message = ({
             <MessageMetrics
               message={message}
               handleOpenThread={handleOpenThread}
-              isBubble={isBubble}
-              isMe={isMe}
+              variantStyles={variantStyles}
             />
           ) : null}
         </MessageBodyContainer>
       </Box>
-
       {newDay && (
         <MessageDivider>
           {format(new Date(message.ts), 'MMMM d, yyyy')}

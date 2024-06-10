@@ -1,8 +1,9 @@
 import React from 'react';
-import { Global, css, useTheme } from '@emotion/react';
+import { Global, css } from '@emotion/react';
+import { useCustomTheme } from '../hooks/useCustomTheme';
 
 const GlobalStyles = () => {
-  const theme = useTheme();
+  const { theme, colors } = useCustomTheme();
 
   return (
     <Global
@@ -16,6 +17,10 @@ const GlobalStyles = () => {
           font-family: ${theme.typography.default.fontFamily};
           font-size: ${theme.typography.default.fontSize}px;
           font-weight: ${theme.typography.default.fontWeightRegular};
+        }
+
+        a {
+          color: ${colors.foreground};
         }
       `}
     />

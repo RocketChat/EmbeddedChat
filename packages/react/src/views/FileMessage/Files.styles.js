@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const fileMetricsStyles = {
   metrics: css`
@@ -79,12 +78,13 @@ export const filePreviewHeaderStyles = {
   `,
 };
 
-export const useFileStyles = () => {
-  const { scrollStyles } = useGlobalStyles();
-  const message = css`
+export const fileDisplayStyles = {
+  message: css`
     display: flex;
+    position: relative;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: space-around;
     padding-top: 0.5rem;
     -webkit-padding-before: 0.5rem;
     padding-block-start: 0.5rem;
@@ -95,9 +95,9 @@ export const useFileStyles = () => {
     padding-right: 1.25rem;
     padding-inline: 1.25rem;
     cursor: pointer;
-  `;
+  `,
 
-  const previewUsername = css`
+  previewUsername: css`
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -106,39 +106,18 @@ export const useFileStyles = () => {
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
-  `;
+  `,
 
-  const modalContent = css`
+  modalContent: css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0 0.5rem 0.5rem;
-  `;
+  `,
 
-  const centeredColumnStyles = css`
+  centeredColumnStyles: css`
     display: flex;
     flex-direction: column;
     align-items: center;
-  `;
-
-  const fileListContainer = (filteredFiles) => {
-    const centerAlign = filteredFiles.length === 0;
-    return css`
-      flex: 1;
-      overflow: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: ${centerAlign ? 'center' : 'initial'};
-      align-items: ${centerAlign ? 'center' : 'initial'};
-      ${scrollStyles};
-    `;
-  };
-
-  return {
-    message,
-    previewUsername,
-    modalContent,
-    centeredColumnStyles,
-    fileListContainer,
-  };
+  `,
 };

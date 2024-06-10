@@ -34,9 +34,10 @@ const Menu = ({
   }, [anchor]);
 
   const finalStyle = useMemo(
-    () => ({ ...styleOverrides, ...anchorStyle }),
+    () => ({ ...anchorStyle, ...styleOverrides }),
     [anchorStyle, styleOverrides]
   );
+
   const { classNames: wrapperClasses, styleOverrides: wrapperStyles } =
     useComponentOverrides('MenuWrapper');
 

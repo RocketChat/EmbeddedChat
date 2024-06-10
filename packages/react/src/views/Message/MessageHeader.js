@@ -9,22 +9,25 @@ import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 
 const MessageHeader = ({
   message,
   isTimeStamped = true,
   isRoles = false,
-  showName = true,
+  showDisplayName = true,
 }) => {
-  const { styleOverrides, classNames } = useComponentOverrides('MessageHeader');
-
+  const { styleOverrides, classNames, variantOverrides } =
+    useComponentOverrides('MessageHeader');
+  const displayNameVariant = variantOverrides || 'Normal';
   const styles = useMessageHeaderStyles();
   const colors = useCustomTheme();
+  const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showRoles = useUserStore((state) => state.showRoles);
   const showUsername = useUserStore((state) => state.showUsername);
-  const showNameGlobal = useUserStore((state) => state.showName);
+  const showName = useUserStore((state) => state.showName);
 
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
@@ -68,68 +71,86 @@ const MessageHeader = ({
     }
   };
 
-  if (!message.t) {
-    return (
-      <Box
-        css={styles.header}
-        className={appendClassNames('ec-message-header', classNames)}
-        style={styleOverrides}
-      >
-        {showName && showNameGlobal && (
-          <Box
-            is="span"
-            css={styles.headerName}
-            className={appendClassNames('ec-message-header-name')}
-          >
-            {message.u?.name}
-          </Box>
-        )}
-        {showUsername && (
-          <Box
-            is="span"
-            css={styles.userName}
-            className={appendClassNames('ec-message-header-username')}
-          >
-            @{message.u.username}
-          </Box>
-        )}
-        {showRoles && isRoles && (
-          <>
-            {admins.includes(message?.u?.username) && (
-              <Box
-                as="span"
-                css={styles.userRole}
-                className={appendClassNames('ec-message-user-role')}
-              >
-                admin
-              </Box>
-            )}
+  return (
+    <Box
+      css={styles.header}
+      className={appendClassNames('ec-message-header', classNames)}
+      style={styleOverrides}
+    >
+      {showDisplayName && showName && (
+        <Box
+          is="span"
+          css={styles.name}
+          className={appendClassNames('ec-message-header-name')}
+          style={
+            displayNameVariant === 'Colorize'
+              ? { color: getDisplayNameColor(message.u.username) }
+              : null
+          }
+        >
+          {message.u?.name}
+        </Box>
+      )}
+      {showDisplayName && showUsername && (
+        <Box
+          is="span"
+          css={styles.userName}
+          className={appendClassNames('ec-message-header-username')}
+          style={
+            displayNameVariant === 'Colorize'
+              ? { color: getDisplayNameColor(message.u.username) }
+              : null
+          }
+        >
+          @{message.u.username}
+        </Box>
+      )}
+      {!message.t && showRoles && isRoles && (
+        <>
+          {admins.includes(message?.u?.username) && (
+            <Box
+              as="span"
+              css={styles.userRole}
+              className={appendClassNames('ec-message-user-role')}
+            >
+              admin
+            </Box>
+          )}
 
-            {channelLevelRoles[message.u.username]?.roles?.map(
-              (role, index) => (
-                <Box
-                  key={index}
-                  as="span"
-                  css={styles.userRole}
-                  className={appendClassNames('ec-message-user-role')}
-                >
-                  {role}
-                </Box>
-              )
-            )}
-          </>
-        )}
+          {channelLevelRoles[message.u.username]?.roles?.map((role, index) => (
+            <Box
+              key={index}
+              as="span"
+              css={styles.userRole}
+              className={appendClassNames('ec-message-user-role')}
+            >
+              {role}
+            </Box>
+          ))}
+        </>
+      )}
+      {message.t && (
+        <Box
+          is="span"
+          css={styles.userActions}
+          className={appendClassNames('ec-message-header-useractions')}
+          style={{ marginLeft: '2px' }}
+        >
+          {userActions()}
+        </Box>
+      )}
 
-        {isTimeStamped && (
-          <Box
-            is="span"
-            css={styles.headerTimestamp}
-            className={appendClassNames('ec-message-header-timestamp')}
-          >
-            {format(new Date(message.ts), 'h:mm a')}
-          </Box>
-        )}
+      {isTimeStamped && (
+        <Box
+          is="span"
+          css={styles.timestamp}
+          className={appendClassNames('ec-message-header-timestamp')}
+        >
+          {format(new Date(message.ts), 'h:mm a')}
+        </Box>
+      )}
 
+      {!message.t && (
         <Box css={styles.messageStatus}>
           {message.editedAt && (
             <Icon
@@ -160,38 +181,7 @@ const MessageHeader = ({
             </Tooltip>
           ) : null}
         </Box>
-      </Box>
-    );
-  }
-
-  return (
-    <Box
-      css={styles.header}
-      className={appendClassNames('ec-message-header', classNames)}
-      style={styleOverrides}
-    >
-      <Box
-        is="span"
-        css={styles.headerName}
-        className={appendClassNames('ec-message-header-name')}
-      >
-        @{message.u.username}{' '}
-      </Box>
-      <Box
-        is="span"
-        css={styles.userName}
-        className={appendClassNames('ec-message-header-username')}
-        style={{ marginLeft: '2px' }}
-      >
-        {userActions()}
-      </Box>
-      <Box
-        is="span"
-        css={styles.headerTimestamp}
-        className={appendClassNames('ec-message-header-timestamp')}
-      >
-        {format(new Date(message.ts), 'h:mm a')}
-      </Box>
+      )}
     </Box>
   );
 };

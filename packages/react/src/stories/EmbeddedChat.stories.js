@@ -11,13 +11,11 @@ export const Simple = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
-
     channelName: 'general',
     anonymousMode: true,
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: true,
-    showAvatar: true,
     enableThreads: true,
     hideHeader: false,
     auth: {

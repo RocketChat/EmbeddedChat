@@ -1,28 +1,20 @@
-import bubbleStyles from './Bubble.styles';
+import { bubbleStyles, bubbleStylesMe } from './Bubble.styles';
 import { useCustomTheme } from '../../../hooks/useCustomTheme';
 
-const useBubbleStyles = (
-  isMe = false,
-  sequential = false,
-  lastSequential = false
-) => {
+const useBubbleStyles = (isMe = false) => {
   const customTheme = useCustomTheme();
-  const bubbleStyle = bubbleStyles(customTheme);
+  const styles = bubbleStyles(customTheme);
+  const meStyles = bubbleStylesMe(customTheme);
 
-  const mergeStyle = (styleName) => {
-    const baseStyle = bubbleStyle[styleName];
-    const meStyle = bubbleStyle[`${styleName}Me`];
-    return isMe ? [baseStyle, meStyle].filter(Boolean) : baseStyle;
-  };
+  const mergedStyles = {};
 
-  const getBubbleStyles = (name) =>
-    [
-      mergeStyle(name),
-      sequential && mergeStyle('sequential'),
-      lastSequential && mergeStyle('lastSequential'),
-    ].filter(Boolean);
+  Object.keys(styles).forEach((key) => {
+    mergedStyles[key] = [styles[key], isMe && meStyles[`${key}Me`]].filter(
+      Boolean
+    );
+  });
 
-  return { getBubbleStyles };
+  return mergedStyles;
 };
 
 export default useBubbleStyles;

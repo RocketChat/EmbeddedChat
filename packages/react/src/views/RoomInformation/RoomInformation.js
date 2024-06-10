@@ -5,31 +5,43 @@ import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import { Box } from '../../components/Box';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import Popup from '../../components/Popup/Popup';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
 
   const channelInfo = useChannelStore((state) => state.channelInfo);
-
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
-
+  const { variantOverrides } = useComponentOverrides('RoomMember');
+  const viewType = variantOverrides.viewType || 'Sidebar';
+  const setExclusiveState = useSetExclusiveState();
+  const { scrollStyles } = useGlobalStyles();
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
 
+  const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
   return (
-    <Sidebar
+    <ViewComponent
       title="Room Information"
       iconName="info"
-      setShowWindow={setShowChannelinfo}
+      {...(viewType === 'Popup'
+        ? {
+            isPopupHeader: true,
+            onClose: () => setExclusiveState(null),
+          }
+        : {})}
     >
       <Box
         css={css`
           padding: 0 1rem 1rem;
           margin: 0 auto;
+          overflow: auto;
+          ${scrollStyles}
         `}
       >
         <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
@@ -62,7 +74,7 @@ const Roominfo = () => {
           </Box>
         </Box>
       </Box>
-    </Sidebar>
+    </ViewComponent>
   );
 };
 export default Roominfo;

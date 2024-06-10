@@ -2,12 +2,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
-import {
-  useMessageStore,
-  useUserStore,
-  useChannelStore,
-  useThemeStore,
-} from '../../store';
+import { useMessageStore, useUserStore, useChannelStore } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../../components/Box';
@@ -26,9 +21,8 @@ const ChatBody = ({
   scrollToBottom,
   messageListRef,
 }) => {
-  const { classNames, styleOverrides, variantOverrides } =
-    useComponentOverrides('ChatBody');
-  const variant = variantOverrides || 'flat';
+  const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
+
   const styles = useChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -48,8 +42,6 @@ const ChatBody = ({
     state.isThreadOpen,
     state.threadMainMessage,
   ]);
-
-  const setMessageVariant = useThemeStore((state) => state.setMessageVariant);
 
   const { handleLogin } = useRCAuth();
 
@@ -84,10 +76,6 @@ const ChatBody = ({
     setThreadMessages,
     isChannelPrivate,
   ]);
-
-  useEffect(() => {
-    setMessageVariant(variant);
-  }, [setMessageVariant, variantOverrides]);
 
   useEffect(() => {
     if (isThreadOpen && ECOptions.enableThreads) {

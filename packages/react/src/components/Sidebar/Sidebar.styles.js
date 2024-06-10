@@ -26,12 +26,14 @@ const useSidebarStyles = () => {
   `;
 
   const title = css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 80%;
   `;
 
   const icon = css`
     font-size: 1.25rem;
-    padding: 0 0.5rem 0.5rem 0;
   `;
 
   const searchContainer = css`
@@ -61,6 +63,13 @@ const useSidebarStyles = () => {
     cursor: pointer;
   `;
 
+  const titleContainer = css`
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0.5rem;
+  `;
+
   return {
     parent,
     container,
@@ -70,6 +79,7 @@ const useSidebarStyles = () => {
     searchContainer,
     textInput,
     noInfoIcon,
+    titleContainer,
   };
 };
 

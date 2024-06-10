@@ -11,20 +11,22 @@ import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
 import UserInfoField from './UserInfoField';
 import useUserInformationStyles from './UserInformation.styles';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
+import Popup from '../../components/Popup/Popup';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const UserInformation = () => {
+  const { variantOverrides } = useComponentOverrides('RoomMember');
+  const viewType = variantOverrides.viewType || 'Sidebar';
+  const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
   const styles = useUserInformationStyles();
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
-  const setShowCurrentUserInfo = useUserStore(
-    (state) => state.setShowCurrentUserInfo
-  );
   const currentUser = useUserStore((state) => state.currentUser);
   const authenticatedUserRoles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const isAdmin = authenticatedUserRoles.includes('admin');
-
+  const isAdmin = authenticatedUserRoles?.includes('admin');
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${username}`;
@@ -46,11 +48,18 @@ const UserInformation = () => {
     getCurrentUserInfo();
   }, [RCInstance, setCurrentUserInfo]);
 
+  const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
   return (
-    <Sidebar
+    <ViewComponent
       title="User Info"
       iconName="user"
-      setShowWindow={setShowCurrentUserInfo}
+      {...(viewType === 'Popup'
+        ? {
+            isPopupHeader: true,
+            onClose: () => setExclusiveState(null),
+          }
+        : {})}
     >
       {isUserInfoFetched ? (
         <Box css={styles.userSidebar}>
@@ -155,7 +164,7 @@ const UserInformation = () => {
           <Throbber />
         </Box>
       )}
-    </Sidebar>
+    </ViewComponent>
   );
 };
 

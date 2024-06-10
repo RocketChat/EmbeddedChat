@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
-import { useMessageStore, useUserStore, useThemeStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
@@ -11,7 +11,6 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
   const showAvatar = useUserStore((state) => state.showAvatar);
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
-  const isBubble = useThemeStore((state) => state.isBubble);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -34,7 +33,6 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               lastSequential={lastSequential}
               type="thread"
               showAvatar={showAvatar}
-              isBubble={isBubble}
             />
           )
         );

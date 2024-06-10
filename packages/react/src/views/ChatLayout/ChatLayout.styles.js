@@ -5,6 +5,7 @@ const styles = {
     flex-basis: 100%;
     display: flex;
     overflow: hidden;
+    padding-top: 0.25rem;
   `,
 
   chatMain: css`
