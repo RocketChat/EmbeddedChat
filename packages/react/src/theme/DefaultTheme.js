@@ -73,34 +73,31 @@ const DefaultTheme = {
   typography: {
     default: {
       fontFamily: "'Times New Roman', serif",
-      fontSize: 14,
-      fontWeightLight: 300,
+      fontSize: 16,
       fontWeightRegular: 400,
-      fontWeightMedium: 500,
-      fontWeightBold: 700,
     },
     h1: {
-      fontSize: '2.625rem',
+      fontSize: '2rem',
       fontWeight: 800,
     },
     h2: {
-      fontSize: '1.875rem',
+      fontSize: '1.5rem',
       fontWeight: 800,
     },
     h3: {
-      fontSize: '1.5rem',
+      fontSize: '1.3rem',
       fontWeight: 400,
     },
     h4: {
-      fontSize: '1.25rem',
-      fontWeight: 400,
-    },
-    h5: {
       fontSize: '1rem',
       fontWeight: 400,
     },
+    h5: {
+      fontSize: '0.83rem',
+      fontWeight: 400,
+    },
     h6: {
-      fontSize: '0.875rem',
+      fontSize: '0.67rem',
       fontWeight: 500,
     },
   },

@@ -31,6 +31,7 @@ export const useMenuItemStyles = () => {
   const { mode, colors } = useCustomTheme();
 
   const item = css`
+    font-size: 14px;
     display: flex;
     flex-direction: row;
     align-items: center;
