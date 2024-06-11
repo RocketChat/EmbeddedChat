@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
@@ -18,6 +18,10 @@ function CommandsList({
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
   const styles = useCommandListStyles();
   const { colors } = useCustomTheme();
+  const itemRefs = useRef([]);
+  const setItemRef = (el, index) => {
+    itemRefs.current[index] = el;
+  };
 
   const handleCommandClick = useCallback(
     (command) => {
@@ -46,6 +50,14 @@ function CommandsList({
     };
   }, [commandIndex, filteredCommands, handleCommandClick]);
 
+  useEffect(() => {
+    if (itemRefs.current[commandIndex]) {
+      itemRefs.current[commandIndex].scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [commandIndex]);
+
   return (
     <Box
       css={styles.main}
@@ -59,6 +71,7 @@ function CommandsList({
             key={command.command}
             role="presentation"
             css={styles.listItem}
+            ref={(el) => setItemRef(el, index)}
             onClick={() => handleCommandClick(command)}
             style={{
               backgroundColor: index === commandIndex && colors.primary,

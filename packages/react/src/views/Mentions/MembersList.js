@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import useMemberListStyles from './MembersList.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
+  const itemRefs = useRef([]);
   const styles = useMemberListStyles();
   const { colors } = useCustomTheme();
 
@@ -14,6 +15,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     },
     [onMemberClick]
   );
+
+  const setItemRef = (el, index) => {
+    itemRefs.current[index] = el;
+  };
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -35,6 +40,14 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     };
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 
+  useEffect(() => {
+    if (itemRefs.current[mentionIndex]) {
+      itemRefs.current[mentionIndex].scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [mentionIndex]);
+
   return (
     <Box css={styles.main}>
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
@@ -44,6 +57,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
             role="presentation"
             css={styles.listItem}
             onClick={() => handleMemberClick(member)}
+            ref={(el) => setItemRef(el, index)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleMemberClick(member);
@@ -67,6 +81,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           key="all"
           role="presentation"
           css={styles.listItem}
+          ref={(el) => setItemRef(el, filteredMembers.length)}
           onClick={() => handleMemberClick('all')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -89,6 +104,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           key="here"
           role="presentation"
           css={styles.listItem}
+          ref={(el) => setItemRef(el, filteredMembers.length + 1)}
           onClick={() => handleMemberClick('here')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
