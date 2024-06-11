@@ -388,11 +388,6 @@ const ChatInput = ({ scrollToBottom }) => {
     messageRef.current.value = parseEmoji(e.target.value);
     setDisableButton(!messageRef.current.value.length);
 
-    if (e.code === 'Enter') {
-      messageRef.current.value += '\n';
-      sendTypingStop();
-    }
-
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
       e.target.style.boxSizing = 'border-box';
