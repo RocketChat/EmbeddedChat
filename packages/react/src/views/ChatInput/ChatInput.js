@@ -161,7 +161,7 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const getMessageLink = async (id) => {
-    const host = await RCInstance.getHost();
+    const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
     return `${host}/channel/${res.room.name}/?msg=${id}`;
   };
@@ -385,10 +385,8 @@ const ChatInput = ({ scrollToBottom }) => {
     [getFilteredCommands]
   );
 
-  const onTextChange = (e) => {
-    sendTypingStart();
-    messageRef.current.value = parseEmoji(e.target.value);
-    setDisableButton(!messageRef.current.value.length);
+  const handleNewLine = (e, addLine = true) => {
+    if (addLine) messageRef.current.value += '\n';
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -397,6 +395,14 @@ const ChatInput = ({ scrollToBottom }) => {
     } else {
       e.target.style.height = '150px';
     }
+  };
+
+  const onTextChange = (e) => {
+    sendTypingStart();
+    messageRef.current.value = parseEmoji(e.target.value);
+    setDisableButton(!messageRef.current.value.length);
+
+    handleNewLine(e, false);
     searchToMentionUser(
       messageRef.current.value,
       members,
@@ -448,21 +454,6 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     };
 
-    const handleNewLine = () => {
-      messageRef.current.value += '\n';
-      e.target.style.height = 'auto';
-      if (e.target.scrollHeight <= 150) {
-        e.target.style.boxSizing = 'border-box';
-        e.target.style.height = `${e.target.scrollHeight}px`;
-      } else {
-        e.target.style.height = '150px';
-      }
-    };
-
-    if (e.shiftKey && e.code === 'Enter') {
-      return;
-    }
-
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
@@ -474,9 +465,9 @@ const ChatInput = ({ scrollToBottom }) => {
         formatSelection('*{{text}}*');
         break;
       }
-      case (e.ctrlKey || e.metaKey) && e.code === 'Enter':
+      case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
         e.preventDefault();
-        handleNewLine();
+        handleNewLine(e);
         break;
       case e.code === 'Escape':
         e.preventDefault();
