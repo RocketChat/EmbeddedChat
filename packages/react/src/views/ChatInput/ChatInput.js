@@ -88,6 +88,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const [filteredMembers, setFilteredMembers] = useState([]);
 
   const [mentionIndex, setmentionIndex] = useState(-1);
+  const [commandIndex, setCommandIndex] = useState(0);
   const [startReading, setStartReading] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
 
@@ -474,11 +475,17 @@ const ChatInput = ({ scrollToBottom }) => {
       setmentionIndex(
         mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
       );
+      setCommandIndex(
+        commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
+      );
     }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       setmentionIndex(
         mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+      );
+      setCommandIndex(
+        commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1
       );
 
       const lastIndexOfAt = messageRef.current.value.lastIndexOf('@');
@@ -501,6 +508,7 @@ const ChatInput = ({ scrollToBottom }) => {
         setStartReading(false);
         setFilteredMembers([]);
         setmentionIndex(-1);
+        setCommandIndex(0);
       } else {
         sendTypingStop();
         sendMessage();
@@ -559,6 +567,7 @@ const ChatInput = ({ scrollToBottom }) => {
         )}
         {filteredCommands.length === 0 ? null : (
           <CommandsList
+            commandIndex={commandIndex}
             filteredCommands={filteredCommands}
             onCommandClick={onCommandClick}
           />

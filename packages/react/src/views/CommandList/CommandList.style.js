@@ -7,7 +7,6 @@ const useCommandListStyles = () => {
   const { theme, colors } = useCustomTheme();
   const main = css`
     margin: 0.2rem 2rem;
-    padding: 0.5rem 0.3rem;
     display: block;
     max-height: 10rem;
     overflow: scroll;
@@ -24,6 +23,7 @@ const useCommandListStyles = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0.1rem 0.25rem;
 
     &:hover {
       background-color: ${colors.secondary};

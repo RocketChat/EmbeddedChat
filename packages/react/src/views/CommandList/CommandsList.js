@@ -6,6 +6,7 @@ import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useCommandListStyles from './CommandList.style';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function CommandsList({
   className = '',
@@ -13,10 +14,12 @@ function CommandsList({
   filteredCommands,
   execCommand,
   onCommandClick,
+  commandIndex,
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
   const styles = useCommandListStyles();
+  const { colors } = useCustomTheme();
 
   const handleCommandClick = useCallback(
     (command) => {
@@ -53,11 +56,15 @@ function CommandsList({
       {...props}
     >
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-        {filteredCommands.map((command) => (
+        {filteredCommands.map((command, index) => (
           <li
             key={command.command}
             css={styles.listItem}
             onClick={() => handleCommandClick(command)}
+            style={{
+              backgroundColor: index === commandIndex && colors.primary,
+              color: index === commandIndex && colors.primaryForeground,
+            }}
           >
             <Box
               is="span"
