@@ -462,7 +462,11 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
-    } else if (filteredMembers.length === 0 && e.keyCode === 13) {
+    } else if (
+      filteredMembers.length === 0 &&
+      filteredCommands.length === 0 &&
+      e.keyCode === 13
+    ) {
       e.preventDefault();
       e.target.style.height = '38px';
       sendMessage();
