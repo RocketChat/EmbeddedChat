@@ -29,10 +29,10 @@ import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { useChatInputStyles } from './ChatInput.styles';
+import useFormatSelection from '../../hooks/useFormatSelection';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
-
   const { RCInstance, ECOptions } = useRCContext();
   const styles = useChatInputStyles();
   const [commands, setCommands] = useState([]);
@@ -90,6 +90,8 @@ const ChatInput = ({ scrollToBottom }) => {
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
   const [showCommandList, setShowCommandList] = useState(false);
+
+  const { formatSelection } = useFormatSelection(messageRef);
 
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
@@ -408,22 +410,6 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const onKeyDown = (e) => {
-    const handleItalic = (start, end) => {
-      const italic = ` _${messageRef.current.value.slice(start, end)}_ `;
-      messageRef.current.value =
-        messageRef.current.value.slice(0, start) +
-        italic +
-        messageRef.current.value.slice(end);
-    };
-
-    const handleBold = (start, end) => {
-      const bold = ` *${messageRef.current.value.slice(start, end)}* `;
-      messageRef.current.value =
-        messageRef.current.value.slice(0, start) +
-        bold +
-        messageRef.current.value.slice(end);
-    };
-
     const handleArrowDown = () => {
       setmentionIndex(
         mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
@@ -480,22 +466,12 @@ const ChatInput = ({ scrollToBottom }) => {
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
-        const italicStart = e.target.selectionStart;
-        const italicEnd = e.target.selectionEnd;
-        italicEnd - italicStart > 0
-          ? handleItalic(italicStart, italicEnd)
-          : (messageRef.current.value = '__');
-        e.target.setSelectionRange(italicStart + 1, italicStart + 1);
+        formatSelection('_{{text}}_');
         break;
       }
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
-        const boldStart = e.target.selectionStart;
-        const boldEnd = e.target.selectionEnd;
-        boldEnd - boldStart > 0
-          ? handleBold(boldStart, boldEnd)
-          : (messageRef.current.value = '**');
-        e.target.setSelectionRange(boldStart + 1, boldStart + 1);
+        formatSelection('*{{text}}*');
         break;
       }
       case (e.ctrlKey || e.metaKey) && e.code === 'Enter':
