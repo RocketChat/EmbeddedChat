@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
@@ -59,6 +57,7 @@ function CommandsList({
         {filteredCommands.map((command, index) => (
           <li
             key={command.command}
+            role="presentation"
             css={styles.listItem}
             onClick={() => handleCommandClick(command)}
             style={{
