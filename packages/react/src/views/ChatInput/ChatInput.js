@@ -413,76 +413,32 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const onKeyDown = (e) => {
-    if (e.shiftKey && e.keyCode === 13) {
-      return;
-    }
-    if (e.ctrlKey && e.key === 'i') {
-      e.preventDefault();
-      const start = e.target.selectionStart;
-      const end = e.target.selectionEnd;
-      if (end - start > 0) {
-        const italic = ` _${messageRef.current.value.slice(start, end)}_ `;
-        messageRef.current.value =
-          messageRef.current.value.slice(0, start) +
-          italic +
-          messageRef.current.value.slice(end);
-      } else {
-        messageRef.current.value = '__';
-        e.target.setSelectionRange(start + 1, start + 1);
-      }
-    }
-    if (e.ctrlKey && e.key === 'b') {
-      e.preventDefault();
-      const start = e.target.selectionStart;
-      const end = e.target.selectionEnd;
-      if (end - start > 0) {
-        const bold = ` *${messageRef.current.value.slice(start, end)}* `;
-        messageRef.current.value =
-          messageRef.current.value.slice(0, start) +
-          bold +
-          messageRef.current.value.slice(end);
-      } else {
-        messageRef.current.value = '**';
-        e.target.setSelectionRange(start + 1, start + 1);
-      }
-    }
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-      messageRef.current.value += '\n';
-      e.target.style.height = 'auto';
-      if (e.target.scrollHeight <= 150) {
-        e.target.style.boxSizing = 'border-box';
-        e.target.style.height = `${e.target.scrollHeight}px`;
-      } else {
-        e.target.style.height = '150px';
-      }
-    } else if (
-      (editMessage.msg || editMessage.attachments) &&
-      e.keyCode === 27
-    ) {
-      messageRef.current.value = '';
-      setDisableButton(true);
-      setEditMessage({});
-    } else if (
-      filteredMembers.length === 0 &&
-      filteredCommands.length === 0 &&
-      e.keyCode === 13
-    ) {
-      e.preventDefault();
-      e.target.style.height = '38px';
-      sendMessage();
-    }
+    const handleItalic = (start, end) => {
+      const italic = ` _${messageRef.current.value.slice(start, end)}_ `;
+      messageRef.current.value =
+        messageRef.current.value.slice(0, start) +
+        italic +
+        messageRef.current.value.slice(end);
+    };
 
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
+    const handleBold = (start, end) => {
+      const bold = ` *${messageRef.current.value.slice(start, end)}* `;
+      messageRef.current.value =
+        messageRef.current.value.slice(0, start) +
+        bold +
+        messageRef.current.value.slice(end);
+    };
+
+    const handleArrowDown = () => {
       setmentionIndex(
         mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
       );
       setCommandIndex(
         commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
       );
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
+    };
+
+    const handleArrowUp = () => {
       setmentionIndex(
         mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
       );
@@ -493,10 +449,9 @@ const ChatInput = ({ scrollToBottom }) => {
       const lastIndexOfAt = messageRef.current.value.lastIndexOf('@');
       const cursorPosition = lastIndexOfAt === -1 ? 0 : lastIndexOfAt + 1;
       messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
-    }
+    };
 
-    if (e.key === 'Enter') {
-      e.preventDefault();
+    const handleEnter = () => {
       if (showMembersList) {
         setshowMembersList(false);
         setStartReadMentionUser(false);
@@ -510,6 +465,71 @@ const ChatInput = ({ scrollToBottom }) => {
         sendTypingStop();
         sendMessage();
       }
+    };
+
+    const handleNewLine = () => {
+      messageRef.current.value += '\n';
+      e.target.style.height = 'auto';
+      if (e.target.scrollHeight <= 150) {
+        e.target.style.boxSizing = 'border-box';
+        e.target.style.height = `${e.target.scrollHeight}px`;
+      } else {
+        e.target.style.height = '150px';
+      }
+    };
+
+    if (e.shiftKey && e.code === 'Enter') {
+      return;
+    }
+
+    switch (true) {
+      case e.ctrlKey && e.code === 'KeyI': {
+        e.preventDefault();
+        const italicStart = e.target.selectionStart;
+        const italicEnd = e.target.selectionEnd;
+        italicEnd - italicStart > 0
+          ? handleItalic(italicStart, italicEnd)
+          : (messageRef.current.value = '__');
+        e.target.setSelectionRange(italicStart + 1, italicStart + 1);
+        break;
+      }
+      case e.ctrlKey && e.code === 'KeyB': {
+        e.preventDefault();
+        const boldStart = e.target.selectionStart;
+        const boldEnd = e.target.selectionEnd;
+        boldEnd - boldStart > 0
+          ? handleBold(boldStart, boldEnd)
+          : (messageRef.current.value = '**');
+        e.target.setSelectionRange(boldStart + 1, boldStart + 1);
+        break;
+      }
+      case (e.ctrlKey || e.metaKey) && e.code === 'Enter':
+        e.preventDefault();
+        handleNewLine();
+        break;
+      case e.code === 'Escape':
+        e.preventDefault();
+        if (editMessage.msg || editMessage.attachments) {
+          messageRef.current.value = '';
+          setDisableButton(true);
+          setEditMessage({});
+        }
+        break;
+
+      case e.code === 'ArrowDown':
+        e.preventDefault();
+        handleArrowDown();
+        break;
+      case e.code === 'ArrowUp':
+        e.preventDefault();
+        handleArrowUp();
+        break;
+      case e.code === 'Enter':
+        e.preventDefault();
+        handleEnter();
+        break;
+      default:
+        break;
     }
   };
 
