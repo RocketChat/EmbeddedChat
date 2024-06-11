@@ -166,25 +166,11 @@ const ChatInput = ({ scrollToBottom }) => {
     return `${host}/channel/${res.room.name}/?msg=${id}`;
   };
 
-  const sendMessage = async (isAttachmentMode = false) => {
+  const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
 
-    if (isAttachmentMode) {
-      const messageBlob = new Blob([message], { type: 'text/plain' });
-      const file = new File([messageBlob], 'message.txt', {
-        type: 'text/plain',
-        lastModified: Date.now(),
-      });
-
-      toggle();
-      setData(file);
-
-      messageRef.current.value = '';
-      setEditMessage({});
-      return;
-    }
     if (message.length > msgMaxLength) {
       openMsgLongModal();
       return;
@@ -269,9 +255,20 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
   };
 
-  const handleConvertToAttachment = () => {
+  const handleAttachmentConversion = () => {
     closeMsgLongModal();
-    sendMessage(true);
+    const message = messageRef.current.value.trim();
+    const messageBlob = new Blob([message], { type: 'text/plain' });
+    const file = new File([messageBlob], 'message.txt', {
+      type: 'text/plain',
+      lastModified: Date.now(),
+    });
+
+    toggle();
+    setData(file);
+
+    messageRef.current.value = '';
+    setEditMessage({});
   };
 
   const sendAttachment = (event) => {
@@ -637,7 +634,7 @@ const ChatInput = ({ scrollToBottom }) => {
               <Button type="secondary" onClick={closeMsgLongModal}>
                 Cancel
               </Button>
-              <Button onClick={handleConvertToAttachment} type="primary">
+              <Button onClick={handleAttachmentConversion} type="primary">
                 Ok
               </Button>
             </Modal.Footer>
