@@ -1,30 +1,36 @@
 export const searchToMentionUser = (
   message,
   roomMembers,
-  startReading,
-  setStartReading,
+  startReadMentionUser,
+  setStartReadMentionUser,
   setFilteredMembers,
   setmentionIndex,
   setshowMembersList
 ) => {
   const lastChar = message ? message[message.length - 1] : '';
+
   if (message.length === 0) {
     setshowMembersList(false);
-    setStartReading(false);
+    setStartReadMentionUser(false);
     setFilteredMembers([]);
     setmentionIndex(-1);
     return;
   }
 
-  if (lastChar === '@') {
-    if (message.length > 1 && message[message.length - 2] !== ' ') return;
-    setStartReading(true);
+  if (
+    lastChar === '@' &&
+    (message.length === 1 || message[message.length - 2] === ' ')
+  ) {
+    setStartReadMentionUser(true);
     setFilteredMembers(roomMembers);
     setmentionIndex(0);
     setshowMembersList(true);
-  } else if (startReading) {
+    return;
+  }
+
+  if (startReadMentionUser) {
     if (lastChar === ' ') {
-      setStartReading(false);
+      setStartReadMentionUser(false);
       setFilteredMembers([]);
       setmentionIndex(-1);
       setshowMembersList(false);
@@ -40,19 +46,10 @@ export const searchToMentionUser = (
 
       setFilteredMembers(filteredMentionMembers);
 
-      const isValidUsername = roomMembers.some(
-        (member) =>
-          member.name.toLowerCase().includes(query) ||
-          member.username.toLowerCase().includes(query)
-      );
+      const isValidUsername = filteredMentionMembers.length > 0;
 
-      if (isValidUsername) {
-        setshowMembersList(true);
-        setmentionIndex(0);
-      } else {
-        setshowMembersList(false);
-        setmentionIndex(-1);
-      }
+      setshowMembersList(isValidUsername);
+      setmentionIndex(isValidUsername ? 0 : -1);
     }
   }
 };

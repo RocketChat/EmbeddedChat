@@ -87,7 +87,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [commandIndex, setCommandIndex] = useState(0);
-  const [startReading, setStartReading] = useState(false);
+  const [startReadMentionUser, setStartReadMentionUser] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
   const [showCommandList, setShowCommandList] = useState(false);
 
@@ -403,8 +403,8 @@ const ChatInput = ({ scrollToBottom }) => {
     searchToMentionUser(
       messageRef.current.value,
       members,
-      startReading,
-      setStartReading,
+      startReadMentionUser,
+      setStartReadMentionUser,
       setFilteredMembers,
       setmentionIndex,
       setshowMembersList
@@ -502,7 +502,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
         handleMemberClick(selectedMember);
         setshowMembersList(false);
-        setStartReading(false);
+        setStartReadMentionUser(false);
         setFilteredMembers([]);
         setmentionIndex(-1);
       } else if (showCommandList) {
