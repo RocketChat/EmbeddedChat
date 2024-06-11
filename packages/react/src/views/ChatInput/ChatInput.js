@@ -84,13 +84,12 @@ const ChatInput = ({ scrollToBottom }) => {
   const chatInputContainer = useRef(null);
 
   const [disableButton, setDisableButton] = useState(true);
-
   const [filteredMembers, setFilteredMembers] = useState([]);
-
   const [mentionIndex, setmentionIndex] = useState(-1);
   const [commandIndex, setCommandIndex] = useState(0);
   const [startReading, setStartReading] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
+  const [showCommandList, setShowCommandList] = useState(false);
 
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
@@ -298,7 +297,6 @@ const ChatInput = ({ scrollToBottom }) => {
   const sendTypingStart = async () => {
     try {
       if (typingRef.current && messageRef.current.value?.length) {
-        // 15 seconds has not been passed since last send.
         return;
       }
       if (messageRef.current.value?.length) {
@@ -326,7 +324,7 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const onCommandClick = useCallback(async (command) => {
+  const handleCommandClick = useCallback(async (command) => {
     const commandName = command.command;
     const currentMessage = messageRef.current.value;
     const tokens = (currentMessage || '').split(' ');
@@ -376,22 +374,24 @@ const ChatInput = ({ scrollToBottom }) => {
         .split(/\s+/);
       if (tokens.length === 1 && tokens[0].startsWith('/')) {
         setFilteredCommands(getFilteredCommands(tokens[0]));
+        setShowCommandList(true);
       } else {
         setFilteredCommands([]);
+        setShowCommandList(false);
       }
     },
     [getFilteredCommands]
   );
 
   const onTextChange = (e) => {
+    sendTypingStart();
     messageRef.current.value = parseEmoji(e.target.value);
+    setDisableButton(!messageRef.current.value.length);
 
     if (e.code === 'Enter') {
       messageRef.current.value += '\n';
       sendTypingStop();
     }
-
-    setDisableButton(!messageRef.current.value.length);
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -409,12 +409,11 @@ const ChatInput = ({ scrollToBottom }) => {
       setmentionIndex,
       setshowMembersList
     );
-    sendTypingStart();
+    showCommands(e);
   };
 
   const onKeyDown = (e) => {
     if (e.shiftKey && e.keyCode === 13) {
-      // new line with shift enter. do nothing.
       return;
     }
     if (e.ctrlKey && e.key === 'i') {
@@ -448,7 +447,6 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     }
     if ((e.ctrlKey || e.metaKey) && e.keyCode === 13) {
-      // Insert line break in text input field
       messageRef.current.value += '\n';
       e.target.style.height = 'auto';
       if (e.target.scrollHeight <= 150) {
@@ -503,11 +501,11 @@ const ChatInput = ({ scrollToBottom }) => {
         else selectedMember = filteredMembers[mentionIndex].username;
 
         handleMemberClick(selectedMember);
-
         setshowMembersList(false);
         setStartReading(false);
         setFilteredMembers([]);
         setmentionIndex(-1);
+      } else if (showCommandList) {
         setCommandIndex(0);
       } else {
         sendTypingStop();
@@ -554,22 +552,19 @@ const ChatInput = ({ scrollToBottom }) => {
           />
         ) : null}
 
-        {showMembersList ? (
-          <>
-            <MembersList
-              mentionIndex={mentionIndex}
-              filteredMembers={filteredMembers}
-              onMemberClick={handleMemberClick}
-            />
-          </>
-        ) : (
-          <></>
+        {showMembersList && (
+          <MembersList
+            mentionIndex={mentionIndex}
+            filteredMembers={filteredMembers}
+            onMemberClick={handleMemberClick}
+          />
         )}
-        {filteredCommands.length === 0 ? null : (
+
+        {showCommandList && (
           <CommandsList
             commandIndex={commandIndex}
             filteredCommands={filteredCommands}
-            onCommandClick={onCommandClick}
+            onCommandClick={handleCommandClick}
           />
         )}
 
@@ -596,7 +591,6 @@ const ChatInput = ({ scrollToBottom }) => {
             }
             css={styles.textInput}
             onChange={onTextChange}
-            onKeyUp={showCommands}
             onBlur={() => {
               sendTypingStop();
               handleBlur();

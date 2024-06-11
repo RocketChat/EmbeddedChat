@@ -36,7 +36,7 @@ function CommandsList({
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
-        const selectedItem = filteredCommands[0];
+        const selectedItem = filteredCommands[commandIndex];
         handleCommandClick(selectedItem);
       }
     };
@@ -46,7 +46,7 @@ function CommandsList({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [filteredCommands, handleCommandClick]);
+  }, [commandIndex, filteredCommands, handleCommandClick]);
 
   return (
     <Box
