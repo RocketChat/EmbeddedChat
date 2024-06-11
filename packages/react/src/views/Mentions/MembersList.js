@@ -28,18 +28,10 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
       }
     };
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-      }
-    };
-
     document.addEventListener('keydown', handleKeyPress);
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
-      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [mentionIndex, filteredMembers, handleMemberClick]);
 

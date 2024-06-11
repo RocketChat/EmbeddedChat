@@ -494,19 +494,14 @@ const ChatInput = ({ scrollToBottom }) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (showMembersList) {
-        let selectedMember = null;
-        if (mentionIndex === filteredMembers.length) selectedMember = 'all';
-        else if (mentionIndex === filteredMembers.length + 1)
-          selectedMember = 'here';
-        else selectedMember = filteredMembers[mentionIndex].username;
-
-        handleMemberClick(selectedMember);
         setshowMembersList(false);
         setStartReadMentionUser(false);
         setFilteredMembers([]);
         setmentionIndex(-1);
       } else if (showCommandList) {
         setCommandIndex(0);
+        setShowCommandList(false);
+        setFilteredCommands([]);
       } else {
         sendTypingStop();
         sendMessage();
