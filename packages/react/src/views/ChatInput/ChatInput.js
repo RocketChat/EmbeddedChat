@@ -414,25 +414,34 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const onKeyDown = (e) => {
     const handleArrowDown = () => {
-      setmentionIndex(
-        mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
-      );
-      setCommandIndex(
-        commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
-      );
+      if (showMembersList) {
+        e.preventDefault();
+        setmentionIndex(
+          mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
+        );
+      }
+
+      if (showCommandList) {
+        e.preventDefault();
+        setCommandIndex(
+          commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
+        );
+      }
     };
 
     const handleArrowUp = () => {
-      setmentionIndex(
-        mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
-      );
-      setCommandIndex(
-        commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1
-      );
-
-      const lastIndexOfAt = messageRef.current.value.lastIndexOf('@');
-      const cursorPosition = lastIndexOfAt === -1 ? 0 : lastIndexOfAt + 1;
-      messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      if (showMembersList) {
+        e.preventDefault();
+        setmentionIndex(
+          mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+        );
+      }
+      if (showCommandList) {
+        e.preventDefault();
+        setCommandIndex(
+          commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1
+        );
+      }
     };
 
     const handleEnter = () => {
@@ -476,11 +485,9 @@ const ChatInput = ({ scrollToBottom }) => {
         break;
 
       case e.code === 'ArrowDown':
-        e.preventDefault();
         handleArrowDown();
         break;
       case e.code === 'ArrowUp':
-        e.preventDefault();
         handleArrowUp();
         break;
       case e.code === 'Enter':
