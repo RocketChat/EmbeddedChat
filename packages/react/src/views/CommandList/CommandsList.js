@@ -125,10 +125,15 @@ function CommandsList({
 }
 
 CommandsList.propTypes = {
-  filteredCommands: PropTypes.array,
-  execCommand: PropTypes.func,
   className: PropTypes.string,
   style: PropTypes.object,
+  messageRef: PropTypes.object.isRequired,
+  setFilteredCommands: PropTypes.func.isRequired,
+  filteredCommands: PropTypes.array,
+  execCommand: PropTypes.func,
+  commandIndex: PropTypes.number.isRequired,
+  setCommandIndex: PropTypes.func.isRequired,
+  setShowCommandList: PropTypes.func.isRequired,
 };
 
 export default CommandsList;

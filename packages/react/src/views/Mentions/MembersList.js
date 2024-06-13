@@ -188,8 +188,13 @@ function MembersList({
 }
 
 MembersList.propTypes = {
-  mentionIndex: PropTypes.any,
+  mentionIndex: PropTypes.number,
+  messageRef: PropTypes.object.isRequired,
   filteredMembers: PropTypes.array,
+  setFilteredMembers: PropTypes.func.isRequired,
+  setMentionIndex: PropTypes.func.isRequired,
+  setStartReadMentionUser: PropTypes.func.isRequired,
+  setShowMembersList: PropTypes.func.isRequired,
 };
 
 export default MembersList;
