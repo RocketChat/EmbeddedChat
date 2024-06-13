@@ -9,11 +9,13 @@ import { useCustomTheme } from '../../hooks/useCustomTheme';
 function CommandsList({
   className = '',
   style = {},
+  messageRef,
+  setFilteredCommands,
   filteredCommands,
   execCommand,
-  onCommandClick,
   commandIndex,
   setCommandIndex,
+  setShowCommandList,
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
@@ -25,15 +27,21 @@ function CommandsList({
   };
 
   const handleCommandClick = useCallback(
-    (command) => {
-      if (execCommand) {
-        execCommand(command);
-      }
-      if (onCommandClick) {
-        onCommandClick(command);
+    async (command) => {
+      const commandName = command.command;
+      const currentMessage = messageRef.current.value;
+      const tokens = (currentMessage || '').split(' ');
+      const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
+      if (firstTokenIdx !== -1) {
+        tokens[firstTokenIdx] = `/${commandName}`;
+        const newMessageString = tokens.join(' ');
+        messageRef.current.value = newMessageString;
+        setFilteredCommands([]);
+        setCommandIndex(0);
+        setShowCommandList(false);
       }
     },
-    [execCommand, onCommandClick]
+    [messageRef, setCommandIndex, setFilteredCommands, setShowCommandList]
   );
 
   useEffect(() => {

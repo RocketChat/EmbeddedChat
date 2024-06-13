@@ -6,9 +6,12 @@ import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function MembersList({
   mentionIndex,
+  messageRef,
   filteredMembers = [],
+  setFilteredMembers,
   setMentionIndex,
-  onMemberClick,
+  setStartReadMentionUser,
+  setShowMembersList,
 }) {
   const itemRefs = useRef([]);
   const styles = useMemberListStyles();
@@ -16,9 +19,42 @@ function MembersList({
 
   const handleMemberClick = useCallback(
     (selectedItem) => {
-      onMemberClick(selectedItem);
+      let insertionText;
+      if (selectedItem === 'all') {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@all `;
+      } else if (selectedItem === 'here') {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@here `;
+      } else {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@${selectedItem.username} `;
+      }
+
+      messageRef.current.value = insertionText;
+
+      const cursorPosition = insertionText.length;
+      messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      messageRef.current.focus();
+
+      setFilteredMembers([]);
+      setMentionIndex(-1);
+      setStartReadMentionUser(false);
+      setShowMembersList(false);
     },
-    [onMemberClick]
+    [
+      messageRef,
+      setFilteredMembers,
+      setMentionIndex,
+      setShowMembersList,
+      setStartReadMentionUser,
+    ]
   );
 
   const setItemRef = (el, index) => {
@@ -154,7 +190,6 @@ function MembersList({
 MembersList.propTypes = {
   mentionIndex: PropTypes.any,
   filteredMembers: PropTypes.array,
-  onMemberClick: PropTypes.func.isRequired,
 };
 
 export default MembersList;
