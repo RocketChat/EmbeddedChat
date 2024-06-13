@@ -35,16 +35,30 @@ const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const styles = useChatInputStyles();
+
+  const inputRef = useRef(null);
+  const typingRef = useRef();
+  const messageRef = useRef(null);
+  const chatInputContainer = useRef(null);
+
   const [commands, setCommands] = useState([]);
+  const [disableButton, setDisableButton] = useState(true);
+  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [mentionIndex, setmentionIndex] = useState(-1);
+  const [commandIndex, setCommandIndex] = useState(0);
+  const [startReadMentionUser, setStartReadMentionUser] = useState(false);
+  const [showMembersList, setshowMembersList] = useState(false);
+  const [showCommandList, setShowCommandList] = useState(false);
+  const [filteredCommands, setFilteredCommands] = useState([]);
+  const [isMsgLong, setIsMsgLong] = useState(false);
+
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
   const canSendMsg = useUserStore((state) => state.canSendMsg);
-
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const isChannelReadOnly = useChannelStore((state) => state.isChannelReadOnly);
   const members = useMemberStore((state) => state.members);
@@ -67,38 +81,6 @@ const ChatInput = ({ scrollToBottom }) => {
     });
   }, [RCInstance]);
 
-  const [filteredCommands, setFilteredCommands] = useState([]);
-  const getFilteredCommands = useCallback(
-    (cmd) => commands.filter((c) => c.command.startsWith(cmd.replace('/', ''))),
-    [commands]
-  );
-
-  const execCommand = async (command, params) => {
-    await RCInstance.execCommand({ command, params });
-    setFilteredCommands([]);
-  };
-
-  const inputRef = useRef(null);
-  const typingRef = useRef();
-  const messageRef = useRef(null);
-  const chatInputContainer = useRef(null);
-
-  const [disableButton, setDisableButton] = useState(true);
-  const [filteredMembers, setFilteredMembers] = useState([]);
-  const [mentionIndex, setmentionIndex] = useState(-1);
-  const [commandIndex, setCommandIndex] = useState(0);
-  const [startReadMentionUser, setStartReadMentionUser] = useState(false);
-  const [showMembersList, setshowMembersList] = useState(false);
-  const [showCommandList, setShowCommandList] = useState(false);
-
-  const { formatSelection } = useFormatSelection(messageRef);
-
-  const setIsLoginModalOpen = loginModalStore(
-    (state) => state.setIsLoginModalOpen
-  );
-
-  const [isMsgLong, setIsMsgLong] = useState(false);
-
   const {
     editMessage,
     setEditMessage,
@@ -118,19 +100,30 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
   }));
-
+  const setIsLoginModalOpen = loginModalStore(
+    (state) => state.setIsLoginModalOpen
+  );
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
-
   const user = useUserStore((state) => ({
     _id: state.userId,
     username: state.username,
     name: state.name,
   }));
-
   const toastPosition = useToastStore((state) => state.position);
 
+  const { formatSelection } = useFormatSelection(messageRef);
   const dispatchToastMessage = useToastBarDispatch();
+
+  const getFilteredCommands = useCallback(
+    (cmd) => commands.filter((c) => c.command.startsWith(cmd.replace('/', ''))),
+    [commands]
+  );
+
+  const execCommand = async (command, params) => {
+    await RCInstance.execCommand({ command, params });
+    setFilteredCommands([]);
+  };
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
