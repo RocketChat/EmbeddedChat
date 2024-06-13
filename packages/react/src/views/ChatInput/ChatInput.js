@@ -178,9 +178,11 @@ const ChatInput = ({ scrollToBottom }) => {
   const handleEditMessage = async (message) => {
     messageRef.current.value = '';
     setDisableButton(true);
+    const editMessageId = editMessage._id;
     setEditMessage({});
+
     const res = await RCInstance.updateMessage(
-      editMessage._id,
+      editMessageId,
       message.replace(/\n/g, '\\n')
     );
     if (!res.success) {
@@ -191,7 +193,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
-    return `${host}/channel/${res.room.name}/?msg=${id}`;
+    return `${host}/channel/${res.room?.name}/?msg=${id}`;
   };
 
   const handleSendNewMessage = async (message) => {
@@ -199,12 +201,13 @@ const ChatInput = ({ scrollToBottom }) => {
     setDisableButton(true);
     let pendingMessage = '';
     if (quoteMessage.msg || quoteMessage.attachments) {
-      const msgLink = await getMessageLink(quoteMessage?._id);
+      const quoteMessageId = quoteMessage?._id;
+      setQuoteMessage({});
+      const msgLink = await getMessageLink(quoteMessageId);
       pendingMessage = createPendingMessage(
         `[ ](${msgLink})\n ${message}`,
         user
       );
-      setQuoteMessage({});
     } else {
       pendingMessage = createPendingMessage(message, user);
     }
@@ -259,7 +262,7 @@ const ChatInput = ({ scrollToBottom }) => {
     scrollToBottom();
   };
 
-  const handleAttachmentConversion = () => {
+  const textToAttach = () => {
     closeMsgLongModal();
     const message = messageRef.current.value.trim();
     const messageBlob = new Blob([message], { type: 'text/plain' });
@@ -645,7 +648,7 @@ const ChatInput = ({ scrollToBottom }) => {
               <Button type="secondary" onClick={closeMsgLongModal}>
                 Cancel
               </Button>
-              <Button onClick={handleAttachmentConversion} type="primary">
+              <Button onClick={textToAttach} type="primary">
                 Ok
               </Button>
             </Modal.Footer>
