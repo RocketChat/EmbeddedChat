@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -12,7 +12,6 @@ import {
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
-import { searchToMentionUser } from '../../lib/searchToMentionUser';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
@@ -30,6 +29,8 @@ import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { useChatInputStyles } from './ChatInput.styles';
 import useFormatSelection from '../../hooks/useFormatSelection';
+import useShowCommands from '../../hooks/useShowCommands';
+import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -67,41 +68,6 @@ const ChatInput = ({ scrollToBottom }) => {
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
   const username = useUserStore((state) => state.username);
 
-  const showCommands = useCallback(
-    async (e) => {
-      const getFilteredCommands = (cmd) =>
-        commands.filter((c) => c.command.startsWith(cmd.replace('/', '')));
-
-      const cursor = e.target.selectionStart;
-      const tokens = e.target.value.trim().slice(0, cursor).split(/\s+/);
-
-      if (tokens.length === 1 && tokens[0].startsWith('/')) {
-        setFilteredCommands(getFilteredCommands(tokens[0]));
-        setShowCommandList(true);
-      } else {
-        setFilteredCommands([]);
-        setShowCommandList(false);
-      }
-    },
-    [commands, setFilteredCommands, setShowCommandList]
-  );
-
-  useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
-      if (user) {
-        RCInstance.getCommandsList()
-          .then((data) => setCommands(data.commands || []))
-          .catch(console.error);
-
-        RCInstance.getChannelMembers(isChannelPrivate)
-          .then((channelMembers) =>
-            setMembersHandler(channelMembers.members || [])
-          )
-          .catch(console.error);
-      }
-    });
-  }, [RCInstance, isChannelPrivate, setMembersHandler]);
-
   const {
     editMessage,
     setEditMessage,
@@ -126,7 +92,7 @@ const ChatInput = ({ scrollToBottom }) => {
   );
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const setData = useAttachmentWindowStore((state) => state.setData);
-  const user = useUserStore((state) => ({
+  const userInfo = useUserStore((state) => ({
     _id: state.userId,
     username: state.username,
     name: state.name,
@@ -135,6 +101,36 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const { formatSelection } = useFormatSelection(messageRef);
   const dispatchToastMessage = useToastBarDispatch();
+  const showCommands = useShowCommands(
+    commands,
+    setFilteredCommands,
+    setShowCommandList
+  );
+
+  const searchMentionUser = useSearchMentionUser(
+    members,
+    startReadMentionUser,
+    setStartReadMentionUser,
+    setFilteredMembers,
+    setMentionIndex,
+    setShowMembersList
+  );
+
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        RCInstance.getCommandsList()
+          .then((data) => setCommands(data.commands || []))
+          .catch(console.error);
+
+        RCInstance.getChannelMembers(isChannelPrivate)
+          .then((channelMembers) =>
+            setMembersHandler(channelMembers.members || [])
+          )
+          .catch(console.error);
+      }
+    });
+  }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
     if (editMessage.attachments) {
@@ -259,10 +255,10 @@ const ChatInput = ({ scrollToBottom }) => {
       const msgLink = await getMessageLink(quoteMessageId);
       pendingMessage = createPendingMessage(
         `[ ](${msgLink})\n ${message}`,
-        user
+        userInfo
       );
     } else {
-      pendingMessage = createPendingMessage(message, user);
+      pendingMessage = createPendingMessage(message, userInfo);
     }
 
     if (ECOptions.enableThreads && threadId) {
@@ -358,19 +354,11 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const onTextChange = (e) => {
     sendTypingStart();
-    messageRef.current.value = parseEmoji(e.target.value);
+    const message = e.target.value;
+    messageRef.current.value = parseEmoji(message);
     setDisableButton(!messageRef.current.value.length);
-
     handleNewLine(e, false);
-    searchToMentionUser(
-      messageRef.current.value,
-      members,
-      startReadMentionUser,
-      setStartReadMentionUser,
-      setFilteredMembers,
-      setMentionIndex,
-      setShowMembersList
-    );
+    searchMentionUser(message);
     showCommands(e);
   };
 
