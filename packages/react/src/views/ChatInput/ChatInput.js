@@ -44,7 +44,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
   const [filteredMembers, setFilteredMembers] = useState([]);
-  const [mentionIndex, setmentionIndex] = useState(-1);
+  const [mentionIndex, setMentionIndex] = useState(-1);
   const [commandIndex, setCommandIndex] = useState(0);
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
   const [showMembersList, setshowMembersList] = useState(false);
@@ -413,60 +413,25 @@ const ChatInput = ({ scrollToBottom }) => {
       startReadMentionUser,
       setStartReadMentionUser,
       setFilteredMembers,
-      setmentionIndex,
+      setMentionIndex,
       setshowMembersList
     );
     showCommands(e);
   };
 
+  const handleFocus = () => {
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.add('focused');
+    }
+  };
+
+  const handleBlur = () => {
+    if (chatInputContainer.current) {
+      chatInputContainer.current.classList.remove('focused');
+    }
+  };
+
   const onKeyDown = (e) => {
-    const handleArrowDown = () => {
-      if (showMembersList) {
-        e.preventDefault();
-        setmentionIndex(
-          mentionIndex + 1 >= filteredMembers.length + 2 ? 0 : mentionIndex + 1
-        );
-      }
-
-      if (showCommandList) {
-        e.preventDefault();
-        setCommandIndex(
-          commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
-        );
-      }
-    };
-
-    const handleArrowUp = () => {
-      if (showMembersList) {
-        e.preventDefault();
-        setmentionIndex(
-          mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
-        );
-      }
-      if (showCommandList) {
-        e.preventDefault();
-        setCommandIndex(
-          commandIndex - 1 < 0 ? filteredCommands.length - 1 : commandIndex - 1
-        );
-      }
-    };
-
-    const handleEnter = () => {
-      if (showMembersList) {
-        setshowMembersList(false);
-        setStartReadMentionUser(false);
-        setFilteredMembers([]);
-        setmentionIndex(-1);
-      } else if (showCommandList) {
-        setCommandIndex(0);
-        setShowCommandList(false);
-        setFilteredCommands([]);
-      } else {
-        sendTypingStop();
-        sendMessage();
-      }
-    };
-
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
@@ -483,38 +448,32 @@ const ChatInput = ({ scrollToBottom }) => {
         handleNewLine(e);
         break;
       case e.code === 'Escape':
-        e.preventDefault();
         if (editMessage.msg || editMessage.attachments) {
+          e.preventDefault();
           messageRef.current.value = '';
           setDisableButton(true);
           setEditMessage({});
         }
         break;
 
-      case e.code === 'ArrowDown':
-        handleArrowDown();
-        break;
-      case e.code === 'ArrowUp':
-        handleArrowUp();
-        break;
       case e.code === 'Enter':
         e.preventDefault();
-        handleEnter();
+        if (showMembersList) {
+          setshowMembersList(false);
+          setStartReadMentionUser(false);
+          setFilteredMembers([]);
+          setMentionIndex(-1);
+        } else if (showCommandList) {
+          setCommandIndex(0);
+          setShowCommandList(false);
+          setFilteredCommands([]);
+        } else {
+          sendTypingStop();
+          sendMessage();
+        }
         break;
       default:
         break;
-    }
-  };
-
-  const handleFocus = () => {
-    if (chatInputContainer.current) {
-      chatInputContainer.current.classList.add('focused');
-    }
-  };
-
-  const handleBlur = () => {
-    if (chatInputContainer.current) {
-      chatInputContainer.current.classList.remove('focused');
     }
   };
 
@@ -547,6 +506,7 @@ const ChatInput = ({ scrollToBottom }) => {
         {showMembersList && (
           <MembersList
             mentionIndex={mentionIndex}
+            setMentionIndex={setMentionIndex}
             filteredMembers={filteredMembers}
             onMemberClick={handleMemberClick}
           />
@@ -556,6 +516,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <CommandsList
             commandIndex={commandIndex}
             filteredCommands={filteredCommands}
+            setCommandIndex={setCommandIndex}
             onCommandClick={handleCommandClick}
           />
         )}

@@ -13,6 +13,7 @@ function CommandsList({
   execCommand,
   onCommandClick,
   commandIndex,
+  setCommandIndex,
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
@@ -37,9 +38,28 @@ function CommandsList({
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        const selectedItem = filteredCommands[commandIndex];
-        handleCommandClick(selectedItem);
+      switch (event.key) {
+        case 'Enter': {
+          const selectedItem = filteredCommands[commandIndex];
+          handleCommandClick(selectedItem);
+          break;
+        }
+        case 'ArrowDown':
+          event.preventDefault();
+          setCommandIndex(
+            commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
+          );
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          setCommandIndex(
+            commandIndex - 1 < 0
+              ? filteredCommands.length - 1
+              : commandIndex - 1
+          );
+          break;
+        default:
+          break;
       }
     };
 
@@ -48,7 +68,7 @@ function CommandsList({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [commandIndex, filteredCommands, handleCommandClick]);
+  }, [commandIndex, filteredCommands, handleCommandClick, setCommandIndex]);
 
   useEffect(() => {
     if (itemRefs.current[commandIndex]) {

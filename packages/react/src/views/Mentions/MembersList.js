@@ -4,7 +4,12 @@ import { Box } from '../../components/Box';
 import useMemberListStyles from './MembersList.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
+function MembersList({
+  mentionIndex,
+  filteredMembers = [],
+  setMentionIndex,
+  onMemberClick,
+}) {
   const itemRefs = useRef([]);
   const styles = useMemberListStyles();
   const { colors } = useCustomTheme();
@@ -22,14 +27,32 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        const selectedItem =
-          mentionIndex < filteredMembers.length
-            ? filteredMembers[mentionIndex]
-            : mentionIndex === filteredMembers.length
-            ? 'all'
-            : 'here';
-        handleMemberClick(selectedItem);
+      switch (event.key) {
+        case 'Enter': {
+          const selectedItem =
+            mentionIndex < filteredMembers.length
+              ? filteredMembers[mentionIndex]
+              : mentionIndex === filteredMembers.length
+              ? 'all'
+              : 'here';
+          handleMemberClick(selectedItem);
+          break;
+        }
+        case 'ArrowUp':
+          event.preventDefault();
+          setMentionIndex(
+            mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+          );
+          break;
+        case 'ArrowDown':
+          setMentionIndex(
+            mentionIndex + 1 >= filteredMembers.length + 2
+              ? 0
+              : mentionIndex + 1
+          );
+          break;
+        default:
+          break;
       }
     };
 
@@ -38,7 +61,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [mentionIndex, filteredMembers, handleMemberClick]);
+  }, [mentionIndex, filteredMembers, handleMemberClick, setMentionIndex]);
 
   useEffect(() => {
     if (itemRefs.current[mentionIndex]) {
