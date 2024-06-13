@@ -54,19 +54,33 @@ const ChatInput = ({ scrollToBottom }) => {
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isMsgLong, setIsMsgLong] = useState(false);
 
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const canSendMsg = useUserStore((state) => state.canSendMsg);
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const isChannelReadOnly = useChannelStore((state) => state.isChannelReadOnly);
-  const members = useMemberStore((state) => state.members);
-  const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
+  const {
+    isUserAuthenticated,
+    canSendMsg,
+    setIsUserAuthenticated,
+    username,
+    userId,
+    name,
+  } = useUserStore((state) => ({
+    isUserAuthenticated: state.isUserAuthenticated,
+    canSendMsg: state.canSendMsg,
+    setIsUserAuthenticated: state.setIsUserAuthenticated,
+    username: state.username,
+    userId: state.userId,
+    name: state.name,
+  }));
+
+  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
+    isChannelPrivate: state.isChannelPrivate,
+    isChannelReadOnly: state.isChannelReadOnly,
+  }));
+
+  const { members, setMembersHandler } = useMemberStore((state) => ({
+    members: state.members,
+    setMembersHandler: state.setMembersHandler,
+  }));
+
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
-  const username = useUserStore((state) => state.username);
 
   const {
     editMessage,
@@ -87,17 +101,17 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
   }));
+
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
   );
-  const toggle = useAttachmentWindowStore((state) => state.toggle);
-  const setData = useAttachmentWindowStore((state) => state.setData);
-  const userInfo = useUserStore((state) => ({
-    _id: state.userId,
-    username: state.username,
-    name: state.name,
+  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+    toggle: state.toggle,
+    setData: state.setData,
   }));
   const toastPosition = useToastStore((state) => state.position);
+
+  const userInfo = { _id: userId, username, name };
 
   const { formatSelection } = useFormatSelection(messageRef);
   const dispatchToastMessage = useToastBarDispatch();
@@ -143,16 +157,6 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   }, [editMessage]);
 
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-  const openMsgLongModal = () => {
-    setIsMsgLong(true);
-  };
-  const closeMsgLongModal = () => {
-    setIsMsgLong(false);
-  };
-
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
@@ -172,8 +176,10 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const textToAttach = () => {
-    closeMsgLongModal();
     const message = messageRef.current.value.trim();
+    messageRef.current.value = '';
+    setEditMessage({});
+    setIsMsgLong(false);
     const messageBlob = new Blob([message], { type: 'text/plain' });
     const file = new File([messageBlob], 'message.txt', {
       type: 'text/plain',
@@ -182,9 +188,6 @@ const ChatInput = ({ scrollToBottom }) => {
 
     toggle();
     setData(file);
-
-    messageRef.current.value = '';
-    setEditMessage({});
   };
 
   const handleSendError = async (errorMessage) => {
@@ -210,7 +213,7 @@ const ChatInput = ({ scrollToBottom }) => {
           });
         }
       } else {
-        openLoginModal();
+        setIsLoginModalOpen(true);
       }
     }
   };
@@ -248,11 +251,13 @@ const ChatInput = ({ scrollToBottom }) => {
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
     setDisableButton(true);
+
+    const { msg, attachments, _id } = quoteMessage;
     let pendingMessage = '';
-    if (quoteMessage.msg || quoteMessage.attachments) {
-      const quoteMessageId = quoteMessage?._id;
+
+    if (msg || attachments) {
       setQuoteMessage({});
-      const msgLink = await getMessageLink(quoteMessageId);
+      const msgLink = await getMessageLink(_id);
       pendingMessage = createPendingMessage(
         `[ ](${msgLink})\n ${message}`,
         userInfo
@@ -264,7 +269,9 @@ const ChatInput = ({ scrollToBottom }) => {
     if (ECOptions.enableThreads && threadId) {
       pendingMessage.tmid = threadId;
     }
+
     upsertMessage(pendingMessage, ECOptions.enableThreads);
+
     const res = await RCInstance.sendMessage(
       {
         msg: pendingMessage.msg,
@@ -326,7 +333,7 @@ const ChatInput = ({ scrollToBottom }) => {
     }
 
     if (message.length > msgMaxLength) {
-      openMsgLongModal();
+      setIsMsgLong(true);
       return;
     }
 
@@ -522,37 +529,34 @@ const ChatInput = ({ scrollToBottom }) => {
         )}
       </Box>
       {isMsgLong && (
-        <Modal>
-          <Modal
+        <Modal
+          css={css`
+            padding: 1em;
+          `}
+          onClose={() => setIsMsgLong(false)}
+        >
+          <Modal.Header>
+            <Modal.Title>
+              <Icon name="report" size="1.25rem" />
+              Message Too Long!
+            </Modal.Title>
+            <Modal.Close onClick={() => setIsMsgLong(false)} />
+          </Modal.Header>
+          <Modal.Content
             css={css`
-              padding: 1em;
+              margin: 1em;
             `}
-            onClose={closeMsgLongModal}
           >
-            <Modal.Header>
-              <Modal.Title>
-                <Icon name="report" size="1.25rem" />
-                Message Too Long!
-              </Modal.Title>
-              <Modal.Close onClick={closeMsgLongModal} />
-            </Modal.Header>
-            <Modal.Content
-              css={css`
-                margin: 1em;
-              `}
-            >
-              {' '}
-              Send it as attachment instead?{' '}
-            </Modal.Content>
-            <Modal.Footer>
-              <Button type="secondary" onClick={closeMsgLongModal}>
-                Cancel
-              </Button>
-              <Button onClick={textToAttach} type="primary">
-                Ok
-              </Button>
-            </Modal.Footer>
-          </Modal>
+            Send it as attachment instead?
+          </Modal.Content>
+          <Modal.Footer>
+            <Button type="secondary" onClick={() => setIsMsgLong(false)}>
+              Cancel
+            </Button>
+            <Button onClick={textToAttach} type="primary">
+              Ok
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
     </Box>
