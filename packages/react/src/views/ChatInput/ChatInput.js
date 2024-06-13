@@ -160,21 +160,85 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
+  const handleSendError = async (errorMessage) => {
+    await RCInstance.logout();
+    setIsUserAuthenticated(false);
+    dispatchToastMessage({
+      type: 'error',
+      message: errorMessage,
+      toastPosition,
+    });
+  };
+
+  const handleCommandExecution = async (message) => {
+    const [command, ...paramsArray] = message.split(' ');
+    const params = paramsArray.join(' ');
+
+    if (commands.find((c) => c.command === command.replace('/', ''))) {
+      messageRef.current.value = '';
+      setDisableButton(true);
+      setEditMessage({});
+      await execCommand(command.replace('/', ''), params);
+    }
+  };
+
+  const handleEditMessage = async (message) => {
+    messageRef.current.value = '';
+    setDisableButton(true);
+    setEditMessage({});
+    const res = await RCInstance.updateMessage(
+      editMessage._id,
+      message.replace(/\n/g, '\\n')
+    );
+    if (!res.success) {
+      handleSendError('Error editing message, login again');
+    }
+  };
+
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
     return `${host}/channel/${res.room.name}/?msg=${id}`;
   };
 
+  const handleSendNewMessage = async (message) => {
+    messageRef.current.value = '';
+    setDisableButton(true);
+    let pendingMessage = '';
+    if (quoteMessage.msg || quoteMessage.attachments) {
+      const msgLink = await getMessageLink(quoteMessage?._id);
+      pendingMessage = createPendingMessage(
+        `[ ](${msgLink})\n ${message}`,
+        user
+      );
+      setQuoteMessage({});
+    } else {
+      pendingMessage = createPendingMessage(message, user);
+    }
+
+    if (ECOptions.enableThreads && threadId) {
+      pendingMessage.tmid = threadId;
+    }
+    upsertMessage(pendingMessage, ECOptions.enableThreads);
+    const res = await RCInstance.sendMessage(
+      {
+        msg: pendingMessage.msg,
+        _id: pendingMessage._id,
+      },
+      ECOptions.enableThreads ? threadId : undefined
+    );
+
+    if (!res.success) {
+      handleSendError('Error sending message, login again');
+    } else {
+      replaceMessage(pendingMessage._id, res.message);
+    }
+  };
+
   const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
-
-    if (message.length > msgMaxLength) {
-      openMsgLongModal();
-      return;
-    }
 
     if (!message.length || !isUserAuthenticated) {
       messageRef.current.value = '';
@@ -184,74 +248,21 @@ const ChatInput = ({ scrollToBottom }) => {
       return;
     }
 
-    if (!editMessage.msg && !editMessage.attachments) {
-      if (message.startsWith('/')) {
-        const [command, ...paramsArray] = message.split(' ');
-        const params = paramsArray.join(' ');
-
-        if (commands.find((c) => c.command === command.replace('/', ''))) {
-          messageRef.current.value = '';
-          setDisableButton(true);
-          setEditMessage({});
-          await execCommand(command.replace('/', ''), params);
-          return;
-        }
-      }
-      messageRef.current.value = '';
-      let pendingMessage = '';
-      if (quoteMessage.msg || quoteMessage.attachments) {
-        const msgLink = await getMessageLink(quoteMessage?._id);
-        pendingMessage = createPendingMessage(
-          `[ ](${msgLink})\n ${message}`,
-          user
-        );
-        setQuoteMessage({});
-      } else {
-        pendingMessage = createPendingMessage(message, user);
-      }
-
-      if (ECOptions.enableThreads && threadId) {
-        pendingMessage.tmid = threadId;
-      }
-      upsertMessage(pendingMessage, ECOptions.enableThreads);
-      const res = await RCInstance.sendMessage(
-        {
-          msg: pendingMessage.msg,
-          _id: pendingMessage._id,
-        },
-        ECOptions.enableThreads ? threadId : undefined
-      );
-
-      if (!res.success) {
-        await RCInstance.logout();
-        setIsUserAuthenticated(false);
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Error sending message, login again',
-        });
-      } else {
-        replaceMessage(pendingMessage._id, res.message);
-      }
-      setDisableButton(true);
-    } else {
-      const res = await RCInstance.updateMessage(
-        editMessage._id,
-        message.replace(/\n/g, '\\n')
-      );
-      if (!res.success) {
-        await RCInstance.logout();
-        setIsUserAuthenticated(false);
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Error editing message, login again',
-          position: toastPosition,
-        });
-      }
-      messageRef.current.value = '';
-      setDisableButton(true);
-      setEditMessage({});
+    if (message.length > msgMaxLength) {
+      openMsgLongModal();
+      return;
     }
 
+    if (editMessage.msg || editMessage.attachments) {
+      handleEditMessage(message);
+      return;
+    }
+    if (message.startsWith('/')) {
+      handleCommandExecution(message);
+      return;
+    }
+
+    handleSendNewMessage(message);
     scrollToBottom();
   };
 
