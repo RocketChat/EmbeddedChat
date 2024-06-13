@@ -28,9 +28,9 @@ import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { useChatInputStyles } from './ChatInput.styles';
-import useFormatSelection from '../../hooks/useFormatSelection';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
+import formatSelection from '../../lib/formatSelection';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -113,7 +113,6 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const userInfo = { _id: userId, username, name };
 
-  const { formatSelection } = useFormatSelection(messageRef);
   const dispatchToastMessage = useToastBarDispatch();
   const showCommands = useShowCommands(
     commands,
@@ -385,12 +384,12 @@ const ChatInput = ({ scrollToBottom }) => {
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
-        formatSelection('_{{text}}_');
+        formatSelection(messageRef, '_{{text}}_');
         break;
       }
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
-        formatSelection('*{{text}}*');
+        formatSelection(messageRef, '*{{text}}*');
         break;
       }
       case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':

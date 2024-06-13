@@ -11,7 +11,7 @@ import { Tooltip } from '../../components/Tooltip';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
-import useFormatSelection from '../../hooks/useFormatSelection';
+import formatSelection from '../../lib/formatSelection';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -24,7 +24,6 @@ const ChatInputFormattingToolbar = ({
 
   const styles = useChatInputFormattingToolbarStyles();
   const toolOptions = configOverrides.optionConfig?.toolOptions || toolConfig;
-  const { formatSelection } = useFormatSelection(messageRef);
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
@@ -103,7 +102,7 @@ const ChatInputFormattingToolbar = ({
           disabled={isRecordingMessage}
           ghost
           onClick={() => {
-            formatSelection(item.pattern);
+            formatSelection(messageRef, item.pattern);
           }}
         >
           <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
