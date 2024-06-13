@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
 import { darken } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useChatInputStyles = () => {
   const { theme, colors } = useCustomTheme();
+  const { scrollStyles } = useGlobalStyles();
   const inputWithFormattingBox = css`
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
@@ -22,6 +24,7 @@ export const useChatInputStyles = () => {
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    padding: 0.25rem;
   `;
 
   const iconCursor = css`
@@ -29,10 +32,15 @@ export const useChatInputStyles = () => {
   `;
 
   const textInput = css`
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow: auto;
+    overflow-x: hidden;
     resize: none;
     border: none;
     outline: none;
     font-size: 14px;
+    ${scrollStyles};
 
     &:focus {
       border: none;

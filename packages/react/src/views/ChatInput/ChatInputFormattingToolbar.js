@@ -11,6 +11,7 @@ import { Tooltip } from '../../components/Tooltip';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
+import formatSelection from '../../lib/formatSelection';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -30,49 +31,13 @@ const ChatInputFormattingToolbar = ({
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
-  const handleClickToOpenFiles = (e) => {
+  const handleClickToOpenFiles = () => {
     inputRef.current.click();
   };
 
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
     messageRef.current.value += ` :${emoji.replace(/[\s-]+/g, '_')}: `;
-  };
-
-  const wrapSelection = (pattern) => {
-    const input = messageRef.current;
-    const { selectionEnd = input.value.length, selectionStart = 0 } = input;
-    const initText = input.value.slice(0, selectionStart);
-    const selectedText = input.value.slice(selectionStart, selectionEnd);
-    const finalText = input.value.slice(selectionEnd, input.value.length);
-
-    const startPattern = pattern.slice(0, pattern.indexOf('{{text}}'));
-    const endPattern = pattern.slice(
-      pattern.indexOf('{{text}}') + '{{text}}'.length
-    );
-
-    const startPatternFound = initText.endsWith(startPattern);
-    const endPatternFound = finalText.startsWith(endPattern);
-
-    if (startPatternFound && endPatternFound) {
-      // Text is already wrapped, so unwrap it
-      input.value =
-        initText.slice(0, initText.length - startPattern.length) +
-        selectedText +
-        finalText.slice(endPattern.length);
-
-      input.selectionStart = selectionStart - startPattern.length;
-      input.selectionEnd = input.selectionStart + selectedText.length;
-    } else {
-      // Text is not wrapped, so wrap it
-      const wrappedText = startPattern + selectedText + endPattern;
-      if (!document.execCommand?.('insertText', false, wrappedText)) {
-        input.value = initText + wrappedText + finalText;
-      }
-
-      input.selectionStart = selectionStart + startPattern.length;
-      input.selectionEnd = input.selectionStart + selectedText.length;
-    }
   };
 
   const chatToolMap = {
@@ -137,7 +102,7 @@ const ChatInputFormattingToolbar = ({
           disabled={isRecordingMessage}
           ghost
           onClick={() => {
-            wrapSelection(item.pattern);
+            formatSelection(messageRef, item.pattern);
           }}
         >
           <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />

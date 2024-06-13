@@ -1,40 +1,73 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useCommandListStyles from './CommandList.style';
+import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function CommandsList({
   className = '',
   style = {},
+  messageRef,
+  setFilteredCommands,
   filteredCommands,
   execCommand,
-  onCommandClick,
+  commandIndex,
+  setCommandIndex,
+  setShowCommandList,
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
   const styles = useCommandListStyles();
+  const { colors } = useCustomTheme();
+  const itemRefs = useRef([]);
+  const setItemRef = (el, index) => {
+    itemRefs.current[index] = el;
+  };
 
   const handleCommandClick = useCallback(
-    (command) => {
-      if (execCommand) {
-        execCommand(command);
-      }
-      if (onCommandClick) {
-        onCommandClick(command);
+    async (command) => {
+      const commandName = command.command;
+      const currentMessage = messageRef.current.value;
+      const tokens = (currentMessage || '').split(' ');
+      const firstTokenIdx = tokens.findIndex((token) => token.match(/^\/\w*$/));
+      if (firstTokenIdx !== -1) {
+        tokens[firstTokenIdx] = `/${commandName}`;
+        const newMessageString = tokens.join(' ');
+        messageRef.current.value = newMessageString;
+        setFilteredCommands([]);
+        setCommandIndex(0);
+        setShowCommandList(false);
       }
     },
-    [execCommand, onCommandClick]
+    [messageRef, setCommandIndex, setFilteredCommands, setShowCommandList]
   );
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        const selectedItem = filteredCommands[0];
-        handleCommandClick(selectedItem);
+      switch (event.key) {
+        case 'Enter': {
+          const selectedItem = filteredCommands[commandIndex];
+          handleCommandClick(selectedItem);
+          break;
+        }
+        case 'ArrowDown':
+          event.preventDefault();
+          setCommandIndex(
+            commandIndex + 1 >= filteredCommands.length ? 0 : commandIndex + 1
+          );
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          setCommandIndex(
+            commandIndex - 1 < 0
+              ? filteredCommands.length - 1
+              : commandIndex - 1
+          );
+          break;
+        default:
+          break;
       }
     };
 
@@ -43,7 +76,15 @@ function CommandsList({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [filteredCommands, handleCommandClick]);
+  }, [commandIndex, filteredCommands, handleCommandClick, setCommandIndex]);
+
+  useEffect(() => {
+    if (itemRefs.current[commandIndex]) {
+      itemRefs.current[commandIndex].scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [commandIndex]);
 
   return (
     <Box
@@ -53,11 +94,17 @@ function CommandsList({
       {...props}
     >
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-        {filteredCommands.map((command) => (
+        {filteredCommands.map((command, index) => (
           <li
             key={command.command}
+            role="presentation"
             css={styles.listItem}
+            ref={(el) => setItemRef(el, index)}
             onClick={() => handleCommandClick(command)}
+            style={{
+              backgroundColor: index === commandIndex && colors.primary,
+              color: index === commandIndex && colors.primaryForeground,
+            }}
           >
             <Box
               is="span"
@@ -78,10 +125,15 @@ function CommandsList({
 }
 
 CommandsList.propTypes = {
-  filteredCommands: PropTypes.array,
-  execCommand: PropTypes.func,
   className: PropTypes.string,
   style: PropTypes.object,
+  messageRef: PropTypes.object.isRequired,
+  setFilteredCommands: PropTypes.func.isRequired,
+  filteredCommands: PropTypes.array,
+  execCommand: PropTypes.func,
+  commandIndex: PropTypes.number.isRequired,
+  setCommandIndex: PropTypes.func.isRequired,
+  setShowCommandList: PropTypes.func.isRequired,
 };
 
 export default CommandsList;

@@ -7,13 +7,10 @@ const useMemberListStyles = () => {
   const { scrollStyles } = useGlobalStyles();
   const main = css`
     margin: 0.2rem 2rem;
-    padding: 0.5rem 0;
-    padding-left: 4px;
     display: block;
+    overflow: auto;
     max-height: 10rem;
-    overflow: scroll;
     overflow-x: hidden;
-    max-height: 145px;
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
     color: ${colors.secondaryForeground};
@@ -25,6 +22,7 @@ const useMemberListStyles = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0.1rem 0.25rem;
 
     &:hover {
       background-color: ${colors.secondary};

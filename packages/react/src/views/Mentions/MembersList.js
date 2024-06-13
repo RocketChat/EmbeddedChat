@@ -1,47 +1,111 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '../../components/Box';
 import useMemberListStyles from './MembersList.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
+function MembersList({
+  mentionIndex,
+  messageRef,
+  filteredMembers = [],
+  setFilteredMembers,
+  setMentionIndex,
+  setStartReadMentionUser,
+  setShowMembersList,
+}) {
+  const itemRefs = useRef([]);
   const styles = useMemberListStyles();
   const { colors } = useCustomTheme();
 
   const handleMemberClick = useCallback(
     (selectedItem) => {
-      onMemberClick(selectedItem);
+      let insertionText;
+      if (selectedItem === 'all') {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@all `;
+      } else if (selectedItem === 'here') {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@here `;
+      } else {
+        insertionText = `${messageRef.current.value.substring(
+          0,
+          messageRef.current.value.lastIndexOf('@')
+        )}@${selectedItem.username} `;
+      }
+
+      messageRef.current.value = insertionText;
+
+      const cursorPosition = insertionText.length;
+      messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
+      messageRef.current.focus();
+
+      setFilteredMembers([]);
+      setMentionIndex(-1);
+      setStartReadMentionUser(false);
+      setShowMembersList(false);
     },
-    [onMemberClick]
+    [
+      messageRef,
+      setFilteredMembers,
+      setMentionIndex,
+      setShowMembersList,
+      setStartReadMentionUser,
+    ]
   );
+
+  const setItemRef = (el, index) => {
+    itemRefs.current[index] = el;
+  };
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        const selectedItem =
-          mentionIndex < filteredMembers.length
-            ? filteredMembers[mentionIndex]
-            : mentionIndex === filteredMembers.length
-            ? 'all'
-            : 'here';
-        handleMemberClick(selectedItem);
-      }
-    };
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
+      switch (event.key) {
+        case 'Enter': {
+          const selectedItem =
+            mentionIndex < filteredMembers.length
+              ? filteredMembers[mentionIndex]
+              : mentionIndex === filteredMembers.length
+              ? 'all'
+              : 'here';
+          handleMemberClick(selectedItem);
+          break;
+        }
+        case 'ArrowUp':
+          event.preventDefault();
+          setMentionIndex(
+            mentionIndex - 1 < 0 ? filteredMembers.length + 1 : mentionIndex - 1
+          );
+          break;
+        case 'ArrowDown':
+          setMentionIndex(
+            mentionIndex + 1 >= filteredMembers.length + 2
+              ? 0
+              : mentionIndex + 1
+          );
+          break;
+        default:
+          break;
       }
     };
 
     document.addEventListener('keydown', handleKeyPress);
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
-      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mentionIndex, filteredMembers, handleMemberClick]);
+  }, [mentionIndex, filteredMembers, handleMemberClick, setMentionIndex]);
+
+  useEffect(() => {
+    if (itemRefs.current[mentionIndex]) {
+      itemRefs.current[mentionIndex].scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [mentionIndex]);
 
   return (
     <Box css={styles.main}>
@@ -52,6 +116,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
             role="presentation"
             css={styles.listItem}
             onClick={() => handleMemberClick(member)}
+            ref={(el) => setItemRef(el, index)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleMemberClick(member);
@@ -75,6 +140,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           key="all"
           role="presentation"
           css={styles.listItem}
+          ref={(el) => setItemRef(el, filteredMembers.length)}
           onClick={() => handleMemberClick('all')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -97,6 +163,7 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
           key="here"
           role="presentation"
           css={styles.listItem}
+          ref={(el) => setItemRef(el, filteredMembers.length + 1)}
           onClick={() => handleMemberClick('here')}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -121,9 +188,13 @@ function MembersList({ mentionIndex, filteredMembers = [], onMemberClick }) {
 }
 
 MembersList.propTypes = {
-  mentionIndex: PropTypes.any,
+  mentionIndex: PropTypes.number,
+  messageRef: PropTypes.object.isRequired,
   filteredMembers: PropTypes.array,
-  onMemberClick: PropTypes.func.isRequired,
+  setFilteredMembers: PropTypes.func.isRequired,
+  setMentionIndex: PropTypes.func.isRequired,
+  setStartReadMentionUser: PropTypes.func.isRequired,
+  setShowMembersList: PropTypes.func.isRequired,
 };
 
 export default MembersList;
