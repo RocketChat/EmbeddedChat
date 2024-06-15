@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import ToastContext from '../../context/ToastContext';
 import ToastContainer from './ToastContainer';
 
-const ToastBarProvider = ({ position = 'bottom left', children }) => {
+const ToastBarProvider = ({ position = 'bottom right', children }) => {
   const [toasts, setToasts] = useState([]);
   const dispatchToast = useCallback(
     (toast) => {

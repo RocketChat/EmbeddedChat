@@ -28,6 +28,7 @@ const ToastContainer = () => {
   if (!currentToast) {
     return null;
   }
+
   return (
     <Box css={styles.container(theme)} style={positionStyle}>
       <ToastBar toast={currentToast} onClose={onClose} />

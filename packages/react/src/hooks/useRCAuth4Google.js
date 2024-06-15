@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import RCContext from '../context/RCInstance';
 import { useGoogleLogin } from './useGoogleLogin';
-import { useToastStore, useUserStore, totpModalStore } from '../store';
+import { useUserStore, totpModalStore } from '../store';
 import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
@@ -17,7 +17,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-  const toastPosition = useToastStore((state) => state.position);
   const dispatchToastMessage = useToastBarDispatch();
 
   const handleGoogleLogin = async (acsCode) => {
@@ -28,7 +27,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
           type: 'error',
           message:
             'Something went wrong. Please check your TOTP and try again.',
-          position: toastPosition,
         });
       } else {
         if (res.error === 'totp-required') {
@@ -36,7 +34,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
           dispatchToastMessage({
             type: 'info',
             message: 'Please Open your authentication app and enter the code.',
-            position: toastPosition,
           });
         }
         if (res.status === 'success') {
@@ -47,13 +44,11 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',
-            position: toastPosition,
           });
         } else if (res.status === 'error' && !(res.error === 'totp-required')) {
           dispatchToastMessage({
             type: 'error',
             message: 'Something wrong happened',
-            position: toastPosition,
           });
         }
       }
@@ -70,7 +65,6 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
       dispatchToastMessage({
         type: 'success',
         message: 'Successfully logged out',
-        position: toastPosition,
       });
     }
   };

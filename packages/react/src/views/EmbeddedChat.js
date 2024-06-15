@@ -1,13 +1,19 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useToastStore, useUserStore, useThemeStore } from '../store';
+import { useUserStore } from '../store';
 import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
 import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
 import useAttachmentWindowStore from '../store/attachmentwindow';
@@ -48,39 +54,23 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const messageListRef = useRef(null);
   const {
-    setShowAvatar,
-    setShowRoles,
-    setShowUsername,
-    setShowName,
     isUserAuthenticated,
     setIsUserAuthenticated,
-    setUsername: setAuthenticatedUserUsername,
-    setUserAvatarUrl: setAuthenticatedUserAvatarUrl,
+    setUsername: setAuthenticatedUsername,
+    setUserAvatarUrl: setAuthenticatedAvatarUrl,
     setUserId: setAuthenticatedUserId,
     setName: setAuthenticatedName,
     setRoles: setAuthenticatedUserRoles,
   } = useUserStore((state) => ({
-    setShowAvatar: state.setShowAvatar,
-    setShowRoles: state.setShowRoles,
-    setShowUsername: state.setShowUsername,
-    setShowName: state.setShowName,
     isUserAuthenticated: state.isUserAuthenticated,
     setIsUserAuthenticated: state.setIsUserAuthenticated,
-    setUsername: state.setUsername,
     setUserAvatarUrl: state.setUserAvatarUrl,
     setUserId: state.setUserId,
     setName: state.setName,
+    setUsername: state.setUsername,
     setRoles: state.setRoles,
   }));
 
-  const { setDark: setDarkMode, setLight: setLightMode } = useThemeStore(
-    (state) => ({
-      setDark: state.setDark,
-      setLight: state.setLight,
-    })
-  );
-
-  const setToastbarPosition = useToastStore((state) => state.setPosition);
   const attachmentWindowOpen = useAttachmentWindowStore(
     (state) => state.attachmentWindowOpen
   );
@@ -100,20 +90,20 @@ const EmbeddedChat = ({
     }
   };
 
-  const initializeRCInstance = () => {
+  const initializeRCInstance = useCallback(() => {
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
       getToken,
       deleteToken,
       saveToken,
-      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
+      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth?.flow),
     });
-    if (auth.flow === 'TOKEN') {
+    if (auth?.flow === 'TOKEN') {
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
     }
     return newRCInstance;
-  };
+  }, [host, roomId, auth?.flow, auth?.credentials]);
 
-  const [RCInstance, setRCInstance] = useState(initializeRCInstance);
+  const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
   useEffect(() => {
     const reInstantiate = () => {
@@ -121,11 +111,21 @@ const EmbeddedChat = ({
       setRCInstance(newRCInstance);
     };
 
-    if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close().then(reInstantiate).catch(console.error);
+    if (RCInstance) {
+      RCInstance.close()
+        .then(reInstantiate)
+        .catch((error) => console.error('Error closing RCInstance:', error));
     } else {
       reInstantiate();
     }
+
+    return () => {
+      if (RCInstance) {
+        RCInstance.close().catch((error) =>
+          console.error('Error closing RCInstance during cleanup:', error)
+        );
+      }
+    };
   }, [roomId, host, auth?.flow]);
 
   useEffect(() => {
@@ -136,8 +136,8 @@ const EmbeddedChat = ({
             console.log(`Connected to RocketChat ${RCInstance.host}`);
             console.log('reinstantiated');
             const { me } = user;
-            setAuthenticatedUserAvatarUrl(me.avatarUrl);
-            setAuthenticatedUserUsername(me.username);
+            setAuthenticatedAvatarUrl(me.avatarUrl);
+            setAuthenticatedUsername(me.username);
             setAuthenticatedUserId(me._id);
             setAuthenticatedName(me.name);
             setAuthenticatedUserRoles(me.roles);
@@ -151,34 +151,11 @@ const EmbeddedChat = ({
   }, [
     RCInstance,
     setAuthenticatedName,
-    setAuthenticatedUserAvatarUrl,
     setAuthenticatedUserId,
-    setAuthenticatedUserUsername,
     setAuthenticatedUserRoles,
     setIsUserAuthenticated,
-  ]);
-
-  useEffect(() => {
-    setToastbarPosition(toastBarPosition);
-    setShowAvatar(showAvatar);
-    setShowRoles(showRoles);
-    setShowUsername(showUsername);
-    setShowName(showName);
-    dark ? setDarkMode() : setLightMode();
-  }, [
-    toastBarPosition,
-    showAvatar,
-    setShowAvatar,
-    setToastbarPosition,
-    showRoles,
-    setShowRoles,
-    dark,
-    setDarkMode,
-    setLightMode,
-    showUsername,
-    setShowUsername,
-    setShowName,
-    showName,
+    setAuthenticatedAvatarUrl,
+    setAuthenticatedUsername,
   ]);
 
   const ECOptions = useMemo(
@@ -190,11 +167,13 @@ const EmbeddedChat = ({
       host,
       roomId,
       channelName,
+      showName,
       showRoles,
       showAvatar,
+      showUsername,
       hideHeader,
       anonymousMode,
-      dark,
+      mode: dark ? 'dark' : 'light',
     }),
     [
       enableThreads,
@@ -204,8 +183,10 @@ const EmbeddedChat = ({
       host,
       roomId,
       channelName,
+      showName,
       showRoles,
       showAvatar,
+      showUsername,
       hideHeader,
       anonymousMode,
       dark,
@@ -219,8 +200,8 @@ const EmbeddedChat = ({
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
-      <GlobalStyles />
       <RCInstanceProvider value={RCContextValue}>
+        <GlobalStyles />
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),
