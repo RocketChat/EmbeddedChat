@@ -46,43 +46,45 @@ const EmbeddedChat = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
-  const setToastbarPosition = useToastStore((state) => state.setPosition);
-  const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-  const setShowRoles = useUserStore((state) => state.setShowRoles);
-  const setShowUsername = useUserStore((state) => state.setShowUsername);
-  const setShowName = useUserStore((state) => state.setShowName);
-  const setDarkMode = useThemeStore((state) => state.setDark);
-  const setLightMode = useThemeStore((state) => state.setLight);
-
-  useEffect(() => {
-    setToastbarPosition(toastBarPosition);
-    setShowAvatar(showAvatar);
-    setShowRoles(showRoles);
-    setShowUsername(showUsername);
-    setShowName(showName);
-    dark ? setDarkMode() : setLightMode();
-  }, [
-    toastBarPosition,
-    showAvatar,
+  const messageListRef = useRef(null);
+  const {
     setShowAvatar,
-    setToastbarPosition,
-    showRoles,
     setShowRoles,
-    dark,
-    setDarkMode,
-    setLightMode,
-    showUsername,
     setShowUsername,
     setShowName,
-    showName,
-  ]);
+    isUserAuthenticated,
+    setIsUserAuthenticated,
+    setUsername: setAuthenticatedUserUsername,
+    setUserAvatarUrl: setAuthenticatedUserAvatarUrl,
+    setUserId: setAuthenticatedUserId,
+    setName: setAuthenticatedName,
+    setRoles: setAuthenticatedUserRoles,
+  } = useUserStore((state) => ({
+    setShowAvatar: state.setShowAvatar,
+    setShowRoles: state.setShowRoles,
+    setShowUsername: state.setShowUsername,
+    setShowName: state.setShowName,
+    isUserAuthenticated: state.isUserAuthenticated,
+    setIsUserAuthenticated: state.setIsUserAuthenticated,
+    setUsername: state.setUsername,
+    setUserAvatarUrl: state.setUserAvatarUrl,
+    setUserId: state.setUserId,
+    setName: state.setName,
+    setRoles: state.setRoles,
+  }));
 
-  const {
-    data,
-    handleDrag,
+  const { setDark: setDarkMode, setLight: setLightMode } = useThemeStore(
+    (state) => ({
+      setDark: state.setDark,
+      setLight: state.setLight,
+    })
+  );
 
-    handleDragDrop,
-  } = useDropBox();
+  const setToastbarPosition = useToastStore((state) => state.setPosition);
+  const attachmentWindowOpen = useAttachmentWindowStore(
+    (state) => state.attachmentWindowOpen
+  );
+  const { data, handleDrag, handleDragDrop } = useDropBox();
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -90,7 +92,15 @@ const EmbeddedChat = ({
     );
   }
 
-  const [RCInstance, setRCInstance] = useState(() => {
+  const scrollToBottom = () => {
+    if (messageListRef && messageListRef.current) {
+      requestAnimationFrame(() => {
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      });
+    }
+  };
+
+  const initializeRCInstance = () => {
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
       getToken,
       deleteToken,
@@ -101,19 +111,13 @@ const EmbeddedChat = ({
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
     }
     return newRCInstance;
-  });
+  };
+
+  const [RCInstance, setRCInstance] = useState(initializeRCInstance);
 
   useEffect(() => {
     const reInstantiate = () => {
-      const newRCInstance = new EmbeddedChatApi(host, roomId, {
-        getToken,
-        deleteToken,
-        saveToken,
-        autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
-      });
-      if (auth.flow === 'TOKEN') {
-        newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-      }
+      const newRCInstance = initializeRCInstance();
       setRCInstance(newRCInstance);
     };
 
@@ -123,26 +127,6 @@ const EmbeddedChat = ({
       reInstantiate();
     }
   }, [roomId, host, auth?.flow]);
-
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-
-  const setAuthenticatedUserUsername = useUserStore(
-    (state) => state.setUsername
-  );
-  const setAuthenticatedUserAvatarUrl = useUserStore(
-    (state) => state.setUserAvatarUrl
-  );
-  const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
-  const setAuthenticatedName = useUserStore((state) => state.setName);
-  const setAuthenticatedUserRoles = useUserStore((state) => state.setRoles);
-  const attachmentWindowOpen = useAttachmentWindowStore(
-    (state) => state.attachmentWindowOpen
-  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -172,6 +156,29 @@ const EmbeddedChat = ({
     setAuthenticatedUserUsername,
     setAuthenticatedUserRoles,
     setIsUserAuthenticated,
+  ]);
+
+  useEffect(() => {
+    setToastbarPosition(toastBarPosition);
+    setShowAvatar(showAvatar);
+    setShowRoles(showRoles);
+    setShowUsername(showUsername);
+    setShowName(showName);
+    dark ? setDarkMode() : setLightMode();
+  }, [
+    toastBarPosition,
+    showAvatar,
+    setShowAvatar,
+    setToastbarPosition,
+    showRoles,
+    setShowRoles,
+    dark,
+    setDarkMode,
+    setLightMode,
+    showUsername,
+    setShowUsername,
+    setShowName,
+    showName,
   ]);
 
   const ECOptions = useMemo(
@@ -209,16 +216,6 @@ const EmbeddedChat = ({
     () => ({ RCInstance, ECOptions }),
     [RCInstance, ECOptions]
   );
-
-  const messageListRef = useRef(null);
-
-  const scrollToBottom = () => {
-    if (messageListRef && messageListRef.current) {
-      requestAnimationFrame(() => {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-      });
-    }
-  };
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
