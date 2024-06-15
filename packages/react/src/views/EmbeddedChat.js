@@ -87,21 +87,11 @@ const EmbeddedChat = ({
       setRCInstance(newRCInstance);
     };
 
-    if (RCInstance) {
-      RCInstance.close()
-        .then(reInstantiate)
-        .catch((error) => console.error('Error closing RCInstance:', error));
+    if (RCInstance.rcClient.loggedIn()) {
+      RCInstance.close().then(reInstantiate).catch(console.error);
     } else {
       reInstantiate();
     }
-
-    return () => {
-      if (RCInstance) {
-        RCInstance.close().catch((error) =>
-          console.error('Error closing RCInstance during cleanup:', error)
-        );
-      }
-    };
   }, [roomId, host, auth?.flow]);
 
   useEffect(() => {
