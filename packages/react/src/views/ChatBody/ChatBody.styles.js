@@ -15,6 +15,7 @@ export const useChatbodyStyles = () => {
     max-height: 600px;
     position: relative;
     padding-top: 70px;
+    margin-top: 0.25rem;
     ${scrollStyles};
   `;
 
