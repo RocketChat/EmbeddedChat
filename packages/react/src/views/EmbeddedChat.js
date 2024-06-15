@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useCallback,
-} from 'react';
+import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
@@ -14,14 +7,10 @@ import { ChatHeader } from './ChatHeader';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore } from '../store';
-import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
-import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
-import useAttachmentWindowStore from '../store/attachmentwindow';
 import DefaultTheme from '../theme/DefaultTheme';
 import { deleteToken, getToken, saveToken } from '../lib/auth';
 import { Box } from '../components/Box';
 import useComponentOverrides from '../hooks/useComponentOverrides';
-import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
@@ -52,7 +41,7 @@ const EmbeddedChat = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
-  const messageListRef = useRef(null);
+
   const {
     isUserAuthenticated,
     setIsUserAuthenticated,
@@ -71,24 +60,11 @@ const EmbeddedChat = ({
     setRoles: state.setRoles,
   }));
 
-  const attachmentWindowOpen = useAttachmentWindowStore(
-    (state) => state.attachmentWindowOpen
-  );
-  const { data, handleDrag, handleDragDrop } = useDropBox();
-
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
     );
   }
-
-  const scrollToBottom = () => {
-    if (messageListRef && messageListRef.current) {
-      requestAnimationFrame(() => {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-      });
-    }
-  };
 
   const initializeRCInstance = useCallback(() => {
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
@@ -214,42 +190,23 @@ const EmbeddedChat = ({
           ]}
           className={`ec-embedded-chat ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
-          onDragOver={(e) => handleDrag(e)}
-          onDrop={(e) => handleDragDrop(e)}
         >
           <ToastBarProvider position={toastBarPosition}>
             {hideHeader ? null : (
               <ChatHeader
-                channelName={channelName}
                 isClosable={isClosable}
                 setClosableState={setClosableState}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
               />
             )}
 
             {isUserAuthenticated || anonymousMode ? (
-              <ChatLayout
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-                scrollToBottom={scrollToBottom}
-              />
+              <ChatLayout />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
             )}
 
-            {attachmentWindowOpen ? (
-              data ? (
-                <>
-                  <AttachmentPreview />
-                </>
-              ) : (
-                <CheckPreviewType data={data} />
-              )
-            ) : null}
             <div id="overlay-items" />
           </ToastBarProvider>
         </Box>

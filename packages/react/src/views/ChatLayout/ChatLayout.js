@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useRef } from 'react';
 import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import styles from './ChatLayout.styles';
@@ -26,14 +25,18 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
+import useDropBox from '../../hooks/useDropBox';
+import AttachmentPreview from '../AttachmentPreview/AttachmentPreview';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
+import CheckPreviewType from '../AttachmentPreview/CheckPreviewType';
+import { useRCContext } from '../../context/RCInstance';
 
-const ChatLayout = ({
-  anonymousMode,
-  showRoles,
-  messageListRef,
-  scrollToBottom,
-}) => {
+const ChatLayout = () => {
+  const messageListRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
+  const { ECOptions } = useRCContext();
+  const anonymousMode = ECOptions?.anonymousMode;
+  const showRoles = ECOptions?.anonymousMode;
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
   const showAllThreads = useThreadsMessageStore(
@@ -48,6 +51,18 @@ const ChatLayout = ({
   const showCurrentUserInfo = useUserStore(
     (state) => state.showCurrentUserInfo
   );
+  const attachmentWindowOpen = useAttachmentWindowStore(
+    (state) => state.attachmentWindowOpen
+  );
+  const { data, handleDrag, handleDragDrop } = useDropBox();
+
+  const scrollToBottom = () => {
+    if (messageListRef && messageListRef.current) {
+      requestAnimationFrame(() => {
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      });
+    }
+  };
 
   return (
     <Box
@@ -56,6 +71,8 @@ const ChatLayout = ({
         ...styleOverrides,
       }}
       className={`ec-chat-layout ${classNames}`}
+      onDragOver={(e) => handleDrag(e)}
+      onDrop={(e) => handleDragDrop(e)}
     >
       <Box css={styles.chatMain}>
         <ChatBody
@@ -79,13 +96,18 @@ const ChatLayout = ({
         {showStarred && <StarredMessages />}
         {showCurrentUserInfo && <UserInformation />}
       </Box>
+
+      {attachmentWindowOpen ? (
+        data ? (
+          <>
+            <AttachmentPreview />
+          </>
+        ) : (
+          <CheckPreviewType data={data} />
+        )
+      ) : null}
     </Box>
   );
-};
-
-ChatLayout.propTypes = {
-  anonymousMode: PropTypes.bool,
-  showRoles: PropTypes.bool,
 };
 
 export default ChatLayout;

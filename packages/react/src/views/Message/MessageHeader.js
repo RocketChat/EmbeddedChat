@@ -27,8 +27,8 @@ const MessageHeader = ({
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const { showUsername } = ECOptions;
-  const { showName } = ECOptions;
+  const showUsername = ECOptions?.showUsername;
+  const showName = ECOptions?.showName;
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
 

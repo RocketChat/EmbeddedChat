@@ -32,11 +32,8 @@ const ChatHeader = ({
   setClosableState,
   fullScreen,
   setFullScreen,
-  channelName,
   className = '',
   style = {},
-  anonymousMode,
-  showRoles,
   optionConfig = {
     chatOptions: [
       'minmax',
@@ -79,7 +76,8 @@ const ChatHeader = ({
   );
   const workspaceLevelRoles = useUserStore((state) => state.roles);
 
-  const { RCInstance } = useRCContext();
+  const { RCInstance, ECOptions } = useRCContext();
+  const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -472,7 +470,6 @@ ChatHeader.propTypes = {
   fullScreen: PropTypes.bool,
   setClosableState: PropTypes.func,
   setFullScreen: PropTypes.func,
-  channelName: PropTypes.string,
   className: PropTypes.string,
   style: PropTypes.object,
 };
