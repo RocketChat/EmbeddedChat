@@ -10,7 +10,9 @@ import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);
-  const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
+  const setIsTotpModalOpen = totpModalStore(
+    (state) => state.setIsTotpModalOpen
+  );
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const setIsLoginModalOpen = loginModalStore(
     (state) => state.setIsLoginModalOpen
@@ -41,7 +43,7 @@ export const useRCAuth = () => {
           setPassword(password);
           setEmailorUser(userOrEmail);
           setIsLoginModalOpen(false);
-          setIsModalOpen(true);
+          setIsTotpModalOpen(true);
           dispatchToastMessage({
             type: 'info',
             message: 'Please Open your authentication app and enter the code.',
@@ -60,7 +62,7 @@ export const useRCAuth = () => {
           setUserAvatarUrl(res.me.avatarUrl);
           setAuthenticatedUserUsername(res.me.username);
           setIsUserAuthenticated(true);
-          setIsModalOpen(false);
+          setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);
           dispatchToastMessage({

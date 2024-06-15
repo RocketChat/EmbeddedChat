@@ -7,7 +7,9 @@ import { useToastBarDispatch } from './useToastBarDispatch';
 export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
   const { signIn } = useGoogleLogin(GOOGLE_CLIENT_ID);
   const { RCInstance } = useContext(RCContext);
-  const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
+  const setIsTotpModalOpen = totpModalStore(
+    (state) => state.setIsTotpModalOpen
+  );
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const setAuthenticatedUserUsername = useUserStore(
     (state) => state.setUsername
@@ -30,7 +32,7 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
         });
       } else {
         if (res.error === 'totp-required') {
-          setIsModalOpen(true);
+          setIsTotpModalOpen(true);
           dispatchToastMessage({
             type: 'info',
             message: 'Please Open your authentication app and enter the code.',
@@ -41,7 +43,7 @@ export const useRCAuth4Google = (GOOGLE_CLIENT_ID) => {
           setUserAvatarUrl(res.me.avatarUrl);
           setAuthenticatedUserUsername(res.me.username);
           setIsUserAuthenticated(true);
-          setIsModalOpen(false);
+          setIsTotpModalOpen(false);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',

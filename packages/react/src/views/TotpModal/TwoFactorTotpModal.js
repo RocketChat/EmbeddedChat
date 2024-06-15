@@ -10,8 +10,10 @@ import { Input } from '../../components/Input';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
-  const isModalOpen = totpModalStore((state) => state.isModalOpen);
-  const setIsModalOpen = totpModalStore((state) => state.setIsModalOpen);
+  const isTotpModalOpen = totpModalStore((state) => state.isTotpModalOpen);
+  const setIsTotpModalOpen = totpModalStore(
+    (state) => state.setIsTotpModalOpen
+  );
   const password = useUserStore((state) => state.password);
   const emailoruser = useUserStore((state) => state.emailoruser);
 
@@ -24,13 +26,13 @@ export default function TotpModal({ handleLogin }) {
     setAccessCode(undefined);
   };
   const handleClose = () => {
-    setIsModalOpen(false);
+    setIsTotpModalOpen(false);
   };
 
   const handleEdit = (e) => {
     setAccessCode(e.target.value);
   };
-  return isModalOpen ? (
+  return isTotpModalOpen ? (
     <>
       <GenericModal
         variant="info"
