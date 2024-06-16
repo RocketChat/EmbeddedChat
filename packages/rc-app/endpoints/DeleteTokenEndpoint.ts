@@ -13,11 +13,12 @@ export class DeleteTokenEndpoint extends ApiEndpoint {
                 message: "Token unset successfully.",
             },
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "http://localhost:6006",
                 "Access-Control-Allow-Methods": "DELETE, OPTIONS",
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Set-Cookie":
-                    "token=; Max-Age=0; Path=/; HttpOnly; SameSite=None;",
+                    "token=; Max-Age=0; Path=/; HttpOnly; SameSite=None; Secure",
             },
         };
     }
@@ -26,8 +27,9 @@ export class DeleteTokenEndpoint extends ApiEndpoint {
         return {
             status: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST, DELETE, OPTIONS",
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "http://localhost:6006",
+                "Access-Control-Allow-Methods": "DELETE, OPTIONS",
                 "Access-Control-Allow-Headers": "Content-Type",
             },
         };

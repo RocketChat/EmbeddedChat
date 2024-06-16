@@ -57,7 +57,8 @@ export class GetTokenEndpoint extends ApiEndpoint {
         return {
             status: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true,
+                "Access-Control-Allow-Origin": "http://localhost:6006",
                 "Access-Control-Allow-Methods": "GET, OPTIONS",
                 "Access-Control-Allow-Headers": "Content-Type",
             },
