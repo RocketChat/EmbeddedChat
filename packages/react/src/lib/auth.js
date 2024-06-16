@@ -47,7 +47,17 @@ export async function getToken() {
 }
 
 export async function deleteToken() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('ec_token');
-  }
+  const requestOptions = {
+    method: 'DELETE',
+    redirect: 'follow',
+    credentials: 'include',
+  };
+
+  fetch(
+    'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/delete-token',
+    requestOptions
+  )
+    .then((response) => response.text())
+    .then((result) => console.log(result))
+    .catch((error) => console.error(error));
 }
