@@ -37,6 +37,7 @@ const EmbeddedChat = ({
   auth = {
     flow: 'PASSWORD',
   },
+  secure = false,
   dark = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');

@@ -10,7 +10,7 @@ export async function saveToken(token) {
   };
 
   fetch(
-    'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/save-token',
+    'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/auth-token',
     requestOptions
   )
     .then((response) => response.text())
@@ -27,7 +27,7 @@ export async function getToken() {
 
   try {
     const response = await fetch(
-      'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/get-token',
+      'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/auth-token',
       requestOptions
     );
 
@@ -54,7 +54,7 @@ export async function deleteToken() {
   };
 
   fetch(
-    'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/delete-token',
+    'http://localhost:3000/api/apps/public/4c977b2e-eda2-4627-8bfe-2d0358304a79/auth-token',
     requestOptions
   )
     .then((response) => response.text())
