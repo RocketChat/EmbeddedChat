@@ -15,9 +15,7 @@ import { CallbackEndpoint } from "./endpoints/CallbackEndpoint";
 import { SettingType } from "@rocket.chat/apps-engine/definition/settings";
 import { getCallbackUrl } from "./lib/getCallbackUrl";
 import { InfoEndpoint } from "./endpoints/InfoEndpoint";
-import { SaveTokenEndpoint } from "./endpoints/SaveTokenEndpoint";
-import { GetTokenEndpoint } from "./endpoints/GetTokenEndpoint";
-import { DeleteTokenEndpoint } from "./endpoints/DeleteTokenEndpoint";
+import { AuthTokenEndpoint } from "./endpoints/AuthTokenEndpoint";
 
 export class EmbeddedChatApp extends App {
     constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -50,19 +48,7 @@ export class EmbeddedChatApp extends App {
             configuration.api.provideApi({
                 visibility: ApiVisibility.PUBLIC,
                 security: ApiSecurity.UNSECURE,
-                endpoints: [new SaveTokenEndpoint(this)],
-            }),
-
-            configuration.api.provideApi({
-                visibility: ApiVisibility.PUBLIC,
-                security: ApiSecurity.UNSECURE,
-                endpoints: [new GetTokenEndpoint(this)],
-            }),
-
-            configuration.api.provideApi({
-                visibility: ApiVisibility.PUBLIC,
-                security: ApiSecurity.UNSECURE,
-                endpoints: [new DeleteTokenEndpoint(this)],
+                endpoints: [new AuthTokenEndpoint(this)],
             }),
 
             // Get the callback URL and provide it as a setting
