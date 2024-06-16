@@ -2,12 +2,41 @@ import {
     ApiEndpoint,
     IApiRequest,
     IApiResponse,
+    IApiEndpointInfo,
 } from "@rocket.chat/apps-engine/definition/api";
+import { getAllowedOrigins } from "../lib/getAllowedOrigins";
+import {
+    IRead,
+    IModify,
+    IHttp,
+    IPersistence,
+} from "@rocket.chat/apps-engine/definition/accessors";
+import { extractTokenCookie } from "../lib/extractTokenCookie";
 
 export class AuthTokenEndpoint extends ApiEndpoint {
     public path = "auth-token";
 
-    public async post(request: IApiRequest): Promise<IApiResponse> {
+    private async generateHeaders(
+        read: IRead,
+        methods: string
+    ): Promise<Record<string, string>> {
+        const allowedOrigins = await getAllowedOrigins(read);
+        return {
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Origin": allowedOrigins,
+            "Access-Control-Allow-Methods": methods,
+            "Access-Control-Allow-Headers": "Content-Type",
+        };
+    }
+
+    public async post(
+        request: IApiRequest,
+        endpoint: IApiEndpointInfo,
+        read: IRead,
+        modify: IModify,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<IApiResponse> {
         const { token } = request.content;
 
         return {
@@ -16,88 +45,89 @@ export class AuthTokenEndpoint extends ApiEndpoint {
                 message: "Token set successfully.",
             },
             headers: {
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Origin": "http://localhost:6006",
-                "Access-Control-Allow-Methods": "POST",
-                "Access-Control-Allow-Headers": "Content-Type",
+                ...(await this.generateHeaders(read, "POST")),
                 "Set-Cookie": [
                     `ec-token=${token}; Max-Age=${
-                        24 * 60 * 60 * 1000
+                        24 * 60 * 60
                     }; Path=/; HttpOnly; SameSite=None; Secure`,
                 ],
             },
         };
     }
 
-    public async get(request: IApiRequest): Promise<IApiResponse> {
+    public async get(
+        request: IApiRequest,
+        endpoint: IApiEndpointInfo,
+        read: IRead,
+        modify: IModify,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<IApiResponse> {
+        const headers = await this.generateHeaders(read, "GET");
         const cookieHeader = request.headers.cookie;
+
         if (!cookieHeader) {
             return {
                 status: 400,
-                content: "Missing token cookie",
+                content: "no cookie header",
+                headers,
             };
         }
 
-        const cookiesArray = cookieHeader
-            .split(";")
-            .map((cookie) => cookie.trim());
-
-        let token: string | undefined;
-        for (const cookie of cookiesArray) {
-            const [key, value] = cookie.split("=");
-            if (key.trim() === "ec-token") {
-                token = decodeURIComponent(value);
-                break;
-            }
-        }
+        const token = extractTokenCookie(cookieHeader);
 
         if (!token) {
             return {
                 status: 400,
-                content: "Token cookie not found",
+                content: "ec-token not found",
+                headers,
             };
         }
 
         return {
             status: 200,
             content: {
-                token: token,
+                token,
             },
-            headers: {
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Origin": "http://localhost:6006",
-                "Access-Control-Allow-Methods": "GET",
-                "Access-Control-Allow-Headers": "Content-Type",
-            },
+            headers,
         };
     }
 
-    public async delete(): Promise<IApiResponse> {
+    public async delete(
+        request: IApiRequest,
+        endpoint: IApiEndpointInfo,
+        read: IRead,
+        modify: IModify,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<IApiResponse> {
         return {
             status: 200,
             content: {
                 message: "Token unset successfully.",
             },
             headers: {
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Origin": "http://localhost:6006",
-                "Access-Control-Allow-Methods": "DELETE",
-                "Access-Control-Allow-Headers": "Content-Type",
+                ...(await this.generateHeaders(read, "DELETE")),
                 "Set-Cookie":
                     "ec-token=; Max-Age=0; Path=/; HttpOnly; SameSite=None; Secure",
             },
         };
     }
 
-    public async options(): Promise<IApiResponse> {
+    public async options(
+        request: IApiRequest,
+        endpoint: IApiEndpointInfo,
+        read: IRead,
+        modify: IModify,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<IApiResponse> {
         return {
             status: 200,
-            headers: {
-                "Access-Control-Allow-Credentials": true,
-                "Access-Control-Allow-Origin": "http://localhost:6006",
-                "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type",
-            },
+            headers: await this.generateHeaders(
+                read,
+                "GET, POST, DELETE, OPTIONS"
+            ),
         };
     }
 }
