@@ -168,10 +168,6 @@ class RocketChatAuth {
   }
 
   async save() {
-    // localStorage.setItem("ec_user", JSON.stringify({
-    // 	user: this.currentUser,
-    // 	lastFetched: this.lastFetched
-    // }))
     await this.saveToken(this.currentUser.authToken);
     this.notifyAuthListeners();
   }
@@ -180,7 +176,6 @@ class RocketChatAuth {
    * Load current user from localStorage
    */
   async load() {
-    // const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
     try {
       const token = await this.getToken();
       if (token) {
@@ -212,7 +207,6 @@ class RocketChatAuth {
     } finally {
       await this.deleteToken();
     }
-    // localStorage.removeItem("ec_user");
     this.lastFetched = new Date(0);
     this.currentUser = null;
     this.notifyAuthListeners();
