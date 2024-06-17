@@ -8,7 +8,7 @@ import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
-import { deleteToken, getToken, saveToken } from '../lib/auth';
+import { getTokenStorage } from '../lib/auth';
 import { Box } from '../components/Box';
 import useComponentOverrides from '../hooks/useComponentOverrides';
 import { ToastBarProvider } from '../components/ToastBar';
@@ -42,6 +42,7 @@ const EmbeddedChat = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
+  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
 
   const {
     isUserAuthenticated,
