@@ -16,7 +16,7 @@ import Popup from '../../components/Popup/Popup';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const UserInformation = () => {
-  const { variantOverrides } = useComponentOverrides('RoomMember');
+  const { variantOverrides } = useComponentOverrides('UserInformation');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);

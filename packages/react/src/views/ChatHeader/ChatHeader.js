@@ -8,7 +8,6 @@ import {
   useMemberStore,
   useSearchMessageStore,
   useChannelStore,
-  useToastStore,
   useThreadsMessageStore,
   useMentionsStore,
   usePinnedMessageStore,
@@ -33,11 +32,8 @@ const ChatHeader = ({
   setClosableState,
   fullScreen,
   setFullScreen,
-  channelName,
   className = '',
   style = {},
-  anonymousMode,
-  showRoles,
   optionConfig = {
     chatOptions: [
       'minmax',
@@ -80,7 +76,8 @@ const ChatHeader = ({
   );
   const workspaceLevelRoles = useUserStore((state) => state.roles);
 
-  const { RCInstance } = useRCContext();
+  const { RCInstance, ECOptions } = useRCContext();
+  const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -91,7 +88,6 @@ const ChatHeader = ({
 
   const dispatchToastMessage = useToastBarDispatch();
   const getMessagesAndRoles = useFetchChatData(showRoles);
-  const toastPosition = useToastStore((state) => state.position);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);
@@ -178,7 +174,6 @@ const ChatHeader = ({
         dispatchToastMessage({
           type: 'error',
           message: "Channel doesn't exist. Logging out.",
-          position: toastPosition,
         });
         await RCInstance.logout();
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
@@ -186,7 +181,6 @@ const ChatHeader = ({
           type: 'error',
           message:
             "You don't have permission to access this channel. Logging out",
-          position: toastPosition,
         });
         await RCInstance.logout();
       }
@@ -202,7 +196,6 @@ const ChatHeader = ({
     setChannelInfo,
     setIsChannelPrivate,
     dispatchToastMessage,
-    toastPosition,
     isChannelPrivate,
     setCanSendMsg,
     authenticatedUserId,
@@ -477,7 +470,6 @@ ChatHeader.propTypes = {
   fullScreen: PropTypes.bool,
   setClosableState: PropTypes.func,
   setFullScreen: PropTypes.func,
-  channelName: PropTypes.string,
   className: PropTypes.string,
   style: PropTypes.object,
 };

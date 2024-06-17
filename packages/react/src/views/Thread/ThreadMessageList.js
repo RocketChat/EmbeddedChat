@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay } from 'date-fns';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { Message } from '../Message';
 
 const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
-  const showAvatar = useUserStore((state) => state.showAvatar);
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
 
@@ -32,7 +31,7 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
               sequential={sequential}
               lastSequential={lastSequential}
               type="thread"
-              showAvatar={showAvatar}
+              showAvatar
             />
           )
         );

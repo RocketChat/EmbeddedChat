@@ -18,8 +18,8 @@ import { useChatbodyStyles } from './ChatBody.styles';
 const ChatBody = ({
   anonymousMode,
   showRoles,
-  scrollToBottom,
   messageListRef,
+  scrollToBottom,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
 

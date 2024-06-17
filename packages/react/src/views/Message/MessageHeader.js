@@ -10,6 +10,7 @@ import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
+import { useRCContext } from '../../context/RCInstance';
 
 const MessageHeader = ({
   message,
@@ -19,16 +20,15 @@ const MessageHeader = ({
 }) => {
   const { styleOverrides, classNames, variantOverrides } =
     useComponentOverrides('MessageHeader');
+  const { ECOptions } = useRCContext();
   const displayNameVariant = variantOverrides || 'Normal';
   const styles = useMessageHeaderStyles();
   const colors = useCustomTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const showRoles = useUserStore((state) => state.showRoles);
-  const showUsername = useUserStore((state) => state.showUsername);
-  const showName = useUserStore((state) => state.showName);
-
+  const showUsername = ECOptions?.showUsername;
+  const showName = ECOptions?.showName;
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
 
@@ -105,9 +105,9 @@ const MessageHeader = ({
           @{message.u.username}
         </Box>
       )}
-      {!message.t && showRoles && isRoles && (
+      {!message.t && ECOptions?.showRoles && isRoles && (
         <>
-          {admins.includes(message?.u?.username) && (
+          {admins?.includes(message?.u?.username) && (
             <Box
               as="span"
               css={styles.userRole}

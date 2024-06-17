@@ -43,7 +43,8 @@ const Message = ({
       style
     );
 
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
+  showAvatar = ECOptions?.showAvatar && showAvatar;
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);

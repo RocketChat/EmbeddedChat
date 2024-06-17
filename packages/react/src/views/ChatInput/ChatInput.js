@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { useRCContext } from '../../context/RCInstance';
 import {
-  useToastStore,
   useUserStore,
   useMessageStore,
   loginModalStore,
@@ -109,7 +108,6 @@ const ChatInput = ({ scrollToBottom }) => {
     toggle: state.toggle,
     setData: state.setData,
   }));
-  const toastPosition = useToastStore((state) => state.position);
 
   const userInfo = { _id: userId, username, name };
 
@@ -195,7 +193,6 @@ const ChatInput = ({ scrollToBottom }) => {
     dispatchToastMessage({
       type: 'error',
       message: errorMessage,
-      toastPosition,
     });
   };
 

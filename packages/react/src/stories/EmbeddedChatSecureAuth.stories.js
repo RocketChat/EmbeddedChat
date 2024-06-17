@@ -2,12 +2,12 @@ import { EmbeddedChat } from '..';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: 'EmbeddedChat/WithOAuth',
+  title: 'EmbeddedChat/SecureAuth',
   component: EmbeddedChat,
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const WithOAuth = {
+export const Secure_Auth = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: 'GENERAL',
@@ -16,10 +16,12 @@ export const WithOAuth = {
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: true,
-    showAvatar: true,
     enableThreads: true,
+    hideHeader: false,
     auth: {
-      flow: 'OAUTH',
+      flow: 'PASSWORD',
     },
+    secure: true,
+    dark: false,
   },
 };

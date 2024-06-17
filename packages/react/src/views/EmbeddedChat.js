@@ -1,21 +1,16 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useToastStore, useUserStore, useThemeStore } from '../store';
-import AttachmentPreview from './AttachmentPreview/AttachmentPreview';
-import CheckPreviewType from './AttachmentPreview/CheckPreviewType';
-import useAttachmentWindowStore from '../store/attachmentwindow';
+import { useUserStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
-import { deleteToken, getToken, saveToken } from '../lib/auth';
+import { getTokenStorage } from '../lib/auth';
 import { Box } from '../components/Box';
 import useComponentOverrides from '../hooks/useComponentOverrides';
-import useDropBox from '../hooks/useDropBox';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
@@ -42,47 +37,30 @@ const EmbeddedChat = ({
   auth = {
     flow: 'PASSWORD',
   },
+  secure = false,
   dark = false,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
-  const setToastbarPosition = useToastStore((state) => state.setPosition);
-  const setShowAvatar = useUserStore((state) => state.setShowAvatar);
-  const setShowRoles = useUserStore((state) => state.setShowRoles);
-  const setShowUsername = useUserStore((state) => state.setShowUsername);
-  const setShowName = useUserStore((state) => state.setShowName);
-  const setDarkMode = useThemeStore((state) => state.setDark);
-  const setLightMode = useThemeStore((state) => state.setLight);
-
-  useEffect(() => {
-    setToastbarPosition(toastBarPosition);
-    setShowAvatar(showAvatar);
-    setShowRoles(showRoles);
-    setShowUsername(showUsername);
-    setShowName(showName);
-    dark ? setDarkMode() : setLightMode();
-  }, [
-    toastBarPosition,
-    showAvatar,
-    setShowAvatar,
-    setToastbarPosition,
-    showRoles,
-    setShowRoles,
-    dark,
-    setDarkMode,
-    setLightMode,
-    showUsername,
-    setShowUsername,
-    setShowName,
-    showName,
-  ]);
+  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
 
   const {
-    data,
-    handleDrag,
-
-    handleDragDrop,
-  } = useDropBox();
+    isUserAuthenticated,
+    setIsUserAuthenticated,
+    setUsername: setAuthenticatedUsername,
+    setUserAvatarUrl: setAuthenticatedAvatarUrl,
+    setUserId: setAuthenticatedUserId,
+    setName: setAuthenticatedName,
+    setRoles: setAuthenticatedUserRoles,
+  } = useUserStore((state) => ({
+    isUserAuthenticated: state.isUserAuthenticated,
+    setIsUserAuthenticated: state.setIsUserAuthenticated,
+    setUserAvatarUrl: state.setUserAvatarUrl,
+    setUserId: state.setUserId,
+    setName: state.setName,
+    setUsername: state.setUsername,
+    setRoles: state.setRoles,
+  }));
 
   if (isClosable && !setClosableState) {
     throw Error(
@@ -90,30 +68,24 @@ const EmbeddedChat = ({
     );
   }
 
-  const [RCInstance, setRCInstance] = useState(() => {
+  const initializeRCInstance = useCallback(() => {
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
       getToken,
       deleteToken,
       saveToken,
-      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
+      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth?.flow),
     });
-    if (auth.flow === 'TOKEN') {
+    if (auth?.flow === 'TOKEN') {
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
     }
     return newRCInstance;
-  });
+  }, [host, roomId, auth?.flow, auth?.credentials]);
+
+  const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
   useEffect(() => {
     const reInstantiate = () => {
-      const newRCInstance = new EmbeddedChatApi(host, roomId, {
-        getToken,
-        deleteToken,
-        saveToken,
-        autoLogin: ['PASSWORD', 'OAUTH'].includes(auth.flow),
-      });
-      if (auth.flow === 'TOKEN') {
-        newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-      }
+      const newRCInstance = initializeRCInstance();
       setRCInstance(newRCInstance);
     };
 
@@ -124,26 +96,6 @@ const EmbeddedChat = ({
     }
   }, [roomId, host, auth?.flow]);
 
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
-  );
-  const setIsUserAuthenticated = useUserStore(
-    (state) => state.setIsUserAuthenticated
-  );
-
-  const setAuthenticatedUserUsername = useUserStore(
-    (state) => state.setUsername
-  );
-  const setAuthenticatedUserAvatarUrl = useUserStore(
-    (state) => state.setUserAvatarUrl
-  );
-  const setAuthenticatedUserId = useUserStore((state) => state.setUserId);
-  const setAuthenticatedName = useUserStore((state) => state.setName);
-  const setAuthenticatedUserRoles = useUserStore((state) => state.setRoles);
-  const attachmentWindowOpen = useAttachmentWindowStore(
-    (state) => state.attachmentWindowOpen
-  );
-
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
@@ -152,8 +104,8 @@ const EmbeddedChat = ({
             console.log(`Connected to RocketChat ${RCInstance.host}`);
             console.log('reinstantiated');
             const { me } = user;
-            setAuthenticatedUserAvatarUrl(me.avatarUrl);
-            setAuthenticatedUserUsername(me.username);
+            setAuthenticatedAvatarUrl(me.avatarUrl);
+            setAuthenticatedUsername(me.username);
             setAuthenticatedUserId(me._id);
             setAuthenticatedName(me.name);
             setAuthenticatedUserRoles(me.roles);
@@ -167,11 +119,11 @@ const EmbeddedChat = ({
   }, [
     RCInstance,
     setAuthenticatedName,
-    setAuthenticatedUserAvatarUrl,
     setAuthenticatedUserId,
-    setAuthenticatedUserUsername,
     setAuthenticatedUserRoles,
     setIsUserAuthenticated,
+    setAuthenticatedAvatarUrl,
+    setAuthenticatedUsername,
   ]);
 
   const ECOptions = useMemo(
@@ -183,11 +135,13 @@ const EmbeddedChat = ({
       host,
       roomId,
       channelName,
+      showName,
       showRoles,
       showAvatar,
+      showUsername,
       hideHeader,
       anonymousMode,
-      dark,
+      mode: dark ? 'dark' : 'light',
     }),
     [
       enableThreads,
@@ -197,8 +151,10 @@ const EmbeddedChat = ({
       host,
       roomId,
       channelName,
+      showName,
       showRoles,
       showAvatar,
+      showUsername,
       hideHeader,
       anonymousMode,
       dark,
@@ -210,20 +166,10 @@ const EmbeddedChat = ({
     [RCInstance, ECOptions]
   );
 
-  const messageListRef = useRef(null);
-
-  const scrollToBottom = () => {
-    if (messageListRef && messageListRef.current) {
-      requestAnimationFrame(() => {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-      });
-    }
-  };
-
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
-      <GlobalStyles />
       <RCInstanceProvider value={RCContextValue}>
+        <GlobalStyles />
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),
@@ -236,42 +182,23 @@ const EmbeddedChat = ({
           ]}
           className={`ec-embedded-chat ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
-          onDragOver={(e) => handleDrag(e)}
-          onDrop={(e) => handleDragDrop(e)}
         >
           <ToastBarProvider position={toastBarPosition}>
             {hideHeader ? null : (
               <ChatHeader
-                channelName={channelName}
                 isClosable={isClosable}
                 setClosableState={setClosableState}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
               />
             )}
 
             {isUserAuthenticated || anonymousMode ? (
-              <ChatLayout
-                anonymousMode={anonymousMode}
-                showRoles={showRoles}
-                messageListRef={messageListRef}
-                scrollToBottom={scrollToBottom}
-              />
+              <ChatLayout />
             ) : (
               <Home height={!fullScreen ? height : '88vh'} />
             )}
 
-            {attachmentWindowOpen ? (
-              data ? (
-                <>
-                  <AttachmentPreview />
-                </>
-              ) : (
-                <CheckPreviewType data={data} />
-              )
-            ) : null}
             <div id="overlay-items" />
           </ToastBarProvider>
         </Box>

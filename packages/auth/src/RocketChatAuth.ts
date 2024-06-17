@@ -4,7 +4,7 @@ import loginWithResumeToken from "./loginWithResumeToken";
 import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
 import { Api, ApiError } from "./Api";
 import loginWithRocketChatOAuth from "./loginWithRocketChatOAuth";
-
+import handleSecureLogin from "./handleSecureLogin";
 class RocketChatAuth {
   host: string;
   api: Api;
@@ -133,6 +133,21 @@ class RocketChatAuth {
   }
 
   /**
+   * Handles Secure HTTP Only Cookie. The EmbeddedChatApp must be installed and configured in RocketChat.
+   * @returns
+   */
+
+  async handleSecureLogin(action: string, token?: string) {
+    return await handleSecureLogin(
+      {
+        api: this.api,
+      },
+      action,
+      token
+    );
+  }
+
+  /**
    * Get current user.
    * @param refresh
    * @returns
@@ -168,10 +183,6 @@ class RocketChatAuth {
   }
 
   async save() {
-    // localStorage.setItem("ec_user", JSON.stringify({
-    // 	user: this.currentUser,
-    // 	lastFetched: this.lastFetched
-    // }))
     await this.saveToken(this.currentUser.authToken);
     this.notifyAuthListeners();
   }
@@ -180,7 +191,6 @@ class RocketChatAuth {
    * Load current user from localStorage
    */
   async load() {
-    // const {user, lastFetched} = JSON.parse(localStorage.getItem("ec_user") || "{}");
     try {
       const token = await this.getToken();
       if (token) {
@@ -212,7 +222,6 @@ class RocketChatAuth {
     } finally {
       await this.deleteToken();
     }
-    // localStorage.removeItem("ec_user");
     this.lastFetched = new Date(0);
     this.currentUser = null;
     this.notifyAuthListeners();

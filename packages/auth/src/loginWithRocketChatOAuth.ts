@@ -27,13 +27,13 @@ const loginWithRocketChatOAuth = async (config: { api: Api }) => {
   }
   if (
     allowedOrigins.length &&
-    allowedOrigins.includes(window.location.origin)
+    !allowedOrigins.includes(window.location.origin)
   ) {
     throw new Error(
       "Origin not allowed. Make sure you have configured the EmbeddedChatApp on Rocket.Chat server"
     );
   }
-  const authorizeUrl = await getRCAuthorizeURL(
+  const authorizeUrl = getRCAuthorizeURL(
     config.api.baseUrl,
     redirect_uri,
     client_id
