@@ -18,15 +18,16 @@ async function deleteTokenLocalStorage() {
 }
 
 async function saveTokenSecure(token) {
-  this.loginWithSecureToken('save', token);
+  this.handleSecureLogin('save', token);
 }
 
 async function getTokenSecure() {
-  return this.loginWithSecureToken('get') || null;
+  const response = await this.handleSecureLogin('get');
+  return response?.token !== undefined ? response.token : null;
 }
 
 async function deleteTokenSecure() {
-  this.loginWithSecureToken('delete');
+  this.handleSecureLogin('delete');
 }
 
 export function getTokenStorage(secure = false) {

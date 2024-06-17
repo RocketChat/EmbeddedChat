@@ -16,7 +16,7 @@ export const WithOAuth = {
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: true,
-    showAvatar: false,
+    showAvatar: true,
     enableThreads: true,
     auth: {
       flow: 'OAUTH',

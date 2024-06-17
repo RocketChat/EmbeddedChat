@@ -4,7 +4,7 @@ import loginWithResumeToken from "./loginWithResumeToken";
 import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
 import { Api, ApiError } from "./Api";
 import loginWithRocketChatOAuth from "./loginWithRocketChatOAuth";
-
+import handleSecureLogin from "./handleSecureLogin";
 class RocketChatAuth {
   host: string;
   api: Api;
@@ -130,6 +130,21 @@ class RocketChatAuth {
     );
     this.setUser(response.data);
     return this.currentUser;
+  }
+
+  /**
+   * Handles Secure HTTP Only Cookie. The EmbeddedChatApp must be installed and configured in RocketChat.
+   * @returns
+   */
+
+  async handleSecureLogin(action: string, token?: string) {
+    return await handleSecureLogin(
+      {
+        api: this.api,
+      },
+      action,
+      token
+    );
   }
 
   /**
