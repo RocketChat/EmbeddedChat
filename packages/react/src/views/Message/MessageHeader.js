@@ -107,7 +107,7 @@ const MessageHeader = ({
       )}
       {!message.t && ECOptions?.showRoles && isRoles && (
         <>
-          {admins.includes(message?.u?.username) && (
+          {admins?.includes(message?.u?.username) && (
             <Box
               as="span"
               css={styles.userRole}
