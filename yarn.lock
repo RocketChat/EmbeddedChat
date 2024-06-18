@@ -2347,7 +2347,6 @@ __metadata:
     eslint-plugin-react: ^7.31.11
     eslint-plugin-react-hooks: ^4.6.0
     eslint-plugin-storybook: ^0.6.12
-    gapi-cjs: ^1.0.3
     identity-obj-proxy: ^3.0.0
     jest: ^27.5.1
     js-cookie: ^3.0.5
@@ -17239,13 +17238,6 @@ __metadata:
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: c3f1f5ba20f4e962efb71344ce0a40722163e85bee2101ce25f88214e78182d2d2476aa85ef37950c579eb6cf6ee811c17b3101bb84004bb75655f3e33f3fdb5
-  languageName: node
-  linkType: hard
-
-"gapi-cjs@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "gapi-cjs@npm:1.0.3"
-  checksum: 4f000798c88e0f318ad0fc1ee8ba945de9dd4d05d3820b7eaabe04726abae9528f3a83f1757b7344a6360c4e6f39de8876c8f6d3be637e3a3b1581418eaa8661
   languageName: node
   linkType: hard
 
