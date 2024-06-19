@@ -56,9 +56,12 @@ const Menu = ({
         setOpen(false);
       }
     };
-    document.body.addEventListener('click', onBodyClick);
 
-    return () => document.body.removeEventListener('click', onBodyClick);
+    document.addEventListener('click', onBodyClick);
+
+    return () => {
+      document.removeEventListener('click', onBodyClick);
+    };
   }, [isOpen]);
 
   const optionJsx = (
@@ -69,7 +72,10 @@ const Menu = ({
             ghost
             icon="kebab"
             size={size}
-            onClick={() => setOpen(!isOpen)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen((prev) => !prev);
+            }}
           />
         </Tooltip>
       ) : (
@@ -77,7 +83,10 @@ const Menu = ({
           ghost
           icon="kebab"
           size={size}
-          onClick={() => setOpen(!isOpen)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen((prev) => !prev);
+          }}
         />
       )}
       {isOpen ? (
