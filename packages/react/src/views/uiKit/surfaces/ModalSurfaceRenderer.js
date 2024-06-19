@@ -1,6 +1,6 @@
 import { FuselageSurfaceRenderer } from './FuselageSurfaceRenderer';
 
-export class FuselageModalSurfaceRenderer extends FuselageSurfaceRenderer {
+export class ModalSurfaceRenderer extends FuselageSurfaceRenderer {
   constructor() {
     super([
       'actions',
