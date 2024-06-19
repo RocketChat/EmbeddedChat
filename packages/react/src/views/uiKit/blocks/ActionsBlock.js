@@ -5,7 +5,7 @@ import useComponentOverrides from '../../../hooks/useComponentOverrides';
 import { Box } from '../../../components/Box';
 import { Button } from '../../../components/Button';
 
-import { useSurfaceType } from '../contexts/SurfaceContext';
+import { useSurfaceType } from '../hooks/useSurfaceType';
 import Action from './ActionsBlock.Action';
 
 const ActionsBlock = ({ className, block, surfaceRenderer }) => {
