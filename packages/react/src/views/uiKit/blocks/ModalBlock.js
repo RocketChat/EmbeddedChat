@@ -7,8 +7,6 @@ import { Box } from '../../../components/Box';
 import { Button } from '../../../components/Button';
 import { Modal } from '../../../components/Modal';
 
-const getButtonStyle = (view) =>
-  view.submit?.style === 'danger' ? { danger: true } : { primary: true };
 const focusableElementsString = `
 	a[href]:not([tabindex="-1"]),
 	area[href]:not([tabindex="-1"]),
@@ -85,14 +83,17 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
       <Modal.Footer>
         {view.close && (
           <Button
-            color={view.close.style === 'danger' ? 'error' : 'secondary'}
+            type={view.close.style === 'danger' ? 'destructive' : 'secondary'}
             onClick={onCancel}
           >
             {modalParser.text(view.close.text)}
           </Button>
         )}
         {view.submit && (
-          <Button {...getButtonStyle(view)} onClick={onSubmit} type="primary">
+          <Button
+            type={view.submit?.style === 'danger' ? 'destructive' : 'primary'}
+            onClick={onSubmit}
+          >
             {modalParser.text(view.submit.text)}
           </Button>
         )}

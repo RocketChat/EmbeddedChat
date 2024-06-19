@@ -100,6 +100,7 @@ const ChatBody = ({
   const [viewData, setViewData] = useState();
 
   const onActionTriggerResponse = useCallback((data) => {
+    console.log(data);
     if (data?.type === 'modal.open' || data?.type === 'modal.update') {
       setViewData(data.view);
       setModalOpen(true);
