@@ -17,12 +17,11 @@ const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
   );
 
   const handleChange = useCallback(
-    (val) => {
-      action({ target: { val } });
+    (event) => {
+      action({ target: { value: event.target.value } });
     },
     [action]
   );
-
   return (
     <StaticSelect
       options={options}
