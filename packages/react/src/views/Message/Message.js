@@ -131,12 +131,14 @@ const Message = ({
     () => ({
       action: async ({ actionId, value, blockId, appId }) => {
         await RCInstance?.triggerBlockAction({
-          blockId,
-          actionId,
-          value,
-          mid: message._id,
-          rid: RCInstance.rid,
           appId,
+          rid: RCInstance.rid,
+          type: 'blockAction',
+          actionId,
+          payload: {
+            blockId,
+            value,
+          },
           container: {
             type: 'message',
             id: message._id,

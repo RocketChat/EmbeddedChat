@@ -118,38 +118,26 @@ const ChatBody = ({
     setViewData(null);
   };
 
-  const onModalSubmit = useCallback(
-    async (data) => {
-      const { actionId, value, blockId, appId, viewId } = data;
-      await RCInstance?.triggerBlockAction({
-        rid: RCInstance.rid,
-        actionId,
-        value,
-        blockId,
-        appId,
-        viewId,
-      });
-    },
-    [RCInstance]
-  );
+  const onModalSubmit = async () => {};
 
   const context = useMemo(
     () => ({
       action: async ({ actionId, value, blockId, appId }) => {
         await RCInstance?.triggerBlockAction({
-          blockId,
-          actionId,
-          value,
-          rid: RCInstance.rid,
           appId,
+          rid: RCInstance.rid,
+          type: 'blockAction',
+          actionId,
           container: {
             type: 'view',
             id: viewData?.id,
           },
+          payload: {
+            blockId,
+            value,
+          },
         });
       },
-
-      rid: RCInstance.rid,
     }),
     [RCInstance, viewData?.id]
   );
