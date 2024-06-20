@@ -5,7 +5,7 @@ import { fromTextObjectToString } from '../utils/fromTextObjectToString';
 import { StaticSelect } from '../../components/StaticSelect';
 
 const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
-  const [{ loading }, action] = useUiKitState(block, context);
+  const [{ loading, value }, action] = useUiKitState(block, context);
 
   const options = useMemo(
     () =>
@@ -24,7 +24,9 @@ const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
   );
   return (
     <StaticSelect
+      value={value}
       options={options}
+      disabled={loading}
       placeholder={fromTextObjectToString(
         surfaceRenderer,
         block.placeholder,
