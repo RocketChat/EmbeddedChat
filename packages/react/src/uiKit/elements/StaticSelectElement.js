@@ -2,7 +2,7 @@ import React, { memo, useMemo, useCallback } from 'react';
 
 import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
-import { StaticSelect } from '../../../components/StaticSelect';
+import { StaticSelect } from '../../components/StaticSelect';
 
 const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
   const [{ loading }, action] = useUiKitState(block, context);

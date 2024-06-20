@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { Surface } from './Surface';
-import { Box } from '../../../components/Box';
+import { Box } from '../../components/Box';
 
 const ModalSurface = ({ children }) => (
   <Surface type="modal">

@@ -1,8 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
-import useComponentOverrides from '../../../hooks/useComponentOverrides';
-import { Box } from '../../../components/Box';
+import useComponentOverrides from '../../hooks/useComponentOverrides';
+import { Box } from '../../components/Box';
 import { ContextBlockItemStyles as styles } from './blocks.styles';
 
 const Item = ({ block: element, surfaceRenderer: parser, index }) => {

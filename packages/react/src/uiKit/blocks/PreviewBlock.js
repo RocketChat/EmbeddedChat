@@ -4,7 +4,7 @@ import {
   isPreviewBlockWithPreview,
 } from '@rocket.chat/ui-kit';
 import React, { memo } from 'react';
-import { Box } from '../../../components/Box';
+import { Box } from '../../components/Box';
 import {
   MessageGenericPreviewCoverImage,
   MessageGenericPreview,
@@ -13,7 +13,7 @@ import {
   MessageGenericPreviewTitle,
   MessageGenericPreviewDescription,
   MessageGenericPreviewFooter,
-} from '../../MessageGenericPreview';
+} from '../../views/MessageGenericPreview';
 
 import ContextBlock from './ContextBlock';
 

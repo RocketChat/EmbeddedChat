@@ -1,6 +1,6 @@
 import React from 'react';
 import * as UiKit from '@rocket.chat/ui-kit';
-import { Grid } from '../../../components/Grid';
+import { Grid } from '../../components/Grid';
 
 const breakpoints = {
   xs: 4,

@@ -16,7 +16,7 @@ import MultiStaticSelectElement from '../elements/MultiStaticSelectElement';
 import OverflowElement from '../elements/OverflowElement';
 import PlainTextInputElement from '../elements/PlainTextInputElement';
 import StaticSelectElement from '../elements/StaticSelectElement';
-import { Markup } from '../../Markup';
+import { Markup } from '../../views/Markup';
 
 export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
   constructor(allowedBlocks) {

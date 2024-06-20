@@ -1,7 +1,7 @@
 import React, { useMemo, memo } from 'react';
 import { css } from '@emotion/react';
-import { Menu } from '../../../components/Menu';
-import { Box } from '../../../components/Box';
+import { Menu } from '../../components/Menu';
+import { Box } from '../../components/Box';
 import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
 

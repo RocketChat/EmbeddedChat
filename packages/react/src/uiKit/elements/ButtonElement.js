@@ -1,8 +1,8 @@
 import React from 'react';
 import * as UiKit from '@rocket.chat/ui-kit';
 import { css } from '@emotion/react';
-import { Button } from '../../../components/Button';
-import { Throbber } from '../../../components/Throbber';
+import { Button } from '../../components/Button';
+import { Throbber } from '../../components/Throbber';
 
 import { useUiKitState } from '../hooks/useUiKitState';
 

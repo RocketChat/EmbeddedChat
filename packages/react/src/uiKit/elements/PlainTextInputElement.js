@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Input } from '../../../components/Input';
+import { Input } from '../../components/Input';
 import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
 

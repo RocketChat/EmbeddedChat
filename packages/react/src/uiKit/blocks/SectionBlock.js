@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import { Box } from '../../../components/Box';
-import Flex from '../../../components/Flex';
-import { Grid } from '../../../components/Grid';
+import { Box } from '../../components/Box';
+import Flex from '../../components/Flex';
+import { Grid } from '../../components/Grid';
 
 import Fields from './SectionBlock.Fields';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Box } from '../../../../components/Box';
+import { Box } from '../../../components/Box';
 import { ContextElementItem } from './ContextElementItem';
 
 export const ContextElement = ({ block, surfaceRenderer, className }) => (
