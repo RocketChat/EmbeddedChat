@@ -96,13 +96,13 @@ const ChatBody = ({
     [upsertMessage, ECOptions?.enableThreads, username, messageListRef]
   );
 
-  const [isModalOpen, setModalOpen] = useState();
+  const [isUiKitModalOpen, setUiKitModalOpen] = useState();
   const [viewData, setViewData] = useState();
 
   const onActionTriggerResponse = useCallback((data) => {
     if (data?.type === 'modal.open' || data?.type === 'modal.update') {
       setViewData(data.view);
-      setModalOpen(true);
+      setUiKitModalOpen(true);
     }
   }, []);
 
@@ -202,7 +202,13 @@ const ChatBody = ({
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
-        {isModalOpen && <UiKitModal initialView={viewData} />}
+        {isUiKitModalOpen && (
+          <UiKitModal
+            initialView={viewData}
+            setUiKitModalOpen={setUiKitModalOpen}
+            setViewData={setViewData}
+          />
+        )}
       </Box>
       {popupVisible && otherUserMessage && (
         <RecentMessageButton

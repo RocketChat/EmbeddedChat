@@ -986,7 +986,7 @@ export default class EmbeddedChatApi {
   }
 
   async triggerBlockAction({
-    type,
+    type = "blockAction",
     actionId,
     appId,
     rid,
@@ -1012,7 +1012,7 @@ export default class EmbeddedChatApi {
           },
           method: "POST",
           body: JSON.stringify({
-            type: "blockAction",
+            type: type,
             actionId,
             payload,
             container,

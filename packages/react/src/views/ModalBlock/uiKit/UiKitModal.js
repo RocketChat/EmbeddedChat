@@ -7,7 +7,7 @@ import { useModalContextValue } from '../../../hooks/uiKit/useModalBlockContextV
 import { useUiKitView } from '../../../hooks/uiKit/useUiKitView';
 import ModalBlock from './ModalBlock';
 
-const UiKitModal = ({ initialView }) => {
+const UiKitModal = ({ initialView, setUiKitModalOpen, setViewData }) => {
   const { RCInstance } = useContext(RCContext);
   const { values, updateValues, state } = useUiKitView(initialView);
   const contextValue = useModalContextValue({
@@ -29,8 +29,11 @@ const UiKitModal = ({ initialView }) => {
         },
         viewId: initialView.id,
       });
+      setUiKitModalOpen(false);
+      setViewData(null);
     },
-    [RCInstance, state, initialView]
+
+    [RCInstance, initialView, state, setUiKitModalOpen, setViewData]
   );
 
   const handleCancel = useCallback(
@@ -48,8 +51,11 @@ const UiKitModal = ({ initialView }) => {
           isCleared: false,
         },
       });
+
+      setUiKitModalOpen(false);
+      setViewData(null);
     },
-    [RCInstance, state, initialView]
+    [RCInstance, initialView, state, setUiKitModalOpen, setViewData]
   );
 
   const handleClose = useCallback(async () => {
@@ -65,7 +71,10 @@ const UiKitModal = ({ initialView }) => {
         isCleared: true,
       },
     });
-  }, [RCInstance, state, initialView]);
+
+    setUiKitModalOpen(false);
+    setViewData(null);
+  }, [RCInstance, initialView, state, setUiKitModalOpen, setViewData]);
 
   return (
     <UiKitContext.Provider value={contextValue}>
