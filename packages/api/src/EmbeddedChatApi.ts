@@ -985,7 +985,7 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async triggerBlockAction({
+  async handleUiKitInteraction({
     type = "blockAction",
     actionId,
     appId,

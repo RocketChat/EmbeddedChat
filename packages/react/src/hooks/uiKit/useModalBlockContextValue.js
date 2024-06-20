@@ -5,8 +5,8 @@ import RCContext from '../../context/RCInstance';
 export const useModalContextValue = ({ view, values, updateValues }) => {
   const { RCInstance } = useContext(RCContext);
 
-  const debouncedTriggerBlockAction = useDebouncedCallback(async (params) => {
-    await RCInstance?.triggerBlockAction(params);
+  const debouncedTriggerAction = useDebouncedCallback(async (params) => {
+    await RCInstance?.handleUiKitInteraction(params);
   }, 700);
 
   return {
@@ -25,9 +25,9 @@ export const useModalContextValue = ({ view, values, updateValues }) => {
       const triggerAction = dispatchActionConfig?.includes(
         'on_character_entered'
       )
-        ? debouncedTriggerBlockAction
+        ? debouncedTriggerAction
         : async (params) => {
-            await RCInstance?.triggerBlockAction(params);
+            await RCInstance?.handleUiKitInteraction(params);
           };
 
       await triggerAction({
