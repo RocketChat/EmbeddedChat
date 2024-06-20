@@ -13,12 +13,12 @@ const ButtonElement = ({ block, context, surfaceRenderer }) => {
     return (
       <a target="_blank" href={block.url} rel="noreferrer">
         <Button
+          size="small"
           disabled={loading}
           color={block.style === 'danger' ? 'error' : 'secondary'}
           css={css`
             min-width: 4ch;
           `}
-          size="small"
           onClick={action}
         >
           {loading ? (
@@ -41,7 +41,7 @@ const ButtonElement = ({ block, context, surfaceRenderer }) => {
       primary={block.style === 'primary'}
       danger={block.style === 'danger'}
       minWidth="4ch"
-      size="medium"
+      size="small"
       value={block.value}
       onClick={action}
     >

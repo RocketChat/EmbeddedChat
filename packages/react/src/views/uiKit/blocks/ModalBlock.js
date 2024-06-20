@@ -37,7 +37,6 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
   const id = `modal_id_${useUniqueId()}`;
   const ref = useRef();
 
-  // Auto focus
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -51,9 +50,7 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
       element && element.focus();
     }
   }, [errors]);
-  // save focus to restore after close
   const previousFocus = useMemo(() => document.activeElement, []);
-  // restore the focus after the component unmount
   useEffect(
     () => () => previousFocus && previousFocus.focus(),
     [previousFocus]
@@ -103,4 +100,3 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
 }
 
 export default ModalBlock;
-export { modalParser };
