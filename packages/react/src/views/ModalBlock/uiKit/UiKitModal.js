@@ -8,70 +8,70 @@ import { useUiKitView } from '../../../hooks/uiKit/useUiKitView';
 import ModalBlock from './ModalBlock';
 
 const UiKitModal = ({ initialView }) => {
-  console.log(initialView);
   const { RCInstance } = useContext(RCContext);
-  const { view, errors, values, updateValues, state } =
-    useUiKitView(initialView);
-  const contextValue = useModalContextValue({ view, values, updateValues });
-
+  const { values, updateValues, state } = useUiKitView(initialView);
+  const contextValue = useModalContextValue({
+    view: initialView,
+    values,
+    updateValues,
+  });
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       await RCInstance?.triggerBlockAction({
-        appId: view.appId,
+        appId: initialView.appId,
         type: 'viewSubmit',
         payload: {
           view: {
-            ...view,
+            ...initialView,
             state,
           },
         },
-        viewId: view.id,
+        viewId: initialView.id,
       });
     },
-    [RCInstance, state, view]
+    [RCInstance, state, initialView]
   );
 
   const handleCancel = useCallback(
     async (e) => {
       e.preventDefault();
       await RCInstance?.triggerBlockAction({
-        appId: view.appId,
+        appId: initialView.appId,
         type: 'viewClosed',
         payload: {
-          viewId: view.id,
+          viewId: initialView.id,
           view: {
-            ...view,
+            ...initialView,
             state,
           },
           isCleared: false,
         },
       });
     },
-    [RCInstance, state, view]
+    [RCInstance, state, initialView]
   );
 
   const handleClose = useCallback(async () => {
     await RCInstance?.triggerBlockAction({
-      appId: view.appId,
+      appId: initialView.appId,
       type: 'viewClosed',
       payload: {
-        viewId: view.id,
+        viewId: initialView.id,
         view: {
-          ...view,
+          ...initialView,
           state,
         },
         isCleared: true,
       },
     });
-  }, [RCInstance, state, view]);
+  }, [RCInstance, state, initialView]);
 
   return (
     <UiKitContext.Provider value={contextValue}>
       <ModalBlock
-        view={view}
-        errors={errors}
-        appId={view.appId}
+        view={initialView}
+        appId={initialView.appId}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         onClose={handleClose}

@@ -2,13 +2,7 @@ import { useDebouncedCallback } from '@rocket.chat/fuselage-hooks';
 import { useContext } from 'react';
 import RCContext from '../../context/RCInstance';
 
-export const useModalContextValue = ({
-  view,
-  values,
-  updateValues,
-  mid,
-  rid,
-}) => {
+export const useModalContextValue = ({ view, values, updateValues }) => {
   const { RCInstance } = useContext(RCContext);
 
   const debouncedTriggerBlockAction = useDebouncedCallback(async (params) => {
@@ -40,16 +34,14 @@ export const useModalContextValue = ({
         appId,
         type: 'blockAction',
         actionId,
+        container: {
+          type: 'view',
+          id: viewId,
+        },
         payload: {
           blockId,
           value,
         },
-        container: {
-          type: 'message',
-          id: mid,
-        },
-        rid,
-        mid,
       });
     },
     updateState: ({ actionId, value, blockId = 'default' }) => {
