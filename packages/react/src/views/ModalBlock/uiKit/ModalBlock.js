@@ -2,10 +2,10 @@
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { css } from '@emotion/react';
-import { UiKitComponent, UiKitModal, modalParser } from '..';
-import { Box } from '../../components/Box';
-import { Button } from '../../components/Button';
-import { Modal } from '../../components/Modal';
+import { UiKitComponent, UiKitModal, modalParser } from '../../../uiKit';
+import { Box } from '../../../components/Box';
+import { Button } from '../../../components/Button';
+import { Modal } from '../../../components/Modal';
 
 const focusableElementsString = `
 	a[href]:not([tabindex="-1"]),

@@ -69,8 +69,6 @@ export function useUiKitView(initialView) {
         ...getViewFromInteraction(interaction),
       }));
     };
-
-    handleUpdate();
   }, [setErrors, updateView, viewId]);
 
   return { view, errors, values, updateValues, state };

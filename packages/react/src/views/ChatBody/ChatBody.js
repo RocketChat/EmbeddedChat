@@ -1,11 +1,5 @@
 /* eslint-disable no-shadow */
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useUserStore, useChannelStore } from '../../store';
@@ -15,12 +9,11 @@ import { Box } from '../../components/Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
-import ModalBlock from '../../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';
-import { UiKitContext } from '../../uiKit';
+import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
 
 const ChatBody = ({
   anonymousMode,
@@ -112,35 +105,6 @@ const ChatBody = ({
       setModalOpen(true);
     }
   }, []);
-
-  const onModalClose = () => {
-    setModalOpen(false);
-    setViewData(null);
-  };
-
-  const onModalSubmit = async () => {};
-
-  const context = useMemo(
-    () => ({
-      action: async ({ actionId, value, blockId, appId }) => {
-        await RCInstance?.triggerBlockAction({
-          appId,
-          rid: RCInstance.rid,
-          type: 'blockAction',
-          actionId,
-          container: {
-            type: 'view',
-            id: viewData?.id,
-          },
-          payload: {
-            blockId,
-            value,
-          },
-        });
-      },
-    }),
-    [RCInstance, viewData?.id]
-  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -238,17 +202,7 @@ const ChatBody = ({
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
-        {isModalOpen && (
-          <UiKitContext.Provider value={context}>
-            <ModalBlock
-              appId={viewData.appId}
-              onClose={onModalClose}
-              onCancel={onModalClose}
-              onSubmit={onModalSubmit}
-              view={viewData}
-            />
-          </UiKitContext.Provider>
-        )}
+        {isModalOpen && <UiKitModal initialView={viewData} />}
       </Box>
       {popupVisible && otherUserMessage && (
         <RecentMessageButton
