@@ -4,7 +4,10 @@ import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
 
 const PlainTextInputElement = ({ block, context, surfaceRenderer }) => {
-  const [{ loading, value, error }, action] = useUiKitState(block, context);
+  const [{ loading, value = '', error }, action] = useUiKitState(
+    block,
+    context
+  );
 
   if (block.multiline) {
     return (

@@ -13,13 +13,7 @@ const ImageElement = ({ block, context }) => {
     return null;
   }
 
-  return (
-    <Box
-      css={styles.container(block.imageUrl, size)}
-      imageUrl={block.imageUrl}
-      size={size}
-    />
-  );
+  return <Box css={styles.container(block.imageUrl, size)} size={size} />;
 };
 
 export default ImageElement;

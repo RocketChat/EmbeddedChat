@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export const useChatbodyStyles = () => {
-
   const chatbodyContainer = css`
     flex: 1;
     word-break: break-all;

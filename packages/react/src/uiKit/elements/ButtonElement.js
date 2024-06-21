@@ -38,9 +38,6 @@ const ButtonElement = ({ block, context, surfaceRenderer }) => {
   return (
     <Button
       disabled={loading}
-      primary={block.style === 'primary'}
-      danger={block.style === 'danger'}
-      minWidth="4ch"
       size="small"
       value={block.value}
       onClick={action}

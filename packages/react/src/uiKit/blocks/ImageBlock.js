@@ -80,7 +80,6 @@ const ImageBlock = ({ className, block, surfaceRenderer }) => {
         ) : (
           <Box
             css={styles.image(block.imageUrl, width, height)}
-            imageUrl={block.imageUrl}
             width={width}
             height={height}
             aria-label={block.altText}
