@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { css } from '@emotion/react';
 import { UiKitComponent, UiKitModal, modalParser } from '../../../uiKit';
 import { Box } from '../../../components/Box';
 import { Button } from '../../../components/Button';

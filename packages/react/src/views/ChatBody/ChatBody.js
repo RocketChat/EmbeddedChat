@@ -45,9 +45,9 @@ const ChatBody = ({
     state.threadMainMessage,
   ]);
 
-  const { isUiKitModalOpen, viewData } = useUiKitStore((state) => ({
+  const { isUiKitModalOpen, modalViewData } = useUiKitStore((state) => ({
     isUiKitModalOpen: state.isUiKitModalOpen,
-    viewData: state.viewData,
+    modalViewData: state.modalViewData,
   }));
 
   const { handleLogin } = useRCAuth();
@@ -208,7 +208,7 @@ const ChatBody = ({
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
         {isUiKitModalOpen && (
-          <UiKitModal key={Math.random()} initialView={viewData} />
+          <UiKitModal key={Math.random()} initialView={modalViewData} />
         )}
       </Box>
       {popupVisible && otherUserMessage && (

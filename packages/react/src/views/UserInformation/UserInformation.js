@@ -54,10 +54,10 @@ const UserInformation = () => {
     <ViewComponent
       title="User Info"
       iconName="user"
+      onClose={() => setExclusiveState(null)}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
-            onClose: () => setExclusiveState(null),
           }
         : {})}
     >

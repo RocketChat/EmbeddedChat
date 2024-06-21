@@ -30,6 +30,8 @@ import AttachmentPreview from '../AttachmentPreview/AttachmentPreview';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from '../AttachmentPreview/CheckPreviewType';
 import { useRCContext } from '../../context/RCInstance';
+import UiKitContextualBar from '../ContextualBarBlock/uiKit/UiKitContextualBar';
+import useUiKitStore from '../../store/uiKitStore';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
@@ -55,6 +57,14 @@ const ChatLayout = () => {
     (state) => state.attachmentWindowOpen
   );
   const { data, handleDrag, handleDragDrop } = useDropBox();
+  const { isUiKitContextualBarOpen, contextualBarViewData } = useUiKitStore(
+    (state) => ({
+      isUiKitContextualBarOpen: state.isUiKitContextualBarOpen,
+      contextualBarViewData: state.contextualBarViewData,
+    })
+  );
+
+  console.log(isUiKitContextualBarOpen);
 
   const scrollToBottom = () => {
     if (messageListRef && messageListRef.current) {
@@ -95,6 +105,12 @@ const ChatLayout = () => {
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}
         {showCurrentUserInfo && <UserInformation />}
+        {isUiKitContextualBarOpen && (
+          <UiKitContextualBar
+            key={Math.random()}
+            initialView={contextualBarViewData}
+          />
+        )}
       </Box>
 
       {attachmentWindowOpen ? (

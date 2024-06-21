@@ -27,10 +27,10 @@ const Roominfo = () => {
     <ViewComponent
       title="Room Information"
       iconName="info"
+      onClose={() => setExclusiveState(null)}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
-            onClose: () => setExclusiveState(null),
           }
         : {})}
     >

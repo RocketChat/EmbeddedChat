@@ -50,10 +50,10 @@ const RoomMembers = ({ members }) => {
     <ViewComponent
       title="Members"
       iconName="members"
+      onClose={() => setExclusiveState(null)}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
-            onClose: () => setExclusiveState(null),
           }
         : {})}
     >

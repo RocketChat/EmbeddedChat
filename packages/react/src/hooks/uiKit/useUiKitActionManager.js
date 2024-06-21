@@ -8,23 +8,33 @@ const emitter = new Emitter();
 const useUiKitActionManager = () => {
   const { RCInstance } = useContext(RCContext);
 
-  const { setIsUiKitModalOpen, setViewData } = useUiKitStore((state) => ({
+  const {
+    setIsUiKitModalOpen,
+    setIsUiKitContextualBarOpen,
+    setModalViewData,
+    setContextualBarViewData,
+  } = useUiKitStore((state) => ({
     setIsUiKitModalOpen: state.setIsUiKitModalOpen,
-    setViewData: state.setViewData,
+    setIsUiKitContextualBarOpen: state.setIsUiKitContextualBarOpen,
+    setModalViewData: state.setModalViewData,
+    setContextualBarViewData: state.setContextualBarViewData,
   }));
 
   const disposeView = useCallback(() => {
     setIsUiKitModalOpen(false);
-    setViewData(null);
-  }, [setIsUiKitModalOpen, setViewData]);
+    setModalViewData(null);
+  }, [setIsUiKitModalOpen, setModalViewData]);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
       switch (interaction.type) {
         case 'modal.open':
-        case 'contextual_bar.open':
-          setViewData(interaction.view);
+          setModalViewData(interaction.view);
           setIsUiKitModalOpen(true);
+          break;
+        case 'contextual_bar.open':
+          setContextualBarViewData(interaction.view);
+          setIsUiKitContextualBarOpen(true);
           break;
         case 'modal.update':
         case 'contextual_bar.update': {
@@ -44,7 +54,7 @@ const useUiKitActionManager = () => {
           break;
       }
     },
-    [setIsUiKitModalOpen, setViewData]
+    [setIsUiKitModalOpen, setModalViewData]
   );
 
   const emitInteraction = async (appId, userInteraction) => {
