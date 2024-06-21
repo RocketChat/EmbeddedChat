@@ -14,6 +14,9 @@ const useSidebarStyles = () => {
   `;
 
   const content = css`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     overflow: auto;
     overflow-x: hidden;
   `;

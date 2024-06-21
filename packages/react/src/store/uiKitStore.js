@@ -6,7 +6,6 @@ const useUiKitStore = create((set) => ({
 
   isUiKitContextualBarOpen: false,
   setIsUiKitContextualBarOpen: (isOpen) => {
-    console.log('Setting isUiKitContextualBarOpen to:', isOpen); // Log the change
     set({ isUiKitContextualBarOpen: isOpen });
   },
 
@@ -15,7 +14,6 @@ const useUiKitStore = create((set) => ({
 
   contextualBarViewData: null,
   setContextualBarViewData: (data) => {
-    console.log('Setting contextualBarViewData to:', data); // Log the change
     set({ contextualBarViewData: data });
   },
 }));

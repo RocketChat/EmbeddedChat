@@ -64,8 +64,6 @@ const ChatLayout = () => {
     })
   );
 
-  console.log(isUiKitContextualBarOpen);
-
   const scrollToBottom = () => {
     if (messageListRef && messageListRef.current) {
       requestAnimationFrame(() => {

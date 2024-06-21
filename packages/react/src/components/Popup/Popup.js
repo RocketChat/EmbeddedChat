@@ -63,7 +63,7 @@ const Popup = ({
             onClose={onClose}
           />
         )}
-        {children}
+        <Box css={styles.popupContent}>{children}</Box>
       </Box>
     </ReactPortal>
   );

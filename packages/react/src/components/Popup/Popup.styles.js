@@ -17,6 +17,11 @@ export const usePopupStyles = () => {
       width: ${width};
       height: ${height};
     `,
+
+    popupContent: css`
+      overflow: auto;
+      overflow-x: hidden;
+    `,
   };
   return styles;
 };
