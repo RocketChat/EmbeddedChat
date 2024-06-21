@@ -23,7 +23,14 @@ const useUiKitActionManager = () => {
   const disposeView = useCallback(() => {
     setIsUiKitModalOpen(false);
     setModalViewData(null);
-  }, [setIsUiKitModalOpen, setModalViewData]);
+    setIsUiKitContextualBarOpen(false);
+    setContextualBarViewData(null);
+  }, [
+    setContextualBarViewData,
+    setIsUiKitContextualBarOpen,
+    setIsUiKitModalOpen,
+    setModalViewData,
+  ]);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
