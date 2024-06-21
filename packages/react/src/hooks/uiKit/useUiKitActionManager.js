@@ -22,10 +22,12 @@ const useUiKitActionManager = () => {
     (interaction) => {
       switch (interaction.type) {
         case 'modal.open':
+        case 'contextual_bar.open':
           setViewData(interaction.view);
           setIsUiKitModalOpen(true);
           break;
-        case 'modal.update': {
+        case 'modal.update':
+        case 'contextual_bar.update': {
           const { type, triggerId, appId, view } = interaction;
           emitter.emit(view.id, {
             type,

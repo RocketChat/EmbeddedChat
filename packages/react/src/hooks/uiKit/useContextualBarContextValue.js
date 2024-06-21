@@ -2,7 +2,7 @@
 import { useDebouncedCallback } from '@rocket.chat/fuselage-hooks';
 import useUiKitActionManager from './useUiKitActionManager';
 
-export const useModalContextValue = ({ view, values, updateValues }) => {
+const useContextualBarContextValue = ({ view, values, updateValues }) => {
   const { emitInteraction } = useUiKitActionManager();
 
   const debouncedTriggerAction = useDebouncedCallback(async (appId, params) => {
@@ -11,9 +11,9 @@ export const useModalContextValue = ({ view, values, updateValues }) => {
 
   return {
     action: async ({
-      actionId,
-      viewId,
       appId,
+      viewId,
+      actionId,
       dispatchActionConfig,
       blockId,
       value,
@@ -55,3 +55,5 @@ export const useModalContextValue = ({ view, values, updateValues }) => {
     viewId: view.id,
   };
 };
+
+export default useContextualBarContextValue;
