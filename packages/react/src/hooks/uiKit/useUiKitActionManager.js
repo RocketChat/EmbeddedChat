@@ -6,12 +6,17 @@ import useUiKitStore from '../../store/uiKitStore';
 const emitter = new Emitter();
 
 const useUiKitActionManager = () => {
+  const { RCInstance } = useContext(RCContext);
+
   const { setIsUiKitModalOpen, setViewData } = useUiKitStore((state) => ({
     setIsUiKitModalOpen: state.setIsUiKitModalOpen,
     setViewData: state.setViewData,
   }));
 
-  const { RCInstance } = useContext(RCContext);
+  const disposeView = useCallback(() => {
+    setIsUiKitModalOpen(false);
+    setViewData(null);
+  }, [setIsUiKitModalOpen, setViewData]);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
@@ -41,7 +46,28 @@ const useUiKitActionManager = () => {
   );
 
   const emitInteraction = async (appId, userInteraction) => {
-    await RCInstance?.handleUiKitInteraction(appId, userInteraction);
+    const interaction = await RCInstance?.handleUiKitInteraction(
+      appId,
+      userInteraction
+    );
+    switch (userInteraction.type) {
+      case 'viewSubmit':
+        if (
+          !!interaction &&
+          !['errors', 'modal.update', 'contextual_bar.update'].includes(
+            interaction.type
+          )
+        )
+          disposeView();
+        break;
+
+      case 'viewClosed':
+        if (!!interaction && interaction.type !== 'errors') disposeView();
+        break;
+
+      default:
+        break;
+    }
   };
 
   const on = useCallback((eventName, listener) => {
@@ -53,7 +79,7 @@ const useUiKitActionManager = () => {
     emitter.off(eventName, listener);
   }, []);
 
-  return { handleServerInteraction, emitInteraction, on, off };
+  return { handleServerInteraction, emitInteraction, disposeView, on, off };
 };
 
 export default useUiKitActionManager;

@@ -16,12 +16,12 @@ const UiKitModal = ({ initialView }) => {
     updateValues,
   });
 
-  const actionManager = useUiKitActionManager();
+  const { emitInteraction } = useUiKitActionManager();
 
   const handleSubmit = useEffectEvent(
     (e) => {
       e.preventDefault();
-      void actionManager.emitInteraction(view.appId, {
+      void emitInteraction(view.appId, {
         type: 'viewSubmit',
         payload: {
           view: {
@@ -32,13 +32,13 @@ const UiKitModal = ({ initialView }) => {
         viewId: view.id,
       });
     },
-    [actionManager, view, state]
+    [view, state]
   );
 
   const handleCancel = useEffectEvent(
     (e) => {
       e.preventDefault();
-      void actionManager.emitInteraction(view.appId, {
+      void emitInteraction(view.appId, {
         type: 'viewClosed',
         payload: {
           viewId: view.id,
@@ -50,11 +50,11 @@ const UiKitModal = ({ initialView }) => {
         },
       });
     },
-    [actionManager, view, state]
+    [view, state]
   );
 
   const handleClose = useEffectEvent(() => {
-    void actionManager.emitInteraction(view.appId, {
+    void emitInteraction(view.appId, {
       type: 'viewClosed',
       payload: {
         viewId: view.id,
@@ -65,7 +65,7 @@ const UiKitModal = ({ initialView }) => {
         isCleared: true,
       },
     });
-  }, [actionManager, view, state]);
+  }, [view, state]);
 
   return (
     <UiKitContext.Provider value={contextValue}>
