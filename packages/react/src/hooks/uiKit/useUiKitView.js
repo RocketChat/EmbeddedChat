@@ -41,10 +41,6 @@ function useUiKitView(initialView) {
   const [view, updateView] = useSafely(useState(initialView));
   const actionManager = useUiKitActionManager();
 
-  useEffect(() => {
-    updateView(initialView);
-  }, [initialView, updateView]);
-
   const state = useMemo(
     () =>
       Object.entries(values).reduce((obj, [key, payload]) => {
