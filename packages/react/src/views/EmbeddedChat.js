@@ -169,7 +169,6 @@ const EmbeddedChat = ({
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
       <RCInstanceProvider value={RCContextValue}>
-        <GlobalStyles />
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),
@@ -183,6 +182,7 @@ const EmbeddedChat = ({
           className={`ec-embedded-chat ${className} ${classNames}`}
           style={{ ...style, ...styleOverrides }}
         >
+          <GlobalStyles />
           <ToastBarProvider position={toastBarPosition}>
             {hideHeader ? null : (
               <ChatHeader

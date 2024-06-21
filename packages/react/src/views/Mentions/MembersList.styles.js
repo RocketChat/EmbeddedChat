@@ -1,10 +1,8 @@
 import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useMemberListStyles = () => {
   const { theme, colors } = useCustomTheme();
-  const { scrollStyles } = useGlobalStyles();
   const main = css`
     margin: 0.2rem 2rem;
     display: block;
@@ -14,7 +12,6 @@ const useMemberListStyles = () => {
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
     color: ${colors.secondaryForeground};
-    ${scrollStyles};
   `;
 
   const listItem = css`

@@ -1,30 +1,49 @@
 import React from 'react';
-import { Global, css } from '@emotion/react';
+import { css, Global } from '@emotion/react';
 import { useCustomTheme } from '../hooks/useCustomTheme';
+import { alpha } from '../lib/color';
+
+const useStyles = (colors, theme) => css`
+  .ec-embedded-chat * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ec-embedded-chat body {
+    font-family: ${theme.typography.default.fontFamily};
+    font-size: ${theme.typography.default.fontSize}px;
+    font-weight: ${theme.typography.default.fontWeightRegular};
+  }
+
+  .ec-embedded-chat a {
+    color: ${colors.foreground};
+  }
+
+  .ec-embedded-chat ::-webkit-scrollbar {
+    width: 4px;
+    height: 7.7px;
+  }
+
+  .ec-embedded-chat ::-webkit-scrollbar-thumb {
+    background: ${alpha(colors.primary, 0.5)};
+    border-radius: 4px;
+  }
+
+  .ec-embedded-chat ::-webkit-scrollbar-thumb:hover {
+    background: ${colors.primary};
+  }
+
+  .ec-embedded-chat ::-webkit-scrollbar-button {
+    display: none;
+  }
+`;
 
 const GlobalStyles = () => {
   const { theme, colors } = useCustomTheme();
+  const styles = useStyles(colors, theme);
 
-  return (
-    <Global
-      styles={css`
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-        body {
-          font-family: ${theme.typography.default.fontFamily};
-          font-size: ${theme.typography.default.fontSize}px;
-          font-weight: ${theme.typography.default.fontWeightRegular};
-        }
-
-        a {
-          color: ${colors.foreground};
-        }
-      `}
-    />
-  );
+  return <Global styles={styles} />;
 };
 
 export default GlobalStyles;

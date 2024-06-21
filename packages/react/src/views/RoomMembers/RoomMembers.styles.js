@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useRoomMemberStyles = () => {
-  const { scrollStyles } = useGlobalStyles();
   const container = css`
     display: flex;
     flex-direction: column;
@@ -11,7 +9,6 @@ export const useRoomMemberStyles = () => {
     align-items: center;
     justify-content: center;
     padding: 0 1rem 1rem;
-    ${scrollStyles};
   `;
 
   return { container };

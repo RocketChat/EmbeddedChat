@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useAttachmentPreviewStyles = () => {
-  const { scrollStyles } = useGlobalStyles();
   const inputContainer = css`
     display: flex;
     flex-direction: column;
@@ -19,7 +17,6 @@ const useAttachmentPreviewStyles = () => {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 350px;
-    ${scrollStyles};
   `;
 
   return { inputContainer, input, modalContent };

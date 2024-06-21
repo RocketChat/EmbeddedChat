@@ -1,11 +1,9 @@
 import { css } from '@emotion/react';
 import { darken } from '../../lib/color';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useChatInputStyles = () => {
   const { theme, colors } = useCustomTheme();
-  const { scrollStyles } = useGlobalStyles();
   const inputWithFormattingBox = css`
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
@@ -40,7 +38,6 @@ export const useChatInputStyles = () => {
     border: none;
     outline: none;
     font-size: 14px;
-    ${scrollStyles};
 
     &:focus {
       border: none;

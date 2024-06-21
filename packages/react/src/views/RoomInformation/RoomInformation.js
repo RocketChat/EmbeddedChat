@@ -5,7 +5,6 @@ import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import { Box } from '../../components/Box';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import Popup from '../../components/Popup/Popup';
@@ -17,7 +16,6 @@ const Roominfo = () => {
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
-  const { scrollStyles } = useGlobalStyles();
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
@@ -41,7 +39,6 @@ const Roominfo = () => {
           padding: 0 1rem 1rem;
           margin: 0 auto;
           overflow: auto;
-          ${scrollStyles}
         `}
       >
         <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />

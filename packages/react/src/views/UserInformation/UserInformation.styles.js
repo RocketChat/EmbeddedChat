@@ -1,15 +1,12 @@
 import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useUserInformationStyles = () => {
   const { theme, colors } = useCustomTheme();
-  const { scrollStyles } = useGlobalStyles();
   const userSidebar = css`
     padding: 0 1rem 1rem;
     margin: 0 auto;
     overflow: auto;
-    ${scrollStyles};
   `;
 
   const roleContainer = css`
