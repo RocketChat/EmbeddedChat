@@ -11,7 +11,7 @@ export const useModalstyles = () => {
     flex-direction: column;
     align-content: stretch;
     justify-content: strech;
-    max-height: 100%;
+    max-height: 90%;
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;

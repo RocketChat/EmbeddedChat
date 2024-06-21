@@ -61,10 +61,10 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
       open
       id={id}
       ref={ref}
-      css={css`
-        max-width: 600px,
-        max-height: 80vh,
-      `}
+      style={{
+        maxWidth: '600px',
+        maxHeight: '80vh',
+      }}
     >
       <Modal.Header>
         <Modal.Title>{modalParser.text(view.title)}</Modal.Title>
