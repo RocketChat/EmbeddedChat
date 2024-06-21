@@ -51,7 +51,7 @@ const ChatBody = ({
   }));
 
   const { handleLogin } = useRCAuth();
-  const { handleAction } = useUiKitActionManager();
+  const { handleServerInteraction } = useUiKitActionManager();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -106,9 +106,9 @@ const ChatBody = ({
 
   const onActionTriggerResponse = useCallback(
     (data) => {
-      handleAction(data);
+      handleServerInteraction(data);
     },
-    [handleAction]
+    [handleServerInteraction]
   );
 
   useEffect(() => {

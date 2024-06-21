@@ -30,8 +30,7 @@ export const useModalContextValue = ({ view, values, updateValues }) => {
             await RCInstance?.handleUiKitInteraction(params);
           };
 
-      await triggerAction({
-        appId,
+      await triggerAction(appId, {
         type: 'blockAction',
         actionId,
         container: {

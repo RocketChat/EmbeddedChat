@@ -985,22 +985,11 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async handleUiKitInteraction({
-    type = "blockAction",
-    actionId,
-    appId,
-    rid,
-    mid,
-    viewId,
-    container,
-    ...rest
-  }: any) {
+  async handleUiKitInteraction(appId: string, userInteraction: any) {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
 
       const triggerId = Math.random().toString(32).slice(2, 16);
-
-      const payload = rest.payload || rest;
 
       const response = await fetch(
         `${this.host}/api/apps/ui.interaction/${appId}`,
@@ -1012,20 +1001,15 @@ export default class EmbeddedChatApi {
           },
           method: "POST",
           body: JSON.stringify({
-            type: type,
-            actionId,
-            payload,
-            container,
-            mid,
-            rid,
             triggerId,
-            viewId,
+            ...userInteraction,
           }),
         }
       );
-      const data = await response.json();
-      this.onActionTriggeredCallbacks.map((cb) => cb(data));
-      return data;
+
+      const interaction = await response.json();
+      this.onActionTriggeredCallbacks.forEach((cb) => cb(interaction));
+      return interaction;
     } catch (e) {
       console.error(e);
     }

@@ -19,8 +19,7 @@ const UiKitModal = ({ initialView }) => {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      await RCInstance?.handleUiKitInteraction({
-        appId: view.appId,
+      await RCInstance?.handleUiKitInteraction(view.appId, {
         type: 'viewSubmit',
         payload: {
           view: {
@@ -31,15 +30,13 @@ const UiKitModal = ({ initialView }) => {
         viewId: view.id,
       });
     },
-
     [RCInstance, view, state]
   );
 
   const handleCancel = useCallback(
     async (e) => {
       e.preventDefault();
-      await RCInstance?.handleUiKitInteraction({
-        appId: view.appId,
+      await RCInstance?.handleUiKitInteraction(view.appId, {
         type: 'viewClosed',
         payload: {
           viewId: view.id,
@@ -55,8 +52,7 @@ const UiKitModal = ({ initialView }) => {
   );
 
   const handleClose = useCallback(async () => {
-    await RCInstance?.handleUiKitInteraction({
-      appId: view.appId,
+    await RCInstance?.handleUiKitInteraction(view.appId, {
       type: 'viewClosed',
       payload: {
         viewId: view.id,

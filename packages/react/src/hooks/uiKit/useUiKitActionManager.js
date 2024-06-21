@@ -10,7 +10,7 @@ const useUiKitActionManager = () => {
     setViewData: state.setViewData,
   }));
 
-  const handleAction = useCallback(
+  const handleServerInteraction = useCallback(
     (interaction) => {
       switch (interaction.type) {
         case 'modal.open':
@@ -46,7 +46,7 @@ const useUiKitActionManager = () => {
     emitter.off(eventName, listener);
   }, []);
 
-  return { handleAction, on, off };
+  return { handleServerInteraction, on, off };
 };
 
 export default useUiKitActionManager;

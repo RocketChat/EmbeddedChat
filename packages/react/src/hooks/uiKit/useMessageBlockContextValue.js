@@ -6,8 +6,7 @@ export const useMessageBlockContextValue = (rid, mid) => {
 
   return {
     action: async ({ appId, actionId, blockId, value }) => {
-      await RCInstance?.handleUiKitInteraction({
-        appId,
+      await RCInstance?.handleUiKitInteraction(appId, {
         type: 'blockAction',
         actionId,
         payload: {
