@@ -28,7 +28,8 @@ export const useModalstyles = () => {
 export const ModalContentStyles = {
   content: css`
     position: relative;
-    overflow-y: auto !important;
+    overflow-y: auto;
+    overflow-x: hidden;
   `,
 };
 
