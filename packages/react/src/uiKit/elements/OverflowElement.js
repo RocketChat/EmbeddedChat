@@ -36,9 +36,6 @@ const OverflowElement = ({ block, context, surfaceRenderer }) => {
       <Menu
         options={options}
         tooltip={{ isToolTip: false, position: 'bottom', text: 'Options' }}
-        css={css`
-          padding: 0 0.25rem;
-        `}
       />
     </Box>
   );
