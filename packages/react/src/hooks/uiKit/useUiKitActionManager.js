@@ -54,7 +54,12 @@ const useUiKitActionManager = () => {
           break;
       }
     },
-    [setIsUiKitModalOpen, setModalViewData]
+    [
+      setContextualBarViewData,
+      setIsUiKitContextualBarOpen,
+      setIsUiKitModalOpen,
+      setModalViewData,
+    ]
   );
 
   const emitInteraction = async (appId, userInteraction) => {

@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 import { Input } from '../Input';
 import useSidebarStyles from './Sidebar.styles';
 
-const SidebarContent = ({ children, searchProps = {} }) => {
+const SidebarContent = ({ children, searchProps = {}, style }) => {
   const {
     isSearch = false,
     handleInputChange,
@@ -26,7 +26,7 @@ const SidebarContent = ({ children, searchProps = {} }) => {
   };
 
   return (
-    <Box css={styles.container}>
+    <Box css={styles.content} style={style}>
       {isSearch && (
         <Box
           css={styles.searchContainer}

@@ -6,7 +6,7 @@ const MinimalSidebar = ({ children }) => {
   const styles = useSidebarStyles();
 
   return (
-    <Box css={styles.parent} className="ec-minimal-sidebar">
+    <Box css={styles.sidebarContainer} className="ec-minimal-sidebar">
       {children}
     </Box>
   );

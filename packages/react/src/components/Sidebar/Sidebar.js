@@ -12,11 +12,12 @@ const Sidebar = ({
   children,
   searchProps = {},
   footer,
+  style = {},
 }) => {
   const styles = useSidebarStyles();
 
   return (
-    <Box css={styles.parent} className="ec-sidebar">
+    <Box css={styles.sidebarContainer} className="ec-sidebar" style={style}>
       <SidebarHeader title={title} iconName={iconName} onClose={onClose} />
       <SidebarContent searchProps={searchProps}>{children}</SidebarContent>
       {footer && <SidebarFooter>{footer}</SidebarFooter>}

@@ -1,5 +1,6 @@
 /* eslint-disable no-void */
 import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
+import { css } from '@emotion/react';
 import { BlockContext } from '@rocket.chat/ui-kit';
 import React, { memo } from 'react';
 import {
@@ -77,7 +78,12 @@ const UiKitContextualBar = ({ initialView }) => {
           title={contextualBarParser.text(view.title, BlockContext.NONE, 0)}
           onClose={handleClose}
         />
-        <SidebarContent>
+        <SidebarContent
+          style={{
+            padding: '0.75rem',
+            height: '90%',
+          }}
+        >
           <form method="post" action="#" onSubmit={handleSubmit}>
             <UiKitComponent
               render={UiKitContextualBarSurfaceRender}
@@ -85,11 +91,17 @@ const UiKitContextualBar = ({ initialView }) => {
             />
           </form>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter
+          css={css`
+            margin: 0.75rem;
+            display: flex;
+          `}
+        >
           {view.close && (
             <Button
               type={view.close.style === 'danger' ? 'destructive' : 'secondary'}
               onClick={handleCancel}
+              style={{ flex: 1 }}
             >
               {contextualBarParser.text(view.close.text)}
             </Button>
@@ -97,6 +109,7 @@ const UiKitContextualBar = ({ initialView }) => {
           {view.submit && (
             <Button
               type={view.submit?.style === 'danger' ? 'destructive' : 'primary'}
+              style={{ flex: 1 }}
               onClick={handleSubmit}
             >
               {contextualBarParser.text(view.submit.text)}
