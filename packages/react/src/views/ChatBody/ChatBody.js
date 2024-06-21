@@ -14,6 +14,8 @@ import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
+import useUiKitStore from '../../store/uiKitStore';
+import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
 
 const ChatBody = ({
   anonymousMode,
@@ -43,7 +45,13 @@ const ChatBody = ({
     state.threadMainMessage,
   ]);
 
+  const { isUiKitModalOpen, viewData } = useUiKitStore((state) => ({
+    isUiKitModalOpen: state.isUiKitModalOpen,
+    viewData: state.viewData,
+  }));
+
   const { handleLogin } = useRCAuth();
+  const { handleAction } = useUiKitActionManager();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -96,15 +104,12 @@ const ChatBody = ({
     [upsertMessage, ECOptions?.enableThreads, username, messageListRef]
   );
 
-  const [isUiKitModalOpen, setUiKitModalOpen] = useState();
-  const [viewData, setViewData] = useState();
-
-  const onActionTriggerResponse = useCallback((data) => {
-    if (data?.type === 'modal.open' || data?.type === 'modal.update') {
-      setViewData(data.view);
-      setUiKitModalOpen(true);
-    }
-  }, []);
+  const onActionTriggerResponse = useCallback(
+    (data) => {
+      handleAction(data);
+    },
+    [handleAction]
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -202,13 +207,7 @@ const ChatBody = ({
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
-        {isUiKitModalOpen && (
-          <UiKitModal
-            initialView={viewData}
-            setUiKitModalOpen={setUiKitModalOpen}
-            setViewData={setViewData}
-          />
-        )}
+        {isUiKitModalOpen && <UiKitModal initialView={viewData} />}
       </Box>
       {popupVisible && otherUserMessage && (
         <RecentMessageButton

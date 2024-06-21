@@ -2310,6 +2310,7 @@ __metadata:
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1
     "@open-wc/building-rollup": ^3.0.2
+    "@rocket.chat/emitter": ^0.31.25
     "@rocket.chat/fuselage-hooks": ^0.31.23
     "@rocket.chat/icons": ^0.31.23
     "@rocket.chat/message-parser": ^0.31.25
@@ -6766,6 +6767,13 @@ __metadata:
   peerDependencies:
     "@rocket.chat/ui-kit": "*"
   checksum: 2e7fa2856bdbdc6b0dd2456e9aa5e5804a4198f8df0306a002c5e71681466d3fc2cb0a1253668d5e24fa21345a7dd7eed3458a257e1e4cc59a4e8a3876579aa5
+  languageName: node
+  linkType: hard
+
+"@rocket.chat/emitter@npm:^0.31.25":
+  version: 0.31.25
+  resolution: "@rocket.chat/emitter@npm:0.31.25"
+  checksum: bcb7fbd947507446b9902157adea89ed873f499f5493e9de4eee14795e52a3678b2dd7353f827721f985773dc0a39f51f387bc4e40202e2afb666444437a6041
   languageName: node
   linkType: hard
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { useSafely } from '@rocket.chat/fuselage-hooks';
-import { useMemo, useReducer } from 'react';
+import useUiKitActionManager from './useUiKitActionManager';
 import { extractInitialStateFromLayout } from '../../uiKit/utils/extractInitialStateFromLayout';
 
 const reduceValues = (values, { actionId, payload }) => ({
@@ -8,10 +9,41 @@ const reduceValues = (values, { actionId, payload }) => ({
   [actionId]: payload,
 });
 
-export function useUiKitView(initialView) {
+const getViewId = (view) => {
+  if ('id' in view && typeof view.id === 'string') {
+    return view.id;
+  }
+
+  if ('viewId' in view && typeof view.viewId === 'string') {
+    return view.viewId;
+  }
+
+  throw new Error('Invalid view');
+};
+
+const getViewFromInteraction = (interaction) => {
+  if ('view' in interaction && typeof interaction.view === 'object') {
+    return interaction.view;
+  }
+
+  if (interaction.type === 'banner.open') {
+    return interaction;
+  }
+
+  return undefined;
+};
+
+function useUiKitView(initialView) {
+  const [errors, setErrors] = useSafely(useState(undefined));
   const [values, updateValues] = useSafely(
     useReducer(reduceValues, initialView.blocks, extractInitialStateFromLayout)
   );
+  const [view, updateView] = useSafely(useState(initialView));
+  const actionManager = useUiKitActionManager();
+
+  useEffect(() => {
+    updateView(initialView);
+  }, [initialView, updateView]);
 
   const state = useMemo(
     () =>
@@ -29,5 +61,29 @@ export function useUiKitView(initialView) {
     [values]
   );
 
-  return { values, updateValues, state };
+  const viewId = getViewId(view);
+
+  useEffect(() => {
+    const handleUpdate = (interaction) => {
+      if (interaction.type === 'errors') {
+        setErrors(interaction.errors);
+        return;
+      }
+
+      updateView((view) => ({
+        ...view,
+        ...getViewFromInteraction(interaction),
+      }));
+    };
+
+    actionManager.on(viewId, handleUpdate);
+
+    return () => {
+      actionManager.off(viewId, handleUpdate);
+    };
+  }, [actionManager, setErrors, updateView, viewId]);
+
+  return { view, errors, values, updateValues, state };
 }
+
+export default useUiKitView;

@@ -91,6 +91,7 @@
     "@embeddedchat/api": "0.0.2",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@emotion/react": "11.7.1",
+    "@rocket.chat/emitter": "^0.31.25",
     "@rocket.chat/fuselage-hooks": "^0.31.23",
     "@rocket.chat/icons": "^0.31.23",
     "@rocket.chat/message-parser": "^0.31.25",

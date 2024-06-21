@@ -2,84 +2,78 @@
 import React, { useContext, useCallback } from 'react';
 import { UiKitContext } from '../../../uiKit';
 import RCContext from '../../../context/RCInstance';
-
 import { useModalContextValue } from '../../../hooks/uiKit/useModalBlockContextValue';
-import { useUiKitView } from '../../../hooks/uiKit/useUiKitView';
 import ModalBlock from './ModalBlock';
+import useUiKitView from '../../../hooks/uiKit/useUiKitView';
 
-const UiKitModal = ({ initialView, setUiKitModalOpen, setViewData }) => {
+const UiKitModal = ({ initialView }) => {
   const { RCInstance } = useContext(RCContext);
-  const { values, updateValues, state } = useUiKitView(initialView);
+  const { view, errors, values, updateValues, state } =
+    useUiKitView(initialView);
   const contextValue = useModalContextValue({
-    view: initialView,
+    view,
     values,
     updateValues,
   });
+
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       await RCInstance?.handleUiKitInteraction({
-        appId: initialView.appId,
+        appId: view.appId,
         type: 'viewSubmit',
         payload: {
           view: {
-            ...initialView,
+            ...view,
             state,
           },
         },
-        viewId: initialView.id,
+        viewId: view.id,
       });
-      setUiKitModalOpen(false);
-      setViewData(null);
     },
 
-    [RCInstance, initialView, state, setUiKitModalOpen, setViewData]
+    [RCInstance, view, state]
   );
 
   const handleCancel = useCallback(
     async (e) => {
       e.preventDefault();
       await RCInstance?.handleUiKitInteraction({
-        appId: initialView.appId,
+        appId: view.appId,
         type: 'viewClosed',
         payload: {
-          viewId: initialView.id,
+          viewId: view.id,
           view: {
-            ...initialView,
+            ...view,
             state,
           },
           isCleared: false,
         },
       });
-
-      setUiKitModalOpen(false);
-      setViewData(null);
     },
-    [RCInstance, initialView, state, setUiKitModalOpen, setViewData]
+    [RCInstance, view, state]
   );
 
   const handleClose = useCallback(async () => {
     await RCInstance?.handleUiKitInteraction({
-      appId: initialView.appId,
+      appId: view.appId,
       type: 'viewClosed',
       payload: {
-        viewId: initialView.id,
+        viewId: view.id,
         view: {
-          ...initialView,
+          ...view,
           state,
         },
         isCleared: true,
       },
     });
-
-    setUiKitModalOpen(false);
-    setViewData(null);
-  }, [RCInstance, initialView, state, setUiKitModalOpen, setViewData]);
+  }, [RCInstance, view, state]);
 
   return (
     <UiKitContext.Provider value={contextValue}>
       <ModalBlock
-        view={initialView}
+        view={view}
+        errors={errors}
         appId={initialView.appId}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
