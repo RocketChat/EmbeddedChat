@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { Emitter } from '@rocket.chat/emitter';
+import RCContext from '../../context/RCInstance';
 import useUiKitStore from '../../store/uiKitStore';
 
 const emitter = new Emitter();
@@ -9,6 +10,8 @@ const useUiKitActionManager = () => {
     setIsUiKitModalOpen: state.setIsUiKitModalOpen,
     setViewData: state.setViewData,
   }));
+
+  const { RCInstance } = useContext(RCContext);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
@@ -37,6 +40,10 @@ const useUiKitActionManager = () => {
     [setIsUiKitModalOpen, setViewData]
   );
 
+  const emitInteraction = async (appId, userInteraction) => {
+    await RCInstance?.handleUiKitInteraction(appId, userInteraction);
+  };
+
   const on = useCallback((eventName, listener) => {
     emitter.on(eventName, listener);
     return () => emitter.off(eventName, listener);
@@ -46,7 +53,7 @@ const useUiKitActionManager = () => {
     emitter.off(eventName, listener);
   }, []);
 
-  return { handleServerInteraction, on, off };
+  return { handleServerInteraction, emitInteraction, on, off };
 };
 
 export default useUiKitActionManager;

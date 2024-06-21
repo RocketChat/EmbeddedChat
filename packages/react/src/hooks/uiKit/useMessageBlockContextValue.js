@@ -1,12 +1,10 @@
-import { useContext } from 'react';
-import RCContext from '../../context/RCInstance';
+import useUiKitActionManager from './useUiKitActionManager';
 
 export const useMessageBlockContextValue = (rid, mid) => {
-  const { RCInstance } = useContext(RCContext);
-
+  const { emitInteraction } = useUiKitActionManager();
   return {
     action: async ({ appId, actionId, blockId, value }) => {
-      await RCInstance?.handleUiKitInteraction(appId, {
+      await emitInteraction(appId, {
         type: 'blockAction',
         actionId,
         payload: {

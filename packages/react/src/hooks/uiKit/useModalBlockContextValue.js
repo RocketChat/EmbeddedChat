@@ -1,12 +1,12 @@
+/* eslint-disable no-shadow */
 import { useDebouncedCallback } from '@rocket.chat/fuselage-hooks';
-import { useContext } from 'react';
-import RCContext from '../../context/RCInstance';
+import useUiKitActionManager from './useUiKitActionManager';
 
 export const useModalContextValue = ({ view, values, updateValues }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { emitInteraction } = useUiKitActionManager();
 
-  const debouncedTriggerAction = useDebouncedCallback(async (params) => {
-    await RCInstance?.handleUiKitInteraction(params);
+  const debouncedTriggerAction = useDebouncedCallback(async (appId, params) => {
+    await emitInteraction(appId, params);
   }, 700);
 
   return {
@@ -26,8 +26,8 @@ export const useModalContextValue = ({ view, values, updateValues }) => {
         'on_character_entered'
       )
         ? debouncedTriggerAction
-        : async (params) => {
-            await RCInstance?.handleUiKitInteraction(params);
+        : async (appId, params) => {
+            await emitInteraction(appId, params);
           };
 
       await triggerAction(appId, {

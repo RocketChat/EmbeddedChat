@@ -2311,7 +2311,7 @@ __metadata:
     "@emotion/react": 11.7.1
     "@open-wc/building-rollup": ^3.0.2
     "@rocket.chat/emitter": ^0.31.25
-    "@rocket.chat/fuselage-hooks": ^0.31.23
+    "@rocket.chat/fuselage-hooks": ^0.33.1
     "@rocket.chat/icons": ^0.31.23
     "@rocket.chat/message-parser": ^0.31.25
     "@rocket.chat/sdk": ^1.0.0-alpha.42
@@ -6777,15 +6777,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocket.chat/fuselage-hooks@npm:^0.31.23":
-  version: 0.31.25
-  resolution: "@rocket.chat/fuselage-hooks@npm:0.31.25"
+"@rocket.chat/fuselage-hooks@npm:^0.33.1":
+  version: 0.33.1
+  resolution: "@rocket.chat/fuselage-hooks@npm:0.33.1"
   dependencies:
     use-sync-external-store: ~1.2.0
   peerDependencies:
     "@rocket.chat/fuselage-tokens": "*"
     react: ^17.0.2
-  checksum: a706cc7b2b83ec7de037dac29b583f61d870f75efc84aa31e0832d3ea5c4e0f09a25d2758b22ccda5f7306ed9af8e407d3e301cd6a8e360bedb18733b86a58b5
+  checksum: bbbec1124ee9747883b69ac8a7934bd6d1b4ab59c7903f2698848940e0d59ce58030d1bb3eb9b704c313d9a7a0d3b2789b69ed28207d1344f613f3e9db01594f
   languageName: node
   linkType: hard
 

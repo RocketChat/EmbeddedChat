@@ -1,13 +1,13 @@
 /* eslint-disable no-void */
-import React, { useContext, useCallback } from 'react';
+import React from 'react';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import { UiKitContext } from '../../../uiKit';
-import RCContext from '../../../context/RCInstance';
 import { useModalContextValue } from '../../../hooks/uiKit/useModalBlockContextValue';
 import ModalBlock from './ModalBlock';
 import useUiKitView from '../../../hooks/uiKit/useUiKitView';
+import useUiKitActionManager from '../../../hooks/uiKit/useUiKitActionManager';
 
 const UiKitModal = ({ initialView }) => {
-  const { RCInstance } = useContext(RCContext);
   const { view, errors, values, updateValues, state } =
     useUiKitView(initialView);
   const contextValue = useModalContextValue({
@@ -16,10 +16,12 @@ const UiKitModal = ({ initialView }) => {
     updateValues,
   });
 
-  const handleSubmit = useCallback(
-    async (e) => {
+  const actionManager = useUiKitActionManager();
+
+  const handleSubmit = useEffectEvent(
+    (e) => {
       e.preventDefault();
-      await RCInstance?.handleUiKitInteraction(view.appId, {
+      void actionManager.emitInteraction(view.appId, {
         type: 'viewSubmit',
         payload: {
           view: {
@@ -30,13 +32,13 @@ const UiKitModal = ({ initialView }) => {
         viewId: view.id,
       });
     },
-    [RCInstance, view, state]
+    [actionManager, view, state]
   );
 
-  const handleCancel = useCallback(
-    async (e) => {
+  const handleCancel = useEffectEvent(
+    (e) => {
       e.preventDefault();
-      await RCInstance?.handleUiKitInteraction(view.appId, {
+      void actionManager.emitInteraction(view.appId, {
         type: 'viewClosed',
         payload: {
           viewId: view.id,
@@ -48,11 +50,11 @@ const UiKitModal = ({ initialView }) => {
         },
       });
     },
-    [RCInstance, view, state]
+    [actionManager, view, state]
   );
 
-  const handleClose = useCallback(async () => {
-    await RCInstance?.handleUiKitInteraction(view.appId, {
+  const handleClose = useEffectEvent(() => {
+    void actionManager.emitInteraction(view.appId, {
       type: 'viewClosed',
       payload: {
         viewId: view.id,
@@ -63,7 +65,7 @@ const UiKitModal = ({ initialView }) => {
         isCleared: true,
       },
     });
-  }, [RCInstance, view, state]);
+  }, [actionManager, view, state]);
 
   return (
     <UiKitContext.Provider value={contextValue}>
