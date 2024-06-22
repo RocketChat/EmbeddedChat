@@ -34,7 +34,6 @@ const useUiKitActionManager = () => {
 
   const handleServerInteraction = useCallback(
     (interaction) => {
-      console.log(interaction);
       switch (interaction.type) {
         case 'modal.open':
           setUiKitModalData(interaction.view);

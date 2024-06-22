@@ -2,7 +2,7 @@
 import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import { css } from '@emotion/react';
 import { BlockContext } from '@rocket.chat/ui-kit';
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import {
   UiKitComponent,
   UiKitContextualBar as UiKitContextualBarSurfaceRender,
@@ -17,8 +17,14 @@ import useUiKitView from '../../../hooks/uiKit/useUiKitView';
 import SidebarFooter from '../../../components/Sidebar/SidebarFooter';
 import SidebarContent from '../../../components/Sidebar/SidebarContent';
 import SidebarHeader from '../../../components/Sidebar/SidebarHeader';
+import RCContext from '../../../context/RCInstance';
 
 const UiKitContextualBar = ({ initialView }) => {
+  const { RCInstance } = useContext(RCContext);
+  const getHost = () => {
+    const host = RCInstance.getHost();
+    return host;
+  };
   const { emitInteraction } = useUiKitActionManager();
   const { view, values, updateValues, state } = useUiKitView(initialView);
   const contextValue = useContextualBarContextValue({
@@ -77,6 +83,7 @@ const UiKitContextualBar = ({ initialView }) => {
         <SidebarHeader
           title={contextualBarParser.text(view.title, BlockContext.NONE, 0)}
           onClose={handleClose}
+          avatarUrl={`${getHost()}/api/apps/${view.appId}/icon`}
         />
         <SidebarContent
           style={{
