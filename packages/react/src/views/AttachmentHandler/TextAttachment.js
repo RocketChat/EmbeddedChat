@@ -14,6 +14,9 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     return URL;
   };
 
+  console.log(attachment);
+  console.log(type);
+
   let attachmentText = attachment?.text;
   if (attachmentText.includes(')')) {
     attachmentText = attachmentText.split(')')[1] || '';
@@ -52,18 +55,21 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           variantStyles.textUserInfo,
         ]}
       >
-        <>
-          <Avatar
-            url={getUserAvatarUrl(attachment?.author_icon)}
-            alt="avatar"
-            size="1.2em"
-          />
-          <Box>@{attachment?.author_name}</Box>
-        </>
+        {attachment?.author_name && (
+          <>
+            <Avatar
+              url={getUserAvatarUrl(attachment?.author_icon)}
+              alt="avatar"
+              size="1.2em"
+            />
+            <Box>@{attachment?.author_name}</Box>
+          </>
+        )}
       </Box>
       <Box
         css={css`
           margin-top: 0.5rem;
+          white-space: pre-line;
         `}
       >
         {attachmentText}
