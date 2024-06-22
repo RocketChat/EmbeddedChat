@@ -20,7 +20,7 @@ const StaticSelect = ({
   const styles = useStaticSelectStyles();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
+  const [intervalValue, setInternalValue] = useState('');
   const staticSelectRef = useRef(null);
 
   const toggleDropdown = () => {
@@ -30,7 +30,7 @@ const StaticSelect = ({
   };
 
   const handleSelect = (optionValue) => {
-    setSelectedValue(optionValue);
+    setInternalValue(optionValue);
     setIsOpen(false);
     if (onSelect) {
       onSelect(optionValue);
@@ -38,7 +38,7 @@ const StaticSelect = ({
   };
 
   useEffect(() => {
-    setSelectedValue(value || '');
+    setInternalValue(value || '');
   }, [value]);
 
   useEffect(() => {
@@ -76,8 +76,8 @@ const StaticSelect = ({
         {...props}
       >
         <Box is="span" className="selected-option">
-          {selectedValue
-            ? options.find((option) => option.value === selectedValue)?.label
+          {intervalValue
+            ? options.find((option) => option.value === intervalValue)?.label
             : placeholder}
         </Box>
         <Icon name="chevron-down" />

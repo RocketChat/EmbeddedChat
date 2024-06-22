@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useTheme, css } from '@emotion/react';
+import React, { useState, useEffect } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
@@ -9,22 +9,29 @@ import { CheckBox } from '../CheckBox';
 const MultiSelect = ({
   className = '',
   style = {},
-  color = 'primary',
   options = [],
+  value,
   onChange,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('MultiSelect');
-  const theme = useTheme();
   const styles = useMultiSelectStyles();
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [internalValue, setInternalValue] = useState([]);
 
-  const handleOptionToggle = (value) => {
-    const isSelected = selectedOptions.includes(value);
+  useEffect(() => {
+    setInternalValue(value || []);
+  }, [value]);
+
+  const handleOptionToggle = (val) => {
+    const isSelected = internalValue.includes(val);
     if (isSelected) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== value));
+      const newValue = internalValue.filter((item) => item !== val);
+      setInternalValue(newValue);
+      onChange(newValue);
     } else {
-      setSelectedOptions([...selectedOptions, value]);
+      const newValue = [...internalValue, val];
+      setInternalValue(newValue);
+      onChange(newValue);
     }
   };
 
@@ -42,7 +49,7 @@ const MultiSelect = ({
             <CheckBox
               type="checkbox"
               value={option.value}
-              checked={selectedOptions.includes(option.value)}
+              checked={internalValue.includes(option.value)}
               onChange={() => handleOptionToggle(option.value)}
               css={styles.checkbox}
             />

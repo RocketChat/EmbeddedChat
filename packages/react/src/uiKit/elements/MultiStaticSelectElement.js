@@ -17,8 +17,8 @@ const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
   );
 
   const handleChange = useCallback(
-    (val) => {
-      action({ target: { val } });
+    (value) => {
+      action({ target: { value } });
     },
     [action]
   );
@@ -31,6 +31,7 @@ const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
         block.placeholder,
         0
       )}
+      disabled={loading}
       onChange={handleChange}
     />
   );
