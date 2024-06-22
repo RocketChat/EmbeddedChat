@@ -28,7 +28,14 @@ const SectionBlock = ({ className, block, surfaceRenderer }) => {
       </Grid.Item>
       {block.accessory && (
         <Flex.Item grow={0}>
-          <Grid.Item>
+          <Grid.Item
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: '0.25rem',
+            }}
+          >
             {accessoryElement
               ? surfaceRenderer.renderSectionAccessoryBlockElement(
                   accessoryElement,
