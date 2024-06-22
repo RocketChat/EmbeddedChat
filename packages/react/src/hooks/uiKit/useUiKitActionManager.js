@@ -9,39 +9,37 @@ const useUiKitActionManager = () => {
   const { RCInstance } = useContext(RCContext);
 
   const {
-    setIsUiKitModalOpen,
-    setIsUiKitContextualBarOpen,
-    setModalViewData,
-    setContextualBarViewData,
+    setUiKitModalOpen,
+    setUiKitContextualBarOpen,
+    setUiKitModalData,
+    setUiKitContextualBarData,
   } = useUiKitStore((state) => ({
-    setIsUiKitModalOpen: state.setIsUiKitModalOpen,
-    setIsUiKitContextualBarOpen: state.setIsUiKitContextualBarOpen,
-    setModalViewData: state.setModalViewData,
-    setContextualBarViewData: state.setContextualBarViewData,
+    setUiKitModalOpen: state.setUiKitModalOpen,
+    setUiKitContextualBarOpen: state.setUiKitContextualBarOpen,
+    setUiKitModalData: state.setUiKitModalData,
+    setUiKitContextualBarData: state.setUiKitContextualBarData,
   }));
 
-  const disposeView = useCallback(() => {
-    setIsUiKitModalOpen(false);
-    setModalViewData(null);
-    setIsUiKitContextualBarOpen(false);
-    setContextualBarViewData(null);
-  }, [
-    setContextualBarViewData,
-    setIsUiKitContextualBarOpen,
-    setIsUiKitModalOpen,
-    setModalViewData,
-  ]);
+  const disposeModalView = useCallback(() => {
+    setUiKitModalOpen(false);
+    setUiKitModalData(null);
+  }, [setUiKitModalOpen, setUiKitModalData]);
+
+  const disposeContextualBarView = useCallback(() => {
+    setUiKitContextualBarOpen(false);
+    setUiKitContextualBarData(null);
+  }, [setUiKitContextualBarData, setUiKitContextualBarOpen]);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
       switch (interaction.type) {
         case 'modal.open':
-          setModalViewData(interaction.view);
-          setIsUiKitModalOpen(true);
+          setUiKitModalData(interaction.view);
+          setUiKitModalOpen(true);
           break;
         case 'contextual_bar.open':
-          setContextualBarViewData(interaction.view);
-          setIsUiKitContextualBarOpen(true);
+          setUiKitContextualBarData(interaction.view);
+          setUiKitContextualBarOpen(true);
           break;
         case 'modal.update':
         case 'contextual_bar.update': {
@@ -62,10 +60,10 @@ const useUiKitActionManager = () => {
       }
     },
     [
-      setContextualBarViewData,
-      setIsUiKitContextualBarOpen,
-      setIsUiKitModalOpen,
-      setModalViewData,
+      setUiKitContextualBarData,
+      setUiKitContextualBarOpen,
+      setUiKitModalOpen,
+      setUiKitModalData,
     ]
   );
 
@@ -82,11 +80,11 @@ const useUiKitActionManager = () => {
             interaction.type
           )
         )
-          disposeView();
+          disposeModalView();
         break;
 
       case 'viewClosed':
-        if (!!interaction && interaction.type !== 'errors') disposeView();
+        if (!!interaction && interaction.type !== 'errors') disposeModalView();
         break;
 
       default:
@@ -103,7 +101,14 @@ const useUiKitActionManager = () => {
     emitter.off(eventName, listener);
   }, []);
 
-  return { handleServerInteraction, emitInteraction, disposeView, on, off };
+  return {
+    handleServerInteraction,
+    emitInteraction,
+    disposeModalView,
+    disposeContextualBarView,
+    on,
+    off,
+  };
 };
 
 export default useUiKitActionManager;

@@ -57,10 +57,10 @@ const ChatLayout = () => {
     (state) => state.attachmentWindowOpen
   );
   const { data, handleDrag, handleDragDrop } = useDropBox();
-  const { isUiKitContextualBarOpen, contextualBarViewData } = useUiKitStore(
+  const { uiKitContextualBarOpen, uiKitContextualBarData } = useUiKitStore(
     (state) => ({
-      isUiKitContextualBarOpen: state.isUiKitContextualBarOpen,
-      contextualBarViewData: state.contextualBarViewData,
+      uiKitContextualBarOpen: state.uiKitContextualBarOpen,
+      uiKitContextualBarData: state.uiKitContextualBarData,
     })
   );
 
@@ -103,10 +103,10 @@ const ChatLayout = () => {
         {showPinned && <PinnedMessages />}
         {showStarred && <StarredMessages />}
         {showCurrentUserInfo && <UserInformation />}
-        {isUiKitContextualBarOpen && (
+        {uiKitContextualBarOpen && (
           <UiKitContextualBar
             key={Math.random()}
-            initialView={contextualBarViewData}
+            initialView={uiKitContextualBarData}
           />
         )}
       </Box>

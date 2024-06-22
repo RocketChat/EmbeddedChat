@@ -1,21 +1,18 @@
 import { create } from 'zustand';
 
 const useUiKitStore = create((set) => ({
-  isUiKitModalOpen: false,
-  setIsUiKitModalOpen: (isOpen) => set({ isUiKitModalOpen: isOpen }),
+  uiKitModalOpen: false,
+  setUiKitModalOpen: (isOpen) => set({ uiKitModalOpen: isOpen }),
 
-  isUiKitContextualBarOpen: false,
-  setIsUiKitContextualBarOpen: (isOpen) => {
-    set({ isUiKitContextualBarOpen: isOpen });
-  },
+  uiKitContextualBarOpen: false,
+  setUiKitContextualBarOpen: (isOpen) =>
+    set({ uiKitContextualBarOpen: isOpen }),
 
-  modalViewData: null,
-  setModalViewData: (data) => set({ modalViewData: data }),
+  uiKitModalData: null,
+  setUiKitModalData: (data) => set({ uiKitModalData: data }),
 
-  contextualBarViewData: null,
-  setContextualBarViewData: (data) => {
-    set({ contextualBarViewData: data });
-  },
+  uiKitContextualBarData: null,
+  setUiKitContextualBarData: (data) => set({ uiKitContextualBarData: data }),
 }));
 
 export default useUiKitStore;

@@ -19,7 +19,7 @@ import SidebarContent from '../../../components/Sidebar/SidebarContent';
 import SidebarHeader from '../../../components/Sidebar/SidebarHeader';
 
 const UiKitContextualBar = ({ initialView }) => {
-  const { emitInteraction } = useUiKitActionManager();
+  const { emitInteraction, disposeContextualBarView } = useUiKitActionManager();
   const { view, values, updateValues, state } = useUiKitView(initialView);
   const contextValue = useContextualBarContextValue({
     view,
@@ -39,6 +39,7 @@ const UiKitContextualBar = ({ initialView }) => {
       },
       viewId: view.id,
     });
+    disposeContextualBarView();
   });
 
   const handleCancel = useEffectEvent((e) => {
@@ -54,6 +55,7 @@ const UiKitContextualBar = ({ initialView }) => {
         isCleared: false,
       },
     });
+    disposeContextualBarView();
   });
 
   const handleClose = useEffectEvent((e) => {
@@ -69,6 +71,7 @@ const UiKitContextualBar = ({ initialView }) => {
         isCleared: true,
       },
     });
+    disposeContextualBarView();
   });
 
   return (
