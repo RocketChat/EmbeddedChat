@@ -22,7 +22,6 @@ const MultiSelect = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const multiSelectRef = useRef(null);
-
   const toggleDropdown = () => {
     if (!disabled) {
       setIsOpen(!isOpen);
@@ -72,7 +71,7 @@ const MultiSelect = ({
         <ListBox
           options={options}
           onSelect={handleSelect}
-          value={internalValue}
+          value={value}
           multi
         />
       )}
@@ -83,14 +82,16 @@ const MultiSelect = ({
 MultiSelect.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
-  color: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
     })
   ),
-  onChange: PropTypes.func,
+  value: PropTypes.array,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default MultiSelect;

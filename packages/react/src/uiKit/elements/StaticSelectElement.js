@@ -18,7 +18,6 @@ const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
 
   const handleSelect = useCallback(
     (selectedValue) => {
-      console.log(selectedValue);
       action({ target: { value: selectedValue } });
     },
     [action]

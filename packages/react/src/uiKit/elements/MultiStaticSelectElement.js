@@ -18,6 +18,7 @@ const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
 
   const handleChange = useCallback(
     (val) => {
+      console.log(val);
       action({ target: { value: val } });
     },
     [action]

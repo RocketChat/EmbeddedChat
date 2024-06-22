@@ -29,7 +29,6 @@ const ListBox = ({
 
   const handleOptionClick = useCallback(
     (option) => {
-      console.log(option);
       if (onSelect) {
         onSelect(option.value);
       }
