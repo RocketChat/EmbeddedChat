@@ -5,7 +5,7 @@ import { fromTextObjectToString } from '../utils/fromTextObjectToString';
 import { MultiSelect } from '../../components/MultiSelect';
 
 const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
-  const [{ loading }, action] = useUiKitState(block, context);
+  const [{ loading, value }, action] = useUiKitState(block, context);
 
   const options = useMemo(
     () =>
@@ -17,8 +17,8 @@ const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
   );
 
   const handleChange = useCallback(
-    (value) => {
-      action({ target: { value } });
+    (val) => {
+      action({ target: { value: val } });
     },
     [action]
   );
@@ -26,6 +26,7 @@ const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
   return (
     <MultiSelect
       options={options}
+      value={value}
       placeholder={fromTextObjectToString(
         surfaceRenderer,
         block.placeholder,
