@@ -20,7 +20,7 @@ const StaticSelect = ({
   const styles = useStaticSelectStyles();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [intervalValue, setInternalValue] = useState('');
+  const [internalValue, setInternalValue] = useState('');
   const staticSelectRef = useRef(null);
 
   const toggleDropdown = () => {
@@ -76,8 +76,8 @@ const StaticSelect = ({
         {...props}
       >
         <Box is="span" className="selected-option">
-          {intervalValue
-            ? options.find((option) => option.value === intervalValue)?.label
+          {internalValue
+            ? options.find((option) => option.value === internalValue)?.label
             : placeholder}
         </Box>
         <Icon name="chevron-down" />

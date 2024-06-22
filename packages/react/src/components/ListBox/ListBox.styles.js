@@ -28,7 +28,14 @@ const useListBoxStyles = () => {
     font-weight: 600;
   `;
 
-  return { main, listItem, listText };
+  const checkContainer = css`
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+
+  return { main, listItem, listText, checkContainer };
 };
 
 export default useListBoxStyles;

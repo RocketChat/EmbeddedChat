@@ -1,6 +1,9 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
+import { CheckBox } from '../CheckBox';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useListBoxStyles from './ListBox.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
@@ -10,6 +13,8 @@ const ListBox = ({
   style = {},
   onSelect,
   options = [],
+  multi = false,
+  value,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ListBox');
@@ -24,6 +29,7 @@ const ListBox = ({
 
   const handleOptionClick = useCallback(
     (option) => {
+      console.log(option);
       if (onSelect) {
         onSelect(option.value);
       }
@@ -90,7 +96,25 @@ const ListBox = ({
               color: index === optionIndex && colors.primaryForeground,
             }}
           >
-            <Box is="span">{option.label}</Box>
+            {multi ? (
+              <label key={option.value} css={styles.checkContainer}>
+                <CheckBox
+                  type="checkbox"
+                  value={option.value}
+                  defaultChecked={value?.includes(option.value)}
+                  css={styles.checkbox}
+                />
+                <Box
+                  css={css`
+                    padding: 0 0.3rem;
+                  `}
+                >
+                  {option.label}
+                </Box>
+              </label>
+            ) : (
+              <Box is="span">{option.label}</Box>
+            )}
           </li>
         ))}
       </ul>
