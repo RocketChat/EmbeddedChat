@@ -20,18 +20,21 @@ const useUiKitActionManager = () => {
     setUiKitContextualBarData: state.setUiKitContextualBarData,
   }));
 
-  const disposeModalView = useCallback(() => {
+  const disposeView = useCallback(() => {
     setUiKitModalOpen(false);
     setUiKitModalData(null);
-  }, [setUiKitModalOpen, setUiKitModalData]);
-
-  const disposeContextualBarView = useCallback(() => {
     setUiKitContextualBarOpen(false);
     setUiKitContextualBarData(null);
-  }, [setUiKitContextualBarData, setUiKitContextualBarOpen]);
+  }, [
+    setUiKitModalOpen,
+    setUiKitModalData,
+    setUiKitContextualBarOpen,
+    setUiKitContextualBarData,
+  ]);
 
   const handleServerInteraction = useCallback(
     (interaction) => {
+      console.log(interaction);
       switch (interaction.type) {
         case 'modal.open':
           setUiKitModalData(interaction.view);
@@ -80,11 +83,11 @@ const useUiKitActionManager = () => {
             interaction.type
           )
         )
-          disposeModalView();
+          disposeView();
         break;
 
       case 'viewClosed':
-        if (!!interaction && interaction.type !== 'errors') disposeModalView();
+        if (!!interaction && interaction.type !== 'errors') disposeView();
         break;
 
       default:
@@ -104,8 +107,7 @@ const useUiKitActionManager = () => {
   return {
     handleServerInteraction,
     emitInteraction,
-    disposeModalView,
-    disposeContextualBarView,
+    disposeView,
     on,
     off,
   };

@@ -94,3 +94,10 @@ export const ModalTitleStyles = {
     align-items: center;
   `,
 };
+
+export const ModalThumbStyles = {
+  modalThumb: css`
+    display: flex;
+    align-items: center;
+  `,
+};

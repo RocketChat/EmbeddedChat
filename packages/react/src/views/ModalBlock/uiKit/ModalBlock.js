@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import RCContext from '../../../context/RCInstance';
 import { UiKitComponent, UiKitModal, modalParser } from '../../../uiKit';
 import { Box } from '../../../components/Box';
 import { Button } from '../../../components/Button';
@@ -33,6 +34,11 @@ const focusableElementsStringInvalid = `
 	[contenteditable]:invalid`;
 
 function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
+  const { RCInstance } = useContext(RCContext);
+  const getHost = () => {
+    const host = RCInstance.getHost();
+    return host;
+  };
   const id = `modal_id_${useUniqueId()}`;
   const ref = useRef();
 
@@ -66,9 +72,13 @@ function ModalBlock({ view, errors, onSubmit, onClose, onCancel }) {
       }}
     >
       <Modal.Header>
+        {view.showIcon && (
+          <Modal.Thumb url={`${getHost()}/api/apps/${view.appId}/icon`} />
+        )}
         <Modal.Title>{modalParser.text(view.title)}</Modal.Title>
         <Modal.Close tabIndex={-1} onClick={onClose} />
       </Modal.Header>
+
       <Modal.Content>
         <Box style={{ padding: '0.25rem' }}>
           <form method="post" action="#" onSubmit={onSubmit}>
