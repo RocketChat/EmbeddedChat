@@ -129,7 +129,20 @@ ListBox.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
   onSelect: PropTypes.func,
-  options: PropTypes.array.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
+    })
+  ).isRequired,
+  multi: PropTypes.bool,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]),
 };
 
 export default ListBox;
