@@ -21,7 +21,7 @@ const SectionBlock = ({ className, block, surfaceRenderer }) => {
   );
 
   return (
-    <Grid className={className}>
+    <Grid className={className} cols={2} gap="10px">
       <Grid.Item>
         {text && <Box>{surfaceRenderer.text(text)}</Box>}
         {fields && <Fields fields={fields} surfaceRenderer={surfaceRenderer} />}

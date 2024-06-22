@@ -14,6 +14,7 @@ const useSidebarStyles = () => {
   `;
 
   const content = css`
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1;

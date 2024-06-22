@@ -40,14 +40,12 @@ export const gridStyles = {
 
 export const gridItemStyles = {
   dynamicItem: (xs, md, lg, xl, xxl) => css`
-    @media (max-width: 600px) {
-      ${xs && xs.colSpan && `grid-column: span ${xs.colSpan}`};
-      ${xs && xs.rowSpan && `grid-row: span ${xs.rowSpan}`};
-      ${xs && xs.colStart && `grid-column-start: ${xs.colStart}`};
-      ${xs && xs.colEnd && `grid-column-end: ${xs.colEnd}`};
-      ${xs && xs.rowStart && `grid-row-start: ${xs.rowStart}`};
-      ${xs && xs.rowEnd && `grid-row-end: ${xs.rowEnd}`};
-    }
+    ${xs && xs.colSpan && `grid-column: span ${xs.colSpan}`};
+    ${xs && xs.rowSpan && `grid-row: span ${xs.rowSpan}`};
+    ${xs && xs.colStart && `grid-column-start: ${xs.colStart}`};
+    ${xs && xs.colEnd && `grid-column-end: ${xs.colEnd}`};
+    ${xs && xs.rowStart && `grid-row-start: ${xs.rowStart}`};
+    ${xs && xs.rowEnd && `grid-row-end: ${xs.rowEnd}`};
 
     @media (min-width: 600px) {
       ${md && md.colSpan && `grid-column: span ${md.colSpan}`};
