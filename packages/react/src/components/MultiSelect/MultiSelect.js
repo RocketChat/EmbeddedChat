@@ -79,8 +79,16 @@ const MultiSelect = ({
         ]}
         {...props}
       >
-        <Box is="span" className="selected-option">
-          {placeholder}
+        <Box css={styles.selectedItemsContainer}>
+          {internalValue.length > 0 ? (
+            internalValue.map((item, index) => (
+              <Box is="span" key={index} css={styles.selectedItems}>
+                {options.find((option) => option.value === item)?.label || item}
+              </Box>
+            ))
+          ) : (
+            <Box is="span">{placeholder}</Box>
+          )}
         </Box>
         <Icon name="chevron-down" />
       </Box>

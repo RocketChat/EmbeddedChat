@@ -39,6 +39,18 @@ const useMultiSelectStyles = () => {
       cursor: not-allowed !important;
       color: ${colors.mutedForeground};
     `,
+    selectedItemsContainer: css`
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    `,
+    selectedItems: css`
+      background: ${colors.muted};
+      padding: 0.2rem;
+      display: flex;
+      justify-self: flex-start;
+      gap: 0.2rem;
+    `,
   };
 
   return styles;
