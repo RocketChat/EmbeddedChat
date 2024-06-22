@@ -207,7 +207,9 @@ const ChatBody = ({
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
-        {uiKitModalOpen && <UiKitModal initialView={uiKitModalData} />}
+        {uiKitModalOpen && (
+          <UiKitModal key={Math.random()} initialView={uiKitModalData} />
+        )}
       </Box>
       {popupVisible && otherUserMessage && (
         <RecentMessageButton
