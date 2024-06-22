@@ -17,7 +17,7 @@ const useListBoxStyles = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.25rem;
+    padding: 0.2rem;
 
     &:hover {
       background-color: ${colors.secondary};
@@ -35,7 +35,11 @@ const useListBoxStyles = () => {
     justify-content: center;
   `;
 
-  return { main, listItem, listText, checkContainer };
+  const checkbox = css`
+    cursor: pointer;
+  `;
+
+  return { main, listItem, listText, checkContainer, checkbox };
 };
 
 export default useListBoxStyles;

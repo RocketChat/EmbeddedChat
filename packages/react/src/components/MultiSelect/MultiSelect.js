@@ -32,6 +32,24 @@ const MultiSelect = ({
     setInternalValue(value || []);
   }, [value]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        multiSelectRef.current &&
+        !multiSelectRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen]);
+
   const handleSelect = (val) => {
     const isSelected = internalValue.includes(val);
     if (isSelected) {

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
@@ -96,12 +95,17 @@ const ListBox = ({
             }}
           >
             {multi ? (
-              <label key={option.value} css={styles.checkContainer}>
+              <Box
+                css={css`
+                  display: flex;
+                  gap: 0.25rem;
+                `}
+              >
                 <CheckBox
-                  type="checkbox"
                   value={option.value}
-                  defaultChecked={value?.includes(option.value)}
                   css={styles.checkbox}
+                  checked={value?.includes(option.value)}
+                  onChange={() => {}}
                 />
                 <Box
                   css={css`
@@ -110,7 +114,7 @@ const ListBox = ({
                 >
                   {option.label}
                 </Box>
-              </label>
+              </Box>
             ) : (
               <Box is="span">{option.label}</Box>
             )}
