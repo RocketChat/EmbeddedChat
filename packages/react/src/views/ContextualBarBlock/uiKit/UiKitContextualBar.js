@@ -116,7 +116,7 @@ const UiKitContextualBar = ({ initialView }) => {
           {view.submit && (
             <Button
               type={view.submit?.style === 'danger' ? 'destructive' : 'primary'}
-              style={{ flex: 1 }}
+              style={{ flex: 1, marginLeft: '0.75rem' }}
               onClick={handleSubmit}
             >
               {contextualBarParser.text(view.submit.text)}
