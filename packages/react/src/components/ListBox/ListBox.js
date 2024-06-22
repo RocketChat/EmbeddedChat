@@ -84,7 +84,7 @@ const ListBox = ({
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {options.map((option, index) => (
           <li
-            key={index}
+            key={option.value}
             role="presentation"
             css={styles.listItem}
             ref={(el) => setItemRef(el, index)}
