@@ -68,7 +68,11 @@ const StaticSelect = ({
     >
       <Box
         onClick={toggleDropdown}
-        css={[styles.selectBox, isOpen && styles.clickStyle]}
+        css={[
+          styles.selectBox,
+          isOpen && styles.clickStyle,
+          disabled && styles.disabled,
+        ]}
         {...props}
       >
         <Box is="span" className="selected-option">

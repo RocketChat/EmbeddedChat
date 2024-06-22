@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import { Box } from '../Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useListBoxStyles from './ListBox.styles';

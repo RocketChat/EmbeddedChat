@@ -34,6 +34,11 @@ const useStaticSelectStyles = () => {
     clickStyle: css`
       border-color: ${colors.ring};
     `,
+
+    disabled: css`
+      cursor: not-allowed !important;
+      color: ${colors.mutedForeground};
+    `,
   };
 
   return styles;

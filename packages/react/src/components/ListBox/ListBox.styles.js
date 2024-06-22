@@ -17,7 +17,7 @@ const useListBoxStyles = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.1rem 0.25rem;
+    padding: 0.25rem;
 
     &:hover {
       background-color: ${colors.secondary};
