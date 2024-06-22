@@ -32,7 +32,7 @@ const SidebarContent = ({ children, searchProps = {}, style }) => {
           css={styles.searchContainer}
           style={{
             position: 'relative',
-            marginBottom: '1rem',
+            margin: '0.5rem',
           }}
           ref={searchContainerRef}
         >
