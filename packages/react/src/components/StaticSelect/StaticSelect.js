@@ -1,51 +1,102 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
+import { Box } from '../Box';
 import useStaticSelectStyles from './StaticSelect.styles';
+import ListBox from '../ListBox/ListBox';
+import Icon from '../Icon/Icon';
 
 const StaticSelect = ({
   className = '',
   style = {},
   options = [],
   placeholder = '',
-  onChange,
+  value,
+  onSelect,
+  disabled = false,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('StaticSelect');
   const styles = useStaticSelectStyles();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
+  const staticSelectRef = useRef(null);
+
+  const toggleDropdown = () => {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const handleSelect = (optionValue) => {
+    setSelectedValue(optionValue);
+    setIsOpen(false);
+    if (onSelect) {
+      onSelect(optionValue);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedValue(value || '');
+  }, [value]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        staticSelectRef.current &&
+        !staticSelectRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <select
-      css={styles.main}
+    <Box
       className={`ec-static-select ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
-      onChange={onChange}
-      {...props}
+      ref={staticSelectRef}
+      css={styles.main}
     >
-      {placeholder && (
-        <option value="" hidden>
-          {placeholder}
-        </option>
-      )}
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+      <Box
+        onClick={toggleDropdown}
+        css={[styles.selectBox, isOpen && styles.clickStyle]}
+        {...props}
+      >
+        <Box is="span" className="selected-option">
+          {selectedValue
+            ? options.find((option) => option.value === selectedValue)?.label
+            : placeholder}
+        </Box>
+        <Icon name="chevron-down" />
+      </Box>
+
+      {isOpen && <ListBox options={options} onSelect={handleSelect} />}
+    </Box>
   );
 };
 
 StaticSelect.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
-  color: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
     })
-  ),
-  onChange: PropTypes.func,
+  ).isRequired,
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onSelect: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default StaticSelect;

@@ -16,9 +16,10 @@ const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
     [block.options, surfaceRenderer]
   );
 
-  const handleChange = useCallback(
-    (event) => {
-      action({ target: { value: event.target.value } });
+  const handleSelect = useCallback(
+    (selectedValue) => {
+      console.log(selectedValue);
+      action({ target: { value: selectedValue } });
     },
     [action]
   );
@@ -32,7 +33,7 @@ const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
         block.placeholder,
         0
       )}
-      onChange={handleChange}
+      onSelect={handleSelect}
     />
   );
 };
