@@ -39,13 +39,24 @@ export const gridStyles = {
 };
 
 export const gridItemStyles = {
-  dynamicItem: (xs, md, lg, xl, xxl) => css`
-    ${xs && xs.colSpan && `grid-column: span ${xs.colSpan}`};
-    ${xs && xs.rowSpan && `grid-row: span ${xs.rowSpan}`};
-    ${xs && xs.colStart && `grid-column-start: ${xs.colStart}`};
-    ${xs && xs.colEnd && `grid-column-end: ${xs.colEnd}`};
-    ${xs && xs.rowStart && `grid-row-start: ${xs.rowStart}`};
-    ${xs && xs.rowEnd && `grid-row-end: ${xs.rowEnd}`};
+  dynamicItem: (standard, xs, md, lg, xl, xxl) => css`
+    ${standard && standard.colSpan && `grid-column: span ${standard.colSpan}`};
+    ${standard && standard.rowSpan && `grid-row: span ${standard.rowSpan}`};
+    ${standard &&
+    standard.colStart &&
+    `grid-column-start: ${standard.colStart}`};
+    ${standard && standard.colEnd && `grid-column-end: ${standard.colEnd}`};
+    ${standard && standard.rowStart && `grid-row-start: ${standard.rowStart}`};
+    ${standard && standard.rowEnd && `grid-row-end: ${standard.rowEnd}`};
+
+    @media (min-width: 600px) {
+      ${xs && xs.colSpan && `grid-column: span ${xs.colSpan}`};
+      ${xs && xs.rowSpan && `grid-row: span ${xs.rowSpan}`};
+      ${xs && xs.colStart && `grid-column-start: ${xs.colStart}`};
+      ${xs && xs.colEnd && `grid-column-end: ${xs.colEnd}`};
+      ${xs && xs.rowStart && `grid-row-start: ${xs.rowStart}`};
+      ${xs && xs.rowEnd && `grid-row-end: ${xs.rowEnd}`};
+    }
 
     @media (min-width: 600px) {
       ${md && md.colSpan && `grid-column: span ${md.colSpan}`};
