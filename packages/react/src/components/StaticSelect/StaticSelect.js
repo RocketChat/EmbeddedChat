@@ -76,14 +76,20 @@ const StaticSelect = ({
         {...props}
       >
         <Box is="span" className="selected-option">
-          {internalValue
+          {!isOpen && internalValue
             ? options.find((option) => option.value === internalValue)?.label
             : placeholder}
         </Box>
         <Icon name="chevron-down" />
       </Box>
 
-      {isOpen && <ListBox options={options} onSelect={handleSelect} />}
+      {isOpen && (
+        <ListBox
+          options={options}
+          onSelect={handleSelect}
+          value={internalValue}
+        />
+      )}
     </Box>
   );
 };

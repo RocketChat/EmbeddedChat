@@ -97,7 +97,7 @@ const MultiSelect = ({
         <ListBox
           options={options}
           onSelect={handleSelect}
-          value={value}
+          value={internalValue}
           multi
         />
       )}
