@@ -1,5 +1,3 @@
-// StaticSelect.stories.jsx
-
 import React from 'react';
 import { ThemeProvider } from '@emotion/react';
 import DefaultTheme from '../../theme/DefaultTheme';
