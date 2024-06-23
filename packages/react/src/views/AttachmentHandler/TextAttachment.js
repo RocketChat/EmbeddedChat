@@ -14,9 +14,6 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     return URL;
   };
 
-  console.log(attachment);
-  console.log(type);
-
   let attachmentText = attachment?.text;
   if (attachmentText.includes(')')) {
     attachmentText = attachmentText.split(')')[1] || '';

@@ -7,9 +7,11 @@ import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useListBoxStyles from './ListBox.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 
-const findIndex = (options, value) => {
-  if (value !== undefined && value !== null) {
-    return options.findIndex((option) => option.value === value);
+const findIndex = (options, value, multi) => {
+  if (multi) return 0;
+  if (value) {
+    const index = options.findIndex((option) => option.value === value);
+    return index !== -1 ? index : 0;
   }
   return 0;
 };
@@ -28,7 +30,7 @@ const ListBox = ({
   const { colors } = useCustomTheme();
   const itemRefs = useRef([]);
   const [optionIndex, setOptionIndex] = useState(() =>
-    findIndex(options, value)
+    findIndex(options, value, multi)
   );
 
   const setItemRef = (el, index) => {
@@ -84,8 +86,8 @@ const ListBox = ({
   }, [optionIndex]);
 
   useEffect(() => {
-    setOptionIndex(findIndex(options, value));
-  }, [options, value]);
+    setOptionIndex(findIndex(options, value, multi));
+  }, [multi, options, value]);
 
   return (
     <Box

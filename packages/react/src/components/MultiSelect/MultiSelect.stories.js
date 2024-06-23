@@ -3,11 +3,11 @@
 import React from 'react';
 import { ThemeProvider } from '@emotion/react';
 import DefaultTheme from '../../theme/DefaultTheme';
-import StaticSelect from './StaticSelect';
+import MultiSelect from './MultiSelect';
 
 export default {
-  title: 'Components/StaticSelect',
-  component: StaticSelect,
+  title: 'Components/MultiSelect',
+  component: MultiSelect,
 };
 
 export const Default = {
@@ -17,13 +17,13 @@ export const Default = {
       { value: 'option2', label: 'Option 2' },
       { value: 'option3', label: 'Option 3' },
     ],
-    placeholder: 'Select an option...',
+    placeholder: 'Select options...',
     value: '',
     disabled: false,
   },
   render: (args) => (
     <ThemeProvider theme={DefaultTheme}>
-      <StaticSelect {...args} />
+      <MultiSelect {...args} />
     </ThemeProvider>
   ),
 };
