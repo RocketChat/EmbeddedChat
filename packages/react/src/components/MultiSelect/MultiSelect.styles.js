@@ -5,11 +5,11 @@ const useMultiSelectStyles = () => {
   const { theme, colors } = useCustomTheme();
   const styles = {
     main: css`
-      display: flex;
+      display: inline-flex;
+      flex: 1 0 auto;
       flex-direction: column;
-      min-width: 8rem;
       gap: 0.25rem;
-      flex: 1;
+      min-width: 8rem;
     `,
 
     selectBox: css`
