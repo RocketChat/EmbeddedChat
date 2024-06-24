@@ -102,8 +102,6 @@
     "date-fns": "^2.30.0",
     "emoji-picker-react": "^4.4.9",
     "emoji-toolkit": "^7.0.1",
-    "gapi-cjs": "^1.0.3",
-    "js-cookie": "^3.0.5",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",
     "react-virtuoso": "^4.3.10",
