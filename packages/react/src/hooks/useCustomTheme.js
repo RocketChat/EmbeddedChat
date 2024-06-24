@@ -4,11 +4,13 @@ import { useRCContext } from '../context/RCInstance';
 const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
 
 export const useCustomTheme = () => {
-  const { ECOptions } = useRCContext();
+  const { ECOptions } = useRCContext() || {};
   const theme = useTheme();
-  const mode = ECOptions?.mode;
-  const colors = theme.schemes[mode];
-  const invertedColors = theme.schemes[invertMode(mode)];
+
+  const mode = ECOptions?.mode || 'light';
+
+  const colors = theme.schemes?.[mode];
+  const invertedColors = theme.schemes?.[invertMode(mode)];
 
   return { theme, mode, colors, invertedColors };
 };

@@ -5,13 +5,26 @@ import { gridStyles as styles } from './Grid.styles';
 
 import GridItem from './GridItem';
 
-const Grid = ({ xs, md, lg, xl, xxl, cols, gap, gapX, gapY, children }) => (
+const Grid = ({
+  xs,
+  md,
+  lg,
+  xl,
+  xxl,
+  cols,
+  gap,
+  gapX,
+  gapY,
+  children,
+  ...props
+}) => (
   <Box
     className="ec-grid"
     css={[
       styles.container,
       styles.dynamic(cols, gap, gapX, gapY, xs, md, lg, xl, xxl),
     ]}
+    {...props}
   >
     {children}
   </Box>

@@ -11,7 +11,7 @@ export const useModalstyles = () => {
     flex-direction: column;
     align-content: stretch;
     justify-content: strech;
-    max-height: 100%;
+    max-height: 90%;
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
@@ -28,7 +28,8 @@ export const useModalstyles = () => {
 export const ModalContentStyles = {
   content: css`
     position: relative;
-    overflow-y: auto !important;
+    overflow-y: auto;
+    overflow-x: hidden;
   `,
 };
 
@@ -89,6 +90,13 @@ export const ModalTitleStyles = {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+  `,
+};
+
+export const ModalThumbStyles = {
+  modalThumb: css`
     display: flex;
     align-items: center;
   `,

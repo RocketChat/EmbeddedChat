@@ -3,39 +3,45 @@ import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useStaticSelectStyles = () => {
   const { theme, colors } = useCustomTheme();
+  const styles = {
+    main: css`
+      display: inline-flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 8rem;
+    `,
 
-  const main = css`
-    position: relative;
-    display: inline-flex;
-    flex: 1 0 auto;
-    min-width: 8rem;
-    padding: 0.5rem 0.9375rem;
-    vertical-align: baseline;
-    outline: 0;
-    background-color: transparent;
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.25rem;
-    overflow: hidden;
-    color: ${colors.foreground};
-    border-right: 0.9375rem transparent;
-    border-width: 1px;
-    border-color: ${colors.border};
-    border-style: solid;
-    border-radius: ${theme.schemes.radius};
-    box-shadow: none;
-    -webkit-appearance: none;
-    appearance: none;
-    transition: all 230ms;
-    background-color: ${colors.background};
+    selectBox: css`
+      display: flex;
+      cursor: pointer;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.9375rem;
+      background-color: transparent;
+      letter-spacing: 0rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.25rem;
+      color: ${colors.foreground};
+      border-width: 1px;
+      border-color: ${colors.border};
+      border-style: solid;
+      border-radius: ${theme.schemes.radius};
+      background-color: ${colors.background};
+    `,
 
-    &:focus {
+    clickStyle: css`
       border-color: ${colors.ring};
-    }
-  `;
+    `,
 
-  return { main };
+    disabled: css`
+      cursor: not-allowed !important;
+      color: ${colors.mutedForeground};
+    `,
+  };
+
+  return styles;
 };
 
 export default useStaticSelectStyles;

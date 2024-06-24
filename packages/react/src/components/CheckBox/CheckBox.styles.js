@@ -11,7 +11,7 @@ const useCheckBoxStyles = (checked) => {
     height: 1rem;
     width: 1rem;
     box-sizing: border-box;
-    border: ${!checked ? `1px solid ${colors.primary}` : `none`};
+    border: ${!checked ? `2px solid ${colors.border}` : `none`};
     border-radius: ${theme.schemes.radius};
     cursor: pointer;
     outline: none;

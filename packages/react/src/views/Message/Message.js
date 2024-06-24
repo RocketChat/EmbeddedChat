@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Attachments } from '../AttachmentHandler';
@@ -7,7 +7,6 @@ import MessageHeader from './MessageHeader';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { Box } from '../../components/Box';
-import { UiKitComponent, kitContext, UiKitMessage } from '../uiKit';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';
@@ -21,6 +20,7 @@ import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
 import { useMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
+import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
 
 const Message = ({
   message,
@@ -127,28 +127,6 @@ const Message = ({
     openThread(msg);
   };
 
-  const context = useMemo(
-    () => ({
-      action: async ({ actionId, value, blockId, appId }) => {
-        await RCInstance?.triggerBlockAction({
-          blockId,
-          actionId,
-          value,
-          mid: message._id,
-          rid: RCInstance.rid,
-          appId,
-          container: {
-            type: 'message',
-            id: message._id,
-          },
-        });
-      },
-      appId: message.blocks && message.blocks[0] && message.blocks[0].appId,
-      rid: RCInstance.rid,
-    }),
-    [RCInstance, message._id, message.blocks]
-  );
-
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const isPinned = message.pinned;
   const shouldShowHeader = !sequential || (!showAvatar && isStarred);
@@ -205,12 +183,11 @@ const Message = ({
                 )}
 
                 {message.blocks && (
-                  <kitContext.Provider value={context} mid={message.mid}>
-                    <UiKitComponent
-                      render={UiKitMessage}
-                      blocks={message.blocks}
-                    />
-                  </kitContext.Provider>
+                  <UiKitMessageBlock
+                    rid={RCInstance.rid}
+                    mid={message._id}
+                    blocks={message.blocks}
+                  />
                 )}
 
                 {!message.t && showToolbox ? (

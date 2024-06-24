@@ -49,6 +49,8 @@ export const bubbleStyles = (customTheme) => {
 
     attachmentBody: css`
       position: relative;
+      width: fit-content;
+      max-width: 80%;
       border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
         ${theme.schemes.radius} 0.2rem;
     `,

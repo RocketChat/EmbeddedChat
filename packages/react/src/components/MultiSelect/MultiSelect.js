@@ -1,61 +1,106 @@
-import React, { useState } from 'react';
-import { useTheme, css } from '@emotion/react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
+import { Icon } from '../Icon';
+import ListBox from '../ListBox/ListBox';
 import useMultiSelectStyles from './MultiSelect.styles';
-import { CheckBox } from '../CheckBox';
 
 const MultiSelect = ({
   className = '',
   style = {},
-  color = 'primary',
   options = [],
+  value,
+  placeholder = '',
+  disabled = false,
   onChange,
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('MultiSelect');
-  const theme = useTheme();
   const styles = useMultiSelectStyles();
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [internalValue, setInternalValue] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleOptionToggle = (value) => {
-    const isSelected = selectedOptions.includes(value);
+  const multiSelectRef = useRef(null);
+  const toggleDropdown = () => {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  useEffect(() => {
+    setInternalValue(value || []);
+  }, [value]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        multiSelectRef.current &&
+        !multiSelectRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleSelect = (val) => {
+    const isSelected = internalValue.includes(val);
     if (isSelected) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== value));
+      const newValue = internalValue.filter((item) => item !== val);
+      setInternalValue(newValue);
+      onChange(newValue);
     } else {
-      setSelectedOptions([...selectedOptions, value]);
+      const newValue = [...internalValue, val];
+      setInternalValue(newValue);
+      onChange(newValue);
     }
   };
 
   return (
     <Box
-      css={styles.main}
       className={`ec-multi-select ${className} ${classNames}`}
       style={{ ...styleOverrides, ...style }}
-      {...props}
+      ref={multiSelectRef}
+      css={styles.main}
     >
-      <Box css={styles.mainBox}>
-        {options.map((option) => (
-          // eslint-disable-next-line jsx-a11y/label-has-associated-control
-          <label key={option.value} css={styles.checkContainer}>
-            <CheckBox
-              type="checkbox"
-              value={option.value}
-              checked={selectedOptions.includes(option.value)}
-              onChange={() => handleOptionToggle(option.value)}
-              css={styles.checkbox}
-            />
-            <Box
-              css={css`
-                padding: 0 0.3rem;
-              `}
-            >
-              {option.label}
-            </Box>
-          </label>
-        ))}
+      <Box
+        onClick={toggleDropdown}
+        css={[
+          styles.selectBox,
+          isOpen && styles.clickStyle,
+          disabled && styles.disabled,
+        ]}
+        {...props}
+      >
+        <Box css={styles.selectedItemsContainer}>
+          {internalValue.length > 0 ? (
+            internalValue.map((item, index) => (
+              <Box is="span" key={index} css={styles.selectedItems}>
+                {options.find((option) => option.value === item)?.label || item}
+              </Box>
+            ))
+          ) : (
+            <Box is="span">{placeholder}</Box>
+          )}
+        </Box>
+        <Icon name="chevron-down" />
       </Box>
+
+      {isOpen && (
+        <ListBox
+          options={options}
+          onSelect={handleSelect}
+          value={internalValue}
+          multi
+        />
+      )}
     </Box>
   );
 };
@@ -63,14 +108,16 @@ const MultiSelect = ({
 MultiSelect.propTypes = {
   className: PropTypes.string,
   style: PropTypes.object,
-  color: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
     })
   ),
-  onChange: PropTypes.func,
+  value: PropTypes.array,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default MultiSelect;

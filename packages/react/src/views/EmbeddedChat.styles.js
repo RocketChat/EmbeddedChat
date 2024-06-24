@@ -1,6 +1,4 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../hooks/useCustomTheme';
-import { alpha } from '../lib/color';
 
 export const styles = {
   embeddedchat: (theme, dark) => css`
@@ -23,26 +21,4 @@ export const styles = {
     border-radius: 0;
     border: none;
   `,
-};
-
-export const useGlobalStyles = () => {
-  const { colors } = useCustomTheme();
-  const scrollStyles = css`
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 7.7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
-    }
-    ::-webkit-scrollbar-button {
-      display: none;
-    }
-  `;
-
-  return { scrollStyles };
 };

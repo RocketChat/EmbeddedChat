@@ -3,17 +3,23 @@ import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const useSidebarStyles = () => {
   const { theme, colors } = useCustomTheme();
-  const parent = css`
+
+  const sidebarContainer = css`
     width: 350px;
     height: 100%;
     box-shadow: ${theme.shadows[2]};
     z-index: ${theme.zIndex.general};
-  `;
-
-  const container = css`
     display: flex;
     flex-direction: column;
-    height: 100%;
+  `;
+
+  const content = css`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+    overflow-x: hidden;
   `;
 
   const header = css`
@@ -71,8 +77,8 @@ const useSidebarStyles = () => {
   `;
 
   return {
-    parent,
-    container,
+    sidebarContainer,
+    content,
     header,
     title,
     icon,

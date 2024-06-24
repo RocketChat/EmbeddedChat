@@ -7,7 +7,7 @@ const useShowCommands = (commands, setFilteredCommands, setShowCommandList) =>
         commands.filter((c) => c.command.startsWith(cmd.replace('/', '')));
 
       const cursor = e.target.selectionStart;
-      const tokens = e.target.value.trim().slice(0, cursor).split(/\s+/);
+      const tokens = e.target.value.slice(0, cursor).split(/\s+/);
 
       if (tokens.length === 1 && tokens[0].startsWith('/')) {
         setFilteredCommands(getFilteredCommands(tokens[0]));

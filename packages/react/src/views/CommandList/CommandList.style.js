@@ -1,10 +1,8 @@
 import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 const useCommandListStyles = () => {
-  const { scrollStyles } = useGlobalStyles();
-  const { theme, colors } = useCustomTheme();
+  const { colors } = useCustomTheme();
   const main = css`
     margin: 0.2rem 2rem;
     display: block;
@@ -13,9 +11,8 @@ const useCommandListStyles = () => {
     overflow-x: hidden;
     max-height: 145px;
     border: 1px solid ${colors.border};
-    border-radius: ${theme.schemes.radius};
+    border-radius: 0.2rem;
     color: ${colors.secondaryForeground};
-    ${scrollStyles};
   `;
 
   const listItem = css`

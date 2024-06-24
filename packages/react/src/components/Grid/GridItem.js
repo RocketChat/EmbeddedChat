@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import { gridItemStyles as styles } from './Grid.styles';
 
-const GridItem = ({ xs, md, lg, xl, xxl, children }) => (
-  <Box css={styles.dynamicItem(xs, md, lg, xl, xxl)}>{children}</Box>
+const GridItem = ({ xs, md, lg, xl, xxl, children, ...props }) => (
+  <Box css={styles.dynamicItem(xs, md, lg, xl, xxl)} {...props}>
+    {children}
+  </Box>
 );
 
 GridItem.propTypes = {

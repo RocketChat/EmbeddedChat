@@ -1,10 +1,7 @@
 import { css } from '@emotion/react';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { useGlobalStyles } from '../EmbeddedChat.styles';
 
 export const useChatbodyStyles = () => {
-  const { scrollStyles } = useGlobalStyles();
-
   const chatbodyContainer = css`
     flex: 1;
     word-break: break-all;
@@ -16,7 +13,6 @@ export const useChatbodyStyles = () => {
     position: relative;
     padding-top: 70px;
     margin-top: 0.25rem;
-    ${scrollStyles};
   `;
 
   return { chatbodyContainer };

@@ -9,11 +9,13 @@ import { Box } from '../../components/Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
-import ModalBlock from '../uiKit/blocks/ModalBlock';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';
+import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
+import useUiKitStore from '../../store/uiKitStore';
+import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
 
 const ChatBody = ({
   anonymousMode,
@@ -43,7 +45,13 @@ const ChatBody = ({
     state.threadMainMessage,
   ]);
 
+  const { uiKitModalOpen, uiKitModalData } = useUiKitStore((state) => ({
+    uiKitModalOpen: state.uiKitModalOpen,
+    uiKitModalData: state.uiKitModalData,
+  }));
+
   const { handleLogin } = useRCAuth();
+  const { handleServerInteraction } = useUiKitActionManager();
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -96,34 +104,11 @@ const ChatBody = ({
     [upsertMessage, ECOptions?.enableThreads, username, messageListRef]
   );
 
-  const [isModalOpen, setModalOpen] = useState();
-  const [viewData, setViewData] = useState();
-
-  const onActionTriggerResponse = useCallback((data) => {
-    if (data?.type === 'modal.open' || data?.type === 'modal.update') {
-      setViewData(data.view);
-      setModalOpen(true);
-    }
-  }, []);
-
-  const onModalClose = () => {
-    setModalOpen(false);
-    setViewData(null);
-  };
-
-  const onModalSubmit = useCallback(
-    async (data) => {
-      const { actionId, value, blockId, appId, viewId } = data;
-      await RCInstance?.triggerBlockAction({
-        rid: RCInstance.rid,
-        actionId,
-        value,
-        blockId,
-        appId,
-        viewId,
-      });
+  const onActionTriggerResponse = useCallback(
+    (data) => {
+      handleServerInteraction(data);
     },
-    [RCInstance]
+    [handleServerInteraction]
   );
 
   useEffect(() => {
@@ -222,14 +207,8 @@ const ChatBody = ({
         )}
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
-        {isModalOpen && (
-          <ModalBlock
-            appId={viewData.appId}
-            onClose={onModalClose}
-            onCancel={onModalClose}
-            onSubmit={onModalSubmit}
-            view={viewData}
-          />
+        {uiKitModalOpen && (
+          <UiKitModal key={Math.random()} initialView={uiKitModalData} />
         )}
       </Box>
       {popupVisible && otherUserMessage && (

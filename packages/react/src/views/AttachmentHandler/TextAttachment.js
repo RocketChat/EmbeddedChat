@@ -52,18 +52,21 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           variantStyles.textUserInfo,
         ]}
       >
-        <>
-          <Avatar
-            url={getUserAvatarUrl(attachment?.author_icon)}
-            alt="avatar"
-            size="1.2em"
-          />
-          <Box>@{attachment?.author_name}</Box>
-        </>
+        {attachment?.author_name && (
+          <>
+            <Avatar
+              url={getUserAvatarUrl(attachment?.author_icon)}
+              alt="avatar"
+              size="1.2em"
+            />
+            <Box>@{attachment?.author_name}</Box>
+          </>
+        )}
       </Box>
       <Box
         css={css`
           margin-top: 0.5rem;
+          white-space: pre-line;
         `}
       >
         {attachmentText}
