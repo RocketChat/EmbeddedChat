@@ -36,7 +36,7 @@ class RocketChatAuth {
   async onAuthChange(callback: (user: object | null) => void) {
     this.authListeners.push(callback);
     const user = await this.getCurrentUser();
-    if (user) callback(user);
+    callback(user);
   }
 
   async removeAuthListener(callback: (user: object | null) => void) {
