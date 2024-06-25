@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { GenericModal } from '../../components/GenericModal';
-import { loginModalStore } from '../../store';
+import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import { Button } from '../../components/Button';
 import { Box } from '../../components/Box';
@@ -16,8 +16,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const isLoginModalOpen = loginModalStore((state) => state.isLoginModalOpen);
-  const setIsLoginModalOpen = loginModalStore(
+  const isLoginModalOpen = useLoginStore((state) => state.isLoginModalOpen);
+  const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();

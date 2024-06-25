@@ -4,7 +4,7 @@ import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
   useMessageStore,
-  loginModalStore,
+  useLoginStore,
   useChannelStore,
   useMemberStore,
 } from '../../store';
@@ -101,7 +101,7 @@ const ChatInput = ({ scrollToBottom }) => {
     threadId: state.threadMainMessage?._id,
   }));
 
-  const setIsLoginModalOpen = loginModalStore(
+  const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
   const { toggle, setData } = useAttachmentWindowStore((state) => ({
