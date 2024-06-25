@@ -88,12 +88,14 @@ const EmbeddedChat = ({
       setRCInstance(newRCInstance);
     };
 
-    if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close().then(reInstantiate).catch(console.error);
-    } else {
-      reInstantiate();
-    }
-  }, [roomId, host, auth?.flow]);
+    RCInstance.close().then(reInstantiate).catch(console.error);
+
+    return () => {
+      if (RCInstance) {
+        RCInstance.close().catch(console.error);
+      }
+    };
+  }, [roomId, host, initializeRCInstance]);
 
   useEffect(() => {
     const autoLogin = async () => {

@@ -51,9 +51,7 @@ const EmbeddedChat = ({
 			deleteToken,
 			saveToken,
 		});
-		if (auth.flow === 'TOKEN') {
-			newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-		}
+
 		return newRCInstance;
 	});
 
