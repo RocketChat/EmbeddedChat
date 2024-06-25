@@ -23,7 +23,7 @@ export default class EmbeddedChatApi {
   constructor(
     host: string,
     rid: string,
-    { getToken, saveToken, deleteToken, autoLogin }: IRocketChatAuthOptions
+    { getToken, saveToken, deleteToken }: IRocketChatAuthOptions
   ) {
     this.host = host;
     this.rid = rid;
@@ -44,7 +44,6 @@ export default class EmbeddedChatApi {
       deleteToken,
       getToken,
       saveToken,
-      autoLogin,
     });
   }
 

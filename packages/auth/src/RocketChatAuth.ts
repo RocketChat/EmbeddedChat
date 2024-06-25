@@ -19,7 +19,6 @@ class RocketChatAuth {
     saveToken,
     getToken,
     deleteToken,
-    autoLogin = true,
   }: IRocketChatAuthOptions) {
     this.host = host;
     this.api = new Api(host);
@@ -28,9 +27,6 @@ class RocketChatAuth {
     this.getToken = getToken;
     this.saveToken = saveToken;
     this.deleteToken = deleteToken;
-    if (autoLogin) {
-      this.load();
-    }
   }
 
   /**
@@ -40,7 +36,7 @@ class RocketChatAuth {
   async onAuthChange(callback: (user: object | null) => void) {
     this.authListeners.push(callback);
     const user = await this.getCurrentUser();
-    callback(user);
+    if (user) callback(user);
   }
 
   async removeAuthListener(callback: (user: object | null) => void) {
