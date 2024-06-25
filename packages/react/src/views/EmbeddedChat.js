@@ -44,8 +44,6 @@ const EmbeddedChat = ({
   const [fullScreen, setFullScreen] = useState(false);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
 
-  const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
-
   const {
     isUserAuthenticated,
     setIsUserAuthenticated,
@@ -64,6 +62,8 @@ const EmbeddedChat = ({
     setRoles: state.setRoles,
   }));
 
+  const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -76,35 +76,16 @@ const EmbeddedChat = ({
       deleteToken,
       saveToken,
     });
+
     return newRCInstance;
   }, [host, roomId, getToken, deleteToken, saveToken]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
   useEffect(() => {
-    const reInstantiate = async () => {
+    const reInstantiate = () => {
       const newRCInstance = initializeRCInstance();
       setRCInstance(newRCInstance);
-      try {
-        setIsLoginIn(true);
-        switch (auth?.flow) {
-          case 'PASSWORD':
-          case 'OAUTH':
-            await newRCInstance.auth.load();
-            break;
-          case 'TOKEN':
-            await newRCInstance.auth.loginWithOAuthServiceToken(
-              auth.credentials
-            );
-            break;
-          default:
-            break;
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoginIn(false);
-      }
     };
 
     if (RCInstance.rcClient.loggedIn()) {
@@ -112,10 +93,24 @@ const EmbeddedChat = ({
     } else {
       reInstantiate();
     }
-  }, [roomId, host, auth?.flow, auth.credentials, setIsLoginIn]);
+  }, [roomId, host, auth?.flow]);
 
   useEffect(() => {
-    const authChange = async (user) => {
+    const autoLogin = async () => {
+      setIsLoginIn(true);
+      try {
+        await RCInstance.autoLogin(auth);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoginIn(false);
+      }
+    };
+    autoLogin();
+  }, [RCInstance, auth, setIsLoginIn]);
+
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -132,13 +127,7 @@ const EmbeddedChat = ({
       } else {
         setIsUserAuthenticated(false);
       }
-    };
-
-    RCInstance.auth.onAuthChange(authChange);
-
-    return () => {
-      RCInstance.auth.removeAuthListener(authChange);
-    };
+    });
   }, [
     RCInstance,
     setAuthenticatedName,
@@ -147,7 +136,6 @@ const EmbeddedChat = ({
     setIsUserAuthenticated,
     setAuthenticatedAvatarUrl,
     setAuthenticatedUsername,
-    setIsLoginIn,
   ]);
 
   const ECOptions = useMemo(

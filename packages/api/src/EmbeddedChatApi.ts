@@ -145,6 +145,33 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async autoLogin(auth: {
+    flow: "PASSWORD" | "OAUTH" | "TOKEN";
+    credentials: any;
+  }) {
+    try {
+      if (!auth || !auth.flow) {
+        return;
+      }
+      switch (auth.flow) {
+        case "PASSWORD":
+        case "OAUTH":
+          await this.auth.load();
+          break;
+        case "TOKEN":
+          if (!auth.credentials) {
+            return;
+          }
+          await this.auth.loginWithOAuthServiceToken(auth.credentials);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Auto-login failed:", error);
+    }
+  }
+
   async logout() {
     try {
       await this.auth.logout();
