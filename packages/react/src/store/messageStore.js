@@ -4,6 +4,7 @@ import { upsertMessage } from '../lib/messageListHelpers';
 
 const useMessageStore = create((set, get) => ({
   messages: [],
+  isMessageLoaded: false,
   threadMessages: [],
   filtered: false,
   editMessage: {},
@@ -15,7 +16,11 @@ const useMessageStore = create((set, get) => ({
   threadMainMessage: null,
   headerTitle: null,
   setFilter: (filter) => set(() => ({ filtered: filter })),
-  setMessages: (messages) => set(() => ({ messages })),
+  setMessages: (messages) =>
+    set(() => ({
+      messages,
+      isMessageLoaded: true,
+    })),
   upsertMessage: (message, enableThreads = false) => {
     if (message.tmid && enableThreads) {
       if (get().threadMainMessage?._id === message.tmid) {

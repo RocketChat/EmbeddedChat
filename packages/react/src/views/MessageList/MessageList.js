@@ -2,19 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
-import { useMessageStore, useLoginStore } from '../../store';
+import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
 import { Box } from '../../components/Box';
-import { Throbber } from '../../components/Throbber';
 import { Icon } from '../../components/Icon';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 
 const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
-  const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
@@ -24,18 +23,16 @@ const MessageList = ({ messages }) => {
       {messages.length === 0 ? (
         <Box
           css={css`
-            margin: auto;
             text-align: center;
+            margin: auto;
           `}
         >
-          {isLoginIn ? (
-            <Throbber />
-          ) : (
-            <>
-              <Icon name="thread" size="2rem" />
-              <Box>{isLoginIn ? <Throbber /> : 'No messages'}</Box>
-            </>
-          )}
+          <Icon name="thread" size="2rem" />
+          <Box>
+            {isMessageLoaded
+              ? 'No messages'
+              : 'Ready to chat? Login now to join the fun.'}
+          </Box>
         </Box>
       ) : (
         <>

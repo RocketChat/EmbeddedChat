@@ -30,6 +30,7 @@ import { useChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
+import { Throbber } from '../../components/Throbber';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -104,6 +105,8 @@ const ChatInput = ({ scrollToBottom }) => {
   const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
+  const isLoginIn = useLoginStore((state) => state.isLoginIn);
+
   const { toggle, setData } = useAttachmentWindowStore((state) => ({
     toggle: state.toggle,
     setData: state.setData,
@@ -511,8 +514,8 @@ const ChatInput = ({ scrollToBottom }) => {
                 icon="send"
               />
             ) : (
-              <Button onClick={onJoin} type="primary">
-                JOIN
+              <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
+                {isLoginIn ? <Throbber /> : 'JOIN'}
               </Button>
             )}
           </Box>
