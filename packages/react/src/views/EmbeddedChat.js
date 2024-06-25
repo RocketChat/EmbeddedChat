@@ -79,7 +79,15 @@ const EmbeddedChat = ({
       newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
     }
     return newRCInstance;
-  }, [host, roomId, auth?.flow, auth?.credentials]);
+  }, [
+    host,
+    roomId,
+    getToken,
+    deleteToken,
+    saveToken,
+    auth?.flow,
+    auth.credentials,
+  ]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
