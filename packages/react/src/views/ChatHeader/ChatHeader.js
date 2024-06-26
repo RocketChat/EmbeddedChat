@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useRCContext } from '../../context/RCInstance';
+import { RCInstanceProvider, useRCContext } from '../../context/RCInstance';
 import Heading from '../../components/Heading/Heading';
 import {
   useUserStore,
@@ -78,6 +78,8 @@ const ChatHeader = ({
 
   const { RCInstance, ECOptions } = useRCContext();
   const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
+
+  const currentUser = useUserStore((state) => state.currentUser);
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -158,12 +160,15 @@ const ChatHeader = ({
       }
     };
 
+    
     const getChannelInfo = async () => {
       const res = await RCInstance.channelInfo();
+      const userRes = await RCInstance.getAuth();
+      const isAdmin = userRes.currentUser.me.roles.includes('admin');
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room.ro) {
+        if (res.room.ro && !isAdmin) {
           setIsChannelReadOnly(true);
           setMessageAllowed();
         }
