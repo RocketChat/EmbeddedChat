@@ -19,6 +19,10 @@ import GlobalStyles from './GlobalStyles';
 const EmbeddedChat = (props) => {
   const [config, setConfig] = useState(() => props);
 
+  useEffect(() => {
+    setConfig(props);
+  }, [props]);
+
   const {
     isClosable = false,
     setClosableState = () => {},
