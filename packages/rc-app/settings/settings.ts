@@ -49,7 +49,16 @@ export const propSettings: ISetting[] = [
     {
         id: "ec-width",
         i18nLabel: "Width",
-        i18nDescription: "The width of EC Container",
+        i18nDescription: "Specifies the width of the EC Container.",
+        type: SettingType.STRING,
+        required: false,
+        public: false,
+        packageValue: "",
+    },
+    {
+        id: "ec-height",
+        i18nLabel: "Height",
+        i18nDescription: "Specifies the height of the EC Container.",
         type: SettingType.STRING,
         required: false,
         public: false,
@@ -57,12 +66,24 @@ export const propSettings: ISetting[] = [
     },
 
     {
-        id: "ec-height",
-        i18nLabel: "Height",
-        i18nDescription: "The height of EC Container",
+        id: "fallback-name",
+        i18nLabel: "Fallback Channel Name",
+        i18nDescription:
+            "Specifies a fallback name for the channel before the user successfully logs in.",
         type: SettingType.STRING,
         required: false,
         public: false,
         packageValue: "",
+    },
+
+    {
+        id: "anonymous-mode",
+        i18nLabel: "Anonymous Mode",
+        i18nDescription:
+            "Allows users to read channel messages without logging in. This is only applicable if the work allows anonymous read.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: true,
     },
 ];

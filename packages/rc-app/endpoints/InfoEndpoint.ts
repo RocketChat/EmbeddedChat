@@ -29,13 +29,17 @@ export class InfoEndpoint extends ApiEndpoint {
         const [
             width,
             height,
+            channelName,
+            anonymousMode,
             serviceName,
             client_id,
             redirect_uri,
             allowedOrigins,
         ] = await Promise.all([
             readEnvironment.getValueById("ec-width"),
-            readEnvironment.getValueById("ec-width"),
+            readEnvironment.getValueById("ec-height"),
+            readEnvironment.getValueById("fallback-name"),
+            readEnvironment.getValueById("anonymous-mode"),
             readEnvironment.getValueById("custom-oauth-name"),
             readEnvironment.getValueById("client-id"),
             readEnvironment.getValueById("client-secret"),
@@ -54,6 +58,8 @@ export class InfoEndpoint extends ApiEndpoint {
                 propConfig: {
                     width,
                     height,
+                    channelName,
+                    anonymousMode,
                 },
             },
         };
