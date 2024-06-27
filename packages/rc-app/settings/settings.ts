@@ -3,7 +3,7 @@ import {
     SettingType,
 } from "@rocket.chat/apps-engine/definition/settings";
 
-export const settings: ISetting[] = [
+export const authSettings: ISetting[] = [
     {
         id: "client-id",
         i18nLabel: "Client ID",
@@ -44,3 +44,7 @@ export const settings: ISetting[] = [
         packageValue: "",
     },
 ];
+
+export const propSettings: ISetting[]=[
+    
+]

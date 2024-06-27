@@ -10,7 +10,7 @@ import {
 } from "@rocket.chat/apps-engine/definition/api";
 import { App } from "@rocket.chat/apps-engine/definition/App";
 import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata";
-import { settings } from "./settings/settings";
+import { authSettings, propSettings } from "./settings/settings";
 import { CallbackEndpoint } from "./endpoints/CallbackEndpoint";
 import { SettingType } from "@rocket.chat/apps-engine/definition/settings";
 import { getCallbackUrl } from "./lib/getCallbackUrl";
@@ -27,9 +27,10 @@ export class EmbeddedChatApp extends App {
     ): Promise<void> {
         await Promise.all([
             // Existing settings
-            ...settings.map((setting) =>
+            ...authSettings.map((setting) =>
                 configuration.settings.provideSetting(setting)
             ),
+            ...propSettings.map((setting)=> configuration.settings.provideSetting(setting)),
 
             // Provide the API with CallbackEndpoint
             configuration.api.provideApi({
