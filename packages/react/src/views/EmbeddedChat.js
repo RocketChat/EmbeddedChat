@@ -43,6 +43,7 @@ const EmbeddedChat = (props) => {
     },
     secure = false,
     dark = false,
+    remoteOpt = false,
   } = config;
 
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -183,7 +184,9 @@ const EmbeddedChat = (props) => {
     [RCInstance, ECOptions]
   );
 
-  useRemoteProps(RCInstance, setConfig);
+  if (!useRemoteProps(remoteOpt, RCInstance, setConfig)) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
