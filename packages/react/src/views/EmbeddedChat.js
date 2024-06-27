@@ -9,37 +9,42 @@ import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
+import useRemoteProps from '../hooks/useRemoteProps';
 import { Box } from '../components/Box';
 import useComponentOverrides from '../hooks/useComponentOverrides';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 
-const EmbeddedChat = ({
-  isClosable = false,
-  setClosableState = () => {},
-  width = '100%',
-  height = '95vh',
-  host = 'http://localhost:3000',
-  roomId = 'GENERAL',
-  channelName,
-  anonymousMode = false,
-  toastBarPosition = 'bottom right',
-  showRoles = false,
-  showAvatar = true,
-  showUsername = false,
-  showName = true,
-  enableThreads = false,
-  theme = null,
-  className = '',
-  style = {},
-  hideHeader = false,
-  auth = {
-    flow: 'PASSWORD',
-  },
-  secure = false,
-  dark = false,
-}) => {
+const EmbeddedChat = (props) => {
+  const [config, setConfig] = useState(() => props);
+
+  const {
+    isClosable = false,
+    setClosableState = () => {},
+    width = '100%',
+    height = '95vh',
+    host = 'http://localhost:3000',
+    roomId = 'GENERAL',
+    channelName,
+    anonymousMode = false,
+    toastBarPosition = 'bottom right',
+    showRoles = false,
+    showAvatar = true,
+    showUsername = false,
+    showName = true,
+    enableThreads = false,
+    theme = null,
+    className = '',
+    style = {},
+    hideHeader = false,
+    auth = {
+      flow: 'PASSWORD',
+    },
+    secure = false,
+    dark = false,
+  } = config;
+
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
@@ -138,16 +143,6 @@ const EmbeddedChat = ({
     setAuthenticatedUsername,
   ]);
 
-  useEffect(() => {
-    const getConfig = async () => {
-      const response = await RCInstance.getRCAppInfo();
-      const remoteProps = response.propConfig;
-      console.log(remoteProps);
-    };
-
-    getConfig();
-  });
-
   const ECOptions = useMemo(
     () => ({
       enableThreads,
@@ -187,6 +182,8 @@ const EmbeddedChat = ({
     () => ({ RCInstance, ECOptions }),
     [RCInstance, ECOptions]
   );
+
+  useRemoteProps(RCInstance, setConfig);
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>

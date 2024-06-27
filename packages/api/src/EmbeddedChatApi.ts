@@ -386,6 +386,9 @@ export default class EmbeddedChatApi {
         `${this.host}/api/apps/public/${ROCKETCHAT_APP_ID}/info`
       );
 
+      if (!response.ok) {
+        return null;
+      }
       return await response.json();
     } catch (err) {
       console.error(err);
