@@ -45,6 +45,24 @@ export const authSettings: ISetting[] = [
     },
 ];
 
-export const propSettings: ISetting[]=[
-    
-]
+export const propSettings: ISetting[] = [
+    {
+        id: "ec-width",
+        i18nLabel: "Width",
+        i18nDescription: "The width of EC Container",
+        type: SettingType.STRING,
+        required: true,
+        public: false,
+        packageValue: "",
+    },
+
+    {
+        id: "ec-height",
+        i18nLabel: "Height",
+        i18nDescription: "The height of EC Container",
+        type: SettingType.STRING,
+        required: true,
+        public: false,
+        packageValue: "",
+    },
+];

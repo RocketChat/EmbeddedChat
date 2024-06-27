@@ -1,5 +1,6 @@
 import { Rocketchat } from "@rocket.chat/sdk";
 import cloneArray from "./cloneArray";
+import { ROCKETCHAT_APP_ID } from "./utils/constants";
 import {
   IRocketChatAuthOptions,
   RocketChatAuth,
@@ -377,6 +378,18 @@ export default class EmbeddedChatApi {
     this.onTypingStatusCallbacks.forEach((callback) =>
       callback(newTypingStatus)
     );
+  }
+
+  async getRCAppInfo() {
+    try {
+      const response = await fetch(
+        `${this.host}/api/apps/public/${ROCKETCHAT_APP_ID}/info`
+      );
+
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async updateUserNameThroughSuggestion(userid: string) {

@@ -27,12 +27,15 @@ export class InfoEndpoint extends ApiEndpoint {
     ): Promise<IApiResponse> {
         const readEnvironment = read.getEnvironmentReader().getSettings();
         const [
+            width,
+            height,
             serviceName,
             client_id,
-            client_secret,
             redirect_uri,
             allowedOrigins,
         ] = await Promise.all([
+            readEnvironment.getValueById("ec-width"),
+            readEnvironment.getValueById("ec-width"),
             readEnvironment.getValueById("custom-oauth-name"),
             readEnvironment.getValueById("client-id"),
             readEnvironment.getValueById("client-secret"),
@@ -48,10 +51,9 @@ export class InfoEndpoint extends ApiEndpoint {
                     allowedOrigins,
                     redirect_uri,
                 },
-                configuredItems: {
-                    client_id: !!client_id,
-                    client_secret: !!client_secret,
-                    custom_oauth_name: !!serviceName,
+                propConfig: {
+                    width,
+                    height,
                 },
             },
         };

@@ -138,6 +138,16 @@ const EmbeddedChat = ({
     setAuthenticatedUsername,
   ]);
 
+  useEffect(() => {
+    const getConfig = async () => {
+      const response = await RCInstance.getRCAppInfo();
+      const remoteProps = response.propConfig;
+      console.log(remoteProps);
+    };
+
+    getConfig();
+  });
+
   const ECOptions = useMemo(
     () => ({
       enableThreads,
