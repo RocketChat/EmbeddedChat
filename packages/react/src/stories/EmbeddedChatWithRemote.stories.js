@@ -3,6 +3,9 @@ import { EmbeddedChat } from '..';
 export default {
   title: 'EmbeddedChat/WithRemoteOpt',
   component: EmbeddedChat,
+  parameters: {
+    controls: { disable: true },
+  },
 };
 
 export const With_Remote_Opt = {
