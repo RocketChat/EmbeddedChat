@@ -11,6 +11,7 @@ import {
     IApiResponse,
 } from "@rocket.chat/apps-engine/definition/api";
 import { getCallbackUrl } from "../lib/getCallbackUrl";
+import { getEnvironmentValues } from "../lib/getEnvironmentVariables";
 import { getAllowedOrigins } from "../lib/getAllowedOrigins";
 
 export class InfoEndpoint extends ApiEndpoint {
@@ -26,6 +27,7 @@ export class InfoEndpoint extends ApiEndpoint {
         persis: IPersistence
     ): Promise<IApiResponse> {
         const readEnvironment = read.getEnvironmentReader().getSettings();
+
         const [
             width,
             height,
@@ -33,19 +35,20 @@ export class InfoEndpoint extends ApiEndpoint {
             anonymousMode,
             serviceName,
             client_id,
-            redirect_uri,
-            allowedOrigins,
-        ] = await Promise.all([
-            readEnvironment.getValueById("ec-width"),
-            readEnvironment.getValueById("ec-height"),
-            readEnvironment.getValueById("fallback-name"),
-            readEnvironment.getValueById("anonymous-mode"),
-            readEnvironment.getValueById("custom-oauth-name"),
-            readEnvironment.getValueById("client-id"),
-            readEnvironment.getValueById("client-secret"),
+        ] = await getEnvironmentValues(readEnvironment, {
+            width: "ec-width",
+            height: "ec-height",
+            channelName: "fallback-name",
+            anonymousMode: "anonymous-mode",
+            serviceName: "custom-oauth-name",
+            client_id: "client-id",
+        });
+
+        const [redirect_uri, allowedOrigins] = await Promise.all([
             getCallbackUrl(this.app),
             getAllowedOrigins(read),
         ]);
+
         return {
             status: 200,
             content: {
