@@ -91,9 +91,7 @@ const EmbeddedChat = ({
     RCInstance.close().then(reInstantiate).catch(console.error);
 
     return () => {
-      if (RCInstance) {
-        RCInstance.close().catch(console.error);
-      }
+      RCInstance.close().catch(console.error);
     };
   }, [roomId, host, initializeRCInstance]);
 
