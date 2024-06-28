@@ -17,7 +17,7 @@ const useRemoteProps = (remoteOpt, RCInstance, setConfig) => {
             setConfig((prevConfig) => ({
               ...prevConfig,
               ...Object.keys(props).reduce((acc, key) => {
-                if (props[key]) {
+                if (props[key] !== '') {
                   acc[key] = props[key];
                 }
                 return acc;
