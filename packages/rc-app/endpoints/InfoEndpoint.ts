@@ -26,45 +26,88 @@ export class InfoEndpoint extends ApiEndpoint {
         http: IHttp,
         persis: IPersistence
     ): Promise<IApiResponse> {
-        const readEnvironment = read.getEnvironmentReader().getSettings();
+        try {
+            const readEnvironment = read.getEnvironmentReader().getSettings();
 
-        const [
-            width,
-            height,
-            channelName,
-            anonymousMode,
-            serviceName,
-            client_id,
-        ] = await getEnvironmentValues(readEnvironment, {
-            width: "ec-width",
-            height: "ec-height",
-            channelName: "fallback-name",
-            anonymousMode: "anonymous-mode",
-            serviceName: "custom-oauth-name",
-            client_id: "client-id",
-        });
+            const [
+                serviceName,
+                client_id,
+                width,
+                height,
+                channelName,
+                anonymousMode,
+                roomId,
+                toastBarPosition,
+                showRoles,
+                showAvatar,
+                showUsername,
+                showName,
+                enableThreads,
+                className,
+                hideHeader,
+                secure,
+                dark,
+            ] = await getEnvironmentValues(readEnvironment, {
+                serviceName: "custom-oauth-name",
+                client_id: "client-id",
+                width: "ec-width",
+                height: "ec-height",
+                channelName: "fallback-name",
+                anonymousMode: "anonymous-mode",
+                roomId: "room-id",
+                toastBarPosition: "toast-bar-position",
+                showRoles: "show-roles",
+                showAvatar: "show-avatar",
+                showUsername: "show-username",
+                showName: "show-name",
+                enableThreads: "enable-threads",
+                className: "ec-class-name",
+                hideHeader: "hide-header",
+                secure: "secure",
+                dark: "dark",
+            });
 
-        const [redirect_uri, allowedOrigins] = await Promise.all([
-            getCallbackUrl(this.app),
-            getAllowedOrigins(read),
-        ]);
+            const [redirect_uri, allowedOrigins] = await Promise.all([
+                getCallbackUrl(this.app),
+                getAllowedOrigins(read),
+            ]);
 
-        return {
-            status: 200,
-            content: {
-                config: {
-                    serviceName,
-                    client_id,
-                    allowedOrigins,
-                    redirect_uri,
+            return {
+                status: 200,
+                content: {
+                    config: {
+                        serviceName,
+                        client_id,
+                        allowedOrigins,
+                        redirect_uri,
+                    },
+                    propConfig: {
+                        width,
+                        height,
+                        channelName,
+                        anonymousMode,
+                        roomId,
+                        toastBarPosition,
+                        showRoles,
+                        showAvatar,
+                        showUsername,
+                        showName,
+                        enableThreads,
+                        className,
+                        hideHeader,
+                        secure,
+                        dark,
+                    },
                 },
-                propConfig: {
-                    width,
-                    height,
-                    channelName,
-                    anonymousMode,
+            };
+        } catch (error) {
+            console.error("Error occurred in InfoEndpoint:", error);
+            return {
+                status: 500,
+                content: {
+                    error: "Internal Server Error",
                 },
-            },
-        };
+            };
+        }
     }
 }

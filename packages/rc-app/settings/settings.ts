@@ -53,7 +53,7 @@ export const propSettings: ISetting[] = [
         type: SettingType.STRING,
         required: false,
         public: false,
-        packageValue: "",
+        packageValue: "100%",
     },
     {
         id: "ec-height",
@@ -62,7 +62,7 @@ export const propSettings: ISetting[] = [
         type: SettingType.STRING,
         required: false,
         public: false,
-        packageValue: "",
+        packageValue: "95vh",
     },
 
     {
@@ -73,9 +73,19 @@ export const propSettings: ISetting[] = [
         type: SettingType.STRING,
         required: false,
         public: false,
-        packageValue: "",
+        packageValue: "general",
     },
 
+    {
+        id: "room-id",
+        i18nLabel: "Room ID",
+        i18nDescription:
+            "Specifies the id of the room to which EmbeddedChat will connect to",
+        type: SettingType.STRING,
+        required: false,
+        public: false,
+        packageValue: "GENERAL",
+    },
     {
         id: "anonymous-mode",
         i18nLabel: "Anonymous Mode",
@@ -85,5 +95,114 @@ export const propSettings: ISetting[] = [
         required: false,
         public: false,
         packageValue: true,
+    },
+    {
+        id: "toast-bar-position",
+        i18nLabel: "Toast Bar Position",
+        i18nDescription:
+            "Specifies the position at which the toast bar is displayed.",
+        type: SettingType.STRING,
+        required: false,
+        public: false,
+        packageValue: "bottom right",
+    },
+
+    {
+        id: "show-roles",
+        i18nLabel: "Show Roles",
+        i18nDescription:
+            "Specifies whether the roles of the user should be displayed in EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: false,
+    },
+
+    {
+        id: "show-avatar",
+        i18nLabel: "Show Avatar",
+        i18nDescription:
+            "Specifies whether the user's avatar should be displayed in EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: true,
+    },
+
+    {
+        id: "show-username",
+        i18nLabel: "Show Username",
+        i18nDescription:
+            "Specifies whether the user's username should be displayed in EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: false,
+    },
+
+    {
+        id: "show-name",
+        i18nLabel: "Show Name",
+        i18nDescription:
+            "Specifies whether the user's name should be displayed in EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: true,
+    },
+
+    {
+        id: "enable-threads",
+        i18nLabel: "Enable Threads",
+        i18nDescription:
+            "Specifies whether threads should be allowed in channels using EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: true,
+    },
+
+    {
+        id: "ec-class-name",
+        i18nLabel: "Custom ClassName for EC Component",
+        i18nDescription:
+            "Specifies a custom className for the EmbeddedChat component.",
+        type: SettingType.STRING,
+        required: false,
+        public: false,
+        packageValue: "",
+    },
+
+    {
+        id: "hide-header",
+        i18nLabel: "Hide Chat Header",
+        i18nDescription:
+            "Specifies whether the chat header should be hidden in EmbeddedChat.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: false,
+    },
+
+    {
+        id: "secure",
+        i18nLabel: "Secure Authentication",
+        i18nDescription:
+            "Uses HTTP-only cookies for authentication. This requires proper configuration of the EmbeddedChat RC app.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: false,
+    },
+
+    {
+        id: "dark",
+        i18nLabel: "Dark Mode",
+        i18nDescription:
+            "Enabling this will activate dark mode in the app; disabling it will show light mode.",
+        type: SettingType.BOOLEAN,
+        required: false,
+        public: false,
+        packageValue: false,
     },
 ];
