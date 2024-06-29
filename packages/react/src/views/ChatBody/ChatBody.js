@@ -126,14 +126,10 @@ const ChatBody = ({
         RCInstance.addMessageDeleteListener(removeMessage);
         RCInstance.addActionTriggeredListener(onActionTriggerResponse);
         RCInstance.addUiInteractionListener(onActionTriggerResponse);
-        getMessagesAndRoles();
-      } else {
-        getMessagesAndRoles(anonymousMode);
       }
     });
 
     return () => {
-      RCInstance.close();
       RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
@@ -147,6 +143,16 @@ const ChatBody = ({
     onActionTriggerResponse,
     anonymousMode,
   ]);
+
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        getMessagesAndRoles();
+      } else {
+        getMessagesAndRoles(anonymousMode);
+      }
+    });
+  }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
   const handlePopupClick = () => {
     scrollToBottom();
