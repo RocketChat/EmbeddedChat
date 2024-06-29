@@ -13,57 +13,40 @@ import isMessageLastSequential from '../../lib/isMessageLastSequential';
 const MessageList = ({ messages }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
-  const headerTitle = useMessageStore((state) => state.headerTitle);
+  const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
-  let iconType = 'thread';
-  let msgType = headerTitle;
-  if (msgType === 'Pinned Messages') {
-    iconType = 'pin';
-  } else if (msgType === 'Starred Messages') {
-    iconType = 'star';
-  } else {
-    msgType = 'messages';
-  }
-  if (messages.length === 0) {
-    return (
-      <Box
-        css={css`
-          margin: auto;
-        `}
-      >
-        <Box
-          css={css`
-            text-align: center;
-          `}
-        >
-          <Icon name={iconType} size="2rem" />
-        </Box>
-        <Box
-          css={css`
-            text-align: center;
-          `}
-        >
-          No {msgType}
-        </Box>
-      </Box>
-    );
-  }
   return (
     <>
-      {messages &&
-        messages.map((msg, index, arr) => {
-          const prev = arr[index + 1];
-          const next = arr[index - 1];
-          const newDay = isMessageNewDay(msg, prev);
-          const sequential = isMessageSequential(msg, prev, 300);
-          const lastSequential =
-            sequential && isMessageLastSequential(msg, next);
+      {messages.length === 0 ? (
+        <Box
+          css={css`
+            text-align: center;
+            margin: auto;
+          `}
+        >
+          <Icon name="thread" size="2rem" />
+          <Box>
+            {isMessageLoaded
+              ? 'No messages'
+              : 'Ready to chat? Login now to join the fun.'}
+          </Box>
+        </Box>
+      ) : (
+        <>
+          {messages.map((msg, index, arr) => {
+            const prev = arr[index + 1];
+            const next = arr[index - 1];
 
-          return (
-            msg && (
+            if (!msg) return null;
+            const newDay = isMessageNewDay(msg, prev);
+            const sequential = isMessageSequential(msg, prev, 300);
+            const lastSequential =
+              sequential && isMessageLastSequential(msg, next);
+
+            return (
               <Message
                 key={msg._id}
                 message={msg}
@@ -73,17 +56,19 @@ const MessageList = ({ messages }) => {
                 type="default"
                 showAvatar
               />
-            )
-          );
-        })}
-
-      {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
+            );
+          })}
+          {showReportMessage && (
+            <MessageReportWindow messageId={messageToReport} />
+          )}
+        </>
+      )}
     </>
   );
 };
 
-export default MessageList;
-
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape),
 };
+
+export default MessageList;

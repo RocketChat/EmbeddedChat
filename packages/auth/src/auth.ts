@@ -6,14 +6,12 @@ const rocketChatAuth = ({
   saveToken,
   getToken,
   deleteToken,
-  autoLogin,
 }: IRocketChatAuthOptions) => {
   return new RocketChatAuth({
     host,
     saveToken,
     getToken,
     deleteToken,
-    autoLogin,
   });
 };
 

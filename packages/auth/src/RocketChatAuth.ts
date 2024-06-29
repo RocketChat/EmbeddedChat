@@ -19,7 +19,6 @@ class RocketChatAuth {
     saveToken,
     getToken,
     deleteToken,
-    autoLogin = true,
   }: IRocketChatAuthOptions) {
     this.host = host;
     this.api = new Api(host);
@@ -28,9 +27,6 @@ class RocketChatAuth {
     this.getToken = getToken;
     this.saveToken = saveToken;
     this.deleteToken = deleteToken;
-    if (autoLogin) {
-      this.load();
-    }
   }
 
   /**

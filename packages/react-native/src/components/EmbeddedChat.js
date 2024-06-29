@@ -50,11 +50,8 @@ const EmbeddedChat = ({
 			getToken,
 			deleteToken,
 			saveToken,
-			autoLogin: auth.flow === 'MANAGED',
 		});
-		if (auth.flow === 'TOKEN') {
-			newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-		}
+
 		return newRCInstance;
 	});
 
@@ -64,11 +61,8 @@ const EmbeddedChat = ({
 				getToken,
 				deleteToken,
 				saveToken,
-				autoLogin: auth.flow === 'MANAGED',
 			});
-			if (auth.flow === 'TOKEN') {
-				newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-			}
+
 			setRCInstance(newRCInstance);
 			console.log('Reinstantiated');
 		};
@@ -78,8 +72,14 @@ const EmbeddedChat = ({
 		} else {
 			reInstantiate();
 		}
-	}, [roomId, host, auth?.flow]);
+	}, [roomId, host]);
 
+	useEffect(() => {
+		RCInstance.autoLogin(auth).catch((error) => {
+		  console.error(error);
+		});
+	  }, [RCInstance, auth]);
+	
 
 	useEffect(() => {
 		const onAuthChange = async (user) => {
