@@ -201,9 +201,8 @@ const EmbeddedChat = (props) => {
     [RCInstance, ECOptions]
   );
 
-  if (!useRemoteProps(remoteOpt, RCInstance, setConfig)) {
-    return null;
-  }
+  const isSynced = useRemoteProps(remoteOpt, RCInstance, setConfig);
+  if (!isSynced) return null;
 
   return (
     <ThemeProvider theme={theme || DefaultTheme}>
