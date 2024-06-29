@@ -101,10 +101,17 @@ export const propSettings: ISetting[] = [
         i18nLabel: "Toast Bar Position",
         i18nDescription:
             "Specifies the position at which the toast bar is displayed.",
-        type: SettingType.STRING,
+        type: SettingType.SELECT,
+        values: [
+            { key: "bottom right", i18nLabel: "Bottom right" },
+            { key: "top right", i18nLabel: "Top right" },
+            { key: "bottom left", i18nLabel: "Bottom left" },
+            { key: "top left", i18nLabel: "Top left" },
+        ],
+
         required: false,
         public: false,
-        packageValue: "bottom right",
+        packageValue: "",
     },
 
     {
