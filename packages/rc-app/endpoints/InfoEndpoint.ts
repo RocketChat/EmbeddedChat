@@ -11,6 +11,7 @@ import {
     IApiResponse,
 } from "@rocket.chat/apps-engine/definition/api";
 import { getCallbackUrl } from "../lib/getCallbackUrl";
+import { getEnvironmentValues } from "../lib/getEnvironmentVariables";
 import { getAllowedOrigins } from "../lib/getAllowedOrigins";
 
 export class InfoEndpoint extends ApiEndpoint {
@@ -25,35 +26,88 @@ export class InfoEndpoint extends ApiEndpoint {
         http: IHttp,
         persis: IPersistence
     ): Promise<IApiResponse> {
-        const readEnvironment = read.getEnvironmentReader().getSettings();
-        const [
-            serviceName,
-            client_id,
-            client_secret,
-            redirect_uri,
-            allowedOrigins,
-        ] = await Promise.all([
-            readEnvironment.getValueById("custom-oauth-name"),
-            readEnvironment.getValueById("client-id"),
-            readEnvironment.getValueById("client-secret"),
-            getCallbackUrl(this.app),
-            getAllowedOrigins(read),
-        ]);
-        return {
-            status: 200,
-            content: {
-                config: {
-                    serviceName,
-                    client_id,
-                    allowedOrigins,
-                    redirect_uri,
+        try {
+            const readEnvironment = read.getEnvironmentReader().getSettings();
+
+            const [
+                serviceName,
+                client_id,
+                width,
+                height,
+                channelName,
+                anonymousMode,
+                roomId,
+                toastBarPosition,
+                showRoles,
+                showAvatar,
+                showUsername,
+                showName,
+                enableThreads,
+                className,
+                hideHeader,
+                secure,
+                dark,
+            ] = await getEnvironmentValues(readEnvironment, {
+                serviceName: "custom-oauth-name",
+                client_id: "client-id",
+                width: "ec-width",
+                height: "ec-height",
+                channelName: "fallback-name",
+                anonymousMode: "anonymous-mode",
+                roomId: "room-id",
+                toastBarPosition: "toast-bar-position",
+                showRoles: "show-roles",
+                showAvatar: "show-avatar",
+                showUsername: "show-username",
+                showName: "show-name",
+                enableThreads: "enable-threads",
+                className: "ec-class-name",
+                hideHeader: "hide-header",
+                secure: "secure",
+                dark: "dark",
+            });
+
+            const [redirect_uri, allowedOrigins] = await Promise.all([
+                getCallbackUrl(this.app),
+                getAllowedOrigins(read),
+            ]);
+
+            return {
+                status: 200,
+                content: {
+                    config: {
+                        serviceName,
+                        client_id,
+                        allowedOrigins,
+                        redirect_uri,
+                    },
+                    propConfig: {
+                        width,
+                        height,
+                        channelName,
+                        anonymousMode,
+                        roomId,
+                        toastBarPosition,
+                        showRoles,
+                        showAvatar,
+                        showUsername,
+                        showName,
+                        enableThreads,
+                        className,
+                        hideHeader,
+                        secure,
+                        dark,
+                    },
                 },
-                configuredItems: {
-                    client_id: !!client_id,
-                    client_secret: !!client_secret,
-                    custom_oauth_name: !!serviceName,
+            };
+        } catch (error) {
+            console.error("Error occurred in InfoEndpoint:", error);
+            return {
+                status: 500,
+                content: {
+                    error: "Internal Server Error",
                 },
-            },
-        };
+            };
+        }
     }
 }

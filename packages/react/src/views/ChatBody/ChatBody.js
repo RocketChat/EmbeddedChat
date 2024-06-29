@@ -135,14 +135,7 @@ const ChatBody = ({
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
-  }, [
-    RCInstance,
-    getMessagesAndRoles,
-    addMessage,
-    removeMessage,
-    onActionTriggerResponse,
-    anonymousMode,
-  ]);
+  }, [RCInstance, addMessage, removeMessage, onActionTriggerResponse]);
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
