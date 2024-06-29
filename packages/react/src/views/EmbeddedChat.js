@@ -21,6 +21,7 @@ import useComponentOverrides from '../hooks/useComponentOverrides';
 import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
+import { overrideECProps } from '../lib/overrideECProps';
 
 const EmbeddedChat = (props) => {
   const [config, setConfig] = useState(() => props);
@@ -168,19 +169,8 @@ const EmbeddedChat = (props) => {
         const appInfo = await RCInstance.getRCAppInfo();
 
         if (appInfo) {
-          const remoteProps = appInfo.propConfig;
-
-          if (remoteProps && Object.keys(remoteProps).length > 0) {
-            setConfig((prevConfig) => ({
-              ...prevConfig,
-              ...Object.keys(remoteProps).reduce((acc, key) => {
-                if (remoteProps[key] !== '') {
-                  acc[key] = remoteProps[key];
-                }
-                return acc;
-              }, {}),
-            }));
-          }
+          const remoteConfig = appInfo.propConfig;
+          setConfig((prevConfig) => overrideECProps(prevConfig, remoteConfig));
         }
       } catch (error) {
         console.error('Error fetching remote config:', error);
@@ -190,7 +180,7 @@ const EmbeddedChat = (props) => {
     };
 
     getConfig();
-  }, [RCInstance, remoteOpt, setConfig]);
+  }, [RCInstance, remoteOpt, setConfig, setIsSynced]);
 
   const ECOptions = useMemo(
     () => ({
