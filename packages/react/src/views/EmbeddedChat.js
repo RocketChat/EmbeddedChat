@@ -1,4 +1,11 @@
-import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { css, ThemeProvider } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
@@ -50,6 +57,7 @@ const EmbeddedChat = (props) => {
     remoteOpt = false,
   } = config;
 
+  const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
@@ -92,18 +100,23 @@ const EmbeddedChat = (props) => {
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
+  const reInstantiate = useCallback(() => {
+    const newRCInstance = initializeRCInstance();
+    setRCInstance(newRCInstance);
+  }, [initializeRCInstance]);
+
   useEffect(() => {
-    const reInstantiate = () => {
-      const newRCInstance = initializeRCInstance();
-      setRCInstance(newRCInstance);
-    };
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
 
     RCInstance.close().then(reInstantiate).catch(console.error);
 
     return () => {
       RCInstance.close().catch(console.error);
     };
-  }, [roomId, host, initializeRCInstance]);
+  }, [roomId, host, reInstantiate, RCInstance]);
 
   useEffect(() => {
     const autoLogin = async () => {
