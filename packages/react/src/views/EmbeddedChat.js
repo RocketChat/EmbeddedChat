@@ -16,7 +16,6 @@ import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
-import useRemoteProps from '../hooks/useRemoteProps';
 import { Box } from '../components/Box';
 import useComponentOverrides from '../hooks/useComponentOverrides';
 import { ToastBarProvider } from '../components/ToastBar';
@@ -60,8 +59,8 @@ const EmbeddedChat = (props) => {
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
+  const [isSynced, setIsSynced] = useState(false);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
-
   const {
     isUserAuthenticated,
     setIsUserAuthenticated,
@@ -161,6 +160,38 @@ const EmbeddedChat = (props) => {
     setAuthenticatedUsername,
   ]);
 
+  useEffect(() => {
+    const getConfig = async () => {
+      try {
+        if (!remoteOpt) return;
+
+        const appInfo = await RCInstance.getRCAppInfo();
+
+        if (appInfo) {
+          const remoteProps = appInfo.propConfig;
+
+          if (remoteProps && Object.keys(remoteProps).length > 0) {
+            setConfig((prevConfig) => ({
+              ...prevConfig,
+              ...Object.keys(remoteProps).reduce((acc, key) => {
+                if (remoteProps[key] !== '') {
+                  acc[key] = remoteProps[key];
+                }
+                return acc;
+              }, {}),
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching remote config:', error);
+      } finally {
+        setIsSynced(true);
+      }
+    };
+
+    getConfig();
+  }, [RCInstance, remoteOpt, setConfig]);
+
   const ECOptions = useMemo(
     () => ({
       enableThreads,
@@ -201,7 +232,6 @@ const EmbeddedChat = (props) => {
     [RCInstance, ECOptions]
   );
 
-  const isSynced = useRemoteProps(remoteOpt, RCInstance, setConfig);
   if (!isSynced) return null;
 
   return (
