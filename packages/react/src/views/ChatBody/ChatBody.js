@@ -126,9 +126,6 @@ const ChatBody = ({
         RCInstance.addMessageDeleteListener(removeMessage);
         RCInstance.addActionTriggeredListener(onActionTriggerResponse);
         RCInstance.addUiInteractionListener(onActionTriggerResponse);
-        getMessagesAndRoles();
-      } else {
-        getMessagesAndRoles(anonymousMode);
       }
     });
 
@@ -147,6 +144,16 @@ const ChatBody = ({
     anonymousMode,
   ]);
 
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        getMessagesAndRoles();
+      } else {
+        getMessagesAndRoles(anonymousMode);
+      }
+    });
+  }, [RCInstance, anonymousMode, getMessagesAndRoles]);
+
   const handlePopupClick = () => {
     scrollToBottom();
     setIsUserScrolledUp(false);
@@ -159,7 +166,7 @@ const ChatBody = ({
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight
+        messageListRef.current.scrollHeight
       );
     }
 
