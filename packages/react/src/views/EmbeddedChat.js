@@ -100,12 +100,12 @@ const EmbeddedChat = (props) => {
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
-  const reInstantiate = useCallback(() => {
-    const newRCInstance = initializeRCInstance();
-    setRCInstance(newRCInstance);
-  }, [initializeRCInstance]);
-
   useEffect(() => {
+    const reInstantiate = () => {
+      const newRCInstance = initializeRCInstance();
+      setRCInstance(newRCInstance);
+    };
+
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
@@ -116,7 +116,7 @@ const EmbeddedChat = (props) => {
     return () => {
       RCInstance.close().catch(console.error);
     };
-  }, [roomId, host, reInstantiate, RCInstance]);
+  }, [roomId, host, initializeRCInstance]);
 
   useEffect(() => {
     const autoLogin = async () => {
