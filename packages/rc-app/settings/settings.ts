@@ -111,7 +111,7 @@ export const propSettings: ISetting[] = [
 
         required: false,
         public: false,
-        packageValue: "",
+        packageValue: "bottom right",
     },
 
     {
