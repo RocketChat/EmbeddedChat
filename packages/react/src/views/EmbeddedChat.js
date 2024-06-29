@@ -60,7 +60,7 @@ const EmbeddedChat = (props) => {
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
-  const [isSynced, setIsSynced] = useState(false);
+  const [isSynced, setIsSynced] = useState(!remoteOpt);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
   const {
     isUserAuthenticated,
@@ -164,8 +164,6 @@ const EmbeddedChat = (props) => {
   useEffect(() => {
     const getConfig = async () => {
       try {
-        if (!remoteOpt) return;
-
         const appInfo = await RCInstance.getRCAppInfo();
 
         if (appInfo) {
@@ -178,8 +176,9 @@ const EmbeddedChat = (props) => {
         setIsSynced(true);
       }
     };
-
-    getConfig();
+    if (remoteOpt) {
+      getConfig();
+    }
   }, [RCInstance, remoteOpt, setConfig, setIsSynced]);
 
   const ECOptions = useMemo(
