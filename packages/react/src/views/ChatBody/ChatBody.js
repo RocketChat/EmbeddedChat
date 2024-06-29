@@ -133,7 +133,6 @@ const ChatBody = ({
     });
 
     return () => {
-      RCInstance.close();
       RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
