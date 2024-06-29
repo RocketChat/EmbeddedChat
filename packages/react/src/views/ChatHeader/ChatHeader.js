@@ -150,9 +150,7 @@ const ChatHeader = ({
           .flatMap((chRole) => chRole.roles);
 
         const allRoles = [...channelLevelRoles, ...workspaceLevelRoles];
-        const canSendMsg =
-          channelLevelRoles.length > 0 &&
-          postMsgRoles.some((role) => allRoles.includes(role));
+        const canSendMsg = postMsgRoles.some((role) => allRoles.includes(role));
 
         setCanSendMsg(canSendMsg);
       }
