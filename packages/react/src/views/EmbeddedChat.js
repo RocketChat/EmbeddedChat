@@ -6,7 +6,7 @@ import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore } from '../store';
+import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { Box } from '../components/Box';
@@ -62,6 +62,8 @@ const EmbeddedChat = ({
     setRoles: state.setRoles,
   }));
 
+  const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -73,13 +75,10 @@ const EmbeddedChat = ({
       getToken,
       deleteToken,
       saveToken,
-      autoLogin: ['PASSWORD', 'OAUTH'].includes(auth?.flow),
     });
-    if (auth?.flow === 'TOKEN') {
-      newRCInstance.auth.loginWithOAuthServiceToken(auth.credentials);
-    }
+
     return newRCInstance;
-  }, [host, roomId, auth?.flow, auth?.credentials]);
+  }, [host, roomId, getToken, deleteToken, saveToken]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
@@ -89,12 +88,26 @@ const EmbeddedChat = ({
       setRCInstance(newRCInstance);
     };
 
-    if (RCInstance.rcClient.loggedIn()) {
-      RCInstance.close().then(reInstantiate).catch(console.error);
-    } else {
-      reInstantiate();
-    }
-  }, [roomId, host, auth?.flow]);
+    RCInstance.close().then(reInstantiate).catch(console.error);
+
+    return () => {
+      RCInstance.close().catch(console.error);
+    };
+  }, [roomId, host, initializeRCInstance]);
+
+  useEffect(() => {
+    const autoLogin = async () => {
+      setIsLoginIn(true);
+      try {
+        await RCInstance.autoLogin(auth);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoginIn(false);
+      }
+    };
+    autoLogin();
+  }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -102,7 +115,6 @@ const EmbeddedChat = ({
         RCInstance.connect()
           .then(() => {
             console.log(`Connected to RocketChat ${RCInstance.host}`);
-            console.log('reinstantiated');
             const { me } = user;
             setAuthenticatedAvatarUrl(me.avatarUrl);
             setAuthenticatedUsername(me.username);

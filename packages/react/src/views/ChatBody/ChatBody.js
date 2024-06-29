@@ -1,8 +1,14 @@
 /* eslint-disable no-shadow */
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useUserStore, useChannelStore } from '../../store';
+import {
+  useMessageStore,
+  useUserStore,
+  useChannelStore,
+  useLoginStore,
+} from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { Box } from '../../components/Box';
@@ -16,6 +22,7 @@ import { useChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
 import useUiKitStore from '../../store/uiKitStore';
 import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
+import { Throbber } from '../../components/Throbber';
 
 const ChatBody = ({
   anonymousMode,
@@ -39,6 +46,7 @@ const ChatBody = ({
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const isLoginIn = useLoginStore((state) => state.isLoginIn);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -147,7 +155,7 @@ const ChatBody = ({
     setPopupVisible(false);
   };
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (messageListRef && messageListRef.current) {
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
@@ -162,7 +170,13 @@ const ChatBody = ({
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
     }
-  };
+  }, [
+    messageListRef,
+    setScrollPosition,
+    setIsUserScrolledUp,
+    setPopupVisible,
+    setOtherUserMessage,
+  ]);
 
   const showNewMessagesPopup = () => {
     setPopupVisible(true);
@@ -175,7 +189,7 @@ const ChatBody = ({
     return () => {
       currentRef.removeEventListener('scroll', handleScroll);
     };
-  }, [messageListRef]);
+  }, [handleScroll, messageListRef]);
 
   useEffect(() => {
     const isScrolledUp =
@@ -185,7 +199,7 @@ const ChatBody = ({
     if (isScrolledUp && otherUserMessage) {
       showNewMessagesPopup();
     }
-  }, [scrollPosition, otherUserMessage]);
+  }, [scrollPosition, otherUserMessage, messageListRef]);
 
   return (
     <>
@@ -197,7 +211,16 @@ const ChatBody = ({
         }}
         className={`ec-chat-body ${classNames}`}
       >
-        {isThreadOpen ? (
+        {isLoginIn ? (
+          <Box
+            css={css`
+              margin: auto;
+              text-align: center;
+            `}
+          >
+            <Throbber />
+          </Box>
+        ) : isThreadOpen ? (
           <ThreadMessageList
             threadMainMessage={threadMainMessage}
             threadMessages={threadMessages}
@@ -205,12 +228,15 @@ const ChatBody = ({
         ) : (
           <MessageList messages={messages} />
         )}
+
         <TotpModal handleLogin={handleLogin} />
         <LoginForm />
+
         {uiKitModalOpen && (
           <UiKitModal key={Math.random()} initialView={uiKitModalData} />
         )}
       </Box>
+
       {popupVisible && otherUserMessage && (
         <RecentMessageButton
           visible

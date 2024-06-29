@@ -3,5 +3,4 @@ export interface IRocketChatAuthOptions {
   saveToken: (token: string) => Promise<void>;
   getToken: () => Promise<string>;
   deleteToken: () => Promise<void>;
-  autoLogin?: boolean;
 }

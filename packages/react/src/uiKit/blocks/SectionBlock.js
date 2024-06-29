@@ -23,7 +23,7 @@ const SectionBlock = ({ className, block, surfaceRenderer }) => {
   return (
     <Grid
       className={className}
-      cols={(text || fields) && block.accessory ? '2' : '1'}
+      cols={(text || fields) && block.accessory ? 2 : 1}
       gap="10px"
     >
       <Grid.Item>

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import RCContext from '../context/RCInstance';
-import { useUserStore, totpModalStore, loginModalStore } from '../store';
+import { useUserStore, totpModalStore, useLoginStore } from '../store';
 import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth = () => {
@@ -9,7 +9,7 @@ export const useRCAuth = () => {
     (state) => state.setIsTotpModalOpen
   );
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
-  const setIsLoginModalOpen = loginModalStore(
+  const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
   const setAuthenticatedUserUsername = useUserStore(

@@ -23,7 +23,7 @@ export default class EmbeddedChatApi {
   constructor(
     host: string,
     rid: string,
-    { getToken, saveToken, deleteToken, autoLogin }: IRocketChatAuthOptions
+    { getToken, saveToken, deleteToken }: IRocketChatAuthOptions
   ) {
     this.host = host;
     this.rid = rid;
@@ -44,7 +44,6 @@ export default class EmbeddedChatApi {
       deleteToken,
       getToken,
       saveToken,
-      autoLogin,
     });
   }
 
@@ -143,6 +142,33 @@ export default class EmbeddedChatApi {
         return { error: authErrorRes?.error };
       }
       console.error(error);
+    }
+  }
+
+  async autoLogin(auth: {
+    flow: "PASSWORD" | "OAUTH" | "TOKEN";
+    credentials: any;
+  }) {
+    try {
+      if (!auth || !auth.flow) {
+        return;
+      }
+      switch (auth.flow) {
+        case "PASSWORD":
+        case "OAUTH":
+          await this.auth.load();
+          break;
+        case "TOKEN":
+          if (!auth.credentials) {
+            return;
+          }
+          await this.auth.loginWithOAuthServiceToken(auth.credentials);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Auto-login failed:", error);
     }
   }
 
