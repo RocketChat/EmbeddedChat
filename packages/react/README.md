@@ -45,8 +45,8 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 - `width` (string): Width of the chat window. Defaults to `'100%'`.
 - `height` (string): Height of the chat window. Defaults to `'95vh'`.
 - `host` (string): URL of your RocketChat server.
-- `roomId` (string): ID of the chat room.
-- `channelName` (string): Fallback channel name for the chat.
+- `roomId` (string): ID of the chat room. Defaults to `GENERAL`.
+- `channelName` (string): Fallback channel name for the chat. Defaults to `general`.
 - `anonymousMode` (boolean): Enables anonymous mode. Defaults to `false`.
 - `toastBarPosition` (string): Position of the toast bar. Defaults to `'bottom right'`.
 - `showRoles` (boolean): Displays user roles. Defaults to `false`.
@@ -63,88 +63,34 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 - `dark` (boolean): Enables dark mode in the application. Defaults to `false`.
 - `remoteOpt` (boolean): Allows props override remotely using `EmbeddedChat RC App`. Defaults to `false`.
 
-### Authentication
+## Handling the Closable State
 
-The `EmbeddedChat` component offers three distinct authentication modes to cater to different requirements for accessing RocketChat. Below is a detailed guide on how to implement each authentication flow.
-
-#### 1. Token Authentication Flow
-
-Token authentication allows users to authenticate using a service-specific access token. There are two ways to use token authentication:
-
-##### a. Using `accessToken` and `expiresIn`:
-
-```javascript
-auth: {
-  flow: 'TOKEN',
-  credentials: {
-    serviceName: "your-service-name",
-    accessToken: "accessToken",
-    expiresIn: 3600,
-  },
-}
-```
-
-- `serviceName`: The name of your authentication service.
-- `accessToken`: The access token obtained from your authentication service.
-- `expiresIn`: The duration in seconds for which the token is valid.
-
-##### b. Using `resume`:
-
-```javascript
-auth: {
-  flow: 'TOKEN',
-  credentials: {
-    resume: 'resumeToken',
-  },
-}
-```
-
-- `resume`: A resume token to be used for authentication.
-
-In both cases, the credentials are posted to the `/api/v1/login` endpoint of the RocketChat server.
-
-#### 2. Password Authentication Flow
-
-The password method displays a modal where users can enter their username and password:
-
-```javascript
-auth: {
-  flow: 'PASSWORD',
-}
-```
-
-This method is straightforward and does not require additional configuration for the `auth` prop. When this flow is active, a modal dialog prompts users for their RocketChat username and password.
-
-#### 3. OAuth Authentication Flow
-
-To use RocketChat's OAuth authentication, ensure the EmbeddedChat app is installed and configured on your RocketChat server:
-
-```javascript
-auth: {
-  flow: 'OAUTH',
-}
-```
-
-This method utilizes the OAuth configuration set up in RocketChat, providing a seamless authentication experience.
-
-### Integrating with EmbeddedChat
-
-When implementing any of these authentication methods in `EmbeddedChat`, include the `auth` prop with the desired configuration:
+If `isClosable` is `true`, provide a `setClosableState` function to manage the state when the chat window is closed:
 
 ```jsx
 <EmbeddedChat
-  host="http://your-rocketchat-server.com"
-  roomId="YOUR_ROOM_ID"
-  auth={{
-    flow: 'TOKEN', // or 'PASSWORD' or 'OAUTH'
-    credentials: {
-      // Include if using TOKEN flow
-    },
-  }}
+  isClosable={true}
+  setClosableState={handleClose}
+  // ...other props
 />
 ```
 
-Ensure that the `host` and `roomId` props are set according to your RocketChat server and the specific room you want to connect to.
+## Authentication Guide
+
+Embedded Chat supports various methods for logging into a Rocket.Chat server. These include three primary methods:
+
+1. **Token-Based Authentication**: This can be either a personal access token or a service-specific access token.
+2. **Login Credentials**: Using a valid username/email and password.
+3. **OAuth Authentication**: Uses the OAuth configuration set up in Rocket.Chat. [This method requires installing the EmbeddedChat RC App on the Rocket.Chat server]
+
+#### Storing the `ec-token` for Auto Login
+
+After completing the login, a `resume-token / ec-token` is used for automatic login. There are two methods to store this token :
+
+1. **Local Storage**: Store the `ec-token` in the browser's local storage.
+2. **HTTP-Only Cookie**: Store the `ec-token` as an HTTP-only cookie. [This method requires the installation of the EmbeddedChat RC App on the Rocket.Chat server]
+
+For a detailed description of how to work with each of these authentication methods, refer to the [authentication.md](docs/authentication.md) file.
 
 ## Theming and Customization
 
@@ -158,18 +104,6 @@ You can pass a `theme` object to customize the appearance according to your appl
 ```
 
 Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
-
-## Handling the Closable State
-
-If `isClosable` is `true`, provide a `setClosableState` function to manage the state when the chat window is closed:
-
-```jsx
-<EmbeddedChat
-  isClosable={true}
-  setClosableState={handleClose}
-  // ...other props
-/>
-```
 
 ## Development
 
