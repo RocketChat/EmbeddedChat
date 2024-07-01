@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 env:
-  STORYBOOK_RC_HOST: ${{ vars.STORYBOOK_RC_HOST }}
+  STORYBOOK_RC_HOST: 'https://spiral-memory.rocket.chat'
 
 jobs:
   deploy:
