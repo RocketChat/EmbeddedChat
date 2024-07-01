@@ -1,18 +1,21 @@
-# EmbeddedChat
+<h1 align='center'>Embedded Chat: A staple in excellent customer service</h1>
 
-An easy to use full-stack component embedding Rocket.Chat into your webapp.
+![image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/574be6b4-d2f7-4bea-a7b1-4c6e840d8e22)
 
-_EmbeddedChat is a full-stack React component node module of the RocketChat application that is fully configurable, extensible, and flexible for use. It is tightly bound with the RocketChat server using Rocket.Chat nodejs SDK and its UI fully customisable._
+An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
 
-![embeddedchatwall](https://user-images.githubusercontent.com/73601258/178119162-ecabb9b7-e3ae-4c70-8ab2-f6c02856f4c6.png)
+_EmbeddedChat is a full-stack React component designed to integrate Rocket.Chat into your web app. It is fully configurable, extensible, and flexible, offering various preconfigured designs, multiple login options, and more. The component is tightly integrated with the Rocket.Chat server using the Rocket.Chat SDK, and its entire UI is built using custom components._
+
+![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
 <div align='center' width='100%'>
-<a href="https://github.com/monoclehq">
+<a href="https://github.com/RocketChat/EmbeddedChat/graphs/contributors">
 <img src="https://open-source-assets.middlewarehq.com/svgs/RocketChat-EmbeddedChat-contributor-metrics-dark-widget.svg?caching=true"></img>
 </a>
 </div>
 
 ## Installation
+
 ```bash
 npm install @embeddedchat/react
 # or
@@ -32,32 +35,33 @@ import { EmbeddedChat } from '@embeddedchat/react';
 To use the `EmbeddedChat` component, include it in your component's render method or return statement. Here's a basic example:
 
 ```jsx
-<EmbeddedChat
-  host="http://your-rocketchat-server.com"
-  roomId="YOUR_ROOM_ID"
-/>
+<EmbeddedChat host="http://your-rocketchat-server.com" roomId="YOUR_ROOM_ID" />
 ```
 
 ### Props
 
 - `isClosable` (boolean): If `true`, the chat window can be closed. Defaults to `false`.
-- `setClosableState` (function): Callback to handle the closable state.
-- `moreOpts` (boolean): It adds a kebab menu with added functionalities like showing pinned, starred, thread messages. Defaults to `false`.
+- `setClosableState` (function): Callback for handling the closable state.
 - `width` (string): Width of the chat window. Defaults to `'100%'`.
-- `height` (string): Height of the chat window. Defaults to `'50vh'`.
-- `host` (string): The URL of your RocketChat server.
+- `height` (string): Height of the chat window. Defaults to `'95vh'`.
+- `host` (string): URL of your RocketChat server.
 - `roomId` (string): ID of the chat room.
-- `channelName` (string): The fallback channel name to be present on the chat.
-- `anonymousMode` (boolean): Enable anonymous mode. Defaults to `false`.
+- `channelName` (string): Fallback channel name for the chat.
+- `anonymousMode` (boolean): Enables anonymous mode. Defaults to `false`.
 - `toastBarPosition` (string): Position of the toast bar. Defaults to `'bottom right'`.
-- `showRoles` (boolean): Display user roles. Defaults to `false`.
-- `showAvatar` (boolean): Show user avatars. Defaults to `false`.
-- `enableThreads` (boolean): Enable chat threads. Defaults to `false`.
+- `showRoles` (boolean): Displays user roles. Defaults to `false`.
+- `showAvatar` (boolean): Shows user avatars. Defaults to `true`.
+- `showUsername` (boolean): Displays the user's username. Defaults to `false`.
+- `showName` (boolean): Displays the user's name. Defaults to `true`.
+- `enableThreads` (boolean): Enables chat threads. Defaults to `false`.
 - `theme` (object): Theme object for styling.
 - `className` (string): Additional CSS class for styling.
 - `style` (object): Inline styles for the chat window.
-- `hideHeader` (boolean): Hide the chat header. Defaults to `false`.
+- `hideHeader` (boolean): Hides the chat header. Defaults to `false`.
 - `auth` (object): Authentication configuration.
+- `secure` (boolean): Uses HTTP-only cookies for authentication. Defaults to `false`.
+- `dark` (boolean): Enables dark mode in the application. Defaults to `false`.
+- `remoteOpt` (boolean): Allows props override remotely using `EmbeddedChat RC App`. Defaults to `false`.
 
 ### Authentication
 
@@ -152,6 +156,7 @@ You can pass a `theme` object to customize the appearance according to your appl
   theme={myCustomTheme}
 />
 ```
+
 Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
 
 ## Handling the Closable State
@@ -167,9 +172,9 @@ If `isClosable` is `true`, provide a `setClosableState` function to manage the s
 ```
 
 ## Development
+
 Follow this [EmbeddedChat Readme](https://github.com/RocketChat/EmbeddedChat) to setup EmbeddedChat for development.
 
 ## Conclusion
 
 The `EmbeddedChat` component offers a flexible and feature-rich solution for integrating RocketChat into your application. Customize it according to your needs to enhance your app's chat functionality.
-
