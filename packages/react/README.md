@@ -1,3 +1,10 @@
+<h1>Embedded Chat: A staple in excellent customer service</h1>
+
+An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+
+![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
+
+
 ## Installation
 
 ```bash
@@ -85,6 +92,48 @@ This section of the guide aims to provide a detailed explanation of these props.
 
   Once you obtain the roomId, provide it as the value for the `roomId` prop to connect to the corresponding room.
 
+  ```jsx
+  <EmbeddedChat
+    roomId="your-room-id"
+    // ...other props
+  />
+  ```
+
+- ### Anonymous Mode
+
+  Rocket.Chat allows users to view messages in read-only mode without logging in. This setting can be enabled by navigating to Workspace settings > Accounts > Allow Anonymous Read. Once this setting is activated, EmbeddedChat can also display channel messages in read-only mode without requiring a login. To enable this feature, pass `anonymousMode` as true in the props.
+
+  ```jsx
+  <EmbeddedChat
+    anonymousMode={true}
+    // ...other props
+  />
+  ```
+
+- ### Enabling Threads
+
+  Threads allow users to discuss a specific message separately, preventing the main channel from being cluttered with numerous messages and providing a dedicated space for focused discussions. By default, this setting is enabled, but it can be disabled by passing `enableThreads` as false.
+
+  ```jsx
+  <EmbeddedChat
+    enableThreads={false}
+    // ...other props
+  />
+  ```
+
+- ### Theming and Customization
+
+  EmbeddedChat supports various design variants, style overrides, and many other customization features. To tailor it to your needs, you can pass a `theme` object to customize the appearance according to your application's design:
+
+  ```jsx
+  <EmbeddedChat
+    // ...other props
+    theme={myCustomTheme}
+  />
+  ```
+
+However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](docs/theming.md).
+
 - ### Authentication Guide
 
   Embedded Chat supports various methods for logging into a Rocket.Chat server. These include three primary methods:
@@ -95,25 +144,12 @@ This section of the guide aims to provide a detailed explanation of these props.
 
   #### Storing the `ec-token` for Auto Login
 
-  After completing the login, a `resume-token / ec-token` is used for automatic login. There are two methods to store this token :
+  After completing the login, a resume token, referred to as `ec-token`, is used for auto login. There are currently two supported methods to store this token:
 
   1. **Local Storage**: Store the `ec-token` in the browser's local storage.
   2. **HTTP-Only Cookie**: Store the `ec-token` as an HTTP-only cookie. [This method requires the installation of the EmbeddedChat RC App on the Rocket.Chat server]
 
-  For a detailed description of how to work with each of these authentication methods, refer to the [authentication.md](docs/authentication.md) file.
-
-- ### Theming and Customization
-
-  You can pass a `theme` object to customize the appearance according to your application's design:
-
-  ```jsx
-  <EmbeddedChat
-    // ...other props
-    theme={myCustomTheme}
-  />
-  ```
-
-  Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
+  For a detailed guide on using each of these authentication methods with the `auth` and `secure` props, refer to the [authentication.md](docs/authentication.md) file.
 
 ## Development
 
