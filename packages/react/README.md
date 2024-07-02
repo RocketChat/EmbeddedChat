@@ -38,7 +38,9 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 <EmbeddedChat host="http://your-rocketchat-server.com" roomId="YOUR_ROOM_ID" />
 ```
 
-### Props
+## Props
+
+EmbeddedChat supports various props that are used to customize different aspects of this component. A brief description of all the supported props is listed as follows:
 
 - `isClosable` (boolean): If `true`, the chat window can be closed. Defaults to `false`.
 - `setClosableState` (function): Callback for handling the closable state.
@@ -63,47 +65,71 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 - `dark` (boolean): Enables dark mode in the application. Defaults to `false`.
 - `remoteOpt` (boolean): Allows props override remotely using `EmbeddedChat RC App`. Defaults to `false`.
 
-## Handling the Closable State
+## Understanding Prop Functionality
 
-If `isClosable` is `true`, provide a `setClosableState` function to manage the state when the chat window is closed:
+This section of the guide aims to provide a detailed explanation of these props. However, props such as `width`, `height`, `host`, `channelName`, `showRoles`, `showAvatar`, `showUsername`, `showName`, `className`, `style`, `hideHeader`, and `dark` are straightforward and will not receive detailed discussion here.
 
-```jsx
-<EmbeddedChat
-  isClosable={true}
-  setClosableState={handleClose}
-  // ...other props
-/>
-```
+- ### Managing the Closable State
 
-## Authentication Guide
+  When integrating EmbeddedChat, developers have the flexibility to control its visibility. They can utilize their internal state management to achieve this. EmbeddedChat supports a function to manage this state and provides a close icon for executing the close functionality.
 
-Embedded Chat supports various methods for logging into a Rocket.Chat server. These include three primary methods:
+  To enable the closable feature, set `isClosable` to `true` and provide a `setClosableState` function to handle the open and close states of the chat window.
 
-1. **Token-Based Authentication**: This can be either a personal access token or a service-specific access token.
-2. **Login Credentials**: Using a valid username/email and password.
-3. **OAuth Authentication**: Uses the OAuth configuration set up in Rocket.Chat. [This method requires installing the EmbeddedChat RC App on the Rocket.Chat server]
+  ```jsx
+  <EmbeddedChat
+    isClosable={true}
+    setClosableState={handleClose}
+    // ...other props
+  />
+  ```
 
-#### Storing the `ec-token` for Auto Login
+  This setup allows seamless integration of EmbeddedChat with custom control over its visibility.
 
-After completing the login, a `resume-token / ec-token` is used for automatic login. There are two methods to store this token :
+- ### Obtaining Room ID
 
-1. **Local Storage**: Store the `ec-token` in the browser's local storage.
-2. **HTTP-Only Cookie**: Store the `ec-token` as an HTTP-only cookie. [This method requires the installation of the EmbeddedChat RC App on the Rocket.Chat server]
+  By default, EmbeddedChat uses the 'GENERAL' channel as its default channel in a Rocket.Chat server. However, EmbeddedChat can be integrated into any channel within your workspace, provided you have the roomId of the desired room. To retrieve the roomId for your specified room, execute the following curl command. This API call accepts the roomName parameter and returns detailed information about the room, including its unique ID:
 
-For a detailed description of how to work with each of these authentication methods, refer to the [authentication.md](docs/authentication.md) file.
+  ```bash
+  curl --request GET \
+    --url 'http://your-rocketchat-server.com/api/v1/rooms.info?roomName=channelName' \
+    --header 'X-Auth-Token: auth-token' \
+    --header 'X-User-Id: user-id' \
+    --header 'accept: application/json'
+  ```
 
-## Theming and Customization
+  For a comprehensive guide on retrieving room information, consult the Rocket.Chat API documentation: [Get Room Information](https://developer.rocket.chat/apidocs/get-room-information).
 
-You can pass a `theme` object to customize the appearance according to your application's design:
+Once you obtain the roomId, provide it as the value for the `roomId` prop to connect to the corresponding room.
 
-```jsx
-<EmbeddedChat
-  // ...other props
-  theme={myCustomTheme}
-/>
-```
+- ### Authentication Guide
 
-Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
+  Embedded Chat supports various methods for logging into a Rocket.Chat server. These include three primary methods:
+
+  1. **Token-Based Authentication**: This can be either a personal access token or a service-specific access token.
+  2. **Login Credentials**: Using a valid username/email and password.
+  3. **OAuth Authentication**: Uses the OAuth configuration set up in Rocket.Chat. [This method requires installing the EmbeddedChat RC App on the Rocket.Chat server]
+
+  #### Storing the `ec-token` for Auto Login
+
+  After completing the login, a `resume-token / ec-token` is used for automatic login. There are two methods to store this token :
+
+  1. **Local Storage**: Store the `ec-token` in the browser's local storage.
+  2. **HTTP-Only Cookie**: Store the `ec-token` as an HTTP-only cookie. [This method requires the installation of the EmbeddedChat RC App on the Rocket.Chat server]
+
+  For a detailed description of how to work with each of these authentication methods, refer to the [authentication.md](docs/authentication.md) file.
+
+- ### Theming and Customization
+
+  You can pass a `theme` object to customize the appearance according to your application's design:
+
+  ```jsx
+  <EmbeddedChat
+    // ...other props
+    theme={myCustomTheme}
+  />
+  ```
+
+  Follow [theming.md](docs/theming.md) to know more about EmbeddedChat's theming.
 
 ## Development
 
