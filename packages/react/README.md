@@ -94,7 +94,7 @@ This section of the guide aims to provide a detailed explanation of these props.
 
   ```jsx
   <EmbeddedChat
-    roomId="your-room-id"
+    roomId="YOUR_ROOM_ID"
     // ...other props
   />
   ```
