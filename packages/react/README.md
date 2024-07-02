@@ -83,7 +83,7 @@ This section of the guide aims to provide a detailed explanation of these props.
 
   For a comprehensive guide on retrieving room information, consult the Rocket.Chat API documentation: [Get Room Information](https://developer.rocket.chat/apidocs/get-room-information).
 
-Once you obtain the roomId, provide it as the value for the `roomId` prop to connect to the corresponding room.
+  Once you obtain the roomId, provide it as the value for the `roomId` prop to connect to the corresponding room.
 
 - ### Authentication Guide
 
