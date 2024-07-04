@@ -46,6 +46,7 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
     if (popup) {
       const onMessage = async (e: MessageEvent) => {
         if (e.data.type === "rc-oauth-callback") {
+          console.log(e.data.credentials);
           const { accessToken, expiresIn, serviceName } = e.data.credentials;
           const response = await config.api.post("/api/v1/login", {
             accessToken,
