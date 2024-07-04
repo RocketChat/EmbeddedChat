@@ -4,7 +4,6 @@ An easy-to-use, full-stack component (React.js + backend behaviors) for embeddin
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-
 ## Authentication
 
 The `EmbeddedChat` component offers three distinct authentication modes to cater to different requirements for accessing RocketChat. Below is a detailed guide on how to implement each authentication flow.
@@ -43,7 +42,7 @@ auth: {
 
 - `resume`: A resume token to be used for authentication.
 
-To obtain the resume token, navigate to your profile settings in Rocket.Chat, then go to Personal Access Token and click ADD.
+To obtain the resume token, navigate to your profile settings in Rocket.Chat. Then, go to Personal Access Token and click ADD. You will get a personal access token which you can use here to facilitate auto-login with a test user.
 
 In both cases, the credentials are posted to the `/api/v1/login` endpoint of the RocketChat server.
 
@@ -72,6 +71,60 @@ auth: {
 This method leverages the OAuth configuration established in Rocket.Chat, ensuring a streamlined authentication process.
 
 For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](../../rc-app/README.md).
+
+#### Steps to Enable OAuth Login in EmbeddedChat RC App
+
+1. **Copy Callback URL**
+
+   - Navigate to the EmbeddedChat RC app settings.
+   - Copy the Callback URL.
+
+2. **Configure Third-Party Login**
+
+   - Go to your Rocket.Chat workspace.
+   - Navigate to **Third-Party Login**.
+   - Click on **New Application**.
+   - Fill in a suitable application name and paste the copied Callback URL.
+   - Obtain the client ID and secret.
+   - Set this application to active.
+
+3. **Update EmbeddedChat RC App Settings**
+
+   - Go back to EmbeddedChat RC app settings.
+   - Paste the client ID and secret.
+   - Save the settings.
+
+4. **Create Custom OAuth**
+
+   - Navigate to **Workspace Settings** > **OAuth**.
+   - Add a custom OAuth and name it.
+   - Fill in the details as follows:
+     - URL: `http://your-rocket-chat-server-url/api/v1`
+     - Token sent via: Payload
+     - Login style: Popup
+     - Enable "Merge Users" and "Merge users from distinct services".
+     - Disable "Show Button on Login Page".
+     - Save the settings.
+
+5. **Finalize EmbeddedChat RC App Configuration**
+
+   - Go back to EmbeddedChat RC app settings.
+   - Enter your custom OAuth name (use lowercase).
+   - Save the settings.
+
+6. **Enable OAuth Login for Users**
+
+   - By default, only admins can log in with this method.
+   - To enable Rocket.Chat OAuth login for all users:
+     - Go to **Workspace** > **Permissions**.
+     - Search for "manage OAuth apps".
+     - Provide the permission to the desired roles.
+
+Once these steps are completed, OAuth login will be successfully enabled in EmbeddedChat.
+
+A video demonstration can also be found below to assist in successfully enabling this in your workspace:
+
+https://github.com/RocketChat/EmbeddedChat/assets/78961432/cc77d84a-f818-4e16-9e44-bd489f64cf22
 
 ## Integrating with EmbeddedChat
 
