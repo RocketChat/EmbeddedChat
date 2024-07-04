@@ -78,16 +78,16 @@ Certainly! Here are the instructions to enable OAuth login in the EmbeddedChat R
 
 #### Steps to Enable OAuth Login in EmbeddedChat RC App
 
-1. **Copy Callback URL**:
+1. Copy Callback URL:
    Navigate to the settings of your EmbeddedChat RC app. Locate the Callback URL and copy it.
 
-2. **Configure Third-Party Login**:
+2. Configure Third-Party Login:
    Access your Rocket.Chat workspace. Navigate to the Third-Party Login settings. Click on New Application, provide a suitable name, and paste the copied Callback URL. Obtain the client ID and secret for this application, then activate it.
 
-3. **Update EmbeddedChat RC App Settings**:
+3. Update EmbeddedChat RC App Settings:
    Return to the settings of your EmbeddedChat RC app. Paste the obtained client ID and secret into the respective fields. Save the updated settings.
 
-4. **Creating Custom OAuth:**
+4. Creating Custom OAuth:
   Navigate to Workspace Settings > OAuth within your Rocket.Chat workspace. Here, create a new custom OAuth configuration with a suitable name, and configure it as follows:
 
     - URL: http://your-rocket-chat-server-url/api/v1
@@ -96,11 +96,11 @@ Certainly! Here are the instructions to enable OAuth login in the EmbeddedChat R
     - Enable: Merge Users and Merge users from distinct services.
     - Disable: Show Button on Login Page.
 
-5. **Finalize EmbeddedChat RC App Configuration**:
+5. Finalize EmbeddedChat RC App Configuration:
    Go back to the settings of your EmbeddedChat RC app. Enter the lowercase name of your custom OAuth configuration. Save the settings to apply the OAuth integration.
 
-6. **Enable OAuth Login for Users**:
-   By default, only administrators can use OAuth login. To enable OAuth login for all users, navigate to Workspace > Permissions, search for manage OAuth apps permission, and grant it to the desired user roles.
+6. Enable OAuth Login for Users:
+   By default, only administrators can use OAuth login. To enable OAuth login for all users, navigate to Wokspace > Permissions, search for manage OAuth apps permission, and grant it to the desired user roles.
 
 Following these steps will successfully enable OAuth login in the EmbeddedChat RC app, integrating it with your Rocket.Chat workspace for streamlined user authentication.
 
@@ -112,9 +112,9 @@ A video demonstration can also be found below to assist in successfully enabling
 
 Currently, EmbeddedChat supports two modes for enabling auto-login. After the user completes the login process, the Rocket.chat server returns a token referred to as `ec-token`. This token can be saved in two ways:
 
-1. **Storing in Local Storage**: By default, the `ec-token` is stored in local storage. Upon initial loading, if an `ec-token` is found in local storage, it triggers auto login and manages subsequent actions accordingly.
+1. Storing in Local Storage: By default, the `ec-token` is stored in local storage. Upon initial loading, if an `ec-token` is found in local storage, it triggers auto login and manages subsequent actions accordingly.
 
-2. **Storing as HTTP-Only Cookie**: By setting the `secure` prop to true, the `ec-token` can be stored as an HTTP-only cookie. This approach enhances security by preventing JavaScript access to the token. Note that this feature requires the EmbeddedChat RC app to be installed on the server.
+2. Storing as HTTP-Only Cookie: By setting the `secure` prop to true, the `ec-token` can be stored as an HTTP-only cookie. This approach enhances security by preventing JavaScript access to the token. Note that this feature requires the EmbeddedChat RC app to be installed on the server.
 
 Here’s a concise explanation of how it operates: after logging in, the token is transferred to the EmbeddedChat RC app, where it is set as an HTTP-only cookie. During auto-login, EmbeddedChat makes a request that includes cookies managed by the browser to the RC app endpoint. The RC app retrieves the token and sends it back, which EmbeddedChat then forwards to the `/api/v1/login` endpoint of the Rocket.chat server for authentication. This functionality is fully integrated into the EmbeddedChat app, presented here for technical insight.
 
