@@ -116,7 +116,7 @@ Currently, EmbeddedChat supports two modes for enabling auto-login. After the us
 
 2. Storing as HTTP-Only Cookie: By setting the `secure` prop to true, the `ec-token` can be stored as an HTTP-only cookie. This approach enhances security by preventing JavaScript access to the token. Note that this feature requires the EmbeddedChat RC app to be installed on the server.
 
-Here’s a concise explanation of how it operates: after logging in, the token is transferred to the EmbeddedChat RC app, where it is set as an HTTP-only cookie. During auto-login, EmbeddedChat makes a request that includes cookies managed by the browser to the RC app endpoint. The RC app retrieves the token and sends it back, which EmbeddedChat then forwards to the `/api/v1/login` endpoint of the Rocket.chat server for authentication. This functionality is fully integrated into the EmbeddedChat app, presented here for technical insight.
+    Here’s a concise explanation of how it operates: after logging in, the token is transferred to the EmbeddedChat RC app, where it is set as an HTTP-only cookie. During auto-login, EmbeddedChat makes a request that includes cookies managed by the browser to the RC app endpoint. The RC app retrieves the token and sends it back, which EmbeddedChat then forwards to the `/api/v1/login` endpoint of the Rocket.chat server for authentication. This functionality is fully integrated into the EmbeddedChat app, presented here for technical insight.
 
 To install the EmbeddedChat RC app on your Rocket.Chat server, please refer to the [EmbeddedChat RC App installation guide](../../rc-app/README.md).
 
