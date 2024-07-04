@@ -198,7 +198,7 @@ const DefaultTheme = {
 
 ### Understanding the Theme Object
 
-- The `schemes` object contains `radius` (which is used to give border-radius in the application, increasing this will make EmbeddedChat look more curvy). The `light` and `dark` objects inside control the colors of various elements such as foreground color, background color, border color, input color, colors for warning and success toast messages etc.
+- The `schemes` object contains `radius` (which is used to give border-radius in the application, increasing this will make EmbeddedChat look more curvy). The `light` and `dark` objects inside control the colors of various elements such as foreground color, background color, border color, input color, colors for warning and success toast messages etc in light or the dark mode.
 
 - The `breakpoints` are currently not in use but are planned to be included to make the app more mobile responsive in the future.
 
@@ -298,10 +298,87 @@ toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
 
 Note that in ChatInputFormattingToolbar, the `threshold` is not supported as all options will be displayed directly, and none will be inside a menu.
 
+# EmbeddedChat Component Customization
 
-## Using the useComponentsOverrides Hook
+## Understanding the `variants` Object
 
-We provide a `useComponentsOverrides` hook that returns the necessary data for component customization.
+EmbeddedChat supports different variants for its components. For example, the `Message` component currently supports two variants:
+
+1. **Flat Chat Pattern**: All messages are displayed on the same side in a flat layout.
+2. **Bubble Design**: Messages are displayed as bubbles, with your messages on one side and others on the opposite side for easy separation.
+
+Similarly, the `MessageHeader` component supports two configurations:
+
+1. **Default**: The font color is the foreground color.
+2. **Randomly Colorized**: The username or name is given a random color based on the username.
+
+Additionally, many components support two types of views: `Sidebar` and `Popup`. By default, these components are displayed in sidebars, but they can be customized to appear as popups.
+
+### Example: Enabling Bubble Variant for Messages
+
+To enable the bubble variant for the `Message` component, use the following configuration:
+
+```jsx
+variants: {
+  Message: 'bubble',
+}
+```
+
+**Flat Chat Pattern**:
+
+![Flat Chat Pattern](https://github.com/RocketChat/EmbeddedChat/assets/78961432/c3c18d91-e51f-4abc-a3f6-1ae5a0d9773e)
+
+**Bubble Design**:
+
+![Bubble Design](https://github.com/RocketChat/EmbeddedChat/assets/78961432/2877b662-3591-463c-b9a5-deacd636b1db)
+
+### Example: Enabling Colorize Variant for MessageHeader
+
+To enable the colorize variant for the `MessageHeader` component, use the following configuration:
+
+```jsx
+variants: {
+  MessageHeader: 'Colorize',
+}
+```
+
+**Default Configuration**:
+
+![Default Configuration](https://github.com/RocketChat/EmbeddedChat/assets/78961432/190e125a-b312-4bdf-8560-5c5b04b2ebfa)
+
+**Randomly Colorized**:
+
+![Randomly Colorized](https://github.com/RocketChat/EmbeddedChat/assets/78961432/e7652162-dc83-4b60-9afb-045c5cecde28)
+
+### Example: Customizing View Type for Components
+
+To display components as popups instead of sidebars, use the following configuration:
+
+```jsx
+variants: {
+  PinnedMessages: { viewType: 'Popup' },
+  ThreadedMessages: { viewType: 'Popup' },
+  MentionedMessages: { viewType: 'Popup' },
+  StarredMessages: { viewType: 'Popup' },
+  FileGallery: { viewType: 'Popup' },
+}
+```
+
+These components will now be displayed as popups.
+
+**Sidebar View**:
+
+![Sidebar View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b7efade3-b041-4311-a8a7-3e642b6f0de1)
+
+**Popup View**:
+
+![Popup View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/7acdf6d1-075b-4027-91a9-38736fe9cc58)
+
+## Technical Explanation of `useComponentOverrides` Hook
+
+Internally, each component uses the `useComponentOverrides` hook to return the necessary customization data passed inside the theme.
+
+### Example: MessageBody Component
 
 ```jsx
 import { useComponentOverrides } from '../../hooks/useComponentOverrides';
@@ -331,12 +408,50 @@ export const MessageBody = ({
 };
 ```
 
+### Example: Config Overrides
+
+```jsx
+const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
+  'MessageToolbox',
+  className,
+  style
+);
+
+const toolOptions =
+  configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
+const threshold =
+  configOverrides.optionConfig?.threshold || optionConfig.threshold;
+
+{
+  toolOptions.slice(0, threshold).map((key) => toolMap[key]);
+}
+```
+
+### Example: Variant Overrides
+
+```jsx
+const { styleOverrides, classNames, variantOverrides } =
+  useComponentOverrides('MessageHeader');
+const displayNameVariant = variantOverrides || 'Normal';
+
+<Box
+  is="span"
+  css={styles.userName}
+  className={appendClassNames('ec-message-header-username')}
+  style={
+    displayNameVariant === 'Colorize'
+      ? { color: getDisplayNameColor(message.u.username) }
+      : null
+  }
+/>;
+```
+
 ## Adding Classes to Components
 
-We also add a class to each component. For example, `ec-message-body` for the MessageBody component.
+We add a class to each component for easier styling. For example, the `MessageBody` component is assigned the class `ec-message-body`.
 
-Feel free to explore and customize these components according to your project's needs.
+## Conclusion
 
-If you have any questions or need further assistance, please don't hesitate to ask.
+Feel free to explore and customize these components according to your project's needs. If you have any questions or need further assistance, please don't hesitate to ask.
 
 Happy theming!

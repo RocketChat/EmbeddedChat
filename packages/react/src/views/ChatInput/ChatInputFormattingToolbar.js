@@ -25,7 +25,8 @@ const ChatInputFormattingToolbar = ({
   );
 
   const styles = useChatInputFormattingToolbarStyles();
-  const toolOptions = configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
+  const toolOptions =
+    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
