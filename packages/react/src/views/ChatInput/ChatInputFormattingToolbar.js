@@ -16,14 +16,16 @@ import formatSelection from '../../lib/formatSelection';
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
-  toolConfig = ['emoji', 'formatter', 'audio', 'video', 'file'],
+  optionConfig = {
+    toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
+  },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
 
   const styles = useChatInputFormattingToolbarStyles();
-  const toolOptions = configOverrides.optionConfig?.toolOptions || toolConfig;
+  const toolOptions = configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage

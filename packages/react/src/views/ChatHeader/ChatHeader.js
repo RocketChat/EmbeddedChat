@@ -35,7 +35,7 @@ const ChatHeader = ({
   className = '',
   style = {},
   optionConfig = {
-    chatOptions: [
+    toolOptions: [
       'minmax',
       'close',
       'thread',
@@ -55,8 +55,8 @@ const ChatHeader = ({
   const { classNames, styleOverrides, configOverrides } =
     useComponentOverrides('ChatHeader');
 
-  const chatOptions =
-    configOverrides.optionConfig?.chatOptions || optionConfig.chatOptions;
+  const toolOptions =
+    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
   const threshold =
     configOverrides.optionConfig?.threshold || optionConfig.threshold;
 
@@ -364,7 +364,7 @@ const ChatHeader = ({
     ),
   };
 
-  const menuOptions = chatOptions
+  const menuOptions = toolOptions
     .slice(threshold)
     .map((key) => {
       const tool = menuMap[key];
@@ -434,7 +434,7 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          {chatOptions.slice(0, threshold).map((key) => menuMap[key])}
+          {toolOptions.slice(0, threshold).map((key) => menuMap[key])}
           {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>

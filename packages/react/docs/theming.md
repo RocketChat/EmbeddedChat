@@ -210,28 +210,94 @@ const DefaultTheme = {
 
 - The `zIndex` object controls the stacking of different components in the application. It is recommended not to change these values unless necessary. If a requirement arises, adjustments can be made accordingly.
 
-For example:
+### Understanding to the `components` Object
 
-```json
-"components": {
-  "ChatInput": {
-    "styleOverrides": {
-      "fontWeight": 400,
-      "color": "gray",
-      "border": "1px solid black"
+The `components` object allows you to customize specific components by applying custom styles, adding custom classes, or modifying certain configurations.
+
+To use this object, you need to specify the "ComponentName" as a key, which can include three sub-keys:
+
+- `styleOverrides`
+- `classNames`
+- `configOverrides`
+
+However, `configOverrides` is only applicable to three components: 'ChatHeader', 'ChatInputFormattingToolbar', and 'MessageToolbox'.
+
+Let's first understand `styleOverrides` and `classNames`:
+
+```jsx
+components: {
+  ChatInput: {
+    styleOverrides: {
+      fontWeight: 400,
+      color: "gray",
+      border: "1px solid black"
     },
-    "classNames": "myCustomClassForChatInput"
+    classNames: "myCustomClassForChatInput"
   },
-  "Message": {
-    "classNames": "myCustomClass"
-  }
 }
 ```
 
-In the above example:
+In this example:
 
-- theme.components.ChatInput.styleOverrides would be applied to the style of the ChatInput component.
-- theme.components.ChatInput.classNames would be applied to the className of the ChatInput component.
+- `theme.components.ChatInput.styleOverrides` will apply the specified styles to the ChatInput component.
+- `theme.components.ChatInput.classNames` will apply the specified class name to the ChatInput component.
+
+Now, let's understand `configOverrides` using ChatHeader as an example. `configOverrides` can currently configure options in 'ChatHeader', 'ChatInputFormattingToolbar', and 'MessageToolbox'.
+
+The `configOverrides` object contains `optionConfig`, which includes two keys: `toolOptions` and `threshold`. `toolOptions` specify which options should be displayed in the component, and `threshold` defines how many options should be displayed directly. Options beyond the threshold will be wrapped inside a menu component.
+
+```jsx
+ChatHeader: {
+  configOverrides: {
+    optionConfig: {
+      toolOptions: [
+        'minmax',
+        'close',
+        'thread',
+        'mentions',
+        'starred',
+        'pinned',
+        'files',
+        'members',
+        'search',
+        'rInfo',
+        'logout',
+      ],
+      threshold: 7,
+    },
+  },
+}
+```
+
+In this example, for ChatHeader, options from `minmax` to `files` will be displayed directly, while options from `members` to `logout` will be wrapped inside a menu, as shown:
+
+![image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/84b9558b-5496-4904-8788-070b519aa1f2)
+
+If an option is omitted, it will simply not be rendered. This flexibility is useful for customizing the application to your needs.
+
+Similarly, for MessageToolbox, the supported `toolOptions` are:
+
+```jsx
+toolOptions: [
+  'reaction',
+  'reply',
+  'quote',
+  'star',
+  'pin',
+  'edit',
+  'delete',
+  'report',
+],
+```
+
+For the ChatInputFormattingToolbar component, the supported `toolOptions` are:
+
+```jsx
+toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
+```
+
+Note that in ChatInputFormattingToolbar, the `threshold` is not supported as all options will be displayed directly, and none will be inside a menu.
+
 
 ## Using the useComponentsOverrides Hook
 
