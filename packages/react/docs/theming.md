@@ -6,57 +6,7 @@ An easy-to-use, full-stack component (React.js + backend behaviors) for embeddin
 
 ## Theming Guide
 
-EmbeddedChat supports various styling, customization options, and different variants. This guide will explore these aspects in depth along with some technical details on their implementation. If you prefer to skip the technical details and directly learn how to theme EmbeddedChat, [click here](#how-to-theme-embeddedchat).
-
-### Theming Structure Explained
-
-We use [Emotion](https://emotion.sh/) for styling our components. For every component or view where styling is required, you can find a `component.style.js` file where the necessary CSS is written.
-
-We use Emotion theming with the `useTheme` hook, and we created a custom `useCustomTheme` hook to adjust according to specific needs and make the code more intuitive. The `useCustomTheme` hook is internal, but here's how it works:
-
-```jsx
-import { useTheme } from '@emotion/react';
-import { useRCContext } from '../context/RCInstance';
-
-const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
-
-export const useCustomTheme = () => {
-  const { ECOptions } = useRCContext() || {};
-  const theme = useTheme();
-
-  const mode = ECOptions?.mode || 'light';
-
-  const colors = theme.schemes?.[mode];
-  const invertedColors = theme.schemes?.[invertMode(mode)];
-
-  return { theme, mode, colors, invertedColors };
-};
-```
-
-This hook retrieves the mode (light or dark) from the EmbeddedChat RC Context passed from the main component and provides access to the variables `mode`, `colors`, and `invertedColors`, which are then used while writing CSS for the components.
-
-Most of the border colors, shadows, background colors, text colors, border radius, and other properties are taken from the theme object. By providing different values in the theme object, you can change the look of EmbeddedChat.
-
-Here is an example:
-
-```jsx
-const { colors } = useCustomTheme();
-const main = css`
-  margin: 0.2rem 2rem;
-  display: block;
-  max-height: 10rem;
-  overflow: scroll;
-  overflow-x: hidden;
-  max-height: 145px;
-  border: 1px solid ${colors.border};
-  border-radius: 0.2rem;
-  color: ${colors.secondaryForeground};
-`;
-```
-
-As you can see, `colors` is extracted from `useCustomTheme`, and then `colors.border` and `colors.secondaryForeground` are used to style a component.
-
-These details provide an in-depth understanding of how theming works in this application. However, you can simply pass a theme object in the given structure with the required values according to your choice, and the styles will adjust accordingly.
+EmbeddedChat supports various styling, customization options, and different variants. This guide will explore these aspects in depth.
 
 ### How to Theme EmbeddedChat
 
@@ -198,21 +148,21 @@ const DefaultTheme = {
 
 ### Understanding the Theme Object
 
-- The `schemes` object contains `radius` (which is used to give border-radius in the application, increasing this will make EmbeddedChat look more curvy). The `light` and `dark` objects inside control the colors of various elements such as foreground color, background color, border color, input color, colors for warning and success toast messages etc in light or the dark mode.
+- The `schemes` key contains a `radius` property used to apply border-radius in the app. Increasing this value will make `EmbeddedChat` appear more curved. Within it, the `light` and `dark` subkeys control various aspects such as foreground color, background color, border color, input color, and colors for warning and success toast messages in specific light or dark modes.
 
 - The `breakpoints` are currently not in use but are planned to be included to make the app more mobile responsive in the future.
 
-- The `variants` and `components` objects will be detailed further in the guide.
+- The `variants` and `components` keys will be detailed further in the guide.
 
-- The `typography` object contains a `default` object which includes the font family, font size, and weights for the entire application. Specific font sizes and weights for headings are then defined below that, and changing these will update the heading fonts accordingly.
+- The `typography` key contains a `default` sub-key which includes the font family, font size, and weights for the entire app. Specific font sizes and weights for headings are then defined below that, and changing these will update the heading fonts accordingly.
 
-- The `shadows` object currently includes two shadows used in the app. You can give different colors or styles to these shadows as needed. If more shadows are added, the source code will also need to be modified to reflect those changes.
+- The `shadows` key currently includes two shadows used in the app. You can give different colors or styles to these shadows as needed. If more shadows are added, the source code will also need to be modified to reflect those changes.
 
-- The `zIndex` object controls the stacking of different components in the application. It is recommended not to change these values unless necessary. If a requirement arises, adjustments can be made accordingly.
+- The `zIndex` key controls the stacking of different components in the application. It is recommended not to change these values unless necessary. If a requirement arises, adjustments can be made accordingly.
 
-### Understanding to the `components` Object
+### Understanding to the `components` key
 
-The `components` object allows you to customize specific components by applying custom styles, adding custom classes, or modifying certain configurations.
+The `components` key/object allows you to customize specific components by applying custom styles, adding custom classes, or modifying certain configurations.
 
 To use this object, you need to specify the "ComponentName" as a key, which can include three sub-keys:
 
@@ -220,7 +170,7 @@ To use this object, you need to specify the "ComponentName" as a key, which can 
 - `classNames`
 - `configOverrides`
 
-However, `configOverrides` is only applicable to three components: 'ChatHeader', 'ChatInputFormattingToolbar', and 'MessageToolbox'.
+However, `configOverrides` is currently only applicable to three components: 'ChatHeader', 'ChatInputFormattingToolbar', and 'MessageToolbox'.
 
 Let's first understand `styleOverrides` and `classNames`:
 
@@ -242,7 +192,7 @@ In this example:
 - `theme.components.ChatInput.styleOverrides` will apply the specified styles to the ChatInput component.
 - `theme.components.ChatInput.classNames` will apply the specified class name to the ChatInput component.
 
-Now, let's understand `configOverrides` using ChatHeader as an example. `configOverrides` can currently configure options in 'ChatHeader', 'ChatInputFormattingToolbar', and 'MessageToolbox'.
+Now, let's understand `configOverrides` using ChatHeader as an example.
 
 The `configOverrides` object contains `optionConfig`, which includes two keys: `toolOptions` and `threshold`. `toolOptions` specify which options should be displayed in the component, and `threshold` defines how many options should be displayed directly. Options beyond the threshold will be wrapped inside a menu component.
 
@@ -296,11 +246,9 @@ For the ChatInputFormattingToolbar component, the supported `toolOptions` are:
 toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
 ```
 
-Note that in ChatInputFormattingToolbar, the `threshold` is not supported as all options will be displayed directly, and none will be inside a menu.
+Note: In ChatInputFormattingToolbar, the `threshold` is not supported as all options will be displayed directly, and none will be inside a menu.
 
-# EmbeddedChat Component Customization
-
-## Understanding the `variants` Object
+## Understanding the `variants` key
 
 EmbeddedChat supports different variants for its components. For example, the `Message` component currently supports two variants:
 
@@ -326,11 +274,11 @@ variants: {
 
 **Flat Chat Pattern**:
 
-![Flat Chat Pattern](https://github.com/RocketChat/EmbeddedChat/assets/78961432/c3c18d91-e51f-4abc-a3f6-1ae5a0d9773e)
+![Flat Design](https://github.com/RocketChat/EmbeddedChat/assets/78961432/2877b662-3591-463c-b9a5-deacd636b1db)
 
 **Bubble Design**:
 
-![Bubble Design](https://github.com/RocketChat/EmbeddedChat/assets/78961432/2877b662-3591-463c-b9a5-deacd636b1db)
+![Bubble Design](https://github.com/RocketChat/EmbeddedChat/assets/78961432/c3c18d91-e51f-4abc-a3f6-1ae5a0d9773e)
 
 ### Example: Enabling Colorize Variant for MessageHeader
 
@@ -364,94 +312,20 @@ variants: {
 }
 ```
 
-These components will now be displayed as popups.
+These components can now appear as popups instead of being displayed in the sidebar. Each component originally shown in the sidebar can be configured individually to appear as a popup. Apart from the aforementioned, the following components can currently be displayed either in the sidebar or as popups: "RoomInformation," "RoomMembers," and "UserInformation."
 
 **Sidebar View**:
 
-![Sidebar View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b7efade3-b041-4311-a8a7-3e642b6f0de1)
+![Sidebar View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/7acdf6d1-075b-4027-91a9-38736fe9cc58)
 
 **Popup View**:
 
-![Popup View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/7acdf6d1-075b-4027-91a9-38736fe9cc58)
-
-## Technical Explanation of `useComponentOverrides` Hook
-
-Internally, each component uses the `useComponentOverrides` hook to return the necessary customization data passed inside the theme.
-
-### Example: MessageBody Component
-
-```jsx
-import { useComponentOverrides } from '../../hooks/useComponentOverrides';
-
-export const MessageBody = ({
-  children,
-  className = '',
-  style = {},
-  ...props
-}) => {
-  const { styleOverrides, classNames } = useComponentOverrides(
-    'MessageBody',
-    className,
-    style
-  );
-
-  return (
-    <Box
-      css={MessageBodyCss}
-      className={appendClassNames('ec-message-body', classNames)}
-      style={styleOverrides}
-      {...props}
-    >
-      <p>{children}</p>
-    </Box>
-  );
-};
-```
-
-### Example: Config Overrides
-
-```jsx
-const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
-  'MessageToolbox',
-  className,
-  style
-);
-
-const toolOptions =
-  configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
-const threshold =
-  configOverrides.optionConfig?.threshold || optionConfig.threshold;
-
-{
-  toolOptions.slice(0, threshold).map((key) => toolMap[key]);
-}
-```
-
-### Example: Variant Overrides
-
-```jsx
-const { styleOverrides, classNames, variantOverrides } =
-  useComponentOverrides('MessageHeader');
-const displayNameVariant = variantOverrides || 'Normal';
-
-<Box
-  is="span"
-  css={styles.userName}
-  className={appendClassNames('ec-message-header-username')}
-  style={
-    displayNameVariant === 'Colorize'
-      ? { color: getDisplayNameColor(message.u.username) }
-      : null
-  }
-/>;
-```
-
-## Adding Classes to Components
-
-We add a class to each component for easier styling. For example, the `MessageBody` component is assigned the class `ec-message-body`.
+![Popup View](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b7efade3-b041-4311-a8a7-3e642b6f0de1)
 
 ## Conclusion
 
 Feel free to explore and customize these components according to your project's needs. If you have any questions or need further assistance, please don't hesitate to ask.
+
+For those interested in delving into the technical implementation details, please [click here](theming_technical.md).
 
 Happy theming!
