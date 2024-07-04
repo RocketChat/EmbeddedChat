@@ -122,7 +122,7 @@ To install the EmbeddedChat RC app on your Rocket.Chat server, please refer to t
 
 ## Integrating with EmbeddedChat
 
-When implementing any of these authentication methods in `EmbeddedChat`, include the `auth` prop with the desired configuration:
+When integrating any of these authentication methods into `EmbeddedChat`, ensure to include the `auth` prop containing the desired configuration, and set the `secure` prop to true to activate the HTTP-Only cookie.
 
 ```jsx
 <EmbeddedChat
