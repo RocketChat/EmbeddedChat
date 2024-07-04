@@ -1,18 +1,20 @@
-<h1>Embedded Chat: A staple in excellent customer service</h1>
+# Embedded Chat: A staple in excellent customer service
 
 An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-## Authentication
+## Authentication Guide
 
-The `EmbeddedChat` component offers three distinct authentication modes to cater to different requirements for accessing RocketChat. Below is a detailed guide on how to implement each authentication flow.
+### Various methods for enabling login functionality
 
-### 1. Token Authentication Flow
+The `EmbeddedChat` component offers three distinct authentication modes to cater to different requirements for accessing Rocket.Chat. Below is a detailed guide on how to implement each authentication flow.
+
+#### 1. Token Authentication Flow
 
 Token authentication allows users to authenticate using a service-specific access token or personal access token (resume-token). This method is typically used for automatic user login without requiring login credentials or for managing the authentication process internally. The two ways to use token authentication are:
 
-#### a. Using `accessToken` and `expiresIn`:
+##### a. Using `accessToken` and `expiresIn`:
 
 ```javascript
 auth: {
@@ -29,7 +31,7 @@ auth: {
 - `accessToken`: The access token obtained from your authentication service.
 - `expiresIn`: The duration in seconds for which the token is valid.
 
-#### b. Using `resume`:
+##### b. Using `resume`:
 
 ```javascript
 auth: {
@@ -46,7 +48,7 @@ To obtain the resume token, navigate to your profile settings in Rocket.Chat. Th
 
 In both cases, the credentials are posted to the `/api/v1/login` endpoint of the RocketChat server.
 
-### 2. Password Authentication Flow
+#### 2. Password Authentication Flow
 
 By default, EmbeddedChat utilizes the 'PASSWORD' flow, where a modal prompts users to enter their credentials for login.
 
@@ -58,7 +60,7 @@ auth: {
 
 This method is straightforward and requires no additional configuration for the `auth` prop. When this flow is active, users are prompted with a modal dialog to input their RocketChat username and password.
 
-### 3. OAuth Authentication Flow
+#### 3. OAuth Authentication Flow
 
 EmbeddedChat also offers OAuth login functionality through OAuth configuration set up in Rocket.Chat. This authentication flow can only be utilized if the EmbeddedChat RC app is installed and configured properly on your Rocket.Chat server:
 
@@ -72,7 +74,7 @@ This method leverages the OAuth configuration established in Rocket.Chat, ensuri
 
 For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](../../rc-app/README.md).
 
-#### Steps to Enable OAuth Login in EmbeddedChat RC App
+##### Steps to Enable OAuth Login in EmbeddedChat RC App
 
 1. **Copy Callback URL**
 
@@ -124,7 +126,17 @@ Once these steps are completed, OAuth login will be successfully enabled in Embe
 
 A video demonstration can also be found below to assist in successfully enabling this in your workspace:
 
-https://github.com/RocketChat/EmbeddedChat/assets/78961432/cc77d84a-f818-4e16-9e44-bd489f64cf22
+[Watch the video demonstration](https://github.com/RocketChat/EmbeddedChat/assets/78961432/cc77d84a-f818-4e16-9e44-bd489f64cf22)
+
+## Storing the `ec-token` for automatic login
+
+Currently, EmbeddedChat supports two modes for enabling auto-login. After the user completes the login process, the Rocket.chat server returns a token referred to as `ec-token`. This token can be saved in two ways:
+
+1. **Storing in Local Storage**: By default, the `ec-token` is stored in local storage. Upon initial loading, if an `ec-token` is found in local storage, it triggers auto login and manages subsequent actions accordingly.
+
+2. **Storing as HTTP-Only Cookie**: By setting the `secure` prop to true, the `ec-token` can be stored as an HTTP-only cookie. This approach enhances security by preventing JavaScript access to the token. Note that this feature requires the EmbeddedChat RC app to be installed on the server.
+
+Here’s a concise explanation of how it operates: after logging in, the token is transferred to the EmbeddedChat RC app, where it is set as an HTTP-only cookie. During auto-login, EmbeddedChat makes a request that includes cookies managed by the browser to the RC app endpoint. The RC app retrieves the token and sends it back, which EmbeddedChat then forwards to the `/api/v1/login` endpoint of the Rocket.chat server for authentication. This functionality is fully integrated into the EmbeddedChat app, presented here for technical insight.
 
 ## Integrating with EmbeddedChat
 
@@ -139,6 +151,7 @@ When implementing any of these authentication methods in `EmbeddedChat`, include
     credentials: {
       // Include if using TOKEN flow
     },
+    secure: true // or false
   }}
 />
 ```
