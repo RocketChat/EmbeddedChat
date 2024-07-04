@@ -132,7 +132,9 @@ This section of the guide aims to provide a detailed explanation of these props.
   />
   ```
 
-However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](docs/theming.md).
+  However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](docs/theming.md).
+
+  In Storybook, demonstrations of different themes and variants are provided in the 'Design Variants' section.
 
 - ### Authentication Guide
 
