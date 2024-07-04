@@ -1,4 +1,4 @@
-<h1>Embedded Chat: A staple in excellent customer service</h1>
+# Embedded Chat: A staple in excellent customer service
 
 An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
 
