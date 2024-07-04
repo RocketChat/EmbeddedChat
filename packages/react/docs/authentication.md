@@ -74,55 +74,35 @@ This method leverages the OAuth configuration established in Rocket.Chat, ensuri
 
 For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](../../rc-app/README.md).
 
-##### Steps to Enable OAuth Login in EmbeddedChat RC App
+Certainly! Here are the instructions to enable OAuth login in the EmbeddedChat RC app, without using sub-bullets:
 
-1. **Copy Callback URL**
+#### Steps to Enable OAuth Login in EmbeddedChat RC App
 
-   - Navigate to the EmbeddedChat RC app settings.
-   - Copy the Callback URL.
+1. **Copy Callback URL**:
+   Navigate to the settings of your EmbeddedChat RC app. Locate the Callback URL and copy it.
 
-2. **Configure Third-Party Login**
+2. **Configure Third-Party Login**:
+   Access your Rocket.Chat workspace. Navigate to the Third-Party Login settings. Click on New Application, provide a suitable name, and paste the copied Callback URL. Obtain the client ID and secret for this application, then activate it.
 
-   - Go to your Rocket.Chat workspace.
-   - Navigate to **Third-Party Login**.
-   - Click on **New Application**.
-   - Fill in a suitable application name and paste the copied Callback URL.
-   - Obtain the client ID and secret.
-   - Set this application to active.
+3. **Update EmbeddedChat RC App Settings**:
+   Return to the settings of your EmbeddedChat RC app. Paste the obtained client ID and secret into the respective fields. Save the updated settings.
 
-3. **Update EmbeddedChat RC App Settings**
+4. **Creating Custom OAuth:**
+  Navigate to Workspace Settings > OAuth within your Rocket.Chat workspace. Here, create a new custom OAuth configuration with a suitable name, and configure it as follows:
 
-   - Go back to EmbeddedChat RC app settings.
-   - Paste the client ID and secret.
-   - Save the settings.
+    - URL: http://your-rocket-chat-server-url/api/v1
+    - Token sent via: Payload
+    - Login style: Popup
+    - Enable: Merge Users and Merge users from distinct services.
+    - Disable: Show Button on Login Page.
 
-4. **Create Custom OAuth**
+5. **Finalize EmbeddedChat RC App Configuration**:
+   Go back to the settings of your EmbeddedChat RC app. Enter the lowercase name of your custom OAuth configuration. Save the settings to apply the OAuth integration.
 
-   - Navigate to **Workspace Settings** > **OAuth**.
-   - Add a custom OAuth and name it.
-   - Fill in the details as follows:
-     - URL: `http://your-rocket-chat-server-url/api/v1`
-     - Token sent via: Payload
-     - Login style: Popup
-     - Enable "Merge Users" and "Merge users from distinct services".
-     - Disable "Show Button on Login Page".
-     - Save the settings.
+6. **Enable OAuth Login for Users**:
+   By default, only administrators can use OAuth login. To enable OAuth login for all users, navigate to Workspace > Permissions, search for manage OAuth apps permission, and grant it to the desired user roles.
 
-5. **Finalize EmbeddedChat RC App Configuration**
-
-   - Go back to EmbeddedChat RC app settings.
-   - Enter your custom OAuth name (use lowercase).
-   - Save the settings.
-
-6. **Enable OAuth Login for Users**
-
-   - By default, only admins can log in with this method.
-   - To enable Rocket.Chat OAuth login for all users:
-     - Go to **Workspace** > **Permissions**.
-     - Search for "manage OAuth apps".
-     - Provide the permission to the desired roles.
-
-Once these steps are completed, OAuth login will be successfully enabled in EmbeddedChat.
+Following these steps will successfully enable OAuth login in the EmbeddedChat RC app, integrating it with your Rocket.Chat workspace for streamlined user authentication.
 
 A video demonstration can also be found below to assist in successfully enabling this in your workspace:
 
@@ -137,6 +117,8 @@ Currently, EmbeddedChat supports two modes for enabling auto-login. After the us
 2. **Storing as HTTP-Only Cookie**: By setting the `secure` prop to true, the `ec-token` can be stored as an HTTP-only cookie. This approach enhances security by preventing JavaScript access to the token. Note that this feature requires the EmbeddedChat RC app to be installed on the server.
 
 Here’s a concise explanation of how it operates: after logging in, the token is transferred to the EmbeddedChat RC app, where it is set as an HTTP-only cookie. During auto-login, EmbeddedChat makes a request that includes cookies managed by the browser to the RC app endpoint. The RC app retrieves the token and sends it back, which EmbeddedChat then forwards to the `/api/v1/login` endpoint of the Rocket.chat server for authentication. This functionality is fully integrated into the EmbeddedChat app, presented here for technical insight.
+
+To install the EmbeddedChat RC app on your Rocket.Chat server, please refer to the [EmbeddedChat RC App installation guide](../../rc-app/README.md).
 
 ## Integrating with EmbeddedChat
 
