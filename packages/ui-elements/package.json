@@ -1,7 +1,7 @@
 {
-    "name": "@embeddedchat/components",
+    "name": "@embeddedchat/ui-elements",
     "version": "0.0.0",
-    "description": "Reusable UI components for embeddedchat",
+    "description": "Reusable UI components and UI-related hooks for EmbeddedChat.",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "repository": {

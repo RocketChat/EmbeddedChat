@@ -38,7 +38,6 @@ Button.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
-  color: PropTypes.string,
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string,
   style: PropTypes.object,
