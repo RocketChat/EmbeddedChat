@@ -48,7 +48,15 @@ function FlexContainer({
     }
 
     return style;
-  }, [alignContent, alignItems, direction, inline, justifyContent, wrap]);
+  }, [
+    alignContent,
+    alignItems,
+    direction,
+    inline,
+    justifyContent,
+    style,
+    wrap,
+  ]);
 
   return (
     <Box style={{ ...containerStyle }} {...props}>
