@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../context/ThemeContextProvider';
 import DefaultTheme from '../theme/DefaultTheme';
 
 const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
 
-export const useTheme = () => {
+const useTheme = () => {
   const context = useContext(ThemeContext);
 
   if (!context) {
@@ -25,3 +25,5 @@ export const useTheme = () => {
 
   return context;
 };
+
+export default useTheme;
