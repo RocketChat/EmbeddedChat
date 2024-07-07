@@ -89,6 +89,7 @@
   },
   "dependencies": {
     "@embeddedchat/api": "0.0.2",
+    "@embeddedchat/ui-elements": "workspace:^",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@emotion/react": "11.7.1",
     "@rocket.chat/emitter": "^0.31.25",
