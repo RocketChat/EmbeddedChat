@@ -6,11 +6,11 @@ import {
   Icon,
   Tooltip,
   useComponentOverrides,
+  useTheme,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
 import { useMemberStore, useUserStore } from '../../store';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { useMessageHeaderStyles } from './Message.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
 
@@ -25,7 +25,7 @@ const MessageHeader = ({
   const { ECOptions } = useRCContext();
   const displayNameVariant = variantOverrides || 'Normal';
   const styles = useMessageHeaderStyles();
-  const colors = useCustomTheme();
+  const colors = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);

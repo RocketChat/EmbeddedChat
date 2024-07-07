@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 
-import { darken } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme, darken } from '@embeddedchat/ui-elements';
 
 const rowCentreAlign = css`
   display: flex;
@@ -10,7 +9,7 @@ const rowCentreAlign = css`
 `;
 
 const useChatHeaderStyles = () => {
-  const { theme, mode, colors } = useCustomTheme();
+  const { theme, mode, colors } = useTheme();
   const clearSpacing = css`
     margin: 0;
     padding: 0;

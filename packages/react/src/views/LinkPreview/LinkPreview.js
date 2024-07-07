@@ -6,9 +6,9 @@ import {
   ActionButton,
   Icon,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import useLinkPreviewStyles from './LinkPreview.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const LinkPreview = ({
   className = '',
@@ -20,7 +20,7 @@ const LinkPreview = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 

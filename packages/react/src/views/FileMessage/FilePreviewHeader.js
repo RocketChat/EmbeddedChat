@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { Box, Icon, useComponentOverrides } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  useComponentOverrides,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
 import { useUserStore } from '../../store';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { filePreviewHeaderStyles as styles } from './Files.styles';
 
 const FilePreviewHeader = ({ file, isTimeStamped = true }) => {

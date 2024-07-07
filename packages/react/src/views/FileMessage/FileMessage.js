@@ -8,13 +8,13 @@ import {
   Icon,
   useToastBarDispatch,
   useComponentOverrides,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
 
 import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
 import { useMessageStore } from '../../store';

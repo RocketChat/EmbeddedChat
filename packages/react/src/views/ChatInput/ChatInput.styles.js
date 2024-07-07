@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { darken } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { darken, useTheme } from '@embeddedchat/ui-elements';
 
 export const useChatInputStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const inputWithFormattingBox = css`
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
@@ -63,7 +62,7 @@ export const useChatInputStyles = () => {
 };
 
 export const useChatInputFormattingToolbarStyles = () => {
-  const { theme, mode, colors } = useCustomTheme();
+  const { theme, mode, colors } = useTheme();
 
   const chatFormat = css`
     bottom: 0;
@@ -83,7 +82,7 @@ export const useChatInputFormattingToolbarStyles = () => {
 };
 
 export const useCommonRecorderStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const dot = css`
     width: 0.5rem;
     height: 0.5rem;

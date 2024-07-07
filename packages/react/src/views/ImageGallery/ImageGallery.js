@@ -5,12 +5,12 @@ import {
   Icon,
   Button,
   Throbber,
+  useTheme,
+  ReactPortal,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import { Swiper, SwiperSlide } from './Swiper';
-import ReactPortal from '../../lib/reactPortal';
 import useImageGalleryStyles from './ImageGallery.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const styles = useImageGalleryStyles();
@@ -19,7 +19,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [imgFetchErr, setImgFetchErr] = useState(false);
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     const fetchAllImages = async () => {

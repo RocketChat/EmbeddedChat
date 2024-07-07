@@ -5,13 +5,13 @@ import {
   Box,
   useToastBarDispatch,
   useComponentOverrides,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
 import { MessageMetrics } from './MessageMetrics';

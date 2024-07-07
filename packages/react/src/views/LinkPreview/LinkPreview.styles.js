@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const useLinkPreviewStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const arrowDropDown = css`
     cursor: pointer;
     display: flex;

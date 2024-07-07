@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 export const useChatbodyStyles = () => {
   const chatbodyContainer = css`
@@ -19,7 +19,7 @@ export const useChatbodyStyles = () => {
 };
 
 export const useRecentMessageStyles = () => {
-  const { theme } = useCustomTheme();
+  const { theme } = useTheme();
   const button = css`
     position: relative;
     z-index: ${theme.zIndex.body};

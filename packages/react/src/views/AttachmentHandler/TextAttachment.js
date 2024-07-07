@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box, Avatar } from '@embeddedchat/ui-elements';
+import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
@@ -18,7 +17,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     attachmentText = attachmentText.split(')')[1] || '';
   }
 
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   return (
     <Box

@@ -1,10 +1,9 @@
 import React from 'react';
 import { format } from 'date-fns';
-import { Button, Icon } from '@embeddedchat/ui-elements';
-import { useCustomTheme } from '../../../hooks/useCustomTheme';
+import { Button, Icon, useTheme } from '@embeddedchat/ui-elements';
 
 const BubbleThreadBtn = ({ message, handleOpenThread, styles = {} }) => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   return (
     <>

@@ -1,12 +1,11 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useMemo } from 'react';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
 
 import { useUiKitState } from '../hooks/useUiKitState';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const InputBlock = ({ className, block, surfaceRenderer, context }) => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const inputElement = useMemo(
     () => ({
       ...block.element,

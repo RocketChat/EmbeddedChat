@@ -5,8 +5,8 @@ import {
   Button,
   Icon,
   useComponentOverrides,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import BubbleThreadBtn from './BubbleVariant/BubbleThreadBtn';
 

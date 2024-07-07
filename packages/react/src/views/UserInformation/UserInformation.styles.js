@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const useUserInformationStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const userSidebar = css`
     padding: 0 1rem 1rem;
     margin: 0 auto;

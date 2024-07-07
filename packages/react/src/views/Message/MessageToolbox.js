@@ -8,8 +8,8 @@ import {
   Tooltip,
   Menu,
   useComponentOverrides,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
-import { appendClassNames } from '../../lib/appendClassNames';
 import { EmojiPicker } from '../EmojiPicker';
 import { parseEmoji } from '../../lib/emoji';
 import { useMessageToolboxStyles } from './Message.styles';

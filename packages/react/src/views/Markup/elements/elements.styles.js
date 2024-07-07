@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 export const CodeBlockStyles = {
   copyonly: css`
@@ -59,7 +59,7 @@ export const EmojiStyles = {
 };
 
 const useMentionStyles = (contents, username) => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const mention = css`
     background-color: ${contents.value === 'all' || contents.value === 'here'
       ? colors.warning

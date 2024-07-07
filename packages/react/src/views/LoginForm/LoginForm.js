@@ -6,11 +6,11 @@ import {
   Button,
   Input,
   Icon,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import styles from './LoginForm.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -24,7 +24,7 @@ export default function LoginForm() {
   );
   const { handleLogin } = useRCAuth();
 
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {

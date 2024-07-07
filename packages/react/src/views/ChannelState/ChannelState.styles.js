@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const useChannelStateStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const channelStateContainer = css`
     font-size: 0.75rem;
     padding: 0.2rem 2rem;

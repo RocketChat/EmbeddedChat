@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { lighten, darken } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { lighten, darken, useTheme } from '@embeddedchat/ui-elements';
 
 export const useMessageStyles = () => {
-  const { mode, colors } = useCustomTheme();
+  const { mode, colors } = useTheme();
 
   const main = css`
     display: flex;
@@ -37,7 +36,7 @@ export const useMessageStyles = () => {
 };
 
 export const useMessageAvatarContainerStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   const container = css`
     margin: 3px;
@@ -68,7 +67,7 @@ export const MessageBodyStyles = {
 };
 
 export const useMessageDividerStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const divider = css`
     letter-spacing: 0rem;
@@ -111,7 +110,7 @@ export const useMessageDividerStyles = () => {
 };
 
 export const useMessageHeaderStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const header = css`
     display: flex;
@@ -216,7 +215,7 @@ export const MessageMetricsStyles = {
 };
 
 export const useMessageReactionsStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const container = css`
     display: flex;
     flex-flow: row wrap;
@@ -252,7 +251,7 @@ export const useMessageReactionsStyles = () => {
 };
 
 export const useMessageToolboxStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const toolboxContainer = css`
     display: none;

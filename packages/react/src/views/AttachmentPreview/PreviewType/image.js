@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '@embeddedchat/ui-elements';
-import { useCustomTheme } from '../../../hooks/useCustomTheme';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
 
 function PreviewImage({ previewURL }) {
-  const { theme } = useCustomTheme();
+  const { theme } = useTheme();
   return (
     <Box>
       <img

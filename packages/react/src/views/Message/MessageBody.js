@@ -1,6 +1,9 @@
 import React from 'react';
-import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
-import { appendClassNames } from '../../lib/appendClassNames';
+import {
+  Box,
+  useComponentOverrides,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
 import { MessageBodyStyles as styles } from './Message.styles';
 
 export const MessageBody = ({

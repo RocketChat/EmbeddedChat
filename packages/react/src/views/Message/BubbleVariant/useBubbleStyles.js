@@ -1,8 +1,8 @@
+import { useTheme } from '@embeddedchat/ui-elements';
 import { bubbleStyles, bubbleStylesMe } from './Bubble.styles';
-import { useCustomTheme } from '../../../hooks/useCustomTheme';
 
 const useBubbleStyles = (isMe = false) => {
-  const customTheme = useCustomTheme();
+  const customTheme = useTheme();
   const styles = bubbleStyles(customTheme);
   const meStyles = bubbleStylesMe(customTheme);
 

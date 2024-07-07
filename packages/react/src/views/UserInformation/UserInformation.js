@@ -8,10 +8,10 @@ import {
   Throbber,
   Popup,
   useComponentOverrides,
+  appendClassNames,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
-import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
 import UserInfoField from './UserInfoField';
 import useUserInformationStyles from './UserInformation.styles';
