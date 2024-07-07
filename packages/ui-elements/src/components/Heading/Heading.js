@@ -4,7 +4,6 @@ import useTheme from '../../hooks/useTheme';
 
 const Heading = ({ level = 1, children, ...props }) => {
   const { theme } = useTheme();
-  console.log(theme);
   const Tag = `h${level}`;
   const style = theme.typography[Tag];
   return (

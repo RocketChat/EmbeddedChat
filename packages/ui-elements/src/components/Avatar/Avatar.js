@@ -11,7 +11,6 @@ export const Avatar = ({
   style = {},
   url,
   fallbackIcon = 'avatar',
-  user,
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
