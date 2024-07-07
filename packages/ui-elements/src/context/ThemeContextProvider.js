@@ -8,7 +8,7 @@ export const ThemeContext = createContext();
 export const ThemeProvider = ({
   children,
   theme: initialTheme,
-  initialMode,
+  mode: initialMode,
 }) => {
   const defaultTheme = initialTheme || DefaultTheme;
   const [mode, setMode] = useState(initialMode || 'light');

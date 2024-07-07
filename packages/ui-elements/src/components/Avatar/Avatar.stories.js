@@ -12,7 +12,7 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Default = {
   render: (args) => (
-    <ThemeProvider theme={DefaultTheme} initialMode="dark">
+    <ThemeProvider theme={DefaultTheme} mode="dark">
       <Avatar {...args} />
     </ThemeProvider>
   ),
