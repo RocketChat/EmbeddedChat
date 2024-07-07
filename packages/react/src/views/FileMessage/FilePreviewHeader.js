@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { Box, Icon } from '@embeddedchat/ui-elements';
+import { Box, Icon, useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useUserStore } from '../../store';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { filePreviewHeaderStyles as styles } from './Files.styles';
 

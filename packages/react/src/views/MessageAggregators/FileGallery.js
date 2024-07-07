@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useChannelStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const FileGallery = () => {
   const { RCInstance } = useRCContext();

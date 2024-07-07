@@ -1,7 +1,10 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import React, { memo, useEffect, useState } from 'react';
-import { Box, Skeleton } from '@embeddedchat/ui-elements';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  Skeleton,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import { ImageBlockStyles as styles } from './blocks.styles';
 
 const maxSize = 360;

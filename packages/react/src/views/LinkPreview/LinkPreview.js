@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, ActionButton, Icon } from '@embeddedchat/ui-elements';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  ActionButton,
+  Icon,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import useLinkPreviewStyles from './LinkPreview.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 

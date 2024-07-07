@@ -1,7 +1,6 @@
 import React from 'react';
 import { formatDistance } from 'date-fns';
-import { Box, Icon } from '@embeddedchat/ui-elements';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import { Box, Icon, useComponentOverrides } from '@embeddedchat/ui-elements';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { fileMetricsStyles as styles } from './Files.styles';
 

@@ -1,13 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, Icon, Sidebar, Popup } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Button,
+  Icon,
+  Sidebar,
+  Popup,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './InviteMembers';
 import { useRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const RoomMembers = ({ members }) => {

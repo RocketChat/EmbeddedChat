@@ -1,7 +1,7 @@
 import React from 'react';
+import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useUserStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const StarredMessages = () => {
   const authenticatedUserId = useUserStore((state) => state.userId);

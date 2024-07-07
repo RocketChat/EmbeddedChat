@@ -2,7 +2,11 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, Throbber } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Throbber,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
@@ -15,7 +19,6 @@ import TotpModal from '../TotpModal/TwoFactorTotpModal';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { useChatbodyStyles } from './ChatBody.styles';

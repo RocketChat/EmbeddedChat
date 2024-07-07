@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 
+import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 
 import { MessageAggregator } from './common/MessageAggregator';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const ThreadedMessages = () => {
   const messages = useMessageStore((state) => state.messages);

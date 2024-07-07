@@ -7,8 +7,8 @@ import {
   Button,
   Icon,
   useToastBarDispatch,
+  useComponentOverrides,
 } from '@embeddedchat/ui-elements';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
 

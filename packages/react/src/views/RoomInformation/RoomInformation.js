@@ -1,9 +1,14 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
-import { Box, Avatar, Sidebar, Popup } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Avatar,
+  Sidebar,
+  Popup,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const Roominfo = () => {

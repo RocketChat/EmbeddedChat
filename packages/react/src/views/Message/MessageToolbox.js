@@ -7,8 +7,8 @@ import {
   Button,
   Tooltip,
   Menu,
+  useComponentOverrides,
 } from '@embeddedchat/ui-elements';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { EmojiPicker } from '../EmojiPicker';
 import { parseEmoji } from '../../lib/emoji';
