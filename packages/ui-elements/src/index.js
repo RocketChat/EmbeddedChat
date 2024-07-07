@@ -18,7 +18,13 @@ export { Heading } from './components/Heading';
 export { Input } from './components/Input';
 export { Menu } from './components/Menu';
 export { MultiSelect } from './components/MultiSelect';
-export { Sidebar } from './components/Sidebar';
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  MinimalSidebar,
+} from './components/Sidebar';
 export { StaticSelect } from './components/StaticSelect';
 export { ToastBar } from './components/ToastBar';
 export { ToastBarProvider } from './components/ToastBar';
