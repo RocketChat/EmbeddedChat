@@ -1,7 +1,7 @@
 import { useContext } from 'react';
+import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
 import { useUserStore, totpModalStore, useLoginStore } from '../store';
-import { useToastBarDispatch } from './useToastBarDispatch';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);

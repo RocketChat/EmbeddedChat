@@ -1,6 +1,13 @@
 import React, { useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Menu, Modal, Button, Icon } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Menu,
+  Modal,
+  Button,
+  Icon,
+  useToastBarDispatch,
+} from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
@@ -9,7 +16,6 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { FileMetrics } from './FileMetrics';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { useRCContext } from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';

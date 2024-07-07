@@ -7,6 +7,7 @@ import {
   Menu,
   ActionButton,
   Tooltip,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -23,7 +24,6 @@ import {
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import useChatHeaderStyles from './ChatHeader.styles';

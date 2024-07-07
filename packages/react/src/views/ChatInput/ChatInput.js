@@ -8,6 +8,7 @@ import {
   ActionButton,
   Modal,
   Throbber,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -25,7 +26,6 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
 import { CommandsList } from '../CommandList';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';

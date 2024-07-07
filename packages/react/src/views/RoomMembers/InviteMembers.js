@@ -6,9 +6,9 @@ import {
   Input,
   ActionButton,
   Heading,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import useInviteStore from '../../store/inviteStore';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import { InviteMemberStyles as styles } from './RoomMembers.styles';
 import RCContext from '../../context/RCInstance';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';

@@ -1,7 +1,7 @@
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, useToastBarDispatch } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
@@ -14,7 +14,6 @@ import { MessageReactions } from './MessageReactions';
 import { MessageMetrics } from './MessageMetrics';
 import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
