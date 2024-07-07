@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '../../context/ThemeContextProvider';
 import DefaultTheme from '../../theme/DefaultTheme';
 import Tooltip from './Tooltip';
 import { ActionButton } from '../ActionButton';

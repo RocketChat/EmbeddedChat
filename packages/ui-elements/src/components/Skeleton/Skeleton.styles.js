@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react';
 import { lighten } from '../../lib/color';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 
 const animation = keyframes`
 0% {

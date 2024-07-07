@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '../../context/ThemeContextProvider';
 import Divider from './Divider';
 import DefaultTheme from '../../theme/DefaultTheme';
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '../../context/ThemeContextProvider';
 import { ToastBar, ToastBarProvider } from '.';
 import DefaultTheme from '../../theme/DefaultTheme';
 import { Button } from '../Button';
 import { Box } from '../Box';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
+import useToastBarDispatch from '../../hooks/useToastBarDispatch';
 
 export default {
   title: 'Components/ToastBar',

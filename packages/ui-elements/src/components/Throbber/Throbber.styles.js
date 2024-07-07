@@ -1,5 +1,5 @@
 import { keyframes, css } from '@emotion/react';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 
 const BounceFrames = keyframes`
 0%,

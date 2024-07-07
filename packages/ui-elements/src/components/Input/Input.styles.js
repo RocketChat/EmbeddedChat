@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 
 const useInputStyles = () => {
   const { theme, colors } = useTheme();

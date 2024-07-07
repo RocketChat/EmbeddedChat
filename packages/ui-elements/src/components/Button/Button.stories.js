@@ -1,8 +1,7 @@
 import React from 'react';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '../../context/ThemeContextProvider';
 import { Button } from '.';
 import DefaultTheme from '../../theme/DefaultTheme';
-import { ModeProvider } from '../../hooks/useMode';
 
 export default {
   title: 'Components/Button',
@@ -11,9 +10,7 @@ export default {
 
 const Template = (args) => (
   <ThemeProvider theme={DefaultTheme}>
-    <ModeProvider mode="dark">
-      <Button {...args}>Click Me</Button>
-    </ModeProvider>
+    <Button {...args}>Click Me</Button>
   </ThemeProvider>
 );
 

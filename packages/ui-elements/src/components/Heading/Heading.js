@@ -1,8 +1,10 @@
 import React from 'react';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
+import useTheme from '../../hooks/useTheme';
 
 const Heading = ({ level = 1, children, ...props }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
+  console.log(theme);
   const Tag = `h${level}`;
   const style = theme.typography[Tag];
   return (

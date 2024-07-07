@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
+import useTheme from '../../hooks/useTheme';
 import { Box } from '../Box';
 import { ActionButton } from '../ActionButton';
 import MenuItem from './MenuItem';
@@ -17,7 +18,7 @@ const Menu = ({
   size = 'medium',
   useWrapper = true,
 }) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = useMenuStyles();
   const { classNames, styleOverrides } = useComponentOverrides(
     'Menu',

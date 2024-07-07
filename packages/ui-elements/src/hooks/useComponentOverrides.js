@@ -1,8 +1,8 @@
-import { useTheme } from '@emotion/react';
 import { useMemo } from 'react';
+import useTheme from './useTheme';
 
 const useComponentOverrides = (component, className = '', style = {}) => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const classNames = useMemo(
     () =>
       `${Array.isArray(className) ? className.join(' ') : className} ${

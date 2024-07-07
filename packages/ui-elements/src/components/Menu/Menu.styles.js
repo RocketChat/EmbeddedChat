@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { lighten, darken } from '../../lib/color';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 
 export const useMenuStyles = () => {
   const { theme, colors } = useTheme();

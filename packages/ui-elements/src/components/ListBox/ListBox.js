@@ -5,7 +5,7 @@ import { Box } from '../Box';
 import { CheckBox } from '../CheckBox';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useListBoxStyles from './ListBox.styles';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 
 const findIndex = (options, value, multi) => {
   if (multi) return 0;

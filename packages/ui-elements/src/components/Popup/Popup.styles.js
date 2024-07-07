@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useTheme } from '../../hooks/useTheme';
+import useTheme from '../../hooks/useTheme';
 import { darken } from '../../lib/color';
 
 export const usePopupStyles = () => {
