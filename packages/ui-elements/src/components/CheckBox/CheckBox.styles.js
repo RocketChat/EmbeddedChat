@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const useCheckBoxStyles = (checked) => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const main = css`
     display: inline-block;

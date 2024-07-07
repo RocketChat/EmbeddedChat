@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 export const useAvatarStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const imageAvatar = (size) => css`
     border-radius: ${theme.schemes.radius};
     height: ${size};

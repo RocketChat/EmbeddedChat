@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/react';
 import { lighten } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const animation = keyframes`
 0% {
@@ -17,7 +17,7 @@ const animation = keyframes`
 `;
 
 const useSkeletonStyles = () => {
-  const { theme } = useCustomTheme();
+  const { theme } = useTheme();
   const skeleton = css`
     height: 1.2em;
     animation: ${animation} 1s linear 0s infinite running;

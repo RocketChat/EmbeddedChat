@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const useTooltipStyles = (position) => {
-  const { theme, invertedColors } = useCustomTheme();
+  const { theme, invertedColors } = useTheme();
   const tooltip = css`
     position: absolute;
     left: 64%;

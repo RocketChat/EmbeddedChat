@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const useMultiSelectStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const styles = {
     main: css`

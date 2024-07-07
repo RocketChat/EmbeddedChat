@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const useDividerStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const divider = css`
     height: 2px;
     margin: 0 8px 8px;

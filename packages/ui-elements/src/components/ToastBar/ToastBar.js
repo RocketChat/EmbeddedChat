@@ -6,12 +6,12 @@ import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { toastbarStyles as styles } from './ToastBar.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const { iconName, bgColor, color } = useMemo(() => {

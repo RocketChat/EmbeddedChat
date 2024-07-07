@@ -1,5 +1,5 @@
 import { keyframes, css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const BounceFrames = keyframes`
 0%,
@@ -14,7 +14,7 @@ const BounceFrames = keyframes`
 `;
 
 const useThrobberStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const circle = (size, circleCount, iteration) => css`
     height: ${size};
     width: ${size};

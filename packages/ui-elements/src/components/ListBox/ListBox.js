@@ -5,7 +5,7 @@ import { Box } from '../Box';
 import { CheckBox } from '../CheckBox';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useListBoxStyles from './ListBox.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const findIndex = (options, value, multi) => {
   if (multi) return 0;
@@ -27,7 +27,7 @@ const ListBox = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ListBox');
   const styles = useListBoxStyles();
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const itemRefs = useRef([]);
   const [optionIndex, setOptionIndex] = useState(() =>
     findIndex(options, value, multi)

@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 const useListBoxStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const main = css`
     overflow: auto;
     overflow-x: hidden;

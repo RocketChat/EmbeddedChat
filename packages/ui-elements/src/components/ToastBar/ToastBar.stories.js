@@ -3,6 +3,7 @@ import { ThemeProvider } from '@emotion/react';
 import { ToastBar, ToastBarProvider } from '.';
 import DefaultTheme from '../../theme/DefaultTheme';
 import { Button } from '../Button';
+import { Box } from '../Box';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 export default {
@@ -13,7 +14,7 @@ export default {
 const ToastBarContainer = () => {
   const dispatchToast = useToastBarDispatch();
   return (
-    <>
+    <Box style={{ display: 'flex', gap: '0.2rem' }}>
       <Button
         onClick={() =>
           dispatchToast({
@@ -58,7 +59,7 @@ const ToastBarContainer = () => {
       >
         Show Warning Toast
       </Button>
-    </>
+    </Box>
   );
 };
 

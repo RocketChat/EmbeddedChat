@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '../../context/ThemeContext';
 import { Avatar } from './Avatar';
 import DefaultTheme from '../../theme/DefaultTheme';
 
@@ -12,7 +12,7 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Default = {
   render: (args) => (
-    <ThemeProvider theme={DefaultTheme}>
+    <ThemeProvider theme={DefaultTheme} initialMode="dark">
       <Avatar {...args} />
     </ThemeProvider>
   ),

@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '../../hooks/useTheme';
 
 export const useModalstyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const main = css`
     position: absolute;
     display: flex;
@@ -34,7 +34,7 @@ export const ModalContentStyles = {
 };
 
 export const useModalBackdropStyles = () => {
-  const { theme } = useCustomTheme();
+  const { theme } = useTheme();
 
   const modalBackdrop = css`
     position: absolute;
