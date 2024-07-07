@@ -96,17 +96,13 @@
     "@rocket.chat/fuselage-hooks": "^0.33.1",
     "@rocket.chat/icons": "^0.31.23",
     "@rocket.chat/message-parser": "^0.31.25",
-    "@rocket.chat/sdk": "^1.0.0-alpha.42",
     "@rocket.chat/ui-kit": "^0.31.25",
     "@rollup/plugin-json": "^6.0.0",
-    "color": "^4.2.3",
     "date-fns": "^2.30.0",
     "emoji-picker-react": "^4.4.9",
     "emoji-toolkit": "^7.0.1",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",
-    "react-virtuoso": "^4.3.10",
-    "stylis": "^4.2.0",
     "swiper": "^11.1.0",
     "zustand": "^4.3.8"
   }

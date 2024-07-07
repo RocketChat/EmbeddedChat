@@ -93,8 +93,6 @@
         "@rollup/plugin-json": "^6.0.0",
         "color": "^4.2.3",
         "normalize.css": "^8.0.1",
-        "prop-types": "^15.8.1",
-        "react-virtuoso": "^4.3.10",
-        "stylis": "^4.2.0"
+        "prop-types": "^15.8.1"
     }
 }
