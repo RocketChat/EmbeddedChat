@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useCommandListStyles from './CommandList.style';
 import { useCustomTheme } from '../../hooks/useCustomTheme';

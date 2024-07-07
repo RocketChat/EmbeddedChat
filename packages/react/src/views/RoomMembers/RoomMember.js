@@ -1,18 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Box, Button, Icon, Sidebar, Popup } from '@embeddedchat/ui-elements';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './InviteMembers';
-import { Button } from '../../components/Button';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import { useRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import Popup from '../../components/Popup/Popup';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);

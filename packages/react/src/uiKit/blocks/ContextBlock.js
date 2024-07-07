@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import React, { memo, useMemo } from 'react';
+import { Box } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
 
 import Item from './ContextBlockItem';
 

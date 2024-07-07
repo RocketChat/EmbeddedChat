@@ -1,5 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
+import {
+  Box,
+  Button,
+  Input,
+  Icon,
+  ActionButton,
+  Modal,
+  Throbber,
+} from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
@@ -14,15 +23,9 @@ import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { parseEmoji } from '../../lib/emoji';
-import { Button } from '../../components/Button';
-import { Box } from '../../components/Box';
-import { Input } from '../../components/Input';
-import { Icon } from '../../components/Icon';
 import { CommandsList } from '../CommandList';
-import { ActionButton } from '../../components/ActionButton';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import { Modal } from '../../components/Modal';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
@@ -30,7 +33,6 @@ import { useChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
-import { Throbber } from '../../components/Throbber';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');

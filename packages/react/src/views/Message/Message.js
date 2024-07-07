@@ -1,12 +1,12 @@
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import { Box } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
-import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { MessageBody } from './MessageBody';

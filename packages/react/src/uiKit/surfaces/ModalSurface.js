@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { Box } from '@embeddedchat/ui-elements';
 import { Surface } from './Surface';
-import { Box } from '../../components/Box';
 
 const ModalSurface = ({ children }) => (
   <Surface type="modal">

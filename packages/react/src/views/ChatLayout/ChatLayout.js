@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import styles from './ChatLayout.styles';
 import {

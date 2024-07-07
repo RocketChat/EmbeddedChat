@@ -2,6 +2,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { Box, Throbber } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
@@ -11,7 +12,6 @@ import {
 } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
-import { Box } from '../../components/Box';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
@@ -22,7 +22,6 @@ import { useChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
 import useUiKitStore from '../../store/uiKitStore';
 import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
-import { Throbber } from '../../components/Throbber';
 
 const ChatBody = ({
   anonymousMode,

@@ -1,8 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import * as UiKit from '@rocket.chat/ui-kit';
+import { Box } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
 
 const Action = ({ element, parser, index }) => {
   const { classNames, styleOverrides } =

@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
+import { Box, Icon } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 
 const MessageList = ({ messages }) => {

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '../../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import { CodeBlockStyles as styles } from './elements.styles';
 
 const CodeBlock = ({ lines }) => {

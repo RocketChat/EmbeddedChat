@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box } from '../../components/Box';
-import { Avatar } from '../../components/Avatar';
+import { Box, Avatar } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 

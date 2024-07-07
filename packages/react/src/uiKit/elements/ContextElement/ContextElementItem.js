@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { BlockContext, ElementType } from '@rocket.chat/ui-kit';
-import { Box } from '../../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 
 export const ContextElementItem = ({ element, surfaceRenderer, index }) => {
   const renderedElement = surfaceRenderer.renderContext(

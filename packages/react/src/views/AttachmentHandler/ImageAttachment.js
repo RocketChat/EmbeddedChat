@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
 

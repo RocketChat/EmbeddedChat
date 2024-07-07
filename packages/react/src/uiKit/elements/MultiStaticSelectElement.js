@@ -1,8 +1,8 @@
 import React, { memo, useMemo, useCallback } from 'react';
 
+import { MultiSelect } from '@embeddedchat/ui-elements';
 import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
-import { MultiSelect } from '../../components/MultiSelect';
 
 const MultiStaticSelectElement = ({ block, context, surfaceRenderer }) => {
   const [{ loading, value }, action] = useUiKitState(block, context);

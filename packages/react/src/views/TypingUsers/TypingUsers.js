@@ -1,8 +1,8 @@
 import { css, useTheme } from '@emotion/react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Box } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
-import { Box } from '../../components/Box';
 
 export default function TypingUsers() {
   const { RCInstance } = useContext(RCContext);

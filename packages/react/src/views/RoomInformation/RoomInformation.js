@@ -1,13 +1,10 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
-import { Avatar } from '../../components/Avatar/Avatar';
+import { Box, Avatar, Sidebar, Popup } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
-import { Box } from '../../components/Box';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import Popup from '../../components/Popup/Popup';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);

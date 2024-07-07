@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { isSameDay, format } from 'date-fns';
-import { Box } from '../../../components/Box';
+import { Box, Sidebar, Popup } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import useMessageAggregatorStyles from './MessageAggregator.styles';
-import Sidebar from '../../../components/Sidebar/Sidebar';
 import { useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
-import Popup from '../../../components/Popup/Popup';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 
 export const MessageAggregator = ({

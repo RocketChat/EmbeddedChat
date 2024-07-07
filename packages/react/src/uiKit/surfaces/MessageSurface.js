@@ -1,6 +1,6 @@
 import React from 'react';
+import { Box } from '@embeddedchat/ui-elements';
 import { Surface } from './Surface';
-import { Box } from '../../components/Box';
 
 const MessageSurface = ({ children }) => (
   <Surface type="message">

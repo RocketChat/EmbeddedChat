@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import useMemberListStyles from './MembersList.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 

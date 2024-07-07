@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import { Box, Icon, Tooltip } from '@embeddedchat/ui-elements';
 import { useMemberStore, useUserStore } from '../../store';
-import { Icon } from '../../components/Icon';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';

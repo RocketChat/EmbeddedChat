@@ -1,11 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { Box, Button, Modal } from '@embeddedchat/ui-elements';
 import RCContext from '../../../context/RCInstance';
 import { UiKitComponent, UiKitModal, modalParser } from '../../../uiKit';
-import { Box } from '../../../components/Box';
-import { Button } from '../../../components/Button';
-import { Modal } from '../../../components/Modal';
 
 const focusableElementsString = `
 	a[href]:not([tabindex="-1"]),

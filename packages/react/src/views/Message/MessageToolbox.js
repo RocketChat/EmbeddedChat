@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import {
+  Box,
+  ActionButton,
+  Modal,
+  Icon,
+  Button,
+  Tooltip,
+  Menu,
+} from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { ActionButton } from '../../components/ActionButton';
 import { EmojiPicker } from '../EmojiPicker';
-import { Modal } from '../../components/Modal';
-import { Icon } from '../../components/Icon';
-import { Button } from '../../components/Button';
 import { parseEmoji } from '../../lib/emoji';
-import { Tooltip } from '../../components/Tooltip';
-import { Menu } from '../../components/Menu';
 import { useMessageToolboxStyles } from './Message.styles';
 
 export const MessageToolbox = ({

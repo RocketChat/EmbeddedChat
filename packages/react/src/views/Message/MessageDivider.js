@@ -1,6 +1,6 @@
 import React from 'react';
+import { Box } from '@embeddedchat/ui-elements';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { Box } from '../../components/Box';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { useMessageDividerStyles } from './Message.styles';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '../../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import { useMemberStore, useUserStore } from '../../../store';
 import useMentionStyles from './elements.styles';
 

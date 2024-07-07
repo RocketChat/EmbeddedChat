@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const MessageGenericPreviewTitle = ({

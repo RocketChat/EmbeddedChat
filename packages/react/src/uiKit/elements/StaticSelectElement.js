@@ -1,8 +1,8 @@
 import React, { memo, useMemo, useCallback } from 'react';
 
+import { StaticSelect } from '@embeddedchat/ui-elements';
 import { useUiKitState } from '../hooks/useUiKitState';
 import { fromTextObjectToString } from '../utils/fromTextObjectToString';
-import { StaticSelect } from '../../components/StaticSelect';
 
 const StaticSelectElement = ({ block, context, surfaceRenderer }) => {
   const [{ loading, value }, action] = useUiKitState(block, context);

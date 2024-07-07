@@ -1,9 +1,8 @@
 import React from 'react';
 import { formatDistance } from 'date-fns';
+import { Box, Icon } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { Icon } from '../../components/Icon';
 import { fileMetricsStyles as styles } from './Files.styles';
 
 export const FileMetrics = ({ className = '', file, style = {}, ...props }) => {

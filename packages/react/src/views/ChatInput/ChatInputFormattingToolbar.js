@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
+import { Box, Icon, ActionButton, Tooltip } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { ActionButton } from '../../components/ActionButton';
-import { Tooltip } from '../../components/Tooltip';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  ActionButton,
+  Icon,
+  Button,
+  Throbber,
+} from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
-import { Box } from '../../components/Box';
 import { Swiper, SwiperSlide } from './Swiper';
-import { Throbber } from '../../components/Throbber';
-import { ActionButton } from '../../components/ActionButton';
-import { Icon } from '../../components/Icon';
-import { Button } from '../../components/Button';
 import ReactPortal from '../../lib/reactPortal';
 import useImageGalleryStyles from './ImageGallery.styles';
 import { useCustomTheme } from '../../hooks/useCustomTheme';

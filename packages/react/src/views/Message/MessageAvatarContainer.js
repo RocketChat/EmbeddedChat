@@ -1,8 +1,5 @@
 import React, { useContext } from 'react';
-import { Avatar } from '../../components/Avatar';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { Tooltip } from '../../components/Tooltip';
+import { Box, Avatar, Icon, Tooltip } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageAvatarContainerStyles } from './Message.styles';
 

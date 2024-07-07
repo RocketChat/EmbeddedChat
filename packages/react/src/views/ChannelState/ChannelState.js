@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
+import { Box, Icon } from '@embeddedchat/ui-elements';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useChannelStateStyles from './ChannelState.styles';
 

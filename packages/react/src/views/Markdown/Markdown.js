@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { Box } from '@embeddedchat/ui-elements';
 import { Markup } from '../Markup/index';
-import { Box } from '../../components/Box';
 import EmojiReaction from '../EmojiReaction/EmojiReaction';
 
 const Markdown = ({ body, isReaction = false }) => {
