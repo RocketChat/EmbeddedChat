@@ -21,6 +21,7 @@ export { MultiSelect } from './components/MultiSelect';
 export { Sidebar } from './components/Sidebar';
 export { StaticSelect } from './components/StaticSelect';
 export { ToastBar } from './components/ToastBar';
+export { ToastBarProvider } from './components/ToastBar';
 export { ThemeProvider } from './context/ThemeContextProvider';
 export * from './hooks';
 export * from './lib';
