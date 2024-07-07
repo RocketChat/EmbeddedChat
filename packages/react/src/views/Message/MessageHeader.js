@@ -25,7 +25,7 @@ const MessageHeader = ({
   const { ECOptions } = useRCContext();
   const displayNameVariant = variantOverrides || 'Normal';
   const styles = useMessageHeaderStyles();
-  const colors = useTheme();
+  const { colors } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
