@@ -2315,7 +2315,6 @@ __metadata:
     "@rocket.chat/fuselage-hooks": ^0.33.1
     "@rocket.chat/icons": ^0.31.23
     "@rocket.chat/message-parser": ^0.31.25
-    "@rocket.chat/sdk": ^1.0.0-alpha.42
     "@rocket.chat/ui-kit": ^0.31.25
     "@rollup/plugin-babel": ^5.3.1
     "@rollup/plugin-commonjs": ^21.0.2
@@ -2332,7 +2331,6 @@ __metadata:
     "@storybook/testing-library": ^0.2.0
     "@testing-library/react": ^12.1.4
     babel-jest: ^27.5.1
-    color: ^4.2.3
     concurrently: ^7.2.0
     cross-env: ^7.0.3
     date-fns: ^2.30.0
@@ -2358,7 +2356,6 @@ __metadata:
     prop-types: ^15.8.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-virtuoso: ^4.3.10
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -2369,7 +2366,6 @@ __metadata:
     sass: ^1.66.1
     schedule: ^0.4.0
     storybook: ^7.0.26
-    stylis: ^4.2.0
     swiper: ^11.1.0
     zustand: ^4.3.8
   peerDependencies:
@@ -2428,7 +2424,6 @@ __metadata:
     prop-types: ^15.8.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-virtuoso: ^4.3.10
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -2439,7 +2434,6 @@ __metadata:
     sass: ^1.66.1
     schedule: ^0.4.0
     storybook: ^7.0.26
-    stylis: ^4.2.0
   peerDependencies:
     react: ">=17.0.2 <19.0.0"
     react-dom: ">=17.0.2 <19.0.0"
@@ -26320,16 +26314,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^4.3.10":
-  version: 4.6.2
-  resolution: "react-virtuoso@npm:4.6.2"
-  peerDependencies:
-    react: ">=16 || >=17 || >= 18"
-    react-dom: ">=16 || >=17 || >= 18"
-  checksum: 97daa55b68bb36c25a4a4d2fdd7a60418a019113551018e899f0f5689be57cdadd539e2f10d4d6cd96aa79105e6a5dc03ba6af9856cca168d0ec8e74b231f8fd
-  languageName: node
-  linkType: hard
-
 "react@npm:18.2.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -28782,13 +28766,6 @@ __metadata:
   version: 4.2.0
   resolution: "stylis@npm:4.2.0"
   checksum: 0eb6cc1b866dc17a6037d0a82ac7fa877eba6a757443e79e7c4f35bacedbf6421fadcab4363b39667b43355cbaaa570a3cde850f776498e5450f32ed2f9b7584
-  languageName: node
-  linkType: hard
-
-"stylis@npm:^4.2.0":
-  version: 4.3.0
-  resolution: "stylis@npm:4.3.0"
-  checksum: 6120de3f03eacf3b5adc8e7919c4cca991089156a6badc5248752a3088106afaaf74996211a6817a7760ebeadca09004048eea31875bd8d4df51386365c50025
   languageName: node
   linkType: hard
 
