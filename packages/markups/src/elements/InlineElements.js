@@ -9,7 +9,7 @@ import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
-import Mention from './Mention';
+import UserMention from '../mentions/UserMention';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -33,7 +33,7 @@ const InlineElements = ({ contents }) =>
         return <ChannelMention key={index} mention={content.value.value} />;
 
       case 'MENTION_USER':
-        return <Mention key={index} contents={content.value} />;
+        return <UserMention key={index} contents={content.value} />;
 
       case 'EMOJI':
         return <Emoji key={index} emoji={content} />;

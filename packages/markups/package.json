@@ -1,7 +1,7 @@
 {
-    "name": "@embeddedchat/ui-kit",
+    "name": "@embeddedchat/markups",
     "version": "0.0.0",
-    "description": "UiKit elements for Rocket.Chat Apps built under EmbeddedChat design system",
+    "description": "A React component library for handling markup interactions in EmbeddedChat",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "repository": {
@@ -88,12 +88,11 @@
         "react-dom": ">=17.0.2 <19.0.0"
     },
     "dependencies": {
+        "@embeddedchat/ui-elements": "workspace:^",
         "@emotion/babel-preset-css-prop": "^11.11.0",
         "@emotion/react": "11.7.1",
-        "@rocket.chat/message-parser": "^0.31.29",
         "@rollup/plugin-json": "^6.0.0",
-        "color": "^4.2.3",
-        "normalize.css": "^8.0.1",
+        "emoji-toolkit": "^7.0.1",
         "prop-types": "^15.8.1"
     }
 }

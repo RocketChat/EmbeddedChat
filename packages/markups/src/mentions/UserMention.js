@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@embeddedchat/ui-elements';
-import { useMemberStore, useUserStore } from '../../../store';
-import useMentionStyles from './elements.styles';
+import { MarkupInteractionContext } from '../MarkupInteractionContext';
+import useMentionStyles from '../elements/elements.styles';
 
-const Mention = ({ contents }) => {
-  const members = useMemberStore((state) => state.members);
-  const username = useUserStore((state) => state.username);
+const UserMention = ({ contents }) => {
+  const { members, username } = useContext(MarkupInteractionContext);
 
   const hasMember = (user) => {
     if (user === 'all' || user === 'here') return true;
@@ -18,10 +17,12 @@ const Mention = ({ contents }) => {
     });
     return found;
   };
+
   const styles = useMentionStyles(contents, username);
+
   return (
     <>
-      {hasMember(contents.value) === true ? (
+      {hasMember(contents.value) ? (
         <Box is="span" css={styles.mention}>
           {contents.value}
         </Box>
@@ -32,8 +33,8 @@ const Mention = ({ contents }) => {
   );
 };
 
-export default Mention;
-
-Mention.propTypes = {
-  contents: PropTypes.any,
+UserMention.propTypes = {
+  contents: PropTypes.any.isRequired,
 };
+
+export default UserMention;

@@ -1,7 +1,7 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import { parse } from '@rocket.chat/message-parser';
 import React, { Fragment } from 'react';
-import { Markup } from '@rocket.chat/gazzodown';
+import { Markup } from '@embeddedchat/markups';
 import ActionsBlock from '../blocks/ActionsBlock';
 import ContextBlock from '../blocks/ContextBlock';
 import DividerBlock from '../blocks/DividerBlock';
