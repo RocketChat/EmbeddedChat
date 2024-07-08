@@ -4,6 +4,7 @@
     "description": "Reusable UI components and UI-related hooks for EmbeddedChat.",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
+    "types": "dist/esm/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/RocketChat/EmbeddedChat"
@@ -13,7 +14,9 @@
     ],
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "rollup -c --context=window --environment NODE_ENV:production",
+        "build": "yarn build:types && rollup -c --context=window --environment NODE_ENV:production && yarn build:clean",
+        "build:types": "tsc",
+        "build:clean": "rm -rf ./tmp",
         "watch": "rollup -c --watch --context=window",
         "test:lint": "eslint src/**/*.js",
         "format": "prettier --write 'src/' ",
@@ -70,12 +73,14 @@
         "rollup": "^2.70.1",
         "rollup-plugin-analyzer": "^4.0.0",
         "rollup-plugin-bundle-size": "^1.0.3",
+        "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-terser": "^7.0.2",
         "sass": "^1.66.1",
         "schedule": "^0.4.0",
-        "storybook": "^7.0.26"
+        "storybook": "^7.0.26",
+        "typescript": "^5.5.3"
     },
     "peerDependencies": {
         "react": ">=17.0.2 <19.0.0",
