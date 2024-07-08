@@ -34,7 +34,7 @@ export default [
       'react-dom',
       '@emotion/react',
       '@embeddedchat/ui-elements',
-      'embeddedchat/markups',
+      '@embeddedchat/markups',
     ],
     plugins: [
       replace(

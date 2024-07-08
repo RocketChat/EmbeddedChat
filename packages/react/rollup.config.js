@@ -32,6 +32,7 @@ export default [
     external: [
       'react',
       'react-dom',
+      'lodash',
       '@emotion/react',
       '@embeddedchat/ui-elements',
       '@embeddedchat/api',
