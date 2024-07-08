@@ -11,6 +11,7 @@ export const Avatar = ({
   style = {},
   url,
   fallbackIcon = 'avatar',
+  onClick = () => {},
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
@@ -31,6 +32,7 @@ export const Avatar = ({
           className={classNames}
           style={styleOverrides}
           onError={() => setImgError(true)}
+          onClick={onClick}
         />
       ) : (
         <Box css={styles.fallbackContainer(size)}>

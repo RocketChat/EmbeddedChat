@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { Box, Avatar, Icon, Tooltip } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageAvatarContainerStyles } from './Message.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { useUserStore } from '../../store';
 
 const MessageAvatarContainer = ({
   message,
@@ -17,6 +19,17 @@ const MessageAvatarContainer = ({
     return URL;
   };
 
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
+
+  const handleAvatarClick = () => {
+    setExclusiveState(setShowCurrentUserInfo);
+    setCurrentUser(message?.u);
+  };
+
   return (
     <Box css={styles.container}>
       {!sequential ? (
@@ -24,7 +37,7 @@ const MessageAvatarContainer = ({
           url={getUserAvatarUrl(message.u.username)}
           alt="avatar"
           size={message.t ? '1.2em' : '2.25em'}
-          user={message?.u}
+          onClick={handleAvatarClick}
         />
       ) : null}
       {isStarred && sequential ? (

@@ -55,6 +55,7 @@ const Message = ({
   );
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
+
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
