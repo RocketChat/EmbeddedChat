@@ -4,18 +4,19 @@ import { css } from '@emotion/react';
 import { BlockContext } from '@rocket.chat/ui-kit';
 import React, { memo, useContext } from 'react';
 import {
+  UiKitComponent,
+  UiKitContextualBar as UiKitContextualBarSurfaceRender,
+  contextualBarParser,
+  UiKitContext,
+} from '@embeddedchat/ui-kit';
+import {
   Button,
   MinimalSidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
 } from '@embeddedchat/ui-elements';
-import {
-  UiKitComponent,
-  UiKitContextualBar as UiKitContextualBarSurfaceRender,
-  contextualBarParser,
-  UiKitContext,
-} from '../../../uiKit';
+
 import useContextualBarContextValue from '../../../hooks/uiKit/useContextualBarContextValue';
 import useUiKitActionManager from '../../../hooks/uiKit/useUiKitActionManager';
 import useUiKitView from '../../../hooks/uiKit/useUiKitView';

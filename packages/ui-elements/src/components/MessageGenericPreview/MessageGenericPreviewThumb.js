@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
+import { Box } from '../Box';
+import { useComponentOverrides } from '../../hooks';
 
 const MessageGenericPreviewThumb = (className = '', style = {}, ...props) => {
   const { classNames, styleOverrides } = useComponentOverrides(

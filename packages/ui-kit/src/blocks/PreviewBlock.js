@@ -4,8 +4,8 @@ import {
   isPreviewBlockWithPreview,
 } from '@rocket.chat/ui-kit';
 import React, { memo } from 'react';
-import { Box } from '@embeddedchat/ui-elements';
 import {
+  Box,
   MessageGenericPreviewCoverImage,
   MessageGenericPreview,
   MessageGenericPreviewThumb,
@@ -13,7 +13,7 @@ import {
   MessageGenericPreviewTitle,
   MessageGenericPreviewDescription,
   MessageGenericPreviewFooter,
-} from '../../views/MessageGenericPreview';
+} from '@embeddedchat/ui-elements';
 
 import ContextBlock from './ContextBlock';
 

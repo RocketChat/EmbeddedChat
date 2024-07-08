@@ -2,8 +2,8 @@
 import { useUniqueId } from '@rocket.chat/fuselage-hooks';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { Box, Button, Modal } from '@embeddedchat/ui-elements';
+import { UiKitComponent, UiKitModal, modalParser } from '@embeddedchat/ui-kit';
 import RCContext from '../../../context/RCInstance';
-import { UiKitComponent, UiKitModal, modalParser } from '../../../uiKit';
 
 const focusableElementsString = `
 	a[href]:not([tabindex="-1"]),

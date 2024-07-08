@@ -27,6 +27,7 @@ export {
 } from './components/Sidebar';
 export { StaticSelect } from './components/StaticSelect';
 export { ToastBar } from './components/ToastBar';
+export * from './components/MessageGenericPreview';
 export { ToastBarProvider } from './components/ToastBar';
 export { ThemeProvider } from './context/ThemeContextProvider';
 export * from './hooks';

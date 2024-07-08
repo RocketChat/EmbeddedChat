@@ -1,6 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
+import { Box } from '../Box';
+import { useComponentOverrides } from '../../hooks';
 
 const MessageGenericPreviewCoverImage = ({
   className = '',

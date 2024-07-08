@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useMessageGenericPreviewStyles } from './MessageGenericPreview.styles';
+import { Box } from '../Box';
+import { useComponentOverrides } from '../../hooks';
 
 const MessageGenericPreview = (props, className = '', style = {}) => {
   const { classNames, styleOverrides } = useComponentOverrides(

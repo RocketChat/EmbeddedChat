@@ -90,12 +90,12 @@
   "dependencies": {
     "@embeddedchat/api": "0.0.2",
     "@embeddedchat/ui-elements": "workspace:^",
+    "@embeddedchat/ui-kit": "workspace:^",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@emotion/react": "11.7.1",
     "@rocket.chat/emitter": "^0.31.25",
     "@rocket.chat/fuselage-hooks": "^0.33.1",
     "@rocket.chat/icons": "^0.31.23",
-    "@rocket.chat/message-parser": "^0.31.25",
     "@rocket.chat/ui-kit": "^0.31.25",
     "@rollup/plugin-json": "^6.0.0",
     "date-fns": "^2.30.0",

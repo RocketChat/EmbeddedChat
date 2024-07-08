@@ -1,6 +1,7 @@
 import * as UiKit from '@rocket.chat/ui-kit';
 import { parse } from '@rocket.chat/message-parser';
 import React, { Fragment } from 'react';
+import { Markup } from '@rocket.chat/gazzodown';
 import ActionsBlock from '../blocks/ActionsBlock';
 import ContextBlock from '../blocks/ContextBlock';
 import DividerBlock from '../blocks/DividerBlock';
@@ -16,7 +17,6 @@ import MultiStaticSelectElement from '../elements/MultiStaticSelectElement';
 import OverflowElement from '../elements/OverflowElement';
 import PlainTextInputElement from '../elements/PlainTextInputElement';
 import StaticSelectElement from '../elements/StaticSelectElement';
-import { Markup } from '../../views/Markup';
 
 export class FuselageSurfaceRenderer extends UiKit.SurfaceRenderer {
   constructor(allowedBlocks) {

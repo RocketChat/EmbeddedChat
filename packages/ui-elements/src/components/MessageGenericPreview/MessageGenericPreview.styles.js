@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useTheme } from '@embeddedchat/ui-elements';
+import { useTheme } from '../../hooks';
 
 export const useMessageGenericPreviewStyles = () => {
   const { theme, colors } = useTheme();
