@@ -2311,7 +2311,6 @@ __metadata:
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
-    rollup-plugin-bundle-size: ^1.0.3
     rollup-plugin-dts: ^6.1.1
     rollup-plugin-peer-deps-external: ^2.2.4
     rollup-plugin-postcss: ^4.0.2
@@ -2513,7 +2512,6 @@ __metadata:
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
-    rollup-plugin-bundle-size: ^1.0.3
     rollup-plugin-dts: ^6.1.1
     rollup-plugin-peer-deps-external: ^2.2.4
     rollup-plugin-postcss: ^4.0.2
@@ -2574,7 +2572,6 @@ __metadata:
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
-    rollup-plugin-bundle-size: ^1.0.3
     rollup-plugin-dts: ^6.1.1
     rollup-plugin-peer-deps-external: ^2.2.4
     rollup-plugin-postcss: ^4.0.2

@@ -4,13 +4,11 @@ import babel from '@rollup/plugin-babel';
 import postcss from 'rollup-plugin-postcss';
 import external from 'rollup-plugin-peer-deps-external';
 import json from '@rollup/plugin-json';
-import bundleSize from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
 import analyze from 'rollup-plugin-analyzer';
 import dts from 'rollup-plugin-dts';
 
-const packageJson = require('./package.json');
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
 export default [
@@ -18,15 +16,21 @@ export default [
     input: 'src/index.js',
     output: [
       {
-        file: packageJson.main,
+        dir: 'dist/cjs',
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: 'hidden',
+        preserveModules: true,
+        preserveModulesRoot: 'src',
         plugins: [PRODUCTION && terser()],
+        exports: 'auto',
       },
+
       {
-        file: packageJson.module,
+        dir: 'dist/esm',
         format: 'esm',
-        sourcemap: true,
+        sourcemap: 'hidden',
+        preserveModules: true,
+        preserveModulesRoot: 'src',
         plugins: [PRODUCTION && terser()],
       },
     ],
@@ -58,14 +62,13 @@ export default [
         limit: 20,
         summaryOnly: true,
       }),
-      bundleSize(),
     ],
   },
 
   {
     input: 'src/index.js',
     output: {
-      file: packageJson.types,
+      file: 'dist/esm/index.d.ts',
       format: 'es',
     },
     plugins: [dts()],

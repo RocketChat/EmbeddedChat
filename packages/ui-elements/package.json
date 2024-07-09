@@ -14,7 +14,7 @@
     ],
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "rollup -c --context=window --environment NODE_ENV:production",
+        "build": "yarn prebuild && rollup -c --context=window --environment NODE_ENV:production",
         "watch": "rollup -c --watch --context=window",
         "test:lint": "eslint src/**/*.js",
         "format": "prettier --write 'src/' ",
@@ -70,7 +70,6 @@
         "rimraf": "^5.0.1",
         "rollup": "^2.70.1",
         "rollup-plugin-analyzer": "^4.0.0",
-        "rollup-plugin-bundle-size": "^1.0.3",
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
