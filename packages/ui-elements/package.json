@@ -14,9 +14,7 @@
     ],
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "yarn build:types && rollup -c --context=window --environment NODE_ENV:production && yarn build:clean",
-        "build:types": "tsc",
-        "build:clean": "rm -rf ./tmp",
+        "build": "rollup -c --context=window --environment NODE_ENV:production",
         "watch": "rollup -c --watch --context=window",
         "test:lint": "eslint src/**/*.js",
         "format": "prettier --write 'src/' ",

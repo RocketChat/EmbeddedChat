@@ -63,7 +63,7 @@ export default [
   },
 
   {
-    input: 'tmp/index.d.ts',
+    input: 'src/index.js',
     output: {
       file: packageJson.types,
       format: 'es',
