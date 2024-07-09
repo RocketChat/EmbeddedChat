@@ -104,7 +104,7 @@ const StormySeas = {
     ChatHeader: {
       configOverrides: {
         optionConfig: {
-          chatOptions: [
+          toolOptions: [
             'minmax',
             'close',
             'thread',
