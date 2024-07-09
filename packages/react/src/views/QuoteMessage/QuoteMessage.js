@@ -24,6 +24,46 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');
+
+  // Function to render the message content or attachment preview
+  const renderMessageContent = () => {
+    if (message.msg) {
+      return message.msg;
+    } else if (message.file) {
+      const fileUrl = `${RCInstance.getHost()}/file-upload/${
+        message.file._id
+      }/${message.file.name}`;
+      if (message.file.type.startsWith('video/')) {
+        return (
+          <video controls style={{ maxWidth: '100%', maxHeight: '200px' }}>
+            <source src={fileUrl} type={message.file.type} />
+            Your browser does not support the video tag.
+          </video>
+        );
+      } else if (message.file.type.startsWith('image/')) {
+        return (
+          <div>
+            <img
+              src={fileUrl}
+              alt={message.file.name}
+              style={{ maxWidth: '100px', maxHeight: '100px' }}
+            />
+            <div>{`${message.file.name} (${(message.file.size / 1024).toFixed(
+              2
+            )} kB)`}</div>
+          </div>
+        );
+      } else if (message.file.type.startsWith('audio/')) {
+        return (
+          <audio controls style={{ maxWidth: '100%' }}>
+            <source src={fileUrl} type={message.file.type} />
+            Your browser does not support the audio element.
+          </audio>
+        );
+      }
+    }
+  };
+
   return (
     <Box
       className={`ec-quote-msg ${className} ${classNames}`}
@@ -44,13 +84,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{message?.u.username}</Box>
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
-      <Box css={styles.message}>
-        {message.msg
-          ? message.msg
-          : `${message.file?.name} (${
-              message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
-            } kB)`}
-      </Box>
+      <Box css={styles.message}>{renderMessageContent()}</Box>
     </Box>
   );
 };
