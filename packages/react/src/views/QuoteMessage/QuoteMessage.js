@@ -27,9 +27,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
 
   // Function to render the message content or attachment preview
   const renderMessageContent = () => {
-    if (message.msg) {
-      return message.msg;
-    } else if (message.file) {
+    if (message.file) {
       const fileUrl = `${RCInstance.getHost()}/file-upload/${
         message.file._id
       }/${message.file.name}`;
@@ -62,6 +60,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         );
       }
     }
+    return message.msg;
   };
 
   return (
