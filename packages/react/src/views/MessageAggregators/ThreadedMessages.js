@@ -18,7 +18,7 @@ const ThreadedMessages = () => {
   const searchFiltered = useMemo(
     () =>
       messages.filter((message) =>
-        message.msg.toLowerCase().includes(text.toLowerCase())
+        message.msg?.toLowerCase().includes(text.toLowerCase())
       ),
     [messages, text]
   );
