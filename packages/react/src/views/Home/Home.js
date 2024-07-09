@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Box } from '../../components/Box';
-import Heading from '../../components/Heading/Heading';
+import { Box, Heading } from '@embeddedchat/ui-elements';
 import styles from './Home.styles';
 
 const Home = ({ height }) => (

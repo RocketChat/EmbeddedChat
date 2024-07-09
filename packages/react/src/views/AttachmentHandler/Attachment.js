@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { Box, Icon } from '@embeddedchat/ui-elements';
 import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
 import TextAttachment from './TextAttachment';
 
 const Attachment = ({ attachment, host, type, variantStyles = {} }) => {

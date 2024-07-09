@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
+import {
+  Box,
+  GenericModal,
+  Modal,
+  Input,
+  Button,
+} from '@embeddedchat/ui-elements';
 import { totpModalStore, useUserStore } from '../../store';
-import { GenericModal } from '../../components/GenericModal';
-import { Button } from '../../components/Button';
-import { Box } from '../../components/Box';
-import { Modal } from '../../components/Modal';
-import { Input } from '../../components/Input';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);

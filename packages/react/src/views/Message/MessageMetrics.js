@@ -1,10 +1,12 @@
 import React from 'react';
 import { formatDistance } from 'date-fns';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
-import { appendClassNames } from '../../lib/appendClassNames';
-import { Button } from '../../components/Button';
-import { Icon } from '../../components/Icon';
+import {
+  Box,
+  Button,
+  Icon,
+  useComponentOverrides,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import BubbleThreadBtn from './BubbleVariant/BubbleThreadBtn';
 

@@ -1,12 +1,14 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { css } from '@emotion/react';
+import {
+  Box,
+  Icon,
+  Input,
+  ActionButton,
+  Heading,
+  useToastBarDispatch,
+} from '@embeddedchat/ui-elements';
 import useInviteStore from '../../store/inviteStore';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { Input } from '../../components/Input';
-import { ActionButton } from '../../components/ActionButton';
-import Heading from '../../components/Heading/Heading';
 import { InviteMemberStyles as styles } from './RoomMembers.styles';
 import RCContext from '../../context/RCInstance';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';

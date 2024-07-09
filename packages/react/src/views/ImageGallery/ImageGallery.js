@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  ActionButton,
+  Icon,
+  Button,
+  Throbber,
+  useTheme,
+  ReactPortal,
+} from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
-import { Box } from '../../components/Box';
 import { Swiper, SwiperSlide } from './Swiper';
-import { Throbber } from '../../components/Throbber';
-import { ActionButton } from '../../components/ActionButton';
-import { Icon } from '../../components/Icon';
-import { Button } from '../../components/Button';
-import ReactPortal from '../../lib/reactPortal';
 import useImageGalleryStyles from './ImageGallery.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const styles = useImageGalleryStyles();
@@ -17,7 +19,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [imgFetchErr, setImgFetchErr] = useState(false);
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     const fetchAllImages = async () => {

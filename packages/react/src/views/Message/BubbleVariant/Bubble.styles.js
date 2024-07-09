@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { alpha } from '../../../lib/color';
+import { alpha } from '@embeddedchat/ui-elements';
 
 export const bubbleStyles = (customTheme) => {
   const { theme, colors } = customTheme;

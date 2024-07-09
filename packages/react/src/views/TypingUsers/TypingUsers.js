@@ -1,14 +1,14 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
+import { useTheme, Box } from '@embeddedchat/ui-elements';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
-import { Box } from '../../components/Box';
 
 export default function TypingUsers() {
   const { RCInstance } = useContext(RCContext);
   const currentUserName = useUserStore((state) => state.username);
   const [typingUsers, setTypingUsers] = useState([]);
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     RCInstance.addTypingStatusListener((t) => {

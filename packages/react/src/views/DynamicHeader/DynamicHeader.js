@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Icon } from '../../components/Icon';
-import { Box } from '../../components/Box';
-import { ActionButton } from '../../components/ActionButton';
-import Heading from '../../components/Heading/Heading';
+import { Box, Icon, ActionButton, Heading } from '@embeddedchat/ui-elements';
 import useDynamicHeaderStyles from './DynamicHeader.styles';
 
 const DynamicHeader = ({

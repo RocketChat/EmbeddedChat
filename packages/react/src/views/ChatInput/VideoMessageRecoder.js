@@ -6,13 +6,10 @@ import React, {
   useRef,
 } from 'react';
 import { css } from '@emotion/react';
+import { Box, Icon, ActionButton, Modal } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { ActionButton } from '../../components/ActionButton';
-import { Modal } from '../../components/Modal';
 import { useCommonRecorderStyles } from './ChatInput.styles';
 
 const VideoMessageRecorder = () => {

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Box, Input } from '@embeddedchat/ui-elements';
 import ReportWindowButtons from './ReportWindowButtons';
 import { useMessageStore } from '../../store';
-import { Box } from '../../components/Box';
-import { Input } from '../../components/Input';
 import styles from './ReportMessage.styles';
 
 const MessageReportWindow = ({ messageId }) => {

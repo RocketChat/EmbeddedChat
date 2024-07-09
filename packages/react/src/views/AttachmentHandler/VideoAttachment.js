@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box } from '../../components/Box';
+import { Box } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 
 const userAgentMIMETypeFallback = (type) => {

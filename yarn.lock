@@ -87,6 +87,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/code-frame@npm:^7.24.2":
+  version: 7.24.7
+  resolution: "@babel/code-frame@npm:7.24.7"
+  dependencies:
+    "@babel/highlight": ^7.24.7
+    picocolors: ^1.0.0
+  checksum: 830e62cd38775fdf84d612544251ce773d544a8e63df667728cc9e0126eeef14c6ebda79be0f0bc307e8318316b7f58c27ce86702e0a1f5c321d842eb38ffda4
+  languageName: node
+  linkType: hard
+
 "@babel/compat-data@npm:^7.20.5, @babel/compat-data@npm:^7.22.6, @babel/compat-data@npm:^7.22.9, @babel/compat-data@npm:^7.23.3":
   version: 7.23.3
   resolution: "@babel/compat-data@npm:7.23.3"
@@ -436,6 +446,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-validator-identifier@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/helper-validator-identifier@npm:7.24.7"
+  checksum: 6799ab117cefc0ecd35cd0b40ead320c621a298ecac88686a14cffceaac89d80cdb3c178f969861bf5fa5e4f766648f9161ea0752ecfe080d8e89e3147270257
+  languageName: node
+  linkType: hard
+
 "@babel/helper-validator-option@npm:^7.22.15":
   version: 7.22.15
   resolution: "@babel/helper-validator-option@npm:7.22.15"
@@ -491,6 +508,18 @@ __metadata:
     chalk: ^2.4.2
     js-tokens: ^4.0.0
   checksum: 643acecdc235f87d925979a979b539a5d7d1f31ae7db8d89047269082694122d11aa85351304c9c978ceeb6d250591ccadb06c366f358ccee08bb9c122476b89
+  languageName: node
+  linkType: hard
+
+"@babel/highlight@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/highlight@npm:7.24.7"
+  dependencies:
+    "@babel/helper-validator-identifier": ^7.24.7
+    chalk: ^2.4.2
+    js-tokens: ^4.0.0
+    picocolors: ^1.0.0
+  checksum: 5cd3a89f143671c4ac129960024ba678b669e6fc673ce078030f5175002d1d3d52bc10b22c5b916a6faf644b5028e9a4bd2bb264d053d9b05b6a98690f1d46f1
   languageName: node
   linkType: hard
 
@@ -2239,6 +2268,63 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@embeddedchat/markups@workspace:packages/markups":
+  version: 0.0.0-use.local
+  resolution: "@embeddedchat/markups@workspace:packages/markups"
+  dependencies:
+    "@babel/core": ^7.17.7
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
+    "@babel/preset-env": ^7.16.11
+    "@babel/preset-react": ^7.16.7
+    "@embeddedchat/ui-elements": "workspace:^"
+    "@emotion/babel-plugin": ^11.11.0
+    "@emotion/babel-preset-css-prop": ^11.11.0
+    "@emotion/react": 11.7.1
+    "@open-wc/building-rollup": ^3.0.2
+    "@rollup/plugin-babel": ^5.3.1
+    "@rollup/plugin-commonjs": ^21.0.2
+    "@rollup/plugin-json": ^6.0.0
+    "@rollup/plugin-node-resolve": ^13.1.3
+    "@rollup/plugin-replace": ^5.0.2
+    babel-jest: ^27.5.1
+    concurrently: ^7.2.0
+    cross-env: ^7.0.3
+    deepmerge: ^4.3.1
+    emoji-toolkit: ^7.0.1
+    eslint: ^8.30.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^26.5.3
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: ^7.31.11
+    eslint-plugin-react-hooks: ^4.6.0
+    identity-obj-proxy: ^3.0.0
+    jest: ^27.5.1
+    lint-staged: ^12.4.2
+    npm-run-all: ^4.1.5
+    prettier: ^2.8.1
+    prop-types: ^15.8.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    rimraf: ^5.0.1
+    rollup: ^2.70.1
+    rollup-plugin-analyzer: ^4.0.0
+    rollup-plugin-bundle-size: ^1.0.3
+    rollup-plugin-dts: ^6.1.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-postcss: ^4.0.2
+    rollup-plugin-terser: ^7.0.2
+    sass: ^1.66.1
+    schedule: ^0.4.0
+    typescript: ^5.5.3
+  peerDependencies:
+    react: ">=17.0.2 <19.0.0"
+    react-dom: ">=17.0.2 <19.0.0"
+  languageName: unknown
+  linkType: soft
+
 "@embeddedchat/rc-app@workspace:packages/rc-app":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/rc-app@workspace:packages/rc-app"
@@ -2306,6 +2392,8 @@ __metadata:
     "@babel/preset-env": ^7.16.11
     "@babel/preset-react": ^7.16.7
     "@embeddedchat/api": 0.0.2
+    "@embeddedchat/ui-elements": "workspace:^"
+    "@embeddedchat/ui-kit": "workspace:^"
     "@emotion/babel-plugin": ^11.11.0
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1
@@ -2313,8 +2401,6 @@ __metadata:
     "@rocket.chat/emitter": ^0.31.25
     "@rocket.chat/fuselage-hooks": ^0.33.1
     "@rocket.chat/icons": ^0.31.23
-    "@rocket.chat/message-parser": ^0.31.25
-    "@rocket.chat/sdk": ^1.0.0-alpha.42
     "@rocket.chat/ui-kit": ^0.31.25
     "@rollup/plugin-babel": ^5.3.1
     "@rollup/plugin-commonjs": ^21.0.2
@@ -2331,7 +2417,6 @@ __metadata:
     "@storybook/testing-library": ^0.2.0
     "@testing-library/react": ^12.1.4
     babel-jest: ^27.5.1
-    color: ^4.2.3
     concurrently: ^7.2.0
     cross-env: ^7.0.3
     date-fns: ^2.30.0
@@ -2357,7 +2442,6 @@ __metadata:
     prop-types: ^15.8.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-virtuoso: ^4.3.10
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -2368,9 +2452,136 @@ __metadata:
     sass: ^1.66.1
     schedule: ^0.4.0
     storybook: ^7.0.26
-    stylis: ^4.2.0
     swiper: ^11.1.0
     zustand: ^4.3.8
+  peerDependencies:
+    react: ">=17.0.2 <19.0.0"
+    react-dom: ">=17.0.2 <19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@embeddedchat/ui-elements@workspace:^, @embeddedchat/ui-elements@workspace:packages/ui-elements":
+  version: 0.0.0-use.local
+  resolution: "@embeddedchat/ui-elements@workspace:packages/ui-elements"
+  dependencies:
+    "@babel/core": ^7.17.7
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
+    "@babel/preset-env": ^7.16.11
+    "@babel/preset-react": ^7.16.7
+    "@emotion/babel-plugin": ^11.11.0
+    "@emotion/babel-preset-css-prop": ^11.11.0
+    "@emotion/react": 11.7.1
+    "@open-wc/building-rollup": ^3.0.2
+    "@rollup/plugin-babel": ^5.3.1
+    "@rollup/plugin-commonjs": ^21.0.2
+    "@rollup/plugin-json": ^6.0.0
+    "@rollup/plugin-node-resolve": ^13.1.3
+    "@rollup/plugin-replace": ^5.0.2
+    "@storybook/addon-essentials": ^7.0.26
+    "@storybook/addon-interactions": ^7.0.26
+    "@storybook/addon-links": ^7.0.26
+    "@storybook/addon-styling": ^1.3.6
+    "@storybook/blocks": ^7.0.26
+    "@storybook/react": ^7.0.26
+    "@storybook/react-webpack5": ^7.0.26
+    "@storybook/testing-library": ^0.2.0
+    "@testing-library/react": ^12.1.4
+    babel-jest: ^27.5.1
+    color: ^4.2.3
+    concurrently: ^7.2.0
+    cross-env: ^7.0.3
+    deepmerge: ^4.3.1
+    eslint: ^8.30.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^26.5.3
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: ^7.31.11
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-storybook: ^0.6.12
+    identity-obj-proxy: ^3.0.0
+    jest: ^27.5.1
+    lint-staged: ^12.4.2
+    normalize.css: ^8.0.1
+    npm-run-all: ^4.1.5
+    prettier: ^2.8.1
+    prop-types: ^15.8.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    rimraf: ^5.0.1
+    rollup: ^2.70.1
+    rollup-plugin-analyzer: ^4.0.0
+    rollup-plugin-bundle-size: ^1.0.3
+    rollup-plugin-dts: ^6.1.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-postcss: ^4.0.2
+    rollup-plugin-terser: ^7.0.2
+    sass: ^1.66.1
+    schedule: ^0.4.0
+    storybook: ^7.0.26
+    typescript: ^5.5.3
+  peerDependencies:
+    react: ">=17.0.2 <19.0.0"
+    react-dom: ">=17.0.2 <19.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@embeddedchat/ui-kit@workspace:^, @embeddedchat/ui-kit@workspace:packages/ui-kit":
+  version: 0.0.0-use.local
+  resolution: "@embeddedchat/ui-kit@workspace:packages/ui-kit"
+  dependencies:
+    "@babel/core": ^7.17.7
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.11
+    "@babel/preset-env": ^7.16.11
+    "@babel/preset-react": ^7.16.7
+    "@emotion/babel-plugin": ^11.11.0
+    "@emotion/babel-preset-css-prop": ^11.11.0
+    "@emotion/react": 11.7.1
+    "@open-wc/building-rollup": ^3.0.2
+    "@rocket.chat/message-parser": ^0.31.29
+    "@rollup/plugin-babel": ^5.3.1
+    "@rollup/plugin-commonjs": ^21.0.2
+    "@rollup/plugin-json": ^6.0.0
+    "@rollup/plugin-node-resolve": ^13.1.3
+    "@rollup/plugin-replace": ^5.0.2
+    "@testing-library/react": ^12.1.4
+    babel-jest: ^27.5.1
+    color: ^4.2.3
+    concurrently: ^7.2.0
+    cross-env: ^7.0.3
+    deepmerge: ^4.3.1
+    eslint: ^8.30.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^26.5.3
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: ^7.31.11
+    eslint-plugin-react-hooks: ^4.6.0
+    eslint-plugin-storybook: ^0.6.12
+    identity-obj-proxy: ^3.0.0
+    jest: ^27.5.1
+    lint-staged: ^12.4.2
+    normalize.css: ^8.0.1
+    npm-run-all: ^4.1.5
+    prettier: ^2.8.1
+    prop-types: ^15.8.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    rimraf: ^5.0.1
+    rollup: ^2.70.1
+    rollup-plugin-analyzer: ^4.0.0
+    rollup-plugin-bundle-size: ^1.0.3
+    rollup-plugin-dts: ^6.1.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-postcss: ^4.0.2
+    rollup-plugin-terser: ^7.0.2
+    sass: ^1.66.1
+    schedule: ^0.4.0
+    typescript: ^5.5.3
   peerDependencies:
     react: ">=17.0.2 <19.0.0"
     react-dom: ">=17.0.2 <19.0.0"
@@ -6794,12 +7005,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocket.chat/message-parser@npm:^0.31.25":
-  version: 0.31.26
-  resolution: "@rocket.chat/message-parser@npm:0.31.26"
+"@rocket.chat/message-parser@npm:^0.31.29":
+  version: 0.31.29
+  resolution: "@rocket.chat/message-parser@npm:0.31.29"
   dependencies:
     tldts: ~5.7.112
-  checksum: d845409037ee51acd05b636aa6677053edc70b8fb759ee081cce42ec71070e3b45b4407dcfd4f49ea4373cb37f25c9b45f543f230a5fb20a55355077487669b2
+  checksum: ecb8002721a7e81805fb28873bb4aa6ec236a19ece9730a72366e66319a140a2478d83f6425f5a42ef31b5bdb61605c7735c423fc0365022106f929899d10014
   languageName: node
   linkType: hard
 
@@ -21447,6 +21658,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"magic-string@npm:^0.30.10":
+  version: 0.30.10
+  resolution: "magic-string@npm:0.30.10"
+  dependencies:
+    "@jridgewell/sourcemap-codec": ^1.4.15
+  checksum: 456fd47c39b296c47dff967e1965121ace35417eab7f45a99e681e725b8661b48e1573c366ee67a27715025b3740773c46b088f115421c7365ea4ea6fa10d399
+  languageName: node
+  linkType: hard
+
 "make-dir@npm:3.1.0, make-dir@npm:^3.0.2, make-dir@npm:^3.1.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -26251,16 +26471,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^4.3.10":
-  version: 4.6.2
-  resolution: "react-virtuoso@npm:4.6.2"
-  peerDependencies:
-    react: ">=16 || >=17 || >= 18"
-    react-dom: ">=16 || >=17 || >= 18"
-  checksum: 97daa55b68bb36c25a4a4d2fdd7a60418a019113551018e899f0f5689be57cdadd539e2f10d4d6cd96aa79105e6a5dc03ba6af9856cca168d0ec8e74b231f8fd
-  languageName: node
-  linkType: hard
-
 "react@npm:18.2.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -27058,6 +27268,22 @@ __metadata:
     "@babel/code-frame":
       optional: true
   checksum: a90f8e975e4515734c84fa17e0feaf8fdd9ed9368722c3908687875903a393cba4d07d9934bae9b91a0c1b6c63ac1ef0ccd7363d3e6e4dc10eabca3540be9f11
+  languageName: node
+  linkType: hard
+
+"rollup-plugin-dts@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "rollup-plugin-dts@npm:6.1.1"
+  dependencies:
+    "@babel/code-frame": ^7.24.2
+    magic-string: ^0.30.10
+  peerDependencies:
+    rollup: ^3.29.4 || ^4
+    typescript: ^4.5 || ^5.0
+  dependenciesMeta:
+    "@babel/code-frame":
+      optional: true
+  checksum: e69da1a286570f5a8d990651a613b2063543a71ad3b3471a97e74ea328125ebee77a74b2c800031f8dcccdc92da0d086f833724d13a2c863a2cbdf7e8fc20329
   languageName: node
   linkType: hard
 
@@ -28716,13 +28942,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylis@npm:^4.2.0":
-  version: 4.3.0
-  resolution: "stylis@npm:4.3.0"
-  checksum: 6120de3f03eacf3b5adc8e7919c4cca991089156a6badc5248752a3088106afaaf74996211a6817a7760ebeadca09004048eea31875bd8d4df51386365c50025
-  languageName: node
-  linkType: hard
-
 "sucrase@npm:^3.20.0":
   version: 3.34.0
   resolution: "sucrase@npm:3.34.0"
@@ -29802,6 +30021,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^5.5.3":
+  version: 5.5.3
+  resolution: "typescript@npm:5.5.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 4b4f14313484d5c86064d04ba892544801fa551f5cf72719b540b498056fec7fc192d0bbdb2ba1448e759b1548769956da9e43e7c16781e8d8856787b0575004
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>, typescript@patch:typescript@^4.0.5#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"
@@ -29829,6 +30058,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: f61375590b3162599f0f0d5b8737877ac0a7bc52761dbb585d67e7b8753a3a4c42d9a554c4cc929f591ffcf3a2b0602f65ae3ce74714fd5652623a816862b610
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^5.5.3#~builtin<compat/typescript>":
+  version: 5.5.3
+  resolution: "typescript@patch:typescript@npm%3A5.5.3#~builtin<compat/typescript>::version=5.5.3&hash=29ae49"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 6853be4607706cc1ad2f16047cf1cd72d39f79acd5f9716e1d23bc0e462c7f59be7458fe58a21665e7657a05433d7ab8419d093a5a4bd5f3a33f879b35d2769b
   languageName: node
   linkType: hard
 

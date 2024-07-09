@@ -1,7 +1,10 @@
 import React from 'react';
-import { appendClassNames } from '../../lib/appendClassNames';
-import { Box } from '../../components/Box';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  useComponentOverrides,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
+
 import { useMessageDividerStyles } from './Message.styles';
 
 export const MessageDivider = ({

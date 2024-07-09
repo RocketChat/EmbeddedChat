@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import { GenericModal } from '../../components/GenericModal';
+import {
+  GenericModal,
+  Box,
+  Button,
+  Input,
+  Icon,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
-import { Button } from '../../components/Button';
-import { Box } from '../../components/Box';
-import { Input } from '../../components/Input';
-import { Icon } from '../../components/Icon';
 import styles from './LoginForm.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 export default function LoginForm() {
   const [userOrEmail, setUserOrEmail] = useState(null);
@@ -22,7 +24,7 @@ export default function LoginForm() {
   );
   const { handleLogin } = useRCAuth();
 
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {

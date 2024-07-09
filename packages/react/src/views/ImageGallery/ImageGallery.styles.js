@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
-import { alpha } from '../../lib/color';
+import { useTheme, alpha } from '@embeddedchat/ui-elements';
 
 const useImageGalleryStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
 
   const overlay = css`
     position: absolute;

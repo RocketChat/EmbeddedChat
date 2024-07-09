@@ -7,8 +7,14 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { css, ThemeProvider } from '@emotion/react';
+import { css } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
+import {
+  Box,
+  ToastBarProvider,
+  useComponentOverrides,
+  ThemeProvider,
+} from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { Home } from './Home';
@@ -16,9 +22,6 @@ import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
-import { Box } from '../components/Box';
-import useComponentOverrides from '../hooks/useComponentOverrides';
-import { ToastBarProvider } from '../components/ToastBar';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
@@ -196,7 +199,6 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
-      mode: dark ? 'dark' : 'light',
     }),
     [
       enableThreads,
@@ -212,7 +214,6 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
-      dark,
     ]
   );
 
@@ -224,7 +225,7 @@ const EmbeddedChat = (props) => {
   if (!isSynced) return null;
 
   return (
-    <ThemeProvider theme={theme || DefaultTheme}>
+    <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[

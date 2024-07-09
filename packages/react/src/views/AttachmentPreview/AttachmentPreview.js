@@ -1,14 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
+import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { Button } from '../../components/Button';
-import { Input } from '../../components/Input';
-import { Modal } from '../../components/Modal';
 import useAttachmentPreviewStyles from './AttachmentPreview.styles';
 
 const AttachmentPreview = () => {

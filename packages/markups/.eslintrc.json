@@ -1,0 +1,51 @@
+{
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier",
+    "plugin:storybook/recommended"
+  ],
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": "off",
+    "react/function-component-definition": "off",
+    "react/require-default-props": "off",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "arrow-body-style": ["error", "as-needed"],
+    "import/prefer-default-export": "off",
+    "camelcase": "off",
+    "no-param-reassign": "off",
+    "class-methods-use-this": "off",
+    "consistent-return": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-array-index-key": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "jsx-a11y/alt-text": "off",
+    "no-nested-ternary": "off",
+    "no-undef": "error",
+    "no-restricted-exports": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/no-cycle": 0,
+    "import/no-extraneous-dependencies": "off",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    "react/prop-types": "off",
+    "react/no-unused-prop-types": "off"
+  }
+}

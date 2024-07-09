@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import PreviewImage from './PreviewType/image';
 import PreviewAudio from './PreviewType/audio';
 import PreviewDefault from './PreviewType/default';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const CheckPreviewType = ({ data }) => {
   const type = data ? data.type.split('/')[0] : '';

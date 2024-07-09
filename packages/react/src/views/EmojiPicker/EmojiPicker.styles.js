@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
-import { alpha, lighten, darken } from '../../lib/color';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { alpha, lighten, darken, useTheme } from '@embeddedchat/ui-elements';
 
 const useEmojiPickerStyles = () => {
-  const { theme, mode, colors } = useCustomTheme();
+  const { theme, mode, colors } = useTheme();
   const calculatedColors =
     mode === 'light'
       ? darken(colors.background, 0.03)

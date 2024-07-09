@@ -1,10 +1,12 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box } from '../../components/Box';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  useComponentOverrides,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useCommandListStyles from './CommandList.style';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 function CommandsList({
   className = '',
@@ -20,7 +22,7 @@ function CommandsList({
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
   const styles = useCommandListStyles();
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const itemRefs = useRef([]);
   const setItemRef = (el, index) => {
     itemRefs.current[index] = el;

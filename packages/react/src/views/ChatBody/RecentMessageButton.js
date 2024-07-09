@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '../../components/Button';
-import { Icon } from '../../components/Icon';
-import { Box } from '../../components/Box';
+import { Box, Button, Icon } from '@embeddedchat/ui-elements';
 import { useRecentMessageStyles } from './ChatBody.styles';
 
 const RecentMessageButton = ({ visible, onClick, text }) => {

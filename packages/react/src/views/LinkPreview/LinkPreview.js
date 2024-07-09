@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box } from '../../components/Box';
-import { ActionButton } from '../../components/ActionButton';
-import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  ActionButton,
+  Icon,
+  useComponentOverrides,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useLinkPreviewStyles from './LinkPreview.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 
 const LinkPreview = ({
   className = '',
@@ -18,7 +20,7 @@ const LinkPreview = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 

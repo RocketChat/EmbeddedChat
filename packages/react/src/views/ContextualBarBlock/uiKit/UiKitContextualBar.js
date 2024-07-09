@@ -8,15 +8,18 @@ import {
   UiKitContextualBar as UiKitContextualBarSurfaceRender,
   contextualBarParser,
   UiKitContext,
-} from '../../../uiKit';
-import { Button } from '../../../components/Button';
-import MinimalSidebar from '../../../components/Sidebar/MinimalSidebar';
+} from '@embeddedchat/ui-kit';
+import {
+  Button,
+  MinimalSidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+} from '@embeddedchat/ui-elements';
+
 import useContextualBarContextValue from '../../../hooks/uiKit/useContextualBarContextValue';
 import useUiKitActionManager from '../../../hooks/uiKit/useUiKitActionManager';
 import useUiKitView from '../../../hooks/uiKit/useUiKitView';
-import SidebarFooter from '../../../components/Sidebar/SidebarFooter';
-import SidebarContent from '../../../components/Sidebar/SidebarContent';
-import SidebarHeader from '../../../components/Sidebar/SidebarHeader';
 import RCContext from '../../../context/RCInstance';
 
 const UiKitContextualBar = ({ initialView }) => {

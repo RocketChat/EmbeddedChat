@@ -1,7 +1,8 @@
-import { css, useTheme } from '@emotion/react';
+import { css } from '@emotion/react';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const useDynamicHeaderStyles = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const container = css`
     display: flex;

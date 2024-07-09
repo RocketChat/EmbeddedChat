@@ -1,6 +1,6 @@
 import React from 'react';
+import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { MessageAggregator } from './common/MessageAggregator';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 
 const PinnedMessages = () => {
   const { variantOverrides } = useComponentOverrides('PinnedMessages');
