@@ -52,7 +52,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         variantStyles={variantStyles}
       />
     );
-  } 
+  }
   if (attachment && attachment.attachments[0].audio_url) {
     return (
       <AudioAttachment
