@@ -14,6 +14,8 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         attachment={attachment}
         host={host}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }
@@ -23,6 +25,8 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         attachment={attachment}
         host={host}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }
@@ -30,8 +34,11 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
     return (
       <ImageAttachment
         attachment={attachment}
+        type={type}
         host={host}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }
@@ -49,7 +56,10 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       <ImageAttachment
         attachment={attachment.attachments[0]}
         host={host}
+        type={attachment.attachments[0].type}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }
@@ -58,7 +68,10 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       <AudioAttachment
         attachment={attachment.attachments[0]}
         host={host}
+        type={attachment.attachments[0].type}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }
@@ -67,7 +80,10 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       <VideoAttachment
         attachment={attachment.attachments[0]}
         host={host}
+        type={attachment.attachments[0].type}
         variantStyles={variantStyles}
+        authorIcon={attachment.author_icon}
+        authorName={attachment.author_name}
       />
     );
   }

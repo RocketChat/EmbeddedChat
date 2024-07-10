@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
+import RCContext from '../../context/RCInstance';
 
 const userAgentMIMETypeFallback = (type) => {
   const userAgent = navigator.userAgent.toLocaleLowerCase();
@@ -14,35 +15,83 @@ const userAgentMIMETypeFallback = (type) => {
   return type;
 };
 
-const VideoAttachment = ({ attachment, host, variantStyles = {} }) => (
-  <Box css={variantStyles.videoAttachmentContainer}>
-    <AttachmentMetadata
-      attachment={attachment}
-      url={host + (attachment.title_url || attachment.video_url)}
-      variantStyles={variantStyles}
-    />
-    <Box
-      css={css`
-        line-height: 0;
-        border-radius: inherit;
-      `}
-    >
-      <video
-        width={300}
-        controls
-        style={{
-          borderBottomLeftRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-        }}
+const VideoAttachment = ({
+  attachment,
+  host,
+  type,
+  authorIcon,
+  authorName,
+  variantStyles = {},
+}) => {
+  const { RCInstance } = useContext(RCContext);
+  const { colors } = useTheme();
+  const getUserAvatarUrl = (authorIcon) => {
+    const host = RCInstance.getHost();
+    const URL = `${host}${authorIcon}`;
+    return URL;
+  };
+  return (
+    <Box css={variantStyles.videoAttachmentContainer}>
+      <Box
+        css={[
+          css`
+            line-height: 0;
+            border-radius: inherit;
+            padding: 0.5rem;
+          `,
+          (type
+            ? variantStyles.pinnedContainer
+            : variantStyles.quoteContainer) ||
+            css`
+              ${type === 'file' ? `border: 3px solid ${colors.border};` : ''}
+            `,
+        ]}
       >
-        <source
-          src={host + attachment.video_url}
-          type={userAgentMIMETypeFallback(attachment.video_type)}
+        {type === 'file' ? (
+          <>
+            <Box
+              css={[
+                css`
+                  display: flex;
+                  gap: 0.3rem;
+                  align-items: center;
+                `,
+                variantStyles.textUserInfo,
+              ]}
+            >
+              <Avatar
+                url={getUserAvatarUrl(authorIcon)}
+                alt="avatar"
+                size="1.2em"
+              />
+              <Box>@{authorName}</Box>
+            </Box>
+          </>
+        ) : (
+          ''
+        )}
+        <AttachmentMetadata
+          attachment={attachment}
+          url={host + (attachment.title_url || attachment.video_url)}
+          variantStyles={variantStyles}
         />
-      </video>
+        <video
+          width={300}
+          controls
+          style={{
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
+          }}
+        >
+          <source
+            src={host + attachment.video_url}
+            type={userAgentMIMETypeFallback(attachment.video_type)}
+          />
+        </video>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default VideoAttachment;
 
