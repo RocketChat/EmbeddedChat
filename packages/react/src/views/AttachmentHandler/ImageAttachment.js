@@ -84,6 +84,81 @@ const ImageAttachment = ({
             borderBottomRightRadius: 'inherit',
           }}
         />
+        {attachment.attachments ? (
+          <Box css={variantStyles.imageAttachmentContainer}>
+            <Box
+              onClick={() => setShowGallery(true)}
+              css={[
+                css`
+                  cursor: pointer;
+                  border-radius: inherit;
+                  line-height: 0;
+                  padding: 0.5rem;
+                `,
+                (attachment.attachments[0].type
+                  ? variantStyles.pinnedContainer
+                  : variantStyles.quoteContainer) ||
+                  css`
+                    ${attachment.attachments[0].type === 'file'
+                      ? `border: 3px solid ${colors.border};`
+                      : ''}
+                  `,
+              ]}
+            >
+              {attachment.attachments[0].type === 'file' ? (
+                <>
+                  <Box
+                    css={[
+                      css`
+                        display: flex;
+                        gap: 0.3rem;
+                        align-items: center;
+                      `,
+                      variantStyles.textUserInfo,
+                    ]}
+                  >
+                    <Avatar
+                      url={getUserAvatarUrl(attachment.author_icon)}
+                      alt="avatar"
+                      size="1.2em"
+                    />
+                    <Box>@{attachment.author_name}</Box>
+                  </Box>
+                </>
+              ) : (
+                ''
+              )}
+              <AttachmentMetadata
+                attachment={attachment.attachments[0]}
+                url={
+                  host +
+                  (attachment.attachments[0].title_link ||
+                    attachment.attachments[0].image_url)
+                }
+                variantStyles={variantStyles}
+              />
+              <img
+                src={host + attachment.attachments[0].image_url}
+                style={{
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  borderBottomLeftRadius: 'inherit',
+                  borderBottomRightRadius: 'inherit',
+                }}
+              />
+            </Box>
+            {showGallery && (
+              <ImageGallery
+                currentFileId={extractIdFromUrl(
+                  attachment.attachments[0].title_link
+                )}
+                setShowGallery={setShowGallery}
+              />
+            )}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
       {showGallery && (
         <ImageGallery
