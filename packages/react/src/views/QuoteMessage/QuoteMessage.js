@@ -38,7 +38,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
             Your browser does not support the video tag.
           </video>
         );
-      } else if (message.file.type.startsWith('image/')) {
+      }if (message.file.type.startsWith('image/')) {
         return (
           <div>
             <img
@@ -51,7 +51,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
             )} kB)`}</div>
           </div>
         );
-      } else if (message.file.type.startsWith('audio/')) {
+      } if (message.file.type.startsWith('audio/')) {
         return (
           <audio controls style={{ maxWidth: '100%' }}>
             <source src={fileUrl} type={message.file.type} />
