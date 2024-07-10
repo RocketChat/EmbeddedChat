@@ -25,9 +25,9 @@ const VideoAttachment = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { colors } = useTheme();
-  const getUserAvatarUrl = (authorIcon) => {
-    const host = RCInstance.getHost();
-    const URL = `${host}${authorIcon}`;
+  const getUserAvatarUrl = (icon) => {
+    const instanceHost = RCInstance.getHost();
+    const URL = `${instanceHost}${icon}`;
     return URL;
   };
   return (

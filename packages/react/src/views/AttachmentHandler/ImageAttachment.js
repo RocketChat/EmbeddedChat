@@ -16,9 +16,9 @@ const ImageAttachment = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const [showGallery, setShowGallery] = useState(false);
-  const getUserAvatarUrl = (authorIcon) => {
-    const host = RCInstance.getHost();
-    const URL = `${host}${authorIcon}`;
+  const getUserAvatarUrl = (icon) => {
+    const instanceHost = RCInstance.getHost();
+    const URL = `${instanceHost}${icon}`;
     return URL;
   };
   const extractIdFromUrl = (url) => {
