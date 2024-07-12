@@ -11,6 +11,8 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
+import TextAttachment from '../AttachmentHandler/TextAttachment';
+import ImageAttachment from '../AttachmentHandler/ImageAttachment';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -71,7 +73,9 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         </Box>
       );
     }
-    return message.msg;
+    return message?.msg[0] === '['
+      ? message?.msg.match(/\n(.*)/)[1]
+      : message?.msg;
   };
 
   return (
@@ -94,7 +98,17 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{message?.u.username}</Box>
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
-      <Box css={styles.message}>{renderMessageContent()}</Box>
+      <Box css={styles.message}>
+        {renderMessageContent()}
+        {message.attachments && message.attachments[0].text ? (
+          <TextAttachment
+            attachment={message.attachments[0]}
+            type={message.attachments[0].type}
+          />
+        ) : (
+          <></>
+        )}
+      </Box>
     </Box>
   );
 };

@@ -7,6 +7,7 @@ import ImageGallery from '../ImageGallery/ImageGallery';
 import RCContext from '../../context/RCInstance';
 
 const ImageAttachment = ({
+  key,
   attachment,
   host,
   type,

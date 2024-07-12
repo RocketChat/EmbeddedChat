@@ -67,8 +67,12 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachmentText}
-        {attachment.attachments[0] ? (
+        {attachment?.text
+          ? attachment.text[0] === '['
+            ? attachment.text.match(/\n(.*)/)[1]
+            : attachment.text
+          : ''}
+        {attachment?.attachments && attachment.attachments.length > 0 ? (
           <Box
             css={[
               css`
@@ -120,9 +124,11 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 white-space: pre-line;
               `}
             >
-              {attachment.attachments[0]?.text[0] === '['
-                ? attachment.attachments[0]?.text.match(/\n(.*)/)[1]
-                : attachment.attachments[0]?.text}
+              {attachment.attachments[0]?.text
+                ? attachment.attachments[0].text[0] === '['
+                  ? attachment.attachments[0].text.match(/\n(.*)/)[1]
+                  : attachment.attachments[0].text
+                : ''}
             </Box>
           </Box>
         ) : (
