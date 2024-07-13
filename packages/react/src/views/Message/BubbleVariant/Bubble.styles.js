@@ -85,16 +85,26 @@ export const getBubbleStyles = (theme) => {
     `,
 
     videoAttachmentContainer: css`
+<<<<<<< HEAD
       border: 1px solid ${theme.colors.border};
       border-radius: inherit;
     `,
     imageAttachmentContainer: css`
       border: 1px solid ${theme.colors.border};
+=======
+      border: 1px solid ${colors.border};
+      background-color: ${colors.background};
+      border-radius: inherit;
+    `,
+    imageAttachmentContainer: css`
+      border: 1px solid ${colors.border};
+      background-color: ${colors.background};
+>>>>>>> fbf756e (CSS fix for recursive quoting in curved variants)
       border-radius: inherit;
       overflow: hidden;
     `,
     pinnedContainer: css`
-      max-width: 80%;
+      max-width: 100%;
     `,
 
     quoteContainer: css`
@@ -103,8 +113,13 @@ export const getBubbleStyles = (theme) => {
       flex: 1;
       border-bottom-right-radius: inherit;
       border-bottom-left-radius: inherit;
+<<<<<<< HEAD
       border: 2px solid ${theme.colors.border};
       margin: 0.2rem -0.75rem -0.5rem;
+=======
+      border: 2px solid ${colors.border};
+      margin: 0.2rem -0.75rem -0.75rem;
+>>>>>>> fbf756e (CSS fix for recursive quoting in curved variants)
     `,
 
     textUserInfo: css`
@@ -112,7 +127,7 @@ export const getBubbleStyles = (theme) => {
     `,
 
     attachmentMetaContainer: css`
-      padding: 2.5% 2.5% 0;
+      padding: 2.5% 0 0;
     `,
 
     emojiPickerStyles: css`
@@ -172,7 +187,11 @@ export const getBubbleStylesMe = (theme) => {
 
     pinnedContainerMe: css`
       border-inline-start: none;
+<<<<<<< HEAD
       border-inline-end: 3px solid ${theme.colors.border};
+=======
+      border-inline-end: none;
+>>>>>>> fbf756e (CSS fix for recursive quoting in curved variants)
     `,
 
     textUserInfoMe: css`

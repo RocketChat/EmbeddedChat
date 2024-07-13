@@ -39,9 +39,7 @@ const VideoAttachment = ({
             border-radius: inherit;
             padding: 0.5rem;
           `,
-          (type
-            ? variantStyles.pinnedContainer
-            : variantStyles.quoteContainer) ||
+          (type ? variantStyles.pinnedContainer : '') ||
             css`
               ${type === 'file' ? `border: 3px solid ${colors.border};` : ''}
             `,

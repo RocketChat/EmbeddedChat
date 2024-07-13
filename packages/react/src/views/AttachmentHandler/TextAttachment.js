@@ -86,11 +86,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 margin-top: 0.75rem;
                 padding: 0.5rem;
               `,
-              (type
+              (attachment.attachments[0]?.type
                 ? variantStyles.pinnedContainer
-                : variantStyles.quoteContainer) ||
+                : '') ||
                 css`
-                  ${!type ? `border: 3px solid ${colors.border};` : ''}
+                  ${!attachment.attachments[0]?.type
+                    ? `border: 2px solid ${colors.border};`
+                    : ''}
                 `,
             ]}
           >

@@ -40,11 +40,9 @@ const ImageAttachment = ({
             line-height: 0;
             padding: 0.5rem;
           `,
-          (type
-            ? variantStyles.pinnedContainer
-            : variantStyles.quoteContainer) ||
+          (type ? variantStyles.pinnedContainer : '') ||
             css`
-              ${type === 'file' ? `border: 3px solid ${colors.border};` : ''}
+              ${type === 'file' ? `border: 2px solid ${colors.border};` : ''}
             `,
         ]}
       >
@@ -98,10 +96,10 @@ const ImageAttachment = ({
                 `,
                 (attachment.attachments[0].type
                   ? variantStyles.pinnedContainer
-                  : variantStyles.quoteContainer) ||
+                  : '') ||
                   css`
                     ${attachment.attachments[0].type === 'file'
-                      ? `border: 3px solid ${colors.border};`
+                      ? `border: 2px solid ${colors.border};`
                       : ''}
                   `,
               ]}
