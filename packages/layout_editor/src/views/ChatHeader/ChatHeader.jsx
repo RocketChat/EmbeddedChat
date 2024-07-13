@@ -37,6 +37,9 @@ const ChatHeader = ({
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
 
+  const placeholderSurfaceItem = "placeholder-surface";
+  const placeholderMenuItem = "placeholder-menu";
+
   const options = useMemo(
     () => ({
       minmax: {
@@ -120,33 +123,37 @@ const ChatHeader = ({
     []
   );
 
-  const menuOptions = menuItems
-    ?.map((item) => {
-      if (item in options && options[item].visible) {
-        return {
-          id: options[item].id,
-          action: options[item].onClick,
-          label: options[item].label,
-          icon: options[item].iconName,
-        };
-      }
-      return null;
-    })
-    .filter((option) => option !== null);
+  const menuOptions = menuItems.length > 0
+    ? menuItems
+        .map((item) => {
+          if (item in options && options[item].visible) {
+            return {
+              id: options[item].id,
+              action: options[item].onClick,
+              label: options[item].label,
+              icon: options[item].iconName,
+            };
+          }
+          return null;
+        })
+        .filter((option) => option !== null)
+    : [{ id: placeholderMenuItem, label: "No items", icon: "plus" }];
 
-  const surfaceOptions = surfaceItems
-    ?.map((item) => {
-      if (item in options && options[item].visible) {
-        return {
-          id: options[item].id,
-          onClick: options[item].onClick,
-          label: options[item].label,
-          iconName: options[item].iconName,
-        };
-      }
-      return null;
-    })
-    .filter((option) => option !== null);
+  const surfaceOptions = surfaceItems.length > 0
+    ? surfaceItems
+        .map((item) => {
+          if (item in options && options[item].visible) {
+            return {
+              id: options[item].id,
+              onClick: options[item].onClick,
+              label: options[item].label,
+              iconName: options[item].iconName,
+            };
+          }
+          return null;
+        })
+        .filter((option) => option !== null)
+    : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -154,6 +161,7 @@ const ChatHeader = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
   const handleDragStart = (event) => {
     if (event.active.data.current?.type === "SurfaceOptions") {
       setActiveSurfaceItem({
@@ -169,6 +177,7 @@ const ChatHeader = ({
       });
     }
   };
+
   const handleDragEnd = (event) => {
     setActiveSurfaceItem(null);
     setActiveMenuItem(null);
@@ -189,10 +198,16 @@ const ChatHeader = ({
         });
       } else if (event.active.data.current?.type === "SurfaceOptions" && event.over.data.current?.type === "MenuOptions") {
         setSurfaceItems((items) => items.filter((item) => item !== active.id));
-        setMenuItems((items) => [...items, active.id]);
+        setMenuItems((items) => {
+          const newItems = [...items.filter((item) => item !== placeholderMenuItem), active.id];
+          return newItems;
+        });
       } else if (event.active.data.current?.type === "MenuOptions" && event.over.data.current?.type === "SurfaceOptions") {
         setMenuItems((items) => items.filter((item) => item !== active.id));
-        setSurfaceItems((items) => [...items, active.id]);
+        setSurfaceItems((items) => {
+          const newItems = [...items.filter((item) => item !== placeholderSurfaceItem), active.id];
+          return newItems;
+        });
       }
     }
   };
