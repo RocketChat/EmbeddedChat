@@ -21,7 +21,7 @@ export const useChatInputStyles = () => {
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    padding: 0.25rem;
+    padding: 0.5rem;
   `;
 
   const iconCursor = css`
@@ -29,6 +29,7 @@ export const useChatInputStyles = () => {
   `;
 
   const textInput = css`
+    flex: 1;
     word-wrap: break-word;
     white-space: pre-wrap;
     overflow: auto;
