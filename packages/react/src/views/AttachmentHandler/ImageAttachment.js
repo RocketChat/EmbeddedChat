@@ -96,7 +96,7 @@ const ImageAttachment = ({
                 `,
                 (attachment.attachments[0].type
                   ? variantStyles.pinnedContainer
-                  : '') ||
+                  : variantStyles.quoteContainer) ||
                   css`
                     ${attachment.attachments[0].type === 'file'
                       ? `border: 2px solid ${colors.border};`

@@ -94,6 +94,12 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                     ? `border: 2px solid ${colors.border};`
                     : ''}
                 `,
+              css`
+                ${variantStyles.name !== undefined &&
+                variantStyles.name.includes('bubble')
+                  ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
+                  : ''}
+              `,
             ]}
           >
             <Box
