@@ -51,7 +51,7 @@ const ChatHeader = ({
   const [toolOptions, setToolOptions] = useState(optionConfig.toolOptions);
   const [activeRowOption, setActiveRowOption] = useState(null);
   const [activeColumnOption, setActiveColumnOption] = useState(null);
-  const [threshold] = useState(optionConfig.threshold);
+  const [threshold, setThreshold] = useState(optionConfig.threshold);
 
   const menuMap = {
     minmax: (
@@ -213,6 +213,23 @@ const ChatHeader = ({
     }
   };
 
+  const handleDragOver = (event) => {
+    const isARowOption = event.active.data.current?.type === "RowOptions";
+    const isAColumnOption = event.active.data.current?.type === "ColumnOptions";
+    const isOverAColumnOption =
+      event.over.data.current?.type === "ColumnOptions";
+
+    const isOverARowOption = event.over.data.current?.type === "RowOptions";
+
+    if (isARowOption && isOverAColumnOption) {
+      setThreshold((threshold) => threshold - 1);
+    } else if (isAColumnOption && isOverARowOption) {
+      setThreshold((threshold) => threshold + 1);
+    }
+
+    console.log(event);
+  };
+
   return (
     <Box css={styles.chatHeaderParent}>
       <Box css={styles.chatHeaderChild}>
@@ -240,6 +257,7 @@ const ChatHeader = ({
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
         >
           <Box css={styles.chatHeaderIconRow}>
             <SortableContext items={toolOptions}>

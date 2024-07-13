@@ -3,7 +3,7 @@ import { darken } from "@embeddedchat/ui-elements";
 
 const rowCentreAlign = css`
   display: flex;
-  flex-direction: row;
+  flex-direction: ;
   align-items: center;
 `;
 
