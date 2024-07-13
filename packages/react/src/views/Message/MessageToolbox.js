@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
-  ActionButton,
   Modal,
   Icon,
   Button,
-  Tooltip,
   Menu,
   useComponentOverrides,
   appendClassNames,
@@ -13,6 +11,7 @@ import {
 import { EmojiPicker } from '../EmojiPicker';
 import { parseEmoji } from '../../lib/emoji';
 import { useMessageToolboxStyles } from './Message.styles';
+import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
 export const MessageToolbox = ({
   className = '',
@@ -31,7 +30,7 @@ export const MessageToolbox = ({
   handleQuoteMessage,
   isEditing = false,
   optionConfig = {
-    toolOptions: [
+    surfaceItems: [
       'reaction',
       'reply',
       'quote',
@@ -41,7 +40,8 @@ export const MessageToolbox = ({
       'delete',
       'report',
     ],
-    threshold: 8,
+
+    menuItems: [],
   },
 
   ...props
@@ -53,10 +53,10 @@ export const MessageToolbox = ({
   );
 
   const styles = useMessageToolboxStyles();
-  const toolOptions =
-    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
-  const threshold =
-    configOverrides.optionConfig?.threshold || optionConfig.threshold;
+  const surfaceItems =
+    configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
+  const menuItems =
+    configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
@@ -66,128 +66,116 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const toolMap = {
-    reply: !isThreadMessage && (
-      <Tooltip text="Reply in thread" position="top" key="reply">
-        <ActionButton
-          ghost
-          size="small"
-          icon="thread"
-          onClick={handleOpenThread(message)}
-        />
-      </Tooltip>
-    ),
-    quote: (
-      <Tooltip text="Quote" position="top" key="quote">
-        <ActionButton
-          ghost
-          size="small"
-          icon="quote"
-          onClick={() => handleQuoteMessage(message)}
-        />
-      </Tooltip>
-    ),
-    star: (
-      <Tooltip
-        text={
+  const options = useMemo(
+    () => ({
+      reply: {
+        label: 'Reply in thread',
+        id: 'reply',
+        onClick: handleOpenThread(message),
+        iconName: 'thread',
+        visible: !isThreadMessage,
+      },
+      quote: {
+        label: 'Quote',
+        id: 'quote',
+        onClick: () => handleQuoteMessage(message),
+        iconName: 'quote',
+        visible: true,
+      },
+      star: {
+        label:
           message.starred &&
           message.starred.find((u) => u._id === authenticatedUserId)
             ? 'Unstar'
-            : 'Star'
-        }
-        position="top"
-        key="star"
-      >
-        <ActionButton
-          ghost
-          size="small"
-          icon={`${
-            message.starred &&
-            message.starred.find((u) => u._id === authenticatedUserId)
-              ? 'star-filled'
-              : 'star'
-          }`}
-          onClick={() => handleStarMessage(message)}
-        />
-      </Tooltip>
-    ),
-    reaction: (
-      <Tooltip text="Add reaction" position="top" key="reaction">
-        <ActionButton
-          ghost
-          size="small"
-          icon="emoji"
-          onClick={() => setEmojiOpen(true)}
-        />
-      </Tooltip>
-    ),
-    pin: !isThreadMessage && (
-      <Tooltip text={message.pinned ? 'Unpin' : 'Pin'} position="top" key="pin">
-        <ActionButton
-          ghost
-          size="small"
-          icon={`${message.pinned ? 'pin-filled' : 'pin'}`}
-          onClick={() => handlePinMessage(message)}
-        />
-      </Tooltip>
-    ),
-    edit: message.u._id === authenticatedUserId && (
-      <Tooltip text="Edit" position="top" key="edit">
-        <ActionButton
-          ghost={!isEditing}
-          color={isEditing ? 'secondary' : 'default'}
-          size="small"
-          icon="edit"
-          onClick={() => handleEditMessage(message)}
-        />
-      </Tooltip>
-    ),
-    delete: message.u._id === authenticatedUserId && (
-      <Tooltip text="Delete" position="top" key="delete">
-        <ActionButton
-          ghost
-          size="small"
-          icon="trash"
-          type="destructive"
-          onClick={() => setShowDeleteModal(true)}
-        />
-      </Tooltip>
-    ),
-    report: (
-      <Tooltip text="Report" position="top" key="report">
-        <ActionButton
-          ghost
-          size="small"
-          icon="report"
-          type="destructive"
-          onClick={() => handlerReportMessage(message)}
-        />
-      </Tooltip>
-    ),
-  };
+            : 'Star',
+        id: 'star',
+        onClick: () => handleStarMessage(message),
+        iconName:
+          message.starred &&
+          message.starred.find((u) => u._id === authenticatedUserId)
+            ? 'star-filled'
+            : 'star',
+        visible: true,
+      },
+      reaction: {
+        label: 'Add reaction',
+        id: 'reaction',
+        onClick: () => setEmojiOpen(true),
+        iconName: 'emoji',
+        visible: true,
+      },
+      pin: {
+        label: message.pinned ? 'Unpin' : 'Pin',
+        id: 'pin',
+        onClick: () => handlePinMessage(message),
+        iconName: message.pinned ? 'pin-filled' : 'pin',
+        visible: !isThreadMessage,
+      },
+      edit: {
+        label: 'Edit',
+        id: 'edit',
+        onClick: () => handleEditMessage(message),
+        iconName: 'edit',
+        visible: message.u._id === authenticatedUserId,
+        color: isEditing ? 'secondary' : 'default',
+        ghost: !isEditing,
+      },
+      delete: {
+        label: 'Delete',
+        id: 'delete',
+        onClick: () => setShowDeleteModal(true),
+        iconName: 'trash',
+        visible: message.u._id === authenticatedUserId,
+        type: 'destructive',
+      },
+      report: {
+        label: 'Report',
+        id: 'report',
+        onClick: () => handlerReportMessage(message),
+        iconName: 'report',
+        visible: true,
+        type: 'destructive',
+      },
+    }),
+    [
+      handleOpenThread,
+      message,
+      isThreadMessage,
+      authenticatedUserId,
+      isEditing,
+      handleQuoteMessage,
+      handleStarMessage,
+      handlePinMessage,
+      handleEditMessage,
+      handlerReportMessage,
+    ]
+  );
 
-  const menuOptions = toolOptions
-    .slice(threshold)
-    .map((key) => {
-      const tool = toolMap[key];
-
-      if (!tool) {
-        return null;
-      }
-
-      const { onClick } = tool.props.children.props;
-      const { icon } = tool.props.children.props;
-      const { text } = tool.props;
-
-      if (onClick && icon && text) {
+  const menuOptions = menuItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
         return {
-          id: key,
-          action: onClick,
-          label: text,
-          icon,
+          id: options[item].id,
+          action: options[item].onClick,
+          label: options[item].label,
+          icon: options[item].iconName,
         };
       }
+      return null;
+    })
+    .filter((option) => option !== null);
 
+  const surfaceOptions = surfaceItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
+        return {
+          id: options[item].id,
+          onClick: options[item].onClick,
+          label: options[item].label,
+          iconName: options[item].iconName,
+          type: options[item].type,
+        };
+      }
       return null;
     })
     .filter((option) => option !== null);
@@ -201,9 +189,10 @@ export const MessageToolbox = ({
           style={styleOverrides}
           {...props}
         >
-          {toolOptions.slice(0, threshold).map((key) => toolMap[key])}
-
-          {menuOptions.length > 0 && (
+          {surfaceOptions?.length > 0 && (
+            <SurfaceMenu options={surfaceOptions} size="small" />
+          )}
+          {menuOptions?.length > 0 && (
             <Menu
               size="small"
               options={menuOptions}

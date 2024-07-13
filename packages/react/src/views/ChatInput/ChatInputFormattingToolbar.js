@@ -19,7 +19,7 @@ const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
   optionConfig = {
-    toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
+    surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
@@ -27,8 +27,8 @@ const ChatInputFormattingToolbar = ({
   );
 
   const styles = useChatInputFormattingToolbarStyles();
-  const toolOptions =
-    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
+  const surfaceItems =
+    configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
@@ -122,7 +122,7 @@ const ChatInputFormattingToolbar = ({
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >
-      {toolOptions.map((key) => chatToolMap[key])}
+      {surfaceItems.map((key) => chatToolMap[key])}
     </Box>
   );
 };

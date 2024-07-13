@@ -1,11 +1,17 @@
 import React from 'react';
-import { Tooltip, ActionButton, Icon } from '@embeddedchat/ui-elements';
+import { Tooltip, ActionButton } from '@embeddedchat/ui-elements';
 
-const SurfaceItem = ({ item }) => (
+const SurfaceItem = ({ item, size }) => (
   <Tooltip text={item.label} position="bottom" key={item.id}>
-    <ActionButton square ghost onClick={item.onClick}>
-      <Icon name={item.iconName} size="1.25rem" />
-    </ActionButton>
+    <ActionButton
+      square
+      ghost
+      onClick={item.onClick}
+      icon={item.iconName}
+      size={size}
+      iconSize="small"
+      type={item.type}
+    />
   </Tooltip>
 );
 
