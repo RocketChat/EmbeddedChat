@@ -175,20 +175,24 @@ const ChatHeader = ({
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      if (event.active.data.current?.type === "SurfaceOptions") {
+      if (event.active.data.current?.type === "SurfaceOptions" && event.over.data.current?.type === "SurfaceOptions") {
         setSurfaceItems((items) => {
           const oldIndex = items.indexOf(active.id);
           const newIndex = items.indexOf(over.id);
-
           return arrayMove(items, oldIndex, newIndex);
         });
-      } else if (event.active.data.current?.type === "MenuOptions") {
+      } else if (event.active.data.current?.type === "MenuOptions" && event.over.data.current?.type === "MenuOptions") {
         setMenuItems((items) => {
           const oldIndex = items.indexOf(active.id);
           const newIndex = items.indexOf(over.id);
-
           return arrayMove(items, oldIndex, newIndex);
         });
+      } else if (event.active.data.current?.type === "SurfaceOptions" && event.over.data.current?.type === "MenuOptions") {
+        setSurfaceItems((items) => items.filter((item) => item !== active.id));
+        setMenuItems((items) => [...items, active.id]);
+      } else if (event.active.data.current?.type === "MenuOptions" && event.over.data.current?.type === "SurfaceOptions") {
+        setMenuItems((items) => items.filter((item) => item !== active.id));
+        setSurfaceItems((items) => [...items, active.id]);
       }
     }
   };
