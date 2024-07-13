@@ -53,6 +53,13 @@ export const getMenuItemStyles = (customTheme) => {
       cursor: not-allowed !important;
       color: ${colors.mutedForeground};
     `,
+
+    dragOverlay: css`
+      padding: 0.5rem 0.75em;
+      border: 1px solid ${colors.border};
+      border-right: none;
+      border-left: none;
+    `,
   };
 
   return styles;

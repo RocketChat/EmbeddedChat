@@ -26,20 +26,21 @@ const Menu = ({
       <Tooltip text={tooltip.text} position={tooltip.position}>
         <ActionButton ghost icon="kebab" size={size} />
       </Tooltip>
-      <SortableContext items={options} strategy={verticalListSortingStrategy}>
-        <Box
-          css={[
-            styles.container,
-            css`
-              box-shadow: ${theme.theme.shadows[2]};
-            `,
-          ]}
-        >
+
+      <Box
+        css={[
+          styles.container,
+          css`
+            box-shadow: ${theme.theme.shadows[2]};
+          `,
+        ]}
+      >
+        <SortableContext items={options} strategy={verticalListSortingStrategy}>
           {options.map((option, idx) => (
             <MenuItem {...option} key={option.id || idx} />
           ))}
-        </Box>
-      </SortableContext>
+        </SortableContext>
+      </Box>
     </Box>
   );
 };

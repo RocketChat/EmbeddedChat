@@ -5,18 +5,34 @@ import { getMenuItemStyles } from "./Menu.styles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-
 const MenuItem = ({ id, icon, label, action, disabled }) => {
   const theme = useTheme();
   const styles = getMenuItemStyles(theme);
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    data: {
+      type: "ColumnOptions",
+      icon,
+      label,
+    },
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  if (isDragging) {
+    return <Box ref={setNodeRef} style={style} css={styles.dragOverlay} />;
+  }
 
   return (
     <Box

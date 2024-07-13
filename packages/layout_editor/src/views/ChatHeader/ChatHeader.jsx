@@ -17,13 +17,15 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  horizontalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
+import { createPortal } from "react-dom";
+import MenuItem from "../../components/SortableMenu/MenuItem";
 
 const ChatHeader = ({
   optionConfig = {
@@ -47,6 +49,8 @@ const ChatHeader = ({
   const theme = useTheme();
   const styles = getChatHeaderStyles(theme);
   const [toolOptions, setToolOptions] = useState(optionConfig.toolOptions);
+  const [activeRowOption, setActiveRowOption] = useState(null);
+  const [activeColumnOption, setActiveColumnOption] = useState(null);
   const [threshold] = useState(optionConfig.threshold);
 
   const menuMap = {
@@ -183,8 +187,20 @@ const ChatHeader = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
+  const handleDragStart = (event) => {
+    if (event.active.data.current?.type === "RowOptions") {
+      setActiveRowOption(event.active.id);
+    } else if (event.active.data.current?.type === "ColumnOptions") {
+      setActiveColumnOption({
+        id: event.active.id,
+        icon: event.active.data.current.icon,
+        label: event.active.data.current.label,
+      });
+    }
+  };
   const handleDragEnd = (event) => {
+    setActiveRowOption(null);
+    setActiveColumnOption(null);
     const { active, over } = event;
 
     if (active.id !== over.id) {
@@ -223,18 +239,25 @@ const ChatHeader = ({
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
         >
-          <SortableContext
-            items={toolOptions}
-            strategy={horizontalListSortingStrategy}
-          >
-            <Box css={styles.chatHeaderIconRow}>
+          <Box css={styles.chatHeaderIconRow}>
+            <SortableContext items={toolOptions}>
               {toolOptions.slice(0, threshold).map((key) => (
                 <HeaderOptions key={key} id={key} menuMap={menuMap} />
               ))}
-              {menuOptions.length > 0 && <Menu options={menuOptions} />}
-            </Box>
-          </SortableContext>
+            </SortableContext>
+            {menuOptions.length > 0 && <Menu options={menuOptions} />}
+          </Box>
+          {createPortal(
+            <DragOverlay zIndex={1700}>
+              {activeRowOption && (
+                <HeaderOptions id={activeRowOption} menuMap={menuMap} />
+              )}
+              {activeColumnOption && <MenuItem {...activeColumnOption} />}
+            </DragOverlay>,
+            document.body
+          )}
         </DndContext>
       </Box>
     </Box>
