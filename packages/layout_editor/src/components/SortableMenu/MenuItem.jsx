@@ -19,7 +19,7 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
   } = useSortable({
     id,
     data: {
-      type: "ColumnOptions",
+      type: "MenuOptions",
       icon,
       label,
     },

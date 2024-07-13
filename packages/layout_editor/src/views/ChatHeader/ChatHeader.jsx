@@ -1,15 +1,8 @@
-import React, { useState } from "react";
-import {
-  Heading,
-  Box,
-  Icon,
-  ActionButton,
-  Tooltip,
-  useTheme,
-} from "@embeddedchat/ui-elements";
+import React, { useState, useMemo } from "react";
+import { Heading, Box, Icon, useTheme } from "@embeddedchat/ui-elements";
 import { getChatHeaderStyles } from "./ChatHeader.styles";
-import HeaderOptions from "./HeaderOptions";
 import { Menu } from "../../components/SortableMenu";
+import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
 import {
   DndContext,
   closestCenter,
@@ -19,164 +12,138 @@ import {
   useSensors,
   DragOverlay,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import MenuItem from "../../components/SortableMenu/MenuItem";
+import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 
 const ChatHeader = ({
   optionConfig = {
-    toolOptions: [
+    surfaceItems: [
       "minmax",
+      "close",
       "thread",
       "mentions",
       "starred",
       "pinned",
-      "files",
-      "members",
-      "search",
-      "rInfo",
-      "logout",
-      "close",
     ],
-
-    threshold: 4,
+    menuItems: ["files", "members", "search", "rInfo", "logout"],
   },
 }) => {
   const theme = useTheme();
   const styles = getChatHeaderStyles(theme);
-  const [toolOptions, setToolOptions] = useState(optionConfig.toolOptions);
-  const [activeRowOption, setActiveRowOption] = useState(null);
-  const [activeColumnOption, setActiveColumnOption] = useState(null);
-  const [threshold, setThreshold] = useState(optionConfig.threshold);
+  const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
+  const [menuItems, setMenuItems] = useState(optionConfig.menuItems);
+  const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
+  const [activeMenuItem, setActiveMenuItem] = useState(null);
 
-  const menuMap = {
-    minmax: (
-      <Tooltip text="Maximize" position="bottom" key="minmax">
-        <ActionButton
-          onClick={() => {}}
-          ghost
-          display="inline"
-          square
-          size="medium"
-        >
-          <Icon name="expand" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
+  const options = useMemo(
+    () => ({
+      minmax: {
+        label: "Maximize",
+        id: "minmax",
+        onClick: () => {},
+        iconName: "expand",
+        visible: true,
+      },
+      close: {
+        label: "Close",
+        id: "close",
+        onClick: () => {},
+        iconName: "cross",
+        visible: true,
+      },
+      thread: {
+        label: "Threads",
+        id: "thread",
+        onClick: () => {},
+        iconName: "thread",
+        visible: true,
+      },
+      mentions: {
+        label: "Mentions",
+        id: "mentions",
+        onClick: () => {},
+        iconName: "at",
+        visible: true,
+      },
+      starred: {
+        label: "Starred Messages",
+        id: "starred",
+        onClick: () => {},
+        iconName: "star",
+        visible: true,
+      },
+      pinned: {
+        label: "Pinned Messages",
+        id: "pinned",
+        onClick: () => {},
+        iconName: "pin",
+        visible: true,
+      },
+      members: {
+        label: "Members",
+        id: "members",
+        onClick: () => {},
+        iconName: "members",
+        visible: true,
+      },
+      files: {
+        label: "Files",
+        id: "files",
+        onClick: () => {},
+        iconName: "clip",
+        visible: true,
+      },
+      search: {
+        label: "Search Messages",
+        id: "search",
+        onClick: () => {},
+        iconName: "magnifier",
+        visible: true,
+      },
+      rInfo: {
+        label: "Room Information",
+        id: "rInfo",
+        onClick: () => {},
+        iconName: "info",
+        visible: true,
+      },
+      logout: {
+        label: "Logout",
+        id: "logout",
+        onClick: () => {},
+        iconName: "reply-directly",
+        visible: true,
+      },
+    }),
+    []
+  );
 
-    close: (
-      <Tooltip text="Close" position="bottom" key="close">
-        <ActionButton
-          key="close"
-          onClick={() => {}}
-          ghost
-          display="inline"
-          square
-          size="medium"
-        >
-          <Icon name="cross" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-    thread: (
-      <Tooltip text="Threads" position="bottom" key="thread">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="thread" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    mentions: (
-      <Tooltip text="Mentions" position="bottom" key="mention">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="at" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    starred: (
-      <Tooltip text="Starred Messages" position="bottom" key="starred">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="star" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    pinned: (
-      <Tooltip text="Pinned Messages" position="bottom" key="pinned">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="pin" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    members: (
-      <Tooltip text="Members" position="bottom" key="members">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="members" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    files: (
-      <Tooltip text="Files" position="bottom" key="files">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="clip" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    search: (
-      <Tooltip text="Search Messages" position="bottom" key="search">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="magnifier" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    rInfo: (
-      <Tooltip text="Room Information" position="bottom" key="rInfo">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="info" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    logout: (
-      <Tooltip text="Logout" position="bottom" key="logout">
-        <ActionButton square ghost onClick={() => {}}>
-          <Icon name="reply-directly" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-  };
-
-  const menuOptions = toolOptions
-    .slice(threshold)
-    .map((key) => {
-      const tool = menuMap[key];
-
-      if (!tool) {
-        return null;
-      }
-
-      const { onClick } = tool.props.children.props;
-      const { name: icon } = tool.props.children.props.children.props;
-      const { text } = tool.props;
-
-      if (onClick && icon && text) {
+  const menuOptions = menuItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
         return {
-          id: key,
-          action: onClick,
-          label: text,
-          icon,
+          id: options[item].id,
+          action: options[item].onClick,
+          label: options[item].label,
+          icon: options[item].iconName,
         };
       }
+      return null;
+    })
+    .filter((option) => option !== null);
 
+  const surfaceOptions = surfaceItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
+        return {
+          id: options[item].id,
+          onClick: options[item].onClick,
+          label: options[item].label,
+          iconName: options[item].iconName,
+        };
+      }
       return null;
     })
     .filter((option) => option !== null);
@@ -188,10 +155,14 @@ const ChatHeader = ({
     })
   );
   const handleDragStart = (event) => {
-    if (event.active.data.current?.type === "RowOptions") {
-      setActiveRowOption(event.active.id);
-    } else if (event.active.data.current?.type === "ColumnOptions") {
-      setActiveColumnOption({
+    if (event.active.data.current?.type === "SurfaceOptions") {
+      setActiveSurfaceItem({
+        id: event.active.id,
+        iconName: event.active.data.current.icon,
+        label: event.active.data.current.label,
+      });
+    } else if (event.active.data.current?.type === "MenuOptions") {
+      setActiveMenuItem({
         id: event.active.id,
         icon: event.active.data.current.icon,
         label: event.active.data.current.label,
@@ -199,35 +170,27 @@ const ChatHeader = ({
     }
   };
   const handleDragEnd = (event) => {
-    setActiveRowOption(null);
-    setActiveColumnOption(null);
+    setActiveSurfaceItem(null);
+    setActiveMenuItem(null);
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      setToolOptions((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+      if (event.active.data.current?.type === "SurfaceOptions") {
+        setSurfaceItems((items) => {
+          const oldIndex = items.indexOf(active.id);
+          const newIndex = items.indexOf(over.id);
 
-        return arrayMove(items, oldIndex, newIndex);
-      });
+          return arrayMove(items, oldIndex, newIndex);
+        });
+      } else if (event.active.data.current?.type === "MenuOptions") {
+        setMenuItems((items) => {
+          const oldIndex = items.indexOf(active.id);
+          const newIndex = items.indexOf(over.id);
+
+          return arrayMove(items, oldIndex, newIndex);
+        });
+      }
     }
-  };
-
-  const handleDragOver = (event) => {
-    const isARowOption = event.active.data.current?.type === "RowOptions";
-    const isAColumnOption = event.active.data.current?.type === "ColumnOptions";
-    const isOverAColumnOption =
-      event.over.data.current?.type === "ColumnOptions";
-
-    const isOverARowOption = event.over.data.current?.type === "RowOptions";
-
-    if (isARowOption && isOverAColumnOption) {
-      setThreshold((threshold) => threshold - 1);
-    } else if (isAColumnOption && isOverARowOption) {
-      setThreshold((threshold) => threshold + 1);
-    }
-
-    console.log(event);
   };
 
   return (
@@ -257,22 +220,17 @@ const ChatHeader = ({
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
         >
           <Box css={styles.chatHeaderIconRow}>
-            <SortableContext items={toolOptions}>
-              {toolOptions.slice(0, threshold).map((key) => (
-                <HeaderOptions key={key} id={key} menuMap={menuMap} />
-              ))}
-            </SortableContext>
+            {surfaceOptions.length > 0 && (
+              <SurfaceMenu options={surfaceOptions} />
+            )}
             {menuOptions.length > 0 && <Menu options={menuOptions} />}
           </Box>
           {createPortal(
             <DragOverlay zIndex={1700}>
-              {activeRowOption && (
-                <HeaderOptions id={activeRowOption} menuMap={menuMap} />
-              )}
-              {activeColumnOption && <MenuItem {...activeColumnOption} />}
+              {activeSurfaceItem && <SurfaceItem {...activeSurfaceItem} />}
+              {activeMenuItem && <MenuItem {...activeMenuItem} />}
             </DragOverlay>,
             document.body
           )}

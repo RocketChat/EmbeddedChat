@@ -10,7 +10,6 @@ import MenuItem from "./MenuItem";
 import { getMenuStyles } from "./Menu.styles";
 import {
   SortableContext,
-  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
 const Menu = ({
@@ -35,7 +34,7 @@ const Menu = ({
           `,
         ]}
       >
-        <SortableContext items={options} strategy={verticalListSortingStrategy}>
+        <SortableContext items={options}>
           {options.map((option, idx) => (
             <MenuItem {...option} key={option.id || idx} />
           ))}
