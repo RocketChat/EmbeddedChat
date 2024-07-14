@@ -20,6 +20,7 @@ const ChatInputFormattingToolbar = ({
   inputRef,
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
+    formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
@@ -29,6 +30,8 @@ const ChatInputFormattingToolbar = ({
   const styles = useChatInputFormattingToolbarStyles();
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
+  const formatters =
+    configOverrides.optionConfig?.formatters || optionConfig.formatters;
 
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
@@ -47,36 +50,18 @@ const ChatInputFormattingToolbar = ({
 
   const chatToolMap = {
     emoji: (
-      <Box key="emoji">
-        <Tooltip text="Emoji" position="top" key="emoji-btn">
-          <ActionButton
-            square
-            ghost
-            disabled={isRecordingMessage}
-            onClick={() => {
-              setEmojiOpen(true);
-            }}
-          >
-            <Icon name="emoji" size="1.25rem" />
-          </ActionButton>
-        </Tooltip>
-
-        {isEmojiOpen && (
-          <EmojiPicker
-            key="emoji-picker"
-            handleEmojiClick={(emoji) => {
-              setEmojiOpen(false);
-              handleEmojiClick(emoji);
-            }}
-            positionStyles={css`
-              position: absolute;
-              bottom: 7rem;
-              left: 1.85rem;
-            `}
-            onClose={() => setEmojiOpen(false)}
-          />
-        )}
-      </Box>
+      <Tooltip text="Emoji" position="top" key="emoji-btn">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={() => {
+            setEmojiOpen(true);
+          }}
+        >
+          <Icon name="emoji" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
@@ -100,20 +85,26 @@ const ChatInputFormattingToolbar = ({
         </ActionButton>
       </Tooltip>
     ),
-    formatter: formatter.map((item) => (
-      <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
-        <ActionButton
-          square
-          disabled={isRecordingMessage}
-          ghost
-          onClick={() => {
-            formatSelection(messageRef, item.pattern);
-          }}
-        >
-          <Icon disabled={isRecordingMessage} name={item.name} size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    )),
+    formatter: formatters
+      .map((name) => formatter.find((item) => item.name === name))
+      .map((item) => (
+        <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
+          <ActionButton
+            square
+            disabled={isRecordingMessage}
+            ghost
+            onClick={() => {
+              formatSelection(messageRef, item.pattern);
+            }}
+          >
+            <Icon
+              disabled={isRecordingMessage}
+              name={item.name}
+              size="1.25rem"
+            />
+          </ActionButton>
+        </Tooltip>
+      )),
   };
 
   return (
@@ -123,6 +114,22 @@ const ChatInputFormattingToolbar = ({
       style={styleOverrides}
     >
       {surfaceItems.map((key) => chatToolMap[key])}
+
+      {isEmojiOpen && (
+        <EmojiPicker
+          key="emoji-picker"
+          handleEmojiClick={(emoji) => {
+            setEmojiOpen(false);
+            handleEmojiClick(emoji);
+          }}
+          onClose={() => setEmojiOpen(false)}
+          positionStyles={css`
+            position: absolute;
+            bottom: 7rem;
+            left: 1.85rem;
+          `}
+        />
+      )}
     </Box>
   );
 };
