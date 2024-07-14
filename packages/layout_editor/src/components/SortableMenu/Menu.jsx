@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { css } from "@emotion/react";
 import {
   Box,
@@ -8,17 +8,25 @@ import {
 } from "@embeddedchat/ui-elements";
 import MenuItem from "./MenuItem";
 import { getMenuStyles } from "./Menu.styles";
-import {
-  SortableContext,
-} from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 
 const Menu = ({
   options = [],
   tooltip = { isToolTip: true, position: "bottom", text: "Options" },
+  from = "top",
   size = "medium",
 }) => {
   const theme = useTheme();
   const styles = getMenuStyles(theme);
+
+  const anchorStyle = useMemo(() => {
+    const positions = from.split(/\s+/);
+    const styleAnchor = {};
+    positions.forEach((pos) => {
+      styleAnchor[pos] = "100%";
+    });
+    return styleAnchor;
+  }, [from]);
 
   return (
     <Box>
@@ -33,6 +41,7 @@ const Menu = ({
             box-shadow: ${theme.theme.shadows[2]};
           `,
         ]}
+        style={anchorStyle}
       >
         <SortableContext items={options}>
           {options.map((option, idx) => (

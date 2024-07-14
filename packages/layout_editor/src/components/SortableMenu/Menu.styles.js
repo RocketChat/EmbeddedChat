@@ -11,7 +11,6 @@ export const getMenuStyles = (customTheme) => {
 
     container: css`
       position: absolute;
-      top: 100%;
       right: 0;
       display: flex;
       flex-direction: column;

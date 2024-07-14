@@ -2,7 +2,7 @@
     {
         "_id": "wz5cNwELaK6MnZWkN",
         "rid": "GENERAL",
-        "msg": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor. This will open up so many possibilities for tailoring the user experience exactly to our needs. Looking forward to seeing what we can create with it!",
+        "msg": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor !",
         "ts": "2024-07-14T09:22:39.277Z",
         "u": {
             "_id": "a9bAtEYzGoTHvtxws",
@@ -19,7 +19,7 @@
                 "value": [
                     {
                         "type": "PLAIN_TEXT",
-                        "value": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor. This will open up so many possibilities for tailoring the user experience exactly to our needs. Looking forward to seeing what we can create with it!"
+                        "value": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor. This will open up so many possibilities for tailoring the user experience exactly to our needs !"
                     }
                 ]
             }
