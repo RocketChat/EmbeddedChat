@@ -11,14 +11,13 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
-import TextAttachment from '../AttachmentHandler/TextAttachment';
-import ImageAttachment from '../AttachmentHandler/ImageAttachment';
+import Attachment from '../AttachmentHandler/Attachment';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
+  const instanceHost = RCInstance.getHost();
   const getUserAvatarUrl = (username) => {
-    const host = RCInstance.getHost();
-    const URL = `${host}/avatar/${username}`;
+    const URL = `${instanceHost}/avatar/${username}`;
     return URL;
   };
   const { theme } = useTheme();
@@ -100,10 +99,11 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       </Box>
       <Box css={styles.message}>
         {renderMessageContent()}
-        {message.attachments && message.attachments[0].text ? (
-          <TextAttachment
+        {message.attachments[0].attachments ? (
+          <Attachment
             attachment={message.attachments[0]}
             type={message.attachments[0].type}
+            host={instanceHost}
           />
         ) : (
           <></>
