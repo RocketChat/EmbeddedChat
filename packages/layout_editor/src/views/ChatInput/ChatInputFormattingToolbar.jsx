@@ -4,10 +4,12 @@ import { formatter } from "../../lib/textFormat";
 import { useChatInputFormattingToolbarStyles } from "./ChatInput.styles";
 
 const ChatInputFormattingToolbar = ({
-  toolConfig = ["emoji", "formatter", "audio", "video", "file"],
+  optionConfig = {
+    surfaceItems: ["emoji", "formatter", "audio", "video", "file"],
+  },
 }) => {
   const styles = useChatInputFormattingToolbarStyles();
-  const toolOptions = toolConfig;
+  const surfaceItems = optionConfig.surfaceItems;
 
   const chatToolMap = {
     emoji: (
@@ -51,7 +53,7 @@ const ChatInputFormattingToolbar = ({
 
   return (
     <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
-      {toolOptions.map((key) => chatToolMap[key])}
+      {surfaceItems.map((key) => chatToolMap[key])}
     </Box>
   );
 };

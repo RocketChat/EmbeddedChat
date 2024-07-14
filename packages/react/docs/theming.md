@@ -192,15 +192,13 @@ In this example:
 - `theme.components.ChatInput.styleOverrides` will apply the specified styles to the ChatInput component.
 - `theme.components.ChatInput.classNames` will apply the specified class name to the ChatInput component.
 
-Now, let's understand `configOverrides` using ChatHeader as an example.
-
-The `configOverrides` object contains `optionConfig`, which includes two keys: `toolOptions` and `threshold`. `toolOptions` specify which options should be displayed in the component, and `threshold` defines how many options should be displayed directly. Options beyond the threshold will be wrapped inside a menu component.
+The `configOverrides` object contains `optionConfig`, which includes two keys: `surfaceItems` and `menuItems`. `surfaceItems` specifies which options should be displayed directly on the surface container. Options listed in `menuItems` will be wrapped inside a menu component.
 
 ```jsx
 ChatHeader: {
   configOverrides: {
     optionConfig: {
-      toolOptions: [
+      surfaceItems: [
         'minmax',
         'close',
         'thread',
@@ -208,27 +206,28 @@ ChatHeader: {
         'starred',
         'pinned',
         'files',
+      ],
+      menuItems: [
         'members',
         'search',
         'rInfo',
         'logout',
       ],
-      threshold: 7,
     },
   },
 }
 ```
 
-In this example, for ChatHeader, options from `minmax` to `files` will be displayed directly, while options from `members` to `logout` will be wrapped inside a menu, as shown:
+In this example, for `ChatHeader`, options from `minmax` to `files` will be displayed directly on the surface, while options from `members` to `logout` will be wrapped inside a menu, as shown:
 
 ![image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/84b9558b-5496-4904-8788-070b519aa1f2)
 
 If an option is omitted, it will simply not be rendered. This flexibility is useful for customizing the application to your needs.
 
-Similarly, for MessageToolbox, the supported `toolOptions` are:
+Similarly, for `MessageToolbox`, the supported options are:
 
 ```jsx
-toolOptions: [
+[
   'reaction',
   'reply',
   'quote',
@@ -240,13 +239,13 @@ toolOptions: [
 ],
 ```
 
-For the ChatInputFormattingToolbar component, the supported `toolOptions` are:
+For the `ChatInputFormattingToolbar` component, the supported options are:
 
 ```jsx
-toolOptions: ['emoji', 'formatter', 'audio', 'video', 'file'],
+['emoji', 'formatter', 'audio', 'video', 'file'],
 ```
 
-Note: In ChatInputFormattingToolbar, the `threshold` is not supported as all options will be displayed directly, and none will be inside a menu.
+Note: In `ChatInputFormattingToolbar`, `menuItems` is not supported as all options will be displayed directly on the surface, and none will be inside a menu.
 
 ## Understanding the `variants` key
 

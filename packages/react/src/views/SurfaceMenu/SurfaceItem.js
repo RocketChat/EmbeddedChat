@@ -10,7 +10,7 @@ const SurfaceItem = ({ item, size }) => (
       icon={item.iconName}
       size={size}
       iconSize="small"
-      type={item.type}
+      color={item.type}
     />
   </Tooltip>
 );
