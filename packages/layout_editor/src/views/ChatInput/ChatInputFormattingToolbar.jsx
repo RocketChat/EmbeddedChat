@@ -7,21 +7,14 @@ import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 const ChatInputFormattingToolbar = ({
   optionConfig = {
     surfaceItems: ["emoji", "formatter", "audio", "video", "file"],
+    formatters: ["bold", "italic", "strike", "code", "multiline"],
   },
 }) => {
   const styles = useChatInputFormattingToolbarStyles();
-  const { surfaceItems } = optionConfig;
+  const { surfaceItems, formatters } = optionConfig;
   const placeholderSurfaceItem = "placeholder-surface";
 
   const options = useMemo(() => {
-    const formatterOptions = formatter.map((item) => ({
-      label: item.name,
-      id: `formatter-${item.name}`,
-      onClick: item.onClick || (() => {}),
-      iconName: item.name,
-      visible: true,
-    }));
-
     return {
       emoji: {
         label: "Emoji",
@@ -51,9 +44,17 @@ const ChatInputFormattingToolbar = ({
         iconName: "attachment",
         visible: true,
       },
-      formatter: formatterOptions,
+      formatter: formatter
+        .filter((item) => formatters.includes(item.name))
+        .map((item) => ({
+          label: item.name,
+          id: `formatter-${item.name}`,
+          onClick: item.onClick || (() => {}),
+          iconName: item.name,
+          visible: true,
+        })),
     };
-  }, []);
+  }, [formatters]);
 
   const surfaceOptions = useMemo(() => {
     return surfaceItems.length > 0
@@ -72,10 +73,10 @@ const ChatInputFormattingToolbar = ({
             }
             return null;
           })
-          .flat()
           .filter((option) => option !== null)
       : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
   }, [surfaceItems, options]);
+
   return (
     <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
       {surfaceOptions.length > 0 && (
