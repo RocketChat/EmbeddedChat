@@ -1,7 +1,19 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Box } from "@embeddedchat/ui-elements";
 import { useChatInputFormattingToolbarStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
+import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
+import { createPortal } from "react-dom";
 
 const ChatInputFormattingToolbar = ({
   optionConfig = {
@@ -10,7 +22,8 @@ const ChatInputFormattingToolbar = ({
   },
 }) => {
   const styles = useChatInputFormattingToolbarStyles();
-  const { surfaceItems, formatters } = optionConfig;
+  const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
+  const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const placeholderSurfaceItem = "placeholder-surface";
 
   const options = useMemo(() => {
@@ -43,7 +56,7 @@ const ChatInputFormattingToolbar = ({
         iconName: "attachment",
         visible: true,
       },
-      formatter:  {
+      formatter: {
         label: "Formatter",
         id: "formatter",
         onClick: () => {},
@@ -52,6 +65,41 @@ const ChatInputFormattingToolbar = ({
       },
     };
   }, []);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragStart = (event) => {
+    if (event.active.data.current?.type === "SurfaceOptions") {
+      setActiveSurfaceItem({
+        id: event.active.id,
+        iconName: event.active.data.current.icon,
+        label: event.active.data.current.label,
+      });
+    }
+  };
+
+  const handleDragEnd = (event) => {
+    setActiveSurfaceItem(null);
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      if (
+        event.active.data.current?.type === "SurfaceOptions" &&
+        event.over.data.current?.type === "SurfaceOptions"
+      ) {
+        setSurfaceItems((items) => {
+          const oldIndex = items.indexOf(active.id);
+          const newIndex = items.indexOf(over.id);
+          return arrayMove(items, oldIndex, newIndex);
+        });
+      }
+    }
+  };
 
   const surfaceOptions = useMemo(() => {
     return surfaceItems.length > 0
@@ -75,11 +123,25 @@ const ChatInputFormattingToolbar = ({
   }, [surfaceItems, options]);
 
   return (
-    <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
-      {surfaceOptions.length > 0 && (
-        <SurfaceMenu options={surfaceOptions} tooltipPosition="top" />
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+    >
+      <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
+        {surfaceOptions.length > 0 && (
+          <SurfaceMenu options={surfaceOptions} tooltipPosition="top" />
+        )}
+      </Box>
+
+      {createPortal(
+        <DragOverlay zIndex={1700}>
+          {activeSurfaceItem && <SurfaceItem {...activeSurfaceItem} />}
+        </DragOverlay>,
+        document.body
       )}
-    </Box>
+    </DndContext>
   );
 };
 
