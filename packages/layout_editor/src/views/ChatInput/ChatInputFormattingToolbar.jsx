@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { Box } from "@embeddedchat/ui-elements";
-import { formatter } from "../../lib/textFormat";
 import { useChatInputFormattingToolbarStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 
@@ -44,17 +43,15 @@ const ChatInputFormattingToolbar = ({
         iconName: "attachment",
         visible: true,
       },
-      formatter: formatter
-        .filter((item) => formatters.includes(item.name))
-        .map((item) => ({
-          label: item.name,
-          id: `formatter-${item.name}`,
-          onClick: item.onClick || (() => {}),
-          iconName: item.name,
-          visible: true,
-        })),
+      formatter:  {
+        label: "Formatter",
+        id: "formatter",
+        onClick: () => {},
+        iconName: "format-text",
+        visible: true,
+      },
     };
-  }, [formatters]);
+  }, []);
 
   const surfaceOptions = useMemo(() => {
     return surfaceItems.length > 0
