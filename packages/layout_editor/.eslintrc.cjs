@@ -20,7 +20,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "react/prop-types": "off",
-    "react/no-unknown-property": ["error", { ignore: ["css"] }],
     "@typescript-eslint/no-unused-vars": ["warn"],
   },
 };

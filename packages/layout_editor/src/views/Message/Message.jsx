@@ -17,9 +17,9 @@ const Message = ({
   sequential = false,
   lastSequential = false,
   newDay = false,
-  variantOverrides = "flat",
+  variantOverrides = "default",
 }) => {
-  const isMe = message.u._id === "spiral_memory";
+  const isMe = message.u.username === "spiral_memory";
   const styles = useMessageStyles();
   const bubbleStyles = useBubbleStyles(isMe);
   const shouldShowHeader = !sequential;
