@@ -29,7 +29,10 @@ const Message = ({
     <>
       <Box
         className="ec-message"
-        css={[variantStyles.messageParent || styles.main]}
+        css={[
+          variantStyles.messageParent || styles.main,
+          message._id === "62vhmKJGNoxgvLL7M" && styles.specialMessage,
+        ]}
       >
         <MessageAvatarContainer message={message} sequential={sequential} />
 
@@ -56,11 +59,8 @@ const Message = ({
               >
                 <Markdown body={message} isReaction={false} />
 
-                {!message.t ? (
-                  <MessageToolbox
-                    message={message}
-                    variantStyles={variantStyles}
-                  />
+                {!message.t && message._id === "62vhmKJGNoxgvLL7M" ? (
+                  <MessageToolbox variantStyles={variantStyles} />
                 ) : (
                   <></>
                 )}

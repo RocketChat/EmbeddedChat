@@ -1,5 +1,5 @@
-import { css } from '@emotion/react';
-import { lighten, darken, useTheme } from '@embeddedchat/ui-elements';
+import { css } from "@emotion/react";
+import { lighten, darken, useTheme } from "@embeddedchat/ui-elements";
 
 export const useMessageStyles = () => {
   const { mode, colors } = useTheme();
@@ -15,7 +15,7 @@ export const useMessageStyles = () => {
     color: ${colors.foreground};
 
     &:hover {
-      background-color: ${mode === 'light'
+      background-color: ${mode === "light"
         ? darken(colors.background, 0.03)
         : lighten(colors.background, 1)};
     }
@@ -32,7 +32,13 @@ export const useMessageStyles = () => {
     white-space: pre-line;
   `;
 
-  return { main, messageEditing, pendingMessageBody };
+  const specialMessage = css`
+    background-color: ${mode === "light"
+      ? darken(colors.background, 0.03)
+      : lighten(colors.background, 1)};
+  `;
+
+  return { main, messageEditing, pendingMessageBody, specialMessage };
 };
 
 export const useMessageAvatarContainerStyles = () => {
@@ -204,7 +210,7 @@ export const MessageMetricsStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
+    margin-left: ${isFirstMessage ? "0.5rem" : "0.25rem"};
   `,
 
   metricsItemLabel: css`
@@ -254,14 +260,11 @@ export const useMessageToolboxStyles = () => {
   const { theme, colors } = useTheme();
 
   const toolboxContainer = css`
-    display: none;
-    .ec-message:hover & {
-      display: flex;
-      position: absolute;
-      bottom: 100%;
-      z-index: ${theme.zIndex.body + 1};
-      right: 2rem;
-    }
+    display: flex;
+    position: absolute;
+    bottom: 100%;
+    z-index: ${theme.zIndex.body + 1};
+    right: 2rem;
   `;
 
   const toolbox = css`
