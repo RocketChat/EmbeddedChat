@@ -99,7 +99,9 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       </Box>
       <Box css={styles.message}>
         {renderMessageContent()}
-        {message.attachments[0].attachments ? (
+        {message.attachments &&
+        message.attachments.length > 0 &&
+        message.attachments[0].attachments ? (
           <Attachment
             attachment={message.attachments[0]}
             type={message.attachments[0].type}
