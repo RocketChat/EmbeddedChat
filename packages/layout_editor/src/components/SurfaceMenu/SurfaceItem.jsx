@@ -2,7 +2,6 @@ import React from "react";
 import {
   Tooltip,
   ActionButton,
-  Icon,
   Box,
   useTheme,
 } from "@embeddedchat/ui-elements";
@@ -10,7 +9,15 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { getSurfaceItemStyles } from "./SurfaceMenu.styles";
 
-const SurfaceItem = ({ id, label, iconName, onClick, position = "bottom" }) => {
+const SurfaceItem = ({
+  id,
+  label,
+  iconName,
+  onClick,
+  type,
+  position = "bottom",
+  size,
+}) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({
       id,
@@ -33,10 +40,16 @@ const SurfaceItem = ({ id, label, iconName, onClick, position = "bottom" }) => {
 
   return (
     <Box ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Tooltip text={label} key={id} position={position}>
-        <ActionButton square ghost onClick={onClick}>
-          <Icon name={iconName} size="1.25rem" />
-        </ActionButton>
+      <Tooltip text={label} position={position} key={id}>
+        <ActionButton
+          square
+          ghost
+          onClick={onClick}
+          icon={iconName}
+          size={size}
+          iconSize="small"
+          color={type}
+        />
       </Tooltip>
     </Box>
   );
