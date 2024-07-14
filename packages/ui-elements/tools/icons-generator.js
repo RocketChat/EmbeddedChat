@@ -48,6 +48,7 @@ const iconsList = [
   'arrow-collapse',
   'arrow-expand',
 ];
+
 const svgDirPath = path.join(
   __dirname,
   '../../../node_modules/@rocket.chat/icons/dist/svg'

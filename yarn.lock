@@ -2448,7 +2448,6 @@ __metadata:
     "@open-wc/building-rollup": ^3.0.2
     "@rocket.chat/emitter": ^0.31.25
     "@rocket.chat/fuselage-hooks": ^0.33.1
-    "@rocket.chat/icons": ^0.31.23
     "@rocket.chat/ui-kit": ^0.31.25
     "@rollup/plugin-babel": ^5.3.1
     "@rollup/plugin-commonjs": ^21.0.2
@@ -2520,6 +2519,7 @@ __metadata:
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1
     "@open-wc/building-rollup": ^3.0.2
+    "@rocket.chat/icons": ^0.31.23
     "@rollup/plugin-babel": ^5.3.1
     "@rollup/plugin-commonjs": ^21.0.2
     "@rollup/plugin-json": ^6.0.0
