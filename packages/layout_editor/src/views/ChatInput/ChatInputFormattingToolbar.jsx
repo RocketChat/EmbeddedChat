@@ -1,7 +1,8 @@
-import React from "react";
-import { Box, Icon, ActionButton, Tooltip } from "@embeddedchat/ui-elements";
+import React, { useMemo } from "react";
+import { Box } from "@embeddedchat/ui-elements";
 import { formatter } from "../../lib/textFormat";
 import { useChatInputFormattingToolbarStyles } from "./ChatInput.styles";
+import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 
 const ChatInputFormattingToolbar = ({
   optionConfig = {
@@ -9,51 +10,77 @@ const ChatInputFormattingToolbar = ({
   },
 }) => {
   const styles = useChatInputFormattingToolbarStyles();
-  const surfaceItems = optionConfig.surfaceItems;
+  const { surfaceItems } = optionConfig;
+  const placeholderSurfaceItem = "placeholder-surface";
 
-  const chatToolMap = {
-    emoji: (
-      <Box key="emoji">
-        <Tooltip text="Emoji" position="top" key="emoji-btn">
-          <ActionButton square ghost>
-            <Icon name="emoji" size="1.25rem" />
-          </ActionButton>
-        </Tooltip>
-      </Box>
-    ),
-    audio: (
-      <Tooltip text="Audio Message" position="top" key="audio">
-        <ActionButton ghost square>
-          <Icon size="1.25rem" name="mic" />
-        </ActionButton>
-      </Tooltip>
-    ),
-    video: (
-      <Tooltip text="Video Message" position="top" key="video">
-        <ActionButton ghost square>
-          <Icon size="1.25rem" name="video-recorder" />
-        </ActionButton>
-      </Tooltip>
-    ),
-    file: (
-      <Tooltip text="Upload File" position="top" key="file">
-        <ActionButton square ghost>
-          <Icon name="attachment" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-    formatter: formatter.map((item) => (
-      <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
-        <ActionButton square ghost>
-          <Icon name={item.name} size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    )),
-  };
+  const options = useMemo(() => {
+    const formatterOptions = formatter.map((item) => ({
+      label: item.name,
+      id: `formatter-${item.name}`,
+      onClick: item.onClick || (() => {}),
+      iconName: item.name,
+      visible: true,
+    }));
 
+    return {
+      emoji: {
+        label: "Emoji",
+        id: "emoji",
+        onClick: () => {},
+        iconName: "emoji",
+        visible: true,
+      },
+      audio: {
+        label: "Audio Message",
+        id: "audio",
+        onClick: () => {},
+        iconName: "mic",
+        visible: true,
+      },
+      video: {
+        label: "Video Message",
+        id: "video",
+        onClick: () => {},
+        iconName: "video-recorder",
+        visible: true,
+      },
+      file: {
+        label: "Upload File",
+        id: "file",
+        onClick: () => {},
+        iconName: "attachment",
+        visible: true,
+      },
+      formatter: formatterOptions,
+    };
+  }, []);
+
+  const surfaceOptions = useMemo(() => {
+    return surfaceItems.length > 0
+      ? surfaceItems
+          .map((item) => {
+            if (item === "formatter") {
+              return options.formatter;
+            }
+            if (options[item] && options[item].visible) {
+              return {
+                id: options[item].id,
+                onClick: options[item].onClick,
+                label: options[item].label,
+                iconName: options[item].iconName,
+              };
+            }
+            return null;
+          })
+          .flat()
+          .filter((option) => option !== null)
+      : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
+  }, [surfaceItems, options]);
   return (
     <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
-      {surfaceItems.map((key) => chatToolMap[key])}
+      {surfaceOptions.length > 0 && (
+        <SurfaceMenu options={surfaceOptions} tooltipPosition="top" />
+      )}
     </Box>
   );
 };

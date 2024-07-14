@@ -10,21 +10,16 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { getSurfaceItemStyles } from "./SurfaceMenu.styles";
 
-const SurfaceItem = ({ id, label, iconName, onClick }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useSortable({
-    id,
-    data: {
-      type: "SurfaceOptions",
-      icon: iconName,
-      label,
-    },
-  });
+const SurfaceItem = ({ id, label, iconName, onClick, position = "bottom" }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useSortable({
+      id,
+      data: {
+        type: "SurfaceOptions",
+        icon: iconName,
+        label,
+      },
+    });
   const theme = useTheme();
   const styles = getSurfaceItemStyles(theme);
 
@@ -38,7 +33,7 @@ const SurfaceItem = ({ id, label, iconName, onClick }) => {
 
   return (
     <Box ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Tooltip text={label} position="bottom" key={id}>
+      <Tooltip text={label} key={id} position={position}>
         <ActionButton square ghost onClick={onClick}>
           <Icon name={iconName} size="1.25rem" />
         </ActionButton>
