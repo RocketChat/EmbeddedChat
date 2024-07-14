@@ -104,7 +104,7 @@ const StormySeas = {
     ChatHeader: {
       configOverrides: {
         optionConfig: {
-          toolOptions: [
+          surfaceItems: [
             'minmax',
             'close',
             'thread',
@@ -112,13 +112,8 @@ const StormySeas = {
             'starred',
             'pinned',
             'files',
-            'members',
-            'search',
-            'rInfo',
-            'logout',
           ],
-
-          threshold: 7,
+          menuItems: ['members', 'search', 'rInfo', 'logout'],
         },
       },
     },

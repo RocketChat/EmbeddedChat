@@ -76,17 +76,8 @@ const AquaBreeze = {
     MessageToolbox: {
       configOverrides: {
         optionConfig: {
-          toolOptions: [
-            'reaction',
-            'reply',
-            'quote',
-            'star',
-            'pin',
-            'edit',
-            'delete',
-            'report',
-          ],
-          threshold: 4,
+          surfaceItems: ['reaction', 'reply', 'quote', 'star'],
+          menuItems: ['pin', 'edit', 'delete', 'report'],
         },
       },
     },
