@@ -4,9 +4,9 @@ import ChatBody from "../Chatbody/ChatBody";
 import ChatInput from "../ChatInput/ChatInput";
 import styles from "./ChatLayout.styles";
 import DemoSidebar from "../DemoSidebar/DemoSidebar";
+import members from "../../data/members.json";
 
 const ChatLayout = () => {
-  const members = [];
   return (
     <Box css={styles.layout} className="ec-chat-layout">
       <Box css={styles.chatMain}>

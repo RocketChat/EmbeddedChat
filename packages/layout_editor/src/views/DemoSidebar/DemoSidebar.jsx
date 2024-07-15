@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, Avatar, Icon, Sidebar, Popup } from "@embeddedchat/ui-elements";
+import { Box, Icon, Sidebar, Popup } from "@embeddedchat/ui-elements";
 import { css } from "@emotion/react";
 import { useDemoSidebarStyles } from "./DemoSidebar.styles";
 
@@ -13,30 +13,32 @@ const DemoSidebar = ({ members, viewType = "Sidebar" }) => {
       iconName="members"
       {...(viewType === "Popup" ? { isPopupHeader: true } : {})}
     >
-      {members.map((member, index) => (
-        <Box key={index} css={styles.itemContainer}>
-          <Avatar
-            url={member.avatarUrl}
-            alt="avatar"
-            size="1.5rem"
-            css={css`
-              margin-right: 0.5rem;
-            `}
-          />
-          <Box
-            is="span"
-            css={css`
-              display: flex;
-              align-items: center;
-            `}
-          >
-            {member.userStatus && (
-              <Icon name={member.userStatus} size="1.25rem" css={styles.icon} />
-            )}
-            <Box is="span">{member.username}</Box>
+      <Box css={styles.container}>
+        {members.map((member, index) => (
+          <Box key={index} css={styles.itemContainer}>
+            <Icon
+              name="avatar"
+              alt="avatar"
+              size="1.5rem"
+              css={css`
+                margin-right: 0.5rem;
+              `}
+            />
+            <Box
+              is="span"
+              css={css`
+                display: flex;
+                align-items: center;
+              `}
+            >
+              {member.status && (
+                <Icon name={member.status} size="1.25rem" css={styles.icon} />
+              )}
+              <Box is="span">{member.username}</Box>
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))}
+      </Box>
     </ViewComponent>
   );
 };
