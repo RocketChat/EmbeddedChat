@@ -98,7 +98,8 @@ export const MessageToolbox = ({
         });
       } else if (
         event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "MenuOptions"
+        event.over.data.current?.type === "MenuOptions" &&
+        active.id !== placeholderSurfaceItem
       ) {
         setSurfaceItems((items) => items.filter((item) => item !== active.id));
         setMenuItems((items) => {
@@ -110,7 +111,8 @@ export const MessageToolbox = ({
         });
       } else if (
         event.active.data.current?.type === "MenuOptions" &&
-        event.over.data.current?.type === "SurfaceOptions"
+        event.over.data.current?.type === "SurfaceOptions" &&
+        active.id !== placeholderMenuItem
       ) {
         setMenuItems((items) => items.filter((item) => item !== active.id));
         setSurfaceItems((items) => {
