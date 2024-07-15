@@ -123,40 +123,46 @@ const ChatHeader = ({
     []
   );
 
-  const menuOptions = menuItems.length > 0
-    ? menuItems
-        .map((item) => {
-          if (item in options && options[item].visible) {
-            return {
-              id: options[item].id,
-              action: options[item].onClick,
-              label: options[item].label,
-              icon: options[item].iconName,
-            };
-          }
-          return null;
-        })
-        .filter((option) => option !== null)
-    : [{ id: placeholderMenuItem, label: "No items", icon: "plus" }];
+  const menuOptions =
+    menuItems.length > 0
+      ? menuItems
+          .map((item) => {
+            if (item in options && options[item].visible) {
+              return {
+                id: options[item].id,
+                action: options[item].onClick,
+                label: options[item].label,
+                icon: options[item].iconName,
+              };
+            }
+            return null;
+          })
+          .filter((option) => option !== null)
+      : [{ id: placeholderMenuItem, label: "No items", icon: "plus" }];
 
-  const surfaceOptions = surfaceItems.length > 0
-    ? surfaceItems
-        .map((item) => {
-          if (item in options && options[item].visible) {
-            return {
-              id: options[item].id,
-              onClick: options[item].onClick,
-              label: options[item].label,
-              iconName: options[item].iconName,
-            };
-          }
-          return null;
-        })
-        .filter((option) => option !== null)
-    : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
+  const surfaceOptions =
+    surfaceItems.length > 0
+      ? surfaceItems
+          .map((item) => {
+            if (item in options && options[item].visible) {
+              return {
+                id: options[item].id,
+                onClick: options[item].onClick,
+                label: options[item].label,
+                iconName: options[item].iconName,
+              };
+            }
+            return null;
+          })
+          .filter((option) => option !== null)
+      : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+       distance: 1.5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -184,28 +190,46 @@ const ChatHeader = ({
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      if (event.active.data.current?.type === "SurfaceOptions" && event.over.data.current?.type === "SurfaceOptions") {
+      if (
+        event.active.data.current?.type === "SurfaceOptions" &&
+        event.over.data.current?.type === "SurfaceOptions"
+      ) {
         setSurfaceItems((items) => {
           const oldIndex = items.indexOf(active.id);
           const newIndex = items.indexOf(over.id);
           return arrayMove(items, oldIndex, newIndex);
         });
-      } else if (event.active.data.current?.type === "MenuOptions" && event.over.data.current?.type === "MenuOptions") {
+      } else if (
+        event.active.data.current?.type === "MenuOptions" &&
+        event.over.data.current?.type === "MenuOptions"
+      ) {
         setMenuItems((items) => {
           const oldIndex = items.indexOf(active.id);
           const newIndex = items.indexOf(over.id);
           return arrayMove(items, oldIndex, newIndex);
         });
-      } else if (event.active.data.current?.type === "SurfaceOptions" && event.over.data.current?.type === "MenuOptions") {
+      } else if (
+        event.active.data.current?.type === "SurfaceOptions" &&
+        event.over.data.current?.type === "MenuOptions"
+      ) {
         setSurfaceItems((items) => items.filter((item) => item !== active.id));
         setMenuItems((items) => {
-          const newItems = [...items.filter((item) => item !== placeholderMenuItem), active.id];
+          const newItems = [
+            ...items.filter((item) => item !== placeholderMenuItem),
+            active.id,
+          ];
           return newItems;
         });
-      } else if (event.active.data.current?.type === "MenuOptions" && event.over.data.current?.type === "SurfaceOptions") {
+      } else if (
+        event.active.data.current?.type === "MenuOptions" &&
+        event.over.data.current?.type === "SurfaceOptions"
+      ) {
         setMenuItems((items) => items.filter((item) => item !== active.id));
         setSurfaceItems((items) => {
-          const newItems = [...items.filter((item) => item !== placeholderSurfaceItem), active.id];
+          const newItems = [
+            ...items.filter((item) => item !== placeholderSurfaceItem),
+            active.id,
+          ];
           return newItems;
         });
       }
@@ -226,7 +250,8 @@ const ChatHeader = ({
               general
             </Heading>
 
-            <Box is = "span"
+            <Box
+              is="span"
               className="ec-chat-header--channelDescription"
               css={styles.clearSpacing}
             >

@@ -46,7 +46,11 @@ export const MessageToolbox = ({
   const placeholderMenuItem = "placeholder-menu";
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+       distance: 1.5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })

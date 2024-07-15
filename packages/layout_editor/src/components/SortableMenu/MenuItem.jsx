@@ -28,6 +28,7 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    cursor: "move",
   };
 
   if (isDragging) {

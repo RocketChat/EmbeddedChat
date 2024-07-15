@@ -49,6 +49,9 @@ const SurfaceItem = ({
           size={size}
           iconSize="small"
           color={type}
+          style={{
+            cursor: "move",
+          }}
         />
       </Tooltip>
     </Box>
