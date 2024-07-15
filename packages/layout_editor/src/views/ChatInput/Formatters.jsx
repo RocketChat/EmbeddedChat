@@ -69,13 +69,15 @@ const Formatters = ({ formatters, ...props }) => {
   }, [formatters, options]);
 
   return (
-    <Box css={styles.toolboxContainer}>
-      <Box css={styles.toolbox} className="ec-formatter-box">
-        {surfaceOptions?.length > 0 && (
-          <SurfaceMenu options={surfaceOptions} {...props} />
-        )}
-      </Box>
-    </Box>
+    <>
+      {surfaceOptions?.length > 0 && (
+        <Box css={styles.toolboxContainer}>
+          <Box css={styles.toolbox} className="ec-formatter-box">
+            <SurfaceMenu options={surfaceOptions} {...props} />
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

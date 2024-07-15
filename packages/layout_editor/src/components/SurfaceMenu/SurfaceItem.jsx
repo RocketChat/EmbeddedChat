@@ -17,7 +17,7 @@ const SurfaceItem = ({
   onClick,
   onRemove,
   type,
-  position = "bottom",
+  tooltipPosition = "bottom",
   size,
 }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -47,7 +47,7 @@ const SurfaceItem = ({
   return (
     <Box ref={setNodeRef} style={style} id={id} {...attributes} {...listeners}>
       <Box css={styles.itemContainer}>
-        <Tooltip text={label} position={position} key={id}>
+        <Tooltip text={label} position={tooltipPosition} key={id}>
           <ActionButton
             square
             ghost
