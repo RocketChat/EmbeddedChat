@@ -15,6 +15,7 @@ const Menu = ({
   tooltip = { isToolTip: true, position: "bottom", text: "Options" },
   from = "top",
   size = "medium",
+  ...props
 }) => {
   const theme = useTheme();
   const styles = getMenuStyles(theme);
@@ -45,7 +46,7 @@ const Menu = ({
       >
         <SortableContext items={options}>
           {options.map((option, idx) => (
-            <MenuItem {...option} key={option.id || idx} />
+            <MenuItem {...option} key={option.id || idx} {...props} />
           ))}
         </SortableContext>
       </Box>

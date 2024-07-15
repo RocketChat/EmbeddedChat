@@ -141,6 +141,14 @@ const ChatInputToolbar = ({
       : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
   }, [surfaceItems, options]);
 
+  const removeSurfaceItem = (idToRemove) => {
+    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+  };
+
+  const removeFormatters = (idToRemove) => {
+    setFormatters((items) => items.filter((item) => item !== idToRemove));
+  };
+
   return (
     <DndContext
       sensors={sensors}
@@ -150,7 +158,11 @@ const ChatInputToolbar = ({
     >
       <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
         {surfaceOptions.length > 0 && (
-          <SurfaceMenu options={surfaceOptions} tooltipPosition="top" />
+          <SurfaceMenu
+            options={surfaceOptions}
+            tooltipPosition="top"
+            onRemove={removeSurfaceItem}
+          />
         )}
       </Box>
 
@@ -163,7 +175,7 @@ const ChatInputToolbar = ({
 
       {formattersVisible &&
         createPortal(
-          <Formatters formatters={formatters} />,
+          <Formatters formatters={formatters} onRemove={removeFormatters} />,
           document.getElementById("formatter")
         )}
     </DndContext>

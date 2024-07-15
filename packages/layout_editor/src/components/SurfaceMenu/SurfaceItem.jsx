@@ -15,6 +15,7 @@ const SurfaceItem = ({
   label,
   iconName,
   onClick,
+  onRemove,
   type,
   position = "bottom",
   size,
@@ -39,6 +40,10 @@ const SurfaceItem = ({
     return <Box ref={setNodeRef} style={style} css={styles.overlayBox}></Box>;
   }
 
+  const handleRemoveItem = (id) => {
+    if (id !== "placeholder-surface") onRemove(id);
+  };
+
   return (
     <Box ref={setNodeRef} style={style} id={id} {...attributes} {...listeners}>
       <Box css={styles.itemContainer}>
@@ -55,15 +60,23 @@ const SurfaceItem = ({
               cursor: "grab",
             }}
           />
-          <Box css={styles.iconBox}>
-            <Icon
-              name="cross"
-              className="crossIcon"
-              height="12px"
-              width="12px"
-              css={styles.icon}
-            />
-          </Box>
+
+          {id !== "placeholder-surface" && (
+            <Box
+              css={styles.iconBox}
+              onClick={() => {
+                handleRemoveItem(id);
+              }}
+            >
+              <Icon
+                name="cross"
+                className="crossIcon"
+                height="12px"
+                width="12px"
+                css={styles.icon}
+              />
+            </Box>
+          )}
         </Tooltip>
       </Box>
     </Box>

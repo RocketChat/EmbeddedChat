@@ -3,7 +3,7 @@ import { Box } from "@embeddedchat/ui-elements";
 import { useFormatterStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 
-const Formatters = ({ formatters }) => {
+const Formatters = ({ formatters, ...props }) => {
   const styles = useFormatterStyles();
 
   const options = useMemo(() => {
@@ -71,7 +71,9 @@ const Formatters = ({ formatters }) => {
   return (
     <Box css={styles.toolboxContainer}>
       <Box css={styles.toolbox} className="ec-formatter-box">
-        {surfaceOptions?.length > 0 && <SurfaceMenu options={surfaceOptions} />}
+        {surfaceOptions?.length > 0 && (
+          <SurfaceMenu options={surfaceOptions} {...props} />
+        )}
       </Box>
     </Box>
   );

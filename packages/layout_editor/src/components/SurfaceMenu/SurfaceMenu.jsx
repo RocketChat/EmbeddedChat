@@ -2,16 +2,11 @@ import React from "react";
 import SurfaceItem from "./SurfaceItem";
 import { SortableContext } from "@dnd-kit/sortable";
 
-const SurfaceMenu = ({ options, tooltipPosition, size = "medium" }) => {
+const SurfaceMenu = ({ options, ...props }) => {
   return (
     <SortableContext items={options}>
       {options?.map((item, idx) => (
-        <SurfaceItem
-          {...item}
-          key={idx}
-          position={tooltipPosition}
-          size={size}
-        />
+        <SurfaceItem {...item} key={idx} {...props} />
       ))}
     </SortableContext>
   );

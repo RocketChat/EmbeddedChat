@@ -160,7 +160,7 @@ const ChatHeader = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-       distance: 1.5,
+        distance: 1.5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -236,6 +236,14 @@ const ChatHeader = ({
     }
   };
 
+  const removeSurfaceItem = (idToRemove) => {
+    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+  };
+
+  const removeMenuItem = (idToRemove) => {
+    setMenuItems((items) => items.filter((item) => item !== idToRemove));
+  };
+
   return (
     <Box css={styles.chatHeaderParent}>
       <Box css={styles.chatHeaderChild}>
@@ -267,9 +275,14 @@ const ChatHeader = ({
         >
           <Box css={styles.chatHeaderIconRow}>
             {surfaceOptions.length > 0 && (
-              <SurfaceMenu options={surfaceOptions} />
+              <SurfaceMenu
+                options={surfaceOptions}
+                onRemove={removeSurfaceItem}
+              />
             )}
-            {menuOptions.length > 0 && <Menu options={menuOptions} />}
+            {menuOptions.length > 0 && (
+              <Menu options={menuOptions} onRemove={removeMenuItem} />
+            )}
           </Box>
           {createPortal(
             <DragOverlay zIndex={1700}>

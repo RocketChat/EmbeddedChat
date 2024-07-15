@@ -223,6 +223,14 @@ export const MessageToolbox = ({
           .filter((option) => option !== null)
       : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
 
+  const removeSurfaceItem = (idToRemove) => {
+    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+  };
+
+  const removeMenuItem = (idToRemove) => {
+    setMenuItems((items) => items.filter((item) => item !== idToRemove));
+  };
+
   return (
     <>
       <Box css={variantStyles.toolboxContainer || styles.toolboxContainer}>
@@ -234,7 +242,11 @@ export const MessageToolbox = ({
         >
           <Box css={styles.toolbox} className="ec-message-toolbox" {...props}>
             {surfaceOptions?.length > 0 && (
-              <SurfaceMenu options={surfaceOptions} size="small" />
+              <SurfaceMenu
+                options={surfaceOptions}
+                size="small"
+                onRemove={removeSurfaceItem}
+              />
             )}
             {menuOptions?.length > 0 && (
               <Menu
@@ -244,6 +256,7 @@ export const MessageToolbox = ({
                 tooltip={{ isToolTip: true, position: "top", text: "More" }}
                 useWrapper={false}
                 style={{ top: "auto", bottom: `calc(100% + 2px)` }}
+                onRemove={removeMenuItem}
               />
             )}
           </Box>

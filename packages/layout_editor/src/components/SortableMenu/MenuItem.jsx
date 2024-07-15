@@ -5,7 +5,7 @@ import { getMenuItemStyles } from "./Menu.styles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const MenuItem = ({ id, icon, label, action, disabled }) => {
+const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
   const theme = useTheme();
   const styles = getMenuItemStyles(theme);
 
@@ -35,6 +35,10 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
     return <Box ref={setNodeRef} style={style} css={styles.dragOverlay} />;
   }
 
+  const handleRemoveItem = (id) => {
+    if (id !== "placeholder-menu") onRemove(id);
+  };
+
   return (
     <Box
       ref={setNodeRef}
@@ -48,14 +52,18 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
         <Icon name={icon} size="1em" />
         {label}
       </Box>
-
-      <Icon
-        name="cross"
-        css={styles.icon}
-        className="crossIcon"
-        height="12px"
-        width="12px"
-      />
+      {id !== "placeholder-menu" && (
+        <Icon
+          name="cross"
+          css={styles.icon}
+          className="crossIcon"
+          height="12px"
+          width="12px"
+          onClick={() => {
+            handleRemoveItem(id);
+          }}
+        />
+      )}
     </Box>
   );
 };
