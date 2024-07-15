@@ -36,7 +36,7 @@ export const getMenuItemStyles = (customTheme) => {
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       padding: 0.25em 0.75em;
       white-space: nowrap;
       gap: 0.2rem;
@@ -48,9 +48,30 @@ export const getMenuItemStyles = (customTheme) => {
         cursor: pointer;
       }
     `,
+
+    mainItems: css`
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    `,
+
     disabled: css`
       cursor: not-allowed !important;
       color: ${colors.mutedForeground};
+    `,
+
+    icon: css`
+      visibility: hidden;
+      &:hover {
+        fill: ${colors.destructive};
+      }
+    `,
+
+    showIcon: css`
+      &:hover .crossIcon {
+        visibility: visible;
+        cursor: pointer;
+      }
     `,
 
     dragOverlay: css`

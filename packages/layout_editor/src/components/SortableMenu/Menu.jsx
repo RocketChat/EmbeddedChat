@@ -23,7 +23,7 @@ const Menu = ({
     const positions = from.split(/\s+/);
     const styleAnchor = {};
     positions.forEach((pos) => {
-      styleAnchor[pos] = "100%";
+      styleAnchor[pos] = "120%";
     });
     return styleAnchor;
   }, [from]);

@@ -28,7 +28,7 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: "move",
+    cursor: "grab",
   };
 
   if (isDragging) {
@@ -41,11 +41,21 @@ const MenuItem = ({ id, icon, label, action, disabled }) => {
       style={style}
       {...attributes}
       {...listeners}
-      css={[styles.item, disabled && styles.disabled]}
+      css={[styles.item, styles.showIcon, disabled && styles.disabled]}
       onClick={!disabled && action}
     >
-      <Icon name={icon} size="1em" />
-      {label}
+      <Box css={styles.mainItems}>
+        <Icon name={icon} size="1em" />
+        {label}
+      </Box>
+
+      <Icon
+        name="cross"
+        css={styles.icon}
+        className="crossIcon"
+        height="12px"
+        width="12px"
+      />
     </Box>
   );
 };

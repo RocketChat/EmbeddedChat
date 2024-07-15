@@ -4,6 +4,7 @@ import {
   ActionButton,
   Box,
   useTheme,
+  Icon,
 } from "@embeddedchat/ui-elements";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -40,20 +41,31 @@ const SurfaceItem = ({
 
   return (
     <Box ref={setNodeRef} style={style} id={id} {...attributes} {...listeners}>
-      <Tooltip text={label} position={position} key={id}>
-        <ActionButton
-          square
-          ghost
-          onClick={onClick}
-          icon={iconName}
-          size={size}
-          iconSize="small"
-          color={type}
-          style={{
-            cursor: "move",
-          }}
-        />
-      </Tooltip>
+      <Box css={styles.itemContainer}>
+        <Tooltip text={label} position={position} key={id}>
+          <ActionButton
+            square
+            ghost
+            onClick={onClick}
+            icon={iconName}
+            size={size}
+            iconSize="small"
+            color={type}
+            style={{
+              cursor: "grab",
+            }}
+          />
+          <Box css={styles.iconBox}>
+            <Icon
+              name="cross"
+              className="crossIcon"
+              height="12px"
+              width="12px"
+              css={styles.icon}
+            />
+          </Box>
+        </Tooltip>
+      </Box>
     </Box>
   );
 };
