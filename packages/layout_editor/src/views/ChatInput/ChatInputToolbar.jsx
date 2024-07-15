@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box } from "@embeddedchat/ui-elements";
-import { useChatInputFormattingToolbarStyles } from "./ChatInput.styles";
+import { useChatInputToolbarStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
+import Formatters from "./Formatters";
 import {
   DndContext,
   closestCenter,
@@ -15,15 +16,18 @@ import {
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 
-const ChatInputFormattingToolbar = ({
+const ChatInputToolbar = ({
   optionConfig = {
     surfaceItems: ["emoji", "formatter", "audio", "video", "file"],
     formatters: ["bold", "italic", "strike", "code", "multiline"],
   },
 }) => {
-  const styles = useChatInputFormattingToolbarStyles();
+  const styles = useChatInputToolbarStyles();
   const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
+  const [formatters, setFormatters] = useState(optionConfig.formatters);
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
+  const [formattersVisible, setFormattersVisible] = useState(false);
+
   const placeholderSurfaceItem = "placeholder-surface";
 
   const options = useMemo(() => {
@@ -59,7 +63,9 @@ const ChatInputFormattingToolbar = ({
       formatter: {
         label: "Formatter",
         id: "formatter",
-        onClick: () => {},
+        onClick: () => {
+          setFormattersVisible((prev) => !prev);
+        },
         iconName: "format-text",
         visible: true,
       },
@@ -79,6 +85,9 @@ const ChatInputFormattingToolbar = ({
 
   const handleDragStart = (event) => {
     if (event.active.data.current?.type === "SurfaceOptions") {
+      if (options[event.active.id] !== undefined) {
+        setFormattersVisible(false);
+      }
       setActiveSurfaceItem({
         id: event.active.id,
         iconName: event.active.data.current.icon,
@@ -97,6 +106,12 @@ const ChatInputFormattingToolbar = ({
         event.over.data.current?.type === "SurfaceOptions"
       ) {
         setSurfaceItems((items) => {
+          const oldIndex = items.indexOf(active.id);
+          const newIndex = items.indexOf(over.id);
+          return arrayMove(items, oldIndex, newIndex);
+        });
+
+        setFormatters((items) => {
           const oldIndex = items.indexOf(active.id);
           const newIndex = items.indexOf(over.id);
           return arrayMove(items, oldIndex, newIndex);
@@ -145,8 +160,14 @@ const ChatInputFormattingToolbar = ({
         </DragOverlay>,
         document.body
       )}
+
+      {formattersVisible &&
+        createPortal(
+          <Formatters formatters={formatters} />,
+          document.getElementById("formatter")
+        )}
     </DndContext>
   );
 };
 
-export default ChatInputFormattingToolbar;
+export default ChatInputToolbar;

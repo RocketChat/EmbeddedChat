@@ -39,7 +39,7 @@ const SurfaceItem = ({
   }
 
   return (
-    <Box ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <Box ref={setNodeRef} style={style} id={id} {...attributes} {...listeners}>
       <Tooltip text={label} position={position} key={id}>
         <ActionButton
           square

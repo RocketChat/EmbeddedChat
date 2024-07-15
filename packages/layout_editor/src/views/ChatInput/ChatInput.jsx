@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { css } from "@emotion/react";
 import { Box, Input, ActionButton } from "@embeddedchat/ui-elements";
 import { useChatInputStyles } from "./ChatInput.styles";
-import ChatInputFormattingToolbar from "./ChatInputFormattingToolbar";
+import ChatInputToolbar from "./ChatInputToolbar";
 
 const ChatInput = () => {
   const styles = useChatInputStyles();
@@ -55,7 +55,7 @@ const ChatInput = () => {
             />
           </Box>
         </Box>
-        <ChatInputFormattingToolbar
+        <ChatInputToolbar
           messageRef={messageRef}
           inputRef={inputRef}
         />
