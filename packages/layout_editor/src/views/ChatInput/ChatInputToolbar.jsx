@@ -98,9 +98,9 @@ const ChatInputToolbar = ({
 
   const handleDragEnd = (event) => {
     setActiveSurfaceItem(null);
-    const { active, over } = event;
+    const { active, over } = event || {};
 
-    if (active.id !== over.id) {
+    if (active?.id !== over?.id) {
       if (
         event.active.data.current?.type === "SurfaceOptions" &&
         event.over.data.current?.type === "SurfaceOptions"

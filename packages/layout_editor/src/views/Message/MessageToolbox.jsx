@@ -48,7 +48,7 @@ export const MessageToolbox = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-       distance: 1.5,
+        distance: 1.5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -75,9 +75,9 @@ export const MessageToolbox = ({
   const handleDragEnd = (event) => {
     setActiveSurfaceItem(null);
     setActiveMenuItem(null);
-    const { active, over } = event;
+    const { active, over } = event || {};
 
-    if (active.id !== over.id) {
+    if (active?.id !== over?.id) {
       if (
         event.active.data.current?.type === "SurfaceOptions" &&
         event.over.data.current?.type === "SurfaceOptions"
