@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ChatBody from '../Chatbody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
@@ -8,7 +8,7 @@ import DemoSidebar from '../DemoSidebar/DemoSidebar';
 import members from '../../data/members.json';
 
 const ChatLayout = () => {
-  const styles = getChatLayoutStyles();
+  const styles = getChatLayoutStyles(useTheme());
 
   const handleResize = (size) => {
     const minSize = 26.5;
@@ -33,7 +33,12 @@ const ChatLayout = () => {
             <div id="emoji-popup" />
           </Box>
         </Panel>
-        <PanelResizeHandle />
+        <PanelResizeHandle
+          style={{
+            width: '2px',
+            boxShadow: '0px 0px 0.5px rgba(0, 0, 0, 0.5)',
+          }}
+        />
         <Panel
           defaultSize={26.5}
           minSize={26.5}
