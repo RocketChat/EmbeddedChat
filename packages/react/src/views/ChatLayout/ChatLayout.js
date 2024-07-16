@@ -11,6 +11,7 @@ import {
   useMentionsStore,
   useThreadsMessageStore,
   useMemberStore,
+  useSidebarStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -38,6 +39,7 @@ const ChatLayout = () => {
   const { ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
   const showRoles = ECOptions?.anonymousMode;
+  const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
   const showAllThreads = useThreadsMessageStore(
@@ -92,23 +94,25 @@ const ChatLayout = () => {
         <div id="emoji-popup" />
       </Box>
 
-      <Box className="ec-sidebar-view">
-        {showMembers && <RoomMembers members={members} />}
-        {showSearch && <SearchMessages />}
-        {showChannelinfo && <Roominfo />}
-        {showAllThreads && <ThreadedMessages />}
-        {showAllFiles && <FileGallery />}
-        {showMentions && <MentionedMessages />}
-        {showPinned && <PinnedMessages />}
-        {showStarred && <StarredMessages />}
-        {showCurrentUserInfo && <UserInformation />}
-        {uiKitContextualBarOpen && (
-          <UiKitContextualBar
-            key={Math.random()}
-            initialView={uiKitContextualBarData}
-          />
-        )}
-      </Box>
+      {showSidebar && (
+        <Box className="ec-sidebar-view">
+          {showMembers && <RoomMembers members={members} />}
+          {showSearch && <SearchMessages />}
+          {showChannelinfo && <Roominfo />}
+          {showAllThreads && <ThreadedMessages />}
+          {showAllFiles && <FileGallery />}
+          {showMentions && <MentionedMessages />}
+          {showPinned && <PinnedMessages />}
+          {showStarred && <StarredMessages />}
+          {showCurrentUserInfo && <UserInformation />}
+          {uiKitContextualBarOpen && (
+            <UiKitContextualBar
+              key={Math.random()}
+              initialView={uiKitContextualBarData}
+            />
+          )}
+        </Box>
+      )}
 
       {attachmentWindowOpen ? (
         data ? (
