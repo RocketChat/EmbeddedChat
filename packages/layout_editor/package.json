@@ -14,7 +14,8 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@embeddedchat/ui-elements": "workspace:^",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-resizable-panels": "^2.0.20"
   },
   "devDependencies": {
     "@emotion/babel-preset-css-prop": "^11.11.0",

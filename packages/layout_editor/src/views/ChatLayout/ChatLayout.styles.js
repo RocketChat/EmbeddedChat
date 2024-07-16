@@ -1,9 +1,9 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
 export const getChatLayoutStyles = () => {
   const styles = {
     layout: css`
-      flex-basis: 100%;
+      height: 100%;
       display: flex;
       overflow: hidden;
     `,
@@ -11,7 +11,8 @@ export const getChatLayoutStyles = () => {
     chatMain: css`
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      height: 100%;
+      flex: 1;
       position: relative;
     `,
   };
