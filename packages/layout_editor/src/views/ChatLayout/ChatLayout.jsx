@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ChatBody from '../Chatbody/ChatBody';
@@ -45,7 +45,7 @@ const ChatLayout = () => {
           maxSize={60}
           onResize={handleResize}
         >
-          <Box className="ec-sidebar-view">
+          <Box className="ec-sidebar-view" style={{ height: '100%' }}>
             <DemoSidebar members={members} />
           </Box>
         </Panel>
