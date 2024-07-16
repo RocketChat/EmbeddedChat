@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -19,6 +19,7 @@ const Menu = ({
 }) => {
   const theme = useTheme();
   const styles = getMenuStyles(theme);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const anchorStyle = useMemo(() => {
     const positions = from.split(/\s+/);
@@ -29,27 +30,38 @@ const Menu = ({
     return styleAnchor;
   }, [from]);
 
+  const handleMenuVisibility = () => {
+    setIsMenuVisible((prev) => !prev);
+  };
+
   return (
     <Box>
       <Tooltip text={tooltip.text} position={tooltip.position}>
-        <ActionButton ghost icon="kebab" size={size} />
+        <ActionButton
+          ghost
+          icon="kebab"
+          size={size}
+          onClick={handleMenuVisibility}
+        />
       </Tooltip>
 
-      <Box
-        css={[
-          styles.container,
-          css`
-            box-shadow: ${theme.theme.shadows[2]};
-          `,
-        ]}
-        style={anchorStyle}
-      >
-        <SortableContext items={options}>
-          {options.map((option, idx) => (
-            <MenuItem {...option} key={option.id || idx} {...props} />
-          ))}
-        </SortableContext>
-      </Box>
+      {isMenuVisible && (
+        <Box
+          css={[
+            styles.container,
+            css`
+              box-shadow: ${theme.theme.shadows[2]};
+            `,
+          ]}
+          style={anchorStyle}
+        >
+          <SortableContext items={options}>
+            {options.map((option, idx) => (
+              <MenuItem {...option} key={option.id || idx} {...props} />
+            ))}
+          </SortableContext>
+        </Box>
+      )}
     </Box>
   );
 };
