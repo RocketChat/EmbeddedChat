@@ -7,12 +7,12 @@ import {
   useTheme,
   appendClassNames,
 } from "@embeddedchat/ui-elements";
-import { useMessageHeaderStyles } from "./Message.styles";
+import { getMessageHeaderStyles } from "./Message.styles";
 import useDisplayNameColor from "../../hooks/useDisplayNameColor";
 
 const MessageHeader = ({ message, variantOverrides }) => {
   const displayNameVariant = variantOverrides || "Normal";
-  const styles = useMessageHeaderStyles();
+  const styles = getMessageHeaderStyles(useTheme());
   const { colors } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 

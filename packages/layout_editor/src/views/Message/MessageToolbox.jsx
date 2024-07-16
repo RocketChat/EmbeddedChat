@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
-import { Box } from "@embeddedchat/ui-elements";
+import { Box, useTheme } from "@embeddedchat/ui-elements";
 import { Menu } from "../../components/SortableMenu";
-import { useMessageToolboxStyles } from "./Message.styles";
+import { getMessageToolboxStyles } from "./Message.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
 import MenuItem from "../../components/SortableMenu/MenuItem";
@@ -36,7 +36,7 @@ export const MessageToolbox = ({
 
   ...props
 }) => {
-  const styles = useMessageToolboxStyles();
+  const styles = getMessageToolboxStyles(useTheme());
   const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
   const [menuItems, setMenuItems] = useState(optionConfig.menuItems);
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);

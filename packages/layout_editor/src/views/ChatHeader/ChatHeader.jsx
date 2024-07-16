@@ -30,8 +30,7 @@ const ChatHeader = ({
     menuItems: ["files", "members", "search", "rInfo", "logout"],
   },
 }) => {
-  const theme = useTheme();
-  const styles = getChatHeaderStyles(theme);
+  const styles = getChatHeaderStyles(useTheme());
   const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
   const [menuItems, setMenuItems] = useState(optionConfig.menuItems);
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);

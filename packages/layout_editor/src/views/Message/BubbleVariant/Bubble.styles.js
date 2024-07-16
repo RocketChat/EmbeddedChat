@@ -1,11 +1,9 @@
-import { css } from '@emotion/react';
-import { alpha } from '@embeddedchat/ui-elements';
+import { css } from "@emotion/react";
+import { alpha } from "@embeddedchat/ui-elements";
 
-export const bubbleStyles = (customTheme) => {
-  const { theme, colors } = customTheme;
-
+export const bubbleStyles = ({ theme, colors }) => {
   const styles = {
-    name: 'bubble',
+    name: "bubble",
     messageParent: css`
       display: flex;
       gap: 0.25rem;

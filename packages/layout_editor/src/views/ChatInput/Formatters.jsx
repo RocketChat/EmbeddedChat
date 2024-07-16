@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { Box } from "@embeddedchat/ui-elements";
-import { useFormatterStyles } from "./ChatInput.styles";
+import { Box, useTheme } from "@embeddedchat/ui-elements";
+import { getFormatterStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 
 const Formatters = ({ formatters, ...props }) => {
-  const styles = useFormatterStyles();
+  const styles = getFormatterStyles(useTheme());
 
   const options = useMemo(() => {
     return {

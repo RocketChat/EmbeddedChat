@@ -1,18 +1,20 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
-const styles = {
-  layout: css`
-    flex-basis: 100%;
-    display: flex;
-    overflow: hidden;
-  `,
+export const getChatLayoutStyles = () => {
+  const styles = {
+    layout: css`
+      flex-basis: 100%;
+      display: flex;
+      overflow: hidden;
+    `,
 
-  chatMain: css`
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    position: relative;
-  `,
+    chatMain: css`
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      position: relative;
+    `,
+  };
+
+  return styles;
 };
-
-export default styles;

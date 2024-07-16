@@ -1,10 +1,10 @@
 import React from "react";
 import { Box } from "@embeddedchat/ui-elements";
 
-import { useMessageBodyContainerStyles } from "./Message.styles";
+import { getMessageBodyContainerStyles } from "./Message.styles";
 
 const MessageBodyContainer = ({ children, variantStyles = {} }) => {
-  const styles = useMessageBodyContainerStyles();
+  const styles = getMessageBodyContainerStyles();
 
   return (
     <Box

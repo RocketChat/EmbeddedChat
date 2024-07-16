@@ -1,21 +1,15 @@
-import React from 'react';
-import {
-  Box,
-} from '@embeddedchat/ui-elements';
+import React from "react";
+import { Box, useTheme } from "@embeddedchat/ui-elements";
 
-import { useMessageDividerStyles } from './Message.styles';
+import { getMessageDividerStyles } from "./Message.styles";
 
-export const MessageDivider = ({
-  children,
-  ...props
-}) => {
-
-  const styles = useMessageDividerStyles();
+export const MessageDivider = ({ children, ...props }) => {
+  const styles = getMessageDividerStyles(useTheme());
   return (
     <Box
       role="separator"
       css={styles.divider}
-      className='ec-message-divider'
+      className="ec-message-divider"
       {...props}
     >
       {children && (

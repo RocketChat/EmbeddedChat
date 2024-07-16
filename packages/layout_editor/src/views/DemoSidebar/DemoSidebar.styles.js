@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-export const useDemoSidebarStyles = () => {
+export const getDemoSidebarStyles = () => {
   const styles = {
     container: css`
       display: flex;

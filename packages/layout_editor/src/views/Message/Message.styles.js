@@ -1,200 +1,204 @@
 import { css } from "@emotion/react";
-import { lighten, darken, useTheme } from "@embeddedchat/ui-elements";
+import { lighten, darken } from "@embeddedchat/ui-elements";
 
-export const useMessageStyles = () => {
-  const { mode, colors } = useTheme();
+export const getMessageStyles = ({ mode, colors }) => {
+  const styles = {
+    main: css`
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding-top: 0.5rem;
+      padding-bottom: 0.25rem;
+      padding-left: 2.25rem;
+      padding-right: 2.25rem;
+      color: ${colors.foreground};
 
-  const main = css`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding-top: 0.5rem;
-    padding-bottom: 0.25rem;
-    padding-left: 2.25rem;
-    padding-right: 2.25rem;
-    color: ${colors.foreground};
+      &:hover {
+        background-color: ${mode === "light"
+          ? darken(colors.background, 0.03)
+          : lighten(colors.background, 1)};
+      }
+    `,
+    messageEditing: css`
+      background-color: ${colors.secondary};
+      &:hover {
+        background-color: ${colors.secondary};
+      }
+    `,
 
-    &:hover {
+    pendingMessageBody: css`
+      opacity: 0.4 !important;
+      white-space: pre-line;
+    `,
+
+    specialMessage: css`
       background-color: ${mode === "light"
         ? darken(colors.background, 0.03)
         : lighten(colors.background, 1)};
-    }
-  `;
-  const messageEditing = css`
-    background-color: ${colors.secondary};
-    &:hover {
+    `,
+  };
+
+  return styles;
+};
+
+export const getMessageAvatarContainerStyles = ({ colors }) => {
+  const styles = {
+    container: css`
+      margin: 3px;
+      width: 2.25em;
+      max-height: 2.25em;
+      display: flex;
+      justify-content: flex-end;
+      color: ${colors.primary};
+    `,
+  };
+
+  return styles;
+};
+
+export const getMessageBodyStyles = () => {
+  const styles = {
+    messageBody: css`
+      position: relative;
+      letter-spacing: 0rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.25rem;
+      flex-shrink: 1;
+      transition: opacity 0.3s linear;
+      word-break: break-word;
+      opacity: 1;
+      margin-top: 0.125rem;
+      margin-bottom: 0.125rem;
+    `,
+  };
+
+  return styles;
+};
+
+export const getMessageDividerStyles = ({ theme, colors }) => {
+  const styles = {
+    divider: css`
+      letter-spacing: 0rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1rem;
+      position: relative;
+      display: flex;
+      z-index: ${theme.zIndex.divider};
+      align-items: center;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    `,
+
+    dividerContent: css`
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
       background-color: ${colors.secondary};
-    }
-  `;
+      color: ${colors.secondaryForeground};
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: ${theme.schemes.radius};
+    `,
 
-  const pendingMessageBody = css`
-    opacity: 0.4 !important;
-    white-space: pre-line;
-  `;
+    bar: css`
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-grow: 1;
+      height: 1px;
+      background-color: ${colors.secondary};
+    `,
+  };
 
-  const specialMessage = css`
-    background-color: ${mode === "light"
-      ? darken(colors.background, 0.03)
-      : lighten(colors.background, 1)};
-  `;
-
-  return { main, messageEditing, pendingMessageBody, specialMessage };
+  return styles;
 };
 
-export const useMessageAvatarContainerStyles = () => {
-  const { colors } = useTheme();
+export const getMessageHeaderStyles = ({ theme, colors }) => {
+  const styles = {
+    header: css`
+      display: flex;
+      flex-direction: row;
+      flex-grow: 0;
+      flex-shrink: 1;
+      min-width: 1px;
+      margin-top: 0.125rem;
+      margin-bottom: 0.125rem;
+      gap: 0.125rem;
+      align-items: center;
+    `,
 
-  const container = css`
-    margin: 3px;
-    width: 2.25em;
-    max-height: 2.25em;
-    display: flex;
-    justify-content: flex-end;
-    color: ${colors.primary};
-  `;
+    name: css`
+      letter-spacing: 0rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.25rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 1;
+    `,
 
-  return { container };
+    userName: css`
+      color: ${colors.accentForeground};
+      font-weight: 700;
+      letter-spacing: 0rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 1;
+    `,
+
+    userRole: css`
+      letter-spacing: 0rem;
+      font-size: 0.75rem;
+      padding: 0 0.25rem;
+      margin: 0 0.1rem;
+      border-radius: ${theme.schemes.radius};
+      font-weight: 700;
+      line-height: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: ${colors.secondary};
+    `,
+
+    userActions: css`
+      color: ${colors.accentForeground};
+      letter-spacing: 0rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 1;
+    `,
+
+    timestamp: css`
+      color: ${colors.accentForeground};
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: 0rem;
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1rem;
+      flex-shrink: 0;
+      margin-left: 0.25rem;
+    `,
+  };
+
+  return styles;
 };
 
-export const MessageBodyStyles = {
-  messageBody: css`
-    position: relative;
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.25rem;
-    flex-shrink: 1;
-    transition: opacity 0.3s linear;
-    word-break: break-word;
-    opacity: 1;
-    margin-top: 0.125rem;
-    margin-bottom: 0.125rem;
-  `,
-};
-
-export const useMessageDividerStyles = () => {
-  const { theme, colors } = useTheme();
-
-  const divider = css`
-    letter-spacing: 0rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    line-height: 1rem;
-    position: relative;
-    display: flex;
-    z-index: ${theme.zIndex.divider};
-    align-items: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.75rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-  `;
-
-  const dividerContent = css`
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    background-color: ${colors.secondary};
-    color: ${colors.secondaryForeground};
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: ${theme.schemes.radius};
-  `;
-
-  const bar = css`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-grow: 1;
-    height: 1px;
-    background-color: ${colors.secondary};
-  `;
-
-  return { divider, bar, dividerContent };
-};
-
-export const useMessageHeaderStyles = () => {
-  const { theme, colors } = useTheme();
-
-  const header = css`
-    display: flex;
-    flex-direction: row;
-    flex-grow: 0;
-    flex-shrink: 1;
-    min-width: 1px;
-    margin-top: 0.125rem;
-    margin-bottom: 0.125rem;
-    gap: 0.125rem;
-    align-items: center;
-  `;
-
-  const name = css`
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.25rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-  `;
-
-  const userName = css`
-    color: ${colors.accentForeground};
-    font-weight: 700;
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-  `;
-
-  const userRole = css`
-    letter-spacing: 0rem;
-    font-size: 0.75rem;
-    padding: 0 0.25rem;
-    margin: 0 0.1rem;
-    border-radius: ${theme.schemes.radius};
-    font-weight: 700;
-    line-height: 1rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    background-color: ${colors.secondary};
-  `;
-
-  const userActions = css`
-    color: ${colors.accentForeground};
-    letter-spacing: 0rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-  `;
-
-  const timestamp = css`
-    color: ${colors.accentForeground};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    letter-spacing: 0rem;
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1rem;
-    flex-shrink: 0;
-    margin-left: 0.25rem;
-  `;
-
-  return { header, name, userRole, userName, timestamp, userActions };
-};
-
-export const MessageMetricsStyles = {
+export const getMessageMetricsStyles = {
   metrics: css`
     display: flex;
     margin-left: -0.25rem;
@@ -220,84 +224,83 @@ export const MessageMetricsStyles = {
   `,
 };
 
-export const useMessageReactionsStyles = () => {
-  const { colors } = useTheme();
-  const container = css`
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-  `;
+export const getMessageReactionsStyles = ({ colors }) => {
+  const styles = {
+    container: css`
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
+    `,
 
-  const reaction = css`
-    letter-spacing: 0rem;
-    font-size: 0.6rem;
-    display: inline-flex;
-    gap: 0.125rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0.1rem;
-    margin: 0.125rem;
-    cursor: pointer;
-    img.joypixels {
-      height: 0.75em;
-      width: 0.75em;
-    }
-    p {
-      margin: 0;
-    }
-    border: 1px solid ${colors.border};
-    border-radius: 0.2rem;
-  `;
+    reaction: css`
+      letter-spacing: 0rem;
+      font-size: 0.6rem;
+      display: inline-flex;
+      gap: 0.125rem;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem;
+      margin: 0.125rem;
+      cursor: pointer;
+      img.joypixels {
+        height: 0.75em;
+        width: 0.75em;
+      }
+      p {
+        margin: 0;
+      }
+      border: 1px solid ${colors.border};
+      border-radius: 0.2rem;
+    `,
 
-  const reactionMine = css`
-    background: ${colors.secondary};
-  `;
-
-  return { container, reaction, reactionMine };
-};
-
-export const useMessageToolboxStyles = () => {
-  const { theme, colors } = useTheme();
-
-  const toolboxContainer = css`
-    display: flex;
-    position: absolute;
-    bottom: 100%;
-    z-index: ${theme.zIndex.body + 1};
-    right: 2rem;
-  `;
-
-  const toolbox = css`
-    display: flex;
-    margin-left: -0.25rem;
-    margin-right: -0.25rem;
-    margin-top: 0.125rem;
-    background-color: ${colors.background};
-    box-shadow: 0 0 2px ${colors.foreground};
-    gap: 0.25rem;
-    padding: 0.25rem;
-    border-radius: ${theme.schemes.radius};
-  `;
-
-  const emojiPickerStyles = css`
-    position: absolute;
-    bottom: 100%;
-    right: 1.5rem;
-  `;
-
-  return {
-    toolboxContainer,
-    toolbox,
-    emojiPickerStyles,
+    reactionMine: css`
+      background: ${colors.secondary};
+    `,
   };
+
+  return styles;
 };
 
-export const useMessageBodyContainerStyles = () => {
-  const bodyContainer = css`
-    margin-left: 5px;
-    position: relative;
-    width: 100%;
-  `;
+export const getMessageToolboxStyles = ({ theme, colors }) => {
+  const styles = {
+    toolboxContainer: css`
+      display: flex;
+      position: absolute;
+      bottom: 100%;
+      z-index: ${theme.zIndex.body + 1};
+      right: 2rem;
+    `,
 
-  return { bodyContainer };
+    toolbox: css`
+      display: flex;
+      margin-left: -0.25rem;
+      margin-right: -0.25rem;
+      margin-top: 0.125rem;
+      background-color: ${colors.background};
+      box-shadow: 0 0 2px ${colors.foreground};
+      gap: 0.25rem;
+      padding: 0.25rem;
+      border-radius: ${theme.schemes.radius};
+    `,
+
+    emojiPickerStyles: css`
+      position: absolute;
+      bottom: 100%;
+      right: 1.5rem;
+    `,
+  };
+
+  return styles;
+};
+
+export const getMessageBodyContainerStyles = () => {
+  const styles = {
+    bodyContainer: css`
+      margin-left: 5px;
+      position: relative;
+      width: 100%;
+    `,
+  };
+
+  return styles;
 };

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Box } from "@embeddedchat/ui-elements";
-import { useChatInputToolbarStyles } from "./ChatInput.styles";
+import React, { useMemo, useState } from "react";
+import { Box, useTheme } from "@embeddedchat/ui-elements";
+import { getChatInputToolbarStyles } from "./ChatInput.styles";
 import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
 import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
 import Formatters from "./Formatters";
@@ -22,7 +22,7 @@ const ChatInputToolbar = ({
     formatters: ["bold", "italic", "strike", "code", "multiline"],
   },
 }) => {
-  const styles = useChatInputToolbarStyles();
+  const styles = getChatInputToolbarStyles(useTheme());
   const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
   const [formatters, setFormatters] = useState(optionConfig.formatters);
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);

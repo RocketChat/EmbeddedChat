@@ -1,10 +1,10 @@
-import { useTheme } from '@embeddedchat/ui-elements';
-import { bubbleStyles, bubbleStylesMe } from './Bubble.styles';
+import { useTheme } from "@embeddedchat/ui-elements";
+import { bubbleStyles, bubbleStylesMe } from "./Bubble.styles";
 
 const useBubbleStyles = (isMe = false) => {
-  const customTheme = useTheme();
-  const styles = bubbleStyles(customTheme);
-  const meStyles = bubbleStylesMe(customTheme);
+  const theme = useTheme();
+  const styles = bubbleStyles(theme);
+  const meStyles = bubbleStylesMe(theme);
 
   const mergedStyles = {};
 

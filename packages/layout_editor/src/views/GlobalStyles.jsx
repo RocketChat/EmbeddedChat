@@ -1,8 +1,8 @@
-import React from 'react';
-import { css, Global } from '@emotion/react';
-import { useTheme, alpha } from '@embeddedchat/ui-elements';
+import React from "react";
+import { css, Global } from "@emotion/react";
+import { useTheme, alpha } from "@embeddedchat/ui-elements";
 
-const useStyles = (colors, theme) => css`
+const useStyles = ({ colors, theme }) => css`
   .ec-embedded-chat * {
     box-sizing: border-box;
     margin: 0;
@@ -39,8 +39,7 @@ const useStyles = (colors, theme) => css`
 `;
 
 const GlobalStyles = () => {
-  const { theme, colors } = useTheme();
-  const styles = useStyles(colors, theme);
+  const styles = useStyles(useTheme());
 
   return <Global styles={styles} />;
 };

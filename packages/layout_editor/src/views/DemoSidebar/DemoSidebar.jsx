@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Icon, Sidebar, Popup } from "@embeddedchat/ui-elements";
 import { css } from "@emotion/react";
-import { useDemoSidebarStyles } from "./DemoSidebar.styles";
+import { getDemoSidebarStyles } from "./DemoSidebar.styles";
 
 const DemoSidebar = ({ members, viewType = "Sidebar" }) => {
   const ViewComponent = viewType === "Popup" ? Popup : Sidebar;
-  const styles = useDemoSidebarStyles();
+  const styles = getDemoSidebarStyles();
   return (
     <ViewComponent
       title="Members"

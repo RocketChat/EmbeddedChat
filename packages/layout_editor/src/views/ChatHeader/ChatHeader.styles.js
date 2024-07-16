@@ -1,15 +1,7 @@
 import { css } from "@emotion/react";
 import { darken } from "@embeddedchat/ui-elements";
 
-const rowCentreAlign = css`
-  display: flex;
-  flex-direction: ;
-  align-items: center;
-`;
-
-export const getChatHeaderStyles = (customTheme) => {
-  const { theme, mode, colors } = customTheme;
-
+export const getChatHeaderStyles = ({ theme, mode, colors }) => {
   const styles = {
     clearSpacing: css`
       margin: 0;
@@ -17,7 +9,9 @@ export const getChatHeaderStyles = (customTheme) => {
     `,
 
     chatHeaderChild: css`
-      ${rowCentreAlign}
+      display: flex;
+      flex-direction: ;
+      align-items: center;
       padding: 0 0.75rem;
       justify-content: space-between;
       width: 100%;
@@ -36,13 +30,17 @@ export const getChatHeaderStyles = (customTheme) => {
     `,
 
     channelDescription: css`
-      ${rowCentreAlign}
+      display: flex;
+      flex-direction: ;
+      align-items: center;
       gap: 0.5rem;
     `,
 
     chatHeaderIconRow: css`
-      ${rowCentreAlign}
-      position:relative;
+      display: flex;
+      flex-direction: ;
+      align-items: center;
+      position: relative;
       gap: 0.5rem;
     `,
 

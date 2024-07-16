@@ -1,9 +1,7 @@
 import { css } from "@emotion/react";
-import { darken, useTheme } from "@embeddedchat/ui-elements";
+import { darken } from "@embeddedchat/ui-elements";
 
-export const useChatInputStyles = () => {
-  const { theme, colors } = useTheme();
-
+export const getChatInputStyles = ({ theme, colors }) => {
   const styles = {
     inputWithFormattingBox: css`
       border: 1px solid ${colors.border};
@@ -50,9 +48,7 @@ export const useChatInputStyles = () => {
   return styles;
 };
 
-export const useChatInputToolbarStyles = () => {
-  const { theme, mode, colors } = useTheme();
-
+export const getChatInputToolbarStyles = ({ theme, mode, colors }) => {
   const styles = {
     chatFormat: css`
       bottom: 0;
@@ -72,8 +68,7 @@ export const useChatInputToolbarStyles = () => {
   return styles;
 };
 
-export const useFormatterStyles = () => {
-  const { theme, colors } = useTheme();
+export const getFormatterStyles = ({ theme, colors }) => {
   const styles = {
     toolboxContainer: css`
       display: flex;

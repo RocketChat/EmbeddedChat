@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@embeddedchat/ui-elements";
-import { MessageBodyStyles as styles } from "./Message.styles";
+import { getMessageBodyStyles } from "./Message.styles";
 
 export const MessageBody = ({
   children,
@@ -10,6 +10,7 @@ export const MessageBody = ({
   lastSequential = false,
   ...props
 }) => {
+  const styles = getMessageBodyStyles();
   const messageBodyStyles =
     (isText ? variantStyles.messageBody : variantStyles.attachmentBody) ||
     styles.messageBody;

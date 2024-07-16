@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
-import { Box } from "@embeddedchat/ui-elements";
+import { Box, useTheme } from "@embeddedchat/ui-elements";
 import { Markdown } from "../Markdown";
 import MessageHeader from "./MessageHeader";
 import { MessageBody } from "./MessageBody";
@@ -9,7 +9,7 @@ import { MessageToolbox } from "./MessageToolbox";
 import { MessageDivider } from "./MessageDivider";
 import MessageAvatarContainer from "./MessageAvatarContainer";
 import MessageBodyContainer from "./MessageBodyContainer";
-import { useMessageStyles } from "./Message.styles";
+import { getMessageStyles } from "./Message.styles";
 import useBubbleStyles from "./BubbleVariant/useBubbleStyles";
 
 const Message = ({
@@ -20,7 +20,7 @@ const Message = ({
   variantOverrides = "default",
 }) => {
   const isMe = message.u.username === "spiral_memory";
-  const styles = useMessageStyles();
+  const styles = getMessageStyles(useTheme());
   const bubbleStyles = useBubbleStyles(isMe);
   const shouldShowHeader = !sequential;
   const variantStyles = variantOverrides === "bubble" ? bubbleStyles : {};

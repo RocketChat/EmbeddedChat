@@ -1,9 +1,9 @@
 import React from "react";
-import { Box, Icon } from "@embeddedchat/ui-elements";
-import { useMessageAvatarContainerStyles } from "./Message.styles";
+import { Box, Icon, useTheme } from "@embeddedchat/ui-elements";
+import { getMessageAvatarContainerStyles } from "./Message.styles";
 
 const MessageAvatarContainer = ({ message, sequential }) => {
-  const styles = useMessageAvatarContainerStyles();
+  const styles = getMessageAvatarContainerStyles(useTheme());
 
   return (
     <Box css={styles.container}>
