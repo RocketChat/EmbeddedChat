@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import {
   Tooltip,
   ActionButton,
   Box,
   useTheme,
   Icon,
-} from "@embeddedchat/ui-elements";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { getSurfaceItemStyles } from "./SurfaceMenu.styles";
+} from '@embeddedchat/ui-elements';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { getSurfaceItemStyles } from './SurfaceMenu.styles';
 
 const SurfaceItem = ({
   id,
@@ -17,14 +17,14 @@ const SurfaceItem = ({
   onClick,
   onRemove,
   type,
-  tooltipPosition = "bottom",
+  tooltipPosition = 'bottom',
   size,
 }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useSortable({
       id,
       data: {
-        type: "SurfaceOptions",
+        type: 'SurfaceOptions',
         icon: iconName,
         label,
       },
@@ -41,7 +41,7 @@ const SurfaceItem = ({
   }
 
   const handleRemoveItem = (id) => {
-    if (id !== "placeholder-surface") onRemove(id);
+    if (id !== 'placeholder-surface') onRemove(id);
   };
 
   return (
@@ -57,11 +57,11 @@ const SurfaceItem = ({
             iconSize="small"
             color={type}
             style={{
-              cursor: "grab",
+              cursor: 'grab',
             }}
           />
 
-          {id !== "placeholder-surface" && (
+          {id !== 'placeholder-surface' && (
             <Box
               css={styles.iconBox}
               onClick={() => {

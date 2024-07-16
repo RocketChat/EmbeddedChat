@@ -1,20 +1,20 @@
-import React, { useMemo } from "react";
-import { css } from "@emotion/react";
+import React, { useMemo } from 'react';
+import { css } from '@emotion/react';
 import {
   Box,
   ActionButton,
   Tooltip,
   useTheme,
-} from "@embeddedchat/ui-elements";
-import MenuItem from "./MenuItem";
-import { getMenuStyles } from "./Menu.styles";
-import { SortableContext } from "@dnd-kit/sortable";
+} from '@embeddedchat/ui-elements';
+import MenuItem from './MenuItem';
+import { getMenuStyles } from './Menu.styles';
+import { SortableContext } from '@dnd-kit/sortable';
 
 const Menu = ({
   options = [],
-  tooltip = { isToolTip: true, position: "bottom", text: "Options" },
-  from = "top",
-  size = "medium",
+  tooltip = { isToolTip: true, position: 'bottom', text: 'Options' },
+  from = 'top',
+  size = 'medium',
   ...props
 }) => {
   const theme = useTheme();
@@ -24,7 +24,7 @@ const Menu = ({
     const positions = from.split(/\s+/);
     const styleAnchor = {};
     positions.forEach((pos) => {
-      styleAnchor[pos] = "120%";
+      styleAnchor[pos] = '120%';
     });
     return styleAnchor;
   }, [from]);

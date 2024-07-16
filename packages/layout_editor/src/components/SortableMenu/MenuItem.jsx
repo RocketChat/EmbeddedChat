@@ -1,9 +1,9 @@
-import React from "react";
-import { Box, Icon, useTheme } from "@embeddedchat/ui-elements";
+import React from 'react';
+import { Box, Icon, useTheme } from '@embeddedchat/ui-elements';
 
-import { getMenuItemStyles } from "./Menu.styles";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { getMenuItemStyles } from './Menu.styles';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
   const theme = useTheme();
@@ -19,7 +19,7 @@ const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
   } = useSortable({
     id,
     data: {
-      type: "MenuOptions",
+      type: 'MenuOptions',
       icon,
       label,
     },
@@ -28,7 +28,7 @@ const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: "grab",
+    cursor: 'grab',
   };
 
   if (isDragging) {
@@ -36,7 +36,7 @@ const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
   }
 
   const handleRemoveItem = (id) => {
-    if (id !== "placeholder-menu") onRemove(id);
+    if (id !== 'placeholder-menu') onRemove(id);
   };
 
   return (
@@ -52,7 +52,7 @@ const MenuItem = ({ id, icon, label, action, disabled, onRemove }) => {
         <Icon name={icon} size="1em" />
         {label}
       </Box>
-      {id !== "placeholder-menu" && (
+      {id !== 'placeholder-menu' && (
         <Icon
           name="cross"
           css={styles.icon}

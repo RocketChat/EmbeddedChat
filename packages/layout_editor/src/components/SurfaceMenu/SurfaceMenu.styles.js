@@ -1,8 +1,6 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
-export const getSurfaceItemStyles = (customTheme) => {
-  const { theme, colors } = customTheme;
-
+export const getSurfaceItemStyles = ({ theme, colors }) => {
   const styles = {
     overlayBox: css`
       width: 24px;

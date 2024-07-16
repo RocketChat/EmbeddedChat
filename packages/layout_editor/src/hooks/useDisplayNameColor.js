@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const simpleHash = (str) => {

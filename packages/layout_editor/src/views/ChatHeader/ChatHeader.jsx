@@ -259,13 +259,12 @@ const ChatHeader = ({
               general
             </Heading>
 
-            <Box
-              is="span"
+            <p
               className="ec-chat-header--channelDescription"
               css={styles.clearSpacing}
             >
               Channel description
-            </Box>
+            </p>
           </Box>
         </Box>
         <DndContext
