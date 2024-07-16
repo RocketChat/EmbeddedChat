@@ -1,14 +1,14 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
 export const getDemoSidebarStyles = () => {
   const styles = {
     container: css`
       display: flex;
+      flex: 1;
       flex-direction: column;
       overflow: auto;
       width: 100%;
-      align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       padding: 0 1rem 1rem;
     `,
 
@@ -24,6 +24,10 @@ export const getDemoSidebarStyles = () => {
       padding: 0.125em;
       margin-right: 0.5rem;
       align-self: center;
+    `,
+
+    btn: css`
+      width: 100%;
     `,
   };
 

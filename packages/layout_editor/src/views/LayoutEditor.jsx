@@ -8,7 +8,7 @@ import GlobalStyles from './GlobalStyles';
 
 const LayoutEditor = () => {
   const [mode, setMode] = useState('light');
-  const [isThemeLab, setIsThemeLab] = useState(true);
+  const [isThemeLab, setIsThemeLab] = useState(false);
   return (
     <ThemeProvider theme={DefaultTheme} mode={mode}>
       <Box css={styles.layoutEditor}>
