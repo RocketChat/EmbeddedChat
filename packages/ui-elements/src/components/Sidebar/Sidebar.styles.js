@@ -5,7 +5,7 @@ const useSidebarStyles = () => {
   const { theme, colors } = useTheme();
 
   const sidebarContainer = css`
-    width: 350px;
+    min-width: 350px;
     height: 100%;
     box-shadow: ${theme.shadows[2]};
     z-index: ${theme.zIndex.general};
@@ -45,8 +45,9 @@ const useSidebarStyles = () => {
   const searchContainer = css`
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     border: 1px solid ${colors.border};
+    padding: 0 0.5rem;
     border-radius: ${theme.schemes.radius};
     position: relative;
     margin: 0 1rem 1rem;
@@ -57,7 +58,7 @@ const useSidebarStyles = () => {
 
   const textInput = css`
     border: none;
-    flex: none;
+    flex: 1;
     padding: none;
     &:focus {
       outline: none;

@@ -19,6 +19,7 @@ export const Default = Template.bind({});
 Default.args = {
   title: 'Sidebar Title',
   iconName: 'menu',
+  style: { width: '350px' },
   onClose: () => console.log('Sidebar closed'),
   children: (
     <Box>
@@ -36,6 +37,7 @@ export const WithSearch = Template.bind({});
 WithSearch.args = {
   title: 'Sidebar with Search',
   iconName: 'search',
+  style: { width: '350px' },
   onClose: () => console.log('Sidebar closed'),
   searchProps: { isSearch: true, placeholder: 'Search...' },
   children: (
