@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 export const styles = {
   embeddedchat: (theme, dark) => css`
     width: 75%;
-    height: 100vh;
     position: relative;
     background: ${theme.schemes[dark ? 'dark' : 'light'].background};
     color: ${theme.schemes[dark ? 'dark' : 'light'].foreground};
@@ -16,6 +15,7 @@ export const styles = {
   `,
 
   layoutEditor: css`
+    height: 100vh;
     display: flex;
     gap: 0.25rem;
   `,
