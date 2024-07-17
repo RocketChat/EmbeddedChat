@@ -60,6 +60,7 @@ import Collapse from './ArrowCollapse';
 import Arc from './Arc';
 import Avatar from './Avatar';
 import FormatText from './FormatText';
+import Cog from './Cog';
 
 const icons = {
   file: File,
@@ -124,6 +125,7 @@ const icons = {
   arc: Arc,
   avatar: Avatar,
   'format-text': FormatText,
+  cog: Cog,
 };
 
 export default icons;

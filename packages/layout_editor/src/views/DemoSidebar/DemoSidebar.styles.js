@@ -28,6 +28,13 @@ export const getDemoSidebarStyles = () => {
 
     btn: css`
       width: 100%;
+      opacity: 1;
+      transition: all 0.1s;
+    `,
+
+    btnInvisible: css`
+      width: 0;
+      opacity: 0;
     `,
   };
 

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import DefaultTheme from '../theme/DefaultTheme';
-import { Box, Sidebar, ThemeProvider } from '@embeddedchat/ui-elements';
+import { Box, ThemeProvider } from '@embeddedchat/ui-elements';
 import { styles } from './LayoutEditor.style';
 import ChatLayout from './ChatLayout/ChatLayout';
 import ChatHeader from './ChatHeader/ChatHeader';
 import GlobalStyles from './GlobalStyles';
+import useLayoutStore from '../store/layoutStore';
+import ThemeLab from './ThemeLab/ThemeLab';
 
 const LayoutEditor = () => {
   const [mode, setMode] = useState('light');
-  const [isThemeLab, setIsThemeLab] = useState(false);
+  const themeLabOpen = useLayoutStore((state) => state.themeLabOpen);
   return (
     <ThemeProvider theme={DefaultTheme} mode={mode}>
       <Box css={styles.layoutEditor}>
@@ -24,11 +26,7 @@ const LayoutEditor = () => {
           <ChatLayout />
           <div id="overlay-items" />
         </Box>
-        {isThemeLab && (
-          <Box css={styles.themeLab}>
-            <Sidebar onClose={() => setIsThemeLab(false)}></Sidebar>
-          </Box>
-        )}
+        {themeLabOpen && <ThemeLab />}
       </Box>
     </ThemeProvider>
   );

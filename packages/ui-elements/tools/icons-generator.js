@@ -45,6 +45,7 @@ const iconsList = [
   'at',
   'arrow-collapse',
   'arrow-expand',
+  'cog',
 ];
 
 const svgDirPath = path.join(

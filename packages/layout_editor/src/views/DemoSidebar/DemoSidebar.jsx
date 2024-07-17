@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { Box, Icon, Sidebar, Popup, Button } from '@embeddedchat/ui-elements';
 import { css } from '@emotion/react';
 import { getDemoSidebarStyles } from './DemoSidebar.styles';
+import useLayoutStore from '../../store/layoutStore';
 
 const DemoSidebar = ({ members, viewType = 'Sidebar' }) => {
+  const themeLabOpen = useLayoutStore((state) => state.themeLabOpen);
+  const setThemeLabOpen = useLayoutStore((state) => state.setThemeLabOpen);
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
   const styles = getDemoSidebarStyles();
   return (
@@ -41,8 +44,14 @@ const DemoSidebar = ({ members, viewType = 'Sidebar' }) => {
           ))}
         </Box>
         <Box>
-          <Button type="secondary" css={styles.btn}>
-          🔮 Start Theming ! 
+          <Button
+            type="secondary"
+            css={[styles.btn, themeLabOpen && styles.btnInvisible]}
+            onClick={() => {
+              setThemeLabOpen(true);
+            }}
+          >
+            🔮 Start Theming !
           </Button>
         </Box>
       </Box>
