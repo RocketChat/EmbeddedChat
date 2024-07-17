@@ -41,7 +41,9 @@ const DemoSidebar = ({ members, viewType = 'Sidebar' }) => {
           ))}
         </Box>
         <Box>
-          <Button css={styles.btn}>Start Theming !</Button>
+          <Button type="secondary" css={styles.btn}>
+          🔮 Start Theming ! 
+          </Button>
         </Box>
       </Box>
     </ViewComponent>
