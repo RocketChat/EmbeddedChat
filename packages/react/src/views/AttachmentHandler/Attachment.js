@@ -8,14 +8,17 @@ import VideoAttachment from './VideoAttachment';
 import TextAttachment from './TextAttachment';
 
 const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
+  const author = {
+    authorIcon: attachment?.author_icon,
+    authorName: attachment?.author_name,
+  };
   if (attachment && attachment.audio_url) {
     return (
       <AudioAttachment
         attachment={attachment}
         host={host}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }
@@ -25,8 +28,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         attachment={attachment}
         host={host}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }
@@ -37,8 +39,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         type={type}
         host={host}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }
@@ -58,8 +59,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         type={attachment.attachments[0].type}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }
@@ -70,8 +70,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         type={attachment.attachments[0].type}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }
@@ -82,8 +81,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         type={attachment.attachments[0].type}
         variantStyles={variantStyles}
-        authorIcon={attachment.author_icon}
-        authorName={attachment.author_name}
+        author={author}
       />
     );
   }

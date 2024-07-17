@@ -5,14 +5,7 @@ import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 
-const AudioAttachment = ({
-  attachment,
-  host,
-  type,
-  authorIcon,
-  authorName,
-  variantStyles,
-}) => {
+const AudioAttachment = ({ attachment, host, type, author, variantStyles }) => {
   const { RCInstance } = useContext(RCContext);
   const { colors } = useTheme();
   const getUserAvatarUrl = (icon) => {
@@ -20,6 +13,7 @@ const AudioAttachment = ({
     const URL = `${instanceHost}${icon}`;
     return URL;
   };
+  const { authorIcon, authorName } = author;
   return (
     <Box>
       <Box

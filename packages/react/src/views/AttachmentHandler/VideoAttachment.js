@@ -19,8 +19,7 @@ const VideoAttachment = ({
   attachment,
   host,
   type,
-  authorIcon,
-  authorName,
+  author,
   variantStyles = {},
 }) => {
   const { RCInstance } = useContext(RCContext);
@@ -30,6 +29,7 @@ const VideoAttachment = ({
     const URL = `${instanceHost}${icon}`;
     return URL;
   };
+  const { authorIcon, authorName } = author;
   return (
     <Box css={variantStyles.videoAttachmentContainer}>
       <Box

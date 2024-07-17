@@ -26,7 +26,6 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');
 
-
   return (
     <Box
       className={`ec-quote-msg ${className} ${classNames}`}

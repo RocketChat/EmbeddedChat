@@ -7,12 +7,10 @@ import ImageGallery from '../ImageGallery/ImageGallery';
 import RCContext from '../../context/RCInstance';
 
 const ImageAttachment = ({
-  key,
   attachment,
   host,
   type,
-  authorIcon,
-  authorName,
+  author,
   variantStyles = {},
 }) => {
   const { RCInstance } = useContext(RCContext);
@@ -28,6 +26,8 @@ const ImageAttachment = ({
   };
 
   const { colors } = useTheme();
+
+  const { authorIcon, authorName } = author;
 
   return (
     <Box css={variantStyles.imageAttachmentContainer}>
