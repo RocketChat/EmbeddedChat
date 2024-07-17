@@ -8,6 +8,8 @@ import {
 } from '@embeddedchat/ui-elements';
 import useLayoutStore from '../../store/layoutStore';
 import { useThemeLabStyles } from './ThemeLab.styles';
+import PaletteSetting from './PaletteSetting';
+import LayoutSetting from './LayoutSetting';
 
 const ThemeLab = () => {
   const styles = useThemeLabStyles(useTheme());
@@ -39,6 +41,8 @@ const ThemeLab = () => {
               Layout
             </Box>
           </Box>
+
+          {paletteActive ? <PaletteSetting /> : <LayoutSetting />}
         </SidebarContent>
       </MinimalSidebar>
     </Box>
