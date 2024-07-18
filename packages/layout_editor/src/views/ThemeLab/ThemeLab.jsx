@@ -7,12 +7,12 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import useLayoutStore from '../../store/layoutStore';
-import { useThemeLabStyles } from './ThemeLab.styles';
+import { getThemeLabStyles } from './ThemeLab.styles';
 import PaletteSetting from './PaletteSetting';
 import LayoutSetting from './LayoutSetting';
 
 const ThemeLab = () => {
-  const styles = useThemeLabStyles(useTheme());
+  const styles = getThemeLabStyles(useTheme());
   const setThemeLabOpen = useLayoutStore((state) => state.setThemeLabOpen);
   const [paletteActive, setPaletteAction] = useState(true);
 

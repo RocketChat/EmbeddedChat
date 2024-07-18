@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const useThemeLabStyles = ({ colors }) => {
+export const getThemeLabStyles = ({ colors }) => {
   const styles = {
     sectionContainer: css`
       display: flex;
@@ -14,6 +14,63 @@ export const useThemeLabStyles = ({ colors }) => {
     `,
     sectionActive: css`
       border-bottom: 1px solid ${colors.primary};
+    `,
+  };
+
+  return styles;
+};
+
+export const getPaletteSettings = ({ colors }) => {
+  const styles = {
+    main: css`
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem;
+    `,
+    colorSection: css`
+      padding: 0.5rem;
+    `,
+    typographySection: css`
+      padding: 0.5rem;
+    `,
+  };
+
+  return styles;
+};
+
+export const getLayoutSettings = ({ colors }) => {
+  const styles = {
+    main: css`
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem;
+      padding: 0.75rem;
+    `,
+    variantSection: css`
+      padding: 0.5rem;
+      background-color: ${colors.secondary};
+      border-radius: 0.25rem;
+    `,
+
+    toolSection: css`
+      padding: 0.5rem;
+    `,
+
+    commonSelect: css`
+      display: flex;
+      gap: 1.25rem;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+    `,
+
+    messageView: css`
+      position: relative;
+    `,
+
+    displayName: css`
+      position: relative;
     `,
   };
 
