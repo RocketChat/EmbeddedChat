@@ -45,6 +45,7 @@ export const getLayoutSettings = ({ colors }) => {
       height: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       padding: 0.75rem;
       padding: 0.75rem;
     `,
@@ -56,6 +57,8 @@ export const getLayoutSettings = ({ colors }) => {
 
     toolSection: css`
       padding: 0.5rem;
+      background-color: ${colors.secondary};
+      border-radius: 0.25rem;
     `,
 
     commonSelect: css`

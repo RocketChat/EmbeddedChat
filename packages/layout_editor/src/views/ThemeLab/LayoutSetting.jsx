@@ -1,9 +1,18 @@
 import React from 'react';
 import { Box, useTheme, StaticSelect } from '@embeddedchat/ui-elements';
 import { getLayoutSettings } from './ThemeLab.styles';
+import useLayoutStore from '../../store/layoutStore';
 
 const LayoutSetting = () => {
   const styles = getLayoutSettings(useTheme());
+
+  const { messageView, setMessageView, displayName, setDisplayName } =
+    useLayoutStore((state) => ({
+      messageView: state.messageView,
+      setMessageView: state.setMessageView,
+      displayName: state.displayName,
+      setDisplayName: state.setDisplayName,
+    }));
 
   const messageViewOptions = [
     {
@@ -43,6 +52,7 @@ const LayoutSetting = () => {
               zIndex: '1',
             }}
             placeholder="Choose"
+            value={messageView}
           />
         </Box>
 
@@ -52,6 +62,7 @@ const LayoutSetting = () => {
             options={displayNameOptions}
             style={{ position: 'absolute', top: '16px', right: 0 }}
             placeholder="Choose"
+            value={displayName}
           />
         </Box>
       </Box>
