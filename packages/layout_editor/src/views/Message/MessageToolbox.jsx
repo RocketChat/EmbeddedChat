@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
-import { Box, useTheme } from "@embeddedchat/ui-elements";
-import { Menu } from "../../components/SortableMenu";
-import { getMessageToolboxStyles } from "./Message.styles";
-import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
-import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
-import MenuItem from "../../components/SortableMenu/MenuItem";
+import React, { useMemo, useState } from 'react';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
+import { Menu } from '../../components/SortableMenu';
+import { getMessageToolboxStyles } from './Message.styles';
+import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
+import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
+import MenuItem from '../../components/SortableMenu/MenuItem';
 import {
   DndContext,
   closestCenter,
@@ -13,37 +13,25 @@ import {
   useSensor,
   useSensors,
   DragOverlay,
-} from "@dnd-kit/core";
-import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
+} from '@dnd-kit/core';
+import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
+import useMessageItemsStore from '../../store/messageItemsStore';
 
-export const MessageToolbox = ({
-  variantStyles = {},
-  optionConfig = {
-    surfaceItems: [
-      "reaction",
-      "reply",
-      "quote",
-      "star",
-      "pin",
-      "edit",
-      "delete",
-      "report",
-    ],
-
-    menuItems: [],
-  },
-
-  ...props
-}) => {
+export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
   const styles = getMessageToolboxStyles(useTheme());
-  const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
-  const [menuItems, setMenuItems] = useState(optionConfig.menuItems);
+  const { surfaceItems, menuItems, setSurfaceItems, setMenuItems } =
+    useMessageItemsStore((state) => ({
+      surfaceItems: state.surfaceItems,
+      menuItems: state.menuItems,
+      setSurfaceItems: state.setSurfaceItems,
+      setMenuItems: state.setMenuItems,
+    }));
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
 
-  const placeholderSurfaceItem = "placeholder-surface";
-  const placeholderMenuItem = "placeholder-menu";
+  const placeholderSurfaceItem = 'placeholder-surface';
+  const placeholderMenuItem = 'placeholder-menu';
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -57,13 +45,13 @@ export const MessageToolbox = ({
   );
 
   const handleDragStart = (event) => {
-    if (event.active.data.current?.type === "SurfaceOptions") {
+    if (event.active.data.current?.type === 'SurfaceOptions') {
       setActiveSurfaceItem({
         id: event.active.id,
         iconName: event.active.data.current.icon,
         label: event.active.data.current.label,
       });
-    } else if (event.active.data.current?.type === "MenuOptions") {
+    } else if (event.active.data.current?.type === 'MenuOptions') {
       setActiveMenuItem({
         id: event.active.id,
         icon: event.active.data.current.icon,
@@ -79,49 +67,39 @@ export const MessageToolbox = ({
 
     if (active?.id !== over?.id) {
       if (
-        event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "SurfaceOptions"
+        event.active.data.current?.type === 'SurfaceOptions' &&
+        event.over.data.current?.type === 'SurfaceOptions'
       ) {
-        setSurfaceItems((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldIndex = surfaceItems.indexOf(active.id);
+        const newIndex = surfaceItems.indexOf(over.id);
+        setSurfaceItems(arrayMove(surfaceItems, oldIndex, newIndex));
       } else if (
-        event.active.data.current?.type === "MenuOptions" &&
-        event.over.data.current?.type === "MenuOptions"
+        event.active.data.current?.type === 'MenuOptions' &&
+        event.over.data.current?.type === 'MenuOptions'
       ) {
-        setMenuItems((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldIndex = menuItems.indexOf(active.id);
+        const newIndex = menuItems.indexOf(over.id);
+        setMenuItems(arrayMove(menuItems, oldIndex, newIndex));
       } else if (
-        event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "MenuOptions" &&
+        event.active.data.current?.type === 'SurfaceOptions' &&
+        event.over.data.current?.type === 'MenuOptions' &&
         active.id !== placeholderSurfaceItem
       ) {
-        setSurfaceItems((items) => items.filter((item) => item !== active.id));
-        setMenuItems((items) => {
-          const newItems = [
-            ...items.filter((item) => item !== placeholderMenuItem),
-            active.id,
-          ];
-          return newItems;
-        });
+        setSurfaceItems(surfaceItems.filter((item) => item !== active.id));
+        setMenuItems([
+          ...menuItems.filter((item) => item !== placeholderMenuItem),
+          active.id,
+        ]);
       } else if (
-        event.active.data.current?.type === "MenuOptions" &&
-        event.over.data.current?.type === "SurfaceOptions" &&
+        event.active.data.current?.type === 'MenuOptions' &&
+        event.over.data.current?.type === 'SurfaceOptions' &&
         active.id !== placeholderMenuItem
       ) {
-        setMenuItems((items) => items.filter((item) => item !== active.id));
-        setSurfaceItems((items) => {
-          const newItems = [
-            ...items.filter((item) => item !== placeholderSurfaceItem),
-            active.id,
-          ];
-          return newItems;
-        });
+        setMenuItems(menuItems.filter((item) => item !== active.id));
+        setSurfaceItems([
+          ...surfaceItems.filter((item) => item !== placeholderSurfaceItem),
+          active.id,
+        ]);
       }
     }
   };
@@ -129,62 +107,62 @@ export const MessageToolbox = ({
   const options = useMemo(
     () => ({
       reply: {
-        label: "Reply in thread",
-        id: "reply",
+        label: 'Reply in thread',
+        id: 'reply',
         onClick: () => {},
-        iconName: "thread",
+        iconName: 'thread',
         visible: true,
       },
       quote: {
-        label: "Quote",
-        id: "quote",
+        label: 'Quote',
+        id: 'quote',
         onClick: () => {},
-        iconName: "quote",
+        iconName: 'quote',
         visible: true,
       },
       star: {
-        label: "Star",
-        id: "star",
+        label: 'Star',
+        id: 'star',
         onClick: () => {},
-        iconName: "star",
+        iconName: 'star',
         visible: true,
       },
       reaction: {
-        label: "Add reaction",
-        id: "reaction",
+        label: 'Add reaction',
+        id: 'reaction',
         onClick: () => {},
-        iconName: "emoji",
+        iconName: 'emoji',
         visible: true,
       },
       pin: {
-        label: "Pin",
-        id: "pin",
+        label: 'Pin',
+        id: 'pin',
         onClick: () => {},
-        iconName: "pin",
+        iconName: 'pin',
         visible: true,
       },
       edit: {
-        label: "Edit",
-        id: "edit",
+        label: 'Edit',
+        id: 'edit',
         onClick: () => {},
-        iconName: "edit",
+        iconName: 'edit',
         visible: true,
       },
       delete: {
-        label: "Delete",
-        id: "delete",
+        label: 'Delete',
+        id: 'delete',
         onClick: () => {},
-        iconName: "trash",
+        iconName: 'trash',
         visible: true,
-        type: "destructive",
+        type: 'destructive',
       },
       report: {
-        label: "Report",
-        id: "report",
+        label: 'Report',
+        id: 'report',
         onClick: () => {},
-        iconName: "report",
+        iconName: 'report',
         visible: true,
-        type: "destructive",
+        type: 'destructive',
       },
     }),
     []
@@ -205,7 +183,7 @@ export const MessageToolbox = ({
             return null;
           })
           .filter((option) => option !== null)
-      : [{ id: placeholderMenuItem, label: "No items", icon: "plus" }];
+      : [{ id: placeholderMenuItem, label: 'No items', icon: 'plus' }];
 
   const surfaceOptions =
     surfaceItems.length > 0
@@ -223,14 +201,16 @@ export const MessageToolbox = ({
             return null;
           })
           .filter((option) => option !== null)
-      : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
+      : [{ id: placeholderSurfaceItem, label: 'No items', iconName: 'plus' }];
 
   const removeSurfaceItem = (idToRemove) => {
-    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+    const newSurfaceItems = surfaceItems.filter((item) => item !== idToRemove);
+    setSurfaceItems(newSurfaceItems);
   };
 
   const removeMenuItem = (idToRemove) => {
-    setMenuItems((items) => items.filter((item) => item !== idToRemove));
+    const newMenuItems = menuItems.filter((item) => item !== idToRemove);
+    setMenuItems(newMenuItems);
   };
 
   return (
@@ -255,9 +235,9 @@ export const MessageToolbox = ({
                 size="small"
                 options={menuOptions}
                 from="bottom"
-                tooltip={{ isToolTip: true, position: "top", text: "More" }}
+                tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
                 useWrapper={false}
-                style={{ top: "auto", bottom: `calc(100% + 2px)` }}
+                style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
                 onRemove={removeMenuItem}
               />
             )}

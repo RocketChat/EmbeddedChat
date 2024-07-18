@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from "react";
-import { Heading, Box, Icon, useTheme } from "@embeddedchat/ui-elements";
-import { getChatHeaderStyles } from "./ChatHeader.styles";
-import { Menu } from "../../components/SortableMenu";
-import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
+import React, { useState, useMemo } from 'react';
+import { Heading, Box, Icon, useTheme } from '@embeddedchat/ui-elements';
+import { getChatHeaderStyles } from './ChatHeader.styles';
+import { Menu } from '../../components/SortableMenu';
+import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
 import {
   DndContext,
   closestCenter,
@@ -11,111 +11,106 @@ import {
   useSensor,
   useSensors,
   DragOverlay,
-} from "@dnd-kit/core";
-import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
-import MenuItem from "../../components/SortableMenu/MenuItem";
-import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
+} from '@dnd-kit/core';
+import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
+import MenuItem from '../../components/SortableMenu/MenuItem';
+import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
+import useHeaderItemsStore from '../../store/headerItemsStore';
 
-const ChatHeader = ({
-  optionConfig = {
-    surfaceItems: [
-      "minmax",
-      "close",
-      "thread",
-      "mentions",
-      "starred",
-      "pinned",
-    ],
-    menuItems: ["files", "members", "search", "rInfo", "logout"],
-  },
-}) => {
+const ChatHeader = () => {
   const styles = getChatHeaderStyles(useTheme());
-  const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
-  const [menuItems, setMenuItems] = useState(optionConfig.menuItems);
+  const { surfaceItems, menuItems, setSurfaceItems, setMenuItems } =
+    useHeaderItemsStore((state) => ({
+      surfaceItems: state.surfaceItems,
+      menuItems: state.menuItems,
+      setSurfaceItems: state.setSurfaceItems,
+      setMenuItems: state.setMenuItems,
+    }));
+
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
 
-  const placeholderSurfaceItem = "placeholder-surface";
-  const placeholderMenuItem = "placeholder-menu";
+  const placeholderSurfaceItem = 'placeholder-surface';
+  const placeholderMenuItem = 'placeholder-menu';
 
   const options = useMemo(
     () => ({
       minmax: {
-        label: "Maximize",
-        id: "minmax",
+        label: 'Maximize',
+        id: 'minmax',
         onClick: () => {},
-        iconName: "expand",
+        iconName: 'expand',
         visible: true,
       },
       close: {
-        label: "Close",
-        id: "close",
+        label: 'Close',
+        id: 'close',
         onClick: () => {},
-        iconName: "cross",
+        iconName: 'cross',
         visible: true,
       },
       thread: {
-        label: "Threads",
-        id: "thread",
+        label: 'Threads',
+        id: 'thread',
         onClick: () => {},
-        iconName: "thread",
+        iconName: 'thread',
         visible: true,
       },
       mentions: {
-        label: "Mentions",
-        id: "mentions",
+        label: 'Mentions',
+        id: 'mentions',
         onClick: () => {},
-        iconName: "at",
+        iconName: 'at',
         visible: true,
       },
       starred: {
-        label: "Starred Messages",
-        id: "starred",
+        label: 'Starred Messages',
+        id: 'starred',
         onClick: () => {},
-        iconName: "star",
+        iconName: 'star',
         visible: true,
       },
       pinned: {
-        label: "Pinned Messages",
-        id: "pinned",
+        label: 'Pinned Messages',
+        id: 'pinned',
         onClick: () => {},
-        iconName: "pin",
+        iconName: 'pin',
         visible: true,
       },
       members: {
-        label: "Members",
-        id: "members",
+        label: 'Members',
+        id: 'members',
         onClick: () => {},
-        iconName: "members",
+        iconName: 'members',
         visible: true,
       },
       files: {
-        label: "Files",
-        id: "files",
+        label: 'Files',
+        id: 'files',
         onClick: () => {},
-        iconName: "clip",
+        iconName: 'clip',
         visible: true,
       },
       search: {
-        label: "Search Messages",
-        id: "search",
+        label: 'Search Messages',
+        id: 'search',
         onClick: () => {},
-        iconName: "magnifier",
+        iconName: 'magnifier',
         visible: true,
       },
       rInfo: {
-        label: "Room Information",
-        id: "rInfo",
+        label: 'Room Information',
+        id: 'rInfo',
         onClick: () => {},
-        iconName: "info",
+        iconName: 'info',
         visible: true,
       },
       logout: {
-        label: "Logout",
-        id: "logout",
+        label: 'Logout',
+        id: 'logout',
         onClick: () => {},
-        iconName: "reply-directly",
+        iconName: 'reply-directly',
         visible: true,
       },
     }),
@@ -137,7 +132,7 @@ const ChatHeader = ({
             return null;
           })
           .filter((option) => option !== null)
-      : [{ id: placeholderMenuItem, label: "No items", icon: "plus" }];
+      : [{ id: placeholderMenuItem, label: 'No items', icon: 'plus' }];
 
   const surfaceOptions =
     surfaceItems.length > 0
@@ -154,7 +149,7 @@ const ChatHeader = ({
             return null;
           })
           .filter((option) => option !== null)
-      : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
+      : [{ id: placeholderSurfaceItem, label: 'No items', iconName: 'plus' }];
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -168,13 +163,13 @@ const ChatHeader = ({
   );
 
   const handleDragStart = (event) => {
-    if (event.active.data.current?.type === "SurfaceOptions") {
+    if (event.active.data.current?.type === 'SurfaceOptions') {
       setActiveSurfaceItem({
         id: event.active.id,
         iconName: event.active.data.current.icon,
         label: event.active.data.current.label,
       });
-    } else if (event.active.data.current?.type === "MenuOptions") {
+    } else if (event.active.data.current?.type === 'MenuOptions') {
       setActiveMenuItem({
         id: event.active.id,
         icon: event.active.data.current.icon,
@@ -190,61 +185,52 @@ const ChatHeader = ({
 
     if (active?.id !== over?.id) {
       if (
-        event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "SurfaceOptions"
+        event.active.data.current?.type === 'SurfaceOptions' &&
+        event.over.data.current?.type === 'SurfaceOptions'
       ) {
-        setSurfaceItems((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldIndex = surfaceItems.indexOf(active.id);
+        const newIndex = surfaceItems.indexOf(over.id);
+        setSurfaceItems(arrayMove(surfaceItems, oldIndex, newIndex));
       } else if (
-        event.active.data.current?.type === "MenuOptions" &&
-        event.over.data.current?.type === "MenuOptions"
+        event.active.data.current?.type === 'MenuOptions' &&
+        event.over.data.current?.type === 'MenuOptions'
       ) {
-        setMenuItems((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldIndex = menuItems.indexOf(active.id);
+        const newIndex = menuItems.indexOf(over.id);
+        setMenuItems(arrayMove(menuItems, oldIndex, newIndex));
       } else if (
-        event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "MenuOptions" &&
+        event.active.data.current?.type === 'SurfaceOptions' &&
+        event.over.data.current?.type === 'MenuOptions' &&
         active.id !== placeholderSurfaceItem
       ) {
-        setSurfaceItems((items) => items.filter((item) => item !== active.id));
-        setMenuItems((items) => {
-          const newItems = [
-            ...items.filter((item) => item !== placeholderMenuItem),
-            active.id,
-          ];
-          return newItems;
-        });
+        setSurfaceItems(surfaceItems.filter((item) => item !== active.id));
+        setMenuItems([
+          ...menuItems.filter((item) => item !== placeholderMenuItem),
+          active.id,
+        ]);
       } else if (
-        event.active.data.current?.type === "MenuOptions" &&
-        event.over.data.current?.type === "SurfaceOptions" &&
+        event.active.data.current?.type === 'MenuOptions' &&
+        event.over.data.current?.type === 'SurfaceOptions' &&
         active.id !== placeholderMenuItem
       ) {
-        setMenuItems((items) => items.filter((item) => item !== active.id));
-        setSurfaceItems((items) => {
-          const newItems = [
-            ...items.filter((item) => item !== placeholderSurfaceItem),
-            active.id,
-          ];
-          return newItems;
-        });
+        setMenuItems(menuItems.filter((item) => item !== active.id));
+        setSurfaceItems([
+          ...surfaceItems.filter((item) => item !== placeholderSurfaceItem),
+          active.id,
+        ]);
       }
     }
   };
 
   const removeSurfaceItem = (idToRemove) => {
-    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+    const newSurfaceItems = surfaceItems.filter((item) => item !== idToRemove);
+    setSurfaceItems(newSurfaceItems);
   };
 
   const removeMenuItem = (idToRemove) => {
-    setMenuItems((items) => items.filter((item) => item !== idToRemove));
+    const newMenuItems = menuItems.filter((item) => item !== idToRemove);
+    setMenuItems(newMenuItems);
   };
-
   return (
     <Box css={styles.chatHeaderParent}>
       <Box css={styles.chatHeaderChild}>

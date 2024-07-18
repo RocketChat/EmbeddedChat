@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from "react";
-import { Box, useTheme } from "@embeddedchat/ui-elements";
-import { getChatInputToolbarStyles } from "./ChatInput.styles";
-import SurfaceMenu from "../../components/SurfaceMenu/SurfaceMenu";
-import SurfaceItem from "../../components/SurfaceMenu/SurfaceItem";
-import Formatters from "./Formatters";
+import React, { useMemo, useState } from 'react';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
+import { getChatInputToolbarStyles } from './ChatInput.styles';
+import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
+import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
+import Formatters from './Formatters';
+import useChatInputItemsStore from '../../store/chatInputItemsStore';
 import {
   DndContext,
   closestCenter,
@@ -12,61 +13,62 @@ import {
   useSensor,
   useSensors,
   DragOverlay,
-} from "@dnd-kit/core";
-import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
+} from '@dnd-kit/core';
+import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
 
-const ChatInputToolbar = ({
-  optionConfig = {
-    surfaceItems: ["emoji", "formatter", "audio", "video", "file"],
-    formatters: ["bold", "italic", "strike", "code", "multiline"],
-  },
-}) => {
+const ChatInputToolbar = () => {
   const styles = getChatInputToolbarStyles(useTheme());
-  const [surfaceItems, setSurfaceItems] = useState(optionConfig.surfaceItems);
-  const [formatters, setFormatters] = useState(optionConfig.formatters);
+  const { surfaceItems, setSurfaceItems, formatters, setFormatters } =
+    useChatInputItemsStore((state) => ({
+      surfaceItems: state.surfaceItems,
+      setSurfaceItems: state.setSurfaceItems,
+      formatters: state.formatters,
+      setFormatters: state.setFormatters,
+    }));
+
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [formattersVisible, setFormattersVisible] = useState(false);
 
-  const placeholderSurfaceItem = "placeholder-surface";
+  const placeholderSurfaceItem = 'placeholder-surface';
 
   const options = useMemo(() => {
     return {
       emoji: {
-        label: "Emoji",
-        id: "emoji",
+        label: 'Emoji',
+        id: 'emoji',
         onClick: () => {},
-        iconName: "emoji",
+        iconName: 'emoji',
         visible: true,
       },
       audio: {
-        label: "Audio Message",
-        id: "audio",
+        label: 'Audio Message',
+        id: 'audio',
         onClick: () => {},
-        iconName: "mic",
+        iconName: 'mic',
         visible: true,
       },
       video: {
-        label: "Video Message",
-        id: "video",
+        label: 'Video Message',
+        id: 'video',
         onClick: () => {},
-        iconName: "video-recorder",
+        iconName: 'video-recorder',
         visible: true,
       },
       file: {
-        label: "Upload File",
-        id: "file",
+        label: 'Upload File',
+        id: 'file',
         onClick: () => {},
-        iconName: "attachment",
+        iconName: 'attachment',
         visible: true,
       },
       formatter: {
-        label: "Formatter",
-        id: "formatter",
+        label: 'Formatter',
+        id: 'formatter',
         onClick: () => {
           setFormattersVisible((prev) => !prev);
         },
-        iconName: "format-text",
+        iconName: 'format-text',
         visible: true,
       },
     };
@@ -84,7 +86,7 @@ const ChatInputToolbar = ({
   );
 
   const handleDragStart = (event) => {
-    if (event.active.data.current?.type === "SurfaceOptions") {
+    if (event.active.data.current?.type === 'SurfaceOptions') {
       if (options[event.active.id] !== undefined) {
         setFormattersVisible(false);
       }
@@ -102,20 +104,20 @@ const ChatInputToolbar = ({
 
     if (active?.id !== over?.id) {
       if (
-        event.active.data.current?.type === "SurfaceOptions" &&
-        event.over.data.current?.type === "SurfaceOptions"
+        event.active.data.current?.type === 'SurfaceOptions' &&
+        event.over.data.current?.type === 'SurfaceOptions'
       ) {
-        setSurfaceItems((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldSurfaceIndex = surfaceItems.indexOf(active.id);
+        const newSurfaceIndex = surfaceItems.indexOf(over.id);
+        setSurfaceItems(
+          arrayMove(surfaceItems, oldSurfaceIndex, newSurfaceIndex)
+        );
 
-        setFormatters((items) => {
-          const oldIndex = items.indexOf(active.id);
-          const newIndex = items.indexOf(over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+        const oldFormatterIndex = formatters.indexOf(active.id);
+        const newFormatterIndex = formatters.indexOf(over.id);
+        setFormatters(
+          arrayMove(formatters, oldFormatterIndex, newFormatterIndex)
+        );
       }
     }
   };
@@ -124,7 +126,7 @@ const ChatInputToolbar = ({
     return surfaceItems.length > 0
       ? surfaceItems
           .map((item) => {
-            if (item === "formatter") {
+            if (item === 'formatter') {
               return options.formatter;
             }
             if (options[item] && options[item].visible) {
@@ -138,17 +140,18 @@ const ChatInputToolbar = ({
             return null;
           })
           .filter((option) => option !== null)
-      : [{ id: placeholderSurfaceItem, label: "No items", iconName: "plus" }];
+      : [{ id: placeholderSurfaceItem, label: 'No items', iconName: 'plus' }];
   }, [surfaceItems, options]);
 
   const removeSurfaceItem = (idToRemove) => {
-    setSurfaceItems((items) => items.filter((item) => item !== idToRemove));
+    const newSurfaceItems = surfaceItems.filter((item) => item !== idToRemove);
+    setSurfaceItems(newSurfaceItems);
   };
 
   const removeFormatters = (idToRemove) => {
-    setFormatters((items) => items.filter((item) => item !== idToRemove));
+    const newFormatters = formatters.filter((item) => item !== idToRemove);
+    setFormatters(newFormatters);
   };
-
   return (
     <DndContext
       sensors={sensors}
@@ -176,7 +179,7 @@ const ChatInputToolbar = ({
       {formattersVisible &&
         createPortal(
           <Formatters formatters={formatters} onRemove={removeFormatters} />,
-          document.getElementById("formatter")
+          document.getElementById('formatter')
         )}
     </DndContext>
   );
