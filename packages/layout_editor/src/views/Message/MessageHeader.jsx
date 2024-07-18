@@ -9,9 +9,11 @@ import {
 } from '@embeddedchat/ui-elements';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
+import useLayoutStore from '../../store/layoutStore';
 
-const MessageHeader = ({ message, variantOverrides = 'Normal' }) => {
-  const displayNameVariant = variantOverrides || 'Normal';
+const MessageHeader = ({ message, variantOverrides = 'normal' }) => {
+  const displayName = useLayoutStore((state) => state.displayName);
+  const displayNameVariant = displayName || variantOverrides;
   const styles = getMessageHeaderStyles(useTheme());
   const { colors } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
@@ -23,7 +25,7 @@ const MessageHeader = ({ message, variantOverrides = 'Normal' }) => {
         css={styles.userName}
         className={appendClassNames('ec-message-header-username')}
         style={
-          displayNameVariant === 'Colorize'
+          displayNameVariant === 'colorize'
             ? { color: getDisplayNameColor(message.u.username) }
             : null
         }

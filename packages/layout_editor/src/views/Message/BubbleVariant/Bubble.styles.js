@@ -1,9 +1,9 @@
-import { css } from "@emotion/react";
-import { alpha } from "@embeddedchat/ui-elements";
+import { css } from '@emotion/react';
+import { alpha } from '@embeddedchat/ui-elements';
 
 export const bubbleStyles = ({ theme, colors }) => {
   const styles = {
-    name: "bubble",
+    name: 'bubble',
     messageParent: css`
       display: flex;
       gap: 0.25rem;
@@ -77,8 +77,6 @@ export const bubbleStyles = ({ theme, colors }) => {
     `,
 
     toolboxContainer: css`
-      display: none;
-      .ec-message-body:hover & {
         display: flex;
         position: absolute;
         bottom: calc(100% - 20px);
@@ -173,10 +171,8 @@ export const bubbleStylesMe = (customTheme) => {
     `,
 
     toolboxContainerMe: css`
-      .ec-message-body:hover & {
-        left: auto;
-        right: calc(100% - 20px);
-      }
+      left: auto;
+      right: calc(100% - 10px);
     `,
 
     pinnedContainerMe: css`

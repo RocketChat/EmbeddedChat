@@ -53,6 +53,7 @@ const LayoutSetting = () => {
             }}
             placeholder="Choose"
             value={messageView}
+            onSelect={setMessageView}
           />
         </Box>
 
@@ -63,6 +64,7 @@ const LayoutSetting = () => {
             style={{ position: 'absolute', top: '16px', right: 0 }}
             placeholder="Choose"
             value={displayName}
+            onSelect={setDisplayName}
           />
         </Box>
       </Box>
