@@ -8,7 +8,9 @@ import DemoSidebar from '../DemoSidebar/DemoSidebar';
 import members from '../../data/members.json';
 
 const ChatLayout = () => {
-  const styles = getChatLayoutStyles(useTheme());
+  const theme = useTheme();
+  const styles = getChatLayoutStyles(theme);
+  const { colors } = theme;
 
   const handleResize = (size) => {
     const minSize = 26.5;
@@ -36,6 +38,7 @@ const ChatLayout = () => {
         <PanelResizeHandle
           style={{
             width: '2px',
+            border: `0.5px solid ${colors.border}`,
             boxShadow: '0px 0px 0.5px rgba(0, 0, 0, 0.5)',
           }}
         />

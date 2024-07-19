@@ -408,7 +408,7 @@ const LayoutSetting = () => {
     <Box css={styles.main}>
       <Box css={styles.variantSection}>
         <h3>Variants</h3>
-        <Box css={[styles.commonSelect, styles.messageView]}>
+        <Box css={styles.commonSelect}>
           <Box is="span">Message View</Box>
           <StaticSelect
             options={messageViewOptions}
@@ -424,7 +424,7 @@ const LayoutSetting = () => {
           />
         </Box>
 
-        <Box css={[styles.commonSelect, styles.displayName]}>
+        <Box css={styles.commonSelect}>
           <Box is="span">Display Name</Box>
           <StaticSelect
             options={displayNameOptions}

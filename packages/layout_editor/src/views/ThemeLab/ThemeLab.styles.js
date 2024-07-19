@@ -26,13 +26,26 @@ export const getPaletteSettings = ({ colors }) => {
       height: 100%;
       display: flex;
       flex-direction: column;
+      gap: 1.5rem;
       padding: 0.75rem;
     `,
     colorSection: css`
       padding: 0.5rem;
+      background-color: ${colors.secondary};
+      border-radius: 0.25rem;
     `,
     typographySection: css`
       padding: 0.5rem;
+      background-color: ${colors.secondary};
+      border-radius: 0.25rem;
+    `,
+
+    commonSelect: css`
+      display: flex;
+      gap: 1.25rem;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      position: relative;
     `,
   };
 
@@ -65,13 +78,6 @@ export const getLayoutSettings = ({ colors }) => {
       gap: 1.25rem;
       justify-content: space-between;
       padding: 1.25rem 0;
-    `,
-
-    messageView: css`
-      position: relative;
-    `,
-
-    displayName: css`
       position: relative;
     `,
 

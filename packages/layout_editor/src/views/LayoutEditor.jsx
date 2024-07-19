@@ -1,34 +1,26 @@
-import React, { useState } from 'react';
-import DefaultTheme from '../theme/DefaultTheme';
-import { Box, ThemeProvider } from '@embeddedchat/ui-elements';
-import { styles } from './LayoutEditor.style';
+import React from 'react';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
 import ChatLayout from './ChatLayout/ChatLayout';
 import ChatHeader from './ChatHeader/ChatHeader';
 import GlobalStyles from './GlobalStyles';
 import useLayoutStore from '../store/layoutStore';
 import ThemeLab from './ThemeLab/ThemeLab';
+import { getEditorStyles } from './LayoutEditor.style';
 
 const LayoutEditor = () => {
-  const [mode, setMode] = useState('light');
   const themeLabOpen = useLayoutStore((state) => state.themeLabOpen);
+  const styles = getEditorStyles(useTheme());
+
   return (
-    <ThemeProvider theme={DefaultTheme} mode={mode}>
-      <Box css={styles.layoutEditor}>
-        <Box
-          css={styles.embeddedchat(
-            DefaultTheme,
-            mode === 'light' ? false : true
-          )}
-          className="ec-embedded-chat"
-        >
-          <GlobalStyles />
-          <ChatHeader />
-          <ChatLayout />
-          <div id="overlay-items" />
-        </Box>
-        {themeLabOpen && <ThemeLab />}
+    <Box css={styles.layoutEditor}>
+      <Box css={styles.embeddedchat} className="ec-embedded-chat">
+        <GlobalStyles />
+        <ChatHeader />
+        <ChatLayout />
+        <div id="overlay-items" />
       </Box>
-    </ThemeProvider>
+      {themeLabOpen && <ThemeLab />}
+    </Box>
   );
 };
 
