@@ -45,8 +45,7 @@ export const getLayoutSettings = ({ colors }) => {
       height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 0.75rem;
+      gap: 1.5rem;
       padding: 0.75rem;
     `,
     variantSection: css`
@@ -74,6 +73,15 @@ export const getLayoutSettings = ({ colors }) => {
 
     displayName: css`
       position: relative;
+    `,
+
+    headerItems: css`
+      padding: 1.25rem 0;
+    `,
+
+    itemContainer: css`
+      display: flex;
+      padding: 0.5rem 0;
     `,
   };
 

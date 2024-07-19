@@ -17,6 +17,7 @@ const SurfaceItem = ({
   onClick,
   onRemove,
   type,
+  cursor = 'grab',
   tooltipPosition = 'bottom',
   size,
 }) => {
@@ -57,11 +58,11 @@ const SurfaceItem = ({
             iconSize="small"
             color={type}
             style={{
-              cursor: 'grab',
+              cursor: cursor,
             }}
           />
 
-          {id !== 'placeholder-surface' && (
+          {id !== 'placeholder-surface' && onRemove && (
             <Box
               css={styles.iconBox}
               onClick={() => {
