@@ -81,6 +81,7 @@ export const getLayoutSettings = ({ colors }) => {
 
     itemContainer: css`
       display: flex;
+      flex-wrap: wrap;
       padding: 0.5rem 0;
     `,
   };

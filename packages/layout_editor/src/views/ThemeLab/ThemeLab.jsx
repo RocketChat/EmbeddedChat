@@ -17,7 +17,7 @@ const ThemeLab = () => {
   const [paletteActive, setPaletteAction] = useState(true);
 
   return (
-    <Box>
+    <Box style={{ width: '350px' }}>
       <MinimalSidebar>
         <SidebarHeader
           onClose={() => setThemeLabOpen(false)}
