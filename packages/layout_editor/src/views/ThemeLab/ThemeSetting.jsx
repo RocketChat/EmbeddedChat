@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box, StaticSelect, useTheme } from '@embeddedchat/ui-elements';
 import { getPaletteSettings } from './ThemeLab.styles';
+import ColorManager from './ColorManager';
 
-const PaletteSetting = () => {
-  const theme = useTheme();
-  const styles = getPaletteSettings(theme);
+const ThemeSetting = () => {
+  const themeObject = useTheme();
+  const styles = getPaletteSettings(themeObject);
 
-  const { mode, setMode } = theme;
+  const { mode, setMode } = themeObject;
 
   const modeOptions = [
     {
@@ -25,7 +26,9 @@ const PaletteSetting = () => {
       <Box css={styles.colorSection}>
         <h3>Colors</h3>
         <Box css={styles.commonSelect}>
-          <Box is="span">Mode</Box>
+          <Box is="span">
+            <b>Mode</b>
+          </Box>
           <StaticSelect
             options={modeOptions}
             style={{
@@ -39,6 +42,12 @@ const PaletteSetting = () => {
             onSelect={setMode}
           />
         </Box>
+        <Box css={styles.palette}>
+          <Box is="span">
+            <b>Palette</b>
+          </Box>
+          <ColorManager />
+        </Box>
       </Box>
       <Box css={styles.typographySection}>
         <h3>Typography</h3>
@@ -47,4 +56,4 @@ const PaletteSetting = () => {
   );
 };
 
-export default PaletteSetting;
+export default ThemeSetting;

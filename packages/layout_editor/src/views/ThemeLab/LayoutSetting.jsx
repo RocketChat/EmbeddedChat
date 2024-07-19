@@ -409,7 +409,9 @@ const LayoutSetting = () => {
       <Box css={styles.variantSection}>
         <h3>Variants</h3>
         <Box css={styles.commonSelect}>
-          <Box is="span">Message View</Box>
+          <Box is="span">
+            <b>Message View</b>
+          </Box>
           <StaticSelect
             options={messageViewOptions}
             style={{
@@ -425,7 +427,9 @@ const LayoutSetting = () => {
         </Box>
 
         <Box css={styles.commonSelect}>
-          <Box is="span">Display Name</Box>
+          <Box is="span">
+            <b>Display Name</b>
+          </Box>
           <StaticSelect
             options={displayNameOptions}
             style={{ position: 'absolute', top: '16px', right: 0 }}
@@ -439,28 +443,36 @@ const LayoutSetting = () => {
       <Box css={styles.toolSection}>
         <h3>Tool Tray</h3>
         <Box css={styles.headerItems}>
-          <Box is="span">Header Items</Box>
+          <Box is="span">
+            <b>Header Items</b>
+          </Box>
           <Box css={styles.itemContainer}>
             {headerSurfaceOptions?.map((item, idx) => (
               <SurfaceItem {...item} key={idx} cursor="pointer" />
             ))}
           </Box>
 
-          <Box is="span">Message Items</Box>
+          <Box is="span">
+            <b>Message Items</b>
+          </Box>
           <Box css={styles.itemContainer}>
             {messageSurfaceOptions?.map((item, idx) => (
               <SurfaceItem {...item} key={idx} cursor="pointer" />
             ))}
           </Box>
 
-          <Box is="span">Input Items</Box>
+          <Box is="span">
+            <b>Input Items</b>
+          </Box>
           <Box css={styles.itemContainer}>
             {inputSurfaceOptions?.map((item, idx) => (
               <SurfaceItem {...item} key={idx} cursor="pointer" />
             ))}
           </Box>
 
-          <Box is="span">Formatter Items</Box>
+          <Box is="span">
+            <b>Formatter Items</b>
+          </Box>
           <Box css={styles.itemContainer}>
             {formatterItems?.map((item, idx) => (
               <SurfaceItem {...item} key={idx} cursor="pointer" />

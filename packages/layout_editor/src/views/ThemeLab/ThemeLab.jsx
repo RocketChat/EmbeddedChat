@@ -8,8 +8,8 @@ import {
 } from '@embeddedchat/ui-elements';
 import useLayoutStore from '../../store/layoutStore';
 import { getThemeLabStyles } from './ThemeLab.styles';
-import PaletteSetting from './PaletteSetting';
 import LayoutSetting from './LayoutSetting';
+import ThemeSetting from './ThemeSetting';
 
 const ThemeLab = () => {
   const styles = getThemeLabStyles(useTheme());
@@ -31,7 +31,7 @@ const ThemeLab = () => {
               css={[styles.section, paletteActive && styles.sectionActive]}
               onClick={() => setPaletteAction(true)}
             >
-              Palette
+              Theme
             </Box>
             <Box
               is="span"
@@ -42,7 +42,7 @@ const ThemeLab = () => {
             </Box>
           </Box>
 
-          {paletteActive ? <PaletteSetting /> : <LayoutSetting />}
+          {paletteActive ? <ThemeSetting /> : <LayoutSetting />}
         </SidebarContent>
       </MinimalSidebar>
     </Box>

@@ -6,7 +6,7 @@ import DefaultTheme from './theme/DefaultTheme';
 const App = () => {
   return (
     <ThemeProvider theme={DefaultTheme} mode="light">
-      <LayoutEditor />;
+      <LayoutEditor />
     </ThemeProvider>
   );
 };

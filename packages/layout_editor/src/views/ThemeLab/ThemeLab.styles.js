@@ -47,6 +47,12 @@ export const getPaletteSettings = ({ colors }) => {
       padding: 1.25rem 0;
       position: relative;
     `,
+
+    palette: css`
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    `,
   };
 
   return styles;
@@ -89,6 +95,27 @@ export const getLayoutSettings = ({ colors }) => {
       display: flex;
       flex-wrap: wrap;
       padding: 0.5rem 0;
+    `,
+  };
+
+  return styles;
+};
+
+export const getColorMangerStyles = () => {
+  const styles = {
+    pickerContainer: css`
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.25rem;
+    `,
+
+    colorPicker: css`
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 1;
     `,
   };
 
