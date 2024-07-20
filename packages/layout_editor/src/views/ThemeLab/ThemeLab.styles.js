@@ -26,7 +26,7 @@ export const getPaletteSettings = ({ colors }) => {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      padding: 1.75rem 0.75rem;
+      padding: 1.25rem 0.75rem;
     `,
     colorSection: css`
       padding: 0.5rem;
@@ -63,7 +63,7 @@ export const getLayoutSettings = ({ colors }) => {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      padding: 1.75rem 0.75rem;
+      padding: 1.25rem 0.75rem;
     `,
     variantSection: css`
       padding: 0.5rem;

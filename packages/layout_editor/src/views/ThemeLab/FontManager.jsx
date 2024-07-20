@@ -5,7 +5,6 @@ import { getFontManagerStyles } from './ThemeLab.styles';
 const FontManager = () => {
   const themeObj = useTheme();
   const styles = getFontManagerStyles(themeObj);
-
   const { theme, setTheme } = themeObj;
 
   const fontFamilyOptions = [
@@ -33,11 +32,31 @@ const FontManager = () => {
     { label: 'MS Serif', value: '"MS Serif", "New York", serif' },
   ];
 
+  const fontSizeOptions = [
+    { label: 'Small', value: 12 },
+    { label: 'Medium', value: 16 },
+    { label: 'Large', value: 20 },
+    { label: 'Extra Large', value: 24 },
+  ];
+
+  const fontWeightOptions = [
+    { label: 'Light', value: 300 },
+    { label: 'Normal', value: 400 },
+    { label: 'Bold', value: 700 },
+    { label: 'Extra Bold', value: 900 },
+  ];
+
   const [fontFamily, setFontFamily] = useState(
     theme.typography.default.fontFamily
   );
+  const [fontSize, setFontSize] = useState(
+    theme.typography.default.fontSize || '16'
+  );
+  const [fontWeight, setFontWeight] = useState(
+    theme.typography.default.fontWeightRegular || 400
+  );
 
-  const handleFontChange = (selectedOption) => {
+  const handleFontFamilyChange = (selectedOption) => {
     setFontFamily(selectedOption);
     setTheme({
       ...theme,
@@ -51,23 +70,72 @@ const FontManager = () => {
     });
   };
 
+  const handleFontSizeChange = (selectedOption) => {
+    setFontSize(selectedOption);
+    setTheme({
+      ...theme,
+      typography: {
+        ...theme.typography,
+        default: {
+          ...theme.typography.default,
+          fontSize: selectedOption,
+        },
+      },
+    });
+  };
+
+  const handleFontWeightChange = (selectedOption) => {
+    setFontWeight(selectedOption);
+    setTheme({
+      ...theme,
+      typography: {
+        ...theme.typography,
+        default: {
+          ...theme.typography.default,
+          fontWeightRegular: selectedOption,
+        },
+      },
+    });
+  };
+
   return (
-    <Box css={styles.commonSelect}>
-      <Box is="span">
-        <b>Font Family</b>
+    <Box>
+      <Box css={styles.commonSelect}>
+        <Box is="span">
+          <b>Font Family</b>
+        </Box>
+        <StaticSelect
+          options={fontFamilyOptions}
+          style={{ position: 'absolute', top: '16px', right: 0, zIndex: 2 }}
+          placeholder="Choose"
+          value={fontFamily}
+          onSelect={handleFontFamilyChange}
+        />
       </Box>
-      <StaticSelect
-        options={fontFamilyOptions}
-        style={{
-          position: 'absolute',
-          top: '16px',
-          right: 0,
-          zIndex: '1',
-        }}
-        placeholder="Choose"
-        value={fontFamily}
-        onSelect={handleFontChange}
-      />
+      <Box css={styles.commonSelect}>
+        <Box is="span">
+          <b>Font Size</b>
+        </Box>
+        <StaticSelect
+          options={fontSizeOptions}
+          style={{ position: 'absolute', top: '16px', right: 0, zIndex: 1 }}
+          placeholder="Choose"
+          value={fontSize}
+          onSelect={handleFontSizeChange}
+        />
+      </Box>
+      <Box css={styles.commonSelect}>
+        <Box is="span">
+          <b>Font Weight</b>
+        </Box>
+        <StaticSelect
+          options={fontWeightOptions}
+          style={{ position: 'absolute', top: '16px', right: 0 }}
+          placeholder="Choose"
+          value={fontWeight}
+          onSelect={handleFontWeightChange}
+        />
+      </Box>
     </Box>
   );
 };
