@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { darken, useTheme } from '@embeddedchat/ui-elements';
+import { darken, lighten, useTheme } from '@embeddedchat/ui-elements';
 
 export const useChatInputStyles = () => {
   const { theme, colors } = useTheme();
@@ -71,7 +71,7 @@ export const useChatInputFormattingToolbarStyles = () => {
     align-items: center;
     background-color: ${mode === 'light'
       ? darken(colors.background, 0.03)
-      : colors.secondary};
+      : lighten(colors.background, 1)};
     display: flex;
     position: relative;
     flex-direction: row;

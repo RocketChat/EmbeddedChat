@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { useTheme, darken } from '@embeddedchat/ui-elements';
+import { useTheme, darken, lighten } from '@embeddedchat/ui-elements';
 
 const rowCentreAlign = css`
   display: flex;
@@ -25,7 +25,7 @@ const useChatHeaderStyles = () => {
   const chatHeaderParent = css`
     background-color: ${mode === 'light'
       ? darken(colors.background, 0.03)
-      : colors.secondary};
+      : lighten(colors.background, 1)};
     width: 100%;
     z-index: ${theme.zIndex.general};
     display: flex;
