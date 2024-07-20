@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useMemo, useState, useEffect } from 'react';
 import DefaultTheme from '../theme/DefaultTheme';
 
 const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
@@ -16,6 +16,18 @@ export const ThemeProvider = ({
 
   const colors = theme.schemes?.[mode];
   const invertedColors = theme.schemes?.[invertMode(mode)];
+
+  useEffect(() => {
+    if (initialTheme) {
+      setTheme(initialTheme);
+    }
+  }, [initialTheme]);
+
+  useEffect(() => {
+    if (initialMode) {
+      setMode(initialMode);
+    }
+  }, [initialMode]);
 
   const value = useMemo(
     () => ({
