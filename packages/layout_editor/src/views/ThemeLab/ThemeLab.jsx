@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
+  Button,
   MinimalSidebar,
   SidebarContent,
   SidebarHeader,
@@ -43,6 +44,11 @@ const ThemeLab = () => {
           </Box>
 
           {paletteActive ? <ThemeSetting /> : <LayoutSetting />}
+          <Box css={styles.btn}>
+            <Button type="secondary" style={{ width: '100%' }}>
+              Generate Theme
+            </Button>
+          </Box>
         </SidebarContent>
       </MinimalSidebar>
     </Box>

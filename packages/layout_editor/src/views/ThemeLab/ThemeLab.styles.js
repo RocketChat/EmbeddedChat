@@ -9,11 +9,16 @@ export const getThemeLabStyles = ({ colors }) => {
     `,
 
     section: css`
-      padding: 0 1rem 0.5rem;
       cursor: pointer;
     `,
     sectionActive: css`
       border-bottom: 1px solid ${colors.primary};
+    `,
+
+    btn: css`
+      border-radius: 0.25rem;
+      border: 1px solid ${colors.border};
+      margin: 0 0.75rem 0.75rem;
     `,
   };
 
