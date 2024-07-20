@@ -75,7 +75,7 @@ export const getFormatterStyles = ({ theme, colors }) => {
       position: absolute;
       bottom: 100%;
       left: auto;
-      z-index: ${theme.zIndex.body + 1};
+      z-index: 1101;
     `,
 
     toolbox: css`

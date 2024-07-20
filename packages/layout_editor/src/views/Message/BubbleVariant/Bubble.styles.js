@@ -81,7 +81,7 @@ export const bubbleStyles = ({ theme, colors }) => {
         position: absolute;
         bottom: calc(100% - 20px);
         left: calc(100% - 20px);
-        z-index: ${theme.zIndex.body + 1};
+        z-index: 1101;
       }
     `,
 

@@ -10,9 +10,9 @@ const useStyles = ({ colors, theme }) => css`
   }
 
   body {
-    font-family: ${theme.typography.default.fontFamily};
-    font-size: ${theme.typography.default.fontSize}px;
-    font-weight: ${theme.typography.default.fontWeightRegular};
+    font-family: ${theme.typography.global.fontFamily};
+    font-size: ${theme.typography.global.fontSize}px;
+    font-weight: ${theme.typography.global.fontWeightRegular};
   }
 
   a {

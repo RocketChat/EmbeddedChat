@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, StaticSelect, useTheme } from '@embeddedchat/ui-elements';
 import { getPaletteSettings } from './ThemeLab.styles';
 import ColorManager from './ColorManager';
+import FontManager from './FontManager';
 
 const ThemeSetting = () => {
   const themeObject = useTheme();
@@ -51,6 +52,7 @@ const ThemeSetting = () => {
       </Box>
       <Box css={styles.typographySection}>
         <h3>Typography</h3>
+        <FontManager />
       </Box>
     </Box>
   );

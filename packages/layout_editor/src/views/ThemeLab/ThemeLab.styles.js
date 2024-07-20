@@ -23,11 +23,10 @@ export const getThemeLabStyles = ({ colors }) => {
 export const getPaletteSettings = ({ colors }) => {
   const styles = {
     main: css`
-      height: 100%;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      padding: 0.75rem;
+      padding: 1.75rem 0.75rem;
     `,
     colorSection: css`
       padding: 0.5rem;
@@ -61,11 +60,10 @@ export const getPaletteSettings = ({ colors }) => {
 export const getLayoutSettings = ({ colors }) => {
   const styles = {
     main: css`
-      height: 100%;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      padding: 0.75rem;
+      padding: 1.75rem 0.75rem;
     `,
     variantSection: css`
       padding: 0.5rem;
@@ -122,6 +120,20 @@ export const getColorMangerStyles = () => {
       .hue-horizontal {
         cursor: pointer;
       }
+    `,
+  };
+
+  return styles;
+};
+
+export const getFontManagerStyles = () => {
+  const styles = {
+    commonSelect: css`
+      display: flex;
+      gap: 1.25rem;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      position: relative;
     `,
   };
 
