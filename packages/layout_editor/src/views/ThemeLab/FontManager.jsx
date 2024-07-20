@@ -34,7 +34,7 @@ const FontManager = () => {
   ];
 
   const [fontFamily, setFontFamily] = useState(
-    theme.typography.global.fontFamily
+    theme.typography.default.fontFamily
   );
 
   const handleFontChange = (selectedOption) => {
@@ -43,8 +43,8 @@ const FontManager = () => {
       ...theme,
       typography: {
         ...theme.typography,
-        global: {
-          ...theme.typography.global,
+        default: {
+          ...theme.typography.default,
           fontFamily: selectedOption,
         },
       },

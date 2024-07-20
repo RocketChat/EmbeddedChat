@@ -72,7 +72,7 @@ const DefaultTheme = {
   },
 
   typography: {
-    global: {
+    default: {
       fontFamily: "'Times New Roman', serif",
       fontSize: 16,
       fontWeightRegular: 400,
