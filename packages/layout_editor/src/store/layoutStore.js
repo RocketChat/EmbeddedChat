@@ -15,6 +15,11 @@ const useLayoutStore = create((set) => ({
   setDisplayName: (displayName) => {
     set({ displayName });
   },
+
+  sidebarWidth: '350px',
+  setSidebarWidth: (sidebarWidth) => {
+    set({ sidebarWidth });
+  },
 }));
 
 export default useLayoutStore;

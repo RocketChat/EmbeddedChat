@@ -47,10 +47,13 @@ const ThemeLab = () => {
       formatters: state.formatters,
     }));
 
-  const { messageView, displayName } = useLayoutStore((state) => ({
-    messageView: state.messageView,
-    displayName: state.displayName,
-  }));
+  const { messageView, displayName, sidebarWidth } = useLayoutStore(
+    (state) => ({
+      messageView: state.messageView,
+      displayName: state.displayName,
+      sidebarWidth: state.sidebarWidth,
+    })
+  );
 
   const handleThemeGeneration = () => {
     setThemeModalOpen(true);
@@ -60,6 +63,11 @@ const ThemeLab = () => {
     const addedTheme = {
       ...theme,
       components: {
+        Sidebar: {
+          styleOverrides: {
+            width: sidebarWidth,
+          },
+        },
         ChatHeader: {
           configOverrides: {
             optionConfig: {

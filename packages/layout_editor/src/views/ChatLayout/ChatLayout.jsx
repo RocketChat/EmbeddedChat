@@ -1,18 +1,24 @@
 import React from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
+import debounce from 'lodash/debounce';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import ChatBody from '../Chatbody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
 import { getChatLayoutStyles } from './ChatLayout.styles';
 import DemoSidebar from '../DemoSidebar/DemoSidebar';
 import members from '../../data/members.json';
+import useLayoutStore from '../../store/layoutStore';
 
 const ChatLayout = () => {
   const theme = useTheme();
   const styles = getChatLayoutStyles(theme);
   const { colors } = theme;
 
-  const handleResize = (size) => {
+  const { setSidebarWidth } = useLayoutStore((state) => ({
+    setSidebarWidth: state.setSidebarWidth,
+  }));
+
+  const handleResize = debounce((size) => {
     const minSize = 26.5;
     const maxSize = 60;
     const minWidth = 350;
@@ -22,8 +28,8 @@ const ChatLayout = () => {
       minWidth +
       ((size - minSize) / (maxSize - minSize)) * (maxWidth - minWidth);
 
-    console.log(sidebarWidth);
-  };
+    setSidebarWidth(`${sidebarWidth}px`);
+  }, 100);
 
   return (
     <Box css={styles.layout} className="ec-chat-layout">
