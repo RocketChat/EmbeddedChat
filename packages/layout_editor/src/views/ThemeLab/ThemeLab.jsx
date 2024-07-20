@@ -47,6 +47,11 @@ const ThemeLab = () => {
       formatters: state.formatters,
     }));
 
+  const { messageView, displayName } = useLayoutStore((state) => ({
+    messageView: state.messageView,
+    displayName: state.displayName,
+  }));
+
   const handleThemeGeneration = () => {
     setThemeModalOpen(true);
     const finalFormatters = inputSurfaceItems.includes('formatter')
@@ -79,6 +84,11 @@ const ThemeLab = () => {
             },
           },
         },
+      },
+
+      variants: {
+        Message: messageView,
+        MessageHeader: displayName,
       },
     };
     const themeString = JSON.stringify(addedTheme, null, 2)
