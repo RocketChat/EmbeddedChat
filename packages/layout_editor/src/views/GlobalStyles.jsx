@@ -21,7 +21,7 @@ const useStyles = ({ colors, theme }) => css`
 
   ::-webkit-scrollbar {
     width: 4px;
-    height: 7.7px;
+    height: 4px;
   }
 
   ::-webkit-scrollbar-thumb {

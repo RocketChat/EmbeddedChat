@@ -20,6 +20,14 @@ export const getThemeLabStyles = ({ colors }) => {
       border: 1px solid ${colors.border};
       margin: 0 0.75rem 0.75rem;
     `,
+
+    syntaxBox: css`
+      position: relative;
+    `,
+
+    closeBtn: css`
+      padding: 0.5rem;
+    `,
   };
 
   return styles;

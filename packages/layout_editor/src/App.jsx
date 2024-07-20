@@ -1,12 +1,14 @@
 import React from 'react';
 import LayoutEditor from './views/LayoutEditor';
-import { ThemeProvider } from '@embeddedchat/ui-elements';
+import { ThemeProvider, ToastBarProvider } from '@embeddedchat/ui-elements';
 import DefaultTheme from './theme/DefaultTheme';
 
 const App = () => {
   return (
     <ThemeProvider theme={DefaultTheme} mode="light">
-      <LayoutEditor />
+      <ToastBarProvider position="bottom right">
+        <LayoutEditor />
+      </ToastBarProvider>
     </ThemeProvider>
   );
 };
