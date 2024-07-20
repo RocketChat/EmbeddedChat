@@ -7,102 +7,28 @@ import {
   Modal,
   SidebarContent,
   SidebarHeader,
-  useTheme,
   useToastBarDispatch,
+  useTheme,
 } from '@embeddedchat/ui-elements';
-import useLayoutStore from '../../store/layoutStore';
+import useThemeGenerator from '../../hooks/useThemeGenerator';
 import { getThemeLabStyles } from './ThemeLab.styles';
 import LayoutSetting from './LayoutSetting';
 import ThemeSetting from './ThemeSetting';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import useHeaderItemsStore from '../../store/headerItemsStore';
-import useMessageItemsStore from '../../store/messageItemsStore';
-import useChatInputItemsStore from '../../store/chatInputItemsStore';
+import useLayoutStore from '../../store/layoutStore';
 
 const ThemeLab = () => {
-  const { theme } = useTheme();
+  const { generatedTheme, generateTheme } = useThemeGenerator();
   const dispatchToastMessage = useToastBarDispatch();
   const styles = getThemeLabStyles(useTheme());
   const setThemeLabOpen = useLayoutStore((state) => state.setThemeLabOpen);
   const [paletteActive, setPaletteAction] = useState(true);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
-  const [generatedTheme, setGeneratedTheme] = useState(null);
-
-  const { surfaceItems: headerSurfaceItems, menuItems: headerMenuItems } =
-    useHeaderItemsStore((state) => ({
-      surfaceItems: state.surfaceItems,
-      menuItems: state.menuItems,
-    }));
-
-  const { surfaceItems: messageSurfaceItems, menuItems: messageMenuItems } =
-    useMessageItemsStore((state) => ({
-      surfaceItems: state.surfaceItems,
-      menuItems: state.menuItems,
-    }));
-
-  const { surfaceItems: inputSurfaceItems, formatters } =
-    useChatInputItemsStore((state) => ({
-      surfaceItems: state.surfaceItems,
-      formatters: state.formatters,
-    }));
-
-  const { messageView, displayName, sidebarWidth } = useLayoutStore(
-    (state) => ({
-      messageView: state.messageView,
-      displayName: state.displayName,
-      sidebarWidth: state.sidebarWidth,
-    })
-  );
 
   const handleThemeGeneration = () => {
+    generateTheme();
     setThemeModalOpen(true);
-    const finalFormatters = inputSurfaceItems.includes('formatter')
-      ? formatters
-      : [];
-    const addedTheme = {
-      ...theme,
-      components: {
-        Sidebar: {
-          styleOverrides: {
-            width: sidebarWidth,
-          },
-        },
-        ChatHeader: {
-          configOverrides: {
-            optionConfig: {
-              surfaceItems: headerSurfaceItems,
-              menuItems: headerMenuItems,
-            },
-          },
-        },
-        MessageToolbox: {
-          configOverrides: {
-            optionConfig: {
-              surfaceItems: messageSurfaceItems,
-              menuItems: messageMenuItems,
-            },
-          },
-        },
-        ChatInputFormattingToolbar: {
-          configOverrides: {
-            optionConfig: {
-              surfaceItems: inputSurfaceItems,
-              formatters: finalFormatters,
-            },
-          },
-        },
-      },
-
-      variants: {
-        Message: messageView,
-        MessageHeader: displayName,
-      },
-    };
-    const themeString = JSON.stringify(addedTheme, null, 2)
-      .replace(/"([^"]+)":/g, '$1:')
-      .replace(/\\"/g, "'");
-    setGeneratedTheme(themeString);
   };
 
   const handleCopyToClipboard = () => {
