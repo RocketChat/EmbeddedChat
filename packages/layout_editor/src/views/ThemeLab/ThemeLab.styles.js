@@ -116,6 +116,12 @@ export const getColorMangerStyles = () => {
       top: 100%;
       right: 0;
       z-index: 1;
+
+      .saturation-white,
+      .saturation-black,
+      .hue-horizontal {
+        cursor: pointer;
+      }
     `,
   };
 

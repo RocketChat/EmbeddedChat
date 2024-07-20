@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { ChromePicker } from 'react-color';
 import { getColorMangerStyles } from './ThemeLab.styles';
@@ -80,8 +86,10 @@ const ColorManager = () => {
           <Box is="span">{key}:</Box>
           <Box
             style={{
-              width: 50,
+              width: 20,
               height: 20,
+              borderRadius: '0.2rem',
+              border: `1px solid ${colors.border}`,
               backgroundColor: value,
               margin: '0 10px',
               cursor: 'pointer',

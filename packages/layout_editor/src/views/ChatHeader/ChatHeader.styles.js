@@ -1,5 +1,5 @@
-import { css } from "@emotion/react";
-import { darken } from "@embeddedchat/ui-elements";
+import { css } from '@emotion/react';
+import { darken, lighten } from '@embeddedchat/ui-elements';
 
 export const getChatHeaderStyles = ({ theme, mode, colors }) => {
   const styles = {
@@ -18,9 +18,9 @@ export const getChatHeaderStyles = ({ theme, mode, colors }) => {
     `,
 
     chatHeaderParent: css`
-      background-color: ${mode === "light"
+      background-color: ${mode === 'light'
         ? darken(colors.background, 0.03)
-        : colors.secondary};
+        : lighten(colors.background, 1)};
       width: 100%;
       z-index: ${theme.zIndex.general};
       display: flex;
