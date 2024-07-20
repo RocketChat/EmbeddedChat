@@ -40,7 +40,7 @@ export const useModalBackdropStyles = () => {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: ${theme.zIndex.modal};
+    z-index: ${theme.zIndex?.modal || 1500};
     background: ${alpha(theme.schemes.common.black, 0.5)};
     width: 100%;
     height: 100%;

@@ -9,7 +9,7 @@ export const usePopupStyles = () => {
     popup: (width, height) => css`
       display: flex;
       flex-direction: column;
-      z-index: ${theme.zIndex.modal};
+      z-index: ${theme.zIndex?.modal || 1500};
       box-shadow: ${theme.shadows[2]};
       border-radius: ${theme.schemes.radius};
       background: ${colors.background};

@@ -8,7 +8,7 @@ const useSidebarStyles = () => {
     min-width: 350px;
     height: 100%;
     box-shadow: ${theme.shadows[2]};
-    z-index: ${theme.zIndex.general};
+    z-index: ${theme.zIndex?.sidebar || 1200};
     display: flex;
     flex-direction: column;
   `;
