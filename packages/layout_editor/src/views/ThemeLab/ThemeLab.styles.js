@@ -31,13 +31,13 @@ export const getPaletteSettings = ({ colors }) => {
     `,
     colorSection: css`
       padding: 0.5rem;
-      background-color: ${colors.secondary};
       border-radius: 0.25rem;
+      border: 1px solid ${colors.border};
     `,
     typographySection: css`
       padding: 0.5rem;
-      background-color: ${colors.secondary};
       border-radius: 0.25rem;
+      border: 1px solid ${colors.border};
     `,
 
     commonSelect: css`
@@ -69,13 +69,13 @@ export const getLayoutSettings = ({ colors }) => {
     `,
     variantSection: css`
       padding: 0.5rem;
-      background-color: ${colors.secondary};
+      border: 1px solid ${colors.border};
       border-radius: 0.25rem;
     `,
 
     toolSection: css`
       padding: 0.5rem;
-      background-color: ${colors.secondary};
+      border: 1px solid ${colors.border};
       border-radius: 0.25rem;
     `,
 
