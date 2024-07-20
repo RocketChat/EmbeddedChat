@@ -76,7 +76,7 @@ export const useMessageDividerStyles = () => {
     line-height: 1rem;
     position: relative;
     display: flex;
-    z-index: ${theme.zIndex.divider};
+    z-index: 1000;
     align-items: center;
     margin-top: 0.5rem;
     margin-bottom: 0.75rem;
@@ -259,7 +259,7 @@ export const useMessageToolboxStyles = () => {
       display: flex;
       position: absolute;
       bottom: 100%;
-      z-index: ${theme.zIndex.body + 1};
+      z-index: 1101;
       right: 2rem;
     }
   `;

@@ -51,7 +51,7 @@ export default function TypingUsers() {
         height: ${typingUsers.length !== 0 ? '15px' : '0px'};
         font-size: 0.75rem;
         margin-inline-start: 2.25rem;
-        z-index: ${theme.zIndex.general};
+        z-index: 1200;
       `}
     >
       {typingStatusMessage}

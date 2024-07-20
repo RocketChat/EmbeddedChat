@@ -19,10 +19,9 @@ export const useChatbodyStyles = () => {
 };
 
 export const useRecentMessageStyles = () => {
-  const { theme } = useTheme();
   const button = css`
     position: relative;
-    z-index: ${theme.zIndex.body};
+    z-index: 1100;
     left: 50%;
     transform: translateX(-50%);
     user-select: none;
