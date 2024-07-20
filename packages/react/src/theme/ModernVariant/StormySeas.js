@@ -80,7 +80,7 @@ const StormySeas = {
   },
 
   variants: {
-    MessageHeader: 'Colorize',
+    MessageHeader: 'colorize',
     PinnedMessages: {
       viewType: 'Popup',
     },

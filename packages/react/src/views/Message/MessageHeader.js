@@ -23,7 +23,7 @@ const MessageHeader = ({
   const { styleOverrides, classNames, variantOverrides } =
     useComponentOverrides('MessageHeader');
   const { ECOptions } = useRCContext();
-  const displayNameVariant = variantOverrides || 'Normal';
+  const displayNameVariant = variantOverrides || 'normal';
   const styles = useMessageHeaderStyles();
   const { colors } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
@@ -85,7 +85,7 @@ const MessageHeader = ({
           css={styles.name}
           className={appendClassNames('ec-message-header-name')}
           style={
-            displayNameVariant === 'Colorize'
+            displayNameVariant === 'colorize'
               ? { color: getDisplayNameColor(message.u.username) }
               : null
           }
@@ -99,7 +99,7 @@ const MessageHeader = ({
           css={styles.userName}
           className={appendClassNames('ec-message-header-username')}
           style={
-            displayNameVariant === 'Colorize'
+            displayNameVariant === 'colorize'
               ? { color: getDisplayNameColor(message.u.username) }
               : null
           }
