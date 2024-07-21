@@ -38,7 +38,10 @@ const Heading = ({ level = 1, children, ...props }) => {
 
   const Tag = `h${level}`;
   const { theme } = useTheme();
-  const style = { ...defaultTypography[Tag], ...theme.typography[Tag] };
+  const style = {
+    ...defaultTypography[Tag],
+    ...(theme.typography?.[Tag] || {}),
+  };
 
   return (
     <Tag

@@ -166,7 +166,7 @@ const displayNameVariant = variantOverrides || 'Normal';
   css={styles.userName}
   className={appendClassNames('ec-message-header-username', classNames)}
   style={
-    displayNameVariant === 'Colorize'
+    displayNameVariant === 'colorize'
       ? { color: getDisplayNameColor(message.u.username) }
       : null
   }

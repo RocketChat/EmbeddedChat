@@ -95,8 +95,10 @@ const ThemeLab = () => {
         <Modal onClose={() => setThemeModalOpen(false)}>
           <Modal.Header>
             <Modal.Title>
-              <Icon name="emoji" size="1.25rem" />
-              Your theme is ready!
+              <Box css={styles.modalTitle}>
+                <Icon name="emoji" size="1.25rem" />
+                <Box is="span">Your theme is ready! </Box>
+              </Box>
             </Modal.Title>
             <Modal.Close onClick={() => setThemeModalOpen(false)} />
           </Modal.Header>

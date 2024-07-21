@@ -54,5 +54,5 @@ yarn preview # Preview build
 
 ### Additional Resources
 
-- For installation instructions of the EmbeddedChat RC App, visit [this guide](../rc-app/README.md).
-- For detailed prop usage, refer to [this guide](../react/README.md).
+- For installation instructions of the EmbeddedChat RC App, visit [this guide](ec_rc_setup.md).
+- For detailed prop usage, refer to [this guide](embeddedchat_setup.md).

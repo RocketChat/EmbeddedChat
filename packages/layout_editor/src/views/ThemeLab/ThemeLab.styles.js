@@ -28,6 +28,12 @@ export const getThemeLabStyles = ({ colors }) => {
     closeBtn: css`
       padding: 0.5rem;
     `,
+
+    modalTitle: css`
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    `,
   };
 
   return styles;
