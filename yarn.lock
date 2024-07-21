@@ -2491,6 +2491,7 @@ __metadata:
     eslint-plugin-storybook: ^0.6.12
     identity-obj-proxy: ^3.0.0
     jest: ^27.5.1
+    json5: ^2.2.3
     lint-staged: ^12.4.2
     normalize.css: ^8.0.1
     npm-run-all: ^4.1.5
