@@ -46,11 +46,9 @@ export class AuthTokenEndpoint extends ApiEndpoint {
             },
             headers: {
                 ...(await this.generateHeaders(read, "POST")),
-                "Set-Cookie": [
-                    `ec-token=${token}; Max-Age=${
-                        24 * 60 * 60
-                    }; Path=/; HttpOnly; SameSite=None; Secure`,
-                ],
+                "Set-Cookie": `ec-token=${token}; Max-Age=${
+                    24 * 60 * 60
+                }; Path=/; HttpOnly; SameSite=None; Secure`,
             },
         };
     }

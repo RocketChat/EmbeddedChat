@@ -47,6 +47,7 @@ export class InfoEndpoint extends ApiEndpoint {
                 hideHeader,
                 secure,
                 dark,
+                theme,
             ] = await getEnvironmentValues(readEnvironment, {
                 serviceName: "custom-oauth-name",
                 client_id: "client-id",
@@ -65,6 +66,7 @@ export class InfoEndpoint extends ApiEndpoint {
                 hideHeader: "hide-header",
                 secure: "secure",
                 dark: "dark",
+                theme: "theme",
             });
 
             const [redirect_uri, allowedOrigins] = await Promise.all([
@@ -97,6 +99,7 @@ export class InfoEndpoint extends ApiEndpoint {
                         hideHeader,
                         secure,
                         dark,
+                        theme,
                     },
                 },
             };
