@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-import { useCustomTheme } from './useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const simpleHash = (str) => {
   if (!str) return 0;
@@ -12,7 +12,7 @@ const simpleHash = (str) => {
 };
 
 const useDisplayNameColor = () => {
-  const { theme, mode } = useCustomTheme();
+  const { theme, mode } = useTheme();
 
   const getDisplayNameColor = (username) => {
     const hash = simpleHash(username);

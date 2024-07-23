@@ -1,18 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import {
+  Box,
+  Sidebar,
+  Avatar,
+  Icon,
+  Throbber,
+  Popup,
+  useComponentOverrides,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
-import { Box } from '../../components/Box';
-import { Avatar } from '../../components/Avatar';
-import { Icon } from '../../components/Icon';
-import { Throbber } from '../../components/Throbber';
-import { appendClassNames } from '../../lib/appendClassNames';
 import formatTimestamp from '../../lib/formatTimestamp';
 import UserInfoField from './UserInfoField';
 import useUserInformationStyles from './UserInformation.styles';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
-import Popup from '../../components/Popup/Popup';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const UserInformation = () => {

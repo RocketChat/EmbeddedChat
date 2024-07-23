@@ -1,22 +1,31 @@
-# rc-app
-Configure RocketChat for EmbeddedChat
+# Embedded Chat: A staple in excellent customer service
 
-## Getting Started
-Now that you have generated a blank default Rocket.Chat App, what are you supposed to do next?
-Start developing! Open up your favorite editor, our recommended one is Visual Studio code,
-and start working on your App. Once you have something ready to test, you can either
-package it up and manually deploy it to your test instance or you can use the CLI to do so.
-Here are some commands to get started:
-- `rc-apps package`: this command will generate a packaged app file (zip) which can be installed **if** it compiles with TypeScript
-- `rc-apps deploy`: this will do what `package` does but will then ask you for your server url, username, and password to deploy it for you
+An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
 
-## Documentation
-Here are some links to examples and documentation:
-- [Rocket.Chat Apps TypeScript Definitions Documentation](https://rocketchat.github.io/Rocket.Chat.Apps-engine/)
-- [Rocket.Chat Apps TypeScript Definitions Repository](https://github.com/RocketChat/Rocket.Chat.Apps-engine)
-- [Example Rocket.Chat Apps](https://github.com/graywolf336/RocketChatApps)
-- Community Forums
-  - [App Requests](https://forums.rocket.chat/c/rocket-chat-apps/requests)
-  - [App Guides](https://forums.rocket.chat/c/rocket-chat-apps/guides)
-  - [Top View of Both Categories](https://forums.rocket.chat/c/rocket-chat-apps)
-- [#rocketchat-apps on Open.Rocket.Chat](https://open.rocket.chat/channel/rocketchat-apps)
+![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
+
+## EmbeddedChat RC App
+
+This monorepo hosts an RC app designed to enhance EmbeddedChat functionalities. It facilitates remote configuration of EmbeddedChat settings, implements secure login (storing the resume token as an HTTP-only cookie), and help integrates Rocket.Chat OAuth login capabilities.
+
+### Installation
+
+To install this application, follow these steps:
+
+1. Clone the repository to your local machine:
+
+      ```
+      git clone https://github.com/RocketChat/EmbeddedChat.git
+      ```
+
+2. Navigate to the `packages/rc-app` directory.
+
+3. Open a command prompt and execute the following command:
+
+      ```
+      rc-apps deploy --url host_url --username your_username --password your_password
+      ```
+
+Ensure to substitute `host_url`, `your_username`, and `your_password` with your Rocket.Chat server's URL, username, and password respectively.
+
+Note: A Rocket.Chat server setup is required. If you haven't set up one yet, refer to this [link](https://developer.rocket.chat/open-source-projects/server/server-environment-setup) for instructions.

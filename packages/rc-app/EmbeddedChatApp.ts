@@ -1,8 +1,11 @@
 import {
     IAppAccessors,
     IConfigurationExtend,
+    IConfigurationModify,
     IEnvironmentRead,
+    IHttp,
     ILogger,
+    IRead,
 } from "@rocket.chat/apps-engine/definition/accessors";
 import {
     ApiSecurity,
@@ -12,10 +15,15 @@ import { App } from "@rocket.chat/apps-engine/definition/App";
 import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata";
 import { authSettings, propSettings } from "./settings/settings";
 import { CallbackEndpoint } from "./endpoints/CallbackEndpoint";
-import { SettingType } from "@rocket.chat/apps-engine/definition/settings";
+import {
+    ISetting,
+    SettingType,
+} from "@rocket.chat/apps-engine/definition/settings";
 import { getCallbackUrl } from "./lib/getCallbackUrl";
+import { isValidCssDimension } from "./lib/isValidCssDimension";
 import { InfoEndpoint } from "./endpoints/InfoEndpoint";
 import { AuthTokenEndpoint } from "./endpoints/AuthTokenEndpoint";
+import { ISettingUpdateContext } from "@rocket.chat/apps-engine/definition/settings/ISettingUpdateContext";
 
 export class EmbeddedChatApp extends App {
     constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -30,7 +38,9 @@ export class EmbeddedChatApp extends App {
             ...authSettings.map((setting) =>
                 configuration.settings.provideSetting(setting)
             ),
-            ...propSettings.map((setting)=> configuration.settings.provideSetting(setting)),
+            ...propSettings.map((setting) =>
+                configuration.settings.provideSetting(setting)
+            ),
 
             // Provide the API with CallbackEndpoint
             configuration.api.provideApi({
@@ -67,5 +77,24 @@ export class EmbeddedChatApp extends App {
                 });
             }),
         ]);
+    }
+
+    async onPreSettingUpdate(
+        context: ISettingUpdateContext,
+        configurationModify: IConfigurationModify,
+        read: IRead,
+        http: IHttp
+    ): Promise<ISetting> {
+        switch (context.newSetting.id) {
+            case "ec-width":
+            case "ec-height":
+                if (!isValidCssDimension(context.newSetting.value)) {
+                    return context.oldSetting;
+                }
+            default:
+                break;
+        }
+
+        return context.newSetting;
     }
 }

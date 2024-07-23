@@ -1,6 +1,5 @@
 import React from 'react';
-import { Avatar } from '../../components/Avatar';
-import { Box } from '../../components/Box';
+import { Box, Avatar } from '@embeddedchat/ui-elements';
 import { filePreviewContainerStyles as styles } from './Files.styles';
 
 const FilePreviewContainer = ({ file }) => (

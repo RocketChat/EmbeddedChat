@@ -5,12 +5,10 @@ import React, {
   useContext,
   useRef,
 } from 'react';
+import { Box, Icon, ActionButton } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
-import { Box } from '../../components/Box';
-import { Icon } from '../../components/Icon';
-import { ActionButton } from '../../components/ActionButton';
 import { useCommonRecorderStyles } from './ChatInput.styles';
 
 const AudioMessageRecorder = () => {

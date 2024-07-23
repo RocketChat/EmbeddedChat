@@ -1,7 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Box,
+  Heading,
+  Icon,
+  Menu,
+  ActionButton,
+  Tooltip,
+  useToastBarDispatch,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
-import Heading from '../../components/Heading/Heading';
 import {
   useUserStore,
   useMessageStore,
@@ -15,13 +24,6 @@ import {
   useFileStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
-import { Tooltip } from '../../components/Tooltip';
-import { Box } from '../../components/Box';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Icon } from '../../components/Icon';
-import { ActionButton } from '../../components/ActionButton';
-import { Menu } from '../../components/Menu';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import useChatHeaderStyles from './ChatHeader.styles';
@@ -35,7 +37,7 @@ const ChatHeader = ({
   className = '',
   style = {},
   optionConfig = {
-    chatOptions: [
+    toolOptions: [
       'minmax',
       'close',
       'thread',
@@ -55,8 +57,8 @@ const ChatHeader = ({
   const { classNames, styleOverrides, configOverrides } =
     useComponentOverrides('ChatHeader');
 
-  const chatOptions =
-    configOverrides.optionConfig?.chatOptions || optionConfig.chatOptions;
+  const toolOptions =
+    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
   const threshold =
     configOverrides.optionConfig?.threshold || optionConfig.threshold;
 
@@ -364,7 +366,7 @@ const ChatHeader = ({
     ),
   };
 
-  const menuOptions = chatOptions
+  const menuOptions = toolOptions
     .slice(threshold)
     .map((key) => {
       const tool = menuMap[key];
@@ -434,7 +436,7 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          {chatOptions.slice(0, threshold).map((key) => menuMap[key])}
+          {toolOptions.slice(0, threshold).map((key) => menuMap[key])}
           {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>

@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { format } from 'date-fns';
-import { Box } from '../../components/Box';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
+import {
+  Box,
+  Avatar,
+  ActionButton,
+  Icon,
+  useComponentOverrides,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { Avatar } from '../../components/Avatar';
-import { ActionButton } from '../../components/ActionButton';
-import { Icon } from '../../components/Icon';
 import { useMessageStore } from '../../store';
 import useQuoteMessageStyles from './QuoteMessage.styles';
 

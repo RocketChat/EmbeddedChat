@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import { Box, Icon, Avatar } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { Icon } from '../../components/Icon';
-import { Box } from '../../components/Box';
-import { Avatar } from '../../components/Avatar';
 import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
 
 const RoomMemberItem = ({ user, host }) => {

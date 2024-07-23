@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { debounce } from 'lodash';
+import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { MessageAggregator } from './common/MessageAggregator';
 
 const SearchMessages = () => {

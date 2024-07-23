@@ -1,5 +1,9 @@
 import React from 'react';
-import { UiKitComponent, UiKitContext, UiKitMessage } from '../../../uiKit';
+import {
+  UiKitComponent,
+  UiKitContext,
+  UiKitMessage,
+} from '@embeddedchat/ui-kit';
 import { useMessageBlockContextValue } from '../../../hooks/uiKit/useMessageBlockContextValue';
 
 const UiKitMessageBlock = ({ rid, mid, blocks }) => {

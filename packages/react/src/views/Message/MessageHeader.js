@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import {
+  Box,
+  Icon,
+  Tooltip,
+  useComponentOverrides,
+  useTheme,
+  appendClassNames,
+} from '@embeddedchat/ui-elements';
 import { useMemberStore, useUserStore } from '../../store';
-import { Icon } from '../../components/Icon';
-import useComponentOverrides from '../../hooks/useComponentOverrides';
-import { Box } from '../../components/Box';
-import { appendClassNames } from '../../lib/appendClassNames';
-import { Tooltip } from '../../components/Tooltip';
 import { useMessageHeaderStyles } from './Message.styles';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
 
@@ -23,7 +25,7 @@ const MessageHeader = ({
   const { ECOptions } = useRCContext();
   const displayNameVariant = variantOverrides || 'Normal';
   const styles = useMessageHeaderStyles();
-  const colors = useCustomTheme();
+  const { colors } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);

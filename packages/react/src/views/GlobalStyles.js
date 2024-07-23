@@ -1,7 +1,6 @@
 import React from 'react';
 import { css, Global } from '@emotion/react';
-import { useCustomTheme } from '../hooks/useCustomTheme';
-import { alpha } from '../lib/color';
+import { useTheme, alpha } from '@embeddedchat/ui-elements';
 
 const useStyles = (colors, theme) => css`
   .ec-embedded-chat * {
@@ -40,7 +39,7 @@ const useStyles = (colors, theme) => css`
 `;
 
 const GlobalStyles = () => {
-  const { theme, colors } = useCustomTheme();
+  const { theme, colors } = useTheme();
   const styles = useStyles(colors, theme);
 
   return <Global styles={styles} />;

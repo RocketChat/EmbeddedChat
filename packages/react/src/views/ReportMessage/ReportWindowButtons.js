@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
+import {
+  Button,
+  Icon,
+  Modal,
+  useToastBarDispatch,
+} from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
-import { Button } from '../../components/Button';
-import { Icon } from '../../components/Icon';
-import { Modal } from '../../components/Modal';
-import { useToastBarDispatch } from '../../hooks/useToastBarDispatch';
 
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [

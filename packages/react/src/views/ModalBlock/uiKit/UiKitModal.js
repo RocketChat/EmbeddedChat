@@ -1,7 +1,7 @@
 /* eslint-disable no-void */
 import React from 'react';
 import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
-import { UiKitContext } from '../../../uiKit';
+import { UiKitContext } from '@embeddedchat/ui-kit';
 import { useModalContextValue } from '../../../hooks/uiKit/useModalBlockContextValue';
 import ModalBlock from './ModalBlock';
 import useUiKitView from '../../../hooks/uiKit/useUiKitView';

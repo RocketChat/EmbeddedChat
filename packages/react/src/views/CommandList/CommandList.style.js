@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
-import { useCustomTheme } from '../../hooks/useCustomTheme';
+import { useTheme } from '@embeddedchat/ui-elements';
 
 const useCommandListStyles = () => {
-  const { colors } = useCustomTheme();
+  const { colors } = useTheme();
   const main = css`
     margin: 0.2rem 2rem;
     display: block;
