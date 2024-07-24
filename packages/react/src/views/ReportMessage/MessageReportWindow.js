@@ -4,7 +4,7 @@ import { Box, Input } from '@embeddedchat/ui-elements';
 import ReportWindowButtons from './ReportWindowButtons';
 import { useMessageStore } from '../../store';
 import styles from './ReportMessage.styles';
-import { Markdown } from '../Markdown'
+import { Markdown } from '../Markdown';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
@@ -23,7 +23,9 @@ const MessageReportWindow = ({ messageId }) => {
       reportDescription={reportDescription}
       messageId={messageId}
     >
-      <Box><Markdown body={message} isReaction={false}/></Box>
+      <Box>
+        <Markdown body={message} isReaction={false} />
+      </Box>
       <Box css={styles.conatiner}>
         <Input
           textArea
