@@ -10,7 +10,8 @@ import {
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
-import getQuoteMessageStyles from './QuoteMessage.styles';
+import useQuoteMessageStyles from './QuoteMessage.styles';
+import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -45,11 +46,13 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={styles.message}>
-        {message.msg
-          ? message.msg
-          : `${message.file?.name} (${
-              message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
-            } kB)`}
+        {message.msg ? (
+          <Markdown body={message} isReaction={false} />
+        ) : (
+          `${message.file?.name} (${
+            message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+          } kB)`
+        )}
       </Box>
     </Box>
   );

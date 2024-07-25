@@ -34,6 +34,7 @@ import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
+import { Markdown } from '../Markdown';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -155,7 +156,7 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
     } else if (editMessage.msg) {
-      messageRef.current.value = editMessage.msg;
+      messageRef.current.value = <Markdown body={editMessage} />;
     } else {
       messageRef.current.value = '';
     }

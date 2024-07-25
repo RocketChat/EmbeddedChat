@@ -28,6 +28,7 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { Markdown } from '../Markdown';
 
 const ChatHeader = ({
   isClosable,
@@ -385,7 +386,7 @@ const ChatHeader = ({
       </Box>
       {isThreadOpen && (
         <DynamicHeader
-          title={threadTitle}
+          title={<Markdown body={threadMessage} isReaction={false} />}
           handleClose={closeThread}
           iconName="arrow-back"
         />
