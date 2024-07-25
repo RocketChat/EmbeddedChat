@@ -28,6 +28,7 @@ import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import useChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { Markdown } from '../Markdown';
 
 const ChatHeader = ({
   isClosable,
@@ -96,8 +97,10 @@ const ChatHeader = ({
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
-  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const threadMessage = useMessageStore((state) => state.threadMainMessage);
+
   const closeThread = useMessageStore((state) => state.closeThread);
 
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
@@ -442,7 +445,7 @@ const ChatHeader = ({
       </Box>
       {isThreadOpen && (
         <DynamicHeader
-          title={threadTitle}
+          title={<Markdown body={threadMessage} isReaction={false} />}
           handleClose={closeThread}
           iconName="arrow-back"
         />
