@@ -3,7 +3,7 @@ name: Build and Publish Storybook to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - develop
 
 permissions:
   contents: read
@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: develop
 
       - name: Checkout code
         uses: actions/checkout@v4
