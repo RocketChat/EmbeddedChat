@@ -1,0 +1,80 @@
+name: Build and Publish Storybook to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.19.0"
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Build Storybook
+        run: yarn build:storybook
+        working-directory: packages/react
+
+      - name: Build UI-Elements
+        run: yarn build:storybook
+        working-directory: packages/ui-elements
+
+      - name: Prepare Build Folder
+        run: |
+          mkdir -p build
+          cp -r packages/react/storybook-static/* build/
+          mkdir -p build/ui-elements
+          cp -r packages/ui-elements/storybook-static/* build/ui-elements/
+
+      - name: Upload Storybook Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: storybooks
+          path: build/
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs:
+      - build
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.19.0"
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: storybooks
+          path: build
+
+      - name: Build and publish Storybook
+        uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
+        with:
+          install_command: yarn install
+          build_command: yarn build
+          path: build
+          checkout: false
