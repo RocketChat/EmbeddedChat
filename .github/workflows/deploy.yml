@@ -10,6 +10,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
+
 jobs:
   build:
     runs-on: ubuntu-latest
