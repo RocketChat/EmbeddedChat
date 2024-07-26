@@ -40,9 +40,9 @@ jobs:
       - name: Prepare Build Folder
         run: |
           mkdir -p build
-          cp -r packages/react/storybook-static/* build/
+          mv -v packages/react/storybook-static/* build/
           mkdir -p build/ui-elements
-          cp -r packages/ui-elements/storybook-static/* build/ui-elements/
+          mv -v packages/ui-elements/storybook-static/* build/ui-elements/
 
       - name: Upload Storybook Artifacts
         uses: actions/upload-artifact@v2
