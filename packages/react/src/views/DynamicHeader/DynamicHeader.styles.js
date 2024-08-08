@@ -1,15 +1,12 @@
 import { css } from '@emotion/react';
-import { useTheme } from '@embeddedchat/ui-elements';
 
 const useDynamicHeaderStyles = () => {
-  const { theme } = useTheme();
-
   const container = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    z-index: ${theme.zIndex.general};
+    z-index: 1200;
     padding-block-start: 10px;
   `;
 

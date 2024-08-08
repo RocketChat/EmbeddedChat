@@ -1,0 +1,132 @@
+[
+    {
+        "_id": "wz5cNwELaK6MnZWkN",
+        "rid": "GENERAL",
+        "msg": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor !",
+        "ts": "2024-07-14T09:22:39.277Z",
+        "u": {
+            "_id": "a9bAtEYzGoTHvtxws",
+            "username": "sidmohanty11",
+            "name": "Sidharth Mohanty"
+        },
+        "_updatedAt": "2024-07-14T09:22:39.362Z",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "That's great to hear! It's exciting that we can now customize the EmbeddedChat design using this layout editor. This will open up so many possibilities for tailoring the user experience exactly to our needs !"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "62vhmKJGNoxgvLL7M",
+        "rid": "GENERAL",
+        "msg": "Do give it a try !",
+        "ts": "2024-07-14T09:22:16.995Z",
+        "u": {
+            "_id": "c9bAtEYzGoTHvtxws",
+            "username": "spiral_memory",
+            "name": "Zishan Ahmad"
+        },
+        "_updatedAt": "2024-07-14T09:22:17.039Z",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "Do give it a try !"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "7JkH8StoJxeN8ftcn",
+        "rid": "GENERAL",
+        "msg": "I am good as well. We can now customize the EmbeddedChat design with this layout editor.",
+        "ts": "2024-07-14T09:22:11.965Z",
+        "u": {
+            "_id": "c9bAtEYzGoTHvtxws",
+            "username": "spiral_memory",
+            "name": "Zishan Ahmad"
+        },
+        "_updatedAt": "2024-07-14T09:22:12.015Z",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "I am good as well. We can now customize the EmbeddedChat design with this layout editor."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "DBLBa3TwkWSyW9ADz",
+        "rid": "GENERAL",
+        "msg": "I am good, How about you?",
+        "ts": "2024-07-14T09:21:20.600Z",
+        "u": {
+            "_id": "a9bAtEYzGoTHvtxws",
+            "username": "sidmohanty11",
+            "name": "Sidharth Mohanty"
+        },
+        "_updatedAt": "2024-07-14T09:21:20.688Z",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "I am good, How about you?"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "nt6L6bijA7CNWd2ci",
+        "rid": "GENERAL",
+        "msg": "Hey, How are you Sidharth ?",
+        "ts": "2024-07-14T09:21:08.470Z",
+        "u": {
+            "_id": "c9bAtEYzGoTHvtxws",
+            "username": "spiral_memory",
+            "name": "Zishan Ahmad"
+        },
+        "_updatedAt": "2024-07-14T09:21:08.551Z",
+        "urls": [],
+        "mentions": [],
+        "channels": [],
+        "md": [
+            {
+                "type": "PARAGRAPH",
+                "value": [
+                    {
+                        "type": "PLAIN_TEXT",
+                        "value": "Hey, How are you Sidharth ?"
+                    }
+                ]
+            }
+        ]
+    }
+]

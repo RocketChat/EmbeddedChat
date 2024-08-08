@@ -14,7 +14,7 @@
     ],
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "yarn prebuild && rollup -c --context=window --environment NODE_ENV:production",
+        "build": "rollup -c --context=window --environment NODE_ENV:production",
         "watch": "rollup -c --watch --context=window",
         "test:lint": "eslint src/**/*.js",
         "format": "prettier --write 'src/' ",
@@ -33,6 +33,7 @@
         "@babel/preset-react": "^7.16.7",
         "@emotion/babel-plugin": "^11.11.0",
         "@open-wc/building-rollup": "^3.0.2",
+        "@rocket.chat/icons": "^0.31.23",
         "@rollup/plugin-babel": "^5.3.1",
         "@rollup/plugin-commonjs": "^21.0.2",
         "@rollup/plugin-node-resolve": "^13.1.3",

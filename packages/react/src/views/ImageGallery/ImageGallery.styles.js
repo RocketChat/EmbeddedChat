@@ -10,7 +10,7 @@ const useImageGalleryStyles = () => {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: ${theme.zIndex.modal};
+    z-index: 1500;
     background-color: ${alpha(theme.schemes.common.black, 0.5)};
   `;
 
@@ -24,7 +24,7 @@ const useImageGalleryStyles = () => {
     border-radius: ${theme.schemes.radius};
     padding: 8px 16px;
     cursor: pointer;
-    z-index: ${theme.zIndex.modal + 1};
+    z-index: 1501;
   `;
 
   const imageContainer = css`

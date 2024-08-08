@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@embeddedchat/api": "0.0.2",
 		"@emotion/native": "^11.11.0",
-		"@emotion/react": "^11.11.1",
+		"@emotion/react": "11.7.1",
 		"@expo/vector-icons": "^13.0.0",
 		"@gorhom/bottom-sheet": "^4",
 		"@react-native-async-storage/async-storage": "1.17.11",

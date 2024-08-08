@@ -132,7 +132,7 @@ This section of the guide aims to provide a detailed explanation of these props.
   />
   ```
 
-  However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](docs/theming.md).
+  However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](../docs/theming.md).
 
   In Storybook, demonstrations of different themes and variants are provided in the 'Design Variants' section.
 
@@ -151,7 +151,7 @@ This section of the guide aims to provide a detailed explanation of these props.
   1. **Local Storage**: Store the `ec-token` in the browser's local storage.
   2. **HTTP-Only Cookie**: Store the `ec-token` as an HTTP-only cookie. [This method requires the installation of the EmbeddedChat RC App on the Rocket.Chat server]
 
-  For a detailed guide on using each of these authentication methods with the `auth` and `secure` props, refer to the [authentication.md](docs/authentication.md) file.
+  For a detailed guide on using each of these authentication methods with the `auth` and `secure` props, refer to the [authentication.md](../docs/authentication.md) file.
 
 ## Development
 

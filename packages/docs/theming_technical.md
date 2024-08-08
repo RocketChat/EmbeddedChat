@@ -12,25 +12,38 @@ This guide dives into the technical aspects of how themes, styles, and configura
 
 We use [Emotion](https://emotion.sh/) for styling. Each component has a `component.style.js` file for CSS definitions.
 
-We use Emotion's theming with the `useTheme` hook and a custom `useCustomTheme` hook for specific adjustments:
+We use theming with our `useTheme` hook, exported from `@embeddedchat/ui-elements`, according to our specific requirements. The implementation looks something like this:
 
 ```jsx
-import { useTheme } from '@emotion/react';
-import { useRCContext } from '../context/RCInstance';
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContextProvider';
+import DefaultTheme from '../theme/DefaultTheme';
 
 const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
 
-export const useCustomTheme = () => {
-  const { ECOptions } = useRCContext() || {};
-  const theme = useTheme();
+const useTheme = () => {
+  const context = useContext(ThemeContext);
 
-  const mode = ECOptions?.mode || 'light';
+  if (!context) {
+    const defaultMode = 'light';
+    const defaultTheme = DefaultTheme;
+    const colors = defaultTheme.schemes?.[defaultMode];
+    const invertedColors = defaultTheme.schemes?.[invertMode(defaultMode)];
 
-  const colors = theme.schemes?.[mode];
-  const invertedColors = theme.schemes?.[invertMode(mode)];
+    return {
+      theme: defaultTheme,
+      mode: defaultMode,
+      colors,
+      invertedColors,
+      setMode: () => {},
+      setTheme: () => {},
+    };
+  }
 
-  return { theme, mode, colors, invertedColors };
+  return context;
 };
+
+export default useTheme;
 ```
 
 This hook grants access to the theme, mode, colors, and invertedColors, streamlining their usage across different parts of the application. It ensures that colors are dynamically provided according to the current theme mode (light or dark), eliminating the need for repetitive code.
@@ -38,21 +51,20 @@ This hook grants access to the theme, mode, colors, and invertedColors, streamli
 For example, in the CSS:
 
 ```jsx
-const { colors } = useCustomTheme();
+const { colors } = useTheme();
 const main = css`
   margin: 0.2rem 2rem;
   display: block;
   max-height: 10rem;
   overflow: scroll;
   overflow-x: hidden;
-  max-height: 145px;
   border: 1px solid ${colors.border};
   border-radius: 0.2rem;
   color: ${colors.secondaryForeground};
 `;
 ```
 
-Here, `colors` from `useCustomTheme` sets `colors.border` and `colors.secondaryForeground`.
+Here, `colors` from `useTheme` sets `colors.border` and `colors.secondaryForeground`.
 
 ## Technical Overview of `useComponentOverrides`
 
@@ -99,21 +111,46 @@ const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
   style
 );
 
-// Extract toolOptions and threshold from configOverrides
-const toolOptions =
-  configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
-const threshold =
-  configOverrides.optionConfig?.threshold || optionConfig.threshold;
+// Extract surfaceItems and menuItems from configOverrides
+const surfaceItems = configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
+const menuItems = configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
-// Process toolOptions based on the defined threshold
-{
-  toolOptions.slice(0, threshold).map((key) => toolMap[key]);
-}
+// Process surfaceItems and menuItems based on the configuration
+const menuOptions = menuItems
+  ?.map((item) => options[item]?.visible ? {
+    id: options[item].id,
+    action: options[item].onClick,
+    label: options[item].label,
+    icon: options[item].iconName,
+  } : null)
+  .filter((option) => option !== null);
 
+const surfaceOptions = surfaceItems
+  ?.map((item) => options[item]?.visible ? {
+    id: options[item].id,
+    onClick: options[item].onClick,
+    label: options[item].label,
+    iconName: options[item].iconName,
+    type: options[item].type,
+  } : null)
+  .filter((option) => option !== null);
+
+// Render the options
+{surfaceOptions?.length > 0 && (
+  <SurfaceMenu options={surfaceOptions} size="small" />
+)}
+{menuOptions?.length > 0 && (
+  <Menu
+    size="small"
+    options={menuOptions}
+    tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
+    useWrapper={false}
+    style={{ top: 'auto', bottom: 'calc(100% + 2px)' }}
+  />
+)}
 ```
 
-In this snippet, toolOptions and threshold are retrieved from configOverrides.optionConfig, or fallback to default values (optionConfig.toolOptions and optionConfig.threshold respectively) when not provided in configOverrides.
-
+In this snippet, `surfaceItems` and `menuItems` are retrieved from `configOverrides.optionConfig` or fall back to default values (`optionConfig.surfaceItems` and `optionConfig.menuItems`) when not provided in `configOverrides`. These items are then processed and rendered accordingly.
 ### Example: Variant Overrides
 
 ```jsx
@@ -129,7 +166,7 @@ const displayNameVariant = variantOverrides || 'Normal';
   css={styles.userName}
   className={appendClassNames('ec-message-header-username', classNames)}
   style={
-    displayNameVariant === 'Colorize'
+    displayNameVariant === 'colorize'
       ? { color: getDisplayNameColor(message.u.username) }
       : null
   }

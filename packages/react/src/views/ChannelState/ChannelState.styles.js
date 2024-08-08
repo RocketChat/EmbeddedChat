@@ -6,7 +6,7 @@ const useChannelStateStyles = () => {
   const channelStateContainer = css`
     font-size: 0.75rem;
     padding: 0.2rem 2rem;
-    z-index: ${theme.zIndex.general};
+    z-index: 1200;
     display: flex;
     justify-content: space-between;
   `;

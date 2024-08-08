@@ -80,7 +80,7 @@ const StormySeas = {
   },
 
   variants: {
-    MessageHeader: 'Colorize',
+    MessageHeader: 'colorize',
     PinnedMessages: {
       viewType: 'Popup',
     },
@@ -104,7 +104,7 @@ const StormySeas = {
     ChatHeader: {
       configOverrides: {
         optionConfig: {
-          toolOptions: [
+          surfaceItems: [
             'minmax',
             'close',
             'thread',
@@ -112,13 +112,8 @@ const StormySeas = {
             'starred',
             'pinned',
             'files',
-            'members',
-            'search',
-            'rInfo',
-            'logout',
           ],
-
-          threshold: 7,
+          menuItems: ['members', 'search', 'rInfo', 'logout'],
         },
       },
     },
@@ -163,14 +158,5 @@ const StormySeas = {
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
     'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
   ],
-  zIndex: {
-    divider: 1000,
-    body: 1100,
-    general: 1200,
-    menu: 1300,
-    tooltip: 1400,
-    modal: 1500,
-    toastbar: 1600,
-  },
 };
 export default StormySeas;
