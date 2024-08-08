@@ -156,6 +156,24 @@ This structured approach facilitates cohesive development and integration across
 
 This environment offers a complete setup for developing and testing the `EmbeddedChat` component, alongside its `api` and `auth` packages. Feel free to explore and enhance the capabilities of `EmbeddedChat`!
 
+## References
+
+- Embedded Chat Development: [EC Development](packages/docs/embeddedchat_dev.md) – Explore development techniques for Embedded Chat.
+
+- Embedded Chat Setup: [Setup Instructions](packages/docs/embeddedchat_setup.md) – Start setting up Embedded Chat in your app.
+
+- UI Elements: [Setup & Dev Guide](packages/docs/ui-elements.md) – Integration and customization of UI elements.
+
+- Layout Editor: [Using the Editor](packages/docs/layout_editor.md) – Customize the chat interface with the layout editor.
+
+- EmbeddedChat RC Setup: [Setup Instructions](packages/docs/ec_rc_setup.md) – Guide for setting up Embedded Chat RC App.
+
+- Authentication: [Guide](packages/docs/authentication.md) – Configure and manage authentication for Embedded Chat.
+
+- Theming Guide: [Guide](packages/docs/theming.md) – Guide to theming options and customization.
+
+- Theming Technical: [Technical Overview](packages/docs/theming_technical.md) – Technical aspects of theming.
+
 ### Contributors
 
 <a href="https://github.com/RocketChat/EmbeddedChat/graphs/contributors">

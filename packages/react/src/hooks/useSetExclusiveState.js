@@ -9,9 +9,11 @@ import {
   usePinnedMessageStore,
   useStarredMessageStore,
   useFileStore,
+  useSidebarStore,
 } from '../store';
 
 const useSetExclusiveState = () => {
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
@@ -55,9 +57,16 @@ const useSetExclusiveState = () => {
   );
 
   const setExclusiveState = (activeSetter) => {
+    let isPanelActive = false;
     stateSetters.forEach((setter) => {
-      setter(setter === activeSetter);
+      if (setter === activeSetter) {
+        isPanelActive = true;
+        setter(true);
+      } else {
+        setter(false);
+      }
     });
+    setShowSidebar(isPanelActive);
   };
 
   return setExclusiveState;

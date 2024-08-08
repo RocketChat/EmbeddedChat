@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';

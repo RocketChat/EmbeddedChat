@@ -212,4 +212,15 @@ export const propSettings: ISetting[] = [
         public: false,
         packageValue: false,
     },
+
+    {
+        id: "theme",
+        i18nLabel: "Custom Theme",
+        i18nDescription:
+            "Define a custom theme for remotely styling EmbeddedChat. This allows you to customize the appearance and behavior of the chat interface.",
+        type: SettingType.CODE,
+        required: false,
+        public: false,
+        packageValue: "",
+    },
 ];

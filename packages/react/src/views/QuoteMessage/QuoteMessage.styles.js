@@ -10,7 +10,7 @@ const useQuoteMessageStyles = () => {
     background-color: ${colors.background};
     color: ${colors.foreground};
     padding: 0.5rem;
-    z-index: ${theme.zIndex.general};
+    z-index: 1200;
     border: 1px solid ${colors.border};
     border-radius: ${theme.schemes.radius};
   `;

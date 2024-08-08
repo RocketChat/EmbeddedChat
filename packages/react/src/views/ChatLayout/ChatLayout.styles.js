@@ -2,16 +2,20 @@ import { css } from '@emotion/react';
 
 const styles = {
   layout: css`
-    flex-basis: 100%;
     display: flex;
+    height: 100%;
     overflow: hidden;
   `,
 
   chatMain: css`
     display: flex;
+    flex: 1;
     flex-direction: column;
-    flex-grow: 1;
     position: relative;
+  `,
+
+  sidebar: css`
+    width: 350px;
   `,
 };
 

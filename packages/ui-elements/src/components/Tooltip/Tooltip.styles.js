@@ -12,7 +12,7 @@ const useTooltipStyles = (position) => {
     padding: 8.5px;
     border-radius: ${theme.schemes.radius};
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: ${theme.zIndex.tooltip};
+    z-index: ${theme.zIndex?.tooltip || 1400};
     font-size: 12.5px;
     font-weight: 500;
     white-space: nowrap;

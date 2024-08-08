@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
   Heading,
   Icon,
   Menu,
-  ActionButton,
-  Tooltip,
   useToastBarDispatch,
   useComponentOverrides,
 } from '@embeddedchat/ui-elements';
@@ -28,6 +26,7 @@ import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import useChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
 const ChatHeader = ({
   isClosable,
@@ -37,9 +36,8 @@ const ChatHeader = ({
   className = '',
   style = {},
   optionConfig = {
-    toolOptions: [
-      'minmax',
-      'close',
+    surfaceItems: ['minmax', 'close'],
+    menuItems: [
       'thread',
       'mentions',
       'starred',
@@ -50,17 +48,15 @@ const ChatHeader = ({
       'rInfo',
       'logout',
     ],
-
-    threshold: 2,
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } =
     useComponentOverrides('ChatHeader');
 
-  const toolOptions =
-    configOverrides.optionConfig?.toolOptions || optionConfig.toolOptions;
-  const threshold =
-    configOverrides.optionConfig?.threshold || optionConfig.threshold;
+  const surfaceItems =
+    configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
+  const menuItems =
+    configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
   const styles = useChatHeaderStyles();
   const setExclusiveState = useSetExclusiveState();
@@ -204,190 +200,129 @@ const ChatHeader = ({
     setIsChannelReadOnly,
   ]);
 
-  const menuMap = {
-    minmax: (
-      <Tooltip
-        text={`${fullScreen ? 'Minimize' : 'Maximize'}`}
-        position="bottom"
-        key="minmax"
-      >
-        <ActionButton
-          onClick={() => {
-            setFullScreen((prev) => !prev);
-          }}
-          ghost
-          display="inline"
-          square
-          size="medium"
-        >
-          <Icon name={`${fullScreen ? 'collapse' : 'expand'}`} size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
+  const options = useMemo(
+    () => ({
+      minmax: {
+        label: `${fullScreen ? 'Minimize' : 'Maximize'}`,
+        id: 'minmax',
+        onClick: () => setFullScreen((prev) => !prev),
+        iconName: `${fullScreen ? 'collapse' : 'expand'}`,
+        visible: true,
+      },
+      close: {
+        label: 'Close',
+        id: 'close',
+        onClick: () => setClosableState((prev) => !prev),
+        iconName: 'cross',
+        visible: isClosable,
+      },
+      thread: {
+        label: 'Threads',
+        id: 'thread',
+        onClick: () => setExclusiveState(setShowAllThreads),
+        iconName: 'thread',
+        visible: true,
+      },
+      mentions: {
+        label: 'Mentions',
+        id: 'mention',
+        onClick: () => setExclusiveState(setShowMentions),
+        iconName: 'at',
+        visible: true,
+      },
+      starred: {
+        label: 'Starred Messages',
+        id: 'starred',
+        onClick: () => setExclusiveState(setShowStarred),
+        iconName: 'star',
+        visible: true,
+      },
+      pinned: {
+        label: 'Pinned Messages',
+        id: 'pinned',
+        onClick: () => setExclusiveState(setShowPinned),
+        iconName: 'pin',
+        visible: true,
+      },
+      members: {
+        label: 'Members',
+        id: 'members',
+        onClick: () => setExclusiveState(setShowMembers),
+        iconName: 'members',
+        visible: isUserAuthenticated,
+      },
+      files: {
+        label: 'Files',
+        id: 'files',
+        onClick: () => setExclusiveState(setShowAllFiles),
+        iconName: 'clip',
+        visible: isUserAuthenticated,
+      },
+      search: {
+        label: 'Search Messages',
+        id: 'search',
+        onClick: () => setExclusiveState(setShowSearch),
+        iconName: 'magnifier',
+        visible: isUserAuthenticated,
+      },
+      rInfo: {
+        label: 'Room Information',
+        id: 'rInfo',
+        onClick: () => setExclusiveState(setShowChannelinfo),
+        iconName: 'info',
+        visible: isUserAuthenticated,
+      },
+      logout: {
+        label: 'Logout',
+        id: 'logout',
+        onClick: handleLogout,
+        iconName: 'reply-directly',
+        visible: isUserAuthenticated,
+      },
+    }),
+    [
+      fullScreen,
+      isClosable,
+      isUserAuthenticated,
+      handleLogout,
+      setFullScreen,
+      setClosableState,
+      setExclusiveState,
+      setShowAllThreads,
+      setShowMentions,
+      setShowStarred,
+      setShowPinned,
+      setShowMembers,
+      setShowAllFiles,
+      setShowSearch,
+      setShowChannelinfo,
+    ]
+  );
 
-    close: isClosable && (
-      <ActionButton
-        key="close"
-        onClick={() => {
-          setClosableState((prev) => !prev);
-        }}
-        ghost
-        display="inline"
-        square
-        size="medium"
-      >
-        <Icon name="cross" size="1.25rem" />
-      </ActionButton>
-    ),
-    thread: (
-      <Tooltip text="Threads" position="bottom" key="thread">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowAllThreads);
-          }}
-        >
-          <Icon name="thread" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    mentions: (
-      <Tooltip text="Mentions" position="bottom" key="mention">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowMentions);
-          }}
-        >
-          <Icon name="at" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    starred: (
-      <Tooltip text="Starred Messages" position="bottom" key="starred">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowStarred);
-          }}
-        >
-          <Icon name="star" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    pinned: (
-      <Tooltip text="Pinned Messages" position="bottom" key="pinned">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowPinned);
-          }}
-        >
-          <Icon name="pin" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    members: isUserAuthenticated && (
-      <Tooltip text="Members" position="bottom" key="members">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowMembers);
-          }}
-        >
-          <Icon name="members" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    files: isUserAuthenticated && (
-      <Tooltip text="Files" position="bottom" key="files">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowAllFiles);
-          }}
-        >
-          <Icon name="clip" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    search: isUserAuthenticated && (
-      <Tooltip text="Search Messages" position="bottom" key="search">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowSearch);
-          }}
-        >
-          <Icon name="magnifier" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    rInfo: isUserAuthenticated && (
-      <Tooltip text="Room Information" position="bottom" key="rInfo">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            setExclusiveState(setShowChannelinfo);
-          }}
-        >
-          <Icon name="info" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-
-    logout: isUserAuthenticated && (
-      <Tooltip text="Logout" position="bottom" key="logout">
-        <ActionButton
-          square
-          ghost
-          onClick={() => {
-            handleLogout();
-          }}
-        >
-          <Icon name="reply-directly" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-  };
-
-  const menuOptions = toolOptions
-    .slice(threshold)
-    .map((key) => {
-      const tool = menuMap[key];
-
-      if (!tool) {
-        return null;
-      }
-
-      const { onClick } = tool.props.children.props;
-      const { name: icon } = tool.props.children.props.children.props;
-      const { text } = tool.props;
-
-      if (onClick && icon && text) {
+  const menuOptions = menuItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
         return {
-          id: key,
-          action: onClick,
-          label: text,
-          icon,
+          id: options[item].id,
+          action: options[item].onClick,
+          label: options[item].label,
+          icon: options[item].iconName,
         };
       }
+      return null;
+    })
+    .filter((option) => option !== null);
 
+  const surfaceOptions = surfaceItems
+    ?.map((item) => {
+      if (item in options && options[item].visible) {
+        return {
+          id: options[item].id,
+          onClick: options[item].onClick,
+          label: options[item].label,
+          iconName: options[item].iconName,
+        };
+      }
       return null;
     })
     .filter((option) => option !== null);
@@ -436,7 +371,9 @@ const ChatHeader = ({
             <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
           )}
 
-          {toolOptions.slice(0, threshold).map((key) => menuMap[key])}
+          {surfaceOptions.length > 0 && (
+            <SurfaceMenu options={surfaceOptions} />
+          )}
           {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>

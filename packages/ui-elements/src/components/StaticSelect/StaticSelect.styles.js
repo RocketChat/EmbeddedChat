@@ -9,6 +9,7 @@ const useStaticSelectStyles = () => {
       flex: 1 0 auto;
       flex-direction: column;
       gap: 0.25rem;
+      background-color: ${colors.background};
       min-width: 8rem;
     `,
 

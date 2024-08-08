@@ -6,7 +6,6 @@ const iconsList = [
   'file',
   'mobile',
   'star',
-  'pin',
   'reply-directly',
   'hash',
   'computer',
@@ -42,12 +41,13 @@ const iconsList = [
   'chevron-down',
   'chevron-left',
   'key',
-  'attachment',
   'quote',
   'at',
   'arrow-collapse',
   'arrow-expand',
+  'cog',
 ];
+
 const svgDirPath = path.join(
   __dirname,
   '../../../node_modules/@rocket.chat/icons/dist/svg'
@@ -79,24 +79,6 @@ const getComponentCode = (name, svgData) => `
     export default ${camelCase(name)};
   `;
 
-const getIndexFileCode = () => {
-  const importCodes = iconsList
-    .map((icon) => `import ${camelCase(icon)} from './${camelCase(icon)}';`)
-    .join('\n');
-  const exportCodes = iconsList
-    .map((icon) => `"${icon}": ${camelCase(icon)}`)
-    .join(',\n');
-  return `
-    ${importCodes}
-
-    const icons = {
-      ${exportCodes}
-    };
-
-    export default icons;
-  `;
-};
-
 if (!fs.existsSync(svgIconOutputDir)) {
   fs.mkdirSync(svgIconOutputDir, { recursive: true });
 }
@@ -111,5 +93,4 @@ iconsList.forEach((icon) => {
   fs.writeFileSync(svgIconOutputPath, componentCode);
 });
 
-fs.writeFileSync(path.join(svgIconOutputDir, 'index.js'), getIndexFileCode());
 execSync(`npx prettier --write '${svgIconOutputDir}' `);
