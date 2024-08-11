@@ -1,10 +1,9 @@
-# Embedded Chat: A Staple in Excellent Customer Service
-
-An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+---
+title: Theme insights
+---
+# Technical Details on Theming
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
-
-## Technical Details on Theming
 
 This guide dives into the technical aspects of how themes, styles, and configurations are implemented within the application.
 

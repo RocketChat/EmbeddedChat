@@ -1,10 +1,11 @@
-# Embedded Chat: A Staple in Excellent Customer Service
+---
+title: Theming Guide
+---
+# Theming
 
 An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
-
-## Theming Guide
 
 EmbeddedChat supports various styling, customization options, and different variants. This guide will explore these aspects in depth.
 
@@ -319,6 +320,6 @@ These components can now appear as popups instead of being displayed in the side
 
 Feel free to explore and customize these components according to your project's needs. If you have any questions or need further assistance, please don't hesitate to ask.
 
-For those interested in delving into the technical implementation details, please [click here](theming_technical.md).
+For those interested in delving into the technical implementation details, please [click here](../Development/theming_technical.md).
 
 Happy theming!

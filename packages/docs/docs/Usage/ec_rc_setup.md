@@ -1,10 +1,9 @@
-# Embedded Chat: A staple in excellent customer service
-
-An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+---
+title: Quick Control Guide
+---
+# Quick Control Guide
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
-
-## EmbeddedChat RC App
 
 This monorepo hosts an RC app designed to enhance EmbeddedChat functionalities. It facilitates remote configuration of EmbeddedChat settings, implements secure login (storing the resume token as an HTTP-only cookie), and help integrates Rocket.Chat OAuth login capabilities.
 
