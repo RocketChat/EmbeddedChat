@@ -122,7 +122,6 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc.`,
       },
       prism: {
         theme: prismThemes.github,
