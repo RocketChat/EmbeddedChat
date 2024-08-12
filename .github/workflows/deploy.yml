@@ -47,11 +47,11 @@ jobs:
           node-version: "18.x"
 
       - name: "Install dependencies for docs"
-        run: npm install
+        run: yarn install
         working-directory: packages/docs/
 
       - name: Build Docs
-        run: npm run build
+        run: yarn run build
         working-directory: packages/docs
 
       - name: Prepare Build Folder
