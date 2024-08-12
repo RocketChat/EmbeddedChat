@@ -5,7 +5,7 @@ title: UI-Elements
 
 ![Embedded Chat Demo](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-This component is part of a monorepo, specifically within the `packages/react` project, which houses the main EmbeddedChat Component.
+This component is part of a monorepo, specifically within the `packages/ui-elements` project, which houses the main EmbeddedChat Component.
 
 ![image](https://github.com/user-attachments/assets/2fd76929-ce43-4bb3-8ea8-3a7318468923)
 
@@ -14,7 +14,7 @@ This component is part of a monorepo, specifically within the `packages/react` p
 To develop and view the components:
 
 1. Clone the repository.
-2. Navigate to `packages/layout_editor`.
+2. Navigate to `packages/ui-elements`.
 3. Run the following commands:
 
    ```bash

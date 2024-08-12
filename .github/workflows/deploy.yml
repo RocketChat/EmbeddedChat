@@ -51,7 +51,7 @@ jobs:
         working-directory: packages/docs/
 
       - name: Build Docs
-        run: yarn run build
+        run: yarn build
         working-directory: packages/docs
 
       - name: Prepare Build Folder
