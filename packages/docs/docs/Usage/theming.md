@@ -1,9 +1,8 @@
 ---
 title: Theming Guide
 ---
-# Theming
 
-An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+# Theming
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
