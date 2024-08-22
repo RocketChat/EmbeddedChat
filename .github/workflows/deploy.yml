@@ -16,6 +16,9 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: "https://rocketchat.github.io/EmbeddedChat/"
 
     steps:
       - name: Checkout code
