@@ -48,7 +48,7 @@ export const getChatHeaderStyles = ({ theme, mode, colors }) => {
       width: 24px;
       height: 24px;
       border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
   };
 

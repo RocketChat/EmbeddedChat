@@ -11,7 +11,7 @@ export const usePopupStyles = () => {
       flex-direction: column;
       z-index: ${theme.zIndex?.modal || 1500};
       box-shadow: ${theme.shadows[2]};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       background: ${colors.background};
       border: 1px solid ${colors.border};
       width: ${width};
@@ -56,7 +56,7 @@ export const usePopupHeaderStyles = () => {
       align-items: center;
       justify-content: space-around;
       border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       position: relative;
       margin: 0 1rem;
       &.focused {

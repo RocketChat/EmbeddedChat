@@ -103,7 +103,7 @@ export const getMessageDividerStyles = ({ theme, colors }) => {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
 
     bar: css`
@@ -161,7 +161,7 @@ export const getMessageHeaderStyles = ({ theme, colors }) => {
       font-size: 0.75rem;
       padding: 0 0.25rem;
       margin: 0 0.1rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       font-weight: 700;
       line-height: 1rem;
       overflow: hidden;
@@ -280,7 +280,7 @@ export const getMessageToolboxStyles = ({ theme, colors }) => {
       box-shadow: 0 0 2px ${colors.foreground};
       gap: 0.25rem;
       padding: 0.25rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
 
     emojiPickerStyles: css`

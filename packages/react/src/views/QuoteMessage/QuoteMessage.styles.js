@@ -12,7 +12,7 @@ const useQuoteMessageStyles = () => {
     padding: 0.5rem;
     z-index: 1200;
     border: 1px solid ${colors.border};
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
   `;
 
   const avatarContainer = css`

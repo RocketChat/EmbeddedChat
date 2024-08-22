@@ -11,7 +11,7 @@ const useImageGalleryStyles = () => {
     width: 100%;
     height: 100%;
     z-index: 1500;
-    background-color: ${alpha(theme.schemes.common.black, 0.5)};
+    background-color: ${alpha(theme.commonColors.black, 0.5)};
   `;
 
   const exit = css`
@@ -21,7 +21,7 @@ const useImageGalleryStyles = () => {
     background: ${colors.primary};
     color: ${colors.primaryForeground};
     border: none;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     padding: 8px 16px;
     cursor: pointer;
     z-index: 1501;

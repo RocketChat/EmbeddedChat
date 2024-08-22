@@ -10,7 +10,7 @@ const useTooltipStyles = (position) => {
     background-color: ${invertedColors.secondary};
     color: ${invertedColors.secondaryForeground};
     padding: 8.5px;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     z-index: ${theme.zIndex?.tooltip || 1400};
     font-size: 12.5px;

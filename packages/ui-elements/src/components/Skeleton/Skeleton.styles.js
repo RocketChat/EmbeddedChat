@@ -22,7 +22,7 @@ const useSkeletonStyles = () => {
     height: 1.2em;
     animation: ${animation} 1s linear 0s infinite running;
     border-radius: 0.25rem;
-    background: ${lighten(theme.schemes.common.black, 2)};
+    background: ${lighten(theme.commonColors.black, 2)};
 
     &.text {
       height: auto;

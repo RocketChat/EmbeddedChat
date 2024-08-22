@@ -48,7 +48,7 @@ const useSidebarStyles = () => {
     justify-content: space-between;
     border: 1px solid ${colors.border};
     padding: 0 0.5rem;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     position: relative;
     margin: 0 1rem 1rem;
     &.focused {

@@ -1,20 +1,10 @@
 const DefaultTheme = {
+  radius: '0.2rem',
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
   schemes: {
-    radius: '0.2rem',
-    contrastParams: {
-      light: {
-        saturation: 70,
-        luminance: 19,
-      },
-      dark: {
-        saturation: 88,
-        luminance: 77,
-      },
-    },
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(240, 10%, 3.9%)',
@@ -68,6 +58,17 @@ const DefaultTheme = {
       successForeground: 'hsl(90, 60%, 90.2%)',
       info: 'hsl(214.3, 77.8%, 92.9%)',
       infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
+    },
+  },
+
+  contrastParams: {
+    light: {
+      saturation: 70,
+      luminance: 19,
+    },
+    dark: {
+      saturation: 88,
+      luminance: 77,
     },
   },
 

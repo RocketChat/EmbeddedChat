@@ -18,7 +18,7 @@ const useChannelStateStyles = () => {
     padding: 1.5px 5px;
     justify-content: center;
     align-items: center;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     color: ${colors.secondaryForeground};
   `;
 

@@ -11,7 +11,7 @@ function PreviewImage({ previewURL }) {
         style={{
           maxWidth: '90%',
           objectFit: 'contain',
-          borderRadius: theme.schemes.radius,
+          borderRadius: theme.radius,
         }}
       />
     </Box>

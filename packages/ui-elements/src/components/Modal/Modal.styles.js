@@ -17,7 +17,7 @@ export const useModalstyles = () => {
     padding: 0.5rem;
     color: ${colors.foreground};
     background: ${colors.background};
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -41,7 +41,7 @@ export const useModalBackdropStyles = () => {
     top: 0;
     right: 0;
     z-index: ${theme.zIndex?.modal || 1500};
-    background: ${alpha(theme.schemes.common.black, 0.5)};
+    background: ${alpha(theme.commonColors.black, 0.5)};
     width: 100%;
     height: 100%;
   `;

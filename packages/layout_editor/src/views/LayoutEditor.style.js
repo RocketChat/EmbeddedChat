@@ -11,7 +11,7 @@ export const getEditorStyles = ({ theme, colors }) => {
       flex: 1;
       flex-direction: column;
       border: ${`1.5px solid  ${theme.schemes.border}`};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       overflow: hidden;
     `,
 

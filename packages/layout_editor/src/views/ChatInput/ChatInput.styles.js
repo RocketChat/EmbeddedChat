@@ -5,7 +5,7 @@ export const getChatInputStyles = ({ theme, colors }) => {
   const styles = {
     inputWithFormattingBox: css`
       border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       margin: 0.5rem 2rem 1rem 2rem;
       &.focused {
         border: ${`1.5px solid ${colors.ring}`};
@@ -61,7 +61,7 @@ export const getChatInputToolbarStyles = ({ theme, mode, colors }) => {
       position: relative;
       flex-direction: row;
       gap: 0.375rem;
-      border-radius: 0 0 ${theme.schemes.radius} ${theme.schemes.radius};
+      border-radius: 0 0 ${theme.radius} ${theme.radius};
     `,
   };
 
@@ -84,7 +84,7 @@ export const getFormatterStyles = ({ theme, colors }) => {
       box-shadow: 0 0 2px ${colors.foreground};
       gap: 0.25rem;
       padding: 0.25rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
   };
 

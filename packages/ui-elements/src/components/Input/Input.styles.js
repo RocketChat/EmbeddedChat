@@ -25,7 +25,7 @@ const useInputStyles = () => {
     line-height: 1.25rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     box-shadow: none;
     border: 1px solid ${colors.border};
     outline: none;

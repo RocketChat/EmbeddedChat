@@ -4,7 +4,7 @@ import useTheme from '../../hooks/useTheme';
 export const useAvatarStyles = () => {
   const { theme, colors } = useTheme();
   const imageAvatar = (size) => css`
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     height: ${size};
     width: ${size};
   `;
@@ -15,7 +15,7 @@ export const useAvatarStyles = () => {
     align-items: center;
     background-color: ${colors.primary};
     color: ${colors.primaryForeground};
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     height: ${size};
     width: ${size};
   `;

@@ -10,7 +10,7 @@ export const useMessageGenericPreviewStyles = () => {
     flex-direction: column;
     padding: 0.75rem;
     border: 1px solid ${colors.border};
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     background-color: ${colors.background};
   `;
 

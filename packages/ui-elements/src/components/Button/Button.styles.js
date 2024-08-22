@@ -35,7 +35,7 @@ const useButtonStyles = (type, size) => {
     text-overflow: ellipsis;
     white-space: nowrap;
     align-self: flex-start;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     &.ec-button--small {
       font-size: 0.75rem;
       font-weight: 700;

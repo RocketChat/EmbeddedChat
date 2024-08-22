@@ -21,7 +21,7 @@ const useUserInformationStyles = () => {
     font-size: 0.75rem;
     padding: 0 0.25rem;
     margin: 0 0.1rem;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     font-weight: 700;
     line-height: 1rem;
     overflow: hidden;

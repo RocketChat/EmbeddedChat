@@ -28,7 +28,7 @@ const useMultiSelectStyles = () => {
       border-width: 1px;
       border-color: ${colors.border};
       border-style: solid;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       background-color: ${colors.background};
     `,
 

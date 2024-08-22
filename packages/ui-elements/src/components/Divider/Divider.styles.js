@@ -7,7 +7,7 @@ const useDividerStyles = () => {
     height: 2px;
     margin: 0 8px 8px;
     border: 0;
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     background-color: ${colors.secondary};
   `;
 

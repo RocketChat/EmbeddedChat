@@ -6,7 +6,7 @@ export const getSurfaceItemStyles = ({ theme, colors }) => {
       width: 24px;
       height: 24px;
       border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
 
     itemContainer: css`
