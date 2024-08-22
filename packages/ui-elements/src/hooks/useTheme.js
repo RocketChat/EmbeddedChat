@@ -9,15 +9,19 @@ const useTheme = () => {
 
   if (!context) {
     const defaultMode = 'light';
-    const defaultTheme = DefaultTheme;
-    const colors = defaultTheme.schemes?.[defaultMode];
-    const invertedColors = defaultTheme.schemes?.[invertMode(defaultMode)];
+    const { schemes, ...restParams } = DefaultTheme;
+    const colors = schemes?.[defaultMode];
+    const invertedColors = schemes?.[invertMode(defaultMode)];
 
-    return {
-      theme: defaultTheme,
-      mode: defaultMode,
+    const theme = {
+      ...restParams,
       colors,
       invertedColors,
+    };
+
+    return {
+      theme: theme,
+      mode: defaultMode,
       setMode: () => {},
       setTheme: () => {},
     };

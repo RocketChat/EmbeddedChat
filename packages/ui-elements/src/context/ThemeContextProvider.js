@@ -17,6 +17,15 @@ export const ThemeProvider = ({
   const colors = theme.schemes?.[mode];
   const invertedColors = theme.schemes?.[invertMode(mode)];
 
+  const modifiedTheme = useMemo(() => {
+    const { schemes, ...restParams } = theme;
+    return {
+      ...restParams,
+      colors,
+      invertedColors,
+    };
+  }, [theme, colors, invertedColors]);
+
   useEffect(() => {
     if (initialTheme) {
       setTheme(initialTheme);
@@ -31,14 +40,12 @@ export const ThemeProvider = ({
 
   const value = useMemo(
     () => ({
-      theme,
+      theme: modifiedTheme,
       mode,
-      colors,
-      invertedColors,
       setMode,
       setTheme,
     }),
-    [theme, mode, colors, invertedColors]
+    [modifiedTheme, mode]
   );
 
   return (
