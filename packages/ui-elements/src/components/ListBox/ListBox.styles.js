@@ -2,25 +2,25 @@ import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 
 const useListBoxStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const main = css`
     overflow: auto;
     overflow-x: hidden;
     max-height: 145px;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: 0.2rem;
-    color: ${colors.secondaryForeground};
+    color: ${theme.colors.secondaryForeground};
   `;
 
   const listItem = css`
     cursor: pointer;
-    display: flex;
+    display: flex;theme.
     justify-content: space-between;
     align-items: center;
     padding: 0.2rem;
 
     &:hover {
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
     }
   `;
 

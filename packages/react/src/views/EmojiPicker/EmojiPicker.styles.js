@@ -2,19 +2,19 @@ import { css } from '@emotion/react';
 import { alpha, lighten, darken, useTheme } from '@embeddedchat/ui-elements';
 
 const useEmojiPickerStyles = () => {
-  const { theme, mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
   const calculatedColors =
     mode === 'light'
-      ? darken(colors.background, 0.03)
-      : lighten(colors.background, 1);
+      ? darken(theme.colors.background, 0.03)
+      : lighten(theme.colors.background, 1);
 
   const emojiPicker = css`
     .EmojiPickerReact {
-      --epr-bg-color: ${colors.background};
-      --epr-text-color: ${colors.foreground};
-      --epr-picker-border-color: ${colors.border};
-      --epr-category-label-bg-color: ${colors.background};
-      --epr-category-icon-active-color: ${colors.secondary};
+      --epr-bg-color: ${theme.colors.background};
+      --epr-text-color: ${theme.colors.foreground};
+      --epr-picker-border-color: ${theme.colors.border};
+      --epr-category-label-bg-color: ${theme.colors.background};
+      --epr-category-icon-active-color: ${theme.colors.secondary};
       --epr-emoji-size: 20px;
       --epr-category-navigation-button-size: 20px;
       --epr-emoji-gap: 10px;
@@ -99,13 +99,13 @@ const useEmojiPickerStyles = () => {
 
     .EmojiPickerReact .epr-body::-webkit-scrollbar-thumb,
     .EmojiPickerReact .epr-emoji-list::-webkit-scrollbar-thumb {
-      background: ${alpha(colors.primary, 0.5)};
+      background: ${alpha(theme.colors.primary, 0.5)};
       border-radius: 4px;
     }
 
     .EmojiPickerReact .epr-body::-webkit-scrollbar-thumb:hover,
     .EmojiPickerReact .epr-emoji-list::-webkit-scrollbar-thumb:hover {
-      background: ${colors.primary};
+      background: ${theme.colors.primary};
     }
   `;
 

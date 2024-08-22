@@ -27,7 +27,7 @@ const ListBox = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ListBox');
   const styles = useListBoxStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const itemRefs = useRef([]);
   const [optionIndex, setOptionIndex] = useState(() =>
     findIndex(options, value, multi)
@@ -105,8 +105,8 @@ const ListBox = ({
             ref={(el) => setItemRef(el, index)}
             onClick={() => handleOptionClick(option)}
             style={{
-              backgroundColor: index === optionIndex && colors.primary,
-              color: index === optionIndex && colors.primaryForeground,
+              backgroundColor: index === optionIndex && theme.colors.primary,
+              color: index === optionIndex && theme.colors.primaryForeground,
             }}
           >
             {multi ? (

@@ -2,16 +2,16 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const useQuoteMessageStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const messageContainer = css`
     margin: 0.2rem 2rem;
     position: relative;
     font-size: 0.85rem;
-    background-color: ${colors.background};
-    color: ${colors.foreground};
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.foreground};
     padding: 0.5rem;
     z-index: 1200;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: ${theme.radius};
   `;
 

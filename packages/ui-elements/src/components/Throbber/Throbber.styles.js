@@ -14,18 +14,18 @@ const BounceFrames = keyframes`
 `;
 
 const useThrobberStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const circle = (size, circleCount, iteration) => css`
     height: ${size};
     width: ${size};
     margin-inline: 0.125rem;
     animation: ${BounceFrames} 1.4s infinite ease-in-out both;
     border-radius: 100%;
-    background-color: ${colors.primary};
+    background-color: ${theme.colors.primary};
     animation-duration: ${circleCount * 0.466}s;
     animation-delay: ${iteration * 0.16}s;
     &.disabled {
-      background-color: ${colors.muted};
+      background-color: ${theme.colors.muted};
     }
     &.inherit-color {
       background-color: currentColor;

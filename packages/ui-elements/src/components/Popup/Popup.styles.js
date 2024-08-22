@@ -3,7 +3,7 @@ import useTheme from '../../hooks/useTheme';
 import { darken } from '../../lib/color';
 
 export const usePopupStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const styles = {
     popup: (width, height) => css`
@@ -12,8 +12,8 @@ export const usePopupStyles = () => {
       z-index: ${theme.zIndex?.modal || 1500};
       box-shadow: ${theme.shadows[2]};
       border-radius: ${theme.radius};
-      background: ${colors.background};
-      border: 1px solid ${colors.border};
+      background: ${theme.colors.background};
+      border: 1px solid ${theme.colors.border};
       width: ${width};
       height: ${height};
     `,
@@ -27,12 +27,12 @@ export const usePopupStyles = () => {
 };
 
 export const usePopupHeaderStyles = () => {
-  const { theme, mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
   const styles = {
     popupHeader: css`
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.03)
-        : colors.secondary};
+        ? darken(theme.colors.background, 0.03)
+        : theme.colors.secondary};
 
       display: flex;
       justify-content: space-between;
@@ -55,12 +55,12 @@ export const usePopupHeaderStyles = () => {
       display: flex;
       align-items: center;
       justify-content: space-around;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
       position: relative;
       margin: 0 1rem;
       &.focused {
-        outline: 1px solid ${colors.ring};
+        outline: 1px solid ${theme.colors.ring};
       }
     `,
 
@@ -75,7 +75,7 @@ export const usePopupHeaderStyles = () => {
     `,
 
     noInfoIcon: css`
-      background: ${colors.background};
+      background: ${theme.colors.background};
       padding: 0.125em;
       cursor: pointer;
     `,

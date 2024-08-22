@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { lighten, darken, useTheme } from '@embeddedchat/ui-elements';
 
 export const useMessageStyles = () => {
-  const { mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
 
   const main = css`
     display: flex;
@@ -12,18 +12,18 @@ export const useMessageStyles = () => {
     padding-bottom: 0.25rem;
     padding-left: 2.25rem;
     padding-right: 2.25rem;
-    color: ${colors.foreground};
+    color: ${theme.colors.foreground};
 
     &:hover {
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.03)
-        : lighten(colors.background, 1)};
+        ? darken(theme.colors.background, 0.03)
+        : lighten(theme.colors.background, 1)};
     }
   `;
   const messageEditing = css`
-    background-color: ${colors.secondary};
+    background-color: ${theme.colors.secondary};
     &:hover {
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
     }
   `;
 
@@ -36,7 +36,7 @@ export const useMessageStyles = () => {
 };
 
 export const useMessageAvatarContainerStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   const container = css`
     margin: 3px;
@@ -44,7 +44,7 @@ export const useMessageAvatarContainerStyles = () => {
     max-height: 2.25em;
     display: flex;
     justify-content: flex-end;
-    color: ${colors.primary};
+    color: ${theme.colors.primary};
   `;
 
   return { container };
@@ -67,7 +67,7 @@ export const MessageBodyStyles = {
 };
 
 export const useMessageDividerStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const divider = css`
     letter-spacing: 0rem;
@@ -89,8 +89,8 @@ export const useMessageDividerStyles = () => {
     margin-bottom: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    background-color: ${colors.secondary};
-    color: ${colors.secondaryForeground};
+    background-color: ${theme.colors.secondary};
+    color: ${theme.colors.secondaryForeground};
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -103,14 +103,14 @@ export const useMessageDividerStyles = () => {
     align-items: center;
     flex-grow: 1;
     height: 1px;
-    background-color: ${colors.secondary};
+    background-color: ${theme.colors.secondary};
   `;
 
   return { divider, bar, dividerContent };
 };
 
 export const useMessageHeaderStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const header = css`
     display: flex;
@@ -136,7 +136,7 @@ export const useMessageHeaderStyles = () => {
   `;
 
   const userName = css`
-    color: ${colors.accentForeground};
+    color: ${theme.colors.accentForeground};
     font-weight: 700;
     letter-spacing: 0rem;
     font-size: 0.875rem;
@@ -158,11 +158,11 @@ export const useMessageHeaderStyles = () => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background-color: ${colors.secondary};
+    background-color: ${theme.colors.secondary};
   `;
 
   const userActions = css`
-    color: ${colors.accentForeground};
+    color: ${theme.colors.accentForeground};
     letter-spacing: 0rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -173,7 +173,7 @@ export const useMessageHeaderStyles = () => {
   `;
 
   const timestamp = css`
-    color: ${colors.accentForeground};
+    color: ${theme.colors.accentForeground};
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -215,7 +215,7 @@ export const MessageMetricsStyles = {
 };
 
 export const useMessageReactionsStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const container = css`
     display: flex;
     flex-flow: row wrap;
@@ -239,12 +239,12 @@ export const useMessageReactionsStyles = () => {
     p {
       margin: 0;
     }
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: 0.2rem;
   `;
 
   const reactionMine = css`
-    background: ${colors.secondary};
+    background: ${theme.colors.secondary};
   `;
 
   return { container, reaction, reactionMine };
@@ -269,8 +269,8 @@ export const useMessageToolboxStyles = () => {
     margin-left: -0.25rem;
     margin-right: -0.25rem;
     margin-top: 0.125rem;
-    background-color: ${colors.background};
-    box-shadow: 0 0 2px ${colors.foreground};
+    background-color: ${theme.colors.background};
+    box-shadow: 0 0 2px ${theme.colors.foreground};
     gap: 0.25rem;
     padding: 0.25rem;
     border-radius: ${theme.radius};

@@ -2,18 +2,18 @@ import { css } from '@emotion/react';
 import { darken, lighten, useTheme } from '@embeddedchat/ui-elements';
 
 export const useChatInputStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const inputWithFormattingBox = css`
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: ${theme.radius};
     margin: 0.5rem 2rem 1rem 2rem;
     &.focused {
-      border: ${`1.5px solid ${colors.ring}`};
+      border: ${`1.5px solid ${theme.colors.ring}`};
     }
   `;
 
   const editMessage = css`
-    border: 2px solid ${colors.border};
+    border: 2px solid ${theme.colors.border};
   `;
 
   const inputBox = css`
@@ -63,15 +63,15 @@ export const useChatInputStyles = () => {
 };
 
 export const useChatInputFormattingToolbarStyles = () => {
-  const { theme, mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
 
   const chatFormat = css`
     bottom: 0;
     padding: 0.2rem;
     align-items: center;
     background-color: ${mode === 'light'
-      ? darken(colors.background, 0.03)
-      : lighten(colors.background, 1)};
+      ? darken(theme.colors.background, 0.03)
+      : lighten(theme.colors.background, 1)};
     display: flex;
     position: relative;
     flex-direction: row;
@@ -83,12 +83,12 @@ export const useChatInputFormattingToolbarStyles = () => {
 };
 
 export const useCommonRecorderStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const dot = css`
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: ${colors.destructive};
+    background-color: ${theme.colors.destructive};
     margin: auto;
     margin-right: 8px;
   `;

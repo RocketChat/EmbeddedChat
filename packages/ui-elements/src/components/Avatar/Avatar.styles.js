@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 
 export const useAvatarStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const imageAvatar = (size) => css`
     border-radius: ${theme.radius};
     height: ${size};
@@ -13,8 +13,8 @@ export const useAvatarStyles = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${colors.primary};
-    color: ${colors.primaryForeground};
+    background-color: ${theme.colors.primary};
+    color: ${theme.colors.primaryForeground};
     border-radius: ${theme.radius};
     height: ${size};
     width: ${size};

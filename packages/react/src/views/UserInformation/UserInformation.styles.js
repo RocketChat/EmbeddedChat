@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const useUserInformationStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const userSidebar = css`
     padding: 0 1rem 1rem;
     margin: 0 auto;
@@ -27,7 +27,7 @@ const useUserInformationStyles = () => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    background-color: ${colors.secondary};
+    background-color: ${theme.colors.secondary};
   `;
 
   const emailContainer = css`

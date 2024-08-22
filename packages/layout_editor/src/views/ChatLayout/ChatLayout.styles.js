@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const getChatLayoutStyles = ({ colors }) => {
+export const getChatLayoutStyles = ({ theme }) => {
   const styles = {
     layout: css`
       height: 100%;

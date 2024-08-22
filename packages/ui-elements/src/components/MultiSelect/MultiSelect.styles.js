@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 
 const useMultiSelectStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const styles = {
     main: css`
@@ -24,21 +24,21 @@ const useMultiSelectStyles = () => {
       font-size: 0.875rem;
       font-weight: 400;
       line-height: 1.25rem;
-      color: ${colors.foreground};
+      color: ${theme.colors.foreground};
       border-width: 1px;
-      border-color: ${colors.border};
+      border-color: ${theme.colors.border};
       border-style: solid;
       border-radius: ${theme.radius};
-      background-color: ${colors.background};
+      background-color: ${theme.colors.background};
     `,
 
     clickStyle: css`
-      border-color: ${colors.ring};
+      border-color: ${theme.colors.ring};
     `,
 
     disabled: css`
       cursor: not-allowed !important;
-      color: ${colors.mutedForeground};
+      color: ${theme.colors.mutedForeground};
     `,
 
     selectedItemsContainer: css`
@@ -48,7 +48,7 @@ const useMultiSelectStyles = () => {
     `,
 
     selectedItems: css`
-      background: ${colors.muted};
+      background: ${theme.colors.muted};
       padding: 0.2rem;
       display: flex;
       justify-self: flex-start;

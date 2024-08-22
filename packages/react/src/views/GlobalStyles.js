@@ -2,7 +2,7 @@ import React from 'react';
 import { css, Global } from '@emotion/react';
 import { useTheme, alpha } from '@embeddedchat/ui-elements';
 
-const useStyles = (colors, theme) => css`
+const useStyles = (theme) => css`
   .ec-embedded-chat * {
     box-sizing: border-box;
     margin: 0;
@@ -16,7 +16,7 @@ const useStyles = (colors, theme) => css`
   }
 
   .ec-embedded-chat a {
-    color: ${colors.foreground};
+    color: ${theme.colors.foreground};
   }
 
   .ec-embedded-chat ::-webkit-scrollbar {
@@ -25,12 +25,12 @@ const useStyles = (colors, theme) => css`
   }
 
   .ec-embedded-chat ::-webkit-scrollbar-thumb {
-    background: ${alpha(colors.primary, 0.5)};
+    background: ${alpha(theme.colors.primary, 0.5)};
     border-radius: 4px;
   }
 
   .ec-embedded-chat ::-webkit-scrollbar-thumb:hover {
-    background: ${colors.primary};
+    background: ${theme.colors.primary};
   }
 
   .ec-embedded-chat ::-webkit-scrollbar-button {
@@ -39,8 +39,8 @@ const useStyles = (colors, theme) => css`
 `;
 
 const GlobalStyles = () => {
-  const { theme, colors } = useTheme();
-  const styles = useStyles(colors, theme);
+  const { theme } = useTheme();
+  const styles = useStyles(theme);
 
   return <Global styles={styles} />;
 };

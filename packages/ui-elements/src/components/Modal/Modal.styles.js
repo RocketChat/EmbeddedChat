@@ -3,7 +3,7 @@ import { alpha } from '../../lib/color';
 import useTheme from '../../hooks/useTheme';
 
 export const useModalstyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const main = css`
     position: absolute;
     display: flex;
@@ -15,8 +15,8 @@ export const useModalstyles = () => {
     width: 100%;
     max-width: 600px;
     padding: 0.5rem;
-    color: ${colors.foreground};
-    background: ${colors.background};
+    color: ${theme.colors.foreground};
+    background: ${theme.colors.background};
     border-radius: ${theme.radius};
     top: 50%;
     left: 50%;

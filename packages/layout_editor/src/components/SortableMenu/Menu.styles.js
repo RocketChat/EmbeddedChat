@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { lighten, darken } from '@embeddedchat/ui-elements';
 
-export const getMenuStyles = ({ theme, colors }) => {
+export const getMenuStyles = ({ theme }) => {
   const styles = {
     wrapper: css`
       position: relative;
@@ -18,7 +18,7 @@ export const getMenuStyles = ({ theme, colors }) => {
       border-radius: 0.2em;
       padding: 0.5rem 0;
       box-shadow: ${theme.shadows[1]};
-      background-color: ${colors.background};
+      background-color: ${theme.background};
     `,
   };
 
@@ -26,7 +26,7 @@ export const getMenuStyles = ({ theme, colors }) => {
 };
 
 export const getMenuItemStyles = (customTheme) => {
-  const { mode, colors } = customTheme;
+  const { theme, mode } = customTheme;
 
   const styles = {
     item: css`
@@ -38,11 +38,11 @@ export const getMenuItemStyles = (customTheme) => {
       padding: 0.25em 0.75em;
       white-space: nowrap;
       gap: 0.2rem;
-      color: ${colors.foreground};
+      color: ${theme.foreground};
       &:hover {
         background-color: ${mode === 'light'
-          ? darken(colors.background, 0.05)
-          : lighten(colors.background, 2)};
+          ? darken(theme.background, 0.05)
+          : lighten(theme.background, 2)};
         cursor: pointer;
       }
     `,
@@ -55,13 +55,13 @@ export const getMenuItemStyles = (customTheme) => {
 
     disabled: css`
       cursor: not-allowed !important;
-      color: ${colors.mutedForeground};
+      color: ${theme.mutedForeground};
     `,
 
     icon: css`
       visibility: hidden;
       &:hover {
-        fill: ${colors.destructive};
+        fill: ${theme.destructive};
       }
     `,
 
@@ -74,7 +74,7 @@ export const getMenuItemStyles = (customTheme) => {
 
     dragOverlay: css`
       padding: 0.5rem 0.75em;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.border};
       border-right: none;
       border-left: none;
     `,

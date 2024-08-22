@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 
 const useSidebarStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const sidebarContainer = css`
     min-width: 350px;
@@ -46,13 +46,13 @@ const useSidebarStyles = () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     padding: 0 0.5rem;
     border-radius: ${theme.radius};
     position: relative;
     margin: 0 1rem 1rem;
     &.focused {
-      outline: 1px solid ${colors.ring};
+      outline: 1px solid ${theme.colors.ring};
     }
   `;
 

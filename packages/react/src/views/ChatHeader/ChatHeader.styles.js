@@ -9,7 +9,7 @@ const rowCentreAlign = css`
 `;
 
 const useChatHeaderStyles = () => {
-  const { theme, mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
   const clearSpacing = css`
     margin: 0;
     padding: 0;
@@ -24,8 +24,8 @@ const useChatHeaderStyles = () => {
 
   const chatHeaderParent = css`
     background-color: ${mode === 'light'
-      ? darken(colors.background, 0.03)
-      : lighten(colors.background, 1)};
+      ? darken(theme.colors.background, 0.03)
+      : lighten(theme.colors.background, 1)};
     width: 100%;
     z-index: 1200;
     display: flex;

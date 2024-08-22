@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const useLinkPreviewStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const arrowDropDown = css`
     cursor: pointer;
     display: flex;
@@ -11,7 +11,7 @@ const useLinkPreviewStyles = () => {
 
   const linkPreviewContainer = css`
     max-width: 16rem;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: ${theme.radius};
     margin-bottom: 0.75rem;
     overflow: hidden;

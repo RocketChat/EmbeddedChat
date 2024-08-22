@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 
 const useTooltipStyles = (position) => {
-  const { theme, invertedColors } = useTheme();
+  const { theme } = useTheme();
   const tooltip = css`
     position: absolute;
     left: 64%;
     transform: translateX(-50%);
-    background-color: ${invertedColors.secondary};
-    color: ${invertedColors.secondaryForeground};
+    background-color: ${theme.invertedColors.secondary};
+    color: ${theme.invertedColors.secondaryForeground};
     padding: 8.5px;
     border-radius: ${theme.radius};
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -26,7 +26,7 @@ const useTooltipStyles = (position) => {
     margin-left: -4px;
     border-width: 6px;
     border-style: solid;
-    border-color: ${invertedColors.secondary} transparent transparent
+    border-color: ${theme.invertedColors.secondary} transparent transparent
       transparent;
     top: ${position === 'top' ? '100%' : 'auto'};
     bottom: ${position === 'bottom' ? '100%' : 'auto'};

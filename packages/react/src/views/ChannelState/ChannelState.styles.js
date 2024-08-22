@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const useChannelStateStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const channelStateContainer = css`
     font-size: 0.75rem;
     padding: 0.2rem 2rem;
@@ -12,14 +12,14 @@ const useChannelStateStyles = () => {
   `;
 
   const channelStateMessage = css`
-    background-color: ${colors.secondary};
+    background-color: ${theme.secondary};
     display: flex;
     gap: 0.1rem;
     padding: 1.5px 5px;
     justify-content: center;
     align-items: center;
     border-radius: ${theme.radius};
-    color: ${colors.secondaryForeground};
+    color: ${theme.secondaryForeground};
   `;
 
   return { channelStateContainer, channelStateMessage };

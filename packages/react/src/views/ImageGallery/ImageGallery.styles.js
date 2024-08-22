@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme, alpha } from '@embeddedchat/ui-elements';
 
 const useImageGalleryStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const overlay = css`
     position: absolute;
@@ -18,8 +18,8 @@ const useImageGalleryStyles = () => {
     position: absolute;
     top: 16px;
     right: 16px;
-    background: ${colors.primary};
-    color: ${colors.primaryForeground};
+    background: ${theme.colors.primary};
+    color: ${theme.colors.primaryForeground};
     border: none;
     border-radius: ${theme.radius};
     padding: 8px 16px;
@@ -64,7 +64,7 @@ const useImageGalleryStyles = () => {
   const swiperInject = `
     .swiper-button-next,
     .swiper-button-prev {
-      color: ${colors.primary};
+      color: ${theme.colors.primary};
     }
   `;
 

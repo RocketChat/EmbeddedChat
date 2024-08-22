@@ -3,7 +3,7 @@ import { alpha } from '../../lib/color';
 import useTheme from '../../hooks/useTheme';
 
 const useInputStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const main = css`
     position: relative;
@@ -17,8 +17,8 @@ const useInputStyles = () => {
     vertical-align: baseline;
     white-space: nowrap;
     word-break: break-all;
-    background-color: ${colors.background};
-    color: ${colors.foreground};
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.foreground};
     letter-spacing: 0rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -27,15 +27,15 @@ const useInputStyles = () => {
     text-overflow: ellipsis;
     border-radius: ${theme.radius};
     box-shadow: none;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     outline: none;
 
     &:focus {
-      outline: ${colors.ring} solid 1px;
+      outline: ${theme.colors.ring} solid 1px;
     }
 
     &::placeholder {
-      color: ${alpha(colors.foreground, 0.8)};
+      color: ${alpha(theme.colors.foreground, 0.8)};
     }
   `;
 

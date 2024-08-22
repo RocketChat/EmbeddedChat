@@ -20,7 +20,7 @@ const LinkPreview = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const styles = useLinkPreviewStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
@@ -89,7 +89,7 @@ const LinkPreview = ({
             <a
               href={url}
               css={css`
-                color: ${colors.foreground};
+                color: ${theme.colors.foreground};
               `}
               target="_blank"
               rel="noopener noreferrer"
@@ -101,7 +101,7 @@ const LinkPreview = ({
               <a
                 href={url}
                 css={css`
-                  color: ${colors.foreground};
+                  color: ${theme.colors.foreground};
                 `}
                 target="_blank"
                 rel="noopener noreferrer"

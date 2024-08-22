@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const useCommandListStyles = () => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const main = css`
     margin: 0.2rem 2rem;
     display: block;
@@ -10,9 +10,9 @@ const useCommandListStyles = () => {
     overflow: scroll;
     overflow-x: hidden;
     max-height: 145px;
-    border: 1px solid ${colors.border};
+    border: 1px solid ${theme.colors.border};
     border-radius: 0.2rem;
-    color: ${colors.secondaryForeground};
+    color: ${theme.colors.secondaryForeground};
   `;
 
   const listItem = css`
@@ -23,7 +23,7 @@ const useCommandListStyles = () => {
     padding: 0.1rem 0.25rem;
 
     &:hover {
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
     }
   `;
 

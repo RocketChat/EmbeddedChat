@@ -12,13 +12,13 @@ const getSquareSize = (size) => {
 };
 
 const useButtonStyles = (type, size) => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const main = css`
     cursor: pointer;
     display: inline-block;
-    background-color: ${colors[type] || 'currentColor'};
-    color: ${colors[`${type}Foreground`] || 'currentColor'};
+    background-color: ${theme.colors[type] || 'currentColor'};
+    color: ${theme.colors[`${type}Foreground`] || 'currentColor'};
     border: none;
     font-size: 0.875rem;
     font-weight: 500;
@@ -80,24 +80,24 @@ const useButtonStyles = (type, size) => {
     }
 
     &.disabled:not(.ghost) {
-      background-color: ${colors.muted};
-      color: ${colors.mutedForeground};
+      background-color: ${theme.colors.muted};
+      color: ${theme.colors.mutedForeground};
       border: none;
       cursor: not-allowed;
     }
     &.ghost {
       background: none;
-      color: ${colors[`${type}`] || colors.accentForeground};
+      color: ${theme.colors[`${type}`] || theme.colors.accentForeground};
       border: none;
     }
     &.disabled.ghost {
-      color: ${colors.mutedForeground};
+      color: ${theme.colors.mutedForeground};
       border: none;
       background: none;
       cursor: not-allowed;
     }
     &.ghost:not(.disabled):hover {
-      background: ${colors.accent};
+      background: ${theme.colors.accent};
     }
   `;
 

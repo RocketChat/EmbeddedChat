@@ -11,15 +11,16 @@ import useTheme from '../../hooks/useTheme';
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const { iconName, bgColor, color } = useMemo(() => {
     const color =
       type === 'error'
-        ? colors.destructiveForeground
-        : colors[`${type}Foreground`];
-    const bgColor = type === 'error' ? colors.destructive : colors[type];
+        ? theme.colors.destructiveForeground
+        : theme.colors[`${type}Foreground`];
+    const bgColor =
+      type === 'error' ? theme.colors.destructive : theme.colors[type];
 
     let iconName = 'success';
     switch (type) {
@@ -37,7 +38,7 @@ const ToastBar = ({ toast, onClose }) => {
         iconName = 'check';
     }
     return { iconName, color, bgColor };
-  }, [colors, type]);
+  }, [theme.colors, type]);
 
   useEffect(() => {
     setTimeout(onClose, time);

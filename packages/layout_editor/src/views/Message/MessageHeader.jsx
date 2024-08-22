@@ -15,7 +15,7 @@ const MessageHeader = ({ message, variantOverrides = 'normal' }) => {
   const displayName = useLayoutStore((state) => state.displayName);
   const displayNameVariant = displayName || variantOverrides;
   const styles = getMessageHeaderStyles(useTheme());
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   return (
@@ -48,7 +48,7 @@ const MessageHeader = ({ message, variantOverrides = 'normal' }) => {
               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
               name="edit"
               size="1em"
-              color={colors.primary}
+              color={theme.colors.primary}
             />
           )}
         </Box>

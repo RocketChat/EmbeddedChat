@@ -3,7 +3,7 @@ import { lighten, darken } from '../../lib/color';
 import useTheme from '../../hooks/useTheme';
 
 export const useMenuStyles = () => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const wrapper = css`
     position: relative;
@@ -21,14 +21,14 @@ export const useMenuStyles = () => {
     border-radius: 0.2em;
     padding: 0.5rem 0;
     box-shadow: ${theme.shadows[1]};
-    background-color: ${colors.background};
+    background-color: ${theme.colors.background};
   `;
 
   return { wrapper, container };
 };
 
 export const useMenuItemStyles = () => {
-  const { mode, colors } = useTheme();
+  const { theme, mode } = useTheme();
 
   const item = css`
     font-size: 14px;
@@ -39,18 +39,18 @@ export const useMenuItemStyles = () => {
     padding: 0.25em 0.75em;
     white-space: nowrap;
     gap: 0.2rem;
-    color: ${colors.foreground};
+    color: ${theme.colors.foreground};
     &:hover {
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.05)
-        : lighten(colors.background, 2)};
+        ? darken(theme.colors.background, 0.05)
+        : lighten(theme.colors.background, 2)};
       cursor: pointer;
     }
   `;
 
   const disabled = css`
     cursor: not-allowed !important;
-    color: ${colors.mutedForeground};
+    color: ${theme.colors.mutedForeground};
   `;
 
   return { item, disabled };

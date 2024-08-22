@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { Button, Icon, useTheme } from '@embeddedchat/ui-elements';
 
 const BubbleThreadBtn = ({ message, handleOpenThread, styles = {} }) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <>
@@ -11,7 +11,7 @@ const BubbleThreadBtn = ({ message, handleOpenThread, styles = {} }) => {
         name="arc"
         size="30"
         fill="none"
-        color={`${colors.accent}`}
+        color={`${theme.colors.accent}`}
         css={styles.arcIcon}
       />
       <Button

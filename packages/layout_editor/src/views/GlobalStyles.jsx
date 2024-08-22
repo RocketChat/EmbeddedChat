@@ -2,7 +2,7 @@ import React from 'react';
 import { css, Global } from '@emotion/react';
 import { useTheme, alpha } from '@embeddedchat/ui-elements';
 
-const useStyles = ({ colors, theme }) => css`
+const useStyles = ({ theme }) => css`
   * {
     box-sizing: border-box;
     margin: 0;
@@ -16,7 +16,7 @@ const useStyles = ({ colors, theme }) => css`
   }
 
   a {
-    color: ${colors.foreground};
+    color: ${theme.colors.foreground};
   }
 
   ::-webkit-scrollbar {
@@ -25,12 +25,12 @@ const useStyles = ({ colors, theme }) => css`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${alpha(colors.primary, 0.5)};
+    background: ${alpha(theme.colors.primary, 0.5)};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${colors.primary};
+    background: ${theme.colors.primary};
   }
 
   ::-webkit-scrollbar-button {

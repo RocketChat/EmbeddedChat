@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { darken, lighten } from '@embeddedchat/ui-elements';
 
-export const getChatHeaderStyles = ({ theme, mode, colors }) => {
+export const getChatHeaderStyles = ({ theme, mode }) => {
   const styles = {
     clearSpacing: css`
       margin: 0;
@@ -19,8 +19,8 @@ export const getChatHeaderStyles = ({ theme, mode, colors }) => {
 
     chatHeaderParent: css`
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.03)
-        : lighten(colors.background, 1)};
+        ? darken(theme.colors.background, 0.03)
+        : lighten(theme.colors.background, 1)};
       width: 100%;
       z-index: 1200;
       display: flex;
@@ -47,7 +47,7 @@ export const getChatHeaderStyles = ({ theme, mode, colors }) => {
     overlayBox: css`
       width: 24px;
       height: 24px;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
     `,
   };

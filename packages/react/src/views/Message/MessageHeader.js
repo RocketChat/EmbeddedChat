@@ -25,7 +25,7 @@ const MessageHeader = ({
   const { ECOptions } = useRCContext();
   const displayNameVariant = variantOverrides || 'normal';
   const styles = useMessageHeaderStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const getDisplayNameColor = useDisplayNameColor();
 
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -159,7 +159,7 @@ const MessageHeader = ({
               style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
               name="edit"
               size="1em"
-              color={colors.primary}
+              color={theme.colors.primary}
             />
           )}
           {isStarred ? (
@@ -168,7 +168,7 @@ const MessageHeader = ({
                 style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
                 name="star-filled"
                 size="1em"
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             </Tooltip>
           ) : null}
@@ -178,7 +178,7 @@ const MessageHeader = ({
                 style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
                 name="pin"
                 size="1em"
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             </Tooltip>
           ) : null}

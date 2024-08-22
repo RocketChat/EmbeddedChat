@@ -59,18 +59,18 @@ export const EmojiStyles = {
 };
 
 const useMentionStyles = (contents, username) => {
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const mention = css`
     background-color: ${contents.value === 'all' || contents.value === 'here'
-      ? colors.warning
+      ? theme.colors.warning
       : contents.value === username
-      ? colors.destructive
-      : colors.muted};
+      ? theme.colors.destructive
+      : theme.colors.muted};
     color: ${contents.value === 'all' || contents.value === 'here'
-      ? colors.warningForeground
+      ? theme.colors.warningForeground
       : contents.value === username
-      ? colors.destructiveForeground
-      : colors.mutedForeground};
+      ? theme.colors.destructiveForeground
+      : theme.colors.mutedForeground};
     font-weight: bold;
     cursor: pointer;
     padding: 1.5px;
