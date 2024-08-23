@@ -123,9 +123,7 @@ export const bubbleStyles = ({ theme }) => {
   return styles;
 };
 
-export const bubbleStylesMe = (customTheme) => {
-  const { theme } = customTheme;
-
+export const bubbleStylesMe = ({ theme }) => {
   const styles = {
     messageParentMe: css`
       flex-direction: row-reverse;
