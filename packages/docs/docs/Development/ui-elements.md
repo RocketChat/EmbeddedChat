@@ -75,7 +75,7 @@ The `useTheme` hook provides:
 
 `setTheme` allows you to change the theme on-the-fly, while `setMode` lets you switch between light and dark modes. This flexibility is useful for dynamically adjusting the appearance of your application based on user preferences or other conditions.
 
-You can use this hook to style your components with the provided theme. `useTheme()` also provides `colors` and `invertedColors`, simplifying color management. `colors` will automatically adjust according to the mode, while `invertedColors` provides colors for the alternate mode.
+You can use this hook to style your components with the provided theme. `theme` object also dynamically provides `colors` and `invertedColors`, simplifying color management. `theme.colors` will automatically adjust according to the mode, while `invertedColors` provides colors for the alternate mode.
 
 Additionally, the library offers `darken` and `lighten` functions to dynamically adjust color brightness:
 

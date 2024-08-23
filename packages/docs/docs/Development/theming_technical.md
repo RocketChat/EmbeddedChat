@@ -14,26 +14,30 @@ We use [Emotion](https://emotion.sh/) for styling. Each component has a `compone
 We use theming with our `useTheme` hook, exported from `@embeddedchat/ui-elements`, according to our specific requirements. The implementation looks something like this:
 
 ```jsx
-import { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContextProvider';
-import DefaultTheme from '../theme/DefaultTheme';
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContextProvider";
+import DefaultTheme from "../theme/DefaultTheme";
 
-const invertMode = (mode) => (mode === 'light' ? 'dark' : 'light');
+const invertMode = (mode) => (mode === "light" ? "dark" : "light");
 
 const useTheme = () => {
   const context = useContext(ThemeContext);
 
   if (!context) {
-    const defaultMode = 'light';
-    const defaultTheme = DefaultTheme;
-    const colors = defaultTheme.schemes?.[defaultMode];
-    const invertedColors = defaultTheme.schemes?.[invertMode(defaultMode)];
+    const defaultMode = "light";
+    const theme = DefaultTheme;
+    const colors = theme.schemes?.[defaultMode];
+    const invertedColors = theme.schemes?.[invertMode(defaultMode)];
 
-    return {
-      theme: defaultTheme,
-      mode: defaultMode,
+    const modifiedTheme = {
+      ...theme,
       colors,
       invertedColors,
+    };
+
+    return {
+      theme: modifiedTheme,
+      mode: defaultMode,
       setMode: () => {},
       setTheme: () => {},
     };
@@ -45,25 +49,25 @@ const useTheme = () => {
 export default useTheme;
 ```
 
-This hook grants access to the theme, mode, colors, and invertedColors, streamlining their usage across different parts of the application. It ensures that colors are dynamically provided according to the current theme mode (light or dark), eliminating the need for repetitive code.
+This hook provides access to the `theme` and `mode`, simplifying their use across the application. The theme object dynamically provides `colors` and `invertedColors` in `theme` object based on the mode (light or dark), reducing the need for repetitive code.
 
 For example, in the CSS:
 
 ```jsx
-const { colors } = useTheme();
+const { theme } = useTheme();
 const main = css`
   margin: 0.2rem 2rem;
   display: block;
   max-height: 10rem;
   overflow: scroll;
   overflow-x: hidden;
-  border: 1px solid ${colors.border};
+  border: 1px solid ${theme.colors.border};
   border-radius: 0.2rem;
-  color: ${colors.secondaryForeground};
+  color: ${theme.colors.secondaryForeground};
 `;
 ```
 
-Here, `colors` from `useTheme` sets `colors.border` and `colors.secondaryForeground`.
+In this example, `theme.colors` from `useTheme` is used to set the values for `theme.colors.border` and `theme.colors.secondaryForeground`.
 
 ## Technical Overview of `useComponentOverrides`
 
@@ -72,16 +76,16 @@ Components utilize the `useComponentOverrides` hook to facilitate various types 
 ### Example: styleOverrides and classNames
 
 ```jsx
-import { useComponentOverrides } from '../../hooks/useComponentOverrides';
+import { useComponentOverrides } from "../../hooks/useComponentOverrides";
 
 export const MessageBody = ({
   children,
-  className = '',
+  className = "",
   style = {},
   ...props
 }) => {
   const { styleOverrides, classNames } = useComponentOverrides(
-    'MessageBody',
+    "MessageBody",
     className,
     style
   );
@@ -89,7 +93,7 @@ export const MessageBody = ({
   return (
     <Box
       css={MessageBodyCss}
-      className={appendClassNames('ec-message-body', classNames)}
+      className={appendClassNames("ec-message-body", classNames)}
       style={styleOverrides}
       {...props}
     >
@@ -105,67 +109,82 @@ In this example, it's evident that the className and style properties are dynami
 
 ```jsx
 const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
-  'MessageToolbox',
+  "MessageToolbox",
   className,
   style
 );
 
 // Extract surfaceItems and menuItems from configOverrides
-const surfaceItems = configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
-const menuItems = configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
+const surfaceItems =
+  configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
+const menuItems =
+  configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
 // Process surfaceItems and menuItems based on the configuration
 const menuOptions = menuItems
-  ?.map((item) => options[item]?.visible ? {
-    id: options[item].id,
-    action: options[item].onClick,
-    label: options[item].label,
-    icon: options[item].iconName,
-  } : null)
+  ?.map((item) =>
+    options[item]?.visible
+      ? {
+          id: options[item].id,
+          action: options[item].onClick,
+          label: options[item].label,
+          icon: options[item].iconName,
+        }
+      : null
+  )
   .filter((option) => option !== null);
 
 const surfaceOptions = surfaceItems
-  ?.map((item) => options[item]?.visible ? {
-    id: options[item].id,
-    onClick: options[item].onClick,
-    label: options[item].label,
-    iconName: options[item].iconName,
-    type: options[item].type,
-  } : null)
+  ?.map((item) =>
+    options[item]?.visible
+      ? {
+          id: options[item].id,
+          onClick: options[item].onClick,
+          label: options[item].label,
+          iconName: options[item].iconName,
+          type: options[item].type,
+        }
+      : null
+  )
   .filter((option) => option !== null);
 
 // Render the options
-{surfaceOptions?.length > 0 && (
-  <SurfaceMenu options={surfaceOptions} size="small" />
-)}
-{menuOptions?.length > 0 && (
-  <Menu
-    size="small"
-    options={menuOptions}
-    tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
-    useWrapper={false}
-    style={{ top: 'auto', bottom: 'calc(100% + 2px)' }}
-  />
-)}
+{
+  surfaceOptions?.length > 0 && (
+    <SurfaceMenu options={surfaceOptions} size="small" />
+  );
+}
+{
+  menuOptions?.length > 0 && (
+    <Menu
+      size="small"
+      options={menuOptions}
+      tooltip={{ isToolTip: true, position: "top", text: "More" }}
+      useWrapper={false}
+      style={{ top: "auto", bottom: "calc(100% + 2px)" }}
+    />
+  );
+}
 ```
 
 In this snippet, `surfaceItems` and `menuItems` are retrieved from `configOverrides.optionConfig` or fall back to default values (`optionConfig.surfaceItems` and `optionConfig.menuItems`) when not provided in `configOverrides`. These items are then processed and rendered accordingly.
+
 ### Example: Variant Overrides
 
 ```jsx
 const { styleOverrides, classNames, variantOverrides } =
-  useComponentOverrides('MessageHeader');
+  useComponentOverrides("MessageHeader");
 
 // Determine the display name variant or default to 'Normal'
-const displayNameVariant = variantOverrides || 'Normal';
+const displayNameVariant = variantOverrides || "Normal";
 
 // Render a span element for the message header username
 <Box
   is="span"
   css={styles.userName}
-  className={appendClassNames('ec-message-header-username', classNames)}
+  className={appendClassNames("ec-message-header-username", classNames)}
   style={
-    displayNameVariant === 'colorize'
+    displayNameVariant === "colorize"
       ? { color: getDisplayNameColor(message.u.username) }
       : null
   }
