@@ -10,7 +10,6 @@ import { getEditorStyles } from './LayoutEditor.style';
 const LayoutEditor = () => {
   const themeLabOpen = useLayoutStore((state) => state.themeLabOpen);
   const { theme } = useTheme();
-  console.log(theme);
   const styles = getEditorStyles(theme);
 
   return (
