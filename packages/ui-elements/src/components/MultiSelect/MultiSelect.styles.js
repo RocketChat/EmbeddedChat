@@ -1,9 +1,6 @@
 import { css } from '@emotion/react';
-import useTheme from '../../hooks/useTheme';
 
-const useMultiSelectStyles = () => {
-  const { theme } = useTheme();
-
+const getMultiSelectStyles = (theme) => {
   const styles = {
     main: css`
       display: inline-flex;
@@ -59,4 +56,4 @@ const useMultiSelectStyles = () => {
   return styles;
 };
 
-export default useMultiSelectStyles;
+export default getMultiSelectStyles;

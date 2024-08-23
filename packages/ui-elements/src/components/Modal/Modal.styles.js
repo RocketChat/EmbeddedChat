@@ -1,28 +1,29 @@
 import { css } from '@emotion/react';
 import { alpha } from '../../lib/color';
-import useTheme from '../../hooks/useTheme';
 
-export const useModalstyles = () => {
-  const { theme } = useTheme();
-  const main = css`
-    position: absolute;
-    display: flex;
-    display: -ms-flexbox;
-    flex-direction: column;
-    align-content: stretch;
-    justify-content: strech;
-    max-height: 90%;
-    width: 100%;
-    max-width: 600px;
-    padding: 0.5rem;
-    color: ${theme.colors.foreground};
-    background: ${theme.colors.background};
-    border-radius: ${theme.radius};
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  `;
-  return { main };
+export const getModalstyles = (theme) => {
+  const styles = {
+    main: css`
+      position: absolute;
+      display: flex;
+      display: -ms-flexbox;
+      flex-direction: column;
+      align-content: stretch;
+      justify-content: strech;
+      max-height: 90%;
+      width: 100%;
+      max-width: 600px;
+      padding: 0.5rem;
+      color: ${theme.colors.foreground};
+      background: ${theme.colors.background};
+      border-radius: ${theme.radius};
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+  };
+
+  return styles;
 };
 
 export const ModalContentStyles = {
@@ -33,23 +34,24 @@ export const ModalContentStyles = {
   `,
 };
 
-export const useModalBackdropStyles = () => {
-  const { theme } = useTheme();
+export const getModalBackdropStyles = (theme) => {
+  const styles = {
+    modalBackdrop: css`
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: ${theme.zIndex?.modal || 1500};
+      background: ${alpha(theme.commonColors.black, 0.5)};
+      width: 100%;
+      height: 100%;
+    `,
+  };
 
-  const modalBackdrop = css`
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: ${theme.zIndex?.modal || 1500};
-    background: ${alpha(theme.commonColors.black, 0.5)};
-    width: 100%;
-    height: 100%;
-  `;
-  return { modalBackdrop };
+  return styles;
 };
 
 export const ModalFooterStyles = {
-  modalFooter: () => css`
+  modalFooter: css`
     -webkit-box-pack: end !important;
     -ms-flex-pack: end !important;
     -webkit-justify-content: end !important;

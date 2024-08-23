@@ -1,12 +1,14 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import useInputStyles from './Input.styles';
+import getInputStyles from './Input.styles';
+import { useTheme } from '../../hooks';
 
 const Input = forwardRef(
   ({ className = '', style = {}, textArea = false, ...props }, ref) => {
     const { classNames, styleOverrides } = useComponentOverrides('Input');
-    const styles = useInputStyles();
+    const { theme } = useTheme();
+    const styles = getInputStyles(theme);
     const InputElement = textArea ? 'textarea' : 'input';
     return (
       <InputElement

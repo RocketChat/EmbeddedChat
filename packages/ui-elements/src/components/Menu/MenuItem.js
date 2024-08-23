@@ -4,14 +4,16 @@ import { Icon } from '../Icon';
 
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
-import { useMenuItemStyles } from './Menu.styles';
+import { getMenuItemStyles } from './Menu.styles';
+import { useTheme } from '../../hooks';
 
 const MenuItem = ({ icon, label, action, disabled }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'MenuItem',
     disabled && 'disabled'
   );
-  const styles = useMenuItemStyles();
+  const theme = useTheme();
+  const styles = getMenuItemStyles(theme);
 
   return (
     <Box

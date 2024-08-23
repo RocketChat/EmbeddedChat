@@ -8,7 +8,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import useLinkPreviewStyles from './LinkPreview.styles';
+import getLinkPreviewStyles from './LinkPreview.styles';
 
 const LinkPreview = ({
   className = '',
@@ -19,8 +19,8 @@ const LinkPreview = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
-  const styles = useLinkPreviewStyles();
   const { theme } = useTheme();
+  const styles = getLinkPreviewStyles(theme);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 

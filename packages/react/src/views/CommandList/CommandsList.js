@@ -6,7 +6,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import useCommandListStyles from './CommandList.style';
+import getCommandListStyles from './CommandList.style';
 
 function CommandsList({
   className = '',
@@ -21,8 +21,8 @@ function CommandsList({
   ...props
 }) {
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
-  const styles = useCommandListStyles();
   const { theme } = useTheme();
+  const styles = getCommandListStyles(theme);
   const itemRefs = useRef([]);
   const setItemRef = (el, index) => {
     itemRefs.current[index] = el;

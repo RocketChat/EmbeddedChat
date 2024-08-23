@@ -1,9 +1,7 @@
 import { css } from '@emotion/react';
 import { alpha } from '@embeddedchat/ui-elements';
 
-export const bubbleStyles = (customTheme) => {
-  const { theme } = customTheme;
-
+export const getBubbleStyles = (theme) => {
   const styles = {
     name: 'bubble',
     messageParent: css`
@@ -127,9 +125,7 @@ export const bubbleStyles = (customTheme) => {
   return styles;
 };
 
-export const bubbleStylesMe = (customTheme) => {
-  const { theme } = customTheme;
-
+export const getBubbleStylesMe = (theme) => {
   const styles = {
     messageParentMe: css`
       flex-direction: row-reverse;

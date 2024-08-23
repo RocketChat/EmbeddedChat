@@ -21,7 +21,7 @@ import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
-import { useChatbodyStyles } from './ChatBody.styles';
+import { getChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
 import useUiKitStore from '../../store/uiKitStore';
 import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
@@ -34,7 +34,7 @@ const ChatBody = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
 
-  const styles = useChatbodyStyles();
+  const styles = getChatbodyStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
   const [, setIsUserScrolledUp] = useState(false);

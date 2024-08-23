@@ -18,15 +18,14 @@ export const getMenuStyles = ({ theme }) => {
       border-radius: 0.2em;
       padding: 0.5rem 0;
       box-shadow: ${theme.shadows[1]};
-      background-color: ${theme.background};
+      background-color: ${theme.colors.background};
     `,
   };
 
   return styles;
 };
 
-export const getMenuItemStyles = (customTheme) => {
-  const { theme, mode } = customTheme;
+export const getMenuItemStyles = ({ theme, mode }) => {
 
   const styles = {
     item: css`
@@ -38,11 +37,11 @@ export const getMenuItemStyles = (customTheme) => {
       padding: 0.25em 0.75em;
       white-space: nowrap;
       gap: 0.2rem;
-      color: ${theme.foreground};
+      color: ${theme.colors.foreground};
       &:hover {
         background-color: ${mode === 'light'
-          ? darken(theme.background, 0.05)
-          : lighten(theme.background, 2)};
+          ? darken(theme.colors.background, 0.05)
+          : lighten(theme.colors.background, 2)};
         cursor: pointer;
       }
     `,
@@ -55,13 +54,13 @@ export const getMenuItemStyles = (customTheme) => {
 
     disabled: css`
       cursor: not-allowed !important;
-      color: ${theme.mutedForeground};
+      color: ${theme.colors.mutedForeground};
     `,
 
     icon: css`
       visibility: hidden;
       &:hover {
-        fill: ${theme.destructive};
+        fill: ${theme.colors.destructive};
       }
     `,
 
@@ -74,7 +73,7 @@ export const getMenuItemStyles = (customTheme) => {
 
     dragOverlay: css`
       padding: 0.5rem 0.75em;
-      border: 1px solid ${theme.border};
+      border: 1px solid ${theme.colors.border};
       border-right: none;
       border-left: none;
     `,

@@ -6,13 +6,14 @@ import {
   ActionButton,
   Tooltip,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
-import { useChatInputFormattingToolbarStyles } from './ChatInput.styles';
+import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
 
 const ChatInputFormattingToolbar = ({
@@ -26,8 +27,8 @@ const ChatInputFormattingToolbar = ({
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
-
-  const styles = useChatInputFormattingToolbarStyles();
+  const theme = useTheme();
+  const styles = getChatInputFormattingToolbarStyles(theme);
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
   const formatters =

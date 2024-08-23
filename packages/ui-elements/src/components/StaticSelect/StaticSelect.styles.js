@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
-import useTheme from '../../hooks/useTheme';
 
-const useStaticSelectStyles = () => {
-  const { theme } = useTheme();
+const getStaticSelectStyles = (theme) => {
   const styles = {
     main: css`
       display: inline-flex;
@@ -45,4 +43,4 @@ const useStaticSelectStyles = () => {
   return styles;
 };
 
-export default useStaticSelectStyles;
+export default getStaticSelectStyles;

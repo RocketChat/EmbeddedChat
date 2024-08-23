@@ -6,15 +6,22 @@ import React, {
   useRef,
 } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, ActionButton, Modal } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  ActionButton,
+  Modal,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
-import { useCommonRecorderStyles } from './ChatInput.styles';
+import { getCommonRecorderStyles } from './ChatInput.styles';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
-  const styles = useCommonRecorderStyles();
+  const { theme } = useTheme();
+  const styles = getCommonRecorderStyles(theme);
 
   const toogleRecordingMessage = useMessageStore(
     (state) => state.toogleRecordingMessage

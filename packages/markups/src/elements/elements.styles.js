@@ -60,24 +60,26 @@ export const EmojiStyles = {
 
 const useMentionStyles = (contents, username) => {
   const { theme } = useTheme();
-  const mention = css`
-    background-color: ${contents.value === 'all' || contents.value === 'here'
-      ? theme.colors.warning
-      : contents.value === username
-      ? theme.colors.destructive
-      : theme.colors.muted};
-    color: ${contents.value === 'all' || contents.value === 'here'
-      ? theme.colors.warningForeground
-      : contents.value === username
-      ? theme.colors.destructiveForeground
-      : theme.colors.mutedForeground};
-    font-weight: bold;
-    cursor: pointer;
-    padding: 1.5px;
-    border-radius: 3px;
-  `;
+  const styles = {
+    mention: css`
+      background-color: ${contents.value === 'all' || contents.value === 'here'
+        ? theme.colors.warning
+        : contents.value === username
+        ? theme.colors.destructive
+        : theme.colors.muted};
+      color: ${contents.value === 'all' || contents.value === 'here'
+        ? theme.colors.warningForeground
+        : contents.value === username
+        ? theme.colors.destructiveForeground
+        : theme.colors.mutedForeground};
+      font-weight: bold;
+      cursor: pointer;
+      padding: 1.5px;
+      border-radius: 3px;
+    `,
+  };
 
-  return { mention };
+  return styles;
 };
 
 export default useMentionStyles;

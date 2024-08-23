@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
-import { usePopupHeaderStyles } from './Popup.styles';
+import { getPopupHeaderStyles } from './Popup.styles';
 import Heading from '../Heading/Heading';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { Input } from '../Input';
+import { useTheme } from '../../hooks';
 
 export const PopupHeader = ({
   className = '',
@@ -17,7 +18,8 @@ export const PopupHeader = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('PopupHeader');
-  const styles = usePopupHeaderStyles();
+  const theme = useTheme();
+  const styles = getPopupHeaderStyles(theme);
   const {
     isSearch = false,
     handleInputChange,

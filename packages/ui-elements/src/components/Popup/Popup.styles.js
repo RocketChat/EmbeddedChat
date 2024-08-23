@@ -1,10 +1,7 @@
 import { css } from '@emotion/react';
-import useTheme from '../../hooks/useTheme';
 import { darken } from '../../lib/color';
 
-export const usePopupStyles = () => {
-  const { theme } = useTheme();
-
+export const getPopupStyles = (theme) => {
   const styles = {
     popup: (width, height) => css`
       display: flex;
@@ -26,8 +23,7 @@ export const usePopupStyles = () => {
   return styles;
 };
 
-export const usePopupHeaderStyles = () => {
-  const { theme, mode } = useTheme();
+export const getPopupHeaderStyles = ({ theme, mode }) => {
   const styles = {
     popupHeader: css`
       background-color: ${mode === 'light'

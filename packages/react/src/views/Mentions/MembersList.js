@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
-import useMemberListStyles from './MembersList.styles';
+import getMemberListStyles from './MembersList.styles';
 
 function MembersList({
   mentionIndex,
@@ -13,8 +13,8 @@ function MembersList({
   setShowMembersList,
 }) {
   const itemRefs = useRef([]);
-  const styles = useMemberListStyles();
   const { theme } = useTheme();
+  const styles = getMemberListStyles(theme);
 
   const handleMemberClick = useCallback(
     (selectedItem) => {

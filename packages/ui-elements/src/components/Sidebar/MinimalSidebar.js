@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box } from '../Box';
-import useSidebarStyles from './Sidebar.styles';
+import { getSidebarStyles } from './Sidebar.styles';
+import { useTheme } from '../../hooks';
 
 const MinimalSidebar = ({ children }) => {
-  const styles = useSidebarStyles();
+  const { theme } = useTheme();
+  const styles = getSidebarStyles(theme);
 
   return (
     <Box css={styles.sidebarContainer} className="ec-minimal-sidebar">

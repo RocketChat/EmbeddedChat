@@ -1,6 +1,5 @@
 import { css, keyframes } from '@emotion/react';
 import { lighten } from '../../lib/color';
-import useTheme from '../../hooks/useTheme';
 
 const animation = keyframes`
 0% {
@@ -16,26 +15,27 @@ const animation = keyframes`
 }
 `;
 
-const useSkeletonStyles = () => {
-  const { theme } = useTheme();
-  const skeleton = css`
-    height: 1.2em;
-    animation: ${animation} 1s linear 0s infinite running;
-    border-radius: 0.25rem;
-    background: ${lighten(theme.commonColors.black, 2)};
+const getSkeletonStyles = (theme) => {
+  const styles = {
+    skeleton: css`
+      height: 1.2em;
+      animation: ${animation} 1s linear 0s infinite running;
+      border-radius: 0.25rem;
+      background: ${lighten(theme.commonColors.black, 2)};
 
-    &.text {
-      height: auto;
-      margin-block: none;
-      transform: scale(1, 0.6);
-      transform-origin: 0 60%;
-    }
-    &.circle {
-      border-radius: 50%;
-    }
-  `;
+      &.text {
+        height: auto;
+        margin-block: none;
+        transform: scale(1, 0.6);
+        transform-origin: 0 60%;
+      }
+      &.circle {
+        border-radius: 50%;
+      }
+    `,
+  };
 
-  return { skeleton };
+  return styles;
 };
 
-export default useSkeletonStyles;
+export default getSkeletonStyles;

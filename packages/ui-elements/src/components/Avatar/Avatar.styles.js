@@ -1,26 +1,26 @@
 import { css } from '@emotion/react';
-import useTheme from '../../hooks/useTheme';
 
-export const useAvatarStyles = () => {
-  const { theme } = useTheme();
-  const imageAvatar = (size) => css`
-    border-radius: ${theme.radius};
-    height: ${size};
-    width: ${size};
-  `;
+export const getAvatarStyles = (theme) => {
+  const styles = {
+    imageAvatar: (size) => css`
+      border-radius: ${theme.radius};
+      height: ${size};
+      width: ${size};
+    `,
 
-  const fallbackContainer = (size) => css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: ${theme.colors.primary};
-    color: ${theme.colors.primaryForeground};
-    border-radius: ${theme.radius};
-    height: ${size};
-    width: ${size};
-  `;
+    fallbackContainer: (size) => css`
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: ${theme.colors.primary};
+      color: ${theme.colors.primaryForeground};
+      border-radius: ${theme.radius};
+      height: ${size};
+      width: ${size};
+    `,
+  };
 
-  return { imageAvatar, fallbackContainer };
+  return styles;
 };
 
 export const avatarContainerStyles = {

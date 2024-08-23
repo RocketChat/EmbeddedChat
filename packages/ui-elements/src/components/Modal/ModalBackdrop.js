@@ -1,9 +1,11 @@
 import React, { forwardRef } from 'react';
 import { Box } from '../Box';
-import { useModalBackdropStyles } from './Modal.styles';
+import { getModalBackdropStyles } from './Modal.styles';
+import { useTheme } from '../../hooks';
 
 const ModalBackdrop = forwardRef(({ children, onClick = () => {} }, ref) => {
-  const styles = useModalBackdropStyles();
+  const { theme } = useTheme();
+  const styles = getModalBackdropStyles(theme);
 
   return (
     <Box ref={ref} onClick={onClick} css={styles.modalBackdrop}>

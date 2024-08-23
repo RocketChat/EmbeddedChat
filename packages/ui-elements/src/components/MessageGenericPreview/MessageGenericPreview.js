@@ -1,13 +1,14 @@
 import React from 'react';
-import { useMessageGenericPreviewStyles } from './MessageGenericPreview.styles';
+import { getMessageGenericPreviewStyles } from './MessageGenericPreview.styles';
 import { Box } from '../Box';
-import { useComponentOverrides } from '../../hooks';
+import { useComponentOverrides, useTheme } from '../../hooks';
 
 const MessageGenericPreview = (props, className = '', style = {}) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'MessageGenericPreview'
   );
-  const styles = useMessageGenericPreviewStyles();
+  const { theme } = useTheme();
+  const styles = getMessageGenericPreviewStyles(theme);
 
   return (
     <Box

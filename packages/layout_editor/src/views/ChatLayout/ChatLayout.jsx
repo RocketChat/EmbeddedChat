@@ -43,7 +43,7 @@ const ChatLayout = () => {
         <PanelResizeHandle
           style={{
             width: '2px',
-            border: `0.5px solid ${theme.border}`,
+            border: `0.5px solid ${theme.colors.border}`,
             boxShadow: '0px 0px 0.5px rgba(0, 0, 0, 0.5)',
           }}
         />
