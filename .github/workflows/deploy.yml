@@ -69,13 +69,13 @@ jobs:
           mv -v packages/layout_editor/dist/* build/layout_editor/
           mv -v packages/docs/build/* build/docs/
 
-      - name: 'Upload Artifacts'
-        uses: actions/upload-pages-artifact@v3
-        with: 
-          path: build
-    
-      - id: deploy
-        name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
         with:
-          token: ${{ github.token }}
+          target_branch: gh-deploy
+          build_dir: build/
+          commit_message: "Deploy to Github Pages"
+          jekyll: false
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
