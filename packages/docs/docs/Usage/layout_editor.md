@@ -1,10 +1,10 @@
-# Embedded Chat: A Staple in Excellent Customer Service
+---
+title: Layout Editor
+---
 
-An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+# Layout Editor
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
-
-## Layout Editor
 
 ![image](https://github.com/user-attachments/assets/a42a66af-d8c0-4d3a-aa1a-71f91b07310e)
 
@@ -54,5 +54,5 @@ yarn preview # Preview build
 
 ### Additional Resources
 
-- For installation instructions of the EmbeddedChat RC App, visit [this guide](ec_rc_setup.md).
+- For installation instructions of the EmbeddedChat RC App, visit [this guide](../Usage/ec_rc_setup.md).
 - For detailed prop usage, refer to [this guide](embeddedchat_setup.md).

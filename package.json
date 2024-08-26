@@ -4,7 +4,8 @@
   "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
   "packageManager": "yarn@3.6.4",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "!packages/docs"
   ],
   "scripts": {
     "preinstall": "node scripts/node-check.js",

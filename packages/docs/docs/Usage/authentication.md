@@ -1,10 +1,10 @@
-# Embedded Chat: A staple in excellent customer service
-
-An easy-to-use, full-stack component (React.js + backend behaviors) for embedding Rocket.Chat into your web app.
+---
+title: Authentication Guide
+---
+# Authentication Guide
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-## Authentication Guide
 
 ### Various methods for enabling login functionality
 
@@ -72,7 +72,7 @@ auth: {
 
 This method leverages the OAuth configuration established in Rocket.Chat, ensuring a streamlined authentication process.
 
-For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](ec_rc_setup.md).
+For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](../Usage/ec_rc_setup.md).
 
 Certainly! Here are the instructions to enable OAuth login in the EmbeddedChat RC app, without using sub-bullets:
 

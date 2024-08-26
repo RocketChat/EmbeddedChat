@@ -1,12 +1,11 @@
-# Embedded Chat: A Staple in Excellent Customer Service
-
-The Embedded Chat component is an easy-to-use, full-stack solution for integrating Rocket.Chat into your web application. It combines React.js with backend behaviors for a seamless chat experience.
+---
+title: UI-Elements
+---
+# UI-Elements
 
 ![Embedded Chat Demo](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-## UI Elements
-
-This component is part of a monorepo, specifically within the `packages/react` project, which houses the main EmbeddedChat Component.
+This component is part of a monorepo, specifically within the `packages/ui-elements` project, which houses the main EmbeddedChat Component.
 
 ![image](https://github.com/user-attachments/assets/2fd76929-ce43-4bb3-8ea8-3a7318468923)
 
@@ -15,7 +14,7 @@ This component is part of a monorepo, specifically within the `packages/react` p
 To develop and view the components:
 
 1. Clone the repository.
-2. Navigate to `packages/layout_editor`.
+2. Navigate to `packages/ui-elements`.
 3. Run the following commands:
 
    ```bash
@@ -92,4 +91,4 @@ background-color: ${mode === 'light'
       : lighten(colors.background, 1)};
 ```
 
-This hook allows you to dynamically switch modes or themes as needed. The `theme` object must adhere to a specific format, as outlined in the EmbeddedChat `react` project [Readme.md](theming.md).
+This hook allows you to dynamically switch modes or themes as needed. The `theme` object must adhere to a specific format, as outlined in the EmbeddedChat `react` project [Readme.md](../Usage/theming.md).

@@ -11,4 +11,5 @@ export default defineConfig({
       },
     }),
   ],
+  base: "/EmbeddedChat/layout_editor"
 });
