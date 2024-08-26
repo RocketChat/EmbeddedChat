@@ -14,9 +14,18 @@ _EmbeddedChat is a full-stack React component designed to integrate Rocket.Chat 
 </a>
 </div>
 
+## Try It Out 🚀
+
+Explore our project in action! It's live for a sneak peek and testing at: https://rocketchat.github.io/EmbeddedChat/
+
+Test credentials:
+
+- **Username:** test_acc
+- **Password:** test_acc
+
 ## Installation and Usage
 
-Installation and usage documentation could be found here [EmbeddedChat installation and usage](packages/react/README.md)
+Installation and usage documentation could be found here [EmbeddedChat installation and usage](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/embeddedchat_setup)
 
 ## Development
 
@@ -158,21 +167,25 @@ This environment offers a complete setup for developing and testing the `Embedde
 
 ## References
 
-- Embedded Chat Development: [EC Development](packages/docs/embeddedchat_dev.md) – Explore development techniques for Embedded Chat.
+- **Documentation Overview**: For a comprehensive overview of Embedded Chat, including installation, usage, and advanced topics, visit our [Documentation Page](https://rocketchat.github.io/EmbeddedChat/docs/).
 
-- Embedded Chat Setup: [Setup Instructions](packages/docs/embeddedchat_setup.md) – Start setting up Embedded Chat in your app.
+  Below are specific sections that cover various aspects of Embedded Chat:
 
-- UI Elements: [Setup & Dev Guide](packages/docs/ui-elements.md) – Integration and customization of UI elements.
+  - Embedded Chat Development: [EC Development](https://rocketchat.github.io/EmbeddedChat/docs/docs/Development/dev_launch) – Explore development techniques for Embedded Chat.
 
-- Layout Editor: [Using the Editor](packages/docs/layout_editor.md) – Customize the chat interface with the layout editor.
+  - Embedded Chat Setup: [Setup Instructions](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/embeddedchat_setup) – Start setting up Embedded Chat in your app.
 
-- EmbeddedChat RC Setup: [Setup Instructions](packages/docs/ec_rc_setup.md) – Guide for setting up Embedded Chat RC App.
+  - UI Elements: [Setup & Dev Guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Development/ui-elements) – Integration and customization of UI elements.
 
-- Authentication: [Guide](packages/docs/authentication.md) – Configure and manage authentication for Embedded Chat.
+  - Layout Editor: [Using the Editor](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/layout_editor) – Customize the chat interface with the layout editor.
 
-- Theming Guide: [Guide](packages/docs/theming.md) – Guide to theming options and customization.
+  - EmbeddedChat RC Setup: [Setup Instructions](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/ec_rc_setup) – Guide for setting up Embedded Chat RC App.
 
-- Theming Technical: [Technical Overview](packages/docs/theming_technical.md) – Technical aspects of theming.
+  - Authentication: [Guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/authentication) – Configure and manage authentication for Embedded Chat.
+
+  - Theming Guide: [Guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/theming) – Guide to theming options and customization.
+
+  - Theming Technical: [Technical Overview](https://rocketchat.github.io/EmbeddedChat/docs/docs/Development/theming_technical) – Technical aspects of theming.
 
 ### Contributors
 

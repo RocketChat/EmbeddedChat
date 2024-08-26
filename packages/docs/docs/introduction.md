@@ -18,6 +18,15 @@ _EmbeddedChat is a full-stack React component designed to integrate Rocket.Chat 
 </a>
 </div>
 
+## Try It Out 🚀
+
+Explore our project in action! It's live for a sneak peek and testing at: https://rocketchat.github.io/EmbeddedChat/
+
+Test credentials:
+
+- **Username:** test_acc
+- **Password:** test_acc
+
 ## Installation and usage
 
 Set up and start using the product in no time. Dive into our installation and usage docs [here](Usage/embeddedchat_setup.md)
