@@ -61,7 +61,13 @@ jobs:
 
       - name: Prepare Build for UI-Elements
         if: steps.changes.outputs.ui-elements == 'true'
-        run: mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/
+        run: |
+              if [ '$(ls -A build/pulls/${{github.event.number}})/' ]; then
+                mkdir -p build/pulls/${{github.event.number}}/ui-elements
+                mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/ui-elements
+              else
+                mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/
+              fi
 
 
       - name: Upload Artifacts
