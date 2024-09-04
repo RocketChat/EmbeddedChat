@@ -41,10 +41,6 @@ jobs:
               - 'packages/react/**'
             ui-elements:
               - 'packages/ui-elements/**'
-            layout_editor:
-              - 'packages/layout_editor/**'
-            docs:
-              - 'packages/docs/**'
 
       - name: Create Build Directory
         run: mkdir -p build/pulls/${{github.event.number}}
@@ -67,34 +63,6 @@ jobs:
         if: steps.changes.outputs.ui-elements == 'true'
         run: mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/
 
-      - name: Setup Node.js 18 for Docs
-        if: steps.changes.outputs.docs == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
-
-      - name: "Install dependencies for docs"
-        if: steps.changes.outputs.docs == 'true'
-        run: yarn install
-        working-directory: packages/docs/
-
-      - name: Build Docs
-        if: steps.changes.outputs.docs == 'true'
-        run: yarn build
-        working-directory: packages/docs
-
-      - name: Prepare Build for Docs
-        if: steps.changes.outputs.docs == 'true'
-        run: mv -v packages/docs/build/* build/pulls/${{github.event.number}}/
-
-      - name: Build Layout Editor
-        if: steps.changes.outputs.layout_editor == 'true'
-        run: yarn build
-        working-directory: packages/layout_editor
-
-      - name: Prepare Build for Layout Editor
-        if: steps.changes.outputs.layout_editor == 'true'
-        run: mv -v packages/layout_editor/dist/* build/pulls/${{github.event.number}}/
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
