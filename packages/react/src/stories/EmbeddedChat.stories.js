@@ -12,7 +12,7 @@ export const Simple = {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
     roomId: process.env.RC_ROOM_ID || 'GENERAL',
     channelName: 'general',
-    anonymousMode: true,
+    anonymousMode: false,
     headerColor: 'white',
     toastBarPosition: 'bottom right',
     showRoles: true,
