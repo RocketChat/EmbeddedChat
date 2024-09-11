@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
-import useThrobberStyles from './Throbber.styles';
+import getThrobberStyles from './Throbber.styles';
 import { Box } from '../Box';
+import { useTheme } from '../../hooks';
 
 function Circle({
   disabled,
@@ -10,7 +11,8 @@ function Circle({
   size,
   ...props
 }) {
-  const styles = useThrobberStyles();
+  const { theme } = useTheme();
+  const styles = getThrobberStyles(theme);
   return (
     <Box
       css={styles.circle(size, circleCount, iteration)}
@@ -27,7 +29,8 @@ const Throbber = forwardRef(
     { disabled, size = '16px', circleCount = 3, inheritColor, ...props },
     ref
   ) => {
-    const styles = useThrobberStyles();
+    const { theme } = useTheme();
+    const styles = getThrobberStyles(theme);
     return (
       <Box css={styles.throbber} ref={ref} {...props}>
         {Array.from({ length: circleCount || 3 }, (_, iteration) => (

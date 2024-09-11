@@ -24,7 +24,7 @@ export default function LoginForm() {
   );
   const { handleLogin } = useRCAuth();
 
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (userOrEmail !== null && userOrEmail.trim() === '') {
@@ -101,7 +101,7 @@ export default function LoginForm() {
                   onKeyPress={handleKeyPress}
                   style={{
                     ...(field.error && {
-                      borderColor: colors.destructive,
+                      borderColor: theme.colors.destructive,
                       outline: 'none',
                     }),
                   }}
@@ -120,7 +120,7 @@ export default function LoginForm() {
                 <Box
                   is="span"
                   css={css`
-                    color: ${colors.destructive};
+                    color: ${theme.colors.destructive};
                     font-size: 13px;
                   `}
                 >

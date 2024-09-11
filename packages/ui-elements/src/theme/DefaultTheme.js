@@ -1,10 +1,12 @@
 const DefaultTheme = {
+  radius: '0.2rem',
+
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
+
   schemes: {
-    radius: '0.2rem',
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(240, 10%, 3.9%)',

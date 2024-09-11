@@ -7,7 +7,7 @@ export const styles = {
     display: flex;
     flex-direction: column;
     border: ${`1.5px solid  ${theme.schemes[dark ? 'dark' : 'light'].border}`};
-    border-radius: ${theme.schemes.radius};
+    border-radius: ${theme.radius};
     overflow: hidden;
   `,
   fullscreen: css`

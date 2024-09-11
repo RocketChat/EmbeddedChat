@@ -17,6 +17,10 @@ We offer a layout editor that lets you customize the design and appearance of th
 - **Resizable Sidebar**: Adjust the sidebar by dragging.
 - **Theme Lab**: Customize layout and theme settings, including palette colors and typography.
 
+### Try It Out 🚀
+
+Explore the Layout Editor to style and customize EmbeddedChat to your needs. Generate a theme object and pass it to EmbeddedChat via props. Start customizing here: [Layout Editor](https://rocketchat.github.io/EmbeddedChat/layout-editor/)
+
 ### Theme Lab
 
 In the Theme Lab, you can:

@@ -1,4 +1,9 @@
 const AquaBreeze = {
+  radius: '1.5rem',
+  commonColors: {
+    black: 'hsl(0, 0%, 0%)',
+    white: 'hsl(0, 0%, 100%)',
+  },
   schemes: {
     light: {
       background: 'hsl(192, 52%, 96%)',
@@ -54,34 +59,8 @@ const AquaBreeze = {
       info: 'hsl(214.3, 77.8%, 92.9%)',
       infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
     },
-    common: {
-      black: 'hsl(0, 0%, 0%)',
-      white: 'hsl(0, 0%, 100%)',
-    },
-    radius: '1.5rem',
   },
 
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
-  },
-  variants: {
-    Message: 'bubble',
-  },
-
-  components: {
-    MessageToolbox: {
-      configOverrides: {
-        optionConfig: {
-          surfaceItems: ['reaction', 'reply', 'quote', 'star'],
-          menuItems: ['pin', 'edit', 'delete', 'report'],
-        },
-      },
-    },
-  },
   typography: {
     default: {
       fontFamily: "'Times New Roman', serif",
@@ -116,10 +95,26 @@ const AquaBreeze = {
       fontWeight: 500,
     },
   },
+
   shadows: [
     'none',
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
     'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
   ],
+
+  variants: {
+    Message: 'bubble',
+  },
+
+  components: {
+    MessageToolbox: {
+      configOverrides: {
+        optionConfig: {
+          surfaceItems: ['reaction', 'reply', 'quote', 'star'],
+          menuItems: ['pin', 'edit', 'delete', 'report'],
+        },
+      },
+    },
+  },
 };
 export default AquaBreeze;

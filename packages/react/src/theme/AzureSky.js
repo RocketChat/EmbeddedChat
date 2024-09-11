@@ -1,10 +1,10 @@
 const AzureSky = {
+  radius: '0.2rem',
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
   schemes: {
-    radius: '0.2rem',
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(222.2, 84%, 4.9%)',
@@ -60,14 +60,6 @@ const AzureSky = {
       infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
     },
   },
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
-  },
-  components: {},
 
   typography: {
     default: {

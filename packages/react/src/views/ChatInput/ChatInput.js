@@ -10,6 +10,7 @@ import {
   Throbber,
   useToastBarDispatch,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -29,7 +30,7 @@ import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
-import { useChatInputStyles } from './ChatInput.styles';
+import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
@@ -37,7 +38,8 @@ import formatSelection from '../../lib/formatSelection';
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
-  const styles = useChatInputStyles();
+  const { theme } = useTheme();
+  const styles = getChatInputStyles(theme);
 
   const inputRef = useRef(null);
   const typingRef = useRef();

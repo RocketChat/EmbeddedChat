@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
+import { useTheme } from '../../hooks';
 import { AvatarContainer } from './AvatarContainer';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
-import { useAvatarStyles } from './Avatar.styles';
+import { getAvatarStyles } from './Avatar.styles';
 
 export const Avatar = ({
   size = '2.25rem',
@@ -15,7 +16,8 @@ export const Avatar = ({
   ...props
 }) => {
   const [imgError, setImgError] = useState(false);
-  const styles = useAvatarStyles();
+  const { theme } = useTheme();
+  const styles = getAvatarStyles(theme);
   const { classNames, styleOverrides } = useComponentOverrides(
     'Avatar',
     className,

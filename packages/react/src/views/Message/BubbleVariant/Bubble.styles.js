@@ -1,9 +1,7 @@
 import { css } from '@emotion/react';
 import { alpha } from '@embeddedchat/ui-elements';
 
-export const bubbleStyles = (customTheme) => {
-  const { theme, colors } = customTheme;
-
+export const getBubbleStyles = (theme) => {
   const styles = {
     name: 'bubble',
     messageParent: css`
@@ -13,7 +11,7 @@ export const bubbleStyles = (customTheme) => {
       align-items: flex-start;
       padding: 0 2.25rem 0.25rem 2.25rem;
       a {
-        color: ${colors.primaryForeground};
+        color: ${theme.colors.primaryForeground};
       }
     `,
 
@@ -38,12 +36,11 @@ export const bubbleStyles = (customTheme) => {
       width: fit-content;
       max-width: 80%;
       padding: 0.5rem 0.75rem;
-      border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
-        ${theme.schemes.radius} 0.2rem;
-      background: ${colors.primary};
-      color: ${colors.primaryForeground};
+      border-radius: ${theme.radius} ${theme.radius} ${theme.radius} 0.2rem;
+      background: ${theme.colors.primary};
+      color: ${theme.colors.primaryForeground};
       &:hover {
-        background: ${alpha(colors.primary, 0.8)};
+        background: ${alpha(theme.colors.primary, 0.8)};
       }
     `,
 
@@ -51,16 +48,14 @@ export const bubbleStyles = (customTheme) => {
       position: relative;
       width: fit-content;
       max-width: 80%;
-      border-radius: ${theme.schemes.radius} ${theme.schemes.radius}
-        ${theme.schemes.radius} 0.2rem;
+      border-radius: ${theme.radius} ${theme.radius} ${theme.radius} 0.2rem;
     `,
 
     sequential: css`
-      border-radius: 0.2rem ${theme.schemes.radius} ${theme.schemes.radius}
-        0.2rem;
+      border-radius: 0.2rem ${theme.radius} ${theme.radius} 0.2rem;
     `,
     lastSequential: css`
-      border-radius: 0.2rem ${theme.schemes.radius} ${theme.schemes.radius};
+      border-radius: 0.2rem ${theme.radius} ${theme.radius};
     `,
 
     metricsContainer: css`
@@ -69,8 +64,8 @@ export const bubbleStyles = (customTheme) => {
     `,
 
     threadReplyButton: css`
-      background-color: ${colors.accent};
-      color: ${colors.accentForeground};
+      background-color: ${theme.colors.accent};
+      color: ${theme.colors.accentForeground};
       border-radius: 0.2rem;
     `,
 
@@ -90,11 +85,11 @@ export const bubbleStyles = (customTheme) => {
     `,
 
     videoAttachmentContainer: css`
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: inherit;
     `,
     imageAttachmentContainer: css`
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: inherit;
       overflow: hidden;
     `,
@@ -103,12 +98,12 @@ export const bubbleStyles = (customTheme) => {
     `,
 
     quoteContainer: css`
-      background-color: ${colors.background};
-      color: ${colors.foreground};
+      background-color: ${theme.colors.background};
+      color: ${theme.colors.foreground};
       flex: 1;
       border-bottom-right-radius: inherit;
       border-bottom-left-radius: inherit;
-      border: 2px solid ${colors.border};
+      border: 2px solid ${theme.colors.border};
       margin: 0.2rem -0.75rem -0.5rem;
     `,
 
@@ -130,9 +125,7 @@ export const bubbleStyles = (customTheme) => {
   return styles;
 };
 
-export const bubbleStylesMe = (customTheme) => {
-  const { theme, colors } = customTheme;
-
+export const getBubbleStylesMe = (theme) => {
   const styles = {
     messageParentMe: css`
       flex-direction: row-reverse;
@@ -143,27 +136,23 @@ export const bubbleStylesMe = (customTheme) => {
     `,
 
     messageBodyMe: css`
-      background: ${colors.secondary};
-      color: ${colors.secondaryForeground};
-      border-radius: ${theme.schemes.radius} ${theme.schemes.radius} 0.2rem
-        ${theme.schemes.radius};
+      background: ${theme.colors.secondary};
+      color: ${theme.colors.secondaryForeground};
+      border-radius: ${theme.radius} ${theme.radius} 0.2rem ${theme.radius};
       &:hover {
-        background: ${alpha(colors.secondary, 0.8)};
+        background: ${alpha(theme.colors.secondary, 0.8)};
       }
     `,
 
     attachmentBodyMe: css`
-      border-radius: ${theme.schemes.radius} ${theme.schemes.radius} 0.2rem
-        ${theme.schemes.radius};
+      border-radius: ${theme.radius} ${theme.radius} 0.2rem ${theme.radius};
     `,
 
     lastSequentialMe: css`
-      border-radius: ${theme.schemes.radius} 0.2rem ${theme.schemes.radius}
-        ${theme.schemes.radius};
+      border-radius: ${theme.radius} 0.2rem ${theme.radius} ${theme.radius};
     `,
     sequentialMe: css`
-      border-radius: ${theme.schemes.radius} 0.2rem 0.2rem
-        ${theme.schemes.radius};
+      border-radius: ${theme.radius} 0.2rem 0.2rem ${theme.radius};
     `,
 
     metricsContainerMe: css`
@@ -183,7 +172,7 @@ export const bubbleStylesMe = (customTheme) => {
 
     pinnedContainerMe: css`
       border-inline-start: none;
-      border-inline-end: 3px solid ${colors.border};
+      border-inline-end: 3px solid ${theme.colors.border};
     `,
 
     textUserInfoMe: css`

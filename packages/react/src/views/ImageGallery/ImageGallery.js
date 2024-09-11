@@ -10,16 +10,16 @@ import {
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import { Swiper, SwiperSlide } from './Swiper';
-import useImageGalleryStyles from './ImageGallery.styles';
+import getImageGalleryStyles from './ImageGallery.styles';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
-  const styles = useImageGalleryStyles();
+  const { theme } = useTheme();
+  const styles = getImageGalleryStyles(theme);
   const { RCInstance } = useRCContext();
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [imgFetchErr, setImgFetchErr] = useState(false);
-  const { colors } = useTheme();
 
   useEffect(() => {
     const fetchAllImages = async () => {
@@ -69,14 +69,14 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
             <Icon
               name="magnifier"
               size="3rem"
-              style={{ padding: '0.5rem', color: colors.destructive }}
+              style={{ padding: '0.5rem', color: theme.colors.destructive }}
             />
             <Box
               is="span"
               style={{
                 fontSize: '1.2rem',
                 fontWeight: 'bold',
-                color: colors.primaryForeground,
+                color: theme.colors.primaryForeground,
               }}
             >
               Something went wrong

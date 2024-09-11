@@ -8,7 +8,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import useLinkPreviewStyles from './LinkPreview.styles';
+import getLinkPreviewStyles from './LinkPreview.styles';
 
 const LinkPreview = ({
   className = '',
@@ -19,8 +19,8 @@ const LinkPreview = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
-  const styles = useLinkPreviewStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const styles = getLinkPreviewStyles(theme);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
@@ -89,7 +89,7 @@ const LinkPreview = ({
             <a
               href={url}
               css={css`
-                color: ${colors.foreground};
+                color: ${theme.colors.foreground};
               `}
               target="_blank"
               rel="noopener noreferrer"
@@ -101,7 +101,7 @@ const LinkPreview = ({
               <a
                 href={url}
                 css={css`
-                  color: ${colors.foreground};
+                  color: ${theme.colors.foreground};
                 `}
                 target="_blank"
                 rel="noopener noreferrer"

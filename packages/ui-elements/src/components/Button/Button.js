@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useButtonStyles from './Button.styles';
+import { useTheme } from '../../hooks';
 
 const Button = ({
   children,
@@ -15,11 +16,12 @@ const Button = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Button');
-  const styles = useButtonStyles(type, size);
+  const { theme } = useTheme();
+  const styles = useButtonStyles(theme);
   return (
     <button
       type="button"
-      css={styles.main}
+      css={styles.main(type, size)}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
       } ${ghost ? 'ghost' : ''} ${

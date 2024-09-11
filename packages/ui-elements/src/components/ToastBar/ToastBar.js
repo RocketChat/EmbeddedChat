@@ -5,21 +5,23 @@ import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
-import { toastbarStyles as styles } from './ToastBar.styles';
+import { getToastbarStyles } from './ToastBar.styles';
 import useTheme from '../../hooks/useTheme';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
+  const styles = getToastbarStyles(theme);
   const { iconName, bgColor, color } = useMemo(() => {
     const color =
       type === 'error'
-        ? colors.destructiveForeground
-        : colors[`${type}Foreground`];
-    const bgColor = type === 'error' ? colors.destructive : colors[type];
+        ? theme.colors.destructiveForeground
+        : theme.colors[`${type}Foreground`];
+    const bgColor =
+      type === 'error' ? theme.colors.destructive : theme.colors[type];
 
     let iconName = 'success';
     switch (type) {
@@ -37,7 +39,7 @@ const ToastBar = ({ toast, onClose }) => {
         iconName = 'check';
     }
     return { iconName, color, bgColor };
-  }, [colors, type]);
+  }, [theme.colors, type]);
 
   useEffect(() => {
     setTimeout(onClose, time);
@@ -46,7 +48,7 @@ const ToastBar = ({ toast, onClose }) => {
   return (
     <Box
       ref={toastRef}
-      css={styles.toastbar(theme, color, bgColor, time)}
+      css={styles.toastbar(color, bgColor, time)}
       className={appendClassNames('ec-toast-bar', classNames)}
       style={styleOverrides}
     >

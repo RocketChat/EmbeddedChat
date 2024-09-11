@@ -7,7 +7,7 @@ import MenuItem from './MenuItem';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
-import { useMenuStyles } from './Menu.styles';
+import { getMenuStyles } from './Menu.styles';
 
 const Menu = ({
   options = [],
@@ -19,7 +19,7 @@ const Menu = ({
   useWrapper = true,
 }) => {
   const { theme } = useTheme();
-  const styles = useMenuStyles();
+  const styles = getMenuStyles(theme);
   const { classNames, styleOverrides } = useComponentOverrides(
     'Menu',
     className,

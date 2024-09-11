@@ -3,9 +3,10 @@ import {
   Box,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 
-import { useMessageBodyContainerStyles } from './Message.styles';
+import { getMessageBodyContainerStyles } from './Message.styles';
 
 const MessageBodyContainer = ({
   children,
@@ -18,8 +19,8 @@ const MessageBodyContainer = ({
     className,
     style
   );
-
-  const styles = useMessageBodyContainerStyles();
+  const { theme } = useTheme();
+  const styles = getMessageBodyContainerStyles(theme);
 
   return (
     <Box

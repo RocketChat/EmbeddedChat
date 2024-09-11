@@ -17,7 +17,6 @@ import {
 } from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
-import { Home } from './Home';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
@@ -251,11 +250,7 @@ const EmbeddedChat = (props) => {
               />
             )}
 
-            {isUserAuthenticated || anonymousMode ? (
-              <ChatLayout />
-            ) : (
-              <Home height={!fullScreen ? height : '88vh'} />
-            )}
+            <ChatLayout />
 
             <div id="overlay-items" />
           </ToastBarProvider>

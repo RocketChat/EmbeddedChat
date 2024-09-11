@@ -1,19 +1,12 @@
 const RoseEmber = {
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
+  radius: '0.2rem',
+
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
   },
-  components: {},
 
   schemes: {
-    radius: '0.2rem',
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(343.4, 63%, 95%)',
       foreground: 'hsl(343.4, 5%, 10%)',
@@ -104,6 +97,7 @@ const RoseEmber = {
       fontWeight: 500,
     },
   },
+
   shadows: [
     'none',
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',

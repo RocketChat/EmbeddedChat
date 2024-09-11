@@ -2,7 +2,8 @@ import React, { useRef } from 'react';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import { Input } from '../Input';
-import useSidebarStyles from './Sidebar.styles';
+import { getSidebarContentStyles } from './Sidebar.styles';
+import { useTheme } from '../../hooks';
 
 const SidebarContent = ({ children, searchProps = {}, style }) => {
   const {
@@ -10,8 +11,9 @@ const SidebarContent = ({ children, searchProps = {}, style }) => {
     handleInputChange,
     placeholder,
   } = searchProps || {};
-  const styles = useSidebarStyles();
   const searchContainerRef = useRef(null);
+  const { theme } = useTheme();
+  const styles = getSidebarContentStyles(theme);
 
   const handleFocus = () => {
     if (searchContainerRef.current) {
