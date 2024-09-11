@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { Box } from '@embeddedchat/ui-elements';
+import DOMPurify from 'dompurify';
 import { EmojiStyles as styles } from './elements.styles';
 
 const Emoji = ({ big = false, emoji }) => {
@@ -21,7 +22,7 @@ const Emoji = ({ big = false, emoji }) => {
     <Box
       is="span"
       css={[styles.emojione, styles.emojiInMessage]}
-      dangerouslySetInnerHTML={{ __html: emojiHtml }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emojiHtml) }}
     />
   );
 };
