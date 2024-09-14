@@ -1,24 +1,22 @@
-name: Continuous Integration of Pull Request
-
+name: Deploy PR previews
+concurrency: preview-${{ github.ref }}
 on:
   pull_request:
     types:
       - opened
       - reopened
       - synchronize
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: ${{github.workflow}}-${{github.ref}}
-  cancel-in-progress: true
+      - closed
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -43,7 +41,7 @@ jobs:
               - 'packages/ui-elements/**'
 
       - name: Create Build Directory
-        run: mkdir -p build/pulls/${{github.event.number}}
+        run: mkdir -p build/
 
       - name: Build Storybook
         if: steps.changes.outputs.react == 'true'
@@ -52,7 +50,7 @@ jobs:
 
       - name: Prepare Build for Storybook
         if: steps.changes.outputs.react == 'true'
-        run: mv -v packages/react/storybook-static/* build/pulls/${{github.event.number}}/
+        run: mv -v packages/react/storybook-static/* build/
 
       - name: Build UI-Elements
         if: steps.changes.outputs.ui-elements == 'true'
@@ -62,15 +60,22 @@ jobs:
       - name: Prepare Build for UI-Elements
         if: steps.changes.outputs.ui-elements == 'true'
         run: |
-          if [ -z "$(ls -A build/pulls/${{github.event.number}})" ]; then
-            mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/
+          if [ -z "$(ls -A build/)" ]; then
+            mv -v packages/ui-elements/storybook-static/* build/
           else
-            mkdir -p build/pulls/${{github.event.number}}/ui-elements
-            mv -v packages/ui-elements/storybook-static/* build/pulls/${{github.event.number}}/ui-elements/
+            mkdir -p build/ui-elements
+            mv -v packages/ui-elements/storybook-static/* build/ui-elements/
           fi
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+      - uses: rossjrw/pr-preview-action@v1
         with:
-          name: github-pages
-          path: build/
+          source-dir: build
+          preview-branch: gh-deploy
+          umbrella-dir: pulls
+          action: auto
+
+      - uses: rossjrw/pr-preview-action@v1
+        if: github.event.action == 'closed' || github.event.pull_request.merged == true
+        with:
+          source-dir: build
+          action: remove
