@@ -1,16 +1,18 @@
 import { css } from '@emotion/react';
 
-export const useRoomMemberStyles = () => {
-  const container = css`
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    width: 100%;
-    justify-content: center;
-    padding: 0 1rem 1rem;
-  `;
+export const getRoomMemberStyles = () => {
+  const styles = {
+    container: css`
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      width: 100%;
+      justify-content: center;
+      padding: 0 1rem 1rem;
+    `,
+  };
 
-  return { container };
+  return styles;
 };
 
 export const RoomMemberItemStyles = {

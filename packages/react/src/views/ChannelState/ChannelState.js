@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Icon, useComponentOverrides } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  useComponentOverrides,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useChannelStateStyles from './ChannelState.styles';
 
 const ChannelState = ({
@@ -10,7 +15,8 @@ const ChannelState = ({
   instructions,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChannelState');
-  const styles = useChannelStateStyles();
+  const { theme } = useTheme();
+  const styles = useChannelStateStyles(theme);
   return (
     <Box
       className={`ec-chat-info ${className} ${classNames}`}

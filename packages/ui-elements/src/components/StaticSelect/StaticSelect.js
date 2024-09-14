@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
-import useStaticSelectStyles from './StaticSelect.styles';
+import getStaticSelectStyles from './StaticSelect.styles';
 import ListBox from '../ListBox/ListBox';
 import Icon from '../Icon/Icon';
+import { useTheme } from '../../hooks';
 
 const StaticSelect = ({
   className = '',
@@ -17,7 +18,8 @@ const StaticSelect = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('StaticSelect');
-  const styles = useStaticSelectStyles();
+  const { theme } = useTheme();
+  const styles = getStaticSelectStyles(theme);
 
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState('');

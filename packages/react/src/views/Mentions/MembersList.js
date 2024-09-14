@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
-import useMemberListStyles from './MembersList.styles';
+import getMemberListStyles from './MembersList.styles';
 
 function MembersList({
   mentionIndex,
@@ -13,8 +13,8 @@ function MembersList({
   setShowMembersList,
 }) {
   const itemRefs = useRef([]);
-  const styles = useMemberListStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const styles = getMemberListStyles(theme);
 
   const handleMemberClick = useCallback(
     (selectedItem) => {
@@ -122,8 +122,8 @@ function MembersList({
               }
             }}
             style={{
-              backgroundColor: index === mentionIndex && colors.primary,
-              color: index === mentionIndex && colors.primaryForeground,
+              backgroundColor: index === mentionIndex && theme.colors.primary,
+              color: index === mentionIndex && theme.colors.primaryForeground,
             }}
           >
             <Box is="span">
@@ -148,10 +148,10 @@ function MembersList({
           }}
           style={{
             backgroundColor:
-              mentionIndex === filteredMembers.length && colors.primary,
+              mentionIndex === filteredMembers.length && theme.colors.primary,
             color:
               mentionIndex === filteredMembers.length &&
-              colors.primaryForeground,
+              theme.colors.primaryForeground,
           }}
         >
           <Box is="span" css={styles.listText}>
@@ -171,10 +171,11 @@ function MembersList({
           }}
           style={{
             backgroundColor:
-              mentionIndex === filteredMembers.length + 1 && colors.primary,
+              mentionIndex === filteredMembers.length + 1 &&
+              theme.colors.primary,
             color:
               mentionIndex === filteredMembers.length + 1 &&
-              colors.primaryForeground,
+              theme.colors.primaryForeground,
           }}
         >
           <Box is="span" css={styles.listText}>

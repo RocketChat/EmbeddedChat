@@ -3,10 +3,11 @@ import {
   Box,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
 import { isSameUser, serializeReactions } from '../../lib/reaction';
-import { useMessageReactionsStyles } from './Message.styles';
+import { getMessageReactionsStyles } from './Message.styles';
 
 export const MessageReactions = ({
   message,
@@ -21,7 +22,8 @@ export const MessageReactions = ({
     className,
     style
   );
-  const styles = useMessageReactionsStyles();
+  const { theme } = useTheme();
+  const styles = getMessageReactionsStyles(theme);
   return (
     <Box
       css={styles.container}

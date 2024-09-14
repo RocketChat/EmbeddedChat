@@ -17,7 +17,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     attachmentText = attachmentText.split(')')[1] || '';
   }
 
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <Box
@@ -29,13 +29,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           font-size: 0.875rem;
           font-weight: 400;
           word-break: break-word;
-          border-inline-start: 3px solid ${colors.border};
+          border-inline-start: 3px solid ${theme.colors.border};
           margin-top: 0.75rem;
           padding: 0.5rem;
         `,
         (type ? variantStyles.pinnedContainer : variantStyles.quoteContainer) ||
           css`
-            ${!type ? `border: 3px solid ${colors.border};` : ''}
+            ${!type ? `border: 3px solid ${theme.colors.border};` : ''}
           `,
       ]}
     >

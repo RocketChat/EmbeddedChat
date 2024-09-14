@@ -3,9 +3,10 @@ import {
   Box,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 
-import { useMessageDividerStyles } from './Message.styles';
+import { getMessageDividerStyles } from './Message.styles';
 
 export const MessageDivider = ({
   children,
@@ -19,7 +20,8 @@ export const MessageDivider = ({
     className,
     style
   );
-  const styles = useMessageDividerStyles();
+  const { theme } = useTheme();
+  const styles = getMessageDividerStyles(theme);
   return (
     <Box
       role="separator"

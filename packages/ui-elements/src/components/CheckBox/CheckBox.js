@@ -2,17 +2,19 @@ import React from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Icon } from '../Icon';
 import { Box } from '../Box';
+import { useTheme } from '../../hooks';
 import { appendClassNames } from '../../lib/appendClassNames';
-import useCheckBoxStyles from './CheckBox.styles';
+import getCheckBoxStyles from './CheckBox.styles';
 
 const CheckBox = ({ checked, ...props }) => {
-  const styles = useCheckBoxStyles(checked);
+  const { theme } = useTheme();
+  const styles = getCheckBoxStyles(theme);
   const { classNames, styleOverrides } = useComponentOverrides('CheckBox');
 
   return (
     // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <label
-      css={styles.main}
+      css={styles.main(checked)}
       className={appendClassNames('ec-check-box', classNames)}
       style={styleOverrides}
     >

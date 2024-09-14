@@ -3,11 +3,11 @@ import useTheme from '../../hooks/useTheme';
 import ToastContext from '../../context/ToastContext';
 import { Box } from '../Box';
 import ToastBar from './ToastBar';
-import { toastBarContainerStyles as styles } from './ToastBar.styles';
+import { getToastBarContainerStyles } from './ToastBar.styles';
 
 const ToastContainer = () => {
   const { theme } = useTheme();
-
+  const styles = getToastBarContainerStyles(theme);
   const { position, toasts, setToasts } = useContext(ToastContext);
   const positionStyle = useMemo(() => {
     const positions = position.split(/\s+/);
@@ -30,7 +30,7 @@ const ToastContainer = () => {
   }
 
   return (
-    <Box css={styles.container(theme)} style={positionStyle}>
+    <Box css={styles.container} style={positionStyle}>
       <ToastBar toast={currentToast} onClose={onClose} />
     </Box>
   );

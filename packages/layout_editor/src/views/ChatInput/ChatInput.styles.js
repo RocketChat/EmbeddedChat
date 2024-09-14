@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
 import { darken, lighten } from '@embeddedchat/ui-elements';
 
-export const getChatInputStyles = ({ theme, colors }) => {
+export const getChatInputStyles = ({ theme }) => {
   const styles = {
     inputWithFormattingBox: css`
-      border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
       margin: 0.5rem 2rem 1rem 2rem;
       &.focused {
-        border: ${`1.5px solid ${colors.ring}`};
+        border: ${`1.5px solid ${theme.colors.ring}`};
       }
     `,
 
@@ -48,27 +48,27 @@ export const getChatInputStyles = ({ theme, colors }) => {
   return styles;
 };
 
-export const getChatInputToolbarStyles = ({ theme, mode, colors }) => {
+export const getChatInputToolbarStyles = ({ theme, mode }) => {
   const styles = {
     chatFormat: css`
       bottom: 0;
       padding: 0.2rem;
       align-items: center;
       background-color: ${mode === 'light'
-        ? darken(colors.background, 0.03)
-        : lighten(colors.background, 1)};
+        ? darken(theme.colors.background, 0.03)
+        : lighten(theme.colors.background, 1)};
       display: flex;
       position: relative;
       flex-direction: row;
       gap: 0.375rem;
-      border-radius: 0 0 ${theme.schemes.radius} ${theme.schemes.radius};
+      border-radius: 0 0 ${theme.radius} ${theme.radius};
     `,
   };
 
   return styles;
 };
 
-export const getFormatterStyles = ({ theme, colors }) => {
+export const getFormatterStyles = ({ theme }) => {
   const styles = {
     toolboxContainer: css`
       display: flex;
@@ -80,11 +80,11 @@ export const getFormatterStyles = ({ theme, colors }) => {
 
     toolbox: css`
       display: flex;
-      background-color: ${colors.background};
-      box-shadow: 0 0 2px ${colors.foreground};
+      background-color: ${theme.colors.background};
+      box-shadow: 0 0 2px ${theme.colors.foreground};
       gap: 0.25rem;
       padding: 0.25rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
   };
 

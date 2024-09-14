@@ -1,9 +1,11 @@
 import React from 'react';
 import { Box } from '../Box';
-import useSkeletonStyles from './Skeleton.styles';
+import getSkeletonStyles from './Skeleton.styles';
+import { useTheme } from '../../hooks';
 
 const Skeleton = ({ variant = 'text', height, width, ...props }) => {
-  const styles = useSkeletonStyles();
+  const { theme } = useTheme();
+  const styles = getSkeletonStyles(theme);
   return (
     <Box
       css={styles.skeleton}

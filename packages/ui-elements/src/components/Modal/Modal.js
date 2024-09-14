@@ -2,8 +2,9 @@ import React, { forwardRef, useRef, useCallback, useEffect } from 'react';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { ModalBackdrop } from './ModalBackdrop';
-import { useModalstyles } from './Modal.styles';
+import { getModalstyles } from './Modal.styles';
 import ReactPortal from '../../lib/reactPortal';
+import { useTheme } from '../../hooks';
 
 export const Modal = forwardRef(
   (
@@ -19,7 +20,8 @@ export const Modal = forwardRef(
   ) => {
     const { classNames, styleOverrides } = useComponentOverrides('Modal');
     const backDropRef = useRef(null);
-    const styles = useModalstyles();
+    const { theme } = useTheme();
+    const styles = getModalstyles(theme);
 
     const handleClick = useCallback(
       (e) => {

@@ -4,7 +4,8 @@ import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { Box } from '../Box';
 import { Icon } from '../Icon';
 import ListBox from '../ListBox/ListBox';
-import useMultiSelectStyles from './MultiSelect.styles';
+import getMultiSelectStyles from './MultiSelect.styles';
+import { useTheme } from '../../hooks';
 
 const MultiSelect = ({
   className = '',
@@ -17,7 +18,8 @@ const MultiSelect = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('MultiSelect');
-  const styles = useMultiSelectStyles();
+  const { theme } = useTheme();
+  const styles = getMultiSelectStyles(theme);
   const [internalValue, setInternalValue] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 

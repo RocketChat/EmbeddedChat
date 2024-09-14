@@ -16,7 +16,7 @@ const useDisplayNameColor = () => {
 
   const getDisplayNameColor = (username) => {
     const hash = simpleHash(username);
-    const { saturation, luminance } = theme.schemes.contrastParams[mode];
+    const { saturation, luminance } = theme.contrastParams[mode];
     const hue = Math.abs(hash) % 360;
     return `hsl(${hue}, ${saturation}%, ${luminance}%)`;
   };

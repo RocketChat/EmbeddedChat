@@ -1,10 +1,10 @@
 const DefaultTheme = {
+  radius: '0.2rem',
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
   schemes: {
-    radius: '0.2rem',
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(240, 10%, 3.9%)',
@@ -61,15 +61,6 @@ const DefaultTheme = {
     },
   },
 
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
-  },
-  components: {},
-
   typography: {
     default: {
       fontFamily: "'Times New Roman', serif",
@@ -101,6 +92,7 @@ const DefaultTheme = {
       fontWeight: 500,
     },
   },
+
   shadows: [
     'none',
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',

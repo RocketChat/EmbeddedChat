@@ -1,7 +1,7 @@
-import { css } from "@emotion/react";
-import { lighten, darken } from "@embeddedchat/ui-elements";
+import { css } from '@emotion/react';
+import { lighten, darken } from '@embeddedchat/ui-elements';
 
-export const getMessageStyles = ({ mode, colors }) => {
+export const getMessageStyles = ({ theme, mode }) => {
   const styles = {
     main: css`
       display: flex;
@@ -11,18 +11,18 @@ export const getMessageStyles = ({ mode, colors }) => {
       padding-bottom: 0.25rem;
       padding-left: 2.25rem;
       padding-right: 2.25rem;
-      color: ${colors.foreground};
+      color: ${theme.colors.foreground};
 
       &:hover {
-        background-color: ${mode === "light"
-          ? darken(colors.background, 0.03)
-          : lighten(colors.background, 1)};
+        background-color: ${mode === 'light'
+          ? darken(theme.colors.background, 0.03)
+          : lighten(theme.colors.background, 1)};
       }
     `,
     messageEditing: css`
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
       &:hover {
-        background-color: ${colors.secondary};
+        background-color: ${theme.colors.secondary};
       }
     `,
 
@@ -32,16 +32,16 @@ export const getMessageStyles = ({ mode, colors }) => {
     `,
 
     specialMessage: css`
-      background-color: ${mode === "light"
-        ? darken(colors.background, 0.03)
-        : lighten(colors.background, 1)};
+      background-color: ${mode === 'light'
+        ? darken(theme.colors.background, 0.03)
+        : lighten(theme.colors.background, 1)};
     `,
   };
 
   return styles;
 };
 
-export const getMessageAvatarContainerStyles = ({ colors }) => {
+export const getMessageAvatarContainerStyles = ({ theme }) => {
   const styles = {
     container: css`
       margin: 3px;
@@ -49,7 +49,7 @@ export const getMessageAvatarContainerStyles = ({ colors }) => {
       max-height: 2.25em;
       display: flex;
       justify-content: flex-end;
-      color: ${colors.primary};
+      color: ${theme.colors.primary};
     `,
   };
 
@@ -76,7 +76,7 @@ export const getMessageBodyStyles = () => {
   return styles;
 };
 
-export const getMessageDividerStyles = ({ theme, colors }) => {
+export const getMessageDividerStyles = ({ theme }) => {
   const styles = {
     divider: css`
       letter-spacing: 0rem;
@@ -98,12 +98,12 @@ export const getMessageDividerStyles = ({ theme, colors }) => {
       margin-bottom: 0.5rem;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
-      background-color: ${colors.secondary};
-      color: ${colors.secondaryForeground};
+      background-color: ${theme.colors.secondary};
+      color: ${theme.colors.secondaryForeground};
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
 
     bar: css`
@@ -112,14 +112,14 @@ export const getMessageDividerStyles = ({ theme, colors }) => {
       align-items: center;
       flex-grow: 1;
       height: 1px;
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
     `,
   };
 
   return styles;
 };
 
-export const getMessageHeaderStyles = ({ theme, colors }) => {
+export const getMessageHeaderStyles = ({ theme }) => {
   const styles = {
     header: css`
       display: flex;
@@ -145,7 +145,7 @@ export const getMessageHeaderStyles = ({ theme, colors }) => {
     `,
 
     userName: css`
-      color: ${colors.accentForeground};
+      color: ${theme.colors.accentForeground};
       font-weight: 700;
       letter-spacing: 0rem;
       font-size: 0.875rem;
@@ -161,17 +161,17 @@ export const getMessageHeaderStyles = ({ theme, colors }) => {
       font-size: 0.75rem;
       padding: 0 0.25rem;
       margin: 0 0.1rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
       font-weight: 700;
       line-height: 1rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      background-color: ${colors.secondary};
+      background-color: ${theme.colors.secondary};
     `,
 
     userActions: css`
-      color: ${colors.accentForeground};
+      color: ${theme.colors.accentForeground};
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
@@ -182,7 +182,7 @@ export const getMessageHeaderStyles = ({ theme, colors }) => {
     `,
 
     timestamp: css`
-      color: ${colors.accentForeground};
+      color: ${theme.colors.accentForeground};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -214,7 +214,7 @@ export const getMessageMetricsStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: ${isFirstMessage ? "0.5rem" : "0.25rem"};
+    margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
   `,
 
   metricsItemLabel: css`
@@ -224,7 +224,7 @@ export const getMessageMetricsStyles = {
   `,
 };
 
-export const getMessageReactionsStyles = ({ colors }) => {
+export const getMessageReactionsStyles = ({ theme }) => {
   const styles = {
     container: css`
       display: flex;
@@ -249,19 +249,19 @@ export const getMessageReactionsStyles = ({ colors }) => {
       p {
         margin: 0;
       }
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: 0.2rem;
     `,
 
     reactionMine: css`
-      background: ${colors.secondary};
+      background: ${theme.colors.secondary};
     `,
   };
 
   return styles;
 };
 
-export const getMessageToolboxStyles = ({ theme, colors }) => {
+export const getMessageToolboxStyles = ({ theme }) => {
   const styles = {
     toolboxContainer: css`
       display: flex;
@@ -276,11 +276,11 @@ export const getMessageToolboxStyles = ({ theme, colors }) => {
       margin-left: -0.25rem;
       margin-right: -0.25rem;
       margin-top: 0.125rem;
-      background-color: ${colors.background};
-      box-shadow: 0 0 2px ${colors.foreground};
+      background-color: ${theme.colors.background};
+      box-shadow: 0 0 2px ${theme.colors.foreground};
       gap: 0.25rem;
       padding: 0.25rem;
-      border-radius: ${theme.schemes.radius};
+      border-radius: ${theme.radius};
     `,
 
     emojiPickerStyles: css`
