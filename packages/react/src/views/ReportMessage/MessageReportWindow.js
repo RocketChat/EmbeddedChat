@@ -7,9 +7,13 @@ import styles from './ReportMessage.styles';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
-  const messages = useMessageStore((state) => state.messages);
-  const messageText = messages.filter((message) => message._id === messageId)[0]
-    ?.msg;
+  const messages = useMessageStore((state) => state.messages) || [];
+  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const allMessages = [...messages, ...threadMessages];
+  const messageText = allMessages.filter(
+    (message) => message._id === messageId
+  )[0]?.msg;
+  console.log('messagetext', messageText);
   return (
     <ReportWindowButtons
       variant="danger"

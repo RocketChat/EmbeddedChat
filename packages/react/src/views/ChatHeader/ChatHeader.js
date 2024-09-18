@@ -93,8 +93,13 @@ const ChatHeader = ({
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
-  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const threadMainMessage = useMessageStore((state) => state.threadMainMessage);
+  const threadTitle =
+    threadMainMessage?.msg ||
+    (threadMainMessage?.file ? threadMainMessage.file.name : '');
+
   const closeThread = useMessageStore((state) => state.closeThread);
 
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
