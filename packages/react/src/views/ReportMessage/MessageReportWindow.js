@@ -13,7 +13,6 @@ const MessageReportWindow = ({ messageId }) => {
   const messageText = allMessages.filter(
     (message) => message._id === messageId
   )[0]?.msg;
-  console.log('messagetext', messageText);
   return (
     <ReportWindowButtons
       variant="danger"
