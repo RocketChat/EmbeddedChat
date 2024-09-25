@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rocketchat.github.io/EmbeddedChat/docs/blog</id>
     <title>Embedded Chat Blog</title>
-    <updated>2024-08-26T09:56:50.000Z</updated>
+    <updated>2024-09-11T12:13:23.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rocketchat.github.io/EmbeddedChat/docs/blog"/>
     <subtitle>Embedded Chat Blog</subtitle>
@@ -11,7 +11,7 @@
         <title type="html"><![CDATA[GSoC-2022]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022"/>
-        <updated>2024-08-26T09:56:50.000Z</updated>
+        <updated>2024-09-11T12:13:23.000Z</updated>
         <summary type="html"><![CDATA[Create a ready-to-go easy to embed mini-chat React component.]]></summary>
         <content type="html"><![CDATA[<div align="center"><a href="https://summerofcode.withgoogle.com/projects/#6521788818784256"><img src="https://i.imgur.com/pgkUceb.png" width="650" alt="google-summer-of-code"></a><br><b><p></p><p>Create a ready-to-go easy to embed mini-chat React component.</p><p></p></b></div>
 <p align="center"><code></code></p><p><code><a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022#-project-abstract">Project Abstract</a>&nbsp;&nbsp;&nbsp;
@@ -107,7 +107,7 @@
         <title type="html"><![CDATA[Google Summer of Code 2023, RocketChat]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2023</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2023"/>
-        <updated>2024-08-26T09:56:50.000Z</updated>
+        <updated>2024-09-11T12:13:23.000Z</updated>
         <summary type="html"><![CDATA[Create a ready-to-go easy to embed mini-chat React component.]]></summary>
         <content type="html"><![CDATA[<div><a href="https://summerofcode.withgoogle.com/projects/#6521788818784256"><img src="https://i.imgur.com/pgkUceb.png" width="650" alt="google-summer-of-code"></a><br><b><p></p><p>Create a ready-to-go easy to embed mini-chat React component.</p><p></p></b></div>
 <p>I worked on a project called <a href="https://github.com/RocketChat/EmbeddedChat" target="_blank" rel="noopener noreferrer">EmbeddedChat</a> which is an in-app chat solution that utilizes the RocketChat chat engine through its REST and real-time APIs to support powerful chat features like reactions, online presence, typing status, threads, and much more.</p>
@@ -195,9 +195,9 @@ I learned beyond GSoC from him and am forever grateful to be mentored by him.</p
         <title type="html"><![CDATA[Google Summer of Code 2024, RocketChat]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024"/>
-        <updated>2024-08-26T09:56:50.000Z</updated>
+        <updated>2024-09-11T12:13:23.000Z</updated>
         <summary type="html"><![CDATA[📘 Introduction]]></summary>
-        <content type="html"><![CDATA[<div align="center"><a href="https://summerofcode.withgoogle.com/programs/2024/projects/eVxOuKT2"><img src="https://github.com/user-attachments/assets/9705b330-c4f9-4061-8c71-114cfb5153bb" width="720" alt="google-summer-of-code"></a></div>
+        <content type="html"><![CDATA[<div align="center"><a href="https://summerofcode.withgoogle.com/programs/2024/projects/eVxOuKT2"><img src="https://github.com/user-attachments/assets/9705b330-c4f9-4061-8c71-114cfb5153bb" width="100%" alt="google-summer-of-code"></a></div>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="-introduction">📘 Introduction<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#-introduction" class="hash-link" aria-label="Direct link to 📘 Introduction" title="Direct link to 📘 Introduction">​</a></h2>
 <p>During my GSoC period, I worked on EmbeddedChat, a lightweight chat widget that uses the RocketChat engine's REST and real-time APIs to deliver comprehensive chat features, customizable options, and attractive theming capabilities.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="-project-abstract">⭐ Project Abstract<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#-project-abstract" class="hash-link" aria-label="Direct link to ⭐ Project Abstract" title="Direct link to ⭐ Project Abstract">​</a></h2>
@@ -216,7 +216,7 @@ I learned beyond GSoC from him and am forever grateful to be mentored by him.</p
 <p>Explore a demonstration of the latest features and improvements. See firsthand how the updates enhance functionality and user experience.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="sneak-peek">Sneak Peek<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#sneak-peek" class="hash-link" aria-label="Direct link to Sneak Peek" title="Direct link to Sneak Peek">​</a></h3>
 <p>Here's a brief preview of EmbeddedChat integrated into a website, designed to demonstrate the functionality of RC apps without the need for local setup.</p>
-<p align="center"><img src="https://github.com/user-attachments/assets/1f5da63d-b82e-497d-bade-cf88716297e8" width="720" alt="EC Integration"></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/1f5da63d-b82e-497d-bade-cf88716297e8" width="100%" alt="EC Integration"></p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="code-refactor-separation-of-concerns">Code Refactor: Separation of Concerns<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#code-refactor-separation-of-concerns" class="hash-link" aria-label="Direct link to Code Refactor: Separation of Concerns" title="Direct link to Code Refactor: Separation of Concerns">​</a></h3>
 <p>Key updates to the EmbeddedChat repository include:</p>
 <ol>
@@ -230,25 +230,25 @@ I learned beyond GSoC from him and am forever grateful to be mentored by him.</p
 <p><strong>Markup and UI-Kit Separation</strong>: Markups and the UI Kit are organized into a separate library (monorepo).</p>
 </li>
 </ol>
-<p align="center"><img src="https://github.com/user-attachments/assets/b983d6c9-8190-4d5e-8a40-52588b07e7c3" width="720" alt="CSS styles in component.styles.js"><br></p><p>CSS styles are now in <code>component.styles.js</code></p><p></p>
-<p align="center"><img src="https://github.com/user-attachments/assets/77663956-2c74-4e54-a337-181abff094eb" width="720" alt="Separation into monorepo"><br></p><p>Separation into monorepo for <code>ui-elements</code>, <code>markups</code>, and <code>ui-kit</code></p><p></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/b983d6c9-8190-4d5e-8a40-52588b07e7c3" width="100%" alt="CSS styles in component.styles.js"><br></p><p>CSS styles are now in <code>component.styles.js</code></p><p></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/77663956-2c74-4e54-a337-181abff094eb" width="100%" alt="Separation into monorepo"><br></p><p>Separation into monorepo for <code>ui-elements</code>, <code>markups</code>, and <code>ui-kit</code></p><p></p>
 <p>The video below illustrates the development, usage, and setup of the ui-elements monorepo, and it also shows that EmbeddedChat functions as expected following this separation:</p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/a399defd-cae7-495a-9f88-11f4b518df00" target="_blank" rel="noopener noreferrer">UI-Elements Storybook</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/BEpQYl9Y_z0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="ui-theming-upgrade-prebuilt-themes-and-style-variants">UI Theming Upgrade: Prebuilt Themes and Style Variants<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#ui-theming-upgrade-prebuilt-themes-and-style-variants" class="hash-link" aria-label="Direct link to UI Theming Upgrade: Prebuilt Themes and Style Variants" title="Direct link to UI Theming Upgrade: Prebuilt Themes and Style Variants">​</a></h3>
 <p>The theming system has been enhanced with several prebuilt themes, ensuring a consistent use of theme colors across the repository. This replaces the previously inconsistent and varied color schemes.</p>
 <p>Once the Storybook is running, you can explore and experiment with various designs within the <code>Design Variants</code> folder, including <code>RCVariant</code>, <code>Bubble Variant</code>, and <code>Modern Variant</code>. These options enable you to either use the prebuilt themes or draw inspiration to create your own. Below are images and videos demonstrating the different variants; note that the videos also highlight fixes introduced with these PRs:</p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/d9fea331-fa32-44df-8322-36c9fb2baa6c" target="_blank" rel="noopener noreferrer">RC Variant</a></p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/06d61e66-8f17-423b-a339-1728323661b3" target="_blank" rel="noopener noreferrer">Bubble Variant</a></p>
-<p align="center"><img src="https://github.com/RocketChat/EmbeddedChat/assets/78961432/826cf806-1d9c-4626-a3c2-4f00d8557389" width="720" alt="Automatically generated colors in usernames in dark mode + popup instead of sidebar"><br></p><p>Automatically generated colors in usernames in dark mode + popup instead of sidebar</p><p></p>
-<p align="center"><img src="https://github.com/RocketChat/EmbeddedChat/assets/78961432/b7efade3-b041-4311-a8a7-3e642b6f0de1" width="720" alt="Automatically generated colors in usernames in light mode + popup instead of sidebar"><br></p><p>Automatically generated colors in usernames in light mode + popup instead of sidebar</p><p></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/XtOgYnM-F58" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/D_rskRbEatk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+<p align="center"><img src="https://github.com/RocketChat/EmbeddedChat/assets/78961432/826cf806-1d9c-4626-a3c2-4f00d8557389" width="100%" alt="Automatically generated colors in usernames in dark mode + popup instead of sidebar"><br></p><p>Automatically generated colors in usernames in dark mode + popup instead of sidebar</p><p></p>
+<p align="center"><img src="https://github.com/RocketChat/EmbeddedChat/assets/78961432/b7efade3-b041-4311-a8a7-3e642b6f0de1" width="100%" alt="Automatically generated colors in usernames in light mode + popup instead of sidebar"><br></p><p>Automatically generated colors in usernames in light mode + popup instead of sidebar</p><p></p>
 <p>The theming system follows a convention similar to the ShadCN theming system. Users can generate themes from the ShadCN website or other sites that follow the same convention, then use the <code>packages/react/tools/theme-generator.js</code> to convert the theme into a supported format and apply it via the theme prop.</p>
 <p>A demonstration video is available here:</p>
-<p><a href="https://github.com/user-attachments/assets/9078260f-1933-4be6-b019-61e9ac54be7d" target="_blank" rel="noopener noreferrer">Theme Converter</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/bB2zzlHhIdY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <p>For further details on theming, you can visit the <a href="https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/theming.md" target="_blank" rel="noopener noreferrer">documentation</a> or check out the <a href="https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/theming_technical.md" target="_blank" rel="noopener noreferrer">technical guide</a> for insights on how theming is implemented in the repository.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="enhanced-authentication-with-http-only-cookies">Enhanced Authentication with HTTP-Only Cookies<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#enhanced-authentication-with-http-only-cookies" class="hash-link" aria-label="Direct link to Enhanced Authentication with HTTP-Only Cookies" title="Direct link to Enhanced Authentication with HTTP-Only Cookies">​</a></h3>
 <p>EmbeddedChat authentication security has been enhanced through the use of HTTP-Only cookies for re-authentication. This approach adds an extra layer of protection by preventing access via inline JavaScript, thereby reducing the risk of potential attacks. To use this storage method, the EmbeddedChat RC app must be installed on the RC server, which acts as a bridge for saving and retrieving tokens. Once installed, you can test the feature using the Storybook <code>SecureAuth</code> option or by setting the <code>secure: true</code> prop during EmbeddedChat setup.</p>
 <p>A video demonstration is available here:</p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/24fdf4bf-34b5-4e66-b045-802d6fc428dd" target="_blank" rel="noopener noreferrer">Http-Only-Cookie Auth</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/k1-X-9l67H4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <p>For more information on authentication, refer to the <a href="https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/authentication.md" target="_blank" rel="noopener noreferrer">authentication guide</a>.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="ui-kit-improvement">UI-Kit Improvement<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#ui-kit-improvement" class="hash-link" aria-label="Direct link to UI-Kit Improvement" title="Direct link to UI-Kit Improvement">​</a></h3>
 <p>I enhanced the UI-Kit integration within EmbeddedChat by migrating it to a monorepo as a separate library. Key improvements include:</p>
@@ -262,25 +262,25 @@ I learned beyond GSoC from him and am forever grateful to be mentored by him.</p
 <ol>
 <li><strong>Reminder RC App</strong>:</li>
 </ol>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/eeb17fd6-68f2-4113-8ef1-dc0faf32ca05" target="_blank" rel="noopener noreferrer">Reminder App UI-Kit Test</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/OAertgChvCA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <ol start="2">
 <li><strong>Notion RC App</strong>:</li>
 </ol>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/71d9baa1-a54d-4077-9fbd-f7e005742f77" target="_blank" rel="noopener noreferrer">Notion App UI-Kit Test</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/nYxgsXtod50" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <ol start="3">
 <li><strong>News Aggregation App</strong> (tested multi-select functionality):</li>
 </ol>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/d3f611b0-3205-483f-b00a-9800893b98fb" target="_blank" rel="noopener noreferrer">News App UI-Kit Test</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/LtZESjEnEqA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="embeddedchat-remote-configurability">EmbeddedChat Remote Configurability<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#embeddedchat-remote-configurability" class="hash-link" aria-label="Direct link to EmbeddedChat Remote Configurability" title="Direct link to EmbeddedChat Remote Configurability">​</a></h3>
 <p>I have added support for remote configuration of EmbeddedChat props, including themes, via the EmbeddedChat RC App. The app can also validate CSS dimensions provided in the settings. To try this feature, set up the RC app in your Rocket.Chat workspace and use the Storybook option <code>WithRemoteOpt</code> or pass the <code>remoteOpt: true</code> prop during EmbeddedChat setup.</p>
 <p>The following videos demonstrate its usage:</p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/8f2e5027-2a8d-4723-8c2b-33ae7cbf9336" target="_blank" rel="noopener noreferrer">Remotely Configure EC</a></p>
-<p><a href="https://github.com/RocketChat/EmbeddedChat/assets/78961432/2eaa4e50-ad38-4ac8-8cc7-d8eebd875f26" target="_blank" rel="noopener noreferrer">CSS Validation Test</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/72OBBWMAMOk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/rkuSF9qOG2U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <p>To set up the EmbeddedChat RC App, follow this guide: <a href="https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/ec_rc_setup.md" target="_blank" rel="noopener noreferrer">EmbeddedChat RC App Setup</a>.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="layout-editor">Layout Editor<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#layout-editor" class="hash-link" aria-label="Direct link to Layout Editor" title="Direct link to Layout Editor">​</a></h3>
 <p>I also worked on a new sub-project called <code>layout-editor</code> during GSoC to enhance EmbeddedChat customizability. This tool enables users to customize the EmbeddedChat layout in real-time with drag-and-drop features, color configuration, and more. Once satisfied with their design, users can click the <code>Generate Theme</code> button to create a theme object, which can be applied by passing it into the theme prop during EmbeddedChat setup or by configuring it remotely if EmbeddedChat RC App is properly set up.</p>
 <p>A video demonstration showcases the features:</p>
-<p><a href="https://github.com/user-attachments/assets/3f846616-bf33-49ca-95c7-3a6e98685476" target="_blank" rel="noopener noreferrer">Layout Editor Demo</a></p>
+<iframe width="100%" height="392" src="https://www.youtube.com/embed/vhxsGopMGA8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
 <p>To learn more about the layout editor, visit the guide: <a href="https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/layout_editor.md" target="_blank" rel="noopener noreferrer">Layout Editor Guide</a>.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="-contributions">🚀 Contributions<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#-contributions" class="hash-link" aria-label="Direct link to 🚀 Contributions" title="Direct link to 🚀 Contributions">​</a></h2>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="gsoc-contributions-to-embeddedchat">GSoC Contributions to EmbeddedChat<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#gsoc-contributions-to-embeddedchat" class="hash-link" aria-label="Direct link to GSoC Contributions to EmbeddedChat" title="Direct link to GSoC Contributions to EmbeddedChat">​</a></h3>
