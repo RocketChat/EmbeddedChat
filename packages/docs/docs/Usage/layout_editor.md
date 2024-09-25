@@ -19,7 +19,7 @@ We offer a layout editor that lets you customize the design and appearance of th
 
 ### Try It Out 🚀
 
-Explore the Layout Editor to style and customize EmbeddedChat to your needs. Generate a theme object and pass it to EmbeddedChat via props. Start customizing here: [Layout Editor](https://rocketchat.github.io/EmbeddedChat/layout-editor/)
+Explore the Layout Editor to style and customize EmbeddedChat to your needs. Generate a theme object and pass it to EmbeddedChat via props. Start customizing here: [Layout Editor](https://rocketchat.github.io/EmbeddedChat/layout_editor/)
 
 ### Theme Lab
 
