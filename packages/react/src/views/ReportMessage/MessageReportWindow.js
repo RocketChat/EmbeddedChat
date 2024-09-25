@@ -4,12 +4,12 @@ import { Box, Input } from '@embeddedchat/ui-elements';
 import ReportWindowButtons from './ReportWindowButtons';
 import { useMessageStore } from '../../store';
 import styles from './ReportMessage.styles';
+import { Markdown } from '../Markdown';
 
 const MessageReportWindow = ({ messageId }) => {
   const [reportDescription, setDescription] = useState('');
   const messages = useMessageStore((state) => state.messages);
-  const messageText = messages.filter((message) => message._id === messageId)[0]
-    ?.msg;
+  const message = messages.filter((message) => message._id === messageId)[0];
   return (
     <ReportWindowButtons
       variant="danger"
@@ -19,7 +19,9 @@ const MessageReportWindow = ({ messageId }) => {
       reportDescription={reportDescription}
       messageId={messageId}
     >
-      <Box>{JSON.stringify(messageText)}</Box>
+      <Box>
+        <Markdown body={message} isReaction={false} />
+      </Box>
       <Box css={styles.conatiner}>
         <Input
           textArea
