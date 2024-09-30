@@ -25,7 +25,7 @@ const ImageAttachment = ({
     return match ? match[1] : null;
   };
 
-  const { colors } = useTheme();
+  const { theme } = useTheme();
 
   const { authorIcon, authorName } = author;
 
@@ -42,7 +42,9 @@ const ImageAttachment = ({
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
-              ${type === 'file' ? `border: 2px solid ${colors.border};` : ''}
+              ${type === 'file'
+                ? `border: 2px solid ${theme.colors.border};`
+                : ''}
             `,
         ]}
       >
@@ -99,7 +101,7 @@ const ImageAttachment = ({
                   : variantStyles.quoteContainer) ||
                   css`
                     ${attachment.attachments[0].type === 'file'
-                      ? `border: 2px solid ${colors.border};`
+                      ? `border: 2px solid ${theme.colors.border};`
                       : ''}
                   `,
               ]}

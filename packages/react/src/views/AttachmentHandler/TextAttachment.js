@@ -82,7 +82,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 font-size: 0.875rem;
                 font-weight: 400;
                 word-break: break-word;
-                border-inline-start: 3px solid ${colors.border};
+                border-inline-start: 3px solid ${theme.colors.border};
                 margin-top: 0.75rem;
                 padding: 0.5rem;
               `,
@@ -91,7 +91,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 : '') ||
                 css`
                   ${!attachment.attachments[0]?.type
-                    ? `border: 2px solid ${colors.border};`
+                    ? `border: 2px solid ${theme.colors.border};`
                     : ''}
                 `,
               css`

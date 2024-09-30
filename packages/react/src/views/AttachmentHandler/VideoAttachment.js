@@ -23,7 +23,7 @@ const VideoAttachment = ({
   variantStyles = {},
 }) => {
   const { RCInstance } = useContext(RCContext);
-  const { colors } = useTheme();
+  const { theme } = useTheme();
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
     const URL = `${instanceHost}${icon}`;
@@ -41,7 +41,9 @@ const VideoAttachment = ({
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
-              ${type === 'file' ? `border: 3px solid ${colors.border};` : ''}
+              ${type === 'file'
+                ? `border: 3px solid ${theme.colors.border};`
+                : ''}
             `,
         ]}
       >
@@ -100,7 +102,7 @@ const VideoAttachment = ({
                   : variantStyles.quoteContainer) ||
                   css`
                     ${type === 'file'
-                      ? `border: 3px solid ${colors.border};`
+                      ? `border: 3px solid ${theme.colors.border};`
                       : ''}
                   `,
               ]}
