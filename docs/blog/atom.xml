@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rocketchat.github.io/EmbeddedChat/docs/blog</id>
     <title>Embedded Chat Blog</title>
-    <updated>2024-09-30T17:26:46.000Z</updated>
+    <updated>2024-09-30T17:46:30.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rocketchat.github.io/EmbeddedChat/docs/blog"/>
     <subtitle>Embedded Chat Blog</subtitle>
@@ -11,7 +11,7 @@
         <title type="html"><![CDATA[GSoC-2022]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022"/>
-        <updated>2024-09-30T17:26:46.000Z</updated>
+        <updated>2024-09-30T17:46:30.000Z</updated>
         <summary type="html"><![CDATA[Create a ready-to-go easy to embed mini-chat React component.]]></summary>
         <content type="html"><![CDATA[<div align="center"><a href="https://summerofcode.withgoogle.com/projects/#6521788818784256"><img src="https://i.imgur.com/pgkUceb.png" width="650" alt="google-summer-of-code"></a><br><b><p></p><p>Create a ready-to-go easy to embed mini-chat React component.</p><p></p></b></div>
 <p align="center"><code></code></p><p><code><a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2022#-project-abstract">Project Abstract</a>&nbsp;&nbsp;&nbsp;
@@ -107,7 +107,7 @@
         <title type="html"><![CDATA[Google Summer of Code 2023, RocketChat]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2023</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2023"/>
-        <updated>2024-09-30T17:26:46.000Z</updated>
+        <updated>2024-09-30T17:46:30.000Z</updated>
         <summary type="html"><![CDATA[Create a ready-to-go easy to embed mini-chat React component.]]></summary>
         <content type="html"><![CDATA[<div><a href="https://summerofcode.withgoogle.com/projects/#6521788818784256"><img src="https://i.imgur.com/pgkUceb.png" width="650" alt="google-summer-of-code"></a><br><b><p></p><p>Create a ready-to-go easy to embed mini-chat React component.</p><p></p></b></div>
 <p>I worked on a project called <a href="https://github.com/RocketChat/EmbeddedChat" target="_blank" rel="noopener noreferrer">EmbeddedChat</a> which is an in-app chat solution that utilizes the RocketChat chat engine through its REST and real-time APIs to support powerful chat features like reactions, online presence, typing status, threads, and much more.</p>
@@ -195,7 +195,7 @@ I learned beyond GSoC from him and am forever grateful to be mentored by him.</p
         <title type="html"><![CDATA[Google Summer of Code 2024, RocketChat]]></title>
         <id>https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024</id>
         <link href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024"/>
-        <updated>2024-09-30T17:26:46.000Z</updated>
+        <updated>2024-09-30T17:46:30.000Z</updated>
         <summary type="html"><![CDATA[📘 Introduction]]></summary>
         <content type="html"><![CDATA[<div align="center"><a href="https://summerofcode.withgoogle.com/programs/2024/projects/eVxOuKT2"><img src="https://github.com/user-attachments/assets/9705b330-c4f9-4061-8c71-114cfb5153bb" width="100%" alt="google-summer-of-code"></a></div>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="-introduction">📘 Introduction<a href="https://rocketchat.github.io/EmbeddedChat/docs/blog/EmbeddedChat-2024#-introduction" class="hash-link" aria-label="Direct link to 📘 Introduction" title="Direct link to 📘 Introduction">​</a></h2>
