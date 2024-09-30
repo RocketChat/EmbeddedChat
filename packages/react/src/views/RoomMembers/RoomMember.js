@@ -16,6 +16,7 @@ import InviteMembers from './InviteMembers';
 import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
