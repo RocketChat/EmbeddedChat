@@ -5,17 +5,19 @@ on:
     branches:
       - develop
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 env:
   STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      pages: write
+      id-token: write
+
     environment:
       name: github-pages
       url: "https://rocketchat.github.io/EmbeddedChat/"
