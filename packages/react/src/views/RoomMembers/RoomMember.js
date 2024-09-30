@@ -16,7 +16,6 @@ import InviteMembers from './InviteMembers';
 import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
@@ -28,10 +27,8 @@ const RoomMembers = ({ members }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
-
   const [userInfo, setUserInfo] = useState(null);
   const setExclusiveState = useSetExclusiveState();
-
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -50,38 +47,17 @@ const RoomMembers = ({ members }) => {
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 780);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 780);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const viewComponentStyle = isSmallScreen
-    ? {
-        backgroundColor: theme.colors.background,
-        position: 'absolute',
-        width: '100%',
-        left: 0,
-        zIndex: 1,
-      }
-    : {
-        backgroundColor: theme.colors.background,
-        width: '100%',
-        left: 0,
-        zIndex: 1,
-      };
-
   return (
     <ViewComponent
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
-      style={viewComponentStyle}
+      style={{
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        right: 0,
+        zIndex: 1001,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
