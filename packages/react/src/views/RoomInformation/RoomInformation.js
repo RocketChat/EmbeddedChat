@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -6,6 +6,7 @@ import {
   Sidebar,
   Popup,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
@@ -23,13 +24,39 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
 
+  const { theme } = useTheme();
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 780);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 780);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const viewComponentStyle = isSmallScreen
+    ? {
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      }
+    : {
+        backgroundColor: theme.colors.background,
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      };
   return (
     <ViewComponent
       title="Room Information"
       iconName="info"
       onClose={() => setExclusiveState(null)}
+      style={viewComponentStyle}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,

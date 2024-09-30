@@ -23,7 +23,6 @@ const RoomMembers = ({ members }) => {
   const { host } = ECOptions;
   const { theme } = useTheme();
   const styles = getRoomMemberStyles(theme);
-
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,11 +49,39 @@ const RoomMembers = ({ members }) => {
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 780);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 780);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const viewComponentStyle = isSmallScreen
+    ? {
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      }
+    : {
+        backgroundColor: theme.colors.background,
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      };
+
   return (
     <ViewComponent
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
+      style={viewComponentStyle}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,

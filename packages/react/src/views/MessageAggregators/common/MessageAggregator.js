@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import { Box, Sidebar, Popup, useTheme } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
@@ -41,6 +41,31 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 780);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 780);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const viewComponentStyle = isSmallScreen
+    ? {
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      }
+    : {
+        backgroundColor: theme.colors.background,
+        width: '100%',
+        left: 0,
+        zIndex: 1,
+      };
 
   return (
     <ViewComponent
@@ -48,7 +73,7 @@ export const MessageAggregator = ({
       iconName={iconName}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
-      style={{ padding: 0 }}
+      style={viewComponentStyle}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
