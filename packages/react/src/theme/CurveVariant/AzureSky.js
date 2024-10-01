@@ -1,10 +1,12 @@
 const AzureSky = {
+  radius: '1.5rem',
+
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
+
   schemes: {
-    radius: '1.5rem',
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(222.2, 84%, 4.9%)',
@@ -60,27 +62,6 @@ const AzureSky = {
       infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
     },
   },
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
-  },
-  variants: {
-    Message: 'bubble',
-  },
-
-  components: {
-    MessageToolbox: {
-      configOverrides: {
-        optionConfig: {
-          surfaceItems: ['reaction', 'reply', 'quote', 'star'],
-          menuItems: ['pin', 'edit', 'delete', 'report'],
-        },
-      },
-    },
-  },
 
   typography: {
     default: {
@@ -116,10 +97,26 @@ const AzureSky = {
       fontWeight: 500,
     },
   },
+
   shadows: [
     'none',
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
     'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
   ],
+
+  variants: {
+    Message: 'bubble',
+  },
+
+  components: {
+    MessageToolbox: {
+      configOverrides: {
+        optionConfig: {
+          surfaceItems: ['reaction', 'reply', 'quote', 'star'],
+          menuItems: ['pin', 'edit', 'delete', 'report'],
+        },
+      },
+    },
+  },
 };
 export default AzureSky;

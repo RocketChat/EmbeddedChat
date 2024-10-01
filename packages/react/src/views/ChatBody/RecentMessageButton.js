@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Button, Icon } from '@embeddedchat/ui-elements';
-import { useRecentMessageStyles } from './ChatBody.styles';
+import { getRecentMessageStyles } from './ChatBody.styles';
 
 const RecentMessageButton = ({ visible, onClick, text }) => {
   const [clicked, setClicked] = useState(false);
-  const styles = useRecentMessageStyles();
+  const styles = getRecentMessageStyles();
   return (
     <Button
       css={[styles.button, !visible && 'not', clicked && 'clicked']}

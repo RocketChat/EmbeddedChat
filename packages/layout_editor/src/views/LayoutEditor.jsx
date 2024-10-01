@@ -9,7 +9,8 @@ import { getEditorStyles } from './LayoutEditor.style';
 
 const LayoutEditor = () => {
   const themeLabOpen = useLayoutStore((state) => state.themeLabOpen);
-  const styles = getEditorStyles(useTheme());
+  const { theme } = useTheme();
+  const styles = getEditorStyles(theme);
 
   return (
     <Box css={styles.layoutEditor}>

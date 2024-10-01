@@ -9,12 +9,13 @@ import {
   Popup,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
 import UserInfoField from './UserInfoField';
-import useUserInformationStyles from './UserInformation.styles';
+import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const UserInformation = () => {
@@ -22,7 +23,8 @@ const UserInformation = () => {
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
-  const styles = useUserInformationStyles();
+  const { theme } = useTheme();
+  const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
   const currentUser = useUserStore((state) => state.currentUser);

@@ -10,9 +10,8 @@ import members from '../../data/members.json';
 import useLayoutStore from '../../store/layoutStore';
 
 const ChatLayout = () => {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const styles = getChatLayoutStyles(theme);
-  const { colors } = theme;
 
   const { setSidebarWidth } = useLayoutStore((state) => ({
     setSidebarWidth: state.setSidebarWidth,
@@ -44,7 +43,7 @@ const ChatLayout = () => {
         <PanelResizeHandle
           style={{
             width: '2px',
-            border: `0.5px solid ${colors.border}`,
+            border: `0.5px solid ${theme.colors.border}`,
             boxShadow: '0px 0px 0.5px rgba(0, 0, 0, 0.5)',
           }}
         />

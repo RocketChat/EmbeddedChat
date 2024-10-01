@@ -5,11 +5,12 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
-import useAttachmentPreviewStyles from './AttachmentPreview.styles';
+import getAttachmentPreviewStyles from './AttachmentPreview.styles';
+import { parseEmoji } from '../../lib/emoji';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
-  const styles = useAttachmentPreviewStyles();
+  const styles = getAttachmentPreviewStyles();
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
@@ -25,7 +26,7 @@ const AttachmentPreview = () => {
   };
 
   const handleFileDescription = (e) => {
-    setFileDescription(e.target.value);
+    setFileDescription(parseEmoji(e.target.value));
   };
 
   const submit = async () => {

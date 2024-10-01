@@ -6,10 +6,11 @@ import {
   ActionButton,
   Icon,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
-import useQuoteMessageStyles from './QuoteMessage.styles';
+import getQuoteMessageStyles from './QuoteMessage.styles';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -18,7 +19,8 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
     const URL = `${host}/avatar/${username}`;
     return URL;
   };
-  const styles = useQuoteMessageStyles();
+  const { theme } = useTheme();
+  const styles = getQuoteMessageStyles(theme);
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');

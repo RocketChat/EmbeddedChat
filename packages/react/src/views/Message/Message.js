@@ -6,6 +6,7 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
@@ -20,7 +21,7 @@ import { MessageDivider } from './MessageDivider';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { LinkPreview } from '../LinkPreview';
-import { useMessageStyles } from './Message.styles';
+import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
 
@@ -63,7 +64,8 @@ const Message = ({
   }));
 
   const isMe = message.u._id === authenticatedUserId;
-  const styles = useMessageStyles();
+  const theme = useTheme();
+  const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
 
   const variantStyles =

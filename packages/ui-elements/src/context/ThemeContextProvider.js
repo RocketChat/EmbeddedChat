@@ -13,9 +13,17 @@ export const ThemeProvider = ({
   const defaultTheme = initialTheme || DefaultTheme;
   const [mode, setMode] = useState(initialMode || 'light');
   const [theme, setTheme] = useState(defaultTheme);
-
   const colors = theme.schemes?.[mode];
   const invertedColors = theme.schemes?.[invertMode(mode)];
+
+  const modifiedTheme = useMemo(
+    () => ({
+      ...theme,
+      colors,
+      invertedColors,
+    }),
+    [theme, colors, invertedColors]
+  );
 
   useEffect(() => {
     if (initialTheme) {
@@ -31,14 +39,12 @@ export const ThemeProvider = ({
 
   const value = useMemo(
     () => ({
-      theme,
+      theme: modifiedTheme,
       mode,
-      colors,
-      invertedColors,
       setMode,
       setTheme,
     }),
-    [theme, mode, colors, invertedColors]
+    [modifiedTheme, mode]
   );
 
   return (

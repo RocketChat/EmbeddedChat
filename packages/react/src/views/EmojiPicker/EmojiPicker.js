@@ -2,8 +2,8 @@ import React from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box, Popup } from '@embeddedchat/ui-elements';
-import useEmojiPickerStyles from './EmojiPicker.styles';
+import { Box, Popup, useTheme } from '@embeddedchat/ui-elements';
+import getEmojiPickerStyles from './EmojiPicker.styles';
 
 const CustomEmojiPicker = ({
   handleEmojiClick,
@@ -15,7 +15,8 @@ const CustomEmojiPicker = ({
   wrapperId = 'emoji-popup',
   onClose = () => {},
 }) => {
-  const styles = useEmojiPickerStyles();
+  const theme = useTheme();
+  const styles = getEmojiPickerStyles(theme);
 
   const previewConfig = {
     defaultEmoji: '1f60d',

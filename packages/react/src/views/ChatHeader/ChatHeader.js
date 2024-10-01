@@ -7,6 +7,7 @@ import {
   Menu,
   useToastBarDispatch,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -24,7 +25,7 @@ import {
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
-import useChatHeaderStyles from './ChatHeader.styles';
+import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
@@ -57,8 +58,8 @@ const ChatHeader = ({
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
   const menuItems =
     configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
-
-  const styles = useChatHeaderStyles();
+  const theme = useTheme();
+  const styles = getChatHeaderStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
@@ -92,8 +93,13 @@ const ChatHeader = ({
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
-  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const threadMainMessage = useMessageStore((state) => state.threadMainMessage);
+  const threadTitle =
+    threadMainMessage?.msg ||
+    (threadMainMessage?.file ? threadMainMessage.file.name : '');
+
   const closeThread = useMessageStore((state) => state.closeThread);
 
   const setShowMembers = useMemberStore((state) => state.setShowMembers);

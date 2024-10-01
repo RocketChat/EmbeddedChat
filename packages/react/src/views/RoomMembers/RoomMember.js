@@ -7,12 +7,13 @@ import {
   Sidebar,
   Popup,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './InviteMembers';
-import { useRoomMemberStyles } from './RoomMembers.styles';
+import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
@@ -20,7 +21,8 @@ const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
   const { ECOptions } = useRCContext();
   const { host } = ECOptions;
-  const styles = useRoomMemberStyles();
+  const { theme } = useTheme();
+  const styles = getRoomMemberStyles(theme);
 
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import { CheckBox } from '../CheckBox';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
-import useListBoxStyles from './ListBox.styles';
+import getListBoxStyles from './ListBox.styles';
 import useTheme from '../../hooks/useTheme';
 
 const findIndex = (options, value, multi) => {
@@ -26,8 +26,8 @@ const ListBox = ({
   ...props
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ListBox');
-  const styles = useListBoxStyles();
-  const { colors } = useTheme();
+  const { theme } = useTheme();
+  const styles = getListBoxStyles(theme);
   const itemRefs = useRef([]);
   const [optionIndex, setOptionIndex] = useState(() =>
     findIndex(options, value, multi)
@@ -105,8 +105,8 @@ const ListBox = ({
             ref={(el) => setItemRef(el, index)}
             onClick={() => handleOptionClick(option)}
             style={{
-              backgroundColor: index === optionIndex && colors.primary,
-              color: index === optionIndex && colors.primaryForeground,
+              backgroundColor: index === optionIndex && theme.colors.primary,
+              color: index === optionIndex && theme.colors.primaryForeground,
             }}
           >
             {multi ? (

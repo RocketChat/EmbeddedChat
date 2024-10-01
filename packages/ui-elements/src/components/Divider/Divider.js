@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import useDividerStyles from './Divider.styles';
+import { useTheme } from '../../hooks';
 
 const Divider = ({ className = '', style = {}, ...props }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Divider');
-  const styles = useDividerStyles();
+  const { theme } = useTheme();
+  const styles = useDividerStyles(theme);
 
   return (
     <hr

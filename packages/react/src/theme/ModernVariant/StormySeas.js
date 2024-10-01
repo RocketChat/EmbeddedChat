@@ -1,20 +1,12 @@
 const StormySeas = {
+  radius: '0.2rem',
+
+  commonColors: {
+    black: 'hsl(0, 100%, 0%)',
+    white: 'hsl(0, 100%, 100%)',
+  },
+
   schemes: {
-    radius: '0.2rem',
-    contrastParams: {
-      light: {
-        saturation: 70,
-        luminance: 19,
-      },
-      dark: {
-        saturation: 88,
-        luminance: 77,
-      },
-    },
-    common: {
-      black: 'hsl(0, 100%, 0%)',
-      white: 'hsl(0, 100%, 100%)',
-    },
     light: {
       background: 'hsl(0, 0%, 100%)',
       foreground: 'hsl(222.2, 84%, 4.9%)',
@@ -71,13 +63,57 @@ const StormySeas = {
     },
   },
 
-  breakpoints: {
-    xs: 0,
-    sm: 600,
-    md: 900,
-    lg: 1200,
-    xl: 1536,
+  contrastParams: {
+    light: {
+      saturation: 70,
+      luminance: 19,
+    },
+    dark: {
+      saturation: 88,
+      luminance: 77,
+    },
   },
+
+  typography: {
+    default: {
+      fontFamily: "'Times New Roman', serif",
+      fontSize: 14,
+      fontWeightLight: 300,
+      fontWeightRegular: 400,
+      fontWeightMedium: 500,
+      fontWeightBold: 700,
+    },
+    h1: {
+      fontSize: '2.625rem',
+      fontWeight: 800,
+    },
+    h2: {
+      fontSize: '1.875rem',
+      fontWeight: 800,
+    },
+    h3: {
+      fontSize: '1.5rem',
+      fontWeight: 400,
+    },
+    h4: {
+      fontSize: '1.25rem',
+      fontWeight: 400,
+    },
+    h5: {
+      fontSize: '1rem',
+      fontWeight: 400,
+    },
+    h6: {
+      fontSize: '0.875rem',
+      fontWeight: 500,
+    },
+  },
+
+  shadows: [
+    'none',
+    'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
+    'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+  ],
 
   variants: {
     MessageHeader: 'colorize',
@@ -118,45 +154,5 @@ const StormySeas = {
       },
     },
   },
-
-  typography: {
-    default: {
-      fontFamily: "'Times New Roman', serif",
-      fontSize: 14,
-      fontWeightLight: 300,
-      fontWeightRegular: 400,
-      fontWeightMedium: 500,
-      fontWeightBold: 700,
-    },
-    h1: {
-      fontSize: '2.625rem',
-      fontWeight: 800,
-    },
-    h2: {
-      fontSize: '1.875rem',
-      fontWeight: 800,
-    },
-    h3: {
-      fontSize: '1.5rem',
-      fontWeight: 400,
-    },
-    h4: {
-      fontSize: '1.25rem',
-      fontWeight: 400,
-    },
-    h5: {
-      fontSize: '1rem',
-      fontWeight: 400,
-    },
-    h6: {
-      fontSize: '0.875rem',
-      fontWeight: 500,
-    },
-  },
-  shadows: [
-    'none',
-    'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
-    'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-  ],
 };
 export default StormySeas;

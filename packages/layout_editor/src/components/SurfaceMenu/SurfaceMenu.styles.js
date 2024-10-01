@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 
-export const getSurfaceItemStyles = ({ theme, colors }) => {
+export const getSurfaceItemStyles = ({ theme }) => {
   const styles = {
     overlayBox: css`
       width: 24px;
       height: 24px;
-      border: 1px solid ${colors.border};
-      border-radius: ${theme.schemes.radius};
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
     `,
 
     itemContainer: css`
@@ -16,8 +16,8 @@ export const getSurfaceItemStyles = ({ theme, colors }) => {
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        background: ${colors.secondary};
-        border: 1px solid ${colors.border};
+        background: ${theme.colors.secondary};
+        border: 1px solid ${theme.colors.border};
       }
     `,
 
@@ -30,7 +30,7 @@ export const getSurfaceItemStyles = ({ theme, colors }) => {
 
     icon: css`
       &:hover {
-        fill: ${colors.destructive};
+        fill: ${theme.colors.destructive};
       }
     `,
   };

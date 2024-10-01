@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const getThemeLabStyles = ({ colors }) => {
+export const getThemeLabStyles = ({ theme }) => {
   const styles = {
     sectionContainer: css`
       display: flex;
@@ -12,12 +12,12 @@ export const getThemeLabStyles = ({ colors }) => {
       cursor: pointer;
     `,
     sectionActive: css`
-      border-bottom: 1px solid ${colors.primary};
+      border-bottom: 1px solid ${theme.colors.primary};
     `,
 
     btn: css`
       border-radius: 0.25rem;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       margin: 0 0.75rem 0.75rem;
     `,
 
@@ -39,7 +39,7 @@ export const getThemeLabStyles = ({ colors }) => {
   return styles;
 };
 
-export const getPaletteSettings = ({ colors }) => {
+export const getPaletteSettings = ({ theme }) => {
   const styles = {
     main: css`
       display: flex;
@@ -50,12 +50,12 @@ export const getPaletteSettings = ({ colors }) => {
     colorSection: css`
       padding: 0.5rem;
       border-radius: 0.25rem;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
     `,
     typographySection: css`
       padding: 0.5rem;
       border-radius: 0.25rem;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
     `,
 
     commonSelect: css`
@@ -76,7 +76,7 @@ export const getPaletteSettings = ({ colors }) => {
   return styles;
 };
 
-export const getLayoutSettings = ({ colors }) => {
+export const getLayoutSettings = ({ theme }) => {
   const styles = {
     main: css`
       display: flex;
@@ -86,13 +86,13 @@ export const getLayoutSettings = ({ colors }) => {
     `,
     variantSection: css`
       padding: 0.5rem;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: 0.25rem;
     `,
 
     toolSection: css`
       padding: 0.5rem;
-      border: 1px solid ${colors.border};
+      border: 1px solid ${theme.colors.border};
       border-radius: 0.25rem;
     `,
 

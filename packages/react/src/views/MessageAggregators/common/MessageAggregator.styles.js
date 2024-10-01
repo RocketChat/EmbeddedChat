@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const useMessageAggregatorStyles = () => {
+const getMessageAggregatorStyles = () => {
   const styles = {
     listContainerStyles: css`
       flex: 1;
@@ -26,4 +26,4 @@ const useMessageAggregatorStyles = () => {
   return styles;
 };
 
-export default useMessageAggregatorStyles;
+export default getMessageAggregatorStyles;

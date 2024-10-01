@@ -1,7 +1,13 @@
 import React, { useContext } from 'react';
-import { Box, Avatar, Icon, Tooltip } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Avatar,
+  Icon,
+  Tooltip,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { useMessageAvatarContainerStyles } from './Message.styles';
+import { getMessageAvatarContainerStyles } from './Message.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import { useUserStore } from '../../store';
 
@@ -12,7 +18,8 @@ const MessageAvatarContainer = ({
   isPinned,
 }) => {
   const { RCInstance } = useContext(RCContext);
-  const styles = useMessageAvatarContainerStyles();
+  const { theme } = useTheme();
+  const styles = getMessageAvatarContainerStyles(theme);
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     const URL = `${host}/avatar/${username}`;

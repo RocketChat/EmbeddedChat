@@ -10,12 +10,16 @@ This component is part of a monorepo, specifically within the `packages/react` p
 
 ![image](https://github.com/user-attachments/assets/2fd76929-ce43-4bb3-8ea8-3a7318468923)
 
+### Try It Out 🚀
+
+Check out our Storybook showcasing all the components in action! Preview and test them here: https://rocketchat.github.io/EmbeddedChat/ui-elements/
+
 ### Development
 
 To develop and view the components:
 
 1. Clone the repository.
-2. Navigate to `packages/layout_editor`.
+2. Navigate to `packages/ui-elements`.
 3. Run the following commands:
 
    ```bash
@@ -92,4 +96,4 @@ background-color: ${mode === 'light'
       : lighten(colors.background, 1)};
 ```
 
-This hook allows you to dynamically switch modes or themes as needed. The `theme` object must adhere to a specific format, as outlined in the EmbeddedChat `react` project [Readme.md](../docs/theming.md).
+This hook allows you to dynamically switch modes or themes as needed. The `theme` object must adhere to a specific format, as outlined in the [theming guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/theming).

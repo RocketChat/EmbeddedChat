@@ -4,14 +4,14 @@
     "requiredApiVersion": "^1.36.0",
     "iconFile": "icon.png",
     "author": {
-        "name": "abhinavkrin",
-        "homepage": "https://github.com/abhinavkrin",
+        "name": "ec innovators",
+        "homepage": "https://github.com/RocketChat/EmbeddedChat/graphs/contributors",
         "support": "https://github.com/RocketChat/EmbeddedChat"
     },
     "name": "EmbeddedChat",
     "nameSlug": "embeddedchat",
     "classFile": "EmbeddedChatApp.ts",
-    "description": "Configure RocketChat for EmbeddedChat",
+    "description": "Easily manage EmbeddedChat configs and OAuth with Rocket.Chat.",
     "implements": [],
     "permissions": [
         {

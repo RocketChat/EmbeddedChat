@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import emojione from 'emoji-toolkit';
 import { css } from '@emotion/react';
 import { Box } from '@embeddedchat/ui-elements';
+import DOMPurify from 'dompurify';
 
 const EmojiReaction = ({ body }) => {
   const emojiHtml = emojione.toImage(body);
@@ -12,7 +13,7 @@ const EmojiReaction = ({ body }) => {
       css={css`
         font-size: 1rem;
       `}
-      dangerouslySetInnerHTML={{ __html: emojiHtml }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emojiHtml) }}
     />
   );
 };

@@ -3,9 +3,10 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box } from '../Box';
 import ReactPortal from '../../lib/reactPortal';
-import { usePopupStyles } from './Popup.styles';
+import { getPopupStyles } from './Popup.styles';
 import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { PopupHeader } from './PopupHeader';
+import { useTheme } from '../../hooks';
 
 const Popup = ({
   positionStyles = css`
@@ -25,7 +26,8 @@ const Popup = ({
   height = '350px',
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('Popup');
-  const styles = usePopupStyles();
+  const { theme } = useTheme();
+  const styles = getPopupStyles(theme);
 
   const popupRef = useRef(null);
 

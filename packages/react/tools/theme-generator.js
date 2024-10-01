@@ -98,7 +98,8 @@ const cssString = `
 
 // Add hardcoded colors and other properties
 const otherProps = {
-  common: {
+  radius: '0.2rem',
+  commonColors: {
     black: 'hsl(0, 0%, 0%)',
     white: 'hsl(0, 0%, 100%)',
   },
@@ -118,7 +119,6 @@ const otherProps = {
     info: 'hsl(214.3, 77.8%, 92.9%)',
     infoForeground: 'hsl(214.4, 75.8%, 19.4%)',
   },
-  radius: '0.2rem',
   typography: {
     default: {
       fontFamily: "'Times New Roman', serif",
@@ -158,19 +158,10 @@ const otherProps = {
     'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
     'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
   ],
-  zIndex: {
-    divider: 1000,
-    body: 1100,
-    general: 1200,
-    menu: 1300,
-    tooltip: 1400,
-    modal: 1500,
-    toastbar: 1600,
-  },
 };
 
 const themeObject = parseCSS(cssString);
-themeObject.schemes.common = otherProps.common;
+themeObject.commonColors = otherProps.commonColors;
 themeObject.schemes.light = {
   ...themeObject.schemes.light,
   ...otherProps.light,
@@ -179,7 +170,7 @@ themeObject.schemes.dark = {
   ...themeObject.schemes.dark,
   ...otherProps.dark,
 };
-themeObject.schemes.radius = otherProps.radius;
+themeObject.radius = otherProps.radius;
 themeObject.typography = otherProps.typography;
 themeObject.shadows = otherProps.shadows;
 themeObject.zIndex = otherProps.zIndex;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '../Box';
-import { useComponentOverrides } from '../../hooks';
-import useSidebarStyles from './Sidebar.styles';
+import { useComponentOverrides, useTheme } from '../../hooks';
+import { getSidebarStyles } from './Sidebar.styles';
 import SidebarHeader from './SidebarHeader';
 import SidebarContent from './SidebarContent';
 import SidebarFooter from './SidebarFooter';
@@ -15,7 +15,8 @@ const Sidebar = ({
   footer,
   style = {},
 }) => {
-  const styles = useSidebarStyles();
+  const { theme } = useTheme();
+  const styles = getSidebarStyles(theme);
   const { classNames, styleOverrides } = useComponentOverrides('Sidebar');
 
   return (

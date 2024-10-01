@@ -7,10 +7,11 @@ import {
   Menu,
   useComponentOverrides,
   appendClassNames,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker';
 import { parseEmoji } from '../../lib/emoji';
-import { useMessageToolboxStyles } from './Message.styles';
+import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
 export const MessageToolbox = ({
@@ -51,8 +52,8 @@ export const MessageToolbox = ({
     className,
     style
   );
-
-  const styles = useMessageToolboxStyles();
+  const { theme } = useTheme();
+  const styles = getMessageToolboxStyles(theme);
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
   const menuItems =
