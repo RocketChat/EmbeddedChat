@@ -6,9 +6,12 @@ export const getRoomMemberStyles = () => {
       display: flex;
       flex-direction: column;
       overflow: auto;
-      width: 100%;
       justify-content: center;
-      padding: 0 1rem 1rem;
+      padding: 0 2rem 1rem;
+      width: 300px;
+      @media (max-width: 780px) {
+        width: 100vw;
+      }
     `,
   };
 

@@ -8,7 +8,10 @@ const getMessageAggregatorStyles = () => {
       flex-direction: column;
       justify-content: initial;
       align-items: initial;
-      max-width: 100%;
+      width: 300px;
+      @media (max-width: 780px) {
+        width: 100vw;
+      }
     `,
 
     noMessageStyles: css`
