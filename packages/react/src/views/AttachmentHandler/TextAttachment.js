@@ -67,7 +67,81 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachmentText}
+        {attachment?.text
+          ? attachment.text[0] === '['
+            ? attachment.text.match(/\n(.*)/)[1]
+            : attachment.text
+          : ''}
+        {attachment?.attachments && attachment.attachments.length > 0 ? (
+          <Box
+            css={[
+              css`
+                display: flex;
+                flex-direction: column;
+                letter-spacing: 0rem;
+                font-size: 0.875rem;
+                font-weight: 400;
+                word-break: break-word;
+                border-inline-start: 3px solid ${theme.colors.border};
+                margin-top: 0.75rem;
+                padding: 0.5rem;
+              `,
+              (attachment.attachments[0]?.type
+                ? variantStyles.pinnedContainer
+                : '') ||
+                css`
+                  ${!attachment.attachments[0]?.type
+                    ? `border: 2px solid ${theme.colors.border};`
+                    : ''}
+                `,
+              css`
+                ${variantStyles.name !== undefined &&
+                variantStyles.name.includes('bubble')
+                  ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
+                  : ''}
+              `,
+            ]}
+          >
+            <Box
+              css={[
+                css`
+                  display: flex;
+                  gap: 0.3rem;
+                  align-items: center;
+                `,
+
+                variantStyles.textUserInfo,
+              ]}
+            >
+              {attachment.attachments[0]?.author_name && (
+                <>
+                  <Avatar
+                    url={getUserAvatarUrl(
+                      attachment.attachments[0]?.author_icon
+                    )}
+                    alt="avatar"
+                    size="1.2em"
+                  />
+                  <Box>@{attachment.attachments[0]?.author_name}</Box>
+                </>
+              )}
+            </Box>
+            <Box
+              css={css`
+                margin-top: 0.5rem;
+                white-space: pre-line;
+              `}
+            >
+              {attachment.attachments[0]?.text
+                ? attachment.attachments[0].text[0] === '['
+                  ? attachment.attachments[0].text.match(/\n(.*)/)[1]
+                  : attachment.attachments[0].text
+                : ''}
+            </Box>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
     </Box>
   );
