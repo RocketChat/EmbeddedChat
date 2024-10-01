@@ -2,8 +2,7 @@ name: Deploy PR previews
 concurrency: preview-${{ github.ref }}
 on:
   pull_request_target:
-    types:
-       [opened, reopened, synchronize, closed]
+    types: [opened, reopened, synchronize, closed]
 
 jobs:
   build:
@@ -84,13 +83,13 @@ jobs:
             mkdir -p build/layout_editor
             mv -v packages/layout_editor/dist/* build/layout_editor/
           fi
-      
+
       - name: Setup Node.js for Docs
         if: steps.changes.outputs.docs == 'true' && github.event.action != 'closed'
         uses: actions/setup-node@v4
         with:
           node-version: "18.x"
-  
+
       - name: "Install dependencies for docs"
         if: steps.changes.outputs.docs == 'true' && github.event.action != 'closed'
         run: yarn install
@@ -119,10 +118,9 @@ jobs:
           preview-branch: gh-deploy
           umbrella-dir: pulls
           action: auto
-  
+
       - uses: rossjrw/pr-preview-action@v1
         if: github.event.action == 'closed' || github.event.pull_request.merged == true
         with:
           source-dir: build
           action: remove
-
