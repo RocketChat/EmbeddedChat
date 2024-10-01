@@ -94,7 +94,7 @@ export const getBubbleStyles = (theme) => {
       overflow: hidden;
     `,
     pinnedContainer: css`
-      max-width: 100%;
+      max-width: 80%;
     `,
 
     quoteContainer: css`
@@ -112,7 +112,7 @@ export const getBubbleStyles = (theme) => {
     `,
 
     attachmentMetaContainer: css`
-      padding: 2.5% 0 0;
+      padding: 2.5% 2.5% 0;
     `,
 
     emojiPickerStyles: css`
@@ -172,7 +172,7 @@ export const getBubbleStylesMe = (theme) => {
 
     pinnedContainerMe: css`
       border-inline-start: none;
-      border-inline-end: none;
+      border-inline-end: 3px solid ${theme.colors.border};
     `,
 
     textUserInfoMe: css`
