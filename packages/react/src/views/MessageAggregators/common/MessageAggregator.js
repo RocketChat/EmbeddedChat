@@ -41,14 +41,18 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-
   return (
     <ViewComponent
       title={title}
       iconName={iconName}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
-      style={{ padding: 0 }}
+      style={{
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        right: 0,
+        zIndex: 1001,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
