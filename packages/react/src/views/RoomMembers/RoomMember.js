@@ -23,16 +23,13 @@ const RoomMembers = ({ members }) => {
   const { host } = ECOptions;
   const { theme } = useTheme();
   const styles = getRoomMemberStyles(theme);
-
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
   const [isLoading, setIsLoading] = useState(true);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
-
   const [userInfo, setUserInfo] = useState(null);
   const setExclusiveState = useSetExclusiveState();
-
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -50,11 +47,18 @@ const RoomMembers = ({ members }) => {
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
   return (
     <ViewComponent
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
+      style={{
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        right: 0,
+        zIndex: 1001,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,

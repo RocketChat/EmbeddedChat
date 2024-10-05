@@ -6,6 +6,7 @@ import {
   Sidebar,
   Popup,
   useComponentOverrides,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
@@ -23,6 +24,7 @@ const Roominfo = () => {
     return `${host}/avatar/${channelname}`;
   };
 
+  const { theme } = useTheme();
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
   return (
@@ -30,6 +32,12 @@ const Roominfo = () => {
       title="Room Information"
       iconName="info"
       onClose={() => setExclusiveState(null)}
+      style={{
+        backgroundColor: theme.colors.background,
+        position: 'absolute',
+        right: 0,
+        zIndex: 1001,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -41,6 +49,9 @@ const Roominfo = () => {
           padding: 0 1rem 1rem;
           margin: 0 auto;
           overflow: auto;
+          @media (max-width: 780px) {
+            width: 100vw;
+          }
         `}
       >
         <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
