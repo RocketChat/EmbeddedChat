@@ -11,5 +11,5 @@ export default defineConfig({
       },
     }),
   ],
-  base: "/EmbeddedChat/layout_editor"
+  base: process.env.LAYOUT_EDITOR_BASE_URL || '/EmbeddedChat/layout_editor',
 });

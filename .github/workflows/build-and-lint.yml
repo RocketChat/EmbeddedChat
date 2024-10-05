@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.number}}/layout_editor"
+  BASEURL: "/EmbeddedChat/pulls/pr-${{github.event.number}}/docs"
 jobs:
   build-and-lint:
     runs-on: ubuntu-latest
