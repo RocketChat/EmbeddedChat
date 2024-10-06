@@ -1,0 +1,72 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: "https://rocketchat.github.io/EmbeddedChat/"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.19.0"
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build packages
+        run: yarn build && yarn build:storybook
+
+      - name: Setup Node.js for Docs
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - name: "Install dependencies for docs"
+        run: yarn install
+        working-directory: packages/docs/
+
+      - name: Build Docs
+        run: yarn build
+        working-directory: packages/docs
+
+      - name: Prepare Build Folder
+        run: |
+          mkdir -p build
+          mkdir -p build/ui-elements
+          mkdir -p build/layout_editor
+          mkdir -p build/docs
+
+          mv -v packages/react/storybook-static/* build/
+          mv -v packages/ui-elements/storybook-static/* build/ui-elements/
+          mv -v packages/layout_editor/dist/* build/layout_editor/
+          mv -v packages/docs/build/* build/docs/
+
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-deploy
+          build_dir: build/
+          commit_message: "Deploy to Github Pages"
+          jekyll: false
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

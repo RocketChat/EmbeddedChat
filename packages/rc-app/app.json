@@ -1,0 +1,27 @@
+{
+    "id": "4c977b2e-eda2-4627-8bfe-2d0358304a79",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.36.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "ec innovators",
+        "homepage": "https://github.com/RocketChat/EmbeddedChat/graphs/contributors",
+        "support": "https://github.com/RocketChat/EmbeddedChat"
+    },
+    "name": "EmbeddedChat",
+    "nameSlug": "embeddedchat",
+    "classFile": "EmbeddedChatApp.ts",
+    "description": "Easily manage EmbeddedChat configs and OAuth with Rocket.Chat.",
+    "implements": [],
+    "permissions": [
+        {
+            "name": "server-setting.read"
+        },
+        {
+            "name": "api"
+        },
+        {
+            "name": "networking"
+        }
+    ]
+}
