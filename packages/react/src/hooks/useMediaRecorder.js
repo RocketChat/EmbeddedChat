@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function useUserMedia(constraints, videoRef) {
-  const [stream, setStream] = useState();
+  const [stream, setStream] = useState(null);
+
   async function getStream(refresh = false) {
     if (stream && !refresh) {
       return stream;
@@ -16,26 +17,45 @@ function useUserMedia(constraints, videoRef) {
 
     return _stream;
   }
+
   return { stream, getStream };
 }
 
 export function useMediaRecorder({ constraints, onStop, videoRef }) {
-  const [recorder, setRecorder] = useState();
-  const { getStream } = useUserMedia(constraints, videoRef);
+  const [recorder, setRecorder] = useState(null);
+  const { stream, getStream } = useUserMedia(constraints, videoRef);
   const chunks = useRef([]);
 
+  useEffect(() => {
+    async function initializeRecorder() {
+      if (!stream) return;
+
+      chunks.current = [];
+      const _recorder = new MediaRecorder(stream);
+      _recorder.start();
+      setRecorder(_recorder);
+
+      _recorder.addEventListener('dataavailable', (event) => {
+        chunks.current.push(event.data);
+      });
+
+      _recorder.addEventListener('stop', () => {
+        onStop && onStop(chunks.current);
+      });
+    }
+
+    initializeRecorder();
+
+    return () => {
+      if (recorder) {
+        recorder.stop();
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [constraints, onStop, recorder, stream, videoRef]);
+
   async function start() {
-    const stream = await getStream(constraints, true);
-    chunks.current = [];
-    const _recorder = new MediaRecorder(stream);
-    _recorder.start();
-    setRecorder(_recorder);
-    _recorder.addEventListener('dataavailable', (event) => {
-      chunks.current.push(event.data);
-    });
-    _recorder.addEventListener('stop', () => {
-      onStop && onStop(chunks.current);
-    });
+    await getStream(true);
   }
 
   async function stop() {
