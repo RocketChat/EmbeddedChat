@@ -4,25 +4,19 @@ on:
   pull_request_review:
     types: submitted
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: true
 
 env:
   LAYOUT_EDITOR_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/layout_editor"
-  DOCS_BASEURL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/docs"
-
+  DOCS_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/docs"
+  STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
+  
 jobs:
   build:
     if: github.event.review.state == 'approved' && (github.event.review.author_association == 'COLLABORATOR' || github.event.review.author_association == 'OWNER')
     runs-on: ubuntu-latest
-    outputs:
-      pr_number: ${{ steps.set_pr_number.outputs.pr_number }}
 
     steps:
       - name: Checkout code

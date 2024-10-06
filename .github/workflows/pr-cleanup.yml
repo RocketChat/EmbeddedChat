@@ -13,7 +13,17 @@ jobs:
         with:
           ref: gh-deploy
 
+      - name: Check if Deployment Exists
+        id: check_deployment
+        run: |
+          if [ -d "pulls/pr-${{ github.event.pull_request.number }}" ]; then
+          echo "deployment_exists=true" >> $GITHUB_ENV
+          else
+          echo "deployment_exists=false" >> $GITHUB_ENV
+          fi
+
       - name: Remove Deployment
+        if: env.deployment_exists == 'true'
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
