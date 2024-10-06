@@ -9,7 +9,7 @@ export const getMessageStyles = ({ theme, mode }) => {
       align-items: flex-start;
       padding-top: 0.5rem;
       padding-bottom: 0.25rem;
-      padding-left: 2.25rem;
+      padding-left: 1rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
 
@@ -17,6 +17,15 @@ export const getMessageStyles = ({ theme, mode }) => {
         background-color: ${mode === 'light'
           ? darken(theme.colors.background, 0.03)
           : lighten(theme.colors.background, 1)};
+      }
+      @media (max-width: 900px) {
+        font-size: 0.8rem;
+      }
+      @media (max-width: 600px) {
+        font-size: 0.7rem;
+      }
+      @media (max-width: 400px) {
+        font-size: 0.4rem;
       }
     `,
     messageEditing: css`
@@ -81,6 +90,15 @@ export const getMessageDividerStyles = (theme) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
+      @media (max-width: 900px) {
+        font-size: 0.8rem;
+      }
+      @media (max-width: 600px) {
+        font-size: 0.7rem;
+      }
+      @media (max-width: 400px) {
+        font-size: 0.6rem;
+      }
     `,
 
     dividerContent: css`
@@ -279,7 +297,7 @@ export const getMessageToolboxStyles = (theme) => {
     emojiPickerStyles: css`
       position: absolute;
       bottom: 100%;
-      right: 1.5rem;
+      right: 4.2rem;
     `,
   };
 

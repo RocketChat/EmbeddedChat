@@ -423,7 +423,12 @@ const ChatInput = ({ scrollToBottom }) => {
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box>
+      <Box
+        css={css`
+          margin-bottom: 0;
+          margin-top: auto;
+        `}
+      >
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
