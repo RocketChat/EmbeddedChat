@@ -2,30 +2,14 @@ import { css } from '@emotion/react';
 
 export const getRoomMemberStyles = () => {
   const styles = {
-    inviteButtonStyles: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '1rem 1rem 1rem 1rem',
-      width: '100%',
-    },
-    memberListStyles: css`
-      padding: 0 1rem 1rem;
+    container: css`
       display: flex;
       flex-direction: column;
+      overflow: auto;
       width: 100%;
-      height: 100%;
-      overflow-y: auto;
+      justify-content: center;
+      padding: 0 1rem 1rem;
     `,
-    containerStyles: {
-      position: 'absolute',
-      left: '0',
-      bottom: '0',
-      top: '60px',
-      width: '100%',
-      height: 'auto',
-      zIndex: 1,
-    },
   };
 
   return styles;

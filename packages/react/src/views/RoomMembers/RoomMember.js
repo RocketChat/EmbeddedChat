@@ -50,21 +50,12 @@ const RoomMembers = ({ members }) => {
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  useEffect(() => {
-    setIsSmallScreen(window.innerWidth < 780);
-  }, []);
   return (
     <ViewComponent
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
-      style={{
-        ...(isSmallScreen && viewType === 'Sidebar'
-          ? styles.containerStyles
-          : null),
-        backgroundColor: theme.colors.background,
-      }}
+      style={{ zIndex: 1 }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -74,7 +65,7 @@ const RoomMembers = ({ members }) => {
       {isLoading ? (
         <LoadingIndicator />
       ) : (
-        <Box css={styles.memberListStyles}>
+        <Box css={styles.container}>
           {showInvite ? (
             <InviteMembers />
           ) : (
@@ -85,7 +76,7 @@ const RoomMembers = ({ members }) => {
 
               {isAdmin && (
                 <Button
-                  style={styles.inviteButtonStyles}
+                  style={{ marginTop: '10px', width: '100%' }}
                   onClick={async () => {
                     toggleInviteView();
                   }}

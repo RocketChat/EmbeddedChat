@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -6,17 +6,14 @@ import {
   Sidebar,
   Popup,
   useComponentOverrides,
-  useTheme,
 } from '@embeddedchat/ui-elements';
-import { getRoomInformationStyles } from './RoomInformation.styles';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
-  const { theme } = useTheme();
-  const styles = getRoomInformationStyles(theme);
+
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
@@ -27,21 +24,13 @@ const Roominfo = () => {
   };
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  useEffect(() => {
-    setIsSmallScreen(window.innerWidth < 780);
-  }, []);
+
   return (
     <ViewComponent
       title="Room Information"
       iconName="info"
       onClose={() => setExclusiveState(null)}
-      style={{
-        ...(isSmallScreen && viewType === 'Sidebar'
-          ? styles.sidebarStyles
-          : null),
-        backgroundColor: theme.colors.background,
-      }}
+      style={{ zIndex: 1 }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
