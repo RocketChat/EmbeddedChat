@@ -35,33 +35,16 @@ const getGlobalStyles = (theme) => css`
   .ec-embedded-chat ::-webkit-scrollbar-button {
     display: none;
   }
-
   @media (max-width: 780px) {
     .ec-sidebar {
       position: absolute;
       width: 100% !important;
+      height: calc(100% - 56.39px) !important;
+      min-width: 250px !important;
       left: 0;
       bottom: 0;
       z-index: 1;
       background: ${theme.colors.background}!important;
-    }
-
-    @media (max-height: 430px) {
-      .ec-sidebar {
-        height: 80vh !important;
-      }
-    }
-
-    @media (max-height: 712px) and (min-height: 430px) {
-      .ec-sidebar {
-        height: 86vh !important;
-      }
-    }
-
-    @media (min-height: 712px) {
-      .ec-sidebar {
-        height: 89vh !important;
-      }
     }
   }
 `;
