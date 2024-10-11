@@ -75,7 +75,7 @@ export const getMessageDividerStyles = (theme) => {
       line-height: 1rem;
       position: relative;
       display: flex;
-      z-index: 1000;
+      z-index: 1;
       align-items: center;
       margin-top: 0.5rem;
       margin-bottom: 0.75rem;
