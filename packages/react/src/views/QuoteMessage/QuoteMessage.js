@@ -10,7 +10,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
-import useQuoteMessageStyles from './QuoteMessage.styles';
+import getQuoteMessageStyles from './QuoteMessage.styles';
 import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {

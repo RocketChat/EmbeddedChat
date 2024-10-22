@@ -385,8 +385,8 @@ const ChatHeader = ({
         </Box>
       </Box>
       {isThreadOpen && (
-        <DynamicHeader
-          title={<Markdown body={threadMessage} isReaction={false} />}
+        <DynamicHeader Markdown
+          title={threadTitle}
           handleClose={closeThread}
           iconName="arrow-back"
         />
