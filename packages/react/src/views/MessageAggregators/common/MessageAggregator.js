@@ -27,7 +27,9 @@ export const MessageAggregator = ({
   const setExclusiveState = useSetExclusiveState();
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
-  const allMessages = [...messages, ...threadMessages];
+  const allMessages = useMemo(() => {
+    return [...messages, ...threadMessages];
+  }, [messages, threadMessages]);
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
     searchFiltered || allMessages,
