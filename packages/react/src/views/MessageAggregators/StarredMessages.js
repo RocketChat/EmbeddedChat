@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useUserStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';
@@ -8,12 +8,9 @@ const StarredMessages = () => {
   const { variantOverrides } = useComponentOverrides('StarredMessages');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const shouldRender = useCallback(
-    (msg) => {
-      return (
-        msg.starred &&
-        msg.starred.some((star) => star._id === authenticatedUserId)
-      );
-    },
+    (msg) =>
+      msg.starred &&
+      msg.starred.some((star) => star._id === authenticatedUserId),
     [authenticatedUserId]
   );
   return (
