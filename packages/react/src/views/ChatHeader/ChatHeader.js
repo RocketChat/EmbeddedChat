@@ -28,7 +28,6 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
-import { Markdown } from '../Markdown';
 
 const ChatHeader = ({
   isClosable,

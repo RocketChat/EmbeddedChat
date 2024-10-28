@@ -10,11 +10,9 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker';
-import { parseEmoji } from '../../lib/emoji';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 import { Markdown } from '../Markdown';
-import { useMessageToolboxStyles } from './Message.styles';
 
 export const MessageToolbox = ({
   className = '',
