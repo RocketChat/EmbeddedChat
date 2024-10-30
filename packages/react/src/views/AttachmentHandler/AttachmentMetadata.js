@@ -1,8 +1,13 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
+import { useUserStore } from '../../store';
 
 const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
+  const { username } = useUserStore((state) => ({
+    username: state.username,
+  }));
+
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -21,6 +26,13 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       console.error('Error downloading the file:', error);
     }
   };
+  const parseMentions = (msg) => {
+    const mentionRegex = /(@\w+)/g;
+    const parts = msg.split(mentionRegex);
+    return parts;
+  };
+
+  const parts = parseMentions(attachment.description);
 
   return (
     <Box
@@ -32,15 +44,41 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <p
-        css={[
-          css`
-            margin: 0;
-          `,
-        ]}
-      >
-        {attachment.description}
-      </p>
+      <div>
+        {parts.map((part, index) =>
+          part.startsWith('@') ? (
+            part.slice(1) !== username ? (
+              <span
+                key={index}
+                css={css`
+                  color: #71717a;
+                  font-weight: bold;
+                  background-color: #f4f4f5;
+                  padding: 1.5px;
+                  border-radius: 3px;
+                `}
+              >
+                {part.slice(1)}
+              </span>
+            ) : (
+              <span
+                key={index}
+                css={css`
+                  color: #fafafa;
+                  font-weight: bold;
+                  background-color: #ef4444;
+                  padding: 1.5px;
+                  border-radius: 3px;
+                `}
+              >
+                {part.slice(1)}
+              </span>
+            )
+          ) : (
+            <span key={index}>{part}</span>
+          )
+        )}
+      </div>
       <Box
         css={css`
           display: flex;
