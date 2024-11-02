@@ -91,7 +91,6 @@ const Message = ({
 
   const handlePinMessage = async (msg) => {
     const isPinned = msg.pinned;
-    // Optimistically update the UI
     msg.pinned = !isPinned;
     const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(msg._id)
