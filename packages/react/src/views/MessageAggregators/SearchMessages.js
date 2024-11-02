@@ -18,13 +18,14 @@ const SearchMessages = () => {
   const searchMessages = useCallback(async () => {
     const { messages } = await RCInstance.getSearchMessages(text);
     setMessageList(messages);
-  },[text, RCInstance])
+  }, [text, RCInstance]);
 
   const debouncedSearch = useCallback(
     debounce(async () => {
       await searchMessages();
     }, 500),
-    [searchMessages])
+    [searchMessages]
+  );
 
   useEffect(() => {
     if (!text.trim()) {
