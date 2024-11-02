@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -7,9 +7,9 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore, useMemberStore } from '../../store';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
-import MembersList from '../Mentions/MembersList.js';
-import TypingUsers from '../TypingUsers/TypingUsers.js';
-import useSearchMentionUser from '../../hooks/useSearchMentionUser.js';
+import MembersList from '../Mentions/MembersList';
+import TypingUsers from '../TypingUsers/TypingUsers';
+import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
