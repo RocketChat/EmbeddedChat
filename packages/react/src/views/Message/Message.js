@@ -1,6 +1,6 @@
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import {
   Box,
   useToastBarDispatch,
@@ -11,7 +11,7 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -48,7 +48,7 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-
+  const { showSidebar, setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
@@ -130,6 +130,7 @@ const Message = ({
 
   const handleOpenThread = (msg) => async () => {
     openThread(msg);
+    setShowSidebar(false);
   };
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
