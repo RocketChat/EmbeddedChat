@@ -7,7 +7,6 @@ const useDynamicHeaderStyles = () => {
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      z-index: 1200;
       padding-block-start: 10px;
     `,
 
