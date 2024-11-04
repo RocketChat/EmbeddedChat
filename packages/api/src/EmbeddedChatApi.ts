@@ -121,12 +121,12 @@ export default class EmbeddedChatApi {
     let credentials;
     if (!code) {
       credentials = credentials = {
-        user: userOrEmail,
+        user: userOrEmail.trim(),
         password,
       };
     } else {
       credentials = {
-        user: userOrEmail,
+        user: userOrEmail.trim(),
         password,
         code,
       };
