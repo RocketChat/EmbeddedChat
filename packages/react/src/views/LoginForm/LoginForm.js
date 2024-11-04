@@ -52,7 +52,7 @@ export default function LoginForm() {
   };
 
   const handleEdituserOrEmail = (e) => {
-    setUserOrEmail(e.target.value.trim());
+    setUserOrEmail(e.target.value);
   };
   const handleEditPassword = (e) => {
     setPassword(e.target.value);
