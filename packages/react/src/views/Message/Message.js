@@ -54,7 +54,7 @@ const Message = ({
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
-  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+  const addQuoteMessage = useMessageStore((state) => state.addQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
 
   const dispatchToastMessage = useToastBarDispatch();
@@ -211,7 +211,7 @@ const Message = ({
                         setEditMessage(message);
                       }
                     }}
-                    handleQuoteMessage={() => setQuoteMessage(message)}
+                    handleQuoteMessage={() => addQuoteMessage(message)}
                     handleEmojiClick={handleEmojiClick}
                     handlerReportMessage={() => {
                       setMessageToReport(message._id);

@@ -23,7 +23,9 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
   };
   const { theme } = useTheme();
   const styles = getQuoteMessageStyles(theme);
-  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+  const removeQuoteMessage = useMessageStore(
+    (state) => state.removeQuoteMessage
+  );
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');
   return (
@@ -33,7 +35,11 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       css={styles.messageContainer}
     >
       <Box css={styles.actionBtn}>
-        <ActionButton ghost onClick={() => setQuoteMessage({})} size="small">
+        <ActionButton
+          ghost
+          onClick={() => removeQuoteMessage(message)}
+          size="small"
+        >
           <Icon name="cross" size="0.75rem" />
         </ActionButton>
       </Box>
@@ -92,14 +98,17 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
           message?.msg
         )}
         {message.attachments &&
-        message.attachments.length > 0 &&
-        message.attachments[0].attachments ? (
-          <Attachment
-            attachment={message.attachments[0]}
-            type={message.attachments[0].type}
-            host={instanceHost}
-          />
-        ) : null}
+          message.attachments.length > 0 &&
+          message.msg &&
+          message.msg[0] === '[' &&
+          message.attachments.map((attachment, index) => (
+            <Attachment
+              key={index}
+              attachment={attachment}
+              type={attachment.type}
+              host={instanceHost}
+            />
+          ))}
       </Box>
     </Box>
   );

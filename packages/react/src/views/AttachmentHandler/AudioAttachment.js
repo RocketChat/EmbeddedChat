@@ -61,67 +61,65 @@ const AudioAttachment = ({ attachment, host, type, author, variantStyles }) => {
         />
         <audio src={host + attachment.audio_url} width="100%" controls />
 
-        {attachment.attachments ? (
-          <Box>
-            <Box
-              css={[
-                css`
-                  line-height: 0;
-                  border-radius: inherit;
-                  padding: 0.5rem;
-                `,
-                (attachment.attachments[0].type
-                  ? variantStyles.pinnedContainer
-                  : variantStyles.quoteContainer) ||
+        {attachment.attachments &&
+          attachment.attachments.map((nestedAttachment, index) => (
+            <Box key={index}>
+              <Box
+                css={[
                   css`
-                    ${attachment.attachments[0].type === 'file'
-                      ? `border: 3px solid ${theme.colors.border};`
-                      : ''}
+                    line-height: 0;
+                    border-radius: inherit;
+                    padding: 0.5rem;
                   `,
-              ]}
-            >
-              {attachment.attachments[0].type === 'file' ? (
-                <>
-                  <Box
-                    css={[
-                      css`
-                        display: flex;
-                        gap: 0.3rem;
-                        align-items: center;
-                      `,
-                      variantStyles.textUserInfo,
-                    ]}
-                  >
-                    <Avatar
-                      url={getUserAvatarUrl(attachment.author_icon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
-                    <Box>@{attachment.author_name}</Box>
-                  </Box>
-                </>
-              ) : (
-                ''
-              )}
-              <AttachmentMetadata
-                attachment={attachment.attachments[0]}
-                url={
-                  host +
-                  (attachment.attachments[0].title_url ||
-                    attachment.attachments[0].audio_url)
-                }
-                variantStyles={variantStyles}
-              />
-              <audio
-                src={host + attachment.attachments[0].audio_url}
-                width="100%"
-                controls
-              />
+                  (nestedAttachment.type
+                    ? variantStyles.pinnedContainer
+                    : variantStyles.quoteContainer) ||
+                    css`
+                      ${nestedAttachment.type === 'file'
+                        ? `border: 3px solid ${theme.colors.border};`
+                        : ''}
+                    `,
+                ]}
+              >
+                {nestedAttachment.type === 'file' ? (
+                  <>
+                    <Box
+                      css={[
+                        css`
+                          display: flex;
+                          gap: 0.3rem;
+                          align-items: center;
+                        `,
+                        variantStyles.textUserInfo,
+                      ]}
+                    >
+                      <Avatar
+                        url={getUserAvatarUrl(nestedAttachment.author_icon)}
+                        alt="avatar"
+                        size="1.2em"
+                      />
+                      <Box>@{nestedAttachment.author_name}</Box>
+                    </Box>
+                  </>
+                ) : (
+                  ''
+                )}
+                <AttachmentMetadata
+                  attachment={nestedAttachment}
+                  url={
+                    host +
+                    (nestedAttachment.title_url || nestedAttachment.audio_url)
+                  }
+                  variantStyles={variantStyles}
+                />
+                <audio
+                  src={host + nestedAttachment.audio_url}
+                  width="100%"
+                  controls
+                />
+              </Box>
             </Box>
-          </Box>
-        ) : (
-          <></>
-        )}
+          ))}
       </Box>
     </Box>
   );

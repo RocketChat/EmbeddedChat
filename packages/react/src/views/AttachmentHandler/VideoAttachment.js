@@ -88,77 +88,75 @@ const VideoAttachment = ({
             type={userAgentMIMETypeFallback(attachment.video_type)}
           />
         </video>
-        {attachment.attachments ? (
-          <Box css={variantStyles.videoAttachmentContainer}>
-            <Box
-              css={[
-                css`
-                  line-height: 0;
-                  border-radius: inherit;
-                  padding: 0.5rem;
-                `,
-                (attachment.attachments[0].type
-                  ? variantStyles.pinnedContainer
-                  : variantStyles.quoteContainer) ||
+        {attachment.attachments &&
+          attachment.attachments.map((nestedAttachment, index) => (
+            <Box css={variantStyles.videoAttachmentContainer} key={index}>
+              <Box
+                css={[
                   css`
-                    ${type === 'file'
-                      ? `border: 3px solid ${theme.colors.border};`
-                      : ''}
+                    line-height: 0;
+                    border-radius: inherit;
+                    padding: 0.5rem;
                   `,
-              ]}
-            >
-              {attachment.attachments[0].type === 'file' ? (
-                <>
-                  <Box
-                    css={[
-                      css`
-                        display: flex;
-                        gap: 0.3rem;
-                        align-items: center;
-                      `,
-                      variantStyles.textUserInfo,
-                    ]}
-                  >
-                    <Avatar
-                      url={getUserAvatarUrl(authorIcon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
-                    <Box>@{authorName}</Box>
-                  </Box>
-                </>
-              ) : (
-                ''
-              )}
-              <AttachmentMetadata
-                attachment={attachment.attachments[0]}
-                url={
-                  host +
-                  (attachment.attachments[0].title_url ||
-                    attachment.attachments[0].video_url)
-                }
-                variantStyles={variantStyles}
-              />
-              <video
-                width={300}
-                controls
-                style={{
-                  borderBottomLeftRadius: 'inherit',
-                  borderBottomRightRadius: 'inherit',
-                }}
+                  (nestedAttachment.type
+                    ? variantStyles.pinnedContainer
+                    : variantStyles.quoteContainer) ||
+                    css`
+                      ${type === 'file'
+                        ? `border: 3px solid ${theme.colors.border};`
+                        : ''}
+                    `,
+                ]}
               >
-                <source
-                  src={host + attachment.attachments[0].video_url}
-                  type={userAgentMIMETypeFallback(
-                    attachment.attachments[0].video_type
-                  )}
+                {nestedAttachment.type === 'file' ? (
+                  <>
+                    <Box
+                      css={[
+                        css`
+                          display: flex;
+                          gap: 0.3rem;
+                          align-items: center;
+                        `,
+                        variantStyles.textUserInfo,
+                      ]}
+                    >
+                      <Avatar
+                        url={getUserAvatarUrl(authorIcon)}
+                        alt="avatar"
+                        size="1.2em"
+                      />
+                      <Box>@{authorName}</Box>
+                    </Box>
+                  </>
+                ) : (
+                  ''
+                )}
+                <AttachmentMetadata
+                  attachment={nestedAttachment}
+                  url={
+                    host +
+                    (nestedAttachment.title_url || nestedAttachment.video_url)
+                  }
+                  variantStyles={variantStyles}
                 />
-              </video>
+                <video
+                  width={300}
+                  controls
+                  style={{
+                    borderBottomLeftRadius: 'inherit',
+                    borderBottomRightRadius: 'inherit',
+                  }}
+                >
+                  <source
+                    src={host + attachment.video_url}
+                    type={userAgentMIMETypeFallback(
+                      nestedAttachment.video_type
+                    )}
+                  />
+                </video>
+              </Box>
             </Box>
-          </Box>
-        ) : (
-          <></>
-        )}
+          ))}
       </Box>
     </Box>
   );

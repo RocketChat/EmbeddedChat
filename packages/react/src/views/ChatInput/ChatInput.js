@@ -90,20 +90,20 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage,
     setEditMessage,
     quoteMessage,
-    setQuoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
+    clearQuoteMessages,
     threadId,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
-    setQuoteMessage: state.setQuoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
+    clearQuoteMessages: state.clearQuoteMessages,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -255,14 +255,31 @@ const ChatInput = ({ scrollToBottom }) => {
     messageRef.current.value = '';
     setDisableButton(true);
 
-    const { msg, attachments, _id } = quoteMessage;
     let pendingMessage = '';
+    let quotedMessages = '';
 
-    if (msg || attachments) {
-      setQuoteMessage({});
-      const msgLink = await getMessageLink(_id);
+    if (quoteMessage.length > 0) {
+      // for (const quote of quoteMessage) {
+      //   const { msg, attachments, _id } = quote;
+      //   if (msg || attachments) {
+      //     const msgLink = await getMessageLink(_id);
+      //     quotedMessages += `[ ](${msgLink})`;
+      //   }
+      // }
+
+      const quoteArray = await Promise.all(
+        quoteMessage.map(async (quote) => {
+          const { msg, attachments, _id } = quote;
+          if (msg || attachments) {
+            const msgLink = await getMessageLink(_id);
+            quotedMessages += `[ ](${msgLink})`;
+          }
+          return quotedMessages;
+        })
+      );
+      quotedMessages = quoteArray.join('');
       pendingMessage = createPendingMessage(
-        `[ ](${msgLink})\n ${message}`,
+        `${quotedMessages}\n${message}`,
         userInfo
       );
     } else {
@@ -275,18 +292,14 @@ const ChatInput = ({ scrollToBottom }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
-    const res = await RCInstance.sendMessage(
-      {
-        msg: pendingMessage.msg,
-        _id: pendingMessage._id,
-      },
-      ECOptions.enableThreads ? threadId : undefined
-    );
+    const res = await RCInstance.sendMessage({
+      msg: pendingMessage.msg,
+      _id: pendingMessage._id,
+    });
 
-    if (!res.success) {
-      handleSendError('Error sending message, login again');
-    } else {
-      replaceMessage(pendingMessage._id, res.message);
+    if (res.success) {
+      clearQuoteMessages();
+      replaceMessage(pendingMessage, res.message);
     }
   };
 
@@ -425,6 +438,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
+<<<<<<< HEAD
       <Box
         css={css`
           max-width: 100%;
@@ -433,6 +447,16 @@ const ChatInput = ({ scrollToBottom }) => {
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
+=======
+      <Box css={styles.quoteContainer}>
+        <div>
+          {quoteMessage &&
+            quoteMessage.length > 0 &&
+            quoteMessage.map((message, index) => (
+              <QuoteMessage message={message} key={index} />
+            ))}
+        </div>
+>>>>>>> 7c17ffe (fixed multiple quoting issue)
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
           <ChannelState
             status={

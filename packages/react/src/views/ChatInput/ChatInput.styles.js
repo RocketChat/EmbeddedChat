@@ -52,6 +52,10 @@ export const getChatInputStyles = (theme) => {
         padding-left: 5px;
       }
     `,
+    quoteContainer: css`
+      max-height: 300px;
+      overflow: scroll;
+    `,
   };
 
   return styles;

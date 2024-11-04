@@ -85,81 +85,77 @@ const ImageAttachment = ({
             borderBottomRightRadius: 'inherit',
           }}
         />
-        {attachment.attachments ? (
-          <Box css={variantStyles.imageAttachmentContainer}>
-            <Box
-              onClick={() => setShowGallery(true)}
-              css={[
-                css`
-                  cursor: pointer;
-                  border-radius: inherit;
-                  line-height: 0;
-                  padding: 0.5rem;
-                `,
-                (attachment.attachments[0].type
-                  ? variantStyles.pinnedContainer
-                  : variantStyles.quoteContainer) ||
+        {attachment.attachments &&
+          attachment.attachments.map((nestedAttachment, index) => (
+            <Box css={variantStyles.imageAttachmentContainer} key={index}>
+              <Box
+                onClick={() => setShowGallery(true)}
+                css={[
                   css`
-                    ${attachment.attachments[0].type === 'file'
-                      ? `border: 2px solid ${theme.colors.border};`
-                      : ''}
+                    cursor: pointer;
+                    border-radius: inherit;
+                    line-height: 0;
+                    padding: 0.5rem;
                   `,
-              ]}
-            >
-              {attachment.attachments[0].type === 'file' ? (
-                <>
-                  <Box
-                    css={[
-                      css`
-                        display: flex;
-                        gap: 0.3rem;
-                        align-items: center;
-                      `,
-                      variantStyles.textUserInfo,
-                    ]}
-                  >
-                    <Avatar
-                      url={getUserAvatarUrl(attachment.author_icon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
-                    <Box>@{attachment.author_name}</Box>
-                  </Box>
-                </>
-              ) : (
-                ''
-              )}
-              <AttachmentMetadata
-                attachment={attachment.attachments[0]}
-                url={
-                  host +
-                  (attachment.attachments[0].title_link ||
-                    attachment.attachments[0].image_url)
-                }
-                variantStyles={variantStyles}
-              />
-              <img
-                src={host + attachment.attachments[0].image_url}
-                style={{
-                  maxWidth: '100%',
-                  objectFit: 'contain',
-                  borderBottomLeftRadius: 'inherit',
-                  borderBottomRightRadius: 'inherit',
-                }}
-              />
-            </Box>
-            {showGallery && (
-              <ImageGallery
-                currentFileId={extractIdFromUrl(
-                  attachment.attachments[0].title_link
+                  (nestedAttachment.attachments[0].type
+                    ? variantStyles.pinnedContainer
+                    : variantStyles.quoteContainer) ||
+                    css`
+                      ${nestedAttachment.attachments[0].type === 'file'
+                        ? `border: 2px solid ${theme.colors.border};`
+                        : ''}
+                    `,
+                ]}
+              >
+                {nestedAttachment.type === 'file' ? (
+                  <>
+                    <Box
+                      css={[
+                        css`
+                          display: flex;
+                          gap: 0.3rem;
+                          align-items: center;
+                        `,
+                        variantStyles.textUserInfo,
+                      ]}
+                    >
+                      <Avatar
+                        url={getUserAvatarUrl(nestedAttachment.author_icon)}
+                        alt="avatar"
+                        size="1.2em"
+                      />
+                      <Box>@{nestedAttachment.author_name}</Box>
+                    </Box>
+                  </>
+                ) : (
+                  ''
                 )}
-                setShowGallery={setShowGallery}
-              />
-            )}
-          </Box>
-        ) : (
-          <></>
-        )}
+                <AttachmentMetadata
+                  attachment={nestedAttachment}
+                  url={
+                    host +
+                    (nestedAttachment.title_link || nestedAttachment.image_url)
+                  }
+                  variantStyles={variantStyles}
+                />
+                <img
+                  src={host + nestedAttachment.image_url}
+                  style={{
+                    maxWidth: '100%',
+                    objectFit: 'contain',
+                    borderBottomLeftRadius: 'inherit',
+                    borderBottomRightRadius: 'inherit',
+                  }}
+                />
+              </Box>
+              {showGallery && (
+                <ImageGallery
+                  currentFileId={extractIdFromUrl(nestedAttachment.title_link)}
+                  setShowGallery={setShowGallery}
+                />
+              )}
+            </Box>
+          ))}
       </Box>
       {showGallery && (
         <ImageGallery
