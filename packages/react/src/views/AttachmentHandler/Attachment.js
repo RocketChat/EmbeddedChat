@@ -52,7 +52,11 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       />
     );
   }
-  if (attachment && attachment.attachments[0]?.image_url) {
+  if (
+    attachment.attachments &&
+    Array.isArray(attachment.attachments) &&
+    attachment.attachments[0]?.image_url
+  ) {
     return (
       <ImageAttachment
         attachment={attachment.attachments[0]}
@@ -63,7 +67,11 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       />
     );
   }
-  if (attachment && attachment.attachments[0]?.audio_url) {
+  if (
+    attachment.attachments &&
+    Array.isArray(attachment.attachments) &&
+    attachment.attachments[0]?.audio_url
+  ) {
     return (
       <AudioAttachment
         attachment={attachment.attachments[0]}
@@ -74,7 +82,11 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
       />
     );
   }
-  if (attachment && attachment.attachments[0]?.video_url) {
+  if (
+    attachment.attachments &&
+    Array.isArray(attachment.attachments) &&
+    attachment.attachments[0]?.video_url
+  ) {
     return (
       <VideoAttachment
         attachment={attachment.attachments[0]}
