@@ -12,6 +12,4 @@ Fixes # (issue)
 
 ## PR Test Details
 
-**Note**: The PR will be ready for live testing at https://rocketchat.github.io/EmbeddedChat/pulls/pr-<pr_number> after approval.
-
-
+**Note**: The PR will be ready for live testing at https://rocketchat.github.io/EmbeddedChat/pulls/pr-<pr_number> after approval. Contributors are requested to replace `<pr_number>` with the actual PR number.
