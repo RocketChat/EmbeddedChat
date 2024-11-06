@@ -22,6 +22,8 @@ const getQuoteMessageStyles = (theme) => {
 
     message: css`
       padding: 0.25rem;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     `,
 
     actionBtn: css`

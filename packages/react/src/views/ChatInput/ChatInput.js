@@ -19,6 +19,7 @@ import {
   useLoginStore,
   useChannelStore,
   useMemberStore,
+  useSidebarStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -46,7 +47,9 @@ const ChatInput = ({ scrollToBottom }) => {
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
   const timerRef = useRef();
-
+  const { showSidebar } = useSidebarStore((state) => ({
+    showSidebar: state.showSidebar,
+  }));
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
   const [filteredMembers, setFilteredMembers] = useState([]);
@@ -422,7 +425,13 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   return (
-    <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
+    <Box
+      className={`ec-chat-input ${classNames}`}
+      style={styleOverrides}
+      css={css`
+        width: ${showSidebar ? 'calc(100vw - 350px - 3rem)' : '98vw'};
+      `}
+    >
       <Box>
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
