@@ -16,6 +16,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Download PR Number Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-number
+          path: .
+          github-token: ${{github.token}}
+          repository: ${{github.repository}}
+          run-id: ${{github.event.workflow_run.id}}
+
+      - name: Check PR Approval Status
+        id: approval_check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(cat pr_number.txt)
+
+          RESPONSE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews")
+
+          if ! echo "$RESPONSE" | jq . > /dev/null 2>&1; then
+            echo "Error: Invalid JSON response from GitHub API."
+            exit 1
+          fi
+
+          LATEST_REVIEW=$(echo "$RESPONSE" | jq 'sort_by(.submitted_at) | last')
+
+          STATE=$(echo "$LATEST_REVIEW" | jq -r '.state')
+          AUTHOR_ASSOCIATION=$(echo "$LATEST_REVIEW" | jq -r '.author_association')
+
+          echo "Latest review state: $STATE"
+          echo "Author association: $AUTHOR_ASSOCIATION"
+
+          if [ "$STATE" != "APPROVED" ] || { [ "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ] && [ "$AUTHOR_ASSOCIATION" != "OWNER" ]; }; then
+            echo "The latest review is not an approved review from a collaborator or owner. Exiting."
+            exit 1
+          fi
+
       - uses: actions/download-artifact@v4
         with:
           name: github-pages
