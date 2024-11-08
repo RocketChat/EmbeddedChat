@@ -12,6 +12,8 @@ const getQuoteMessageStyles = (theme) => {
       z-index: 1200;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
+      max-width: 100%;
+      box-sizing: border-box;
     `,
 
     avatarContainer: css`
@@ -22,8 +24,10 @@ const getQuoteMessageStyles = (theme) => {
 
     message: css`
       padding: 0.25rem;
-      word-wrap: break-word;
       overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      width: 100%;
     `,
 
     actionBtn: css`
