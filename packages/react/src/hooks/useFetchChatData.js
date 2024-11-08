@@ -5,6 +5,7 @@ import {
   useChannelStore,
   useMemberStore,
   useMessageStore,
+  useStarredMessageStore,
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
@@ -13,6 +14,7 @@ const useFetchChatData = (showRoles) => {
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setAdmins = useMemberStore((state) => state.setAdmins);
+  const setStarredMessages=useStarredMessageStore((state)=>state.setStarredMessages)
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
@@ -78,9 +80,29 @@ const useFetchChatData = (showRoles) => {
       setAdmins,
       setMemberRoles,
     ]
+    
   );
 
-  return getMessagesAndRoles;
+  const getStarredMessages = useCallback(
+    async (anonymousMode) => {
+      console.log("asjlndlkas")
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const { messages } = await RCInstance.getStarredMessages();
+          console.log("starred messages", messages);
+          setStarredMessages(messages);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setStarredMessages]
+  );
+
+  return { getMessagesAndRoles, getStarredMessages };
 };
 
 export default useFetchChatData;

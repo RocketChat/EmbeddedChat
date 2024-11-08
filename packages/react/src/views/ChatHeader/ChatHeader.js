@@ -86,7 +86,7 @@ const ChatHeader = ({
   );
 
   const dispatchToastMessage = useToastBarDispatch();
-  const getMessagesAndRoles = useFetchChatData(showRoles);
+  const { getMessagesAndRoles } = useFetchChatData(showRoles);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
 
   const avatarUrl = useUserStore((state) => state.avatarUrl);

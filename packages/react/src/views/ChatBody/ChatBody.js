@@ -69,7 +69,7 @@ const ChatBody = ({
 
   const username = useUserStore((state) => state.username);
 
-  const getMessagesAndRoles = useFetchChatData(showRoles);
+  const { getMessagesAndRoles } = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -103,6 +103,7 @@ const ChatBody = ({
 
   const addMessage = useCallback(
     (message) => {
+      console.log("message from listener",message)
       if (message.u.username !== username) {
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {

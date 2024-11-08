@@ -24,6 +24,7 @@ import { LinkPreview } from '../LinkPreview';
 import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const Message = ({
   message,
@@ -56,7 +57,7 @@ const Message = ({
   );
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
-
+  const {getStarredMessages}=useFetchChatData()
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -87,6 +88,7 @@ const Message = ({
         message: 'Message unstarred',
       });
     }
+    getStarredMessages();
   };
 
   const handlePinMessage = async (msg) => {

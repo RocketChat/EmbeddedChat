@@ -16,6 +16,7 @@ export const MessageAggregator = ({
   iconName,
   noMessageInfo,
   shouldRender,
+  messageList,
   searchProps,
   searchFiltered,
   fetching,
@@ -32,7 +33,7 @@ export const MessageAggregator = ({
     [messages, threadMessages]
   );
   const [messageRendered, setMessageRendered] = useState(false);
-  const { loading, messageList } = useSetMessageList(
+  const { loading } = useSetMessageList(
     searchFiltered || allMessages,
     shouldRender
   );
@@ -44,7 +45,7 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-
+  console.log("messages",messages)
   return (
     <ViewComponent
       title={title}
