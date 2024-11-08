@@ -59,10 +59,18 @@ export const MessageBodyStyles = {
     line-height: 1.25rem;
     flex-shrink: 1;
     transition: opacity 0.3s linear;
-    word-break: break-word;
+    word-break: break-word;    
+    overflow-wrap: break-word; 
+    white-space: normal;       
     opacity: 1;
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
+
+    a {
+      word-wrap: break-word;    
+      overflow-wrap: break-word;
+      max-width: 100%; 
+    }
   `,
 };
 

@@ -26,7 +26,19 @@ const Markdown = ({ body, isReaction = false }) => {
   if (!body || !body.md) return <></>;
 
   return (
-    <Box>
+    <Box
+      css={css`
+        word-wrap: break-word;          
+        overflow-wrap: break-word;      
+      
+        a {
+          word-wrap: break-word;         
+          overflow-wrap: break-word;    
+          display: inline-block;        
+          max-width: 100%;            
+        }
+    `}
+    >
       <MarkupInteractionContext.Provider value={value}>
         <Markup tokens={body.md} />
       </MarkupInteractionContext.Provider>

@@ -11,5 +11,8 @@
     "scripts": {
         "format": "prettier --write '*/**.ts'",
         "format:check": "prettier --check '*/**.ts'"
+    },
+    "dependencies": {
+        "@embeddedchat/rc-app": "file:"
     }
 }
