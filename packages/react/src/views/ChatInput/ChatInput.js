@@ -25,7 +25,6 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
-import { parseEmoji } from '../../lib/emoji';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
@@ -149,6 +148,10 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     });
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
+
+  const trigger = (val) => {
+    setDisableButton(!val.trim().length);
+  };
 
   useEffect(() => {
     if (editMessage.attachments) {
@@ -365,7 +368,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const onTextChange = (e) => {
     sendTypingStart();
     const message = e.target.value;
-    messageRef.current.value = parseEmoji(message);
+    messageRef.current.value = message;
     setDisableButton(!messageRef.current.value.length);
     handleNewLine(e, false);
     searchMentionUser(message);
@@ -532,6 +535,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
+            triggerButton={trigger}
           />
         )}
       </Box>

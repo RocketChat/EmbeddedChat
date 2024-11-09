@@ -15,10 +15,12 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
+  triggerButton,
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
@@ -46,7 +48,12 @@ const ChatInputFormattingToolbar = ({
 
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
-    messageRef.current.value += ` :${emoji.replace(/[\s-]+/g, '_')}: `;
+    const message = `${messageRef.current.value} :${emoji.replace(
+      /[\s-]+/g,
+      '_'
+    )}: `;
+    messageRef.current.value = parseEmoji(message);
+    triggerButton?.(message);
   };
 
   const chatToolMap = {
