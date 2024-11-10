@@ -15,7 +15,6 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
-import { parseEmoji } from '../../lib/emoji';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -52,8 +51,7 @@ const ChatInputFormattingToolbar = ({
       /[\s-]+/g,
       '_'
     )}: `;
-    messageRef.current.value = parseEmoji(message);
-    triggerButton?.(message);
+    triggerButton?.(null, message);
   };
 
   const chatToolMap = {

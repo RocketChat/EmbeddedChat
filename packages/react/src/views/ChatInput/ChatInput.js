@@ -33,6 +33,7 @@ import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -148,10 +149,6 @@ const ChatInput = ({ scrollToBottom }) => {
       }
     });
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
-
-  const trigger = (val) => {
-    setDisableButton(!val.trim().length);
-  };
 
   useEffect(() => {
     if (editMessage.attachments) {
@@ -365,14 +362,16 @@ const ChatInput = ({ scrollToBottom }) => {
     setData(event.target.files[0]);
   };
 
-  const onTextChange = (e) => {
+  const onTextChange = (e, val) => {
     sendTypingStart();
-    const message = e.target.value;
-    messageRef.current.value = message;
+    const message = val || e.target.value;
+    messageRef.current.value = parseEmoji(message);
     setDisableButton(!messageRef.current.value.length);
-    handleNewLine(e, false);
-    searchMentionUser(message);
-    showCommands(e);
+    if (e !== null) {
+      handleNewLine(e, false);
+      searchMentionUser(message);
+      showCommands(e);
+    }
   };
 
   const handleFocus = () => {
@@ -535,7 +534,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
-            triggerButton={trigger}
+            triggerButton={onTextChange}
           />
         )}
       </Box>
