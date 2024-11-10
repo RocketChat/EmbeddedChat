@@ -259,6 +259,14 @@ const ChatInput = ({ scrollToBottom }) => {
     let quotedMessages = '';
 
     if (quoteMessage.length > 0) {
+      // for (const quote of quoteMessage) {
+      //   const { msg, attachments, _id } = quote;
+      //   if (msg || attachments) {
+      //     const msgLink = await getMessageLink(_id);
+      //     quotedMessages += `[ ](${msgLink})`;
+      //   }
+      // }
+
       const quoteArray = await Promise.all(
         quoteMessage.map(async (quote) => {
           const { msg, attachments, _id } = quote;
@@ -284,19 +292,14 @@ const ChatInput = ({ scrollToBottom }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
-    const res = await RCInstance.sendMessage(
-      {
-        msg: pendingMessage.msg,
-        _id: pendingMessage._id,
-      },
-      ECOptions.enableThreads ? threadId : undefined
-    );
+    const res = await RCInstance.sendMessage({
+      msg: pendingMessage.msg,
+      _id: pendingMessage._id,
+    });
 
-    if (!res.success) {
-      handleSendError('Error sending message, login again');
-    } else {
+    if (res.success) {
       clearQuoteMessages();
-      replaceMessage(pendingMessage._id, res.message);
+      replaceMessage(pendingMessage, res.message);
     }
   };
 
@@ -435,16 +438,6 @@ const ChatInput = ({ scrollToBottom }) => {
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-<<<<<<< HEAD
-      <Box
-        css={css`
-          max-width: 100%;
-        `}
-      >
-        {(quoteMessage.msg || quoteMessage.attachments) && (
-          <QuoteMessage message={quoteMessage} />
-        )}
-=======
       <Box css={styles.quoteContainer}>
         <div>
           {quoteMessage &&
@@ -453,7 +446,6 @@ const ChatInput = ({ scrollToBottom }) => {
               <QuoteMessage message={message} key={index} />
             ))}
         </div>
->>>>>>> 7c17ffe (fixed multiple quoting issue)
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
           <ChannelState
             status={
