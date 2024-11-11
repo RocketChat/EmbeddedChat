@@ -9,6 +9,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { set } from 'date-fns';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
@@ -28,7 +29,6 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
-import { set } from 'date-fns';
 
 const ChatHeader = ({
   isClosable,
