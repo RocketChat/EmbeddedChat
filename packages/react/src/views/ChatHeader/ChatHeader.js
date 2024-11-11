@@ -28,6 +28,7 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { set } from 'date-fns';
 
 const ChatHeader = ({
   isClosable,
@@ -88,8 +89,9 @@ const ChatHeader = ({
   const dispatchToastMessage = useToastBarDispatch();
   const getMessagesAndRoles = useFetchChatData(showRoles);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
-
+  const setMessages = useMessageStore((state) => state.setMessages);
   const avatarUrl = useUserStore((state) => state.avatarUrl);
+  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
@@ -128,6 +130,9 @@ const ChatHeader = ({
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
+      setMessages([]);
+      setUserAvatarUrl(null);
+      useMessageStore.setState({ isMessageLoaded: false });
     } catch (e) {
       console.error(e);
     } finally {
