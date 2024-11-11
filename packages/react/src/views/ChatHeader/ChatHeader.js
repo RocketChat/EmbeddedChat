@@ -9,7 +9,6 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import { set } from 'date-fns';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
