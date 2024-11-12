@@ -16,7 +16,7 @@ export const MessageAggregator = ({
   iconName,
   noMessageInfo,
   shouldRender,
-  messageList,
+  fetchedMessageList,
   searchProps,
   searchFiltered,
   fetching,
@@ -33,19 +33,18 @@ export const MessageAggregator = ({
     [messages, threadMessages]
   );
   const [messageRendered, setMessageRendered] = useState(false);
-  const { loading } = useSetMessageList(
-    searchFiltered || allMessages,
-    shouldRender
-  );
+  const { loading, messageList } = fetchedMessageList
+    ? { loading: false, messageList: fetchedMessageList }
+    : useSetMessageList(searchFiltered || allMessages, shouldRender);
 
   const isMessageNewDay = (current, previous) =>
     !previous ||
-    !shouldRender(previous) ||
+    (fetchedMessageList && shouldRender(previous)) ||
     !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-  console.log("messages",messages)
+  
   return (
     <ViewComponent
       title={title}
@@ -74,7 +73,7 @@ export const MessageAggregator = ({
 
           {messageList.map((msg, index, arr) => {
             const newDay = isMessageNewDay(msg, arr[index - 1]);
-            if (!messageRendered && shouldRender(msg)) {
+            if (!messageRendered && fetchedMessageList && shouldRender(msg)) {
               setMessageRendered(true);
             }
 

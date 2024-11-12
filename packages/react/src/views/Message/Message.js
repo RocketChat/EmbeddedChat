@@ -57,7 +57,7 @@ const Message = ({
   );
   const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
-  const {getStarredMessages}=useFetchChatData()
+  const { getStarredMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,

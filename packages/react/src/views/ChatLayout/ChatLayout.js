@@ -36,11 +36,15 @@ import useUiKitStore from '../../store/uiKitStore';
 const ChatLayout = () => {
   const messageListRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-  const { RCInstance,ECOptions } = useRCContext();
+  const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
   const showRoles = ECOptions?.anonymousMode;
-  const setStarredMessages=useStarredMessageStore((state)=>state.setStarredMessages)
-  const starredMessages=useStarredMessageStore((state)=>state.starredMessages)
+  const setStarredMessages = useStarredMessageStore(
+    (state) => state.setStarredMessages
+  );
+  const starredMessages = useStarredMessageStore(
+    (state) => state.starredMessages
+  );
   const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
@@ -84,20 +88,15 @@ const ChatLayout = () => {
           return;
         }
         const { messages } = await RCInstance.getStarredMessages();
-        console.log("starred messages",messages)
-        setStarredMessages(messages)
+        setStarredMessages(messages);
       } catch (e) {
         console.error(e);
       }
     }
-  }, [
-    isUserAuthenticated,
-    anonymousMode,
-    RCInstance
-  ]);
-  useEffect(()=>{
-    getStarredMessages()
-  },[showSidebar])
+  }, [isUserAuthenticated, anonymousMode, RCInstance]);
+  useEffect(() => {
+    getStarredMessages();
+  }, [showSidebar]);
   return (
     <Box
       css={styles.layout}
@@ -128,7 +127,7 @@ const ChatLayout = () => {
           {showAllFiles && <FileGallery />}
           {showMentions && <MentionedMessages />}
           {showPinned && <PinnedMessages />}
-          {showStarred && <StarredMessages/>}
+          {showStarred && <StarredMessages />}
           {showCurrentUserInfo && <UserInformation />}
           {uiKitContextualBarOpen && (
             <UiKitContextualBar
