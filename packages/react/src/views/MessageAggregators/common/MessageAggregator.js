@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, set } from 'date-fns';
 import { Box, Sidebar, Popup, useTheme } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore } from '../../../store';
+import { useMessageStore, useSidebarStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
@@ -44,7 +44,14 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const { setScrollToMessageId } = useMessageStore((state) => ({
+    setScrollToMessageId: state.setScrollToMessageId,
+  }));
+  const handleClick = (messageId) => {
+    setShowSidebar(false);
+    setScrollToMessageId(messageId);
+  };
   return (
     <ViewComponent
       title={title}
@@ -99,7 +106,9 @@ export const MessageAggregator = ({
                     showToolbox={false}
                     showRoles={false}
                     isInSidebar
+                    handleClick={handleClick}
                     style={{
+                      cursor: 'pointer',
                       paddingLeft: '0.75rem',
                       paddingRight: '0.75rem',
                     }}

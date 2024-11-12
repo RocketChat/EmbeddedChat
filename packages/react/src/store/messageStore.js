@@ -15,6 +15,8 @@ const useMessageStore = create((set, get) => ({
   isThreadOpen: false,
   threadMainMessage: null,
   headerTitle: null,
+  scrollToMessageId: null,
+  setScrollToMessageId: (id) => set({ scrollToMessageId: id }),
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (messages) =>
     set(() => ({
