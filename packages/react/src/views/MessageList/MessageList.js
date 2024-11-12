@@ -60,7 +60,9 @@ const MessageList = ({ messages }) => {
             return (
               <Message
                 key={msg._id}
-                ref={(el) => (messageRefs.current[msg._id] = el)}
+                ref={(el) => {
+                  messageRefs.current[msg._id] = el;
+                }}
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}

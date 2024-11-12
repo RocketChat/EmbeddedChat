@@ -292,5 +292,5 @@ Message.propTypes = {
   type: PropTypes.oneOf(['thread', 'default']),
   showAvatar: PropTypes.bool,
 };
-
+Message.displayName = 'Message';
 export default memo(Message);
