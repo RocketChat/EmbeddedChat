@@ -44,7 +44,7 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-  
+
   return (
     <ViewComponent
       title={title}
