@@ -33,13 +33,14 @@ export const MessageAggregator = ({
     [messages, threadMessages]
   );
   const [messageRendered, setMessageRendered] = useState(false);
-  const { loading, messageList } = fetchedMessageList
-    ? { loading: false, messageList: fetchedMessageList }
-    : useSetMessageList(searchFiltered || allMessages, shouldRender);
+  const { loading, messageList } = useSetMessageList(
+    fetchedMessageList || searchFiltered || allMessages,
+    shouldRender
+  );
 
   const isMessageNewDay = (current, previous) =>
     !previous ||
-    (fetchedMessageList && shouldRender(previous)) ||
+    shouldRender(previous) ||
     !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
@@ -73,7 +74,7 @@ export const MessageAggregator = ({
 
           {messageList.map((msg, index, arr) => {
             const newDay = isMessageNewDay(msg, arr[index - 1]);
-            if (!messageRendered && fetchedMessageList && shouldRender(msg)) {
+            if (!messageRendered && shouldRender(msg)) {
               setMessageRendered(true);
             }
 
