@@ -25,7 +25,6 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
-import { parseEmoji } from '../../lib/emoji';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
@@ -34,6 +33,7 @@ import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -362,14 +362,16 @@ const ChatInput = ({ scrollToBottom }) => {
     setData(event.target.files[0]);
   };
 
-  const onTextChange = (e) => {
+  const onTextChange = (e, val) => {
     sendTypingStart();
-    const message = e.target.value;
+    const message = val || e.target.value;
     messageRef.current.value = parseEmoji(message);
     setDisableButton(!messageRef.current.value.length);
-    handleNewLine(e, false);
-    searchMentionUser(message);
-    showCommands(e);
+    if (e !== null) {
+      handleNewLine(e, false);
+      searchMentionUser(message);
+      showCommands(e);
+    }
   };
 
   const handleFocus = () => {
@@ -423,7 +425,11 @@ const ChatInput = ({ scrollToBottom }) => {
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box>
+      <Box
+        css={css`
+          max-width: 100%;
+        `}
+      >
         {(quoteMessage.msg || quoteMessage.attachments) && (
           <QuoteMessage message={quoteMessage} />
         )}
@@ -528,6 +534,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
+            triggerButton={onTextChange}
           />
         )}
       </Box>
