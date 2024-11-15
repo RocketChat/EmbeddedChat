@@ -45,14 +45,7 @@ export const MessageAggregator = ({
   );
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
-  const setMessageJumpQueryStringParameter = (msgId) => {
-    const search = new URLSearchParams(window.location.search);
-    const locationPathname = window.location.pathname;
-    if (msgId) {
-      search.set('msg', msgId);
-    }
-    const newUrl = `${locationPathname}?${search.toString()}`;
-    window.history.pushState({}, '', newUrl);
+  const setJumpToMessage = (msgId) => {
     if (msgId) {
       const element = document.getElementById(`ec-message-body-${msgId}`);
       if (element) {
@@ -119,9 +112,7 @@ export const MessageAggregator = ({
                     <ActionButton
                       square
                       ghost
-                      onClick={() =>
-                        setMessageJumpQueryStringParameter(msg._id)
-                      }
+                      onClick={() => setJumpToMessage(msg._id)}
                       css={{
                         position: 'absolute',
                         right: '15px',
