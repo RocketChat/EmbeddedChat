@@ -1,11 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { isSameDay, format } from 'date-fns';
-import { Box, Sidebar, Popup, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Sidebar,
+  Popup,
+  useTheme,
+  ActionButton,
+  Icon,
+} from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
 import { useMessageStore, useSidebarStore } from '../../../store';
-import { ActionButton, Icon } from '@embeddedchat/ui-elements';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
