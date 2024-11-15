@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
@@ -16,19 +16,7 @@ const MessageList = ({ messages }) => {
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
-  const messageRefs = useRef({});
-  const { scrollToMessageId } = useMessageStore((state) => ({
-    scrollToMessageId: state.scrollToMessageId,
-  }));
 
-  useEffect(() => {
-    if (scrollToMessageId && messageRefs.current[scrollToMessageId]) {
-      messageRefs.current[scrollToMessageId].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }, [scrollToMessageId]);
   return (
     <>
       {messages.length === 0 ? (
@@ -60,9 +48,6 @@ const MessageList = ({ messages }) => {
             return (
               <Message
                 key={msg._id}
-                ref={(el) => {
-                  messageRefs.current[msg._id] = el;
-                }}
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}
