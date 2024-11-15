@@ -46,12 +46,12 @@ export const MessageAggregator = ({
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const setMessageJumpQueryStringParameter = (msgId) => {
-    const { msg: _, ...search } = new URLSearchParams(window.location.search);
+    const search = new URLSearchParams(window.location.search);
     const locationPathname = window.location.pathname;
-    const newSearch = msgId ? { ...search, msg: msgId } : search;
-    const newUrl = `${locationPathname}?${new URLSearchParams(
-      newSearch
-    ).toString()}`;
+    if (msgId) {
+      search.set('msg', msgId);
+    }
+    const newUrl = `${locationPathname}?${search.toString()}`;
     window.history.pushState({}, '', newUrl);
     if (msgId) {
       const element = document.getElementById(`ec-message-body-${msgId}`);
