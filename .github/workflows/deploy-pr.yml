@@ -1,28 +1,38 @@
 name: Deploy PR-Preview
-
 on:
   workflow_run:
     workflows: ["Build PR-Preview"]
     types:
       - completed
-
 permissions:
   contents: write
   pages: write
-
 jobs:
   deploy:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: user
+          path: .
+          github-token: ${{github.token}}
+          repository: ${{github.repository}}
+          run-id: ${{github.event.workflow_run.id}}
+
+      - name: Get user
+        id: get_user
+        run: |
+          USER=$(cat user.txt)
+          echo "USER=$USER" >> $GITHUB_ENV
+
       - name: Get Pull Request Number
         id: get_pr_number
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_NUMBER=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${{ github.head_ref }}" \
+             "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{env.USER}}:${{ github.event.workflow_run.head_branch }}" \
             | jq -r '.[0].number')
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
