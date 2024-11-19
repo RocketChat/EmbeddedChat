@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { lazy,Suspense } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -8,13 +9,14 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
-import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+
+const EmojiPicker = lazy(()=>import("../EmojiPicker/index").then(module=>({default:module.EmojiPicker})));
+const AudioMessageRecorder = lazy(()=>import("./AudioMessageRecorder").then(module=>({default:module.AudioMessageRecorder})));
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -71,7 +73,9 @@ const ChatInputFormattingToolbar = ({
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
+        <Suspense fallback={<div>Loading...</div>}>
         <AudioMessageRecorder />
+        </Suspense>
       </Tooltip>
     ),
     video: (
@@ -122,6 +126,7 @@ const ChatInputFormattingToolbar = ({
       {surfaceItems.map((key) => chatToolMap[key])}
 
       {isEmojiOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
         <EmojiPicker
           key="emoji-picker"
           handleEmojiClick={(emoji) => {
@@ -135,6 +140,7 @@ const ChatInputFormattingToolbar = ({
             left: 1.85rem;
           `}
         />
+        </Suspense>
       )}
     </Box>
   );

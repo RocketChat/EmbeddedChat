@@ -1,4 +1,5 @@
 import React, { memo, useContext } from 'react';
+import {Suspense,lazy} from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -8,7 +9,6 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { useMessageStore, useUserStore } from '../../store';
@@ -16,7 +16,6 @@ import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
 import { MessageMetrics } from './MessageMetrics';
-import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
@@ -24,6 +23,9 @@ import { LinkPreview } from '../LinkPreview';
 import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
+
+const MessageToolbox = lazy(()=>import("./MessageToolbox").then(module=>({default:module.MessageToolbox})));
+const Attachments = lazy(()=>import("../AttachmentHandler").then(module=>({default:module.Attachments})));
 
 const Message = ({
   message,
@@ -178,10 +180,12 @@ const Message = ({
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
                     <Markdown body={message} isReaction={false} />
+                    <Suspense fallback={<div>Loading...</div>}>
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}
                     />
+                    </Suspense>
                   </>
                 ) : (
                   <Markdown body={message} isReaction={false} />
@@ -196,6 +200,7 @@ const Message = ({
                 )}
 
                 {!message.t && showToolbox ? (
+                  <Suspense fallback={<div>Loading...</div>}>
                   <MessageToolbox
                     message={message}
                     isEditing={editMessage._id === message._id}
@@ -219,7 +224,7 @@ const Message = ({
                     }}
                     isThreadMessage={type === 'thread'}
                     variantStyles={variantStyles}
-                  />
+                  /></Suspense>
                 ) : (
                   <></>
                 )}
@@ -250,11 +255,13 @@ const Message = ({
           ) : (
             <>
               {message.attachments && (
+                <Suspense fallback={<div>Loading...</div>}>
                 <Attachments
                   attachments={message.attachments}
                   type={message.t}
                   variantStyles={variantStyles}
                 />
+                </Suspense>
               )}
             </>
           )}
