@@ -50,6 +50,7 @@ const Message = ({
   showAvatar = ECOptions?.showAvatar && showAvatar;
 
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const userRoles = useUserStore((state) => state.roles)
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -200,6 +201,7 @@ const Message = ({
                     message={message}
                     isEditing={editMessage._id === message._id}
                     authenticatedUserId={authenticatedUserId}
+                    userRoles={userRoles}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}

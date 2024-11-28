@@ -21,6 +21,7 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  userRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -110,7 +111,7 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage,
+        visible: !isThreadMessage && userRoles.includes('admin'),
       },
       edit: {
         label: 'Edit',
