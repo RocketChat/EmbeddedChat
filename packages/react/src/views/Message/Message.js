@@ -50,7 +50,7 @@ const Message = ({
   showAvatar = ECOptions?.showAvatar && showAvatar;
 
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const userRoles = useUserStore((state) => state.roles)
+  const userRoles = useUserStore((state) => state.roles);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
