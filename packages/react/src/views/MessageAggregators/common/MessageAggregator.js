@@ -108,20 +108,12 @@ export const MessageAggregator = ({
                     fileMessage={msg}
                   />
                 ) : (
-                  <Box position="relative">
-                    <ActionButton
-                      square
-                      ghost
-                      onClick={() => setJumpToMessage(msg._id)}
-                      css={{
-                        position: 'absolute',
-                        right: '15px',
-                        zIndex: 10,
-                      }}
-                    >
-                      <Icon name="arrow-back" size="1.25rem" />
-                    </ActionButton>
-
+                  <Box
+                    position="relative"
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
                     <Message
                       key={`${msg._id}-aggregated`}
                       message={msg}
@@ -132,10 +124,21 @@ export const MessageAggregator = ({
                       showRoles={false}
                       isInSidebar
                       style={{
-                        paddingLeft: '0.75rem',
-                        paddingRight: '0.75rem',
+                        flex: 1,
                       }}
                     />
+
+                    <ActionButton
+                      square
+                      ghost
+                      onClick={() => setJumpToMessage(msg._id)}
+                      css={{
+                        position: 'relative',
+                        zIndex: 10,
+                      }}
+                    >
+                      <Icon name="arrow-back" size="1.25rem" />
+                    </ActionButton>
                   </Box>
                 )}
               </React.Fragment>
