@@ -29,6 +29,9 @@ const useUserStore = create((set) => ({
   setEmailorUser: (emailoruser) => set(() => ({ emailoruser })),
   roles: {},
   setRoles: (roles) => set((state) => ({ ...state, roles })),
+  userPermissions: {},
+  setUserPermissions: (userPermissions) =>
+    set((state) => ({ ...state, userPermissions })),
   showCurrentUserInfo: false,
   setShowCurrentUserInfo: (showCurrentUserInfo) =>
     set(() => ({ showCurrentUserInfo })),
