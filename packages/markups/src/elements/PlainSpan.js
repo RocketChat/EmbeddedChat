@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 const PlainSpan = ({ contents }) => {
   if (contents === '>') {
-    return (
-      <br />
-    );
+    return <br />;
   }
   return <>{contents}</>;
 };
