@@ -20,7 +20,9 @@ export const useRCAuth = () => {
   );
   const setPassword = useUserStore((state) => state.setPassword);
   const setEmailorUser = useUserStore((state) => state.setEmailorUser);
-  const setUserPermissions = useUserStore((state) => state.setUserPermissions);
+  const setUserPinPermissions = useUserStore(
+    (state) => state.setUserPinPermissions
+  );
   const dispatchToastMessage = useToastBarDispatch();
 
   const handleLogin = async (userOrEmail, password, code) => {
@@ -58,7 +60,7 @@ export const useRCAuth = () => {
           setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);
-          setUserPermissions(permissions);
+          setUserPinPermissions(permissions.update[150]);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',

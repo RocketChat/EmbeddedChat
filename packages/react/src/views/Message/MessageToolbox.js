@@ -21,7 +21,8 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
-  isAllowedToPin,
+  userRoles,
+  pinRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -68,6 +69,7 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
+  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
   const options = useMemo(
     () => ({
       reply: {
