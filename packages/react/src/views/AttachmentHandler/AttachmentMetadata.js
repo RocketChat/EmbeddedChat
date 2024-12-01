@@ -1,8 +1,9 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
+import { Markdown } from '../Markdown';
 
-const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
+const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -35,11 +36,11 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       <p
         css={[
           css`
-            margin: 9px 0 0;
+            margin: 3px 0 5px 0;
           `,
         ]}
       >
-        {attachment.description}
+        <Markdown body={msg} md={attachment.descriptionMd} />
       </p>
       <Box
         css={css`
