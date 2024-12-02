@@ -292,10 +292,13 @@ const ChatInput = ({ scrollToBottom }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
-    const res = await RCInstance.sendMessage({
-      msg: pendingMessage.msg,
-      _id: pendingMessage._id,
-    });
+    const res = await RCInstance.sendMessage(
+      {
+        msg: pendingMessage.msg,
+        _id: pendingMessage._id,
+      },
+      ECOptions.enableThreads ? threadId : undefined
+    );
 
     if (res.success) {
       clearQuoteMessages();
