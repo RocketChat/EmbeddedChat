@@ -1142,6 +1142,3 @@ export default class EmbeddedChatApi {
     return data;
   }
 }
-
-  
-
