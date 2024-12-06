@@ -33,7 +33,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <p
+      <div
         css={[
           css`
             margin: 3px 0 5px 0;
@@ -41,7 +41,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
         ]}
       >
         <Markdown body={msg} md={attachment.descriptionMd} />
-      </p>
+      </div>
       <Box
         css={css`
           display: flex;

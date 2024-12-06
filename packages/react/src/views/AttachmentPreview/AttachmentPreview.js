@@ -61,7 +61,9 @@ const AttachmentPreview = () => {
     );
     toggle();
     setData(null);
-    setIsPending(false);
+    if(isPending) {
+      setIsPending(false);
+    }
   };
   return (
     <Modal onClose={toggle}>
