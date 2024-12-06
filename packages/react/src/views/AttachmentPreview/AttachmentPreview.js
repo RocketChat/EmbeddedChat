@@ -61,7 +61,7 @@ const AttachmentPreview = () => {
     );
     toggle();
     setData(null);
-    if(isPending) {
+    if (isPending) {
       setIsPending(false);
     }
   };
