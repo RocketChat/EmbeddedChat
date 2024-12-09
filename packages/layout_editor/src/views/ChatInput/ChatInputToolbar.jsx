@@ -41,6 +41,13 @@ const ChatInputToolbar = () => {
         iconName: 'emoji',
         visible: true,
       },
+      link: {
+        label: 'Insert Link',
+        id: 'link',
+        onClick: () => {},
+        iconName: 'link',
+        visible: true,
+      },
       audio: {
         label: 'Audio Message',
         id: 'audio',
@@ -61,7 +68,7 @@ const ChatInputToolbar = () => {
         onClick: () => {},
         iconName: 'attachment',
         visible: true,
-      },
+      },      
       formatter: {
         label: 'Formatter',
         id: 'formatter',

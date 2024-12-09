@@ -217,6 +217,15 @@ const LayoutSetting = () => {
         iconName: 'emoji',
         visible: true,
       },
+      link: {
+        label: 'Insert Link',
+        id: 'link',
+        onClick: () => {
+          addInputSurfaceItem('link');
+        },
+        iconName: 'link',
+        visible: true,
+      },
       audio: {
         label: 'Audio Message',
         id: 'audio',
@@ -243,7 +252,7 @@ const LayoutSetting = () => {
         },
         iconName: 'attachment',
         visible: true,
-      },
+      },      
       formatter: {
         label: 'Formatter',
         id: 'formatter',

@@ -103,3 +103,31 @@ export const getCommonRecorderStyles = (theme) => {
 
   return styles;
 };
+
+
+export const getInsertLinkModalStyles = (theme) => {
+  const styles = {
+    inputWithFormattingBox: css`
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
+      margin: 0.5rem 1rem;
+      &.focused {
+        border: ${`1.5px solid ${theme.colors.ring}`};
+      }
+    `,
+    modalHeader: css`
+      padding: 0 0.5rem;  
+    `,
+    modalContent: css`
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    `,
+    modalFooter: css`
+      padding: 0.75rem 1rem;  
+    `,
+  };
+
+  return styles;
+};
