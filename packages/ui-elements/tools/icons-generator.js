@@ -64,7 +64,7 @@ const camelCase = (name) =>
 const codeModifier = (code) => {
   let newCode = code.replace(/class=/g, 'className=');
   const openingTag = newCode.match(/<svg.*>/g)[0];
-  const newOpeningTag = openingTag.replace('>', ' {...props}>');
+  const newOpeningTag = openingTag.replace(/>/g, ' {...props}>');
   newCode = newCode.replace(openingTag, newOpeningTag);
   return newCode;
 };
