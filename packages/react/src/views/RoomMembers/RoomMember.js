@@ -55,6 +55,7 @@ const RoomMembers = ({ members }) => {
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
+      style={{ zIndex: window.innerWidth <= 780 ? 1 : null }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
