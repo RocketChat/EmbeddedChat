@@ -30,7 +30,6 @@ const Roominfo = () => {
       title="Room Information"
       iconName="info"
       onClose={() => setExclusiveState(null)}
-      style={{ zIndex: 1 }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,

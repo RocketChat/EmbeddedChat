@@ -1,6 +1,6 @@
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 import {
   Box,
   useToastBarDispatch,
