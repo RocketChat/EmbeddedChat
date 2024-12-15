@@ -42,7 +42,7 @@ const ChatInputToolbar = () => {
         visible: true,
       },
       link: {
-        label: 'Insert Link',
+        label: 'Link',
         id: 'link',
         onClick: () => {},
         iconName: 'link',

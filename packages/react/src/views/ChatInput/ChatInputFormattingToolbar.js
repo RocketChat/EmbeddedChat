@@ -57,7 +57,7 @@ const ChatInputFormattingToolbar = ({
   };
 
   const handleAddLink = (linkText, linkUrl) => {
-    if(!linkText || !linkUrl) {
+    if (!linkText || !linkUrl) {
       setInsertLinkOpen(false);
       return;
     }
@@ -65,12 +65,12 @@ const ChatInputFormattingToolbar = ({
     const start = messageRef.current.selectionStart;
     const end = messageRef.current.selectionEnd;
     const msg = messageRef.current.value;
-    const hyperlink = '[' + linkText + '](' + linkUrl + ')';
+    const hyperlink = `[${linkText}](${linkUrl})`;
     const message = msg.slice(0, start) + hyperlink + msg.slice(end);
-    
+
     triggerButton?.(null, message);
     setInsertLinkOpen(false);
-  }
+  };
 
   const chatToolMap = {
     emoji: (
@@ -176,7 +176,6 @@ const ChatInputFormattingToolbar = ({
           onClose={() => setInsertLinkOpen(false)}
         />
       )}
-
     </Box>
   );
 };

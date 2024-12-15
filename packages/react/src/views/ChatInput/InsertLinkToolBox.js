@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Modal, Input, Button, useTheme } from '@embeddedchat/ui-elements';
 import { getInsertLinkModalStyles } from './ChatInput.styles';
 
@@ -11,7 +11,7 @@ const InsertLinkToolBox = ({
   const styles = getInsertLinkModalStyles(theme);
   const [linkText, setLinkText] = useState(selectedText || 'Text');
   const [linkUrl, setLinkUrl] = useState(null);
- 
+
   const handleLinkTextOnChange = (e) => {
     setLinkText(e.target.value);
   };
@@ -22,22 +22,20 @@ const InsertLinkToolBox = ({
   return (
     <Modal>
       <Modal.Header css={styles.modalHeader}>
-        <Modal.Title>
-          Add link
-        </Modal.Title>
+        <Modal.Title>Add link</Modal.Title>
         <Modal.Close onClick={onClose} />
       </Modal.Header>
       <Modal.Content css={styles.modalContent}>
         <Input
-            type='text'
-            onChange={handleLinkTextOnChange}
-            value={linkText}
-            css={styles.inputWithFormattingBox}
+          type="text"
+          onChange={handleLinkTextOnChange}
+          value={linkText}
+          css={styles.inputWithFormattingBox}
         />
         <Input
-          type='text'
+          type="text"
           onChange={handleLinkUrlOnChange}
-          placeholder='URL'
+          placeholder="URL"
           css={styles.inputWithFormattingBox}
         />
       </Modal.Content>

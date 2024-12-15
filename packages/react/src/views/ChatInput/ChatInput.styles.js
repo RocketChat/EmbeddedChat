@@ -104,7 +104,6 @@ export const getCommonRecorderStyles = (theme) => {
   return styles;
 };
 
-
 export const getInsertLinkModalStyles = (theme) => {
   const styles = {
     inputWithFormattingBox: css`
@@ -116,7 +115,7 @@ export const getInsertLinkModalStyles = (theme) => {
       }
     `,
     modalHeader: css`
-      padding: 0 0.5rem;  
+      padding: 0 0.5rem;
     `,
     modalContent: css`
       display: flex;
@@ -125,7 +124,7 @@ export const getInsertLinkModalStyles = (theme) => {
       margin: 1rem 0;
     `,
     modalFooter: css`
-      padding: 0.75rem 1rem;  
+      padding: 0.75rem 1rem;
     `,
   };
 

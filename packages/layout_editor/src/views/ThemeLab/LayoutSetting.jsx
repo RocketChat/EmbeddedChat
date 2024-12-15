@@ -218,7 +218,7 @@ const LayoutSetting = () => {
         visible: true,
       },
       link: {
-        label: 'Insert Link',
+        label: 'Link',
         id: 'link',
         onClick: () => {
           addInputSurfaceItem('link');
