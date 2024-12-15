@@ -15,8 +15,8 @@ export const getMessageStyles = ({ theme, mode }) => {
 
       &:hover {
         background-color: ${mode === 'light'
-        ? darken(theme.colors.background, 0.03)
-        : lighten(theme.colors.background, 1)};
+          ? darken(theme.colors.background, 0.03)
+          : lighten(theme.colors.background, 1)};
       }
     `,
     messageEditing: css`

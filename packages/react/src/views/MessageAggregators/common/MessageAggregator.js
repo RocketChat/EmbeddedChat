@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format, min } from 'date-fns';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -128,7 +128,7 @@ export const MessageAggregator = ({
                         flex: 1,
                         paddingLeft: 3,
                         paddingRight: 2,
-                        minWidth: 0
+                        minWidth: 0,
                       }}
                     />
 
