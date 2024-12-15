@@ -51,6 +51,10 @@ const Message = ({
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
+  const userRoles = useUserStore((state) => state.roles);
+  const pinPermissions = useUserStore(
+    (state) => state.userPinPermissions.roles
+  );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
@@ -67,6 +71,7 @@ const Message = ({
   const theme = useTheme();
   const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
+  const pinRoles = new Set(pinPermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -200,6 +205,8 @@ const Message = ({
                     message={message}
                     isEditing={editMessage._id === message._id}
                     authenticatedUserId={authenticatedUserId}
+                    userRoles={userRoles}
+                    pinRoles={pinRoles}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
