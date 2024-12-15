@@ -35,7 +35,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       <p
         css={[
           css`
-            margin: 0;
+            margin: 9px 0 0;
           `,
         ]}
       >

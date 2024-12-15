@@ -11,18 +11,22 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
+import Attachment from '../AttachmentHandler/Attachment';
 import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
+  const instanceHost = RCInstance.getHost();
   const getUserAvatarUrl = (username) => {
-    const host = RCInstance.getHost();
+    const host = instanceHost;
     const URL = `${host}/avatar/${username}`;
     return URL;
   };
   const { theme } = useTheme();
   const styles = getQuoteMessageStyles(theme);
-  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+  const removeQuoteMessage = useMessageStore(
+    (state) => state.removeQuoteMessage
+  );
 
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');
   return (
@@ -32,7 +36,11 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       css={styles.messageContainer}
     >
       <Box css={styles.actionBtn}>
-        <ActionButton ghost onClick={() => setQuoteMessage({})} size="small">
+        <ActionButton
+          ghost
+          onClick={() => removeQuoteMessage(message)}
+          size="small"
+        >
           <Icon name="cross" size="0.75rem" />
         </ActionButton>
       </Box>
@@ -46,13 +54,11 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={styles.message}>
-        {message.msg ? (
-          <Markdown body={message} isReaction={false} />
-        ) : (
-          `${message.file?.name} (${
-            message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
-          } kB)`
-        )}
+        {message.msg
+          ? message.msg
+          : `${message.file?.name} (${
+              message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+            } kB)`}
       </Box>
     </Box>
   );
