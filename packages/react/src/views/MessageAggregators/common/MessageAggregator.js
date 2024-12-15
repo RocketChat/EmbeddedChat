@@ -73,8 +73,8 @@ export const MessageAggregator = ({
       style={{ zIndex: 1 }}
       {...(viewType === 'Popup'
         ? {
-          isPopupHeader: true,
-        }
+            isPopupHeader: true,
+          }
         : {})}
     >
       {fetching || loading ? (
