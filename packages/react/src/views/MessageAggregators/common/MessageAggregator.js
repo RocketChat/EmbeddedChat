@@ -23,6 +23,7 @@ export const MessageAggregator = ({
   iconName,
   noMessageInfo,
   shouldRender,
+  fetchedMessageList,
   searchProps,
   searchFiltered,
   fetching,
@@ -40,7 +41,7 @@ export const MessageAggregator = ({
   );
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
-    searchFiltered || allMessages,
+    fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
 
@@ -57,7 +58,7 @@ export const MessageAggregator = ({
 
   const isMessageNewDay = (current, previous) =>
     !previous ||
-    !shouldRender(previous) ||
+    shouldRender(previous) ||
     !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
