@@ -21,6 +21,8 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  userRoles,
+  pinRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -67,6 +69,7 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
+  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
   const options = useMemo(
     () => ({
       reply: {
@@ -110,7 +113,7 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage,
+        visible: !isThreadMessage && isAllowedToPin,
       },
       edit: {
         label: 'Edit',
