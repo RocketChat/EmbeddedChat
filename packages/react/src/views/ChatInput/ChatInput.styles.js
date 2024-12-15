@@ -22,6 +22,9 @@ export const getChatInputStyles = (theme) => {
       justify-content: center;
       flex-direction: row;
       padding: 0.5rem;
+      @media (max-width: 383px) {
+        min-height: 100px;
+      }
     `,
 
     iconCursor: css`
@@ -51,6 +54,9 @@ export const getChatInputStyles = (theme) => {
       &::placeholder {
         padding-left: 5px;
       }
+      @media (max-width: 383px) {
+        font-size: 18px;
+      }
     `,
   };
 
@@ -68,9 +74,12 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
         : lighten(theme.colors.background, 1)};
       display: flex;
       position: relative;
-      flex-direction: row;
-      gap: 0.375rem;
+      gap: 0.1rem;
       border-radius: 0 0 ${theme.radius} ${theme.radius};
+      @media (max-width: 383px) {
+        display: grid;
+        grid-template-columns: repeat(5, 0.2fr);
+      }
     `,
   };
   return styles;
