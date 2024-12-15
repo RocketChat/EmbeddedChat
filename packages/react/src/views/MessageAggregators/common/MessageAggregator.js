@@ -1,10 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { isSameDay, format } from 'date-fns';
-import { Box, Sidebar, Popup, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Sidebar,
+  Popup,
+  useTheme,
+  ActionButton,
+  Icon,
+} from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore } from '../../../store';
+import { useMessageStore, useSidebarStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
@@ -36,6 +43,17 @@ export const MessageAggregator = ({
     searchFiltered || allMessages,
     shouldRender
   );
+
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const setJumpToMessage = (msgId) => {
+    if (msgId) {
+      const element = document.getElementById(`ec-message-body-${msgId}`);
+      if (element) {
+        setShowSidebar(false);
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
 
   const isMessageNewDay = (current, previous) =>
     !previous ||
@@ -90,20 +108,38 @@ export const MessageAggregator = ({
                     fileMessage={msg}
                   />
                 ) : (
-                  <Message
-                    key={`${msg._id}-aggregated`}
-                    message={msg}
-                    newDay={false}
-                    type="default"
-                    showAvatar
-                    showToolbox={false}
-                    showRoles={false}
-                    isInSidebar
+                  <Box
+                    position="relative"
                     style={{
-                      paddingLeft: '0.75rem',
-                      paddingRight: '0.75rem',
+                      display: 'flex',
                     }}
-                  />
+                  >
+                    <Message
+                      key={`${msg._id}-aggregated`}
+                      message={msg}
+                      newDay={false}
+                      type="default"
+                      showAvatar
+                      showToolbox={false}
+                      showRoles={false}
+                      isInSidebar
+                      style={{
+                        flex: 1,
+                      }}
+                    />
+
+                    <ActionButton
+                      square
+                      ghost
+                      onClick={() => setJumpToMessage(msg._id)}
+                      css={{
+                        position: 'relative',
+                        zIndex: 10,
+                      }}
+                    >
+                      <Icon name="arrow-back" size="1.25rem" />
+                    </ActionButton>
+                  </Box>
                 )}
               </React.Fragment>
             );
