@@ -15,8 +15,8 @@ export const getMessageStyles = ({ theme, mode }) => {
 
       &:hover {
         background-color: ${mode === 'light'
-          ? darken(theme.colors.background, 0.03)
-          : lighten(theme.colors.background, 1)};
+        ? darken(theme.colors.background, 0.03)
+        : lighten(theme.colors.background, 1)};
       }
     `,
     messageEditing: css`
@@ -75,12 +75,15 @@ export const getMessageDividerStyles = (theme) => {
       line-height: 1rem;
       position: relative;
       display: flex;
-      z-index: 1;
+      z-index: 1000;
       align-items: center;
       margin-top: 0.5rem;
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
     `,
 
     dividerContent: css`

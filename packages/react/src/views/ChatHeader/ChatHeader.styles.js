@@ -26,6 +26,7 @@ const getChatHeaderStyles = ({ theme, mode }) => {
         ? darken(theme.colors.background, 0.03)
         : lighten(theme.colors.background, 1)};
       width: 100%;
+      z-index: 1200;
       display: flex;
       flex-direction: column;
       padding: 0.75rem;

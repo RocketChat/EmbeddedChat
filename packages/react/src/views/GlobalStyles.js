@@ -43,7 +43,6 @@ const getGlobalStyles = (theme) => css`
       min-width: 250px !important;
       left: 0;
       bottom: 0;
-      z-index: 1;
       background: ${theme.colors.background}!important;
     }
   }

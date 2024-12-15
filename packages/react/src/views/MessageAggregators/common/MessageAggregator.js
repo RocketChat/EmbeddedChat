@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, min } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -73,8 +73,8 @@ export const MessageAggregator = ({
       style={{ zIndex: 1 }}
       {...(viewType === 'Popup'
         ? {
-            isPopupHeader: true,
-          }
+          isPopupHeader: true,
+        }
         : {})}
     >
       {fetching || loading ? (
@@ -126,6 +126,9 @@ export const MessageAggregator = ({
                       isInSidebar
                       style={{
                         flex: 1,
+                        paddingLeft: 3,
+                        paddingRight: 2,
+                        minWidth: 0
                       }}
                     />
 
