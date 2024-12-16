@@ -21,7 +21,7 @@ const VideoAttachment = ({
   type,
   author,
   variantStyles = {},
-  msg
+  msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();

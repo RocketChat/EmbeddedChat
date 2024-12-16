@@ -126,25 +126,30 @@ const AttachmentPreview = () => {
               >
                 File description
               </Box>
-              {showMembersList && (
-                <MembersList
-                  messageRef={messageRef}
-                  mentionIndex={mentionIndex}
-                  setMentionIndex={setMentionIndex}
-                  filteredMembers={filteredMembers}
-                  setFilteredMembers={setFilteredMembers}
-                  setStartReadMentionUser={setStartReadMentionUser}
-                  setShowMembersList={setShowMembersList}
+              <Box css={styles.fileDescription}>
+                {showMembersList && (
+                  <MembersList
+                    messageRef={messageRef}
+                    mentionIndex={mentionIndex}
+                    setMentionIndex={setMentionIndex}
+                    filteredMembers={filteredMembers}
+                    setFilteredMembers={setFilteredMembers}
+                    setStartReadMentionUser={setStartReadMentionUser}
+                    setShowMembersList={setShowMembersList}
+                    css={css`
+                      width: auto;
+                    `}
+                  />
+                )}
+                <Input
+                  onChange={(e) => {
+                    handleFileDescription(e);
+                  }}
+                  css={styles.input}
+                  placeholder="Description"
+                  ref={messageRef}
                 />
-              )}
-              <Input
-                onChange={(e) => {
-                  handleFileDescription(e);
-                }}
-                css={styles.input}
-                placeholder="Description"
-                ref={messageRef}
-              />
+              </Box>
             </Box>
           </Box>
         </Box>

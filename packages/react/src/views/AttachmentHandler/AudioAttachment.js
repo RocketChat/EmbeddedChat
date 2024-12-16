@@ -5,7 +5,14 @@ import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 
-const AudioAttachment = ({ attachment, host, type, author, variantStyles, msg }) => {
+const AudioAttachment = ({
+  attachment,
+  host,
+  type,
+  author,
+  variantStyles,
+  msg,
+}) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const getUserAvatarUrl = (icon) => {
@@ -60,7 +67,7 @@ const AudioAttachment = ({ attachment, host, type, author, variantStyles, msg })
           variantStyles={variantStyles}
           msg={msg}
         />
-        <audio src={host + attachment.audio_url} width="100%" controls/>
+        <audio src={host + attachment.audio_url} width="100%" controls />
 
         {attachment.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (

@@ -11,13 +11,17 @@ const getAttachmentPreviewStyles = () => {
     `,
 
     input: css`
-      width: 95.5%;
+      width: 100%;
     `,
 
     modalContent: css`
       overflow-y: auto;
       overflow-x: hidden;
       max-height: 350px;
+    `,
+
+    fileDescription: css`
+      width: 100%;
     `,
   };
 
