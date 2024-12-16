@@ -70,7 +70,11 @@ export const MessageAggregator = ({
       iconName={iconName}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
-      style={{ padding: 0, zIndex: window.innerWidth <= 780 ? 1 : null }}
+      style={{
+        width: '400px',
+        padding: 0,
+        zIndex: window.innerWidth <= 780 ? 1 : null,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,

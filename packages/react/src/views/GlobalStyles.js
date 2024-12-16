@@ -35,9 +35,6 @@ const getGlobalStyles = (theme) => css`
   .ec-embedded-chat ::-webkit-scrollbar-button {
     display: none;
   }
-  .ec-sidebar {
-    width: 400px;
-  }
   @media (max-width: 780px) {
     .ec-sidebar {
       position: absolute;
