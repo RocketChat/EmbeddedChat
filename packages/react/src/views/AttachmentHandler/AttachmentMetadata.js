@@ -34,13 +34,23 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
       ]}
     >
       <div
-        css={[
-          css`
-            margin: 3px 0 5px 0;
-          `,
-        ]}
+        css={
+          attachment.description !== ''
+            ? [
+                css`
+                  margin: 10px 0px;
+                `,
+              ]
+            : css`
+                margin: -7px 0px;
+              `
+        }
       >
-        <Markdown body={msg} md={attachment.descriptionMd} />
+        {msg ? (
+          <Markdown body={msg} md={attachment.descriptionMd} />
+        ) : (
+          attachment.description
+        )}
       </div>
       <Box
         css={css`
