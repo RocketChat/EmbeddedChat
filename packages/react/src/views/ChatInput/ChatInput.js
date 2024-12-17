@@ -156,7 +156,7 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
     } else if (editMessage.msg) {
-      messageRef.current.value = <Markdown body={editMessage} />;
+      messageRef.current.value = editMessage.msg;
     } else {
       messageRef.current.value = '';
     }

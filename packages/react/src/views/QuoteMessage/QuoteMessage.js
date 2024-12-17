@@ -55,7 +55,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
       </Box>
       <Box css={styles.message}>
         {message.msg
-          ? message.msg
+          ? <Markdown body={message} isReaction={false}/>
           : `${message.file?.name} (${
               message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
             } kB)`}
