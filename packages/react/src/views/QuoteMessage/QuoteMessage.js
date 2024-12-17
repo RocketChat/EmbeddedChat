@@ -54,13 +54,63 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={styles.message}>
-        {message.msg ? (
-          <Markdown body={message} isReaction={false} />
+        {message.file ? (
+          message.file.type.startsWith('image/') ? (
+            <div>
+              <img
+                src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                alt={message.file.name}
+                style={{ maxWidth: '100px', maxHeight: '100px' }}
+              />
+              <div>{`${message.file.name} (${(message.file.size / 1024).toFixed(
+                2
+              )} kB)`}</div>
+            </div>
+          ) : message.file.type.startsWith('video/') ? (
+            <video controls style={{ maxWidth: '100%', maxHeight: '200px' }}>
+              <source
+                src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                type={message.file.type}
+              />
+              Your browser does not support the video tag.
+            </video>
+          ) : message.file.type.startsWith('audio/') ? (
+            <audio controls style={{ maxWidth: '100%' }}>
+              <source
+                src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                type={message.file.type}
+              />
+              Your browser does not support the audio element.
+            </audio>
+          ) : (
+            <Box css={styles.message}>
+              {message.msg ? (
+                <Markdown body={message} isReaction={false} />
+                
+              ) : (
+                `${message.file?.name} (${
+                  message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+                } kB)`
+              )}
+            </Box>
+          )
+        ) : message?.msg[0] === '[' ? (
+          message?.msg.match(/\n(.*)/)[1]
         ) : (
-          `${message.file?.name} (${
-            message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
-          } kB)`
+          <Markdown body={message} isReaction={false} />
         )}
+        {message.attachments &&
+          message.attachments.length > 0 &&
+          message.msg &&
+          message.msg[0] === '[' &&
+          message.attachments.map((attachment, index) => (
+            <Attachment
+              key={index}
+              attachment={attachment}
+              type={attachment.type}
+              host={instanceHost}
+            />
+          ))}
       </Box>
     </Box>
   );
