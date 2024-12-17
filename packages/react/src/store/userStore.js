@@ -27,8 +27,11 @@ const useUserStore = create((set) => ({
   setPassword: (password) => set(() => ({ password })),
   emailoruser: null,
   setEmailorUser: (emailoruser) => set(() => ({ emailoruser })),
-  roles: {},
+  roles: [],
   setRoles: (roles) => set((state) => ({ ...state, roles })),
+  userPinPermissions: {},
+  setUserPinPermissions: (userPinPermissions) =>
+    set((state) => ({ ...state, userPinPermissions })),
   showCurrentUserInfo: false,
   setShowCurrentUserInfo: (showCurrentUserInfo) =>
     set(() => ({ showCurrentUserInfo })),

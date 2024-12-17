@@ -24,6 +24,7 @@ import { LinkPreview } from '../LinkPreview';
 import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const Message = ({
   message,
@@ -51,12 +52,16 @@ const Message = ({
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
+  const userRoles = useUserStore((state) => state.roles);
+  const pinPermissions = useUserStore(
+    (state) => state.userPinPermissions.roles
+  );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
-  const setQuoteMessage = useMessageStore((state) => state.setQuoteMessage);
+  const addQuoteMessage = useMessageStore((state) => state.addQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
-
+  const { getStarredMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -67,6 +72,7 @@ const Message = ({
   const theme = useTheme();
   const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
+  const pinRoles = new Set(pinPermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -87,6 +93,7 @@ const Message = ({
         message: 'Message unstarred',
       });
     }
+    getStarredMessages();
   };
 
   const handlePinMessage = async (msg) => {
@@ -200,6 +207,8 @@ const Message = ({
                     message={message}
                     isEditing={editMessage._id === message._id}
                     authenticatedUserId={authenticatedUserId}
+                    userRoles={userRoles}
+                    pinRoles={pinRoles}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
@@ -211,7 +220,7 @@ const Message = ({
                         setEditMessage(message);
                       }
                     }}
-                    handleQuoteMessage={() => setQuoteMessage(message)}
+                    handleQuoteMessage={() => addQuoteMessage(message)}
                     handleEmojiClick={handleEmojiClick}
                     handlerReportMessage={() => {
                       setMessageToReport(message._id);
