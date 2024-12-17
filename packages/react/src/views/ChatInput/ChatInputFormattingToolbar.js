@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -40,6 +40,20 @@ const ChatInputFormattingToolbar = ({
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const popoverRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setPopoverOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -54,8 +68,45 @@ const ChatInputFormattingToolbar = ({
     triggerButton?.(null, message);
   };
 
+  const handleFormatterClick = (item) => {
+    formatSelection(messageRef, item.pattern);
+    setPopoverOpen(false);
+  };
+
   const chatToolMap = {
-    emoji: (
+    audio: (
+      <Tooltip text="Audio Message" position="top" key="audio">
+        <AudioMessageRecorder />
+      </Tooltip>
+    ),
+    video: (
+      <ActionButton
+        square
+        ghost
+        disabled={isRecordingMessage}
+        onClick={() => {}}
+      >
+        <VideoMessageRecorder />
+      </ActionButton>
+    ),
+    file: (
+      <ActionButton
+        square
+        ghost
+        disabled={isRecordingMessage}
+        onClick={handleClickToOpenFiles}
+      >
+        <Icon name="attachment" size="1.25rem" />
+      </ActionButton>
+    ),
+  };
+
+  return (
+    <Box
+      css={styles.chatFormat}
+      className={`ec-chat-input-formatting-toolbar ${classNames}`}
+      style={styleOverrides}
+    >
       <Tooltip text="Emoji" position="top" key="emoji-btn">
         <ActionButton
           square
@@ -68,58 +119,99 @@ const ChatInputFormattingToolbar = ({
           <Icon name="emoji" size="1.25rem" />
         </ActionButton>
       </Tooltip>
-    ),
-    audio: (
-      <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder />
-      </Tooltip>
-    ),
-    video: (
-      <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder />
-      </Tooltip>
-    ),
-    file: (
-      <Tooltip text="Upload File" position="top" key="file">
-        <ActionButton
-          square
-          ghost
-          disabled={isRecordingMessage}
-          onClick={handleClickToOpenFiles}
-        >
-          <Icon name="attachment" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
-    formatter: formatters
-      .map((name) => formatter.find((item) => item.name === name))
-      .map((item) => (
-        <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
+
+      <Box
+        css={css`
+          display: flex;
+          @media (max-width: 400px) {
+            display: none;
+          }
+        `}
+      >
+        {formatters
+          .map((name) => formatter.find((item) => item.name === name))
+          .map((item) => (
+            <Tooltip
+              text={item.name}
+              position="top"
+              key={`formatter-${item.name}`}
+            >
+              <ActionButton
+                square
+                disabled={isRecordingMessage}
+                ghost
+                onClick={() => {
+                  formatSelection(messageRef, item.pattern);
+                }}
+              >
+                <Icon
+                  disabled={isRecordingMessage}
+                  name={item.name}
+                  size="1.25rem"
+                />
+              </ActionButton>
+            </Tooltip>
+          ))}
+
+        {['audio', 'file', 'video'].map((key) => chatToolMap[key])}
+      </Box>
+
+      <Box
+        css={css`
+          @media (min-width: 400px) {
+            display: none;
+          }
+        `}
+      >
+        <Tooltip text="More" position="top" key="more-btn">
           <ActionButton
             square
-            disabled={isRecordingMessage}
             ghost
-            onClick={() => {
-              formatSelection(messageRef, item.pattern);
-            }}
+            disabled={isRecordingMessage}
+            onClick={() => setPopoverOpen(true)}
           >
-            <Icon
-              disabled={isRecordingMessage}
-              name={item.name}
-              size="1.25rem"
-            />
+            <Icon name="kebab" size="1.25rem" />
           </ActionButton>
         </Tooltip>
-      )),
-  };
+      </Box>
 
-  return (
-    <Box
-      css={styles.chatFormat}
-      className={`ec-chat-input-formatting-toolbar ${classNames}`}
-      style={styleOverrides}
-    >
-      {surfaceItems.map((key) => chatToolMap[key])}
+      {isPopoverOpen && (
+        <Box ref={popoverRef} css={styles.popOverStyles}>
+          {formatters
+            .map((name) => formatter.find((item) => item.name === name))
+            .map((item) => (
+              <ActionButton
+                key={item.name}
+                square
+                disabled={isRecordingMessage}
+                ghost
+                onClick={() => handleFormatterClick(item)}
+                css={css`
+                  padding: 8px;
+                  cursor: pointer;
+                `}
+              >
+                <Icon
+                  disabled={isRecordingMessage}
+                  name={item.name}
+                  size="1.25rem"
+                />
+              </ActionButton>
+            ))}
+          {['video', 'file'].map((key) => (
+            <Box
+              key={key}
+              css={css`
+                padding: 8px;
+              `}
+            >
+              {chatToolMap[key]}
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      {surfaceItems.includes('audio') && chatToolMap.audio}
 
       {isEmojiOpen && (
         <EmojiPicker
@@ -132,7 +224,7 @@ const ChatInputFormattingToolbar = ({
           positionStyles={css`
             position: absolute;
             bottom: 7rem;
-            left: 1.85rem;
+            left: 0.7rem;
           `}
         />
       )}
