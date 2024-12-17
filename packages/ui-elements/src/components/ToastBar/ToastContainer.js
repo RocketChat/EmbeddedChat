@@ -29,8 +29,9 @@ const ToastContainer = () => {
     return null;
   }
 
+  const isMobile = window.innerWidth <= 768;
   return (
-    <Box css={styles.container} style={positionStyle}>
+    <Box css={isMobile ? styles.modalContainer : styles.container} style={positionStyle}>
       <ToastBar toast={currentToast} onClose={onClose} />
     </Box>
   );

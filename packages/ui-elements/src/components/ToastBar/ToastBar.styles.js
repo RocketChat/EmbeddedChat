@@ -45,6 +45,19 @@ export const getToastBarContainerStyles = (theme) => {
       border-radius: ${theme.radius};
       animation: ${animation} ${2000}ms ease-in-out forwards;
     `,
+    modalContainer: css`
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: ${theme.zIndex?.toastbar || 1600};
+      animation: ${animation} 2000ms ease-in-out forwards;
+    `,
   };
   return styles;
 };
