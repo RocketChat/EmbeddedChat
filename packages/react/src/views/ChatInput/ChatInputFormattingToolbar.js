@@ -42,6 +42,7 @@ const ChatInputFormattingToolbar = ({
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popoverRef.current && !popoverRef.current.contains(event.target)) {
@@ -68,11 +69,6 @@ const ChatInputFormattingToolbar = ({
     triggerButton?.(null, message);
   };
 
-  const handleFormatterClick = (item) => {
-    formatSelection(messageRef, item.pattern);
-    setPopoverOpen(false);
-  };
-
   const chatToolMap = {
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
@@ -80,25 +76,27 @@ const ChatInputFormattingToolbar = ({
       </Tooltip>
     ),
     video: (
-      <ActionButton
-        square
-        ghost
-        disabled={isRecordingMessage}
-        onClick={() => {}}
-      >
+      <Tooltip text="Video Message" position="top" key="video">
         <VideoMessageRecorder />
-      </ActionButton>
+      </Tooltip>
     ),
     file: (
-      <ActionButton
-        square
-        ghost
-        disabled={isRecordingMessage}
-        onClick={handleClickToOpenFiles}
-      >
-        <Icon name="attachment" size="1.25rem" />
-      </ActionButton>
+      <Tooltip text="Upload File" position="top" key="file">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={handleClickToOpenFiles}
+        >
+          <Icon name="attachment" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
     ),
+  };
+
+  const handleFormatterClick = (item) => {
+    formatSelection(messageRef, item.pattern);
+    setPopoverOpen(false);
   };
 
   return (
@@ -112,9 +110,7 @@ const ChatInputFormattingToolbar = ({
           square
           ghost
           disabled={isRecordingMessage}
-          onClick={() => {
-            setEmojiOpen(true);
-          }}
+          onClick={() => setEmojiOpen(true)}
         >
           <Icon name="emoji" size="1.25rem" />
         </ActionButton>
@@ -123,7 +119,7 @@ const ChatInputFormattingToolbar = ({
       <Box
         css={css`
           display: flex;
-          @media (max-width: 400px) {
+          @media (max-width: 399px) {
             display: none;
           }
         `}
@@ -140,9 +136,7 @@ const ChatInputFormattingToolbar = ({
                 square
                 disabled={isRecordingMessage}
                 ghost
-                onClick={() => {
-                  formatSelection(messageRef, item.pattern);
-                }}
+                onClick={() => formatSelection(messageRef, item.pattern)}
               >
                 <Icon
                   disabled={isRecordingMessage}
@@ -152,8 +146,6 @@ const ChatInputFormattingToolbar = ({
               </ActionButton>
             </Tooltip>
           ))}
-
-        {['audio', 'file', 'video'].map((key) => chatToolMap[key])}
       </Box>
 
       <Box
@@ -180,38 +172,24 @@ const ChatInputFormattingToolbar = ({
           {formatters
             .map((name) => formatter.find((item) => item.name === name))
             .map((item) => (
-              <ActionButton
+              <Box
                 key={item.name}
-                square
                 disabled={isRecordingMessage}
-                ghost
                 onClick={() => handleFormatterClick(item)}
-                css={css`
-                  padding: 8px;
-                  cursor: pointer;
-                `}
+                css={styles.popOverItemStyles}
               >
                 <Icon
                   disabled={isRecordingMessage}
                   name={item.name}
-                  size="1.25rem"
+                  size="1rem"
                 />
-              </ActionButton>
+                <span>{item.name}</span>
+              </Box>
             ))}
-          {['video', 'file'].map((key) => (
-            <Box
-              key={key}
-              css={css`
-                padding: 8px;
-              `}
-            >
-              {chatToolMap[key]}
-            </Box>
-          ))}
         </Box>
       )}
 
-      {surfaceItems.includes('audio') && chatToolMap.audio}
+      {surfaceItems.map((key) => chatToolMap[key])}
 
       {isEmojiOpen && (
         <EmojiPicker

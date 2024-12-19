@@ -4,9 +4,10 @@ import { darken, lighten } from '@embeddedchat/ui-elements';
 export const getChatInputStyles = (theme) => {
   const styles = {
     inputWithFormattingBox: css`
+      width: 100%;
+      margin-bottom: 5px;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
-      margin: 0.5rem 2rem 1rem 2rem;
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
       }
@@ -39,7 +40,6 @@ export const getChatInputStyles = (theme) => {
       border: none;
       outline: none;
       font-size: 14px;
-
       &:focus {
         border: none;
         outline: none;
@@ -81,13 +81,24 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
     `,
     popOverStyles: css`
       position: absolute;
-      bottom: 4rem;
+      bottom: 3rem;
       left: 0;
-      border: 1px solid ${theme.colors.border};
-      z-index: 1000;
-      background-color: ${theme.colors.background};
-      border-radius: 4px;
+      width: 100%;
+      background: ${theme.colors.background};
+      box-shadow: 0 -8px 10px ${mode === 'light' ? darken(theme.colors.background, 0.1) : lighten(theme.colors.background, 1)};
+      border-radius: 8px;
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 100;
+    `,
+    popOverItemStyles: css`
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      cursor: pointer;
+      padding: 0.5rem;
     `,
   };
   return styles;
