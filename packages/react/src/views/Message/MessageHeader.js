@@ -13,6 +13,7 @@ import { useMemberStore, useUserStore } from '../../store';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const MessageHeader = ({
   message,
@@ -72,6 +73,16 @@ const MessageHeader = ({
         return '';
     }
   };
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
+
+  const handleAvatarClick = () => {
+    setExclusiveState(setShowCurrentUserInfo);
+    setCurrentUser(message?.u);
+  };
 
   return (
     <Box
@@ -82,13 +93,14 @@ const MessageHeader = ({
       {showDisplayName && showName && (
         <Box
           is="span"
-          css={styles.name}
+          css={[styles.name, { cursor: 'pointer' }]}
           className={appendClassNames('ec-message-header-name')}
           style={
             displayNameVariant === 'colorize'
               ? { color: getDisplayNameColor(message.u.username) }
               : null
           }
+          onClick={handleAvatarClick}
         >
           {message.u?.name}
         </Box>
@@ -103,6 +115,7 @@ const MessageHeader = ({
               ? { color: getDisplayNameColor(message.u.username) }
               : null
           }
+          onClick={handleAvatarClick}
         >
           @{message.u.username}
         </Box>
