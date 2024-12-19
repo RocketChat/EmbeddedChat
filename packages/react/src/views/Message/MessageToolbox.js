@@ -120,7 +120,7 @@ export const MessageToolbox = ({
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: message.u._id === authenticatedUserId,
+        visible: (message.u._id === authenticatedUserId) && (message.files?.[0].type !== 'audio/mpeg') && (message.files?.[0].type !== 'video/mp4'),
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },

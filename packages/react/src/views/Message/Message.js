@@ -114,23 +114,6 @@ const Message = ({
     }
   };
 
-  const handleEditMessage = () => {
-
-    if(message.msg == '' && message.files[0]) {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Editing Audio/Video/File messages is not supported at the moment.',
-      });
-      return;
-    }
-
-    if (editMessage._id === message._id) {
-      setEditMessage({});
-    } else {
-      setEditMessage(message);
-    }
-  };
-
   const handleDeleteMessage = async (msg) => {
     const res = await RCInstance.deleteMessage(msg._id);
 
@@ -230,7 +213,13 @@ const Message = ({
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
                     handlePinMessage={handlePinMessage}
-                    handleEditMessage={handleEditMessage}
+                    handleEditMessage={() => {
+                      if (editMessage._id === message._id) {
+                        setEditMessage({});
+                      } else {
+                        setEditMessage(message);
+                      }
+                    }}
                     handleQuoteMessage={() => addQuoteMessage(message)}
                     handleEmojiClick={handleEmojiClick}
                     handlerReportMessage={() => {
