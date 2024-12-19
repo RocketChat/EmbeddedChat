@@ -71,6 +71,9 @@ const useMessageStore = create((set, get) => ({
     }
   },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
+  editMessagePermissions: {},
+  setEditMessagePermissions: (editMessagePermissions) =>
+    set((state) => ({ ...state, editMessagePermissions })),
   addQuoteMessage: (quoteMessage) =>
     set((state) => ({ quoteMessage: [...state.quoteMessage, quoteMessage] })),
   removeQuoteMessage: (quoteMessage) =>
