@@ -113,7 +113,7 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage && isAllowedToPin,
+        visible: isAllowedToPin,
       },
       edit: {
         label: 'Edit',
