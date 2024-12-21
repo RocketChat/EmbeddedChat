@@ -118,6 +118,23 @@ const Message = ({
     }
   };
 
+  const handleCopyMessage = async (msg) => {
+    navigator.clipboard
+      .writeText(msg.msg)
+      .then(() => {
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message copied successfully',
+        });
+      })
+      .catch(() => {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error in copying message',
+        });
+      });
+  };
+
   const handleDeleteMessage = async (msg) => {
     const res = await RCInstance.deleteMessage(msg._id);
 
@@ -215,6 +232,7 @@ const Message = ({
                     userRoles={userRoles}
                     pinRoles={pinRoles}
                     editMessageRoles={editMessageRoles}
+                    handleCopyMessage={handleCopyMessage}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}

@@ -356,6 +356,14 @@ const LayoutSetting = () => {
         },
         iconName: 'edit',
       },
+      copy: {
+        label: 'Copy message',
+        id: 'copy',
+        onClick: () => {
+          addMessageSurfaceItem('copy');
+        },
+        iconName: 'copy',
+      },
       delete: {
         label: 'Delete',
         id: 'delete',
