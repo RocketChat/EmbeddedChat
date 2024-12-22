@@ -79,7 +79,7 @@ const MessageHeader = ({
     setCurrentUser: state.setCurrentUser,
   }));
 
-  const handleAvatarClick = () => {
+  const handleUsernameClick = () => {
     setExclusiveState(setShowCurrentUserInfo);
     setCurrentUser(message?.u);
   };
