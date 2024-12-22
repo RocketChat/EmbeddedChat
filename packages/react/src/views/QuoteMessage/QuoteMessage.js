@@ -12,6 +12,7 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
 import Attachment from '../AttachmentHandler/Attachment';
+import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -83,19 +84,19 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
             </audio>
           ) : (
             <Box css={styles.message}>
-              {message.msg
-                ? message.msg
-                : `${message.file?.name} (${
-                    message.file?.size
-                      ? (message.file.size / 1024).toFixed(2)
-                      : 0
-                  } kB)`}
+              {message.msg ? (
+                <Markdown body={message} isReaction={false} />
+              ) : (
+                `${message.file?.name} (${
+                  message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+                } kB)`
+              )}
             </Box>
           )
         ) : message?.msg[0] === '[' ? (
           message?.msg.match(/\n(.*)/)[1]
         ) : (
-          message?.msg
+          <Markdown body={message} isReaction={false} />
         )}
         {message.attachments &&
           message.attachments.length > 0 &&
