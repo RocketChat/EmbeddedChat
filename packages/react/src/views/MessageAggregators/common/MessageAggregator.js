@@ -130,8 +130,8 @@ export const MessageAggregator = ({
                       isInSidebar
                       style={{
                         flex: 1,
-                        paddingLeft: 3,
-                        paddingRight: 2,
+                        padding: 0,
+                        marginLeft: '15px',
                         minWidth: 0,
                       }}
                     />
@@ -143,6 +143,7 @@ export const MessageAggregator = ({
                       css={{
                         position: 'relative',
                         zIndex: 10,
+                        marginRight: '5px',
                       }}
                     >
                       <Icon name="arrow-back" size="1.25rem" />
