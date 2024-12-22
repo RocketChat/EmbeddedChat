@@ -1,17 +1,23 @@
 import React from 'react';
+import { Suspense, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { MessageBody } from './MessageBody';
-import { MessageToolbox } from './MessageToolbox';
 import { MessageDivider } from './MessageDivider';
 import MessageAvatarContainer from './MessageAvatarContainer';
 import MessageBodyContainer from './MessageBodyContainer';
 import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import useLayoutStore from '../../store/layoutStore';
+
+const MessageToolbox = lazy(() =>
+  import('./MessageToolbox').then((module) => ({
+    default: module.MessageToolbox,
+  }))
+);
 
 const Message = ({
   message,
@@ -65,7 +71,9 @@ const Message = ({
                 <Markdown body={message} isReaction={false} />
 
                 {!message.t && message._id === '62vhmKJGNoxgvLL7M' ? (
-                  <MessageToolbox variantStyles={variantStyles} />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MessageToolbox variantStyles={variantStyles} />
+                  </Suspense>
                 ) : (
                   <></>
                 )}

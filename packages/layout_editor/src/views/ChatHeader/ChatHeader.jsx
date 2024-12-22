@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { Suspense, lazy } from 'react';
 import { Heading, Box, Icon, useTheme } from '@embeddedchat/ui-elements';
 import { getChatHeaderStyles } from './ChatHeader.styles';
-import { Menu } from '../../components/SortableMenu';
 import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
 import {
   DndContext,
@@ -18,6 +18,11 @@ import MenuItem from '../../components/SortableMenu/MenuItem';
 import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
 import useHeaderItemsStore from '../../store/headerItemsStore';
 
+const Menu = lazy(() =>
+  import('../../components/SortableMenu').then((module) => ({
+    default: module.Menu,
+  }))
+);
 const ChatHeader = () => {
   const styles = getChatHeaderStyles(useTheme());
   const { surfaceItems, menuItems, setSurfaceItems, setMenuItems } =
@@ -267,7 +272,9 @@ const ChatHeader = () => {
               />
             )}
             {menuOptions.length > 0 && (
-              <Menu options={menuOptions} onRemove={removeMenuItem} />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Menu options={menuOptions} onRemove={removeMenuItem} />
+              </Suspense>
             )}
           </Box>
           {createPortal(
