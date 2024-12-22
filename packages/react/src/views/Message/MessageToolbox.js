@@ -23,6 +23,7 @@ export const MessageToolbox = ({
   authenticatedUserId,
   userRoles,
   pinRoles,
+  editMessageRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
@@ -70,6 +71,11 @@ export const MessageToolbox = ({
   };
 
   const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+  const isAllowedToEditMessage = userRoles.some((role) =>
+    editMessageRoles.has(role)
+  )
+    ? true
+    : message.u._id === authenticatedUserId;
   const options = useMemo(
     () => ({
       reply: {
@@ -120,7 +126,7 @@ export const MessageToolbox = ({
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: message.u._id === authenticatedUserId,
+        visible: isAllowedToEditMessage,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },
