@@ -56,6 +56,9 @@ const Message = ({
   const pinPermissions = useUserStore(
     (state) => state.userPinPermissions.roles
   );
+  const editMessagePermissions = useMessageStore(
+    (state) => state.editMessagePermissions.roles
+  );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
@@ -73,6 +76,7 @@ const Message = ({
   const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
+  const editMessageRoles = new Set(editMessagePermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -110,6 +114,45 @@ const Message = ({
       dispatchToastMessage({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
+      });
+    }
+  };
+
+  const handleCopyMessage = async (msg) => {
+    navigator.clipboard
+      .writeText(msg.msg)
+      .then(() => {
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message copied successfully',
+        });
+      })
+      .catch(() => {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error in copying message',
+        });
+      });
+  };
+
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
+  const handleCopyMessageLink = async (msg) => {
+    try {
+      const messageLink = await getMessageLink(msg._id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
       });
     }
   };
@@ -210,6 +253,9 @@ const Message = ({
                     authenticatedUserId={authenticatedUserId}
                     userRoles={userRoles}
                     pinRoles={pinRoles}
+                    editMessageRoles={editMessageRoles}
+                    handleCopyMessage={handleCopyMessage}
+                    handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
