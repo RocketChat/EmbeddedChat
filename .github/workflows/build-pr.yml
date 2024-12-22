@@ -12,7 +12,7 @@ env:
   LAYOUT_EDITOR_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/layout_editor"
   DOCS_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/docs"
   STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
-
+  
 jobs:
   build:
     if: github.event.review.state == 'approved' && (github.event.review.author_association == 'COLLABORATOR' || github.event.review.author_association == 'OWNER')
@@ -21,15 +21,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Get user
-        run: echo "${{ github.event.pull_request.head.repo.owner.login }}" > user.txt
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: user
-          path: user.txt
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
