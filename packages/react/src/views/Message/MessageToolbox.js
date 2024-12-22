@@ -143,7 +143,7 @@ export const MessageToolbox = ({
       },
       link: {
         label: 'Copy link',
-        id: 'copyLink',
+        id: 'link',
         onClick: () => handleCopyMessageLink(message),
         iconName: 'link',
         visible: true,

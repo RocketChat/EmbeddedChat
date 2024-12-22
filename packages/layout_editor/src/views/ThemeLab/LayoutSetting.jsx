@@ -366,7 +366,7 @@ const LayoutSetting = () => {
       },
       link: {
         label: 'Copy link',
-        id: 'copyLink',
+        id: 'link',
         onClick: () => addMessageSurfaceItem('link'),
         iconName: 'link',
       },
