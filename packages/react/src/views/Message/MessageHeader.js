@@ -115,7 +115,7 @@ const MessageHeader = ({
               ? { color: getDisplayNameColor(message.u.username) }
               : null
           }
-          onClick={handleAvatarClick}
+          onClick={handleUsernameClick}
         >
           @{message.u.username}
         </Box>
