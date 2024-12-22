@@ -39,7 +39,7 @@ const UserInformation = () => {
   useEffect(() => {
     const getCurrentUserInfo = async () => {
       try {
-        const res = await RCInstance.userInfo(currentUser._id);
+        const res = await RCInstance.userData(currentUser.username);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
@@ -127,7 +127,11 @@ const UserInformation = () => {
             />
             <UserInfoField
               label="Last login"
-              value={formatTimestamp(currentUserInfo.lastLogin)}
+              value={
+                currentUserInfo?.username === 'rocket.cat'
+                  ? 'Never'
+                  : formatTimestamp(currentUserInfo.lastLogin)
+              }
               isAdmin={isAdmin}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
