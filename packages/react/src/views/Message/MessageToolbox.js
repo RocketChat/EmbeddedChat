@@ -81,11 +81,11 @@ export const MessageToolbox = ({
   )
     ? true
     : message.u._id === authenticatedUserId;
-  
+
   const isVisibleForMessageType =
     message.files?.[0].type !== 'audio/mpeg' &&
     message.files?.[0].type !== 'video/mp4';
-  
+
   const options = useMemo(
     () => ({
       reply: {
@@ -145,7 +145,7 @@ export const MessageToolbox = ({
         id: 'copy',
         onClick: () => handleCopyMessage(message),
         iconName: 'copy',
-        visible: true,
+        visible: isVisibleForMessageType,
       },
       link: {
         label: 'Copy link',
