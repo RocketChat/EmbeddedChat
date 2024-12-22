@@ -11,7 +11,7 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -49,7 +49,7 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-
+  const { showSidebar, setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const userRoles = useUserStore((state) => state.roles);
@@ -137,6 +137,7 @@ const Message = ({
 
   const handleOpenThread = (msg) => async () => {
     openThread(msg);
+    setShowSidebar(false);
   };
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
