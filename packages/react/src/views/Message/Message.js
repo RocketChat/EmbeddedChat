@@ -11,7 +11,7 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore } from '../../store';
+import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -49,12 +49,15 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-
+  const { showSidebar, setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const userRoles = useUserStore((state) => state.roles);
   const pinPermissions = useUserStore(
     (state) => state.userPinPermissions.roles
+  );
+  const editMessagePermissions = useMessageStore(
+    (state) => state.editMessagePermissions.roles
   );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -73,6 +76,7 @@ const Message = ({
   const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
+  const editMessageRoles = new Set(editMessagePermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -114,6 +118,45 @@ const Message = ({
     }
   };
 
+  const handleCopyMessage = async (msg) => {
+    navigator.clipboard
+      .writeText(msg.msg)
+      .then(() => {
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message copied successfully',
+        });
+      })
+      .catch(() => {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error in copying message',
+        });
+      });
+  };
+
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
+  const handleCopyMessageLink = async (msg) => {
+    try {
+      const messageLink = await getMessageLink(msg._id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
+      });
+    }
+  };
+
   const handleDeleteMessage = async (msg) => {
     const res = await RCInstance.deleteMessage(msg._id);
 
@@ -137,6 +180,7 @@ const Message = ({
 
   const handleOpenThread = (msg) => async () => {
     openThread(msg);
+    setShowSidebar(false);
   };
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
@@ -209,6 +253,9 @@ const Message = ({
                     authenticatedUserId={authenticatedUserId}
                     userRoles={userRoles}
                     pinRoles={pinRoles}
+                    editMessageRoles={editMessageRoles}
+                    handleCopyMessage={handleCopyMessage}
+                    handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
