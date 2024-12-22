@@ -69,7 +69,7 @@ const ChatBody = ({
 
   const username = useUserStore((state) => state.username);
 
-  const getMessagesAndRoles = useFetchChatData(showRoles);
+  const { getMessagesAndRoles } = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {

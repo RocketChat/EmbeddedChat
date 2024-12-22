@@ -12,11 +12,6 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     return URL;
   };
 
-  let attachmentText = attachment?.text;
-  if (attachmentText.includes(')')) {
-    attachmentText = attachmentText.split(')')[1] || '';
-  }
-
   const { theme } = useTheme();
 
   return (
@@ -67,7 +62,77 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachmentText}
+        {attachment?.text
+          ? attachment.text[0] === '['
+            ? attachment.text.match(/\n(.*)/)?.[1] || ''
+            : attachment.text
+          : ''}
+        {attachment?.attachments &&
+          attachment.attachments.map((nestedAttachment, index) => (
+            <Box
+              css={[
+                css`
+                  display: flex;
+                  flex-direction: column;
+                  letter-spacing: 0rem;
+                  font-size: 0.875rem;
+                  font-weight: 400;
+                  word-break: break-word;
+                  border-inline-start: 3px solid ${theme.colors.border};
+                  margin-top: 0.75rem;
+                  padding: 0.5rem;
+                `,
+                (nestedAttachment?.type ? variantStyles.pinnedContainer : '') ||
+                  css`
+                    ${!attachment?.type
+                      ? `border: 2px solid ${theme.colors.border};`
+                      : ''}
+                  `,
+                css`
+                  ${variantStyles.name !== undefined &&
+                  variantStyles.name.includes('bubble')
+                    ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
+                    : ''}
+                `,
+              ]}
+              key={index}
+            >
+              <Box
+                css={[
+                  css`
+                    display: flex;
+                    gap: 0.3rem;
+                    align-items: center;
+                  `,
+
+                  variantStyles.textUserInfo,
+                ]}
+              >
+                {nestedAttachment?.author_name && (
+                  <>
+                    <Avatar
+                      url={getUserAvatarUrl(nestedAttachment?.author_icon)}
+                      alt="avatar"
+                      size="1.2em"
+                    />
+                    <Box>@{nestedAttachment?.author_name}</Box>
+                  </>
+                )}
+              </Box>
+              <Box
+                css={css`
+                  margin-top: 0.5rem;
+                  white-space: pre-line;
+                `}
+              >
+                {nestedAttachment?.text
+                  ? nestedAttachment.text[0] === '['
+                    ? nestedAttachment.text.match(/\n(.*)/)?.[1] || ''
+                    : nestedAttachment.text
+                  : ''}
+              </Box>
+            </Box>
+          ))}
       </Box>
     </Box>
   );

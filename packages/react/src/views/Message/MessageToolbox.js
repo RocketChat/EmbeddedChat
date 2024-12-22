@@ -10,9 +10,9 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker';
-import { parseEmoji } from '../../lib/emoji';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { Markdown } from '../Markdown';
 
 export const MessageToolbox = ({
   className = '',
@@ -21,12 +21,17 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  userRoles,
+  pinRoles,
+  editMessageRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
   handleStarMessage,
   handleDeleteMessage,
   handlerReportMessage,
+  handleCopyMessage,
+  handleCopyMessageLink,
   handleEditMessage,
   handleQuoteMessage,
   isEditing = false,
@@ -36,6 +41,8 @@ export const MessageToolbox = ({
       'reply',
       'quote',
       'star',
+      'copy',
+      'link',
       'pin',
       'edit',
       'delete',
@@ -67,6 +74,12 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
+  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+  const isAllowedToEditMessage = userRoles.some((role) =>
+    editMessageRoles.has(role)
+  )
+    ? true
+    : message.u._id === authenticatedUserId;
   const options = useMemo(
     () => ({
       reply: {
@@ -110,16 +123,30 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage,
+        visible: !isThreadMessage && isAllowedToPin,
       },
       edit: {
         label: 'Edit',
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: message.u._id === authenticatedUserId,
+        visible: isAllowedToEditMessage,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
+      },
+      copy: {
+        label: 'Copy message',
+        id: 'copy',
+        onClick: () => handleCopyMessage(message),
+        iconName: 'copy',
+        visible: true,
+      },
+      link: {
+        label: 'Copy link',
+        id: 'link',
+        onClick: () => handleCopyMessageLink(message),
+        iconName: 'link',
+        visible: true,
       },
       delete: {
         label: 'Delete',
@@ -149,6 +176,8 @@ export const MessageToolbox = ({
       handlePinMessage,
       handleEditMessage,
       handlerReportMessage,
+      handleCopyMessage,
+      isAllowedToPin,
     ]
   );
 
@@ -240,7 +269,7 @@ export const MessageToolbox = ({
               padding: '0 0.5rem 0.5rem',
             }}
           >
-            {parseEmoji(message.msg)}
+            <Markdown body={message} isReaction={false} />
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={handleOnClose}>
