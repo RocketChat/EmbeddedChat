@@ -30,6 +30,8 @@ export const MessageToolbox = ({
   handleStarMessage,
   handleDeleteMessage,
   handlerReportMessage,
+  handleCopyMessage,
+  handleCopyMessageLink,
   handleEditMessage,
   handleQuoteMessage,
   isEditing = false,
@@ -39,6 +41,8 @@ export const MessageToolbox = ({
       'reply',
       'quote',
       'star',
+      'copy',
+      'link',
       'pin',
       'edit',
       'delete',
@@ -130,6 +134,20 @@ export const MessageToolbox = ({
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },
+      copy: {
+        label: 'Copy message',
+        id: 'copy',
+        onClick: () => handleCopyMessage(message),
+        iconName: 'copy',
+        visible: true,
+      },
+      link: {
+        label: 'Copy link',
+        id: 'link',
+        onClick: () => handleCopyMessageLink(message),
+        iconName: 'link',
+        visible: true,
+      },
       delete: {
         label: 'Delete',
         id: 'delete',
@@ -158,6 +176,8 @@ export const MessageToolbox = ({
       handlePinMessage,
       handleEditMessage,
       handlerReportMessage,
+      handleCopyMessage,
+      isAllowedToPin,
     ]
   );
 
