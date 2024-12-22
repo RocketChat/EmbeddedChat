@@ -148,20 +148,6 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
         iconName: 'edit',
         visible: true,
       },
-      copy: {
-        label: 'Copy message',
-        id: 'copy',
-        onClick: () => {},
-        iconName: 'copy',
-        visible: true,
-      },
-      link: {
-        label: 'Copy link',
-        id: 'link',
-        onClick: () => {},
-        iconName: 'link',
-        visible: true,
-      },
       delete: {
         label: 'Delete',
         id: 'delete',
