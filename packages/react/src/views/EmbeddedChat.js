@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore } from '../store';
+import { useUserStore, useLoginStore, useMessageStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -87,6 +87,9 @@ const EmbeddedChat = (props) => {
     (state) => state.setUserPinPermissions
   );
 
+  const setEditMessagePermissions = useMessageStore(
+    (state) => state.setEditMessagePermissions
+  );
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -130,6 +133,7 @@ const EmbeddedChat = (props) => {
         await RCInstance.autoLogin(auth);
         const permissions = await RCInstance.permissionInfo();
         setUserPinPermissions(permissions.update[150]);
+        setEditMessagePermissions(permissions.update[28]);
       } catch (error) {
         console.error(error);
       } finally {
