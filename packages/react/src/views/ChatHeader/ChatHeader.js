@@ -21,6 +21,7 @@ import {
   usePinnedMessageStore,
   useStarredMessageStore,
   useFileStore,
+  useSidebarStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -84,7 +85,7 @@ const ChatHeader = ({
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const dispatchToastMessage = useToastBarDispatch();
   const { getMessagesAndRoles } = useFetchChatData(showRoles);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
@@ -130,6 +131,7 @@ const ChatHeader = ({
     try {
       await RCInstance.logout();
       setMessages([]);
+      setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
     } catch (e) {
