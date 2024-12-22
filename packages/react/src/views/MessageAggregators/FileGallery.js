@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
-import { useChannelStore } from '../../store';
+import { useChannelStore, useMessageStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
 
@@ -10,6 +10,7 @@ const FileGallery = () => {
   const viewType = variantOverrides.viewType || 'Sidebar';
 
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const messages = useMessageStore((state) => state.messages);
 
   const [text, setText] = useState('');
   const [isFetching, setIsFetching] = useState(true);
@@ -39,7 +40,7 @@ const FileGallery = () => {
       }
     };
     fetchAllFiles();
-  }, [RCInstance, isChannelPrivate]);
+  }, [RCInstance, isChannelPrivate, messages]);
 
   return (
     <MessageAggregator
