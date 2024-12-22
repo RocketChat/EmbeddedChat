@@ -135,6 +135,28 @@ const Message = ({
       });
   };
 
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
+  const handleCopyMessageLink = async (msg) => {
+    try {
+      const messageLink = await getMessageLink(msg._id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
+      });
+    }
+  };
+
   const handleDeleteMessage = async (msg) => {
     const res = await RCInstance.deleteMessage(msg._id);
 
@@ -233,6 +255,7 @@ const Message = ({
                     pinRoles={pinRoles}
                     editMessageRoles={editMessageRoles}
                     handleCopyMessage={handleCopyMessage}
+                    handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
                     handleStarMessage={handleStarMessage}
