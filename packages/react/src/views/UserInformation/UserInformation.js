@@ -27,6 +27,8 @@ const UserInformation = () => {
   const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
+  const [error, setError] = useState(null);
+  const [loader, setLoader] = useState(true);
   const currentUser = useUserStore((state) => state.currentUser);
   const authenticatedUserRoles = useUserStore((state) => state.roles);
   const authenticatedUserId = useUserStore((state) => state.userId);
@@ -39,12 +41,18 @@ const UserInformation = () => {
   useEffect(() => {
     const getCurrentUserInfo = async () => {
       try {
-        const res = await RCInstance.userData(currentUser.username);
+        setError(null);
+        const res = await RCInstance.userInfo(currentUser._id);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
+          setLoader(false);
+        } else {
+          throw new Error('User info not found');
         }
       } catch (err) {
+        setLoader(false);
+        setError(`${err}`);
         console.error('Error fetching current user info', err);
       }
     };
@@ -65,6 +73,9 @@ const UserInformation = () => {
           }
         : {})}
     >
+      <Box css={styles.centeredColumnStyles}>
+        {loader ? <Throbber/> : null}
+      </Box>
       {isUserInfoFetched ? (
         <Box css={styles.userSidebar}>
           <Avatar
@@ -168,8 +179,16 @@ const UserInformation = () => {
           </Box>
         </Box>
       ) : (
-        <Box css={styles.centeredColumnStyles}>
-          <Throbber />
+        <Box
+          css={css`
+            display: flex;
+            align-items: center
+            Font-size: 1.25rem;
+          `}
+        >
+          Failed to load user Info
+          <br/>
+          {error}
         </Box>
       )}
     </ViewComponent>
