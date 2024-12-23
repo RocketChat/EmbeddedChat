@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -24,7 +24,7 @@ import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
-import createPendingMessage from '../../lib/createPendingMessage';
+import { createPendingMessage } from '../../lib/createPendingMessage';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
@@ -58,6 +58,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [messageQueue, setMessageQueue] = useState([]);
 
   const {
     isUserAuthenticated,
@@ -162,6 +163,42 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   }, [editMessage]);
 
+  useEffect(() => {
+    const handleOnline = async () => {
+      if (navigator.onLine && messageQueue.length > 0) {
+        for (let i = 0; i < messageQueue.length; i++) {
+          const pendingMessage = JSON.parse(messageQueue[i]);
+          const res = await RCInstance.sendMessage(
+            {
+              msg: pendingMessage.msg,
+              _id: pendingMessage._id,
+            },
+            ECOptions.enableThreads ? threadId : undefined
+          );
+          if (res.success) {
+            clearQuoteMessages();
+            replaceMessage(pendingMessage, res.message);
+          }
+        }
+        setMessageQueue([]);
+        localStorage.removeItem('pendingMessage');
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [messageQueue]);
+
+  useEffect(() => {
+    const pendingMessage = localStorage.getItem('pendingMessage');
+    if (pendingMessage) {
+      messageRef.current.value = JSON.parse(pendingMessage).msg || '';
+      localStorage.removeItem('pendingMessage');
+    }
+  }, []);
+
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
@@ -252,6 +289,21 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
+  const handleOffline = (pendingMessage) => {
+    localStorage.removeItem('pendingMessage');
+    localStorage.setItem('pendingMessage', JSON.stringify(pendingMessage));
+
+    setMessageQueue((prevQueue) => [
+      ...prevQueue,
+      JSON.stringify(pendingMessage),
+    ]);
+
+    dispatchToastMessage({
+      type: 'info',
+      message: 'Message will be sent automatically once you are back online!',
+    });
+  };
+
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
     setDisableButton(true);
@@ -293,6 +345,11 @@ const ChatInput = ({ scrollToBottom }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
+    if (!navigator.onLine) {
+      handleOffline(pendingMessage);
+      return;
+    }
+
     const res = await RCInstance.sendMessage(
       {
         msg: pendingMessage.msg,
@@ -308,6 +365,14 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleEditMessage = async (message) => {
+    if (!navigator.onLine) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Please try again after connecting to internet!',
+      });
+      return;
+    }
+
     messageRef.current.value = '';
     setDisableButton(true);
     const editMessageId = editMessage._id;

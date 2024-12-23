@@ -1,12 +1,20 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  Button,
+  Input,
+  Modal,
+  useToastBarDispatch,
+} from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useUserStore, useMessageStore } from '../../store';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
+import { createPendingFileMessage } from '../../lib/createPendingMessage';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -29,15 +37,48 @@ const AttachmentPreview = () => {
     setFileDescription(parseEmoji(e.target.value));
   };
 
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const { username, userId, name } = useUserStore((state) => ({
+    username: state.username,
+    userId: state.userId,
+    name: state.name,
+  }));
+  const userInfo = { _id: userId, username, name };
+
   const submit = async () => {
     setIsPending(true);
-    await RCInstance.sendAttachment(
+
+    let pendingFileMessage = createPendingFileMessage(
+      data,
+      userInfo,
+      fileDescription
+    );
+    upsertMessage(pendingFileMessage, ECOptions.enableThreads);
+    toggle();
+
+    if (!navigator.onLine) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Please try again after connecting to internet!',
+      });
+      removeMessage(pendingFileMessage._id);
+      return;
+    }
+
+    const res = await RCInstance.sendAttachment(
       data,
       fileName,
       fileDescription,
       ECOptions?.enableThreads ? threadId : undefined
     );
-    toggle();
+
+    if (res.success) {
+      removeMessage(pendingFileMessage._id);
+    }
+
     setData(null);
     setIsPending(false);
   };

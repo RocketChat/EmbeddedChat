@@ -12,11 +12,13 @@ import {
   ActionButton,
   Modal,
   useTheme,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import RCContext from '../../context/RCInstance';
-import useMessageStore from '../../store/messageStore';
+import { useUserStore, useMessageStore } from '../../store';
 import { getCommonRecorderStyles } from './ChatInput.styles';
+import { createPendingVideoMessage } from '../../lib/createPendingMessage';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -34,6 +36,21 @@ const VideoMessageRecorder = () => {
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
   const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const { username, userId, name } = useUserStore((state) => ({
+    username: state.username,
+    userId: state.userId,
+    name: state.name,
+  }));
+  const userInfo = { _id: userId, username, name };
+
+  const [messageQueue, setMessageQueue] = useState([]);
+  const addMessageInMessageQueue = (key, value) => {
+    setMessageQueue((prevState) => [...prevState, { key, value }]);
+  };
 
   const onStop = (videoChunks) => {
     const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
@@ -135,13 +152,62 @@ const VideoMessageRecorder = () => {
   }, [handleMount]);
 
   useEffect(() => {
+    const handleOnline = async () => {
+      if (navigator.onLine && messageQueue.length > 0) {
+        for (let i = 0; i < messageQueue.length; i++) {
+          const { key, value } = messageQueue[i];
+          const pendingVideoMessage = JSON.parse(value);
+
+          const res = await RCInstance.sendAttachment(
+            key,
+            undefined,
+            undefined,
+            ECOptions.enableThreads ? threadId : undefined
+          );
+
+          if (res.success) {
+            removeMessage(pendingVideoMessage._id);
+          }
+        }
+        setMessageQueue([]);
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [messageQueue]);
+
+  const handleOffline = (file, pendingVideoMessage) => {
+    addMessageInMessageQueue(file, JSON.stringify(pendingVideoMessage));
+
+    dispatchToastMessage({
+      type: 'info',
+      message: 'Video will be sent automatically once you are back online!',
+    });
+  };
+
+  useEffect(() => {
     const sendRecording = async () => {
-      await RCInstance.sendAttachment(
+      let pendingVideoMessage = createPendingVideoMessage(file, userInfo);
+      upsertMessage(pendingVideoMessage, ECOptions.enableThreads);
+
+      if (!navigator.onLine) {
+        handleOffline(file, pendingVideoMessage);
+        return;
+      }
+
+      const res = await RCInstance.sendAttachment(
         file,
         undefined,
         undefined,
         ECOptions.enableThreads ? threadId : undefined
       );
+
+      if (res.success) {
+        removeMessage(pendingVideoMessage._id);
+      }
     };
     if (isRecorded && file) {
       sendRecording();
