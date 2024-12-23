@@ -60,11 +60,21 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
         `}
       >
         <p
-          css={css`
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.7;
-          `}
+          css={
+            attachment.description
+              ? [
+                  css`
+                    margin: 0px;
+                    font-size: 14px;
+                    opacity: 0.7;
+                  `,
+                ]
+              : css`
+                  margin: 22px 0 15px 0;
+                  font-size: 14px;
+                  opacity: 0.7;
+                `
+          }
         >
           {attachment.title}
         </p>
