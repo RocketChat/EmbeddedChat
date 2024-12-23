@@ -732,12 +732,12 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getAllFiles(isChannelPrivate = false) {
+  async getAllFiles(isChannelPrivate = false, typeGroup = "") {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`,
         {
           headers: {
             "Content-Type": "application/json",

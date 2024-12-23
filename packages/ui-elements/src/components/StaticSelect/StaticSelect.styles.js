@@ -38,6 +38,15 @@ const getStaticSelectStyles = (theme) => {
       cursor: not-allowed !important;
       color: ${theme.colors.mutedForeground};
     `,
+
+    fileTypeSelect: css`
+      position: absolute;
+      z-index: 1000;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: white;
+    `,
   };
 
   return styles;

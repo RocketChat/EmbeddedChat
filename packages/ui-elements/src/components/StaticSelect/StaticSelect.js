@@ -12,6 +12,7 @@ const StaticSelect = ({
   style = {},
   options = [],
   placeholder = '',
+  isFile,
   value,
   onSelect,
   disabled = false,
@@ -85,12 +86,21 @@ const StaticSelect = ({
         <Icon name="chevron-down" />
       </Box>
 
-      {isOpen && (
+      {isOpen && !isFile && (
         <ListBox
           options={options}
           onSelect={handleSelect}
           value={internalValue}
         />
+      )}
+      {isOpen && isFile && (
+        <Box css={styles.fileTypeSelect}>
+          <ListBox
+            options={options}
+            onSelect={handleSelect}
+            value={internalValue}
+          />
+        </Box>
       )}
     </Box>
   );

@@ -4,13 +4,20 @@ import { Icon } from '../Icon';
 import { Input } from '../Input';
 import { getSidebarContentStyles } from './Sidebar.styles';
 import { useTheme } from '../../hooks';
+import { StaticSelect } from '../StaticSelect';
 
-const SidebarContent = ({ children, searchProps = {}, style }) => {
+const SidebarContent = ({
+  children,
+  searchProps = {},
+  style,
+  filterProps = {},
+}) => {
   const {
     isSearch = false,
     handleInputChange,
     placeholder,
   } = searchProps || {};
+  const { isFile, options, value, handleFilterSelect } = filterProps || {};
   const searchContainerRef = useRef(null);
   const { theme } = useTheme();
   const styles = getSidebarContentStyles(theme);
@@ -46,6 +53,20 @@ const SidebarContent = ({ children, searchProps = {}, style }) => {
             onBlur={handleBlur}
           />
           <Icon name="magnifier" size="1.25rem" css={styles.noInfoIcon} />
+        </Box>
+      )}
+      {isFile && (
+        <Box>
+          <StaticSelect
+            style={{
+              position: 'relative',
+              margin: '0.5rem',
+            }}
+            isFile={isFile}
+            options={options}
+            value={value}
+            onSelect={handleFilterSelect}
+          />
         </Box>
       )}
       {children}
