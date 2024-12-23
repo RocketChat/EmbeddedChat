@@ -74,7 +74,7 @@ const UserInformation = () => {
         : {})}
     >
       <Box css={styles.centeredColumnStyles}>
-        {loader ? <Throbber/> : null}
+        {loader ? <Throbber /> : null}
       </Box>
       {isUserInfoFetched ? (
         <Box css={styles.userSidebar}>
@@ -187,7 +187,7 @@ const UserInformation = () => {
           `}
         >
           Failed to load user Info
-          <br/>
+          <br />
           {error}
         </Box>
       )}
