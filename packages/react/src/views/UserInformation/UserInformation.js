@@ -52,7 +52,7 @@ const UserInformation = () => {
         }
       } catch (err) {
         setLoader(false);
-        setError(`${err}`);
+        setError(`Failed to load user Info${err}`);
         console.error('Error fetching current user info', err);
       }
     };
@@ -186,7 +186,6 @@ const UserInformation = () => {
             Font-size: 1.25rem;
           `}
         >
-          Failed to load user Info
           <br />
           {error}
         </Box>
