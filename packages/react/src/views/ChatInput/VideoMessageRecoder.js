@@ -170,7 +170,7 @@ const VideoMessageRecorder = () => {
             onClose={handleCancelRecordButton}
             style={{
               display: 'flex',
-              width: '28rem',
+              height: '100%',
             }}
           >
             <video
@@ -180,6 +180,8 @@ const VideoMessageRecorder = () => {
               ref={videoRef}
               css={css`
                 margin-bottom: 2px;
+                object-fit: cover;
+                height: 100%;
               `}
             />
             <Box css={styles.controller}>
