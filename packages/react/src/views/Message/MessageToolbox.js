@@ -11,7 +11,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
-import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import ToolbarMenu from '../SurfaceMenu/ToolbarMenu';
 import { Markdown } from '../Markdown';
 
 export const MessageToolbox = ({
@@ -220,7 +220,7 @@ export const MessageToolbox = ({
           {...props}
         >
           {surfaceOptions?.length > 0 && (
-            <SurfaceMenu options={surfaceOptions} size="small" />
+            <ToolbarMenu options={surfaceOptions} size="small" />
           )}
           {menuOptions?.length > 0 && (
             <Menu
