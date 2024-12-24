@@ -17,7 +17,7 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useSidebarStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage }) => {
@@ -25,6 +25,7 @@ const FileMessage = ({ fileMessage }) => {
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -36,6 +37,23 @@ const FileMessage = ({ fileMessage }) => {
     anchor.click();
     document.body.removeChild(anchor);
   }, []);
+
+  const navigateToFile = (id) => {
+    const message = messages.find((msg) => msg?.file?._id === id);
+    if (message) {
+      const element = document.getElementById(`ec-message-body-${message._id}`);
+      if (element) {
+        element.style.backgroundColor = '#ffeb3b';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setShowSidebar(false);
+
+        setTimeout(() => {
+          element.style.backgroundColor = '';
+          element.style.transition = 'background-color 0.5s ease-out';
+        }, 2000);
+      }
+    }
+  };
 
   const deleteFile = useCallback(
     async (file) => {
@@ -92,9 +110,15 @@ const FileMessage = ({ fileMessage }) => {
             },
             {
               id: 'delete',
-              action: () => setFileToDelete(fileMessage),
+              action: () => setFileToDelete(fileMessage._id),
               label: 'Delete',
               icon: 'trash',
+            },
+            {
+              id: 'navigate',
+              action: () => navigateToFile(fileMessage._id),
+              label: 'Navigate',
+              icon: 'arrow-back',
             },
           ]}
         />
