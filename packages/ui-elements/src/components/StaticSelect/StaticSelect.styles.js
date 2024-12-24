@@ -41,7 +41,7 @@ const getStaticSelectStyles = (theme) => {
 
     fileTypeSelect: css`
       position: absolute;
-      z-index: 1000;
+      z-index: 10;
       top: 100%;
       left: 0;
       width: 100%;
