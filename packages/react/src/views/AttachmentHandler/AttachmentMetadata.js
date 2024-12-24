@@ -32,15 +32,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <p
-        css={[
-          css`
-            margin: 9px 0 0;
-          `,
-        ]}
-      >
-        {attachment.description}
-      </p>
+      <p css={[css``]}>{attachment.description}</p>
       <Box
         css={css`
           display: flex;

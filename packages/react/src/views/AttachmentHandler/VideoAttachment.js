@@ -37,7 +37,6 @@ const VideoAttachment = ({
           css`
             line-height: 0;
             border-radius: inherit;
-            padding: 0.5rem;
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`

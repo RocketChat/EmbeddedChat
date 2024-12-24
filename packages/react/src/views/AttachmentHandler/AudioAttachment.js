@@ -21,7 +21,6 @@ const AudioAttachment = ({ attachment, host, type, author, variantStyles }) => {
           css`
             line-height: 0;
             border-radius: inherit;
-            padding: 0.5rem;
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
