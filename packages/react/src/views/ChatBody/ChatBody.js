@@ -6,6 +6,7 @@ import {
   Box,
   Throbber,
   useComponentOverrides,
+  Modal,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
@@ -48,6 +49,8 @@ const ChatBody = ({
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const channelInfo = useChannelStore((state) => state.channelInfo);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
@@ -204,6 +207,38 @@ const ChatBody = ({
 
   return (
     <>
+      {isModalOpen && (
+        <Modal>
+          <Modal.Header>
+            <Modal.Title>Announcement</Modal.Title>
+            <Modal.Close onClick={() => setIsModalOpen(false)} />
+          </Modal.Header>
+          <Modal.Content>
+            <Box
+              css={css`
+                min-height: 100px;
+              `}
+            >
+              {channelInfo?.announcement}
+            </Box>
+          </Modal.Content>
+        </Modal>
+      )}
+      {channelInfo?.announcement && (
+        <Box css={styles.announcementContainer}>
+          <Box
+            style={{
+              maxWidth: '50%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              cursor: 'pointer',
+            }}
+            onClick={() => setIsModalOpen(true)}
+          >
+            {channelInfo?.announcement}
+          </Box>
+        </Box>
+      )}
       <Box
         ref={messageListRef}
         css={styles.chatbodyContainer}

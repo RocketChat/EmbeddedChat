@@ -14,6 +14,13 @@ export const getChatbodyStyles = () => {
       padding-top: 70px;
       margin-top: 0.25rem;
     `,
+    announcementContainer: css`
+      background-color: #a8c3eb;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    `,
   };
 
   return styles;

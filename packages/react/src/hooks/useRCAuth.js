@@ -5,6 +5,7 @@ import {
   useUserStore,
   totpModalStore,
   useLoginStore,
+  useChannelStore,
   useMessageStore,
 } from '../store';
 
@@ -30,6 +31,9 @@ export const useRCAuth = () => {
   );
   const setEditMessagePermissions = useMessageStore(
     (state) => state.setEditMessagePermissions
+  );
+  const setEditRoomInfoPermission = useChannelStore(
+    (state) => state.setEditRoomInfoPermission
   );
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -70,6 +74,7 @@ export const useRCAuth = () => {
           setPassword(null);
           setUserPinPermissions(permissions.update[150]);
           setEditMessagePermissions(permissions.update[28]);
+          setEditRoomInfoPermission(permissions.update[36].roles);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',

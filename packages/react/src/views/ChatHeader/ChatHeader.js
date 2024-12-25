@@ -126,7 +126,10 @@ const ChatHeader = ({
   };
   const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
   const authenticatedUserId = useUserStore((state) => state.userId);
-
+  const getChannelAvatarURL = (channelname) => {
+    const host = RCInstance.getHost();
+    return `${host}/avatar/${channelname}`;
+  };
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
@@ -359,12 +362,12 @@ const ChatHeader = ({
                   {channelInfo.name || channelName || 'channelName'}
                 </Heading>
                 {fullScreen && (
-                  <p
+                  <div
                     className="ec-chat-header--channelDescription"
-                    css={styles.clearSpacing}
+                    style={{ fontSize: '0.75rem' }}
                   >
-                    {channelInfo.description || ''}
-                  </p>
+                    {channelInfo.topic || ''}
+                  </div>
                 )}
               </>
             ) : (
@@ -396,7 +399,6 @@ const ChatHeader = ({
           iconName="arrow-back"
         />
       )}
-
       {!isThreadOpen && filtered && (
         <DynamicHeader
           title={headerTitle}

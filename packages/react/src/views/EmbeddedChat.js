@@ -18,7 +18,12 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import {
+  useUserStore,
+  useLoginStore,
+  useMessageStore,
+  useChannelStore,
+} from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -86,7 +91,9 @@ const EmbeddedChat = (props) => {
   const setUserPinPermissions = useUserStore(
     (state) => state.setUserPinPermissions
   );
-
+  const setEditRoomInfoPermission = useChannelStore(
+    (state) => state.setEditRoomInfoPermission
+  );
   const setEditMessagePermissions = useMessageStore(
     (state) => state.setEditMessagePermissions
   );
@@ -132,6 +139,7 @@ const EmbeddedChat = (props) => {
       try {
         await RCInstance.autoLogin(auth);
         const permissions = await RCInstance.permissionInfo();
+        setEditRoomInfoPermission(permissions.update[36].roles);
         setUserPinPermissions(permissions.update[150]);
         setEditMessagePermissions(permissions.update[28]);
       } catch (error) {
