@@ -81,6 +81,25 @@ const VideoAttachment = ({
           css={css`
             padding-left: 0.5rem;
           `}
+<<<<<<< HEAD
+=======
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_url || attachment.video_url)}
+            variantStyles={variantStyles}
+          />
+        </Box>
+        <video
+          width={300}
+          controls
+          style={{
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
+            paddingLeft: '0.5rem',
+            paddingBottom: '0.5rem',
+          }}
+>>>>>>> 306ae5b6 (Fix: Add padding for audio and video messages in nested attachments and quotes)
         >
           <AttachmentMetadata
             attachment={attachment}
