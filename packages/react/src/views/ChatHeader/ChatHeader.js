@@ -80,7 +80,7 @@ const ChatHeader = ({
 
   const { RCInstance, ECOptions } = useRCContext();
   const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
-  const showChannelAvatar = ECOptions?.showChannelAvatar;
+
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
