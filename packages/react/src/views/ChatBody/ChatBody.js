@@ -238,8 +238,10 @@ const ChatBody = ({
             css={[
               styles.announcementTextBox,
               css`
-                text-decoration: ${isOverflowing ? 'underline' : 'none'};
-                cursor: ${isOverflowing ? 'pointer' : 'default'};
+                &:hover {
+                  text-decoration: ${isOverflowing ? 'underline' : 'none'};
+                  cursor: ${isOverflowing ? 'pointer' : 'default'};
+                }
               `,
             ]}
             onClick={isOverflowing ? toggleModal : undefined}
