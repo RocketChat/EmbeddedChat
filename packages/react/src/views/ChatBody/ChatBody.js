@@ -171,7 +171,7 @@ const ChatBody = ({
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight
+        messageListRef.current.scrollHeight
       );
     }
 
@@ -202,14 +202,14 @@ const ChatBody = ({
     if (announcementRef.current) {
       setIsOverflowing(
         announcementRef.current.scrollWidth >
-          announcementRef.current.clientWidth
+        announcementRef.current.clientWidth
       );
     }
   };
 
   useEffect(() => {
     checkOverflow();
-  }, [channelInfo.announcement]);
+  }, [channelInfo.announcement, showAnnouncement]);
   useEffect(() => {
     const currentRef = messageListRef.current;
     currentRef.addEventListener('scroll', handleScroll);
