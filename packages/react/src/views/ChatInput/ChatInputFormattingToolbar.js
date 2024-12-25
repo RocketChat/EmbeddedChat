@@ -62,6 +62,7 @@ const ChatInputFormattingToolbar = ({
           ghost
           disabled={isRecordingMessage}
           onClick={() => {
+            if (isRecordingMessage) return;
             setEmojiOpen(true);
           }}
         >
@@ -71,12 +72,12 @@ const ChatInputFormattingToolbar = ({
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder />
+        <AudioMessageRecorder disabled={isRecordingMessage} />
       </Tooltip>
     ),
     video: (
       <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder />
+        <VideoMessageRecorder disabled={isRecordingMessage} />
       </Tooltip>
     ),
     file: (
@@ -85,7 +86,10 @@ const ChatInputFormattingToolbar = ({
           square
           ghost
           disabled={isRecordingMessage}
-          onClick={handleClickToOpenFiles}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            handleClickToOpenFiles();
+          }}
         >
           <Icon name="attachment" size="1.25rem" />
         </ActionButton>
@@ -100,6 +104,7 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage}
             ghost
             onClick={() => {
+              if (isRecordingMessage) return;
               formatSelection(messageRef, item.pattern);
             }}
           >

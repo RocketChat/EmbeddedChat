@@ -18,7 +18,7 @@ import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 
-const VideoMessageRecorder = () => {
+const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -58,6 +58,7 @@ const VideoMessageRecorder = () => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
@@ -155,7 +156,12 @@ const VideoMessageRecorder = () => {
   return (
     <>
       {state === 'idle' && (
-        <ActionButton ghost square onClick={handleRecordButtonClick}>
+        <ActionButton
+          ghost
+          square
+          disabled={disabled}
+          onClick={handleRecordButtonClick}
+        >
           <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>
       )}
