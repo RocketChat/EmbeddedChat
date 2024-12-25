@@ -54,6 +54,7 @@ const VideoAttachment = ({
                   display: flex;
                   gap: 0.3rem;
                   align-items: center;
+                  padding: 0.5rem;
                 `,
                 variantStyles.textUserInfo,
               ]}
@@ -69,17 +70,25 @@ const VideoAttachment = ({
         ) : (
           ''
         )}
-        <AttachmentMetadata
-          attachment={attachment}
-          url={host + (attachment.title_url || attachment.video_url)}
-          variantStyles={variantStyles}
-        />
+        <Box
+          css={css`
+            padding-left: 0.5rem;
+          `}
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_url || attachment.video_url)}
+            variantStyles={variantStyles}
+          />
+        </Box>
         <video
           width={300}
           controls
           style={{
             borderBottomLeftRadius: 'inherit',
             borderBottomRightRadius: 'inherit',
+            paddingLeft: '0.5rem',
+            paddingBottom: '0.5rem',
           }}
         >
           <source
@@ -115,6 +124,7 @@ const VideoAttachment = ({
                           display: flex;
                           gap: 0.3rem;
                           align-items: center;
+                          padding: 0.5rem;
                         `,
                         variantStyles.textUserInfo,
                       ]}
@@ -130,20 +140,28 @@ const VideoAttachment = ({
                 ) : (
                   ''
                 )}
-                <AttachmentMetadata
-                  attachment={nestedAttachment}
-                  url={
-                    host +
-                    (nestedAttachment.title_url || nestedAttachment.video_url)
-                  }
-                  variantStyles={variantStyles}
-                />
+                <Box
+                  css={css`
+                    padding-left: 0.5rem;
+                  `}
+                >
+                  <AttachmentMetadata
+                    attachment={nestedAttachment}
+                    url={
+                      host +
+                      (nestedAttachment.title_url || nestedAttachment.video_url)
+                    }
+                    variantStyles={variantStyles}
+                  />
+                </Box>
                 <video
                   width={300}
                   controls
                   style={{
                     borderBottomLeftRadius: 'inherit',
                     borderBottomRightRadius: 'inherit',
+                    paddingLeft: '0.5rem',
+                    paddingBottom: '0.5rem',
                   }}
                 >
                   <source
