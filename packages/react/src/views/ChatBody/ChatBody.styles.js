@@ -18,7 +18,7 @@ export const getChatbodyStyles = (theme, mode) => {
     announcementStyles: css`
       display: flex;
       justify-content: center;
-      padding: 10px;
+      padding: 7px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
