@@ -1,7 +1,6 @@
 import React from 'react';
 import SurfaceItem from './SurfaceItem';
 import { Menu } from '@embeddedchat/ui-elements';
-import { id } from 'date-fns/locale';
 
 const ToolbarMenu = ({ options, size = 'small' }) => (
   <>
