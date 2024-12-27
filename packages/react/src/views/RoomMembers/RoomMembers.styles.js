@@ -20,6 +20,12 @@ export const getRoomMemberStyles = (theme) => {
       position: relative;
       margin-top: 1rem;
     `,
+    filterContainer: css`
+      border-radius: ${theme.radius};
+      margin-top: 1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    `,
     textInput: css`
       flex: 1;
       border: none;
