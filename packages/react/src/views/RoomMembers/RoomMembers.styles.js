@@ -25,6 +25,8 @@ export const getRoomMemberStyles = (theme) => {
       margin-top: 1rem;
       margin-bottom: 2.5rem;
       position: relative;
+      background-color: ${theme.colors.background};
+      width: 100%;
     `,
     textInput: css`
       flex: 1;

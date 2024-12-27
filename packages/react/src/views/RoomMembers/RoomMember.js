@@ -7,7 +7,7 @@ import {
   Sidebar,
   Input,
   Popup,
-  StaticSelect,
+  MultiSelect,
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
@@ -43,7 +43,7 @@ const RoomMembers = ({ members }) => {
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
-  const [roleFilter, setRoleFilter] = useState('all');
+  const [roleFilter, setRoleFilter] = useState([]);
   const [filteredMembersByRole, setFilteredMembersByRole] = useState(members);
 
   const [adminUserIds, setAdminUserIds] = useState(new Set());
@@ -113,7 +113,11 @@ const RoomMembers = ({ members }) => {
 
   useEffect(() => {
     if (isAdmin) {
-      setFilteredMembersByRole(roleData[roleFilter] || []);
+      const filteredRoles =
+        roleFilter.length > 0
+          ? roleFilter.flatMap((role) => roleData[role] || [])
+          : roleData['all'];
+      setFilteredMembersByRole(filteredRoles);
     }
   }, [roleFilter, roleData, isAdmin]);
 
@@ -141,6 +145,25 @@ const RoomMembers = ({ members }) => {
 
   const isLeaderId = (userId) => {
     return leaderUserIds.has(userId);
+  };
+
+  const handleMultiSelect = (selectedRoles) => {
+    if (selectedRoles.length === 0) {
+      setFilteredMembersByRole(members);
+      return;
+    }
+
+    let filteredMembersList = roleData[selectedRoles[0]] || [];
+
+    selectedRoles.slice(1).forEach((role) => {
+      if (roleData[role]) {
+        filteredMembersList = filteredMembersList.filter((member) =>
+          roleData[role].some((roleMember) => roleMember._id === member._id)
+        );
+      }
+    });
+
+    setFilteredMembersByRole(filteredMembersList);
   };
 
   return (
@@ -179,19 +202,23 @@ const RoomMembers = ({ members }) => {
                       css={css`
                         position: absolute;
                         z-index: 10;
+                        background-color: ${theme.colors.background};
+                        width: 100%;
                       `}
                     >
-                      <StaticSelect
+                      <MultiSelect
                         options={[
-                          { value: 'all', label: 'All' },
                           { value: 'admin', label: 'Admin' },
                           { value: 'owner', label: 'Owner' },
                           { value: 'moderator', label: 'Moderator' },
                           { value: 'leader', label: 'Leader' },
                         ]}
                         value={roleFilter}
-                        onSelect={(value) => setRoleFilter(value)}
-                        placeholder="Select Role"
+                        onChange={(value) => handleMultiSelect(value)}
+                        placeholder="All"
+                        style={{
+                          width: '100%',
+                        }}
                       />
                     </Box>
                   </Box>
