@@ -55,20 +55,68 @@ export const getRoomMemberStyles = (theme) => {
   return styles;
 };
 
-export const RoomMemberItemStyles = {
-  container: css`
-    width: 100%;
-    padding-bottom: 8px;
-    padding-top: 8px;
-    display: flex;
-    align-items: center;
-  `,
+export const RoomMemberItemStyles = (theme) => {
+  const styles = {
+    container: css`
+      width: 100%;
+      padding-bottom: 8px;
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+    `,
 
-  icon: css`
-    padding: 0.125em;
-    margin-right: 0.5rem;
-    align-self: center;
-  `,
+    icon: css`
+      padding: 0.125em;
+      margin-right: 0.5rem;
+      align-self: center;
+    `,
+
+    adminTag: css`
+      background-color: ${theme.colors.primary};
+      color: ${theme.colors.primaryForeground};
+      padding: 0.2rem 0.5rem;
+      border-radius: ${theme.radius};
+      font-size: 0.5rem;
+      font-weight: bold;
+      margin-left: 0.3rem;
+      display: inline-block;
+    `,
+
+    ownerTag: css`
+      background-color: ${theme.invertedColors.primary};
+      color: ${theme.invertedColors.primaryForeground};
+      padding: 0.2rem 0.5rem;
+      border-radius: ${theme.radius};
+      font-size: 0.5rem;
+      font-weight: bold;
+      margin-left: 0.3rem;
+      display: inline-block;
+    `,
+
+    moderatorTag: css`
+      background-color: ${theme.colors.secondary};
+      color: ${theme.colors.secondaryForeground};
+      padding: 0.2rem 0.5rem;
+      border-radius: ${theme.radius};
+      font-size: 0.5rem;
+      font-weight: bold;
+      margin-left: 0.3rem;
+      display: inline-block;
+    `,
+
+    leaderTag: css`
+      background-color: ${theme.invertedColors.secondary};
+      color: ${theme.invertedColors.secondaryForeground};
+      padding: 0.2rem 0.5rem;
+      border-radius: ${theme.radius};
+      font-size: 0.5rem;
+      font-weight: bold;
+      margin-left: 0.3rem;
+      display: inline-block;
+    `,
+  };
+
+  return styles;
 };
 
 export const InviteMemberStyles = {

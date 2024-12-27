@@ -46,6 +46,11 @@ const RoomMembers = ({ members }) => {
   const [roleFilter, setRoleFilter] = useState('all');
   const [filteredMembersByRole, setFilteredMembersByRole] = useState(members);
 
+  const [adminUserIds, setAdminUserIds] = useState(new Set());
+  const [ownerUserIds, setOwnerUserIds] = useState(new Set());
+  const [moderatorUserIds, setModeratorsUserIds] = useState(new Set());
+  const [leaderUserIds, setLeaderUserIds] = useState(new Set());
+
   const [roleData, setRoleData] = useState({
     admin: [],
     all: [],
@@ -61,6 +66,18 @@ const RoomMembers = ({ members }) => {
       const leaderRes = await RCInstance.getUsersInRole('leader');
       const moderatorRes = await RCInstance.getUsersInRole('moderator');
       const ownerRes = await RCInstance.getUsersInRole('owner');
+
+      const adminIds = new Set(adminRes.users.map((user) => user._id));
+      setAdminUserIds(adminIds);
+
+      const OwnerIds = new Set(ownerRes.users.map((user) => user._id));
+      setOwnerUserIds(OwnerIds);
+
+      const ModeratorsIds = new Set(moderatorRes.users.map((user) => user._id));
+      setModeratorsUserIds(ModeratorsIds);
+
+      const LeaderIds = new Set(leaderRes.users.map((user) => user._id));
+      setLeaderUserIds(LeaderIds);
 
       setRoleData({
         admin: adminRes.users || [],
@@ -109,6 +126,22 @@ const RoomMembers = ({ members }) => {
       )
     );
   }, [searchTerm, filteredMembersByRole]);
+
+  const isAdminId = (userId) => {
+    return adminUserIds.has(userId);
+  };
+
+  const isOwnerId = (userId) => {
+    return ownerUserIds.has(userId);
+  };
+
+  const isModeratorId = (userId) => {
+    return moderatorUserIds.has(userId);
+  };
+
+  const isLeaderId = (userId) => {
+    return leaderUserIds.has(userId);
+  };
 
   return (
     <ViewComponent
@@ -183,6 +216,10 @@ const RoomMembers = ({ members }) => {
                         user={member}
                         host={host}
                         key={member._id}
+                        isAdmin={isAdminId(member._id)}
+                        isOwner={isOwnerId(member._id)}
+                        isModerator={isModeratorId(member._id)}
+                        isLeader={isLeaderId(member._id)}
                       />
                     </>
                   ))

@@ -1,16 +1,33 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, Icon, Avatar } from '@embeddedchat/ui-elements';
+import { Box, Icon, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
+import { RoomMemberItemStyles } from './RoomMembers.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import { useUserStore } from '../../store';
 
-const RoomMemberItem = ({ user, host }) => {
+const RoomMemberItem = ({
+  user,
+  host,
+  isAdmin,
+  isOwner,
+  isModerator,
+  isLeader,
+}) => {
   const { RCInstance } = useContext(RCContext);
   const [userStatus, setUserStatus] = useState('');
   const avatarUrl = new URL(`avatar/${user.username}`, host).toString();
+
+  const { theme } = useTheme();
+  const styles = RoomMemberItemStyles(theme);
+
+  const adminRole = isAdmin ? <Box css={styles.adminTag}>Admin</Box> : null;
+  const ownerRole = isOwner ? <Box css={styles.ownerTag}>Owner</Box> : null;
+  const moderatorRole = isModerator ? (
+    <Box css={styles.moderatorTag}>Moderator</Box>
+  ) : null;
+  const leaderRole = isLeader ? <Box css={styles.leaderTag}>Leader</Box> : null;
 
   useEffect(() => {
     const getStatus = async () => {
@@ -26,6 +43,7 @@ const RoomMemberItem = ({ user, host }) => {
 
     getStatus();
   }, [RCInstance]);
+
   const setExclusiveState = useSetExclusiveState();
   const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
     setShowCurrentUserInfo: state.setShowCurrentUserInfo,
@@ -36,6 +54,7 @@ const RoomMemberItem = ({ user, host }) => {
     setExclusiveState(setShowCurrentUserInfo);
     setCurrentUser(user);
   };
+
   return (
     <Box
       css={styles.container}
@@ -62,7 +81,8 @@ const RoomMemberItem = ({ user, host }) => {
           <Icon name={userStatus} size="1.25rem" css={styles.icon} />
         )}
         <Box is="span">
-          {user.name} ({user.username})
+          {user.name} ({user.username}) {adminRole} {ownerRole} {moderatorRole}{' '}
+          {leaderRole}
         </Box>
       </Box>
     </Box>
