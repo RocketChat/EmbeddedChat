@@ -1,13 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
+  Menu,
   Sidebar,
   Popup,
   useTheme,
   ActionButton,
   Icon,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
+import RCContext from '../../../context/RCInstance';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
@@ -21,6 +24,10 @@ import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 export const MessageAggregator = ({
   title,
   iconName,
+  isStarredMessageDisplay = false,
+  isPinnedMessageDisplay = false,
+  unstar,
+  unpin,
   noMessageInfo,
   shouldRender,
   fetchedMessageList,
@@ -33,6 +40,7 @@ export const MessageAggregator = ({
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
+  const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
@@ -44,6 +52,7 @@ export const MessageAggregator = ({
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
+  const dispatchToastMessage = useToastBarDispatch();
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const setJumpToMessage = (msgId) => {
@@ -53,6 +62,28 @@ export const MessageAggregator = ({
         setShowSidebar(false);
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+    }
+  };
+
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
+  const copyLink = async (id) => {
+    try {
+      const messageLink = await getMessageLink(id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
+      });
     }
   };
 
@@ -136,18 +167,55 @@ export const MessageAggregator = ({
                       }}
                     />
 
-                    <ActionButton
-                      square
-                      ghost
-                      onClick={() => setJumpToMessage(msg._id)}
-                      css={{
-                        position: 'relative',
-                        zIndex: 10,
-                        marginRight: '5px',
-                      }}
-                    >
-                      <Icon name="arrow-back" size="1.25rem" />
-                    </ActionButton>
+                    {!isStarredMessageDisplay && !isPinnedMessageDisplay && (
+                      <ActionButton
+                        square
+                        ghost
+                        onClick={() => setJumpToMessage(msg._id)}
+                        css={{
+                          position: 'relative',
+                          zIndex: 10,
+                          marginRight: '5px',
+                        }}
+                      >
+                        <Icon name="arrow-back" size="1.25rem" />
+                      </ActionButton>
+                    )}
+                    {(isStarredMessageDisplay || isPinnedMessageDisplay) && (
+                      <Box
+                        style={{
+                          marginRight: '20px',
+                        }}
+                      >
+                        <Menu
+                          isToolTip={false}
+                          options={[
+                            {
+                              id: isStarredMessageDisplay ? 'unpin' : 'unstar',
+                              action: isStarredMessageDisplay
+                                ? () => unstar(msg)
+                                : () => unpin(msg),
+                              label: isStarredMessageDisplay
+                                ? 'Remove star'
+                                : 'Unpin',
+                              icon: isStarredMessageDisplay ? 'star' : 'pin',
+                            },
+                            {
+                              id: 'copyLink',
+                              action: () => copyLink(msg._id),
+                              label: 'Copy link',
+                              icon: 'link',
+                            },
+                            {
+                              id: 'navigate',
+                              action: () => setJumpToMessage(msg._id),
+                              label: 'Navigate',
+                              icon: 'arrow-back',
+                            },
+                          ]}
+                        />
+                      </Box>
+                    )}
                   </Box>
                 )}
               </React.Fragment>
