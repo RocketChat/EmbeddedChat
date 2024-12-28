@@ -70,7 +70,11 @@ export const MessageAggregator = ({
       iconName={iconName}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
-      style={{ padding: 0 }}
+      style={{
+        width: '400px',
+        padding: 0,
+        zIndex: window.innerWidth <= 780 ? 1 : null,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -126,6 +130,9 @@ export const MessageAggregator = ({
                       isInSidebar
                       style={{
                         flex: 1,
+                        padding: 0,
+                        marginLeft: '15px',
+                        minWidth: 0,
                       }}
                     />
 
@@ -136,6 +143,7 @@ export const MessageAggregator = ({
                       css={{
                         position: 'relative',
                         zIndex: 10,
+                        marginRight: '5px',
                       }}
                     >
                       <Icon name="arrow-back" size="1.25rem" />

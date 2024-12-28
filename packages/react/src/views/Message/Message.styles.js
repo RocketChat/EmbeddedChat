@@ -81,6 +81,9 @@ export const getMessageDividerStyles = (theme) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
     `,
 
     dividerContent: css`
