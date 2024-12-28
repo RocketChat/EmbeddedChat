@@ -163,7 +163,13 @@ const RoomMembers = ({ members }) => {
       }
     });
 
-    setFilteredMembersByRole(filteredMembersList);
+    const uniqueMembers = Array.from(
+      new Map(
+        filteredMembersList.map((member) => [member._id, member])
+      ).values()
+    );
+
+    setFilteredMembersByRole(uniqueMembers);
   };
 
   return (
