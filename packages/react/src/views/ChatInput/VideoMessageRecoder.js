@@ -18,7 +18,8 @@ import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 
-const VideoMessageRecorder = () => {
+const VideoMessageRecorder = (props) => {
+  const { displayName, popOverItemStyles } = props;
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -154,11 +155,21 @@ const VideoMessageRecorder = () => {
 
   return (
     <>
-      {state === 'idle' && (
-        <ActionButton ghost square onClick={handleRecordButtonClick}>
-          <Icon size="1.25rem" name="video-recorder" />
-        </ActionButton>
-      )}
+      {state === 'idle' &&
+        (displayName ? (
+          <Box
+            key="video"
+            css={popOverItemStyles}
+            onClick={handleRecordButtonClick}
+          >
+            <Icon name="video-recorder" size="1rem" />
+            <span>{displayName}</span>
+          </Box>
+        ) : (
+          <ActionButton ghost square onClick={handleRecordButtonClick}>
+            <Icon size="1.25rem" name="video-recorder" />
+          </ActionButton>
+        ))}
 
       {state === 'recording' && (
         <>
