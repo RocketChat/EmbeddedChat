@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
-  Avatar,
   Sidebar,
   Popup,
   useComponentOverrides,
@@ -10,6 +9,7 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { MessageDivider } from '../Message/MessageDivider';
 
 const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
@@ -44,7 +44,7 @@ const Roominfo = () => {
           overflow: auto;
         `}
       >
-        <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
+        <img size="100%" src={getChannelAvatarURL(channelInfo.name)} />
         <Box
           css={css`
             margin: 16px;
@@ -58,19 +58,37 @@ const Roominfo = () => {
           >
             # {channelInfo.name}
           </Box>
+          <MessageDivider />
           <Box
             css={css`
               margin-block: 5px;
+              font-size: 1.1rem;
             `}
           >
             Description
           </Box>
           <Box
             css={css`
-              opacity: 0.5rem;
+              opacity: 0.7;
             `}
           >
             {channelInfo.description}
+          </Box>
+          <MessageDivider />
+          <Box
+            css={css`
+              margin-block: 5px;
+              font-size: 1.1rem;
+            `}
+          >
+            Topic
+          </Box>
+          <Box
+            css={css`
+              opacity: 0.7;
+            `}
+          >
+            {channelInfo.topic}
           </Box>
         </Box>
       </Box>
