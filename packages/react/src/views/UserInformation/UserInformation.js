@@ -42,7 +42,7 @@ const UserInformation = () => {
     const getCurrentUserInfo = async () => {
       try {
         setError(null);
-        const res = await RCInstance.userInsfo(currentUser._id);
+        const res = await RCInstance.userInfo(currentUser._id);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
