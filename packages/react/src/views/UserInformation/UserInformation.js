@@ -42,7 +42,7 @@ const UserInformation = () => {
     const getCurrentUserInfo = async () => {
       try {
         setError(null);
-        const res = await RCInstance.userInfo(currentUser._id);
+        const res = await RCInstance.userInsfo(currentUser._id);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
@@ -67,6 +67,7 @@ const UserInformation = () => {
       title="User Info"
       iconName="user"
       onClose={() => setExclusiveState(null)}
+      style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -181,13 +182,19 @@ const UserInformation = () => {
       ) : (
         <Box
           css={css`
-            display: flex;
-            align-items: center
-            Font-size: 1.25rem;
+            margin: 16px;
+            margin-top: 32px;
+            text-align: center;
           `}
         >
-          <br />
-          {error}
+          <Box
+            css={css`
+              opacity: 0.5rem;
+              margin-block: 16px;
+            `}
+          >
+            {error}
+          </Box>
         </Box>
       )}
     </ViewComponent>
