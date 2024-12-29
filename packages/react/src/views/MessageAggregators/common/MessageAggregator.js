@@ -52,7 +52,7 @@ export const MessageAggregator = ({
       if (element) {
         setShowSidebar(false);
         element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        element.style.backgroundColor = 'rgba(255, 204, 0, 0.5)';
+        element.style.backgroundColor = theme.colors.warning;
         setTimeout(() => {
           element.style.backgroundColor = '';
         }, 1000);
