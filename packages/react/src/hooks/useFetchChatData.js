@@ -20,6 +20,15 @@ const useFetchChatData = (showRoles) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setDeleteMessageRoles = useMessageStore(
+    (state) => state.setDeleteMessageRoles
+  );
+  const setDeleteOwnMessageRoles = useMessageStore(
+    (state) => state.setDeleteOwnMessageRoles
+  );
+  const setForceDeleteMessageRoles = useMessageStore(
+    (state) => state.setForceDeleteMessageRoles
+  );
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );

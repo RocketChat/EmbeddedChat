@@ -85,6 +85,24 @@ export const MessageToolbox = ({
     ? true
     : message.u._id === authenticatedUserId;
 
+  const isAllowedToDeleteMessage = userRoles.some((role) =>
+    deleteMessageRoles.has(role)
+  );
+  const isAllowedToDeleteOwnMessage = userRoles.some((role) =>
+    deleteOwnMessageRoles.has(role)
+  );
+  const isAllowedToForceDeleteMessage = userRoles.some((role) =>
+    forceDeleteMessageRoles.has(role)
+  );
+
+  const canDeleteMessage = isAllowedToForceDeleteMessage
+    ? true
+    : isAllowedToDeleteMessage
+    ? true
+    : isAllowedToDeleteOwnMessage
+    ? message.u._id === authenticatedUserId
+    : false;
+
   const isVisibleForMessageType =
     message.files?.[0].type !== 'audio/mpeg' &&
     message.files?.[0].type !== 'video/mp4';
