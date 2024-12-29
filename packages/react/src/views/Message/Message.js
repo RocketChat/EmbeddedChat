@@ -59,6 +59,15 @@ const Message = ({
   const editMessagePermissions = useMessageStore(
     (state) => state.editMessagePermissions.roles
   );
+  const deleteMessagePermissions = useMessageStore(
+    (state) => state.deleteMessageRoles.roles
+  );
+  const deleteOwnMessagePermissions = useMessageStore(
+    (state) => state.deleteOwnMessageRoles.roles
+  );
+  const forceDeleteMessagePermissions = useMessageStore(
+    (state) => state.forceDeleteMessageRoles.roles
+  );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
   );
@@ -77,6 +86,9 @@ const Message = ({
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
   const editMessageRoles = new Set(editMessagePermissions);
+  const deleteMessageRoles = new Set(deleteMessagePermissions);
+  const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
+  const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -254,6 +266,9 @@ const Message = ({
                     userRoles={userRoles}
                     pinRoles={pinRoles}
                     editMessageRoles={editMessageRoles}
+                    deleteMessageRoles={deleteMessageRoles}
+                    deleteOwnMessageRoles={deleteOwnMessageRoles}
+                    forceDeleteMessageRoles={forceDeleteMessageRoles}
                     handleCopyMessage={handleCopyMessage}
                     handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}

@@ -657,7 +657,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
-        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
+        body: `{"roomId": "${this.rid}", "msgId": "${msgId}"}`,
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,

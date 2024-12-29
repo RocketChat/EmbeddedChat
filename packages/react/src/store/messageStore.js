@@ -7,6 +7,9 @@ const useMessageStore = create((set, get) => ({
   isMessageLoaded: false,
   threadMessages: [],
   filtered: false,
+  deleteMessageRoles: {},
+  deleteOwnMessageRoles: {},
+  forceDeleteMessageRoles: {},
   editMessage: {},
   quoteMessage: [],
   messageToReport: NaN,
@@ -107,6 +110,12 @@ const useMessageStore = create((set, get) => ({
   },
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
+  setDeleteMessageRoles: (deleteMessageRoles) =>
+    set((state) => ({ ...state, deleteMessageRoles })),
+  setDeleteOwnMessageRoles: (deleteOwnMessageRoles) =>
+    set((state) => ({ ...state, deleteOwnMessageRoles })),
+  setForceDeleteMessageRoles: (forceDeleteMessageRoles) =>
+    set((state) => ({ ...state, forceDeleteMessageRoles })),
 }));
 
 export default useMessageStore;

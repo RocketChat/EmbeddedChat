@@ -31,6 +31,15 @@ export const useRCAuth = () => {
   const setEditMessagePermissions = useMessageStore(
     (state) => state.setEditMessagePermissions
   );
+  const setDeleteMessageRoles = useMessageStore(
+    (state) => state.setDeleteMessageRoles
+  );
+  const setDeleteOwnMessageRoles = useMessageStore(
+    (state) => state.setDeleteOwnMessageRoles
+  );
+  const setForceDeleteMessageRoles = useMessageStore(
+    (state) => state.setForceDeleteMessageRoles
+  );
   const dispatchToastMessage = useToastBarDispatch();
 
   const handleLogin = async (userOrEmail, password, code) => {
@@ -70,6 +79,9 @@ export const useRCAuth = () => {
           setPassword(null);
           setUserPinPermissions(permissions.update[150]);
           setEditMessagePermissions(permissions.update[28]);
+          setDeleteMessageRoles(permissions.update[24]);
+          setDeleteOwnMessageRoles(permissions.update[25]);
+          setForceDeleteMessageRoles(permissions.update[39]);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',

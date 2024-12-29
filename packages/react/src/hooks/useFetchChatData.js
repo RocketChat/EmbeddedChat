@@ -20,6 +20,15 @@ const useFetchChatData = (showRoles) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setDeleteMessageRoles = useMessageStore(
+    (state) => state.setDeleteMessageRoles
+  );
+  const setDeleteOwnMessageRoles = useMessageStore(
+    (state) => state.setDeleteOwnMessageRoles
+  );
+  const setForceDeleteMessageRoles = useMessageStore(
+    (state) => state.setForceDeleteMessageRoles
+  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -67,6 +76,11 @@ const useFetchChatData = (showRoles) => {
               : {};
 
           setMemberRoles(rolesObj);
+
+          const permissions = await RCInstance.permissionInfo();
+          setDeleteMessageRoles(permissions.update[24]);
+          setDeleteOwnMessageRoles(permissions.update[25]);
+          setForceDeleteMessageRoles(permissions.update[39]);
         }
       } catch (e) {
         console.error(e);
