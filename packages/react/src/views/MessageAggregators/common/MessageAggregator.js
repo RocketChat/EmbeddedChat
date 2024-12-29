@@ -6,6 +6,7 @@ import {
   Popup,
   useTheme,
   ActionButton,
+  Tooltip,
   Icon,
 } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
@@ -136,18 +137,21 @@ export const MessageAggregator = ({
                       }}
                     />
 
-                    <ActionButton
-                      square
-                      ghost
-                      onClick={() => setJumpToMessage(msg._id)}
-                      css={{
-                        position: 'relative',
-                        zIndex: 10,
-                        marginRight: '5px',
-                      }}
-                    >
-                      <Icon name="arrow-back" size="1.25rem" />
-                    </ActionButton>
+                    <Tooltip text="Go To Message" position="left" key={msg._id}>
+                      <ActionButton
+                        square
+                        ghost
+                        onClick={() => setJumpToMessage(msg._id)}
+                        css={{
+                          position: 'relative',
+                          zIndex: 10,
+                          marginRight: '5px',
+                          marginTop: '6px',
+                        }}
+                      >
+                        <Icon name="arrow-back" size="1.25rem" />
+                      </ActionButton>
+                    </Tooltip>
                   </Box>
                 )}
               </React.Fragment>

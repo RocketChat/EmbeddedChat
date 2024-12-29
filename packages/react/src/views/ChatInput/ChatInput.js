@@ -6,6 +6,7 @@ import {
   Input,
   Icon,
   ActionButton,
+  Tooltip,
   Modal,
   Throbber,
   useToastBarDispatch,
@@ -532,14 +533,16 @@ const ChatInput = ({ scrollToBottom }) => {
             `}
           >
             {isUserAuthenticated ? (
-              <ActionButton
-                ghost
-                size="large"
-                onClick={() => sendMessage()}
-                type="primary"
-                disabled={disableButton || isRecordingMessage}
-                icon="send"
-              />
+              <Tooltip text="Send Message" position="bottom">
+                <ActionButton
+                  ghost
+                  size="large"
+                  onClick={() => sendMessage()}
+                  type="primary"
+                  disabled={disableButton || isRecordingMessage}
+                  icon="send"
+                />
+              </Tooltip>
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
                 {isLoginIn ? <Throbber /> : 'JOIN'}
