@@ -62,13 +62,13 @@ const Roominfo = () => {
               <Box css={styles.info}>{channelInfo.description}</Box>
             </>
           )}
-          {channelInfo.description && (
+          {channelInfo.topic && (
             <>
               <Box css={styles.infoHeader}>Topic</Box>
               <Box css={styles.info}>{channelInfo.topic}</Box>
             </>
           )}
-          {channelInfo.description && (
+          {channelInfo.announcement && (
             <>
               <Box css={styles.infoHeader}>Announcement</Box>
               <Box css={styles.info}>{channelInfo.announcement}</Box>
