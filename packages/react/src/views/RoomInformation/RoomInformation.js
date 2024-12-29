@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
+  Icon,
   Sidebar,
   Popup,
   useComponentOverrides,
@@ -56,7 +57,10 @@ const Roominfo = () => {
               font-size: 1.25rem;
             `}
           >
-            # {channelInfo.name}
+            <span>
+              <Icon name="hash" size={'1rem'} />
+            </span>
+            {channelInfo.name}
           </Box>
           <MessageDivider />
           <Box
@@ -73,6 +77,22 @@ const Roominfo = () => {
             `}
           >
             {channelInfo.description}
+          </Box>
+          <MessageDivider />
+          <Box
+            css={css`
+              margin-block: 5px;
+              font-size: 1.1rem;
+            `}
+          >
+            Anouncements
+          </Box>
+          <Box
+            css={css`
+              opacity: 0.7;
+            `}
+          >
+            {channelInfo.announcement}
           </Box>
           <MessageDivider />
           <Box
