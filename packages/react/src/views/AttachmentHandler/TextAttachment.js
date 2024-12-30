@@ -3,9 +3,11 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
+import { Markdown } from '../Markdown';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
+  const hideAvatar = ECOptions?.showAvatar === false;
   const getUserAvatarUrl = (authorIcon) => {
     const host = RCInstance.getHost();
     const URL = `${host}${authorIcon}`;
@@ -47,11 +49,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
       >
         {attachment?.author_name && (
           <>
-            <Avatar
-              url={getUserAvatarUrl(attachment?.author_icon)}
-              alt="avatar"
-              size="1.2em"
-            />
+            {!hideAvatar && (
+              <Avatar
+                url={getUserAvatarUrl(attachment?.author_icon)}
+                alt="avatar"
+                size="1.2em"
+              />
+            )}
             <Box>@{attachment?.author_name}</Box>
           </>
         )}
@@ -62,11 +66,15 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachment?.text
-          ? attachment.text[0] === '['
-            ? attachment.text.match(/\n(.*)/)?.[1] || ''
-            : attachment.text
-          : ''}
+        {attachment?.text ? (
+          attachment.text[0] === '[' ? (
+            attachment.text.match(/\n(.*)/)?.[1]
+          ) : (
+            <Markdown body={attachment.text} isReaction={false} />
+          )
+        ) : (
+          ''
+        )}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box
@@ -110,11 +118,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               >
                 {nestedAttachment?.author_name && (
                   <>
-                    <Avatar
-                      url={getUserAvatarUrl(nestedAttachment?.author_icon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
+                    {!hideAvatar && (
+                      <Avatar
+                        url={getUserAvatarUrl(attachment?.author_icon)}
+                        alt="avatar"
+                        size="1.2em"
+                      />
+                    )}
                     <Box>@{nestedAttachment?.author_name}</Box>
                   </>
                 )}

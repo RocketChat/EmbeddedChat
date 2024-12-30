@@ -20,6 +20,7 @@ const MessageHeader = ({
   isRoles = false,
   showDisplayName = true,
 }) => {
+  console.log('message', message);
   const { styleOverrides, classNames, variantOverrides } =
     useComponentOverrides('MessageHeader');
   const { ECOptions } = useRCContext();
@@ -45,9 +46,9 @@ const MessageHeader = ({
       case 'uj':
         return 'joined the channel';
       case 'ru':
-        return `removed @${message.message || message.msg}`;
+        return `removed ${message.message || message.msg}`;
       case 'au':
-        return `added @${message.message || message.msg}`;
+        return `added ${message.message || message.msg}`;
       case 'message_pinned':
         return 'Pinned a message:';
       case 'rm':
@@ -68,6 +69,14 @@ const MessageHeader = ({
         return 'unarchived room';
       case 'room-allowed-reacting':
         return 'allowed reactions';
+      case 'room_changed_announcement':
+        return `changed room announcement to ${message?.msg}`;
+      case 'room_changed_description':
+        return `changed room description to ${message?.msg}`;
+      case 'room_changed_topic':
+        return `changed room topic to ${message?.msg}`;
+      case 'room_name':
+        return `changed room name to ${message?.msg}`;
       default:
         return '';
     }
