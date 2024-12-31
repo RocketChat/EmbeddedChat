@@ -88,13 +88,13 @@ const useMentionStyles = (contents, username) => {
       background-color: ${contents.value === 'all' || contents.value === 'here'
         ? theme.colors.warning
         : contents.value === username
-          ? theme.colors.destructive
-          : theme.colors.muted};
+        ? theme.colors.destructive
+        : theme.colors.muted};
       color: ${contents.value === 'all' || contents.value === 'here'
         ? theme.colors.warningForeground
         : contents.value === username
-          ? theme.colors.destructiveForeground
-          : theme.colors.mutedForeground};
+        ? theme.colors.destructiveForeground
+        : theme.colors.mutedForeground};
       font-weight: bold;
       cursor: pointer;
       padding: 1.5px;
