@@ -122,16 +122,8 @@ const Message = ({
     const textToCopy =
       msg.msg ||
       (msg.attachments && msg.attachments[0]
-        ? msg.attachments[0].description
+        ? msg.attachments[0].description || msg.attachments[0].title
         : '');
-
-    if (!textToCopy) {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'No message or attachment description available to copy',
-      });
-      return;
-    }
 
     try {
       await navigator.clipboard.writeText(textToCopy);
