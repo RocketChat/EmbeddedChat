@@ -21,6 +21,7 @@ const VideoAttachment = ({
   type,
   author,
   variantStyles = {},
+  msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
@@ -79,6 +80,7 @@ const VideoAttachment = ({
             attachment={attachment}
             url={host + (attachment.title_url || attachment.video_url)}
             variantStyles={variantStyles}
+            msg={msg}
           />
         </Box>
         <video

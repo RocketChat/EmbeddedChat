@@ -1,8 +1,9 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
+import { Markdown } from '../Markdown';
 
-const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
+const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -32,7 +33,25 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <p css={[css``]}>{attachment.description}</p>
+      <div
+        css={
+          attachment.description !== ''
+            ? [
+                css`
+                  margin: 10px 0px;
+                `,
+              ]
+            : css`
+                margin: -7px 0px;
+              `
+        }
+      >
+        {msg ? (
+          <Markdown body={msg} md={attachment.descriptionMd} />
+        ) : (
+          attachment.description
+        )}
+      </div>
       <Box
         css={css`
           display: flex;
@@ -41,11 +60,21 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
         `}
       >
         <p
-          css={css`
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.7;
-          `}
+          css={
+            attachment.description
+              ? [
+                  css`
+                    margin: 0px;
+                    font-size: 14px;
+                    opacity: 0.7;
+                  `,
+                ]
+              : css`
+                  margin: 22px 0 15px 0;
+                  font-size: 14px;
+                  opacity: 0.7;
+                `
+          }
         >
           {attachment.title}
         </p>
@@ -56,7 +85,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
           onClick={handleDownload}
           css={css`
             margin-left: 10px;
-            margin-top: 5px;
+            margin-top: 15px;
           `}
         />
       </Box>

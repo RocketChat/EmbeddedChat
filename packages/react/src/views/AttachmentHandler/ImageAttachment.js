@@ -12,6 +12,7 @@ const ImageAttachment = ({
   type,
   author,
   variantStyles = {},
+  msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const [showGallery, setShowGallery] = useState(false);
@@ -75,6 +76,7 @@ const ImageAttachment = ({
           attachment={attachment}
           url={host + (attachment.title_link || attachment.image_url)}
           variantStyles={variantStyles}
+          msg={msg}
         />
         <img
           src={host + attachment.image_url}

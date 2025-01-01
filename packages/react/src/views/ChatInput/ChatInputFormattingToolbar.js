@@ -15,13 +15,14 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+import InsertLinkToolBox from './InsertLinkToolBox';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
+    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
   },
 }) => {
@@ -40,6 +41,7 @@ const ChatInputFormattingToolbar = ({
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
+  const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -52,6 +54,22 @@ const ChatInputFormattingToolbar = ({
       '_'
     )}: `;
     triggerButton?.(null, message);
+  };
+
+  const handleAddLink = (linkText, linkUrl) => {
+    if (!linkText || !linkUrl) {
+      setInsertLinkOpen(false);
+      return;
+    }
+
+    const start = messageRef.current.selectionStart;
+    const end = messageRef.current.selectionEnd;
+    const msg = messageRef.current.value;
+    const hyperlink = `[${linkText}](${linkUrl})`;
+    const message = msg.slice(0, start) + hyperlink + msg.slice(end);
+
+    triggerButton?.(null, message);
+    setInsertLinkOpen(false);
   };
 
   const chatToolMap = {
@@ -88,6 +106,20 @@ const ChatInputFormattingToolbar = ({
           onClick={handleClickToOpenFiles}
         >
           <Icon name="attachment" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+    link: (
+      <Tooltip text="Link" position="top" key="link">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={() => {
+            setInsertLinkOpen(true);
+          }}
+        >
+          <Icon name="link" size="1.25rem" />
         </ActionButton>
       </Tooltip>
     ),
@@ -134,6 +166,14 @@ const ChatInputFormattingToolbar = ({
             bottom: 7rem;
             left: 1.85rem;
           `}
+        />
+      )}
+
+      {isInsertLinkOpen && (
+        <InsertLinkToolBox
+          selectedText={window.getSelection().toString()}
+          handleAddLink={handleAddLink}
+          onClose={() => setInsertLinkOpen(false)}
         />
       )}
     </Box>

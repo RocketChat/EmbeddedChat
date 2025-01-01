@@ -1,12 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useMemberStore } from '../../store';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
+import MembersList from '../Mentions/MembersList';
+import TypingUsers from '../TypingUsers/TypingUsers';
+import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -16,17 +19,36 @@ const AttachmentPreview = () => {
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
   const [isPending, setIsPending] = useState(false);
+  const messageRef = useRef(null);
+  const [showMembersList, setShowMembersList] = useState(false);
+  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [mentionIndex, setMentionIndex] = useState(-1);
+  const [startReadMentionUser, setStartReadMentionUser] = useState(false);
 
   const [fileName, setFileName] = useState(data?.name);
-  const [fileDescription, setFileDescription] = useState('');
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
   const handleFileName = (e) => {
     setFileName(e.target.value);
   };
 
+  const { members } = useMemberStore((state) => ({
+    members: state.members,
+  }));
+
+  const searchMentionUser = useSearchMentionUser(
+    members,
+    startReadMentionUser,
+    setStartReadMentionUser,
+    setFilteredMembers,
+    setMentionIndex,
+    setShowMembersList
+  );
+
   const handleFileDescription = (e) => {
-    setFileDescription(parseEmoji(e.target.value));
+    const description = e.target.value;
+    messageRef.current.value = parseEmoji(description);
+    searchMentionUser(description);
   };
 
   const submit = async () => {
@@ -34,12 +56,14 @@ const AttachmentPreview = () => {
     await RCInstance.sendAttachment(
       data,
       fileName,
-      fileDescription,
+      messageRef.current.value,
       ECOptions?.enableThreads ? threadId : undefined
     );
     toggle();
     setData(null);
-    setIsPending(false);
+    if (isPending) {
+      setIsPending(false);
+    }
   };
   return (
     <Modal onClose={toggle}>
@@ -89,6 +113,7 @@ const AttachmentPreview = () => {
                 css={styles.input}
                 placeholder="name"
               />
+              <TypingUsers />
             </Box>
 
             <Box css={styles.inputContainer}>
@@ -101,14 +126,32 @@ const AttachmentPreview = () => {
               >
                 File description
               </Box>
-              <Input
-                onChange={(e) => {
-                  handleFileDescription(e);
-                }}
-                value={fileDescription}
-                css={styles.input}
-                placeholder="Description"
-              />
+              <Box css={styles.fileDescription}>
+                <Box css={styles.mentionListContainer}>
+                  {showMembersList && (
+                    <MembersList
+                      messageRef={messageRef}
+                      mentionIndex={mentionIndex}
+                      setMentionIndex={setMentionIndex}
+                      filteredMembers={filteredMembers}
+                      setFilteredMembers={setFilteredMembers}
+                      setStartReadMentionUser={setStartReadMentionUser}
+                      setShowMembersList={setShowMembersList}
+                      css={css`
+                        width: auto;
+                      `}
+                    />
+                  )}
+                </Box>
+                <Input
+                  onChange={(e) => {
+                    handleFileDescription(e);
+                  }}
+                  css={styles.input}
+                  placeholder="Description"
+                  ref={messageRef}
+                />
+              </Box>
             </Box>
           </Box>
         </Box>
