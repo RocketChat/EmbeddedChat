@@ -714,7 +714,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/channels.images?roomId=${this.rid}`,
+        `${this.host}/api/v1/rooms.images?roomId=${this.rid}`,
         {
           headers: {
             "Content-Type": "application/json",
