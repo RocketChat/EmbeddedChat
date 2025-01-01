@@ -32,6 +32,9 @@ const useUserStore = create((set) => ({
   userPinPermissions: {},
   setUserPinPermissions: (userPinPermissions) =>
     set((state) => ({ ...state, userPinPermissions })),
+  viewUserInfoPermissions: {},
+  setViewUserInfoPermissions: (viewUserInfoPermissions) =>
+    set((state) => ({ ...state, viewUserInfoPermissions })),
   showCurrentUserInfo: false,
   setShowCurrentUserInfo: (showCurrentUserInfo) =>
     set(() => ({ showCurrentUserInfo })),
