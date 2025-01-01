@@ -219,7 +219,10 @@ const Message = ({
             isPinned={isPinned}
           />
         )}
-        <MessageBodyContainer variantStyles={variantStyles}>
+        <MessageBodyContainer
+          variantStyles={variantStyles}
+          style={{ maxWidth: message?.t ? '90%' : null }}
+        >
           {shouldShowHeader && (
             <MessageHeader
               message={message}
