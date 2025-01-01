@@ -5,7 +5,8 @@ export const InlineElementsStyles = () => {
   const { theme } = useTheme();
   const styles = {
     inlineElement: css`
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.75rem;
       width: fit-content;
       padding: 3px;
       background-color: ${theme.colors.border};
@@ -29,11 +30,9 @@ export const CodeBlockStyles = () => {
 
     prestyle: css`
       display: inline-block;
-      max-width: 100%;
+      width: 100%;
       overflow-x: auto;
       white-space: pre-wrap;
-    `,
-    codeStyles: css`
       background-color: ${darken(theme.colors.accent, 0.01)};
       padding: 8px;
       border-radius: 6px;

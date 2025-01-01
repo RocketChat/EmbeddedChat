@@ -41,9 +41,7 @@ const CodeBlock = ({ lines }) => {
       <Box is="span" css={styles.copyonly}>
         ```
       </Box>
-      <Box css={styles.codeStyles}>
-        <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-      </Box>
+      <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
       <Box is="span" css={styles.copyonly}>
         ```
       </Box>
