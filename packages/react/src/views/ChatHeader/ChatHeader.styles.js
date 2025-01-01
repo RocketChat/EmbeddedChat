@@ -13,7 +13,6 @@ const getChatHeaderStyles = ({ theme, mode }) => {
       margin: 0;
       padding: 0;
     `,
-
     chatHeaderChild: css`
       ${rowCentreAlign}
       padding: 0 0.75rem;
@@ -42,6 +41,16 @@ const getChatHeaderStyles = ({ theme, mode }) => {
       ${rowCentreAlign}
       position:relative;
       gap: 0.5rem;
+    `,
+    channelName: css`
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+      cursor: pointer;
+    `,
+    channelTopic: css`
+      opacity: 0.8rem;
+      font-size: 1rem;
     `,
   };
   return styles;

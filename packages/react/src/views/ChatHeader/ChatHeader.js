@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   useTheme,
+  Avatar,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -115,7 +117,10 @@ const ChatHeader = ({
   );
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
-
+  const getChannelAvatarURL = (channelname) => {
+    const host = RCInstance.getHost();
+    return `${host}/avatar/${channelname}`;
+  };
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
       getMessagesAndRoles();
@@ -347,7 +352,6 @@ const ChatHeader = ({
     >
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>
-          <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
           <Box>
             {isUserAuthenticated ? (
               <>
@@ -355,17 +359,40 @@ const ChatHeader = ({
                   level={3}
                   className="ec-chat-header--channelName"
                   css={styles.clearSpacing}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.2rem',
+                  }}
                 >
-                  {channelInfo.name || channelName || 'channelName'}
+                  <Avatar
+                    size="36px"
+                    style={{ marginRight: '6px' }}
+                    url={getChannelAvatarURL(channelInfo.name)}
+                  />
+                  <Box>
+                    <Box
+                      css={styles.channelName}
+                      onClick={() => setExclusiveState(setShowChannelinfo)}
+                    >
+                      <Icon
+                        name="hash"
+                        size={fullScreen ? '1.25rem' : '1rem'}
+                      />
+                      <div>
+                        {channelInfo.name || channelName || 'channelName'}
+                      </div>
+                    </Box>
+                    {fullScreen && (
+                      <Box
+                        className="ec-chat-header--channelDescription"
+                        css={styles.channelTopic}
+                      >
+                        {channelInfo.topic || ''}
+                      </Box>
+                    )}
+                  </Box>
                 </Heading>
-                {fullScreen && (
-                  <p
-                    className="ec-chat-header--channelDescription"
-                    css={styles.clearSpacing}
-                  >
-                    {channelInfo.description || ''}
-                  </p>
-                )}
               </>
             ) : (
               <Heading
