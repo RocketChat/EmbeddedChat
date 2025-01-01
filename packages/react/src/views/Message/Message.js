@@ -114,10 +114,12 @@ const Message = ({
 
   const handlePinMessage = async (msg) => {
     const isPinned = msg.pinned;
+    msg.pinned = !isPinned;
     const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(msg._id)
       : await RCInstance.pinMessage(msg._id);
     if (pinOrUnpin.error) {
+      msg.pinned = isPinned;
       dispatchToastMessage({
         type: 'error',
         message: 'Error pinning message',
