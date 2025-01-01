@@ -28,6 +28,7 @@ import useFetchChatData from '../../hooks/useFetchChatData';
 
 const Message = ({
   message,
+  firstUnreadMessageId,
   type = 'default',
   sequential = false,
   lastSequential = false,
@@ -338,6 +339,9 @@ const Message = ({
           {format(new Date(message.ts), 'MMMM d, yyyy')}
         </MessageDivider>
       )}
+      {message._id === firstUnreadMessageId ? (
+        <MessageDivider unreadLabel="unread messages" />
+      ) : null}
     </>
   );
 };

@@ -9,7 +9,7 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages, firstUnreadMessageId }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
@@ -48,6 +48,7 @@ const MessageList = ({ messages }) => {
             return (
               <Message
                 key={msg._id}
+                firstUnreadMessageId={firstUnreadMessageId}
                 message={msg}
                 newDay={newDay}
                 sequential={sequential}
