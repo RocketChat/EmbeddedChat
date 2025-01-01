@@ -20,6 +20,9 @@ const useFetchChatData = (showRoles) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setViewUserInfoPermissions = useUserStore(
+    (state) => state.setViewUserInfoPermissions
+  );
   const setDeleteMessageRoles = useMessageStore(
     (state) => state.setDeleteMessageRoles
   );
@@ -82,6 +85,9 @@ const useFetchChatData = (showRoles) => {
           setDeleteOwnMessageRoles(permissions.update[25]);
           setForceDeleteMessageRoles(permissions.update[39]);
         }
+
+        const permissions = await RCInstance.permissionInfo();
+        setViewUserInfoPermissions(permissions.update[70]);
       } catch (e) {
         console.error(e);
       }
