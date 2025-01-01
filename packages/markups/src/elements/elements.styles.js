@@ -33,9 +33,10 @@ export const CodeBlockStyles = () => {
       width: 100%;
       overflow-x: auto;
       white-space: pre-wrap;
-      background-color: ${darken(theme.colors.accent, 0.01)};
-      padding: 8px;
-      border-radius: 6px;
+    `,
+    codeBlock: css`
+      background-color: ${darken(theme.colors.accent, 0.01)} !important;
+      border-radius: ${theme.radius};
       font-weight: 600;
     `,
   };
