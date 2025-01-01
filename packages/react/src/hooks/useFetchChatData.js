@@ -23,6 +23,21 @@ const useFetchChatData = (showRoles) => {
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const setDeleteMessageRoles = useMessageStore(
+    (state) => state.setDeleteMessageRoles
+  );
+  const setDeleteOwnMessageRoles = useMessageStore(
+    (state) => state.setDeleteOwnMessageRoles
+  );
+  const setForceDeleteMessageRoles = useMessageStore(
+    (state) => state.setForceDeleteMessageRoles
+  );
+  const setUserPinPermissions = useUserStore(
+    (state) => state.setUserPinPermissions
+  );
+  const setEditMessagePermissions = useMessageStore(
+    (state) => state.setEditMessagePermissions
+  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -73,7 +88,16 @@ const useFetchChatData = (showRoles) => {
         }
 
         const permissions = await RCInstance.permissionInfo();
-        setViewUserInfoPermissions(permissions.update[70]);
+        const permissionsMap = permissions.update.reduce((map, item) => {
+          map[item._id] = item;
+          return map;
+        }, {});
+        setViewUserInfoPermissions(permissionsMap['view-full-other-user-info']);
+        setDeleteMessageRoles(permissionsMap['delete-message']);
+        setDeleteOwnMessageRoles(permissionsMap['delete-own-message']);
+        setForceDeleteMessageRoles(permissionsMap['force-delete-message']);
+        setUserPinPermissions(permissionsMap['pin-message']);
+        setEditMessagePermissions(permissionsMap['edit-message']);
       } catch (e) {
         console.error(e);
       }

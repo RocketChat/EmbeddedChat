@@ -72,6 +72,15 @@ const Message = ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
+  const deleteMessagePermissions = useMessageStore(
+    (state) => state.deleteMessageRoles.roles
+  );
+  const deleteOwnMessagePermissions = useMessageStore(
+    (state) => state.deleteOwnMessageRoles.roles
+  );
+  const forceDeleteMessagePermissions = useMessageStore(
+    (state) => state.forceDeleteMessageRoles.roles
+  );
 
   const isMe = message.u._id === authenticatedUserId;
 
@@ -94,6 +103,9 @@ const Message = ({
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
   const editMessageRoles = new Set(editMessagePermissions);
+  const deleteMessageRoles = new Set(deleteMessagePermissions);
+  const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
+  const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -285,6 +297,9 @@ const Message = ({
                     authenticatedUserId={authenticatedUserId}
                     userRoles={userRoles}
                     pinRoles={pinRoles}
+                    deleteMessageRoles={deleteMessageRoles}
+                    deleteOwnMessageRoles={deleteOwnMessageRoles}
+                    forceDeleteMessageRoles={forceDeleteMessageRoles}
                     editMessageRoles={editMessageRoles}
                     handleCopyMessage={handleCopyMessage}
                     handleCopyMessageLink={handleCopyMessageLink}
