@@ -279,7 +279,6 @@ EmbeddedChat.propTypes = {
   channelName: PropTypes.string,
   anonymousMode: PropTypes.bool,
   toastBarPosition: PropTypes.string,
-  showUsername: PropTypes.bool,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
   enableThreads: PropTypes.bool,
