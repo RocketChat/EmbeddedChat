@@ -28,9 +28,15 @@ const UserInformation = () => {
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
   const currentUser = useUserStore((state) => state.currentUser);
-  const authenticatedUserRoles = useUserStore((state) => state.roles);
+  const currentUserRoles = useUserStore((state) => state.roles);
+  const viewUserFullInfoRoles = useUserStore(
+    (state) => state.viewUserInfoPermissions.roles
+  );
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const isAdmin = authenticatedUserRoles?.includes('admin');
+  const viewInfoRoles = new Set(viewUserFullInfoRoles);
+  const isAllowedToViewFullInfo = currentUserRoles.some((role) =>
+    viewInfoRoles.has(role)
+  );
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${username}`;
@@ -96,6 +102,24 @@ const UserInformation = () => {
               />
               {currentUserInfo?.username}
             </Box>
+            {currentUserInfo?.statusText && (
+              <Box
+                css={css`
+                  margin-bottom: 20px;
+                `}
+              >
+                {currentUserInfo?.statusText}
+              </Box>
+            )}
+            {currentUserInfo?.nickname && (
+              <UserInfoField
+                label="Nickname"
+                value={currentUserInfo?.nickname}
+                isAdmin={isAllowedToViewFullInfo}
+                authenticatedUserId={authenticatedUserId}
+                currentUserInfo={currentUserInfo}
+              />
+            )}
             {currentUserInfo?.roles?.length && (
               <UserInfoField
                 label="Roles"
@@ -113,7 +137,7 @@ const UserInformation = () => {
                     ))}
                   </Box>
                 }
-                isAdmin={isAdmin}
+                isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
                 currentUserInfo={currentUserInfo}
               />
@@ -121,7 +145,7 @@ const UserInformation = () => {
             <UserInfoField
               label="Username"
               value={currentUserInfo?.username}
-              isAdmin={isAdmin}
+              isAdmin
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
@@ -132,17 +156,26 @@ const UserInformation = () => {
                   ? 'Never'
                   : formatTimestamp(currentUserInfo.lastLogin)
               }
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
               label="Full Name"
               value={currentUserInfo.name}
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
+            {currentUserInfo?.bio && (
+              <UserInfoField
+                label="Bio"
+                value={currentUserInfo?.bio}
+                isAdmin={isAllowedToViewFullInfo}
+                authenticatedUserId={authenticatedUserId}
+                currentUserInfo={currentUserInfo}
+              />
+            )}
             <UserInfoField
               label="Email"
               value={currentUserInfo.emails?.map((email, index) => (
@@ -158,14 +191,14 @@ const UserInformation = () => {
                   </Box>
                 </Box>
               ))}
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
               label="Created at"
               value={formatTimestamp(currentUserInfo.createdAt)}
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
