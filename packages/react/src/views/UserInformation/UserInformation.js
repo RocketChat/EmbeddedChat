@@ -42,7 +42,7 @@ const UserInformation = () => {
     const getCurrentUserInfo = async () => {
       try {
         setError(null);
-        const res = await RCInstance.userInfo(currentUser._id);
+        const res = await RCInstance.userInsfo(currentUser._id);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
@@ -58,7 +58,7 @@ const UserInformation = () => {
     };
 
     getCurrentUserInfo();
-  }, [RCInstance, setCurrentUserInfo]);
+  }, [RCInstance, setCurrentUserInfo, currentUser._id]);
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
@@ -186,7 +186,7 @@ const UserInformation = () => {
         <Box
           css={css`
             margin: 16px;
-            margin-top: 230px;
+            margin-top: 210px;
             text-align: center;
             font-weight: bold;
             font-size: 1.15rem;
