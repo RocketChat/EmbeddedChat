@@ -137,7 +137,11 @@ export const MessageAggregator = ({
                       }}
                     />
 
-                    <Tooltip text="Go To Message" position="left" key={msg._id}>
+                    <Tooltip
+                      text="Jump to message"
+                      position="left"
+                      key={msg._id}
+                    >
                       <ActionButton
                         square
                         ghost
