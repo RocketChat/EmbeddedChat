@@ -52,7 +52,7 @@ const UserInformation = () => {
         }
       } catch (err) {
         setLoader(false);
-        setError(`Failed to load user Info${err}`);
+        setError(`${err}`);
         console.error('Error fetching current user info', err);
       }
     };
@@ -182,24 +182,32 @@ const UserInformation = () => {
             />
           </Box>
         </Box>
-      ) : (
+      ) : error ? (
         <Box
           css={css`
             margin: 16px;
-            margin-top: 32px;
+            margin-top: 230px;
             text-align: center;
+            font-weight: bold;
+            font-size: 1.15rem;
           `}
         >
+          <Icon name="user" size="2rem" />
+          <br />
+          No Info Found
+          <br />
           <Box
             css={css`
-              opacity: 0.5rem;
-              margin-block: 16px;
+              font-weight: normal;
+              font-size: 1rem;
+              opacity: 0.6;
+              color: ${theme.colors.textSecondary};
             `}
           >
             {error}
           </Box>
         </Box>
-      )}
+      ) : null}
     </ViewComponent>
   );
 };
