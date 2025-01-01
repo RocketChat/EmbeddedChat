@@ -15,13 +15,14 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+import InsertLinkToolBox from './InsertLinkToolBox';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
+    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
     smallScreenSurfaceItems: [
       'emoji',
@@ -30,7 +31,7 @@ const ChatInputFormattingToolbar = ({
       'video',
       'file',
     ],
-    popOverItems: ['formatter'],
+    popOverItems: ['formatter', 'link'],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
@@ -52,6 +53,7 @@ const ChatInputFormattingToolbar = ({
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
+  const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
@@ -82,6 +84,22 @@ const ChatInputFormattingToolbar = ({
       '_'
     )}: `;
     triggerButton?.(null, message);
+  };
+
+  const handleAddLink = (linkText, linkUrl) => {
+    if (!linkText || !linkUrl) {
+      setInsertLinkOpen(false);
+      return;
+    }
+
+    const start = messageRef.current.selectionStart;
+    const end = messageRef.current.selectionEnd;
+    const msg = messageRef.current.value;
+    const hyperlink = `[${linkText}](${linkUrl})`;
+    const message = msg.slice(0, start) + hyperlink + msg.slice(end);
+
+    triggerButton?.(null, message);
+    setInsertLinkOpen(false);
   };
 
   const chatToolMap = {
@@ -153,6 +171,33 @@ const ChatInputFormattingToolbar = ({
             onClick={handleClickToOpenFiles}
           >
             <Icon name="attachment" size="1.25rem" />
+          </ActionButton>
+        </Tooltip>
+      ),
+    link:
+      isPopoverOpen && popOverItems.includes('link') ? (
+        <Box
+          key="link"
+          css={styles.popOverItemStyles}
+          disabled={isRecordingMessage}
+          onClick={() => {
+            setInsertLinkOpen(true);
+          }}
+        >
+          <Icon name="link" size="1rem" />
+          <span>link</span>
+        </Box>
+      ) : (
+        <Tooltip text="Link" position="top" key="link">
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage}
+            onClick={() => {
+              setInsertLinkOpen(true);
+            }}
+          >
+            <Icon name="link" size="1.25rem" />
           </ActionButton>
         </Tooltip>
       ),
@@ -307,6 +352,14 @@ const ChatInputFormattingToolbar = ({
             bottom: 7rem;
             left: 0.7rem;
           `}
+        />
+      )}
+
+      {isInsertLinkOpen && (
+        <InsertLinkToolBox
+          selectedText={window.getSelection().toString()}
+          handleAddLink={handleAddLink}
+          onClose={() => setInsertLinkOpen(false)}
         />
       )}
     </Box>
