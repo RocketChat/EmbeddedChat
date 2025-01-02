@@ -34,6 +34,7 @@ const AudioAttachment = ({
           css`
             line-height: 0;
             border-radius: inherit;
+            padding: 0.5rem;
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
@@ -51,7 +52,6 @@ const AudioAttachment = ({
                   display: flex;
                   gap: 0.3rem;
                   align-items: center;
-                  padding: 0.5rem;
                 `,
                 variantStyles.textUserInfo,
               ]}
@@ -67,20 +67,14 @@ const AudioAttachment = ({
         ) : (
           ''
         )}
-        <Box
-          css={css`
-            padding-left: 0.5rem;
-          `}
-        >
-          <AttachmentMetadata
-            attachment={attachment}
-            url={host + (attachment.title_url || attachment.audio_url)}
-            variantStyles={variantStyles}
-            msg={msg}
-            onExpandCollapseClick={toggleExpanded}
-            isExpanded={isExpanded}
-          />
-        </Box>
+        <AttachmentMetadata
+          attachment={attachment}
+          url={host + (attachment.title_url || attachment.audio_url)}
+          variantStyles={variantStyles}
+          msg={msg}
+          onExpandCollapseClick={toggleExpanded}
+          isExpanded={isExpanded}
+        />
         {isExpanded && (
           <audio
             src={host + attachment.audio_url}
@@ -121,7 +115,6 @@ const AudioAttachment = ({
                           display: flex;
                           gap: 0.3rem;
                           align-items: center;
-                          padding: 0.5rem;
                         `,
                         variantStyles.textUserInfo,
                       ]}
@@ -137,28 +130,18 @@ const AudioAttachment = ({
                 ) : (
                   ''
                 )}
-                <Box
-                  css={css`
-                    padding-left: 0.5rem;
-                  `}
-                >
-                  <AttachmentMetadata
-                    attachment={nestedAttachment}
-                    url={
-                      host +
-                      (nestedAttachment.title_url || nestedAttachment.audio_url)
-                    }
-                    variantStyles={variantStyles}
-                  />
-                </Box>
+                <AttachmentMetadata
+                  attachment={nestedAttachment}
+                  url={
+                    host +
+                    (nestedAttachment.title_url || nestedAttachment.audio_url)
+                  }
+                  variantStyles={variantStyles}
+                />
                 <audio
                   src={host + nestedAttachment.audio_url}
                   width="100%"
                   controls
-                  style={{
-                    paddingLeft: '0.5rem',
-                    paddingBottom: '0.5rem',
-                  }}
                 />
               </Box>
             </Box>

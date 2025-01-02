@@ -92,7 +92,7 @@ const AttachmentMetadata = ({
           onClick={onExpandCollapseClick}
           css={css`
             margin-left: 10px;
-            margin-top: ${attachment.description ? '3px' : '14px'};
+            margin-top: 5px;
           `}
         />
         <ActionButton
