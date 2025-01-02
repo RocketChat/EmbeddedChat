@@ -92,7 +92,7 @@ const AttachmentMetadata = ({
           onClick={onExpandCollapseClick}
           css={css`
             margin-left: 10px;
-            margin-top: 5px;
+            margin-top: ${attachment.description ? '5px' : '15px'};
           `}
         />
         <ActionButton
@@ -102,7 +102,7 @@ const AttachmentMetadata = ({
           onClick={handleDownload}
           css={css`
             margin-left: 10px;
-            margin-top: ${attachment.description ? '5px' : '15px'};
+            margin-top: 5px;
           `}
         />
       </Box>

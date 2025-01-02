@@ -92,8 +92,6 @@ const VideoAttachment = ({
             style={{
               borderBottomLeftRadius: 'inherit',
               borderBottomRightRadius: 'inherit',
-              paddingLeft: '0.5rem',
-              paddingBottom: '0.5rem',
             }}
           >
             <source
@@ -130,7 +128,6 @@ const VideoAttachment = ({
                           display: flex;
                           gap: 0.3rem;
                           align-items: center;
-                          padding: 0.5rem;
                         `,
                         variantStyles.textUserInfo,
                       ]}
