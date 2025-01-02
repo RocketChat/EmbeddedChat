@@ -130,7 +130,11 @@ const RoomMembers = ({ members }) => {
             <>
               {isAdmin && (
                 <Button
-                  style={{ marginTop: '10px', width: '100%' }}
+                  style={{
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    width: '100%',
+                  }}
                   onClick={async () => {
                     toggleInviteView();
                   }}
