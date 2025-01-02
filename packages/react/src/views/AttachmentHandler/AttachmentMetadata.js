@@ -27,36 +27,46 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       css={[
         css`
           display: flex;
+          margin-top: 10px;
           flex-direction: column;
         `,
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <p
-        css={[
-          css`
-            margin: 9px 0 0;
-          `,
-        ]}
-      >
-        {attachment.description}
-      </p>
+      {attachment.description && (
+        <p
+          css={[
+            css`
+              margin: 9px 0 0;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              flex-wrap: wrap;
+            `,
+          ]}
+        >
+          {attachment.description}
+        </p>
+      )}
       <Box
         css={css`
           display: flex;
           flex-direction: row;
           align-items: center;
+          flex-wrap: wrap;
         `}
       >
-        <p
-          css={css`
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.7;
-          `}
-        >
-          {attachment.title}
-        </p>
+        {attachment.title && (
+          <p
+            css={css`
+              margin: 0;
+              font-size: 14px;
+              opacity: 0.7;
+            `}
+          >
+            {attachment.title}
+          </p>
+        )}
         <ActionButton
           ghost
           icon="download"
