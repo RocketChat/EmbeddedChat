@@ -80,6 +80,8 @@ const MessageHeader = ({
       style={styleOverrides}
     >
       {showDisplayName && showName && (
+        // add a tooltip to the username to show @username at top
+        <Tooltip text={`@${message.u?.username || message.u?.name}`} position="top">
         <Box
           is="span"
           css={styles.name}
@@ -92,6 +94,7 @@ const MessageHeader = ({
         >
           {message.u?.name}
         </Box>
+        </Tooltip>
       )}
       {showDisplayName && showUsername && (
         <Box
@@ -143,13 +146,15 @@ const MessageHeader = ({
       )}
 
       {isTimeStamped && (
+        <Tooltip text={format(new Date(message.ts), 'MMM dd, yyyy h:mm a')} position={'top'}>
         <Box
           is="span"
           css={styles.timestamp}
           className={appendClassNames('ec-message-header-timestamp')}
-        >
+          >
           {format(new Date(message.ts), 'h:mm a')}
         </Box>
+          </Tooltip>
       )}
 
       {!message.t && (
