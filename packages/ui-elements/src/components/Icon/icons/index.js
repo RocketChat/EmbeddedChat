@@ -35,6 +35,7 @@ import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
 import ArrowDown from './ArrowDown';
+import ArrowRight from './ArrowRight';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
@@ -103,6 +104,7 @@ const icons = {
   check: Check,
   'error-circle': ErrorCircle,
   'arrow-down': ArrowDown,
+  'arrow-right': ArrowRight,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
   clip: Clip,
