@@ -11,6 +11,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -18,7 +19,6 @@ import InviteMembers from './InviteMembers';
 import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import { css } from '@emotion/react';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
