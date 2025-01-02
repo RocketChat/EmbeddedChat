@@ -25,9 +25,6 @@ export const useRCAuth = () => {
   );
   const setPassword = useUserStore((state) => state.setPassword);
   const setEmailorUser = useUserStore((state) => state.setEmailorUser);
-  const setUserPinPermissions = useUserStore(
-    (state) => state.setUserPinPermissions
-  );
   const setEditMessagePermissions = useMessageStore(
     (state) => state.setEditMessagePermissions
   );
@@ -68,7 +65,6 @@ export const useRCAuth = () => {
           setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);
-          setUserPinPermissions(permissions.update[150]);
           setEditMessagePermissions(permissions.update[28]);
           dispatchToastMessage({
             type: 'success',

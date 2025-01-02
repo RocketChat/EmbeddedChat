@@ -75,8 +75,6 @@ const Message = ({
   const theme = useTheme();
   const styles = getMessageStyles(theme);
   const bubbleStyles = useBubbleStyles(isMe);
-  const pinRoles = new Set(pinPermissions);
-  const editMessageRoles = new Set(editMessagePermissions);
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
@@ -262,8 +260,6 @@ const Message = ({
                     isEditing={editMessage._id === message._id}
                     authenticatedUserId={authenticatedUserId}
                     userRoles={userRoles}
-                    pinRoles={pinRoles}
-                    editMessageRoles={editMessageRoles}
                     handleCopyMessage={handleCopyMessage}
                     handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}

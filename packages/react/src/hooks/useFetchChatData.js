@@ -20,9 +20,6 @@ const useFetchChatData = (showRoles) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
-  const setViewUserInfoPermissions = useUserStore(
-    (state) => state.setViewUserInfoPermissions
-  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -71,9 +68,6 @@ const useFetchChatData = (showRoles) => {
 
           setMemberRoles(rolesObj);
         }
-
-        const permissions = await RCInstance.permissionInfo();
-        setViewUserInfoPermissions(permissions.update[70]);
       } catch (e) {
         console.error(e);
       }

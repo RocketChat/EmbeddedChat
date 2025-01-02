@@ -84,13 +84,7 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
-  const setUserPinPermissions = useUserStore(
-    (state) => state.setUserPinPermissions
-  );
 
-  const setEditMessagePermissions = useMessageStore(
-    (state) => state.setEditMessagePermissions
-  );
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -132,9 +126,6 @@ const EmbeddedChat = (props) => {
       setIsLoginIn(true);
       try {
         await RCInstance.autoLogin(auth);
-        const permissions = await RCInstance.permissionInfo();
-        setUserPinPermissions(permissions.update[150]);
-        setEditMessagePermissions(permissions.update[28]);
       } catch (error) {
         console.error(error);
       } finally {
