@@ -14,7 +14,7 @@ import RCContext from '../../../context/RCInstance';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore, useSidebarStore } from '../../../store';
+import { useMessageStore, useSidebarStore, useUserStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
@@ -42,6 +42,7 @@ export const MessageAggregator = ({
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
   const messages = useMessageStore((state) => state.messages);
+  const currentUserRoles = useUserStore((state) => state.roles);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
     () => [...messages, ...threadMessages],
@@ -53,6 +54,12 @@ export const MessageAggregator = ({
     shouldRender
   );
   const dispatchToastMessage = useToastBarDispatch();
+  const pinPermissions = useUserStore(
+    (state) => state.userPinPermissions.roles
+  );
+
+  const pinRoles = new Set(pinPermissions);
+  const isAllowedToPin = currentUserRoles.some((role) => pinRoles.has(role));
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const setJumpToMessage = (msgId) => {
@@ -190,16 +197,21 @@ export const MessageAggregator = ({
                         <Menu
                           isToolTip={false}
                           options={[
-                            {
-                              id: isStarredMessageDisplay ? 'unpin' : 'unstar',
-                              action: isStarredMessageDisplay
-                                ? () => unstar(msg)
-                                : () => unpin(msg),
-                              label: isStarredMessageDisplay
-                                ? 'Remove star'
-                                : 'Unpin',
-                              icon: isStarredMessageDisplay ? 'star' : 'pin',
-                            },
+                            isPinnedMessageDisplay && isAllowedToPin
+                              ? {
+                                  id: 'unpin',
+                                  action: () => unpin(msg),
+                                  label: 'Unpin',
+                                  icon: 'pin',
+                                }
+                              : isStarredMessageDisplay
+                              ? {
+                                  id: 'unstar',
+                                  action: () => unstar(msg),
+                                  label: 'Remove star',
+                                  icon: 'star',
+                                }
+                              : {},
                             {
                               id: 'copyLink',
                               action: () => copyLink(msg._id),
@@ -207,10 +219,10 @@ export const MessageAggregator = ({
                               icon: 'link',
                             },
                             {
-                              id: 'navigate',
+                              id: 'jumptomessage',
                               action: () => setJumpToMessage(msg._id),
-                              label: 'Navigate',
-                              icon: 'arrow-back',
+                              label: 'Jump to message',
+                              icon: 'arrow-jump',
                             },
                           ]}
                         />
