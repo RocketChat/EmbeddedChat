@@ -83,19 +83,10 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
           icon="download"
           size="small"
           onClick={handleDownload}
-          css={
-            attachment.description
-              ? [
-                  css`
-                    margin-left: 10px;
-                    margin-top: 5px;
-                  `,
-                ]
-              : css`
-                  margin-left: 10px;
-                  margin-top: 15px;
-                `
-          }
+          css={css`
+            margin-left: 10px;
+            margin-top: ${attachment.description ? '5px' : '15px'};
+          `}
         />
       </Box>
     </Box>
