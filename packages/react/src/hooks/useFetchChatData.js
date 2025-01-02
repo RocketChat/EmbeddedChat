@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import RCContext from '../context/RCInstance';
 import {
   useUserStore,
@@ -38,6 +38,43 @@ const useFetchChatData = (showRoles) => {
   const setEditMessagePermissions = useMessageStore(
     (state) => state.setEditMessagePermissions
   );
+
+  const createPermissionsMap = useMemo(
+    () => (permissions) =>
+      permissions.update.reduce((map, item) => {
+        map[item._id] = item;
+        return map;
+      }, {}),
+    []
+  );
+
+  const fetchAndSetPermissions = useCallback(async () => {
+    try {
+      const permissions = await RCInstance.permissionInfo();
+      const permissionsMap = createPermissionsMap(permissions);
+
+      setViewUserInfoPermissions(permissionsMap['view-full-other-user-info']);
+      setDeleteMessageRoles(permissionsMap['delete-message']);
+      setDeleteOwnMessageRoles(permissionsMap['delete-own-message']);
+      setForceDeleteMessageRoles(permissionsMap['force-delete-message']);
+      setUserPinPermissions(permissionsMap['pin-message']);
+      setEditMessagePermissions(permissionsMap['edit-message']);
+
+      return permissionsMap;
+    } catch (error) {
+      console.error('Error fetching permissions:', error);
+      return null;
+    }
+  }, [
+    RCInstance,
+    createPermissionsMap,
+    setViewUserInfoPermissions,
+    setDeleteMessageRoles,
+    setDeleteOwnMessageRoles,
+    setForceDeleteMessageRoles,
+    setUserPinPermissions,
+    setEditMessagePermissions,
+  ]);
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -86,18 +123,7 @@ const useFetchChatData = (showRoles) => {
 
           setMemberRoles(rolesObj);
         }
-
-        const permissions = await RCInstance.permissionInfo();
-        const permissionsMap = permissions.update.reduce((map, item) => {
-          map[item._id] = item;
-          return map;
-        }, {});
-        setViewUserInfoPermissions(permissionsMap['view-full-other-user-info']);
-        setDeleteMessageRoles(permissionsMap['delete-message']);
-        setDeleteOwnMessageRoles(permissionsMap['delete-own-message']);
-        setForceDeleteMessageRoles(permissionsMap['force-delete-message']);
-        setUserPinPermissions(permissionsMap['pin-message']);
-        setEditMessagePermissions(permissionsMap['edit-message']);
+        await fetchAndSetPermissions();
       } catch (e) {
         console.error(e);
       }
