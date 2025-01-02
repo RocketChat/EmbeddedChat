@@ -27,7 +27,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       css={[
         css`
           display: flex;
-          margin-top: 10px;
+          margin-top: 7px;
           flex-direction: column;
         `,
         variantStyles.attachmentMetaContainer,
