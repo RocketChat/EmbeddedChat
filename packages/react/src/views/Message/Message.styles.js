@@ -125,7 +125,7 @@ export const getMessageDividerStyles = (theme) => {
     `,
 
     unreadDividerContent: css`
-      color: #d40c26;
+      color: ${theme.colors.foreground};
       font-size: 0.875rem;
       font-weight: 750;
       margin-left: 10px;
@@ -137,7 +137,7 @@ export const getMessageDividerStyles = (theme) => {
       align-items: center;
       flex-grow: 1;
       height: 0.7px;
-      background-color: red;
+      background-color: ${theme.colors.foreground};
     `,
   };
 
