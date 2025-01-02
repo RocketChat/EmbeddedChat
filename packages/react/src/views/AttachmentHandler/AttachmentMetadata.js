@@ -67,6 +67,21 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
             {attachment.title}
           </p>
         )}
+
+        <Box
+          css={css`
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.7;
+          `}
+        >
+          (
+          {attachment.image_size
+            ? (attachment.image_size / 1024).toFixed(2)
+            : 0}
+          kB)
+        </Box>
+
         <ActionButton
           ghost
           icon="download"
