@@ -5,7 +5,8 @@ import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
+  const hideAvatar = ECOptions?.showAvatar === false;
   const getUserAvatarUrl = (authorIcon) => {
     const host = RCInstance.getHost();
     const URL = `${host}${authorIcon}`;
@@ -47,11 +48,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
       >
         {attachment?.author_name && (
           <>
-            <Avatar
-              url={getUserAvatarUrl(attachment?.author_icon)}
-              alt="avatar"
-              size="1.2em"
-            />
+            {!hideAvatar && (
+              <Avatar
+                url={getUserAvatarUrl(attachment?.author_icon)}
+                alt="avatar"
+                size="1.2em"
+              />
+            )}
             <Box>@{attachment?.author_name}</Box>
           </>
         )}
@@ -110,11 +113,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               >
                 {nestedAttachment?.author_name && (
                   <>
-                    <Avatar
-                      url={getUserAvatarUrl(nestedAttachment?.author_icon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
+                    {!hideAvatar && (
+                      <Avatar
+                        url={getUserAvatarUrl(nestedAttachment?.author_icon)}
+                        alt="avatar"
+                        size="1.2em"
+                      />
+                    )}
                     <Box>@{nestedAttachment?.author_name}</Box>
                   </>
                 )}

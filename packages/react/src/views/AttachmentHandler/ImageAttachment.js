@@ -14,7 +14,8 @@ const ImageAttachment = ({
   variantStyles = {},
   msg,
 }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
+  const hideAvatar = ECOptions?.showAvatar === false;
   const [showGallery, setShowGallery] = useState(false);
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
@@ -61,11 +62,15 @@ const ImageAttachment = ({
                 variantStyles.textUserInfo,
               ]}
             >
-              <Avatar
-                url={getUserAvatarUrl(authorIcon)}
-                alt="avatar"
-                size="1.2em"
-              />
+              <>
+                {!hideAvatar && (
+                  <Avatar
+                    url={getUserAvatarUrl(authorIcon)}
+                    alt="avatar"
+                    size="1.2em"
+                  />
+                )}
+              </>
               <Box>@{authorName}</Box>
             </Box>
           </>
@@ -121,11 +126,13 @@ const ImageAttachment = ({
                         variantStyles.textUserInfo,
                       ]}
                     >
-                      <Avatar
-                        url={getUserAvatarUrl(nestedAttachment.author_icon)}
-                        alt="avatar"
-                        size="1.2em"
-                      />
+                      {!hideAvatar && (
+                        <Avatar
+                          url={getUserAvatarUrl(nestedAttachment?.author_icon)}
+                          alt="avatar"
+                          size="1.2em"
+                        />
+                      )}
                       <Box>@{nestedAttachment.author_name}</Box>
                     </Box>
                   </>
