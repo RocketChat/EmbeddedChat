@@ -36,39 +36,42 @@ const SidebarContent = ({
 
   return (
     <Box css={styles.content} style={style}>
-      {isSearch && (
-        <Box
-          css={styles.searchContainer}
-          style={{
-            position: 'relative',
-            margin: '0.5rem',
-          }}
-          ref={searchContainerRef}
-        >
-          <Input
-            placeholder={placeholder}
-            onChange={handleInputChange}
-            css={styles.textInput}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-          <Icon name="magnifier" size="1.25rem" css={styles.noInfoIcon} />
-        </Box>
-      )}
-      {isFile && (
-        <Box>
-          <StaticSelect
+      <Box css={styles.filesHeader}>
+        {isSearch && (
+          <Box
+            css={styles.searchContainer}
             style={{
               position: 'relative',
-              margin: '0.5rem',
+              marginBottom: '0.5rem',
+              width: isFile ? '60%' : '100%',
             }}
-            isFile={isFile}
-            options={options}
-            value={value}
-            onSelect={handleFilterSelect}
-          />
-        </Box>
-      )}
+            ref={searchContainerRef}
+          >
+            <Input
+              placeholder={placeholder}
+              onChange={handleInputChange}
+              css={styles.textInput}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+            <Icon name="magnifier" size="1.25rem" css={styles.noInfoIcon} />
+          </Box>
+        )}
+        {isFile && (
+          <Box>
+            <StaticSelect
+              style={{
+                position: 'relative',
+                marginBottom: '0.5rem',
+              }}
+              isFile={isFile}
+              options={options}
+              value={value}
+              onSelect={handleFilterSelect}
+            />
+          </Box>
+        )}
+      </Box>
       {children}
     </Box>
   );

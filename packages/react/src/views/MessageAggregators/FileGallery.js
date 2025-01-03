@@ -39,7 +39,7 @@ const FileGallery = () => {
 
   useEffect(() => {
     const fetchAllFiles = async () => {
-      const res = await RCInstance.getAllFiles(isChannelPrivate);
+      const res = await RCInstance.getAllFiles(isChannelPrivate, '');
       if (res?.files) {
         const sortedFiles = res.files.sort(
           (a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)
@@ -55,7 +55,7 @@ const FileGallery = () => {
     setIsFetching(true);
     let res;
     val === 'all'
-      ? (res = await RCInstance.getAllFiles(isChannelPrivate))
+      ? (res = await RCInstance.getAllFiles(isChannelPrivate, ''))
       : (res = await RCInstance.getAllFiles(isChannelPrivate, val));
     if (res?.files) {
       const sortedFiles = res.files.sort(
