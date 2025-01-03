@@ -8,6 +8,7 @@ import {
   Input,
   Popup,
   StaticSelect,
+  Divider,
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
@@ -108,6 +109,9 @@ const RoomMembers = ({ members }) => {
     setViewStatus(value);
   };
 
+  const totalMembers = members.length;
+  const displayedMembers = filteredMembers.length;
+
   return (
     <ViewComponent
       title="Members"
@@ -178,6 +182,17 @@ const RoomMembers = ({ members }) => {
                     />
                   </Box>
                 </Box>
+              </Box>
+              <Box
+                css={css`
+                  margin-top: 1rem;
+                  margin-bottom: 1rem;
+                `}
+              >
+                <Divider />
+              </Box>
+              <Box>
+                Showing {displayedMembers} of {totalMembers}
               </Box>
               <Box css={styles.memberList}>
                 {filteredMembers.length > 0 ? (
