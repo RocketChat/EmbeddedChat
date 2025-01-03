@@ -109,7 +109,7 @@ const RoomMembers = ({ members }) => {
     setViewStatus(value);
   };
 
-  const totalMembers = members.length;
+  // const totalMembers = members.length;
   const displayedMembers = filteredMembers.length;
 
   return (
@@ -192,7 +192,7 @@ const RoomMembers = ({ members }) => {
                 <Divider />
               </Box>
               <Box>
-                Showing {displayedMembers} of {totalMembers}
+                Showing {displayedMembers} of {displayedMembers}
               </Box>
               <Box css={styles.memberList}>
                 {filteredMembers.length > 0 ? (
