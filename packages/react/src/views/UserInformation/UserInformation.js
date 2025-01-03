@@ -61,8 +61,6 @@ const UserInformation = () => {
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
-  console.log('currentUserInfo: ' + JSON.stringify(currentUserInfo));
-
   return (
     <ViewComponent
       title="User Info"
