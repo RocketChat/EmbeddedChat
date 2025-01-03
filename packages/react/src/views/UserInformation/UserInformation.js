@@ -14,6 +14,7 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
+import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
@@ -59,6 +60,8 @@ const UserInformation = () => {
   }, [RCInstance, setCurrentUserInfo]);
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  console.log('currentUserInfo: ' + JSON.stringify(currentUserInfo));
 
   return (
     <ViewComponent
@@ -182,7 +185,7 @@ const UserInformation = () => {
                 <Box key={index} css={styles.emailContainer}>
                   <a
                     href={`mailto:${email.address}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{ textDecoration: 'underline', color: '#095AD2' }}
                   >
                     {email.address}
                   </a>
@@ -197,7 +200,7 @@ const UserInformation = () => {
             />
             <UserInfoField
               label="Created at"
-              value={formatTimestamp(currentUserInfo.createdAt)}
+              value={formatTimestampGetDate(currentUserInfo.createdAt)}
               isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
