@@ -56,7 +56,7 @@ const getTooltipStyles = (theme, position) => {
         : 'auto'};
       bottom: ${position === 'bottom' ? '100%' : 'auto'};
       left: ${position === 'left'
-        ? '104%'
+        ? '102%'
         : position === 'right'
         ? '-7px'
         : '50%'};
