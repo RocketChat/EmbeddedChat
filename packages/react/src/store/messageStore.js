@@ -83,9 +83,7 @@ const useMessageStore = create((set, get) => ({
     }),
   removeQuoteMessage: (quoteMessage) =>
     set((state) => ({
-      quoteMessage: state.quoteMessage.filter(
-        (msg) => msg._id !== quoteMessage._id
-      ),
+      quoteMessage: state.quoteMessage.filter((i) => i !== quoteMessage),
     })),
 
   clearQuoteMessages: () => set({ quoteMessage: [] }),
