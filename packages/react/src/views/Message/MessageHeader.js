@@ -19,6 +19,8 @@ const MessageHeader = ({
   isTimeStamped = true,
   isRoles = false,
   showDisplayName = true,
+  handlePinMessage,
+  handleStarMessage
 }) => {
   const { styleOverrides, classNames, variantOverrides } =
     useComponentOverrides('MessageHeader');
@@ -181,6 +183,7 @@ const MessageHeader = ({
                 name="star-filled"
                 size="1em"
                 color={theme.colors.primary}
+                onClick={() => handleStarMessage(message)}
               />
             </Tooltip>
           ) : null}
@@ -191,6 +194,7 @@ const MessageHeader = ({
                 name="pin"
                 size="1em"
                 color={theme.colors.primary}
+                onClick={() => handlePinMessage(message)}
               />
             </Tooltip>
           ) : null}

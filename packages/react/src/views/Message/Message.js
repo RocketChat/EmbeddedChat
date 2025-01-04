@@ -218,6 +218,8 @@ const Message = ({
               {...(variantStyles?.name?.includes('bubble') && {
                 showDisplayName: !isMe,
               })}
+              handlePinMessage={handlePinMessage}
+              handleStarMessage={handleStarMessage}
             />
           )}
           {!message.t ? (
