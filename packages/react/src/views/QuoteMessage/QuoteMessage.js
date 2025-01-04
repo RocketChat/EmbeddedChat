@@ -96,7 +96,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         ) : message?.msg[0] === '[' ? (
           message?.msg.match(/\n(.*)/)[1]
         ) : (
-          <Markdown body={message} isReaction={false} />
+          <Markdown body={message} md={message.md} isReaction={false} />
         )}
         {message.attachments &&
           message.attachments.length > 0 &&

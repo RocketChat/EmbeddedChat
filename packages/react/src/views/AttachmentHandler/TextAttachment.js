@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
+import { Markdown } from '../Markdown';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
@@ -61,11 +62,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           margin-top: 0.5rem;
           white-space: pre-line;
         `}
-      >
+      > 
         {attachment?.text
           ? attachment.text[0] === '['
             ? attachment.text.match(/\n(.*)/)?.[1] || ''
-            : attachment.text
+            : (
+              <Markdown body={attachment.text} md={attachment.md} isReaction={false} />
+            )
           : ''}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
