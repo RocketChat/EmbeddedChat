@@ -87,12 +87,12 @@ const AttachmentMetadata = ({
         </p>
         <ActionButton
           ghost
-          icon={isExpanded ? 'arrow-down' : 'arrow-right'}
+          icon={isExpanded ? 'chevron-down' : 'chevron-left'}
           size="small"
           onClick={onExpandCollapseClick}
           css={css`
             margin-left: 10px;
-            margin-top: ${attachment.description ? '5px' : '15px'};
+            margin-top: ${attachment.description ? '3px' : '13px'};
           `}
         />
         <ActionButton
