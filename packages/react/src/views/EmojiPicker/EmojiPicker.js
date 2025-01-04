@@ -32,7 +32,7 @@ const CustomEmojiPicker = ({
       height="auto"
       width="auto"
     >
-      <Box css={styles.emojiPicker}>
+      <Box css={styles.inputBox}>
         <EmojiPicker
           height={350}
           width={300}
