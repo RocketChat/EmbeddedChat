@@ -7,7 +7,7 @@ import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import TextAttachment from './TextAttachment';
 
-const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
+const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
   const author = {
     authorIcon: attachment?.author_icon,
     authorName: attachment?.author_name,
@@ -19,6 +19,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         author={author}
         variantStyles={variantStyles}
+        msg={msg}
       />
     );
   }
@@ -29,6 +30,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         author={author}
         variantStyles={variantStyles}
+        msg={msg}
       />
     );
   }
@@ -39,6 +41,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {} }) => {
         host={host}
         author={author}
         variantStyles={variantStyles}
+        msg={msg}
       />
     );
   }

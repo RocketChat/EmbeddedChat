@@ -469,18 +469,23 @@ const ChatInput = ({ scrollToBottom }) => {
             }
           />
         ) : null}
-
-        {showMembersList && (
-          <MembersList
-            messageRef={messageRef}
-            mentionIndex={mentionIndex}
-            setMentionIndex={setMentionIndex}
-            filteredMembers={filteredMembers}
-            setFilteredMembers={setFilteredMembers}
-            setStartReadMentionUser={setStartReadMentionUser}
-            setShowMembersList={setShowMembersList}
-          />
-        )}
+        <Box
+          css={css`
+            margin: 0rem 2rem;
+          `}
+        >
+          {showMembersList && (
+            <MembersList
+              messageRef={messageRef}
+              mentionIndex={mentionIndex}
+              setMentionIndex={setMentionIndex}
+              filteredMembers={filteredMembers}
+              setFilteredMembers={setFilteredMembers}
+              setStartReadMentionUser={setStartReadMentionUser}
+              setShowMembersList={setShowMembersList}
+            />
+          )}
+        </Box>
 
         {showCommandList && (
           <CommandsList

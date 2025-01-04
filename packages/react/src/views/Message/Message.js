@@ -102,10 +102,12 @@ const Message = ({
 
   const handlePinMessage = async (msg) => {
     const isPinned = msg.pinned;
+    msg.pinned = !isPinned;
     const pinOrUnpin = isPinned
       ? await RCInstance.unpinMessage(msg._id)
       : await RCInstance.pinMessage(msg._id);
     if (pinOrUnpin.error) {
+      msg.pinned = isPinned;
       dispatchToastMessage({
         type: 'error',
         message: 'Error pinning message',
@@ -205,7 +207,10 @@ const Message = ({
             isPinned={isPinned}
           />
         )}
-        <MessageBodyContainer variantStyles={variantStyles}>
+        <MessageBodyContainer
+          variantStyles={variantStyles}
+          style={{ maxWidth: message?.t ? '90%' : null }}
+        >
           {shouldShowHeader && (
             <MessageHeader
               message={message}
@@ -228,14 +233,19 @@ const Message = ({
               >
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
-                    <Markdown body={message} isReaction={false} />
+                    <Markdown
+                      body={message}
+                      md={message.md}
+                      isReaction={false}
+                    />
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}
+                      msg={message}
                     />
                   </>
                 ) : (
-                  <Markdown body={message} isReaction={false} />
+                  <Markdown body={message} md={message.md} isReaction={false} />
                 )}
 
                 {message.blocks && (
