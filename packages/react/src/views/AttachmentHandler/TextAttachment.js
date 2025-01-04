@@ -62,14 +62,20 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           margin-top: 0.5rem;
           white-space: pre-line;
         `}
-      > 
-        {attachment?.text
-          ? attachment.text[0] === '['
-            ? attachment.text.match(/\n(.*)/)?.[1] || ''
-            : (
-              <Markdown body={attachment.text} md={attachment.md} isReaction={false} />
-            )
-          : ''}
+      >
+        {attachment?.text ? (
+          attachment.text[0] === '[' ? (
+            attachment.text.match(/\n(.*)/)?.[1] || ''
+          ) : (
+            <Markdown
+              body={attachment.text}
+              md={attachment.md}
+              isReaction={false}
+            />
+          )
+        ) : (
+          ''
+        )}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box

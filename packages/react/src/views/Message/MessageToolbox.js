@@ -275,7 +275,7 @@ export const MessageToolbox = ({
               padding: '0 0.5rem 0.5rem',
             }}
           >
-            <Markdown body={message} isReaction={false} />
+            <Markdown body={message} md={message.md} isReaction={false} />
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={handleOnClose}>
