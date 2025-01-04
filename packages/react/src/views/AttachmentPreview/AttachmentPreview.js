@@ -65,6 +65,22 @@ const AttachmentPreview = () => {
       setIsPending(false);
     }
   };
+
+  const onKeyDown = (e) => {
+    switch (true) {
+      case e.code === 'Escape':
+        e.preventDefault();
+        toggle();
+        break;
+      case e.code === 'Enter':
+        e.preventDefault();
+        submit();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <Modal onClose={toggle}>
       <Modal.Header>
@@ -112,6 +128,7 @@ const AttachmentPreview = () => {
                 value={fileName}
                 css={styles.input}
                 placeholder="name"
+                onKeyDown={onKeyDown}
               />
               <TypingUsers />
             </Box>
@@ -150,6 +167,7 @@ const AttachmentPreview = () => {
                   css={styles.input}
                   placeholder="Description"
                   ref={messageRef}
+                  onKeyDown={onKeyDown}
                 />
               </Box>
             </Box>
