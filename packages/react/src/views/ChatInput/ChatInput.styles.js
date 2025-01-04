@@ -91,7 +91,7 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      z-index: 100;
+      z-index: 1300;
     `,
     popOverItemStyles: css`
       display: flex;
