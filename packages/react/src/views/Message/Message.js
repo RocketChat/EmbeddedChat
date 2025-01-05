@@ -138,20 +138,24 @@ const Message = ({
   };
 
   const handleCopyMessage = async (msg) => {
-    navigator.clipboard
-      .writeText(msg.msg)
-      .then(() => {
-        dispatchToastMessage({
-          type: 'success',
-          message: 'Message copied successfully',
-        });
-      })
-      .catch(() => {
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Error in copying message',
-        });
+    const textToCopy =
+      msg.msg ||
+      (msg.attachments && msg.attachments[0]
+        ? msg.attachments[0].description || msg.attachments[0].title
+        : '');
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message copied successfully',
       });
+    } catch (error) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message',
+      });
+    }
   };
 
   const getMessageLink = async (id) => {
