@@ -7,6 +7,8 @@ import {
   useComponentOverrides,
   appendClassNames,
   useTheme,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
@@ -72,8 +74,23 @@ const Message = ({
   }));
 
   const isMe = message.u._id === authenticatedUserId;
+
   const theme = useTheme();
+  const { mode } = useTheme();
   const styles = getMessageStyles(theme);
+  const hasType = Boolean(message.t);
+
+  const hoverStyle = hasType
+    ? {}
+    : {
+        '&:hover': {
+          backgroundColor:
+            mode === 'light'
+              ? darken(theme.theme.colors.background, 0.03)
+              : lighten(theme.theme.colors.background, 1),
+        },
+      };
+
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
   const editMessageRoles = new Set(editMessagePermissions);
@@ -195,6 +212,7 @@ const Message = ({
         className={appendClassNames('ec-message', classNames)}
         css={[
           variantStyles.messageParent || styles.main,
+          hoverStyle,
           editMessage._id === message._id && styles.messageEditing,
         ]}
         style={styleOverrides}
