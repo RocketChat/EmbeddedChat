@@ -72,6 +72,8 @@ const ChatInputFormattingToolbar = ({
     setInsertLinkOpen(false);
   };
 
+  const isTyping = messageRef.current?.value.length > 0;
+  console.log(isTyping);
   const chatToolMap = {
     emoji: (
       <Tooltip text="Emoji" position="top" key="emoji-btn">
@@ -89,12 +91,12 @@ const ChatInputFormattingToolbar = ({
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder />
+        <AudioMessageRecorder disable={isTyping} />
       </Tooltip>
     ),
     video: (
       <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder />
+        <VideoMessageRecorder disable={isTyping} />
       </Tooltip>
     ),
     file: (
@@ -102,7 +104,7 @@ const ChatInputFormattingToolbar = ({
         <ActionButton
           square
           ghost
-          disabled={isRecordingMessage}
+          disabled={isRecordingMessage || isTyping}
           onClick={handleClickToOpenFiles}
         >
           <Icon name="attachment" size="1.25rem" />

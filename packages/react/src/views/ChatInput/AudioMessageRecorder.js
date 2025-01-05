@@ -5,7 +5,8 @@ import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const AudioMessageRecorder = () => {
+const AudioMessageRecorder = (props) => {
+  const { disable } = props;
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -130,7 +131,12 @@ const AudioMessageRecorder = () => {
 
   if (state === 'idle') {
     return (
-      <ActionButton ghost square onClick={handleRecordButtonClick}>
+      <ActionButton
+        ghost
+        square
+        onClick={handleRecordButtonClick}
+        disabled={disable}
+      >
         <Icon size="1.25rem" name="mic" />
       </ActionButton>
     );
