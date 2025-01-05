@@ -21,7 +21,8 @@ export const MessageDivider = ({
     style
   );
   const { theme } = useTheme();
-  const styles = getMessageDividerStyles(theme);
+  const { mode } = useTheme();
+  const styles = getMessageDividerStyles(theme, mode);
 
   const isUnread = unreadLabel !== undefined;
 

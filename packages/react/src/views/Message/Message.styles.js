@@ -66,7 +66,7 @@ export const MessageBodyStyles = {
   `,
 };
 
-export const getMessageDividerStyles = (theme) => {
+export const getMessageDividerStyles = (theme, mode) => {
   const styles = {
     divider: css`
       letter-spacing: 0rem;
@@ -125,7 +125,9 @@ export const getMessageDividerStyles = (theme) => {
     `,
 
     unreadDividerContent: css`
-      color: ${theme.colors.foreground};
+      color: ${mode === 'light'
+        ? theme.colors.destructive
+        : theme.colors.warningForeground};
       font-size: 0.875rem;
       font-weight: 750;
       margin-left: 10px;
@@ -137,7 +139,9 @@ export const getMessageDividerStyles = (theme) => {
       align-items: center;
       flex-grow: 1;
       height: 0.7px;
-      background-color: ${theme.colors.foreground};
+      background-color: ${mode === 'light'
+        ? theme.colors.destructive
+        : theme.colors.warningForeground};
     `,
   };
 
