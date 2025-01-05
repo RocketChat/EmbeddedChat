@@ -196,16 +196,6 @@ const UserInformation = () => {
           <br />
           No Info Found
           <br />
-          <Box
-            css={css`
-              font-weight: normal;
-              font-size: 1rem;
-              opacity: 0.6;
-              color: ${theme.colors.textSecondary};
-            `}
-          >
-            {error}
-          </Box>
         </Box>
       ) : null}
     </ViewComponent>
