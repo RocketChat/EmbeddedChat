@@ -15,6 +15,7 @@ import Attachment from '../AttachmentHandler/Attachment';
 import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
+  console.log('message', message);
   const { RCInstance } = useContext(RCContext);
   const instanceHost = RCInstance.getHost();
   const getUserAvatarUrl = (username) => {
