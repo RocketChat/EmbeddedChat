@@ -20,6 +20,7 @@ import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
+import { useRCContext } from '../../../context/RCInstance';
 
 export const MessageAggregator = ({
   title,
@@ -41,6 +42,8 @@ export const MessageAggregator = ({
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
+  const { ECOptions } = useRCContext();
+  const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
   const currentUserRoles = useUserStore((state) => state.roles);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
@@ -67,7 +70,11 @@ export const MessageAggregator = ({
       const element = document.getElementById(`ec-message-body-${msgId}`);
       if (element) {
         setShowSidebar(false);
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        element.style.backgroundColor = theme.colors.warning;
+        setTimeout(() => {
+          element.style.backgroundColor = '';
+        }, 1000);
       }
     }
   };
@@ -164,7 +171,7 @@ export const MessageAggregator = ({
                       type="default"
                       showAvatar
                       showToolbox={false}
-                      showRoles={false}
+                      showRoles={showRoles}
                       isInSidebar
                       style={{
                         flex: 1,
