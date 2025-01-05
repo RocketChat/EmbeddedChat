@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -14,9 +8,9 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
-import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const VideoMessageRecorder = () => {
   const videoRef = useRef(null);
@@ -27,13 +21,16 @@ const VideoMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+    toggle: state.toggle,
+    setData: state.setData,
+  }));
+
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
 
   const onStop = (videoChunks) => {
     const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
@@ -135,16 +132,9 @@ const VideoMessageRecorder = () => {
   }, [handleMount]);
 
   useEffect(() => {
-    const sendRecording = async () => {
-      await RCInstance.sendAttachment(
-        file,
-        undefined,
-        undefined,
-        ECOptions.enableThreads ? threadId : undefined
-      );
-    };
     if (isRecorded && file) {
-      sendRecording();
+      toggle();
+      setData(file);
       setIsRecorded(false);
     }
     if (file) {
