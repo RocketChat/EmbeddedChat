@@ -110,6 +110,7 @@ const ChatInputFormattingToolbar = ({
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
+            if (isRecordingMessage) return;
             setEmojiOpen(true);
           }}
         >
@@ -123,6 +124,7 @@ const ChatInputFormattingToolbar = ({
             ghost
             disabled={isRecordingMessage}
             onClick={() => {
+              if (isRecordingMessage) return;
               setEmojiOpen(true);
             }}
           >
@@ -137,6 +139,7 @@ const ChatInputFormattingToolbar = ({
           displayName={
             isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
           }
+          disabled={isRecordingMessage}
           popOverItemStyles={styles.popOverItemStyles}
         />
       </Tooltip>
@@ -148,6 +151,7 @@ const ChatInputFormattingToolbar = ({
             isPopoverOpen && popOverItems.includes('video') ? 'video' : null
           }
           popOverItemStyles={styles.popOverItemStyles}
+          disabled={isRecordingMessage}
         />
       </Tooltip>
     ),
@@ -157,7 +161,10 @@ const ChatInputFormattingToolbar = ({
           key="file"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
-          onClick={handleClickToOpenFiles}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            handleClickToOpenFiles();
+          }}
         >
           <Icon name="attachment" size="1rem" />
           <span>file</span>
@@ -168,7 +175,10 @@ const ChatInputFormattingToolbar = ({
             square
             ghost
             disabled={isRecordingMessage}
-            onClick={handleClickToOpenFiles}
+            onClick={() => {
+              if (isRecordingMessage) return;
+              handleClickToOpenFiles();
+            }}
           >
             <Icon name="attachment" size="1.25rem" />
           </ActionButton>
@@ -181,6 +191,7 @@ const ChatInputFormattingToolbar = ({
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
+            if (isRecordingMessage) return;
             setInsertLinkOpen(true);
           }}
         >
@@ -194,6 +205,7 @@ const ChatInputFormattingToolbar = ({
             ghost
             disabled={isRecordingMessage}
             onClick={() => {
+              if (isRecordingMessage) return;
               setInsertLinkOpen(true);
             }}
           >
@@ -210,6 +222,7 @@ const ChatInputFormattingToolbar = ({
               key={item.name}
               disabled={isRecordingMessage}
               onClick={() => {
+                if (isRecordingMessage) return;
                 handleFormatterClick(item);
               }}
               css={styles.popOverItemStyles}
@@ -233,6 +246,7 @@ const ChatInputFormattingToolbar = ({
               disabled={isRecordingMessage}
               ghost
               onClick={() => {
+                if (isRecordingMessage) return;
                 formatSelection(messageRef, item.pattern);
               }}
             >
@@ -251,7 +265,10 @@ const ChatInputFormattingToolbar = ({
           square
           ghost
           disabled={isRecordingMessage}
-          onClick={() => setPopoverOpen(true)}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            setPopoverOpen(true);
+          }}
         >
           <Icon name="kebab" size="1.25rem" />
         </ActionButton>
@@ -268,7 +285,7 @@ const ChatInputFormattingToolbar = ({
       <Box
         css={css`
           display: flex;
-          @media (max-width: 399px) {
+          @media (max-width: 499px) {
             display: none;
           }
         `}
@@ -305,7 +322,7 @@ const ChatInputFormattingToolbar = ({
 
       <Box
         css={css`
-          @media (min-width: 400px) {
+          @media (min-width: 500px) {
             display: none;
           }
         `}

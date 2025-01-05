@@ -13,8 +13,8 @@ import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const VideoMessageRecorder = (props) => {
-  const { displayName, popOverItemStyles } = props;
   const videoRef = useRef(null);
+  const { disabled, displayName, popOverItemStyles } = props;
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
 
@@ -56,6 +56,7 @@ const VideoMessageRecorder = (props) => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
@@ -151,12 +152,18 @@ const VideoMessageRecorder = (props) => {
             key="video"
             css={popOverItemStyles}
             onClick={handleRecordButtonClick}
+            disabled={disabled}
           >
             <Icon name="video-recorder" size="1rem" />
             <span>{displayName}</span>
           </Box>
         ) : (
-          <ActionButton ghost square onClick={handleRecordButtonClick}>
+          <ActionButton
+            ghost
+            square
+            onClick={handleRecordButtonClick}
+            disabled={disabled}
+          >
             <Icon size="1.25rem" name="video-recorder" />
           </ActionButton>
         ))}
