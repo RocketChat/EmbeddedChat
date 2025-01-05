@@ -1,9 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '@embeddedchat/ui-elements';
-import { CodeBlockStyles as styles } from './elements.styles';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { vs, monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { CodeBlockStyles } from './elements.styles';
 
 const CodeBlock = ({ lines }) => {
+  const { mode } = useTheme();
+  const styles = CodeBlockStyles();
   const code = useMemo(
     () => lines.map((line) => line.value.value).join('\n'),
     [lines]
@@ -14,7 +18,13 @@ const CodeBlock = ({ lines }) => {
       <Box is="span" css={styles.copyonly}>
         ```
       </Box>
-      <code>{code}</code>
+      <SyntaxHighlighter
+        style={mode === 'dark' ? monokai : vs}
+        wrapLines
+        css={styles.codeBlock}
+      >
+        {code}
+      </SyntaxHighlighter>
       <Box is="span" css={styles.copyonly}>
         ```
       </Box>
@@ -23,7 +33,6 @@ const CodeBlock = ({ lines }) => {
 };
 
 export default CodeBlock;
-
 CodeBlock.propTypes = {
   lines: PropTypes.any,
 };
