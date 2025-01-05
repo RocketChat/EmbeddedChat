@@ -17,7 +17,7 @@ const InsertLinkToolBox = ({
 }) => {
   const { theme } = useTheme();
   const styles = getInsertLinkModalStyles(theme);
-  const [linkText, setLinkText] = useState(selectedText);
+  const [linkText, setLinkText] = useState(selectedText || 'Text');
   const [linkUrl, setLinkUrl] = useState(null);
 
   const handleLinkTextOnChange = (e) => {
