@@ -552,6 +552,47 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getOlderMessages(
+    anonymousMode = false,
+    options: {
+      query?: object | undefined;
+      field?: object | undefined;
+      offset?: number;
+    } = {
+      query: undefined,
+      field: undefined,
+      offset: 50,
+    },
+    isChannelPrivate = false
+  ) {
+    const roomType = isChannelPrivate ? "groups" : "channels";
+    const endp = anonymousMode ? "anonymousread" : "messages";
+    const query = options?.query
+      ? `&query=${JSON.stringify(options.query)}`
+      : "";
+    const field = options?.field
+      ? `&field=${JSON.stringify(options.field)}`
+      : "";
+    const offset = options?.offset ? options.offset : 0;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const messages = await fetch(
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await messages.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async getThreadMessages(tmid: string, isChannelPrivate = false) {
     return this.getMessages(
       false,

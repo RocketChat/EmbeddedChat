@@ -16,11 +16,19 @@ const useMessageStore = create((set, get) => ({
   threadMainMessage: null,
   headerTitle: null,
   setFilter: (filter) => set(() => ({ filtered: filter })),
-  setMessages: (messages) =>
-    set(() => ({
-      messages,
-      isMessageLoaded: true,
-    })),
+  setMessages: (newMessages, append = false) =>
+    set((state) => {
+      const allMessages = append
+        ? [...state.messages, ...newMessages]
+        : newMessages;
+      const uniqueMessages = Array.from(
+        new Map(allMessages.map((msg) => [msg._id, msg])).values()
+      );
+      return {
+        messages: uniqueMessages,
+        isMessageLoaded: true,
+      };
+    }),
   upsertMessage: (message, enableThreads = false) => {
     if (message.tmid && enableThreads) {
       if (get().threadMainMessage?._id === message.tmid) {
