@@ -8,22 +8,21 @@ import { CodeBlockStyles } from './elements.styles';
 const CodeBlock = ({ lines }) => {
   const { mode } = useTheme();
   const styles = CodeBlockStyles();
-  const [theme, setTheme] = useState(vs);
   const code = useMemo(
     () => lines.map((line) => line.value.value).join('\n'),
     [lines]
   );
-
-  useEffect(() => {
-    setTheme(mode === 'dark' ? monokai : vs);
-  }, [mode]);
 
   return (
     <pre role="region" css={styles.prestyle}>
       <Box is="span" css={styles.copyonly}>
         ```
       </Box>
-      <SyntaxHighlighter style={theme} wrapLines css={styles.codeBlock}>
+      <SyntaxHighlighter
+        style={mode === 'dark' ? monokai : vs}
+        wrapLines
+        css={styles.codeBlock}
+      >
         {code}
       </SyntaxHighlighter>
       <Box is="span" css={styles.copyonly}>
