@@ -25,6 +25,7 @@ const UserInformation = () => {
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
@@ -183,7 +184,13 @@ const UserInformation = () => {
                 <Box key={index} css={styles.emailContainer}>
                   <a
                     href={`mailto:${email.address}`}
-                    style={{ textDecoration: 'underline', color: '#095AD2' }}
+                    style={{
+                      textDecoration: 'underline',
+                      color:
+                        mode === 'light'
+                          ? theme.colors.info
+                          : theme.colors.warningForeground,
+                    }}
                   >
                     {email.address}
                   </a>
