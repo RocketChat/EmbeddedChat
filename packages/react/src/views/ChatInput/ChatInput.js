@@ -435,6 +435,25 @@ const ChatInput = ({ scrollToBottom }) => {
           sendMessage();
         }
         break;
+        case e.altKey && e.code === 'ArrowUp': {
+          e.preventDefault();
+          e.stopPropagation();
+          if (messageRef && messageRef.current) {
+            messageRef.current.setSelectionRange(0, 0);
+            messageRef.current.focus();
+          }
+          break;
+        }
+        case e.altKey && e.code === 'ArrowDown': {
+          e.preventDefault();
+          e.stopPropagation();
+          if (messageRef && messageRef.current) {
+            const endlength = messageRef.current.value.length;
+            messageRef.current.setSelectionRange(endlength, endlength);
+            messageRef.current.focus();
+          }
+          break;
+        }
       default:
         break;
     }
