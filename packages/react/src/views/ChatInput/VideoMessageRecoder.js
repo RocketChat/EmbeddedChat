@@ -12,8 +12,7 @@ import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = (props) => {
-  const { disable } = props;
+const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -149,8 +148,8 @@ const VideoMessageRecorder = (props) => {
         <ActionButton
           ghost
           square
+          disabled={disabled}
           onClick={handleRecordButtonClick}
-          disabled={disable}
         >
           <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>

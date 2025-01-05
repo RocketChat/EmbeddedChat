@@ -91,12 +91,12 @@ const ChatInputFormattingToolbar = ({
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder disable={isTyping} />
+        <AudioMessageRecorder disabled={isRecordingMessage || isTyping} />
       </Tooltip>
     ),
     video: (
       <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder disable={isTyping} />
+        <VideoMessageRecorder disabled={isRecordingMessage || isTyping} />
       </Tooltip>
     ),
     file: (
@@ -105,7 +105,10 @@ const ChatInputFormattingToolbar = ({
           square
           ghost
           disabled={isRecordingMessage || isTyping}
-          onClick={handleClickToOpenFiles}
+          onClick={() => {
+            if (isRecordingMessage || isTyping) return;
+            handleClickToOpenFiles();
+          }}
         >
           <Icon name="attachment" size="1.25rem" />
         </ActionButton>
