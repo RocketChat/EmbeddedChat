@@ -435,7 +435,7 @@ const ChatInput = ({ scrollToBottom }) => {
           sendMessage();
         }
         break;
-      case e.altKey && e.code === 'ArrowUp': {
+      case e.altKey && (e.code === 'ArrowUp' || 'ArrowRight'): {
         e.preventDefault();
         e.stopPropagation();
         if (messageRef && messageRef.current) {
@@ -444,7 +444,7 @@ const ChatInput = ({ scrollToBottom }) => {
         }
         break;
       }
-      case e.altKey && e.code === 'ArrowDown': {
+      case e.altKey && (e.code === 'ArrowDown' || 'ArrowLeft'): {
         e.preventDefault();
         e.stopPropagation();
         if (messageRef && messageRef.current) {
