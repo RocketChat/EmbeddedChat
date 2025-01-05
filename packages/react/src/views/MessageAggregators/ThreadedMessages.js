@@ -17,12 +17,18 @@ const ThreadedMessages = () => {
 
   const searchFiltered = useMemo(
     () =>
-      messages.filter((message) =>
-        message.msg?.toLowerCase().includes(text.toLowerCase())
-      ),
+      messages
+        .filter((message) =>
+          message.msg?.toLowerCase().includes(text.toLowerCase())
+        )
+        .sort((a, b) => {
+          const dateA = a.tlm ? new Date(a.tlm) : new Date(0); 
+          const dateB = b.tlm ? new Date(b.tlm) : new Date(0);
+          return dateB - dateA; 
+        }),
     [messages, text]
   );
-
+  
   return (
     <MessageAggregator
       title="Threads"
