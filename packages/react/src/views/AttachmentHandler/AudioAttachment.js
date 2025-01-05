@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
@@ -21,6 +21,12 @@ const AudioAttachment = ({
     return URL;
   };
   const { authorIcon, authorName } = author;
+
+  const [isExpanded, setIsExpanded] = useState(true);
+  const toggleExpanded = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
   return (
     <Box>
       <Box
@@ -66,8 +72,12 @@ const AudioAttachment = ({
           url={host + (attachment.title_url || attachment.audio_url)}
           variantStyles={variantStyles}
           msg={msg}
+          onExpandCollapseClick={toggleExpanded}
+          isExpanded={isExpanded}
         />
-        <audio src={host + attachment.audio_url} width="100%" controls />
+        {isExpanded && (
+          <audio src={host + attachment.audio_url} width="100%" controls />
+        )}
 
         {attachment.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
