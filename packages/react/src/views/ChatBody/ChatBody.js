@@ -197,7 +197,7 @@ const ChatBody = ({
                       $exists: false,
                     },
                   },
-                  offset: offset,
+                  offset,
                 }
               : undefined,
             anonymousMode ? false : isChannelPrivate
