@@ -1,23 +1,46 @@
 import { css } from '@emotion/react';
-import { useTheme } from '@embeddedchat/ui-elements';
+import { useTheme, darken } from '@embeddedchat/ui-elements';
 
-export const CodeBlockStyles = {
-  copyonly: css`
-    display: none;
-    width: 100%;
-    height: 0;
-    user-select: none;
-    vertical-align: baseline;
-    font-size: 0;
-    -moz-box-orient: vertical;
-  `,
+export const InlineElementsStyles = () => {
+  const { theme } = useTheme();
+  const styles = {
+    inlineElement: css`
+      font-weight: 600;
+      font-size: 0.75rem;
+      width: fit-content;
+      padding: 3px;
+      background-color: ${theme.colors.border};
+      border-radius: 6px;
+    `,
+  };
+  return styles;
+};
+export const CodeBlockStyles = () => {
+  const { theme } = useTheme();
+  const styles = {
+    copyonly: css`
+      display: none;
+      width: 100%;
+      height: 0;
+      user-select: none;
+      vertical-align: baseline;
+      font-size: 0;
+      -moz-box-orient: vertical;
+    `,
 
-  prestyle: css`
-    display: inline-block;
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: pre-wrap;
-  `,
+    prestyle: css`
+      display: inline-block;
+      width: 100%;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    `,
+    codeBlock: css`
+      background-color: ${darken(theme.colors.accent, 0.01)} !important;
+      border-radius: ${theme.radius};
+      font-weight: 600;
+    `,
+  };
+  return styles;
 };
 
 export const ColorElementStyles = {

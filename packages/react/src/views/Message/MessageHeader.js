@@ -127,7 +127,7 @@ const MessageHeader = ({
               css={styles.userRole}
               className={appendClassNames('ec-message-user-role')}
             >
-              admin
+              Admin
             </Box>
           )}
 
@@ -138,7 +138,7 @@ const MessageHeader = ({
               css={styles.userRole}
               className={appendClassNames('ec-message-user-role')}
             >
-              {role}
+              {role.charAt(0).toUpperCase() + role.slice(1)}
             </Box>
           ))}
         </>
