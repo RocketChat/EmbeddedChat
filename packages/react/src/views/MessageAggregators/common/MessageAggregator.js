@@ -17,6 +17,7 @@ import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
+import { useRCContext } from '../../../context/RCInstance';
 
 export const MessageAggregator = ({
   title,
@@ -33,6 +34,8 @@ export const MessageAggregator = ({
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
+  const { ECOptions } = useRCContext();
+  const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
@@ -126,7 +129,7 @@ export const MessageAggregator = ({
                       type="default"
                       showAvatar
                       showToolbox={false}
-                      showRoles={false}
+                      showRoles={showRoles}
                       isInSidebar
                       style={{
                         flex: 1,
