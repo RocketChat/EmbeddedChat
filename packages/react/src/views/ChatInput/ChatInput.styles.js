@@ -122,7 +122,7 @@ export const getInsertLinkModalStyles = (theme) => {
     inputWithFormattingBox: css`
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
-      margin: 0.5rem 1rem;
+      margin: 0rem 1rem 0.5rem 1rem;
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
       }
