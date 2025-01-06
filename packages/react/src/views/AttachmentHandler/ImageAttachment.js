@@ -30,10 +30,14 @@ const ImageAttachment = ({
 
   const { authorIcon, authorName } = author;
 
+  const [isExpanded, setIsExpanded] = useState(true);
+  const toggleExpanded = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
   return (
     <Box css={variantStyles.imageAttachmentContainer}>
       <Box
-        onClick={() => setShowGallery(true)}
         css={[
           css`
             cursor: pointer;
@@ -77,16 +81,22 @@ const ImageAttachment = ({
           url={host + (attachment.title_link || attachment.image_url)}
           variantStyles={variantStyles}
           msg={msg}
+          onExpandCollapseClick={toggleExpanded}
+          isExpanded={isExpanded}
         />
-        <img
-          src={host + attachment.image_url}
-          style={{
-            maxWidth: '100%',
-            objectFit: 'contain',
-            borderBottomLeftRadius: 'inherit',
-            borderBottomRightRadius: 'inherit',
-          }}
-        />
+        {isExpanded && (
+          <Box onClick={() => setShowGallery(true)}>
+            <img
+              src={host + attachment.image_url}
+              style={{
+                maxWidth: '100%',
+                objectFit: 'contain',
+                borderBottomLeftRadius: 'inherit',
+                borderBottomRightRadius: 'inherit',
+              }}
+            />
+          </Box>
+        )}
         {attachment.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box css={variantStyles.imageAttachmentContainer} key={index}>

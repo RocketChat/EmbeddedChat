@@ -3,7 +3,14 @@ import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
 
-const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
+const AttachmentMetadata = ({
+  attachment,
+  url,
+  variantStyles = {},
+  msg,
+  onExpandCollapseClick,
+  isExpanded,
+}) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -78,6 +85,16 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
         >
           {attachment.title}
         </p>
+        <ActionButton
+          ghost
+          icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+          size="small"
+          onClick={onExpandCollapseClick}
+          css={css`
+            margin-left: 10px;
+            margin-top: ${attachment.description ? '3px' : '13px'};
+          `}
+        />
         <ActionButton
           ghost
           icon="download"
