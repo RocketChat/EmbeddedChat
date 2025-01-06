@@ -79,7 +79,7 @@ export const MessageReactions = ({
             onMouseLeave={() => setHoveredReaction(null)}
             style={{ position: 'relative' }}
           >
-            <Markdown body={reaction.name} isReaction titleTagVisible={false} />
+            <Markdown body={reaction.name} isReaction />
             <p>{reaction.count}</p>
             {hoveredReaction === reaction.name && (
               <Box css={styles.emojiTooltip}>{tooltipMap[reaction.name]}</Box>
