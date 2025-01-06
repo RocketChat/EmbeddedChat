@@ -22,7 +22,6 @@ import { useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage }) => {
-  console.log('fileMessage', fileMessage);
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
