@@ -82,6 +82,7 @@ const ChatInputFormattingToolbar = ({
           ghost
           disabled={isRecordingMessage}
           onClick={() => {
+            if (isRecordingMessage) return;
             setEmojiOpen(true);
           }}
         >
@@ -137,6 +138,7 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage}
             ghost
             onClick={() => {
+              if (isRecordingMessage) return;
               formatSelection(messageRef, item.pattern);
             }}
           >

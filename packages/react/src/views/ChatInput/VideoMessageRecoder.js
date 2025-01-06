@@ -55,6 +55,7 @@ const VideoMessageRecorder = ({ disabled }) => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
