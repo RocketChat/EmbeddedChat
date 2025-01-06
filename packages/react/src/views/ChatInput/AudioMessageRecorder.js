@@ -54,10 +54,8 @@ const AudioMessageRecorder = ({ disabled }) => {
     setRecordState('idle');
   };
 
-
-  const handleRecordButtonClick = async() => {
+  const handleRecordButtonClick = async () => {
     if (disabled) return;
-    setRecordState('recording');
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
