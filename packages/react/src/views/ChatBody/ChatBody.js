@@ -51,12 +51,13 @@ const ChatBody = ({
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
+  const offset = useMessageStore((state) => state.messagesOffset);
+  const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const threadMessages = useMessageStore((state) => state.threadMessages);
   const [isModalOpen, setModalOpen] = useState(false);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
-  const [offset, setOffset] = useState(50);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
@@ -156,7 +157,6 @@ const ChatBody = ({
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
-        setOffset(50);
         getMessagesAndRoles();
         setHasMoreMessages(true);
       } else {
@@ -207,7 +207,7 @@ const ChatBody = ({
             const previousScrollHeight = messageList.scrollHeight;
 
             setMessages(olderMessages.messages, true);
-            setOffset((prevOffset) => prevOffset + 50);
+            setMessagesOffset(offset + olderMessages.messages.length);
 
             requestAnimationFrame(() => {
               const newScrollHeight = messageList.scrollHeight;
@@ -234,6 +234,7 @@ const ChatBody = ({
   }, [
     messageListRef,
     offset,
+    setMessagesOffset,
     setMessages,
     anonymousMode,
     hasMoreMessages,

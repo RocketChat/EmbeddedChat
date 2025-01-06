@@ -8,6 +8,7 @@ const useMessageStore = create((set, get) => ({
   threadMessages: [],
   filtered: false,
   editMessage: {},
+  messagesOffset: 0,
   quoteMessage: [],
   messageToReport: NaN,
   showReportMessage: false,
@@ -79,6 +80,7 @@ const useMessageStore = create((set, get) => ({
     }
   },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
+  setMessagesOffset: (newOffset) => set(() => ({ messagesOffset: newOffset })),
   editMessagePermissions: {},
   setEditMessagePermissions: (editMessagePermissions) =>
     set((state) => ({ ...state, editMessagePermissions })),
