@@ -12,6 +12,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
+import ImageGallery from '../ImageGallery/ImageGallery';
 
 import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
@@ -21,10 +22,12 @@ import { useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage }) => {
+  console.log('fileMessage', fileMessage);
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  const [showGallery, setShowGallery] = useState(false);
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -36,6 +39,11 @@ const FileMessage = ({ fileMessage }) => {
     anchor.click();
     document.body.removeChild(anchor);
   }, []);
+
+  const extractIdFromUrl = (url) => {
+    const match = url.match(/\/file-upload\/(.*?)\//);
+    return match ? match[1] : null;
+  };
 
   const deleteFile = useCallback(
     async (file) => {
@@ -64,12 +72,23 @@ const FileMessage = ({ fileMessage }) => {
     setFileToDelete({});
   };
 
+  const handleFileClick = (file) => {
+    if (file.typeGroup === 'image') {
+      setShowGallery(true);
+    } else {
+      downloadFile(file.url, file.title);
+    }
+  };
+
   return (
     <>
       <Box
         className={appendClassNames('ec-file', classNames)}
         style={styleOverrides}
         css={styles.message}
+        onClick={() => {
+          handleFileClick(fileMessage);
+        }}
       >
         <FilePreviewContainer file={fileMessage} />
         <FileBodyContainer style={{ width: '75%' }}>
@@ -82,7 +101,9 @@ const FileMessage = ({ fileMessage }) => {
           <FileMetrics file={fileMessage} />
         </FileBodyContainer>
         <Menu
-          isToolTip={false}
+          tooltip={{
+            isToolTip: false,
+          }}
           options={[
             {
               id: 'download',
@@ -99,6 +120,13 @@ const FileMessage = ({ fileMessage }) => {
           ]}
         />
       </Box>
+
+      {showGallery && (
+        <ImageGallery
+          currentFileId={extractIdFromUrl(fileMessage.url)}
+          setShowGallery={setShowGallery}
+        />
+      )}
 
       {fileToDelete && Object.keys(fileToDelete).length > 0 && (
         <Modal onClose={handleOnClose}>
