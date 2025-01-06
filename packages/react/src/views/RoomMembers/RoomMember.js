@@ -40,7 +40,6 @@ const RoomMembers = ({ members }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredMembers, setFilteredMembers] = useState(members);
 
-  const [statusData, setStatusData] = useState({});
   const [viewStatus, setViewStatus] = useState('All');
 
   useEffect(() => {
@@ -58,36 +57,9 @@ const RoomMembers = ({ members }) => {
   }, [RCInstance]);
 
   useEffect(() => {
-    const fetchStatuses = async () => {
-      const statusPromises = members.map(async (member) => {
-        try {
-          const res = await RCInstance.getUserStatus(member._id);
-          if (res.success) {
-            return { id: member._id, status: res.status };
-          }
-        } catch (err) {
-          console.error('Error fetching user status:', err);
-        }
-        return { id: member._id, status: 'offline' };
-      });
-
-      const statuses = await Promise.all(statusPromises);
-
-      const statusMap = statuses.reduce((acc, { id, status }) => {
-        acc[id] = status;
-        return acc;
-      }, {});
-
-      setStatusData(statusMap);
-    };
-
-    fetchStatuses();
-  }, [members, RCInstance]);
-
-  useEffect(() => {
     const filtered = members.filter((member) => {
       if (viewStatus === 'Online') {
-        return statusData[member._id] === 'online';
+        return member.status === 'online';
       }
       return true;
     });
@@ -99,7 +71,7 @@ const RoomMembers = ({ members }) => {
           member.username?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [viewStatus, statusData, searchTerm, members]);
+  }, [viewStatus, searchTerm, members]);
 
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
@@ -109,7 +81,6 @@ const RoomMembers = ({ members }) => {
     setViewStatus(value);
   };
 
-  // const totalMembers = members.length;
   const displayedMembers = filteredMembers.length;
 
   return (
@@ -200,7 +171,7 @@ const RoomMembers = ({ members }) => {
                     <RoomMemberItem
                       user={member}
                       host={host}
-                      userStatus={statusData[member._id]}
+                      userStatus={member.status}
                       key={member._id}
                     />
                   ))
