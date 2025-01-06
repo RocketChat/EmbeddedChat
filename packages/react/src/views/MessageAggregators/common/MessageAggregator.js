@@ -7,6 +7,8 @@ import {
   useTheme,
   ActionButton,
   Icon,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
@@ -32,6 +34,7 @@ export const MessageAggregator = ({
   viewType = 'Sidebar',
 }) => {
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const { ECOptions } = useRCContext();
@@ -49,16 +52,24 @@ export const MessageAggregator = ({
   );
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+
   const setJumpToMessage = (msgId) => {
     if (msgId) {
-      const element = document.getElementById(`ec-message-body-${msgId}`);
+      const childElement = document.getElementById(`ec-message-body-${msgId}`);
+      const element = childElement.closest('.ec-message');
+
       if (element) {
         setShowSidebar(false);
         element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        element.style.backgroundColor = theme.colors.warning;
+
+        element.style.backgroundColor =
+          mode === 'light'
+            ? darken(theme.colors.warning, 0.03)
+            : lighten(theme.colors.warningForeground, 0.03);
+
         setTimeout(() => {
           element.style.backgroundColor = '';
-        }, 1000);
+        }, 2000);
       }
     }
   };
