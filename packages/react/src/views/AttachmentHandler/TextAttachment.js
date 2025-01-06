@@ -1,7 +1,13 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Avatar,
+  useTheme,
+  lighten,
+  darken,
+} from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
@@ -13,6 +19,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   };
 
   const { theme } = useTheme();
+  const { mode } = useTheme();
 
   return (
     <Box
@@ -30,7 +37,13 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
         `,
         (type ? variantStyles.pinnedContainer : variantStyles.quoteContainer) ||
           css`
-            ${!type ? `border: 3px solid ${theme.colors.border};` : ''}
+            ${!type
+              ? `border: 3px solid ${theme.colors.border}; background-color: ${
+                  mode === 'light'
+                    ? darken(theme.colors.background, 0.015)
+                    : lighten(theme.colors.background, 0.5)
+                }; `
+              : ''}
           `,
       ]}
     >
