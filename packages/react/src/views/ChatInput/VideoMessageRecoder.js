@@ -4,94 +4,50 @@ import {
   Box,
   Icon,
   ActionButton,
+  Button,
   Modal,
   useTheme,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
-import { useMediaRecorder } from '../../hooks/useMediaRecorder';
-import useMessageStore from '../../store/messageStore';
+import { useNewMediaRecorder } from '../../hooks/useMediaRecorder';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
+
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getCommonRecorderStyles(theme);
 
-  const toogleRecordingMessage = useMessageStore(
-    (state) => state.toogleRecordingMessage
-  );
-
-  const { toggle, setData } = useAttachmentWindowStore((state) => ({
-    toggle: state.toggle,
-    setData: state.setData,
-  }));
-
-  const [state, setRecordState] = useState('idle');
+  const [state, setRecordState] = useState('idle'); // 1. idle, 2. preview.
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
-  const [isRecorded, setIsRecorded] = useState(false);
+  const [isSendDisabled, setIsSendDisabled] = useState(true);
 
-  const onStop = (videoChunks) => {
-    const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
-    const fileName = 'Video record.mp4';
-    setFile(new File([videoBlob], fileName, { type: 'video/mp4' }));
-  };
+  const { toggle, setData } = useAttachmentWindowStore((state_) => ({
+    toggle: state_.toggle,
+    setData: state_.setData,
+  }));
 
-  const [start, stop] = useMediaRecorder({
-    constraints: { audio: true, video: true }, // Update constraints as needed
-    onStop,
+  const {
+    startCameraAndMic,
+    startRecording,
+    stopRecording,
+    deleteRecording,
+    stopCameraAndMic,
+  } = useNewMediaRecorder({
+    constraints: { video: true, audio: true },
     videoRef,
+    onStop: (videoChunks) => {
+      const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
+      const fileName = 'Video record.mp4';
+      setFile(new File([videoBlob], fileName, { type: 'video/mp4' }));
+    },
   });
-
-  const stopRecording = async () => {
-    stop();
-    if (recordingInterval) {
-      clearInterval(recordingInterval);
-    }
-    setRecordingInterval(null);
-    setTime('00:00');
-    setRecordState('idle');
-  };
-
-  const handleRecordButtonClick = () => {
-    if (disabled) return;
-    setRecordState('recording');
-    try {
-      start(videoRef.current);
-      toogleRecordingMessage();
-      const startTime = new Date();
-      setRecordingInterval(
-        setInterval(() => {
-          const now = new Date();
-          const distance = (now.getTime() - startTime.getTime()) / 1000;
-          const minutes = Math.floor(distance / 60);
-          const seconds = Math.floor(distance % 60);
-          setTime(
-            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
-              2,
-              '0'
-            )}`
-          );
-        }, 1000)
-      );
-    } catch (error) {
-      console.log(error);
-      setRecordState('idle');
-    }
-  };
-
-  const handleCancelRecordButton = async () => {
-    toogleRecordingMessage();
-    await stopRecording();
-    setIsRecorded(false);
-  };
-
-  const handleStopRecordButton = async () => {
-    toogleRecordingMessage();
-    setIsRecorded(true);
-    await stopRecording();
-  };
 
   const handleMount = useCallback(async () => {
     if (navigator.permissions) {
@@ -132,16 +88,76 @@ const VideoMessageRecorder = ({ disabled }) => {
     handleMount();
   }, [handleMount]);
 
-  useEffect(() => {
-    if (isRecorded && file) {
+  const startRecordingInterval = () => {
+    const startTime = new Date();
+    setRecordingInterval(
+      setInterval(() => {
+        const now = new Date();
+        const distance = (now.getTime() - startTime.getTime()) / 1000;
+        const minutes = Math.floor(distance / 60);
+        const seconds = Math.floor(distance % 60);
+        setTime(
+          `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+            2,
+            '0'
+          )}`
+        );
+      }, 1000)
+    );
+  };
+
+  const stopRecordingInterval = () => {
+    if (recordingInterval) {
+      clearInterval(recordingInterval);
+    }
+    setRecordingInterval(null);
+  };
+
+  const deleteRecordingInterval = () => {
+    stopRecordingInterval();
+    setTime('00:00');
+  };
+
+  const openWindowToRecord = () => {
+    startCameraAndMic();
+    setRecordState('preview');
+  };
+
+  const handleStartRecording = () => {
+    deleteRecordingInterval();
+    setIsRecording(true);
+    startRecording();
+    startRecordingInterval();
+    setIsSendDisabled(true);
+  };
+
+  const handleStopRecording = () => {
+    stopRecording();
+    stopRecordingInterval();
+    setIsRecording(false);
+    setIsSendDisabled(false);
+  };
+
+  const handleSendRecording = () => {
+    if (file) {
       toggle();
       setData(file);
-      setIsRecorded(false);
     }
-    if (file) {
-      setFile(null);
-    }
-  }, [isRecorded, file]);
+    deleteRecordingInterval();
+    deleteRecording();
+    stopCameraAndMic();
+    setRecordState('idle');
+    setIsSendDisabled(true);
+  };
+
+  const closeWindowStopRecord = () => {
+    stopRecording();
+    deleteRecordingInterval();
+    deleteRecording();
+    stopCameraAndMic();
+    setRecordState('idle');
+    setIsSendDisabled(true);
+  };
 
   return (
     <>
@@ -150,20 +166,20 @@ const VideoMessageRecorder = ({ disabled }) => {
           ghost
           square
           disabled={disabled}
-          onClick={handleRecordButtonClick}
+          onClick={openWindowToRecord}
         >
           <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>
       )}
 
-      {state === 'recording' && (
+      {state === 'preview' && (
         <>
           <ActionButton ghost square>
             <Icon size="1.25rem" name="disabled-recorder" />
           </ActionButton>
           <Modal
-            open={state === 'recording'}
-            onClose={handleCancelRecordButton}
+            open={state === 'preview'}
+            onClose={closeWindowStopRecord}
             style={{
               display: 'flex',
               width: '28rem',
@@ -179,16 +195,64 @@ const VideoMessageRecorder = ({ disabled }) => {
               `}
             />
             <Box css={styles.controller}>
-              <ActionButton ghost onClick={handleCancelRecordButton}>
-                <Icon size="1.25rem" name="circle-cross" />
-              </ActionButton>
-              <Box css={styles.record}>
-                <Box is="span" css={styles.dot} />
-                <Box css={styles.timer}>{time}</Box>
+              <Box css={styles.leftSection}>
+                <ActionButton
+                  ghost
+                  onClick={
+                    isRecording ? handleStopRecording : handleStartRecording
+                  }
+                  css={css`
+                    margin-top: 0.3rem;
+                  `}
+                >
+                  <Icon
+                    name={isRecording ? 'stop-record' : 'record'}
+                    size="1.25rem"
+                  />
+                </ActionButton>
+                <Box css={styles.record}>
+                  <Box
+                    is="span"
+                    css={isRecording ? styles.dot : styles.oppositeDot}
+                  />
+                  <Box css={styles.timer}>{time}</Box>
+                </Box>
               </Box>
-              <ActionButton ghost onClick={handleStopRecordButton}>
-                <Icon name="circle-check" size="1.25rem" />
-              </ActionButton>
+
+              <Box css={styles.spacer} />
+
+              <Box css={styles.rightSection}>
+                <Button onClick={closeWindowStopRecord}>Cancel</Button>
+                <Button
+                  onClick={handleSendRecording}
+                  disabled={isSendDisabled}
+                  css={css`
+                    margin-left: 5px;
+                  `}
+                  style={{
+                    backgroundColor: (() => {
+                      if (isSendDisabled) {
+                        return mode === 'light'
+                          ? darken(theme.colors.background, 0.2)
+                          : lighten(theme.colors.background, 4);
+                      }
+                      return mode === 'light'
+                        ? theme.colors.info
+                        : theme.colors.warningForeground;
+                    })(),
+
+                    color: isSendDisabled
+                      ? mode === 'light'
+                        ? theme.colors.foreground
+                        : theme.colors.background
+                      : mode === 'light'
+                      ? theme.colors.background
+                      : theme.colors.background,
+                  }}
+                >
+                  Send
+                </Button>
+              </Box>
             </Box>
           </Modal>
         </>
