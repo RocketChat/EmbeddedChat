@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
 
-const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
+const AttachmentMetadata = ({ attachment, url, variantStyles = {}, msg }) => {
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -33,21 +33,29 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      {attachment.description && (
-        <p
-          css={[
-            css`
-              margin: 9px 0 0;
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-              flex-wrap: wrap;
-            `,
-          ]}
-        >
-          {attachment.description}
-        </p>
-      )}
+      <div
+        css={
+          attachment.description !== ''
+            ? [
+                css`
+                  margin: 10px 0px;
+                  display: flex;
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+                `,
+              ]
+            : css`
+                margin: -7px 0px;
+              `
+        }
+      >
+        {msg ? (
+          <Markdown body={msg} md={attachment.descriptionMd} />
+        ) : (
+          attachment.description
+        )}
+      </div>
       <Box
         css={css`
           display: flex;
@@ -58,11 +66,23 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
       >
         {attachment.title && (
           <p
-            css={css`
-              margin: 0;
-              font-size: 14px;
-              opacity: 0.7;
-            `}
+          css={
+            attachment.description
+              ? [
+                  css`
+                    margin: 0px;
+                    font-size: 14px;
+                    opacity: 0.7;
+                    flex-wrap: wrap;
+
+                  `,
+                ]
+              : css`
+                  margin: 22px 0 15px 0;
+                  font-size: 14px;
+                  opacity: 0.7;
+                `
+          }
           >
             {attachment.title}
           </p>
@@ -70,7 +90,8 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
 
         <Box
           css={css`
-            margin: 0;
+            margin-top: 7px;
+            margin-left: 5px;
             font-size: 14px;
             opacity: 0.7;
           `}
@@ -79,6 +100,7 @@ const AttachmentMetadata = ({ attachment, url, variantStyles = {} }) => {
           {attachment.image_size
             ? (attachment.image_size / 1024).toFixed(2)
             : 0}
+            {' '} 
           kB)
         </Box>
 
