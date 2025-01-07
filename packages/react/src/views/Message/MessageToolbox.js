@@ -82,8 +82,6 @@ export const MessageToolbox = ({
     ? true
     : message.u._id === authenticatedUserId;
 
-  const isVisibleForMessage = message.attachments?.[0].description !== '';
-
   const options = useMemo(
     () => ({
       reply: {
@@ -134,7 +132,7 @@ export const MessageToolbox = ({
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: isAllowedToEditMessage && isVisibleForMessage,
+        visible: isAllowedToEditMessage,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },
