@@ -2,7 +2,6 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box, Tooltip } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
-import { useState } from 'react';
 
 const AttachmentMetadata = ({
   attachment,
@@ -12,8 +11,6 @@ const AttachmentMetadata = ({
   onExpandCollapseClick,
   isExpanded,
 }) => {
-  const [collapse, setCollapse] = useState(true);
-
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
@@ -48,10 +45,6 @@ const AttachmentMetadata = ({
             ? [
                 css`
                   margin: 10px 0px;
-                  display: flex;
-                  flex-direction: row;
-                  align-items: center;
-                  flex-wrap: wrap;
                 `,
               ]
             : css`
@@ -121,14 +114,13 @@ const AttachmentMetadata = ({
           kB)
         </Box>
 
-        <Tooltip text={collapse ? 'Collapse' : 'Expand'} position="top">
+        <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
           <ActionButton
             ghost
             icon={isExpanded ? 'chevron-down' : 'chevron-left'}
             size="small"
             onClick={() => {
               onExpandCollapseClick();
-              setCollapse(!collapse);
             }}
             css={css`
               margin-left: 10px;
