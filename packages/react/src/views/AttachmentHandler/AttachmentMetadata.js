@@ -1,7 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { ActionButton, Box } from '@embeddedchat/ui-elements';
+import { ActionButton, Box, Tooltip } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
+import { useState } from 'react';
 
 const AttachmentMetadata = ({
   attachment,
@@ -11,12 +12,13 @@ const AttachmentMetadata = ({
   onExpandCollapseClick,
   isExpanded,
 }) => {
+  const [collapse, setCollapse] = useState(true);
+
   const handleDownload = async () => {
     try {
       const response = await fetch(url);
       const data = await response.blob();
       const downloadUrl = URL.createObjectURL(data);
-
       const anchor = document.createElement('a');
       anchor.href = downloadUrl;
       anchor.download = attachment.title || 'download';
@@ -46,6 +48,10 @@ const AttachmentMetadata = ({
             ? [
                 css`
                   margin: 10px 0px;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  flex-wrap: wrap;
                 `,
               ]
             : css`
@@ -66,45 +72,82 @@ const AttachmentMetadata = ({
           align-items: center;
         `}
       >
-        <p
+        <Tooltip text={attachment.title} position="down">
+          <p
+            css={
+              attachment.description
+                ? [
+                    css`
+                      margin: 3px 0 0 0;
+                      font-size: 12px;
+                      opacity: 0.7;
+                    `,
+                  ]
+                : css`
+                    margin: 22px 0 15px 0;
+                    font-size: 12px;
+                    opacity: 0.7;
+                  `
+            }
+          >
+            {attachment.title.length > 24
+              ? `${attachment.title.substring(0, 24)}...`
+              : attachment.title}
+          </p>
+        </Tooltip>
+        <Box
           css={
             attachment.description
               ? [
                   css`
-                    margin: 0px;
-                    font-size: 14px;
+                    font-size: 12px;
                     opacity: 0.7;
+                    margin-left: 3px;
+                    margin-top: 2px;
                   `,
                 ]
               : css`
-                  margin: 22px 0 15px 0;
-                  font-size: 14px;
+                  font-size: 12px;
                   opacity: 0.7;
+                  margin-left: 3px;
+                  margin-top: 7px;
                 `
           }
         >
-          {attachment.title}
-        </p>
-        <ActionButton
-          ghost
-          icon={isExpanded ? 'chevron-down' : 'chevron-left'}
-          size="small"
-          onClick={onExpandCollapseClick}
-          css={css`
-            margin-left: 10px;
-            margin-top: ${attachment.description ? '3px' : '13px'};
-          `}
-        />
-        <ActionButton
-          ghost
-          icon="download"
-          size="small"
-          onClick={handleDownload}
-          css={css`
-            margin-left: 10px;
-            margin-top: 5px;
-          `}
-        />
+          (
+          {attachment.image_size
+            ? (attachment.image_size / 1024).toFixed(2)
+            : 0}{' '}
+          kB)
+        </Box>
+
+        <Tooltip text={collapse ? 'Collapse' : 'Expand'} position="top">
+          <ActionButton
+            ghost
+            icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+            size="small"
+            onClick={() => {
+              onExpandCollapseClick();
+              setCollapse(!collapse);
+            }}
+            css={css`
+              margin-left: 10px;
+              margin-top: ${attachment.description ? '3px' : '10px'};
+            `}
+          />
+        </Tooltip>
+        <Tooltip text="Download" position="top">
+          <ActionButton
+            ghost
+            icon="download"
+            size="small"
+            onClick={handleDownload}
+            css={css`
+              margin-left: 10px;
+              margin-top: 5px;
+            `}
+          />
+        </Tooltip>
       </Box>
     </Box>
   );
