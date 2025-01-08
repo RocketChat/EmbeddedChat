@@ -14,16 +14,11 @@ const getTooltipStyles = (theme, position) => {
       font-weight: 500;
       white-space: nowrap;
       font-family: sans-serif;
-
       top: ${position === 'top'
         ? 'calc(-100% - 20px)'
         : position === 'bottom'
         ? 'calc(100% + 10px)'
-        : position === 'left'
-        ? '50%'
-        : position === 'right'
-        ? '50%'
-        : 'auto'};
+        : '50%'};
       left: ${position === 'left'
         ? 'calc(-100% - 80px)'
         : position === 'right'
@@ -46,14 +41,11 @@ const getTooltipStyles = (theme, position) => {
       border-style: solid;
       border-color: ${theme.invertedColors.secondary} transparent transparent
         transparent;
-
       top: ${position === 'top'
         ? '100%'
         : position === 'bottom'
         ? 'auto'
-        : position === 'left' || position === 'right'
-        ? '50%'
-        : 'auto'};
+        : '50%'};
       bottom: ${position === 'bottom' ? '100%' : 'auto'};
       left: ${position === 'left'
         ? '102%'
