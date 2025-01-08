@@ -1,7 +1,52 @@
 import { css } from '@emotion/react';
 
-const getTooltipStyles = (theme, position) => {
-  const styles = {
+const getTooltipStyles = (theme, position = 'top') => {
+  const positionMap = {
+    top: {
+      top: 'calc(-100% - 20px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      arrowTop: '100%',
+      arrowLeft: '50%',
+      arrowTransform: 'translateX(-50%) rotate(0deg)',
+    },
+    bottom: {
+      top: 'calc(100% + 10px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      arrowTop: 'auto',
+      arrowLeft: '50%',
+      arrowTransform: 'translateX(-50%) rotate(180deg)',
+    },
+    left: {
+      top: '50%',
+      left: 'calc(-100% - 80px)',
+      transform: 'translateY(-50%)',
+      arrowTop: '50%',
+      arrowLeft: '102%',
+      arrowTransform: 'translateY(-50%) rotate(-90deg)',
+    },
+    right: {
+      top: '50%',
+      left: 'calc(100% + 10px)',
+      transform: 'translateY(-50%)',
+      arrowTop: '50%',
+      arrowLeft: '-7px',
+      arrowTransform: 'translateY(-50%) rotate(90deg)',
+    },
+    center: {
+      top: '50%',
+      left: '64%',
+      transform: 'auto',
+      arrowTop: 'auto',
+      arrowLeft: '50%',
+      arrowTransform: 'translateX(-50%)',
+    },
+  };
+
+  const positionStyles = positionMap[position] || positionMap.top;
+
+  return {
     tooltip: css`
       position: absolute;
       background-color: ${theme.invertedColors.secondary};
@@ -14,23 +59,9 @@ const getTooltipStyles = (theme, position) => {
       font-weight: 500;
       white-space: nowrap;
       font-family: sans-serif;
-      top: ${position === 'top'
-        ? 'calc(-100% - 20px)'
-        : position === 'bottom'
-        ? 'calc(100% + 10px)'
-        : '50%'};
-      left: ${position === 'left'
-        ? 'calc(-100% - 80px)'
-        : position === 'right'
-        ? 'calc(100% + 10px)'
-        : '64%'};
-      transform: ${position === 'top'
-        ? 'translateX(-50%)'
-        : position === 'bottom'
-        ? 'translateX(-50%)'
-        : position === 'left' || position === 'right'
-        ? 'translateY(-50%)'
-        : 'auto'};
+      top: ${positionStyles.top};
+      left: ${positionStyles.left};
+      transform: ${positionStyles.transform};
     `,
 
     tooltipArrow: css`
@@ -41,28 +72,12 @@ const getTooltipStyles = (theme, position) => {
       border-style: solid;
       border-color: ${theme.invertedColors.secondary} transparent transparent
         transparent;
-      top: ${position === 'top'
-        ? '100%'
-        : position === 'bottom'
-        ? 'auto'
-        : '50%'};
-      bottom: ${position === 'bottom' ? '100%' : 'auto'};
-      left: ${position === 'left'
-        ? '102%'
-        : position === 'right'
-        ? '-7px'
-        : '50%'};
-      transform: ${position === 'bottom'
-        ? 'translateX(-50%) rotate(180deg)'
-        : position === 'right'
-        ? 'translateY(-50%) rotate(90deg)'
-        : position === 'left'
-        ? 'translateY(-50%) rotate(-90deg)'
-        : 'translateX(-50%)'};
+      top: ${positionStyles.arrowTop};
+      bottom: ${positionStyles.arrowTop === 'auto' ? '100%' : 'auto'};
+      left: ${positionStyles.arrowLeft};
+      transform: ${positionStyles.arrowTransform};
     `,
   };
-
-  return styles;
 };
 
 export default getTooltipStyles;
