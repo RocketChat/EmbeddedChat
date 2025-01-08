@@ -75,11 +75,17 @@ export const MessageToolbox = ({
   };
 
   const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+
   const isAllowedToEditMessage = userRoles.some((role) =>
     editMessageRoles.has(role)
   )
     ? true
     : message.u._id === authenticatedUserId;
+
+  const isVisibleForMessageType =
+    message.files?.[0].type !== 'audio/mpeg' &&
+    message.files?.[0].type !== 'video/mp4';
+
   const options = useMemo(
     () => ({
       reply: {
@@ -123,14 +129,14 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage && isAllowedToPin,
+        visible: isAllowedToPin,
       },
       edit: {
         label: 'Edit',
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: isAllowedToEditMessage,
+        visible: isAllowedToEditMessage && isVisibleForMessageType,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },

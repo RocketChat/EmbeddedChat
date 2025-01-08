@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, set } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -18,6 +18,7 @@ import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
+import { useRCContext } from '../../../context/RCInstance';
 
 export const MessageAggregator = ({
   title,
@@ -34,6 +35,8 @@ export const MessageAggregator = ({
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
+  const { ECOptions } = useRCContext();
+  const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
@@ -47,12 +50,52 @@ export const MessageAggregator = ({
   );
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
-  const setJumpToMessage = (msgId) => {
+  const openThread = useMessageStore((state) => state.openThread);
+  const closeThread = useMessageStore((state) => state.closeThread);
+
+  const setJumpToMessage = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
+    const { _id: msgId, tmid: threadId } = msg;
     if (msgId) {
-      const element = document.getElementById(`ec-message-body-${msgId}`);
-      if (element) {
-        setShowSidebar(false);
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      let element;
+      if (threadId) {
+        const parentMessage = messages.find((m) => m._id === threadId);
+        if (parentMessage) {
+          closeThread();
+          setTimeout(() => {
+            openThread(parentMessage);
+            setShowSidebar(false);
+            setTimeout(() => {
+              element = document.getElementById(`ec-message-body-${msgId}`);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+                element.style.backgroundColor = theme.colors.warning;
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 1000);
+              }
+            }, 300);
+          }, 300);
+        }
+      } else {
+        closeThread();
+        setTimeout(() => {
+          element = document.getElementById(`ec-message-body-${msgId}`);
+          if (element) {
+            setShowSidebar(false);
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            element.style.backgroundColor = theme.colors.warning;
+            setTimeout(() => {
+              element.style.backgroundColor = '';
+            }, 1000);
+          }
+        }, 300);
       }
     }
   };
@@ -127,7 +170,7 @@ export const MessageAggregator = ({
                       type="default"
                       showAvatar
                       showToolbox={false}
-                      showRoles={false}
+                      showRoles={showRoles}
                       isInSidebar
                       style={{
                         flex: 1,
@@ -145,7 +188,7 @@ export const MessageAggregator = ({
                       <ActionButton
                         square
                         ghost
-                        onClick={() => setJumpToMessage(msg._id)}
+                        onClick={() => setJumpToMessage(msg)}
                         css={{
                           position: 'relative',
                           zIndex: 10,
