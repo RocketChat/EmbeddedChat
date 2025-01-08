@@ -1,5 +1,7 @@
 import File from './File';
 import Mobile from './Mobile';
+import Bell from './Bell';
+import BellSlash from './BellSlash';
 import Star from './Star';
 import Pin from './Pin';
 import ReplyDirectly from './ReplyDirectly';
@@ -70,6 +72,8 @@ const icons = {
   'reply-directly': ReplyDirectly,
   hash: Hash,
   computer: Computer,
+  bell: Bell,
+  'bell-slash': BellSlash,
   cross: Cross,
   copy: Copy,
   mic: Mic,
