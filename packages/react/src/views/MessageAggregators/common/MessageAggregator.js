@@ -63,23 +63,39 @@ export const MessageAggregator = ({
       if (threadId) {
         const parentMessage = messages.find((m) => m._id === threadId);
         if (parentMessage) {
-          openThread(parentMessage);
-          setShowSidebar(false);
+          closeThread();
+          setTimeout(() => {
+            openThread(parentMessage);
+            setShowSidebar(false);
+            setTimeout(() => {
+              element = document.getElementById(`ec-message-body-${msgId}`);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+                element.style.backgroundColor = theme.colors.warning;
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 1000);
+              }
+            }, 300);
+          }, 300);
         }
       } else {
         closeThread();
+        setTimeout(() => {
+          element = document.getElementById(`ec-message-body-${msgId}`);
+          if (element) {
+            setShowSidebar(false);
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            element.style.backgroundColor = theme.colors.warning;
+            setTimeout(() => {
+              element.style.backgroundColor = '';
+            }, 1000);
+          }
+        }, 300);
       }
-      setTimeout(() => {
-        element = document.getElementById(`ec-message-body-${msgId}`);
-        if (element) {
-          setShowSidebar(false);
-          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          element.style.backgroundColor = theme.colors.warning;
-          setTimeout(() => {
-            element.style.backgroundColor = '';
-          }, 1000);
-        }
-      }, 300);
     }
   };
 
