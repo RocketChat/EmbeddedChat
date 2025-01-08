@@ -26,6 +26,7 @@ export const MessageToolbox = ({
   editMessageRoles,
   handleOpenThread,
   handleEmojiClick,
+  handleFollowMessage,
   handlePinMessage,
   handleStarMessage,
   handleDeleteMessage,
@@ -45,6 +46,7 @@ export const MessageToolbox = ({
       'link',
       'pin',
       'edit',
+      'follow',
       'delete',
       'report',
     ],
@@ -117,6 +119,13 @@ export const MessageToolbox = ({
             : 'star',
         visible: true,
       },
+      follow: {
+        label: message?.replies?.length > 0 ? 'Unfollow' : 'Follow',
+        id: 'follow',
+        onClick: () => handleFollowMessage(message),
+        iconName: message?.replies?.length > 0 ? 'bell-slash' : 'bell',
+        visible: true,
+      },
       reaction: {
         label: 'Add reaction',
         id: 'reaction',
@@ -182,6 +191,7 @@ export const MessageToolbox = ({
       handlePinMessage,
       handleEditMessage,
       handlerReportMessage,
+      handleFollowMessage,
       handleCopyMessage,
       isAllowedToPin,
     ]
