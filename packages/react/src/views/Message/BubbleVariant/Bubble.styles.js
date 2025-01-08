@@ -93,6 +93,11 @@ export const getBubbleStyles = (theme) => {
       border-radius: inherit;
       overflow: hidden;
     `,
+    fileAttachmentContainer: css`
+      border: 1px solid ${theme.colors.border};
+      border-radius: inherit;
+      overflow: hidden;
+    `,
     pinnedContainer: css`
       max-width: 100%;
     `,
