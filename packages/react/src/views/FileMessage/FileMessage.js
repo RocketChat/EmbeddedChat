@@ -17,14 +17,48 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useUserStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage }) => {
+  console.log(fileMessage);
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  const currentUserRoles = useUserStore((state) => state.roles);
+  const currentUserId = useUserStore((state) => state.userId);
+  const deleteMessagePermissions = useMessageStore(
+    (state) => state.deleteMessageRoles.roles
+  );
+  const deleteOwnMessagePermissions = useMessageStore(
+    (state) => state.deleteOwnMessageRoles.roles
+  );
+  const forceDeleteMessagePermissions = useMessageStore(
+    (state) => state.forceDeleteMessageRoles.roles
+  );
+
+  const deleteMessageRoles = new Set(deleteMessagePermissions);
+  const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
+  const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
+
+  const isAllowedToDeleteMessage = currentUserRoles.some((role) =>
+    deleteMessageRoles.has(role)
+  );
+  const isAllowedToDeleteOwnMessage = currentUserRoles.some((role) =>
+    deleteOwnMessageRoles.has(role)
+  );
+  const isAllowedToForceDeleteMessage = currentUserRoles.some((role) =>
+    forceDeleteMessageRoles.has(role)
+  );
+
+  const canDeleteFileMessage = isAllowedToForceDeleteMessage
+    ? true
+    : isAllowedToDeleteMessage
+    ? true
+    : isAllowedToDeleteOwnMessage
+    ? currentUserId === fileMessage.user._id
+    : false;
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -90,12 +124,14 @@ const FileMessage = ({ fileMessage }) => {
               label: 'Download',
               icon: 'circle-arrow-down',
             },
-            {
-              id: 'delete',
-              action: () => setFileToDelete(fileMessage),
-              label: 'Delete',
-              icon: 'trash',
-            },
+            canDeleteFileMessage
+              ? {
+                  id: 'delete',
+                  action: () => setFileToDelete(fileMessage),
+                  label: 'Delete',
+                  icon: 'trash',
+                }
+              : {},
           ]}
         />
       </Box>
