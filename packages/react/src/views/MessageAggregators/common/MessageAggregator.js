@@ -52,24 +52,76 @@ export const MessageAggregator = ({
   );
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const openThread = useMessageStore((state) => state.openThread);
+  const closeThread = useMessageStore((state) => state.closeThread);
 
-  const setJumpToMessage = (msgId) => {
+  const setJumpToMessage = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
+
+    const { _id: msgId, tmid: threadId } = msg;
+
     if (msgId) {
-      const childElement = document.getElementById(`ec-message-body-${msgId}`);
-      const element = childElement.closest('.ec-message');
+      let element;
+      if (threadId) {
+        const parentMessage = messages.find((m) => m._id === threadId);
 
-      if (element) {
-        setShowSidebar(false);
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (parentMessage) {
+          closeThread();
 
-        element.style.backgroundColor =
-          mode === 'light'
-            ? darken(theme.colors.warning, 0.03)
-            : lighten(theme.colors.warningForeground, 0.03);
+          setTimeout(() => {
+            openThread(parentMessage);
+            setShowSidebar(false);
+
+            setTimeout(() => {
+              const childElement = document.getElementById(
+                `ec-message-body-${msgId}`
+              );
+              element = childElement.closest('.ec-message');
+
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+
+                element.style.backgroundColor =
+                  mode === 'light'
+                    ? darken(theme.colors.warning, 0.03)
+                    : lighten(theme.colors.warningForeground, 0.03);
+
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 2000);
+              }
+            }, 300);
+          }, 300);
+        }
+      } else {
+        closeThread();
 
         setTimeout(() => {
-          element.style.backgroundColor = '';
-        }, 2000);
+          const childElement = document.getElementById(
+            `ec-message-body-${msgId}`
+          );
+          element = childElement.closest('.ec-message');
+
+          if (element) {
+            setShowSidebar(false);
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            element.style.backgroundColor =
+              mode === 'light'
+                ? darken(theme.colors.warning, 0.03)
+                : lighten(theme.colors.warningForeground, 0.03);
+
+            setTimeout(() => {
+              element.style.backgroundColor = '';
+            }, 2000);
+          }
+        }, 300);
       }
     }
   };
@@ -157,7 +209,7 @@ export const MessageAggregator = ({
                     <ActionButton
                       square
                       ghost
-                      onClick={() => setJumpToMessage(msg._id)}
+                      onClick={() => setJumpToMessage(msg)}
                       css={{
                         position: 'relative',
                         zIndex: 10,
