@@ -34,7 +34,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import { Markdown } from '../Markdown';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -171,12 +170,12 @@ const ChatInput = ({ scrollToBottom }) => {
   const handleNewLine = (e, addLine = true) => {
     if (addLine) {
       const { selectionStart, selectionEnd, value } = messageRef.current;
-      messageRef.current.value =
-        value.substring(0, selectionStart) +
-        '\n' +
-        value.substring(selectionEnd);
-      messageRef.current.selectionStart = messageRef.current.selectionEnd =
-        selectionStart + 1;
+      messageRef.current.value = `${value.substring(
+        0,
+        selectionStart
+      )}\n${value.substring(selectionEnd)}`;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd;
+      messageRef.current.selectionEnd = selectionStart + 1;
     }
 
     e.target.style.height = 'auto';
