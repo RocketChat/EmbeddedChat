@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ParagraphBlock from './ParagraphBlock';
-import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
+import ParagraphBlock from './ParagraphBlock';
 
 const QuoteBlock = ({ contents }) => {
   const { theme } = useTheme();
@@ -12,7 +12,7 @@ const QuoteBlock = ({ contents }) => {
         background-color: ${theme.colors.secondary};
         border-left: 1.7px solid ${theme.colors.primary};
         padding-left: 0.5rem;
-        `}
+      `}
     >
       {contents.map((paragraph, index) => (
         <ParagraphBlock key={index} contents={paragraph.value} />
