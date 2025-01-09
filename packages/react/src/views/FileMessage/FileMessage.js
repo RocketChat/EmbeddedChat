@@ -9,9 +9,9 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   appendClassNames,
-  useTheme, 
-  lighten,    
-  darken,     
+  useTheme,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
@@ -28,10 +28,10 @@ const FileMessage = ({ fileMessage }) => {
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
-  
+
   const theme = useTheme();
-  const { mode } = theme; 
-  const messageStyles = styles.message; 
+  const { mode } = theme;
+  const messageStyles = styles.message;
 
   const hoverStyle = {
     '&:hover': {
@@ -85,10 +85,7 @@ const FileMessage = ({ fileMessage }) => {
       <Box
         className={appendClassNames('ec-file', classNames)}
         style={styleOverrides}
-        css={[
-          messageStyles,   
-          hoverStyle,      
-        ]}
+        css={[messageStyles, hoverStyle]}
       >
         <FilePreviewContainer file={fileMessage} />
         <FileBodyContainer style={{ width: '75%' }}>
