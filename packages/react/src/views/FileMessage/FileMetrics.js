@@ -27,7 +27,7 @@ export const FileMetrics = ({ className = '', file, style = {}, ...props }) => {
       >
         <Icon size="1.25rem" name="clock" />
         <Box css={styles.metricsItemLabel}>
-          {format(new Date(file?.uploadedAt), 'MMMM d, yyyy h:mma')}
+          {format(new Date(file?.uploadedAt), 'MMMM d, yyyy h:mm a')}
         </Box>
       </Box>
     </Box>
