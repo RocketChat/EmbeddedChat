@@ -42,6 +42,9 @@ const ChatLayout = () => {
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );
+  const setPinnedMessages = usePinnedMessageStore(
+    (state) => state.setPinnedMessages
+  );
   const starredMessages = useStarredMessageStore(
     (state) => state.starredMessages
   );
@@ -94,8 +97,22 @@ const ChatLayout = () => {
       }
     }
   }, [isUserAuthenticated, anonymousMode, RCInstance]);
+
+  const getPinnedMessages = useCallback(async () => {
+    if (isUserAuthenticated) {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { messages } = await RCInstance.getPinnedMessages();
+        setPinnedMessages(messages);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isUserAuthenticated, anonymousMode, RCInstance]);
   useEffect(() => {
-    getStarredMessages();
+    getStarredMessages(), getPinnedMessages();
   }, [showSidebar]);
   return (
     <Box
