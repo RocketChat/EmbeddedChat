@@ -75,11 +75,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-    channelInfo: state.channelInfo,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
