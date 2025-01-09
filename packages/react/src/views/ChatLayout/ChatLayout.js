@@ -112,7 +112,7 @@ const ChatLayout = () => {
     }
   }, [isUserAuthenticated, anonymousMode, RCInstance]);
   useEffect(() => {
-    getStarredMessages(), getPinnedMessages();
+    getStarredMessages(), getPinnedMessages()
   }, [showSidebar]);
   return (
     <Box
