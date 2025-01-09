@@ -30,6 +30,7 @@ const getGlobalStyles = (theme) => css`
 
   .ec-embedded-chat ::-webkit-scrollbar-thumb:hover {
     background: ${theme.colors.primary};
+    cursor: pointer;
   }
 
   .ec-embedded-chat ::-webkit-scrollbar-button {
