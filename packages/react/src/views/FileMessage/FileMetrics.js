@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import {
   Box,
   Icon,
@@ -27,9 +27,7 @@ export const FileMetrics = ({ className = '', file, style = {}, ...props }) => {
       >
         <Icon size="1.25rem" name="clock" />
         <Box css={styles.metricsItemLabel}>
-          {formatDistance(new Date(file?.uploadedAt), new Date(), {
-            addSuffix: true,
-          })}
+          {format(new Date(file?.uploadedAt), 'MMMM d, yyyy h:mma')}
         </Box>
       </Box>
     </Box>
