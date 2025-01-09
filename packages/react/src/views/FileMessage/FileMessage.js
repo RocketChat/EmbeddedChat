@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -9,6 +9,9 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   appendClassNames,
+  useTheme, 
+  lighten,    
+  darken,     
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
@@ -25,6 +28,19 @@ const FileMessage = ({ fileMessage }) => {
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  
+  const theme = useTheme();
+  const { mode } = theme; 
+  const messageStyles = styles.message; 
+
+  const hoverStyle = {
+    '&:hover': {
+      backgroundColor:
+        mode === 'light'
+          ? darken(theme.theme.colors.background, 0.03)
+          : lighten(theme.theme.colors.background, 1),
+    },
+  };
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -69,7 +85,10 @@ const FileMessage = ({ fileMessage }) => {
       <Box
         className={appendClassNames('ec-file', classNames)}
         style={styleOverrides}
-        css={styles.message}
+        css={[
+          messageStyles,   
+          hoverStyle,      
+        ]}
       >
         <FilePreviewContainer file={fileMessage} />
         <FileBodyContainer style={{ width: '75%' }}>
