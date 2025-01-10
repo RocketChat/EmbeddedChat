@@ -12,6 +12,7 @@ import {
   useThreadsMessageStore,
   useMemberStore,
   useSidebarStore,
+  useMessageStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -45,6 +46,7 @@ const ChatLayout = () => {
   const starredMessages = useStarredMessageStore(
     (state) => state.starredMessages
   );
+  const messages = useMessageStore((state) => state.messages);
   const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
@@ -96,7 +98,7 @@ const ChatLayout = () => {
   }, [isUserAuthenticated, anonymousMode, RCInstance]);
   useEffect(() => {
     getStarredMessages();
-  }, [showSidebar]);
+  }, [showSidebar, messages]);
   return (
     <Box
       css={styles.layout}
