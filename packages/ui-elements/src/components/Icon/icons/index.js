@@ -61,6 +61,7 @@ import Arc from './Arc';
 import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
+import ArrowJump from './ArrowJump';
 
 const icons = {
   file: File,
@@ -126,6 +127,7 @@ const icons = {
   avatar: Avatar,
   'format-text': FormatText,
   cog: Cog,
+  'arrow-jump': ArrowJump,
 };
 
 export default icons;

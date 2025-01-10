@@ -6,9 +6,12 @@ import {
   Modal,
   Button,
   Icon,
+  useTheme,
   useToastBarDispatch,
   useComponentOverrides,
   appendClassNames,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
@@ -26,6 +29,8 @@ const FileMessage = ({ fileMessage }) => {
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const { theme } = useTheme();
+  const { mode } = useTheme();
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -38,20 +43,36 @@ const FileMessage = ({ fileMessage }) => {
     document.body.removeChild(anchor);
   }, []);
 
-  const navigateToFile = (id) => {
-    const message = messages.find((msg) => msg?.file?._id === id);
-    if (message) {
-      const element = document.getElementById(`ec-message-body-${message._id}`);
-      if (element) {
-        element.style.backgroundColor = '#ffeb3b';
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setShowSidebar(false);
+  const navigateToFile = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
 
-        setTimeout(() => {
-          element.style.backgroundColor = '';
-          element.style.transition = 'background-color 0.5s ease-out';
-        }, 2000);
-      }
+    const message = messages.find((mg) => mg?.file?._id === msg._id);
+
+    if (message) {
+      let element;
+      setTimeout(() => {
+        const childElement = document.getElementById(
+          `ec-message-body-${message._id}`
+        );
+        element = childElement.closest('.ec-message');
+
+        if (element) {
+          setShowSidebar(false);
+          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+          element.style.backgroundColor =
+            mode === 'light'
+              ? darken(theme.colors.warning, 0.03)
+              : lighten(theme.colors.warningForeground, 0.03);
+
+          setTimeout(() => {
+            element.style.backgroundColor = '';
+          }, 2000);
+        }
+      }, 300);
     }
   };
 
@@ -116,9 +137,9 @@ const FileMessage = ({ fileMessage }) => {
             },
             {
               id: 'navigate',
-              action: () => navigateToFile(fileMessage._id),
-              label: 'Navigate',
-              icon: 'arrow-back',
+              action: () => navigateToFile(fileMessage),
+              label: 'Jump to message',
+              icon: 'arrow-jump',
             },
           ]}
         />
