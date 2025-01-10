@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -13,6 +13,7 @@ import { useMemberStore, useUserStore } from '../../store';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const MessageHeader = ({
   message,
@@ -33,6 +34,10 @@ const MessageHeader = ({
   const showName = ECOptions?.showName;
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
+  const { getChannelMembers } = useFetchChatData();
+  useEffect(() => {
+    getChannelMembers();
+  }, [getChannelMembers]);
 
   const isPinned = message.pinned;
   const isStarred =
