@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useContext } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, set } from 'date-fns';
 import {
   Box,
   Menu,
@@ -63,16 +63,52 @@ export const MessageAggregator = ({
   const isAllowedToPin = currentUserRoles.some((role) => pinRoles.has(role));
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
-  const setJumpToMessage = (msgId) => {
+  const openThread = useMessageStore((state) => state.openThread);
+  const closeThread = useMessageStore((state) => state.closeThread);
+
+  const setJumpToMessage = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
+    const { _id: msgId, tmid: threadId } = msg;
     if (msgId) {
-      const element = document.getElementById(`ec-message-body-${msgId}`);
-      if (element) {
-        setShowSidebar(false);
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        element.style.backgroundColor = theme.colors.warning;
+      let element;
+      if (threadId) {
+        const parentMessage = messages.find((m) => m._id === threadId);
+        if (parentMessage) {
+          closeThread();
+          setTimeout(() => {
+            openThread(parentMessage);
+            setShowSidebar(false);
+            setTimeout(() => {
+              element = document.getElementById(`ec-message-body-${msgId}`);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+                element.style.backgroundColor = theme.colors.warning;
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 1000);
+              }
+            }, 300);
+          }, 300);
+        }
+      } else {
+        closeThread();
         setTimeout(() => {
-          element.style.backgroundColor = '';
-        }, 1000);
+          element = document.getElementById(`ec-message-body-${msgId}`);
+          if (element) {
+            setShowSidebar(false);
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            element.style.backgroundColor = theme.colors.warning;
+            setTimeout(() => {
+              element.style.backgroundColor = '';
+            }, 1000);
+          }
+        }, 300);
       }
     }
   };
@@ -183,7 +219,7 @@ export const MessageAggregator = ({
                       <ActionButton
                         square
                         ghost
-                        onClick={() => setJumpToMessage(msg._id)}
+                        onClick={() => setJumpToMessage(msg)}
                         css={{
                           position: 'relative',
                           zIndex: 10,
@@ -225,7 +261,7 @@ export const MessageAggregator = ({
                             },
                             {
                               id: 'jumptomessage',
-                              action: () => setJumpToMessage(msg._id),
+                              action: () => setJumpToMessage(msg),
                               label: 'Jump to message',
                               icon: 'arrow-jump',
                             },
