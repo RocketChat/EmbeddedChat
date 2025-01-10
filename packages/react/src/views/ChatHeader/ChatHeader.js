@@ -376,7 +376,7 @@ const ChatHeader = ({
                       onClick={() => setExclusiveState(setShowChannelinfo)}
                     >
                       <Icon
-                        name="hash"
+                        name={isChannelPrivate ? 'hash_lock' : 'hash'}
                         size={fullScreen ? '1.25rem' : '1rem'}
                       />
                       <div>
