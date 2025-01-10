@@ -119,7 +119,11 @@ const useFetchChatData = (showRoles) => {
             return;
           }
           const { messages } = await RCInstance.getPinnedMessages();
-          setPinnedMessages(messages);
+          const sortedMessages = messages.sort(
+            (a, b) => new Date(b.ts) - new Date(a.ts)
+          );
+          console.log(sortedMessages);
+          setPinnedMessages(sortedMessages);
         } catch (e) {
           console.error(e);
         }
