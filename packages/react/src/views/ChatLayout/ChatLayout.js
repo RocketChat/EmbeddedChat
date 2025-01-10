@@ -89,7 +89,7 @@ const ChatLayout = () => {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
         }
-        const { messages:starredMsgs } = await RCInstance.getStarredMessages();
+        const { messages: starredMsgs } = await RCInstance.getStarredMessages();
         setStarredMessages(starredMsgs);
       } catch (e) {
         console.error(e);
