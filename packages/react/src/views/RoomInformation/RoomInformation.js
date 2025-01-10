@@ -58,14 +58,17 @@ const Roominfo = () => {
         </Box>
         <Box css={styles.infoContainer}>
           <Box css={styles.infoHeader}>
-            <Icon name={isChannelPrivate ? 'lock' : 'hash'} size="1.25rem" 
+            <Icon
+              name={isChannelPrivate ? 'lock' : 'hash'}
+              size="1.25rem"
               css={css`
                 vertical-align: middle;
                 margin-right: 0.5rem;
                 margin-bottom: 0.25rem;
               `}
             />
-             {channelInfo.name}</Box>
+            {channelInfo.name}
+          </Box>
           {channelInfo.description && (
             <>
               <Box css={styles.infoHeader}>Description</Box>

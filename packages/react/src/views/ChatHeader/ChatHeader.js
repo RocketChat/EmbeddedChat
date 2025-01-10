@@ -379,7 +379,11 @@ const ChatHeader = ({
                         name={isChannelPrivate ? 'hash_lock' : 'hash'}
                         size={fullScreen ? '1.25rem' : '1rem'}
                       />
-                      <div>
+                      <div
+                        css={css`
+                          font-size: ${fullScreen ? '1.3rem' : '1.25rem'};
+                        `}
+                      >
                         {channelInfo.name || channelName || 'channelName'}
                       </div>
                     </Box>
