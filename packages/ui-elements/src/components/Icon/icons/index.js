@@ -5,6 +5,7 @@ import Pin from './Pin';
 import ReplyDirectly from './ReplyDirectly';
 import Hash from './Hash';
 import HashLock from './HashLock';
+import Lock from './Lock';
 import Computer from './Computer';
 import Cross from './Cross';
 import Mic from './Mic';
@@ -71,6 +72,7 @@ const icons = {
   'reply-directly': ReplyDirectly,
   hash: Hash,
   hash_lock: HashLock,
+  lock: Lock,
   computer: Computer,
   cross: Cross,
   copy: Copy,

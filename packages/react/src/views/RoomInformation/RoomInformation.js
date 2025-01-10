@@ -6,6 +6,7 @@ import {
   Sidebar,
   Popup,
   useComponentOverrides,
+  Icon,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
@@ -16,6 +17,7 @@ const Roominfo = () => {
   const { RCInstance } = useContext(RCContext);
   const styles = getRoomInformationStyles();
   const channelInfo = useChannelStore((state) => state.channelInfo);
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
@@ -55,7 +57,15 @@ const Roominfo = () => {
           <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
         </Box>
         <Box css={styles.infoContainer}>
-          <Box css={styles.infoHeader}># {channelInfo.name}</Box>
+          <Box css={styles.infoHeader}>
+            <Icon name={isChannelPrivate ? 'lock' : 'hash'} size="1.25rem" 
+              css={css`
+                vertical-align: middle;
+                margin-right: 0.5rem;
+                margin-bottom: 0.25rem;
+              `}
+            />
+             {channelInfo.name}</Box>
           {channelInfo.description && (
             <>
               <Box css={styles.infoHeader}>Description</Box>
