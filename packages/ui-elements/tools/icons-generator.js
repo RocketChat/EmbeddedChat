@@ -8,6 +8,7 @@ const iconsList = [
   'star',
   'reply-directly',
   'hash',
+  'hash_lock',
   'computer',
   'cross',
   'mic',
