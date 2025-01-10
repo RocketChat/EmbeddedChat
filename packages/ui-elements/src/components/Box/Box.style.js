@@ -12,6 +12,10 @@ const styles = {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     flex: 0 1 auto;
+    &:hover {
+      background-color: #f0f0f0; 
+      transform: scale(1.05); 
+    }
   `,
 };
 
