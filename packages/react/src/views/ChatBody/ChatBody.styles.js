@@ -9,7 +9,7 @@ export const getChatbodyStyles = (theme, mode) => {
       overflow: auto;
       overflow-x: hidden;
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       max-height: 100%;
       position: relative;
       padding-top: 70px;
