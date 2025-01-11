@@ -59,10 +59,12 @@ const MessageList = ({
           {loadingOlderMessages && isUserAuthenticated && (
             <Box
               css={css`
-                margin: auto;
-                display: flex;
-                justify-content: center;
-                aling-items: center;
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 8px 16px;
+                z-index: 10;
               `}
             >
               <Throbber />
