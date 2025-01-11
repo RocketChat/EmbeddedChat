@@ -732,21 +732,22 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getAllFiles(isChannelPrivate = false) {
+  async getAllFiles(isChannelPrivate = false, typeGroup: string) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
+      const url =
+        typeGroup === ""
+          ? `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`
+          : `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "GET",
+      });
       return await response.json();
     } catch (err) {
       console.error(err);
