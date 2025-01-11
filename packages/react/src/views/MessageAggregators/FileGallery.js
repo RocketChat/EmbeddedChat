@@ -15,6 +15,7 @@ const FileGallery = () => {
   const [text, setText] = useState('');
   const [isFetching, setIsFetching] = useState(true);
   const [files, setFiles] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const options = [
     { value: 'all', label: 'All' },
@@ -53,6 +54,7 @@ const FileGallery = () => {
 
   const handleFilterSelect = async (val) => {
     setIsFetching(true);
+    setSelectedFilter(val);
     let res;
     val === 'all'
       ? (res = await RCInstance.getAllFiles(isChannelPrivate, ''))
@@ -74,7 +76,7 @@ const FileGallery = () => {
       filterProps={{
         isFile: true,
         options,
-        value: 'all',
+        value: selectedFilter,
         handleFilterSelect,
       }}
       searchProps={{
