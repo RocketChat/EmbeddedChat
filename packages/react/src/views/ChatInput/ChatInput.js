@@ -75,10 +75,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -514,7 +517,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message #${channelInfo.name}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'
