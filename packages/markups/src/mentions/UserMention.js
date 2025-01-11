@@ -47,24 +47,21 @@ const UserMention = ({ contents }) => {
     }
   };
 
-  const renderMention = () => (
-    <Box is="span" css={styles.mention} onClick={handleClick}>
-      {contents.value}
-    </Box>
-  );
+  const tooltipMap = {
+    all: 'Mentions all the room members',
+    here: 'Mentions online room members',
+    [username]: 'Mentions you',
+  };
+  const tooltipText = tooltipMap[contents.value] || 'Mentions user';
 
   return (
     <>
       {hasMember(contents.value) ? (
-        contents.value === username ? (
-          <Tooltip text="Mentions you" position="top" key={username}>
-            {renderMention()}
-          </Tooltip>
-        ) : (
-          <Tooltip text="Mentions user" position="top" key={username}>
-            {renderMention()}
-          </Tooltip>
-        )
+        <Tooltip text={tooltipText} position="top" key={username}>
+          <Box is="span" css={styles.mention} onClick={handleClick}>
+            {contents.value}
+          </Box>
+        </Tooltip>
       ) : (
         `@${contents.value}`
       )}
