@@ -164,12 +164,7 @@ const VideoMessageRecorder = ({ disabled }) => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              height: '100%',
-              width: '100%',
-              maxHeight: '98%',
-              maxWidth: '100%',
-            }}
+            css={styles.modal}
           >
             <video
               muted

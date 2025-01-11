@@ -112,6 +112,14 @@ export const getCommonRecorderStyles = (theme) => {
       display: flex;
       margin: auto;
     `,
+    modal: {
+      '@media(max-width: 500px)': {
+        height: '100%',
+        width: '100%',
+        maxHeight: '100%',
+        maxWidth: '100%',
+      },
+    },
   };
 
   return styles;
