@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { Box } from '../Box';
-import getToolTipStyles from './Tooltip.styles';
+import getTooltipStyles from './Tooltip.styles';
 import { useTheme } from '../../hooks';
 
-const Tooltip = ({ children, text, position }) => {
+const Tooltip = ({ children, text, position = 'top' }) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
   const { theme } = useTheme();
-  const styles = getToolTipStyles(theme, position);
+  const styles = getTooltipStyles(theme, position);
 
   const handleMouseEnter = () => {
     setTooltipVisible(true);
