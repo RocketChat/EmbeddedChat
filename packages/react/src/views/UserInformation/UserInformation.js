@@ -132,7 +132,11 @@ const UserInformation = () => {
                         css={styles.userRole}
                         className={appendClassNames('ec-message-user-role')}
                       >
-                        {role === 'admin' ? 'admin' : role}
+                        {role === 'admin'
+                          ? 'Admin'
+                          : role === 'user'
+                          ? 'user'
+                          : role.charAt(0).toUpperCase() + role.slice(1)}
                       </Box>
                     ))}
                   </Box>
