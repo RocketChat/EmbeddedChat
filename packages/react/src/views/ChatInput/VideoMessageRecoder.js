@@ -176,10 +176,7 @@ const VideoMessageRecorder = (props) => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
@@ -187,7 +184,9 @@ const VideoMessageRecorder = (props) => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>
