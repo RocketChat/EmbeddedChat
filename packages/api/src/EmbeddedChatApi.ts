@@ -553,15 +553,23 @@ export default class EmbeddedChatApi {
   }
 
   async getThreadMessages(tmid: string, isChannelPrivate = false) {
-    return this.getMessages(
-      false,
-      {
-        query: {
-          tmid,
-        },
-      },
-      isChannelPrivate
-    );
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const messages = await fetch(
+        `${this.host}/api/v1/chat.getThreadMessages?roomId=${this.rid}&tmid=${tmid}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await messages.json();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async getChannelRoles(isChannelPrivate = false) {
