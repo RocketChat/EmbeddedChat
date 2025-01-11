@@ -1,7 +1,13 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Avatar,
+  useTheme,
+  lighten,
+  darken,
+} from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 
@@ -25,6 +31,7 @@ const VideoAttachment = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
     const URL = `${instanceHost}${icon}`;
@@ -49,7 +56,12 @@ const VideoAttachment = ({
           (type ? variantStyles.pinnedContainer : '') ||
             css`
               ${type === 'file'
-                ? `border: 3px solid ${theme.colors.border};`
+                ? `border: 3px solid ${theme.colors.border}; 
+                background-color: ${
+                  mode === 'light'
+                    ? darken(theme.colors.background, 0.015)
+                    : lighten(theme.colors.background, 0.5)
+                };`
                 : ''}
             `,
         ]}
