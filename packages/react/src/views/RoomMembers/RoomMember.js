@@ -7,9 +7,12 @@ import {
   Sidebar,
   Input,
   Popup,
+  StaticSelect,
+  Divider,
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -37,6 +40,8 @@ const RoomMembers = ({ members }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredMembers, setFilteredMembers] = useState(members);
 
+  const [viewStatus, setViewStatus] = useState('All');
+
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -52,18 +57,31 @@ const RoomMembers = ({ members }) => {
   }, [RCInstance]);
 
   useEffect(() => {
+    const filtered = members.filter((member) => {
+      if (viewStatus === 'Online') {
+        return member.status === 'online';
+      }
+      return true;
+    });
+
     setFilteredMembers(
-      members.filter(
+      filtered.filter(
         (member) =>
           member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           member.username?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, members]);
+  }, [viewStatus, searchTerm, members]);
 
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  const handleSelect = (value) => {
+    setViewStatus(value);
+  };
+
+  const displayedMembers = filteredMembers.length;
 
   return (
     <ViewComponent
@@ -87,7 +105,11 @@ const RoomMembers = ({ members }) => {
             <>
               {isAdmin && (
                 <Button
-                  style={{ marginTop: '10px', width: '100%' }}
+                  style={{
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    width: '100%',
+                  }}
                   onClick={async () => {
                     toggleInviteView();
                   }}
@@ -95,25 +117,63 @@ const RoomMembers = ({ members }) => {
                   <Icon size="1em" name="link" /> Invite Link
                 </Button>
               )}
-              <Box css={styles.searchContainer}>
-                <Input
-                  css={styles.textInput}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search members"
-                />
-                <Icon name="magnifier" size="1.5rem" css={styles.searchIcon} />
+              <Box
+                css={css`
+                  display: flex;
+                `}
+              >
+                <Box css={styles.searchContainer}>
+                  <Input
+                    css={styles.textInput}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search members"
+                  />
+                  <Icon
+                    name="magnifier"
+                    size="1.5rem"
+                    css={styles.searchIcon}
+                  />
+                </Box>
+                <Box css={styles.filterContainer}>
+                  <Box
+                    css={css`
+                      position: absolute;
+                      z-index: 10;
+                    `}
+                  >
+                    <StaticSelect
+                      options={[
+                        { value: 'All', label: 'All' },
+                        { value: 'Online', label: 'Online' },
+                      ]}
+                      value={viewStatus}
+                      onSelect={handleSelect}
+                      placeholder={viewStatus}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+              <Box
+                css={css`
+                  margin-top: 1rem;
+                  margin-bottom: 1rem;
+                `}
+              >
+                <Divider />
+              </Box>
+              <Box>
+                Showing {displayedMembers} of {displayedMembers}
               </Box>
               <Box css={styles.memberList}>
                 {filteredMembers.length > 0 ? (
                   filteredMembers.map((member) => (
-                    <>
-                      <RoomMemberItem
-                        user={member}
-                        host={host}
-                        key={member._id}
-                      />
-                    </>
+                    <RoomMemberItem
+                      user={member}
+                      host={host}
+                      userStatus={member.status}
+                      key={member._id}
+                    />
                   ))
                 ) : (
                   <Box css={styles.noMembers}>No members found</Box>
