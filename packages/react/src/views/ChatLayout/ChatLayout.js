@@ -38,7 +38,7 @@ const ChatLayout = () => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
-  const showRoles = ECOptions?.anonymousMode;
+  const showRoles = ECOptions?.showRoles;
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );

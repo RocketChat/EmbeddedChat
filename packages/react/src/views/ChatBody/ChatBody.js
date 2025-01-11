@@ -1,11 +1,19 @@
 /* eslint-disable no-shadow */
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import {
   Box,
   Throbber,
   useComponentOverrides,
+  Modal,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
@@ -33,21 +41,23 @@ const ChatBody = ({
   scrollToBottom,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-
-  const styles = getChatbodyStyles();
+  const { theme, mode } = useTheme();
+  const styles = getChatbodyStyles(theme, mode);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
   const [, setIsUserScrolledUp] = useState(false);
   const [otherUserMessage, setOtherUserMessage] = useState(false);
-
+  const [isOverflowing, setIsOverflowing] = useState(false);
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages);
-
+  const [isModalOpen, setModalOpen] = useState(false);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
@@ -81,7 +91,7 @@ const ChatBody = ({
           threadMainMessage._id,
           isChannelPrivate
         );
-        setThreadMessages(messages);
+        setThreadMessages(messages.reverse());
       } catch (e) {
         console.error(e);
       }
@@ -182,7 +192,24 @@ const ChatBody = ({
   const showNewMessagesPopup = () => {
     setPopupVisible(true);
   };
+  const announcementRef = useRef(null);
 
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
+
+  const checkOverflow = () => {
+    if (announcementRef.current) {
+      setIsOverflowing(
+        announcementRef.current.scrollWidth >
+          announcementRef.current.clientWidth
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkOverflow();
+  }, [channelInfo.announcement, showAnnouncement]);
   useEffect(() => {
     const currentRef = messageListRef.current;
     currentRef.addEventListener('scroll', handleScroll);
@@ -204,6 +231,44 @@ const ChatBody = ({
 
   return (
     <>
+      {channelInfo.announcement && showAnnouncement && (
+        <Box css={styles.announcementStyles}>
+          <Box
+            ref={announcementRef}
+            css={[
+              styles.announcementTextBox,
+              css`
+                &:hover {
+                  text-decoration: ${isOverflowing ? 'underline' : 'none'};
+                  cursor: ${isOverflowing ? 'pointer' : 'default'};
+                }
+              `,
+            ]}
+            onClick={isOverflowing ? toggleModal : undefined}
+          >
+            {channelInfo.announcement}
+          </Box>
+        </Box>
+      )}
+      {isModalOpen && (
+        <Modal>
+          <Modal.Header>
+            <Modal.Title>Announcement</Modal.Title>
+            <Modal.Close onClick={toggleModal} />
+          </Modal.Header>
+          <Modal.Content
+            css={css`
+              height: 300px;
+              word-wrap: break-word;
+              overflow-wrap: anywhere;
+              white-space: normal;
+              padding: 20px;
+            `}
+          >
+            {channelInfo.announcement}
+          </Modal.Content>
+        </Modal>
+      )}
       <Box
         ref={messageListRef}
         css={styles.chatbodyContainer}

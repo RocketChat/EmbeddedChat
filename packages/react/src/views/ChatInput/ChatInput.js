@@ -75,10 +75,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -469,18 +472,23 @@ const ChatInput = ({ scrollToBottom }) => {
             }
           />
         ) : null}
-
-        {showMembersList && (
-          <MembersList
-            messageRef={messageRef}
-            mentionIndex={mentionIndex}
-            setMentionIndex={setMentionIndex}
-            filteredMembers={filteredMembers}
-            setFilteredMembers={setFilteredMembers}
-            setStartReadMentionUser={setStartReadMentionUser}
-            setShowMembersList={setShowMembersList}
-          />
-        )}
+        <Box
+          css={css`
+            margin: 0rem 2rem;
+          `}
+        >
+          {showMembersList && (
+            <MembersList
+              messageRef={messageRef}
+              mentionIndex={mentionIndex}
+              setMentionIndex={setMentionIndex}
+              filteredMembers={filteredMembers}
+              setFilteredMembers={setFilteredMembers}
+              setStartReadMentionUser={setStartReadMentionUser}
+              setShowMembersList={setShowMembersList}
+            />
+          )}
+        </Box>
 
         {showCommandList && (
           <CommandsList
@@ -509,7 +517,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message #${channelInfo.name}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'
