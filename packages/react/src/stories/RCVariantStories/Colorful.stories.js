@@ -1,6 +1,7 @@
 import { EmbeddedChat } from '../..';
 import MintMeadow from '../../theme/MintMeadow';
 import RoseEmber from '../../theme/RoseEmber';
+import HoneyHaze from '../../theme/HoneyHaze';
 
 export default {
   title: 'EmbeddedChat/Design Variants/RCVariant/Colorful',
@@ -42,6 +43,27 @@ export const Rose_Ember = {
     enableThreads: true,
     hideHeader: false,
     theme: RoseEmber,
+    auth: {
+      flow: 'PASSWORD',
+    },
+    dark: false,
+  },
+};
+
+export const Honey_Haze = {
+  title: 'EmbeddedChat/Variant/RCVariant/Colorful/HoneyHaze',
+  args: {
+    host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
+    roomId: 'GENERAL',
+    channelName: 'general',
+    anonymousMode: true,
+    headerColor: 'white',
+    toastBarPosition: 'bottom right',
+    showRoles: true,
+    showAvatar: true,
+    enableThreads: true,
+    hideHeader: false,
+    theme: HoneyHaze,
     auth: {
       flow: 'PASSWORD',
     },
