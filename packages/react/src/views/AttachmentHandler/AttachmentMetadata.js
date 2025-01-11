@@ -1,7 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box } from '@embeddedchat/ui-elements';
-import { Markdown } from '../Markdown';
 
 const AttachmentMetadata = ({
   attachment,
@@ -40,48 +39,28 @@ const AttachmentMetadata = ({
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <div
-        css={
-          attachment.description !== ''
-            ? [
-                css`
-                  margin: 10px 0px;
-                `,
-              ]
-            : css`
-                margin: -7px 0px;
-              `
-        }
+      <p
+        css={[
+          css`
+            margin-top: ${attachment.description ? '0.5rem' : '-3px'};
+          `,
+        ]}
       >
-        {msg ? (
-          <Markdown body={msg} md={attachment.descriptionMd} />
-        ) : (
-          attachment.description
-        )}
-      </div>
+        {attachment.description}
+      </p>
       <Box
         css={css`
           display: flex;
           flex-direction: row;
           align-items: center;
+          margin-top: ${attachment.description ? '0.5rem' : '0px'};
         `}
       >
         <p
-          css={
-            attachment.description
-              ? [
-                  css`
-                    margin: 0px;
-                    font-size: 14px;
-                    opacity: 0.7;
-                  `,
-                ]
-              : css`
-                  margin: 22px 0 15px 0;
-                  font-size: 14px;
-                  opacity: 0.7;
-                `
-          }
+          css={css`
+            font-size: 14px;
+            opacity: 0.7;
+          `}
         >
           {attachment.title}
         </p>
@@ -92,7 +71,7 @@ const AttachmentMetadata = ({
           onClick={onExpandCollapseClick}
           css={css`
             margin-left: 10px;
-            margin-top: ${attachment.description ? '3px' : '13px'};
+            margin-top: 1px;
           `}
         />
         <ActionButton
@@ -102,7 +81,7 @@ const AttachmentMetadata = ({
           onClick={handleDownload}
           css={css`
             margin-left: 10px;
-            margin-top: 5px;
+            margin-top: 3px;
           `}
         />
       </Box>
