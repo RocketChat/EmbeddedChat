@@ -136,6 +136,7 @@ const ChatHeader = ({
     try {
       await RCInstance.logout();
       setMessages([]);
+      setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
