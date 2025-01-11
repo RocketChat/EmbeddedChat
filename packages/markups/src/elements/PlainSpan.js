@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PlainSpan = ({ contents }) => <>{contents}</>;
+const PlainSpan = ({ contents }) => {
+  if (contents === '>') {
+    return <br />;
+  }
+  return <>{contents}</>;
+};
 
 export default PlainSpan;
 
