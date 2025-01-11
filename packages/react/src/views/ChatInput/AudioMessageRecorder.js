@@ -47,6 +47,7 @@ const AudioMessageRecorder = ({ disabled }) => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start();
