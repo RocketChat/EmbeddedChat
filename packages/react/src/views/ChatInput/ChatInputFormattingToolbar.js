@@ -73,7 +73,6 @@ const ChatInputFormattingToolbar = ({
   };
 
   const isTyping = messageRef.current?.value.length > 0;
-  console.log(isTyping);
   const chatToolMap = {
     emoji: (
       <Tooltip text="Emoji" position="top" key="emoji-btn">
