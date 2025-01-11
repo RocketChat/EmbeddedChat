@@ -6,9 +6,12 @@ import {
   Modal,
   Button,
   Icon,
+  useTheme,
   useToastBarDispatch,
   useComponentOverrides,
   appendClassNames,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
@@ -17,7 +20,7 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useMessageStore, useSidebarStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage }) => {
@@ -25,6 +28,9 @@ const FileMessage = ({ fileMessage }) => {
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const { theme } = useTheme();
+  const { mode } = useTheme();
 
   const [fileToDelete, setFileToDelete] = useState({});
 
@@ -36,6 +42,39 @@ const FileMessage = ({ fileMessage }) => {
     anchor.click();
     document.body.removeChild(anchor);
   }, []);
+
+  const navigateToFile = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
+
+    const message = messages.find((mg) => mg?.file?._id === msg._id);
+
+    if (message) {
+      let element;
+      setTimeout(() => {
+        const childElement = document.getElementById(
+          `ec-message-body-${message._id}`
+        );
+        element = childElement.closest('.ec-message');
+
+        if (element) {
+          setShowSidebar(false);
+          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+          element.style.backgroundColor =
+            mode === 'light'
+              ? darken(theme.colors.warning, 0.03)
+              : lighten(theme.colors.warningForeground, 0.03);
+
+          setTimeout(() => {
+            element.style.backgroundColor = '';
+          }, 2000);
+        }
+      }, 300);
+    }
+  };
 
   const deleteFile = useCallback(
     async (file) => {
@@ -92,9 +131,15 @@ const FileMessage = ({ fileMessage }) => {
             },
             {
               id: 'delete',
-              action: () => setFileToDelete(fileMessage),
+              action: () => setFileToDelete(fileMessage._id),
               label: 'Delete',
               icon: 'trash',
+            },
+            {
+              id: 'navigate',
+              action: () => navigateToFile(fileMessage),
+              label: 'Jump to message',
+              icon: 'arrow-jump',
             },
           ]}
         />
