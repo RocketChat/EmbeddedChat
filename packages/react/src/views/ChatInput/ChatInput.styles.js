@@ -97,20 +97,46 @@ export const getCommonRecorderStyles = (theme) => {
       border-radius: 50%;
       background-color: ${theme.colors.destructive};
       margin: auto;
-      margin-right: 8px;
+      margin-right: 5px;
+      margin-left: 5px;
+    `,
+
+    oppositeDot: css`
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background-color: ${theme.colors.background};
+      margin: auto;
+      margin-right: 5px;
+      margin-left: 5px;
     `,
 
     controller: css`
       display: flex;
-      gap: 0.15rem;
+      width: 100%;
+    `,
+
+    leftSection: css`
+      display: flex;
+      align-items: left;
+    `,
+
+    record: css`
+      display: flex;
     `,
 
     timer: css`
       margin: auto;
     `,
-    record: css`
+
+    spacer: css`
+      flex-grow: 1;
+    `,
+
+    rightSection: css`
       display: flex;
-      margin: auto;
+      align-items: right;
+      margin-top: 0.3rem;
     `,
   };
 
