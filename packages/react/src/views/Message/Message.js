@@ -164,6 +164,32 @@ const Message = ({
     return `${host}/channel/${res.room.name}/?msg=${id}`;
   };
 
+  const handleFollowMessage = async (msg) => {
+    const isFollowed = msg?.replies?.length > 0;
+    try {
+      if (!isFollowed) {
+        await RCInstance.followMessage(msg._id);
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message followed',
+        });
+      } else {
+        await RCInstance.unfollowMessage(msg._id);
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message unfollowed',
+        });
+      }
+    } catch (error) {
+      dispatchToastMessage({
+        type: 'error',
+        message: `Error in ${
+          isFollowed ? 'unfollowing' : 'following'
+        } the message`,
+      });
+    }
+  };
+
   const handleCopyMessageLink = async (msg) => {
     try {
       const messageLink = await getMessageLink(msg._id);
@@ -287,6 +313,7 @@ const Message = ({
                     pinRoles={pinRoles}
                     editMessageRoles={editMessageRoles}
                     handleCopyMessage={handleCopyMessage}
+                    handleFollowMessage={handleFollowMessage}
                     handleCopyMessageLink={handleCopyMessageLink}
                     handleOpenThread={handleOpenThread}
                     handleDeleteMessage={handleDeleteMessage}
