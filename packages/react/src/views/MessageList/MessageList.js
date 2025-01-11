@@ -24,9 +24,11 @@ const MessageList = ({
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
+  const filteredMessages = messages.filter((msg) => !msg.tmid);
+
   return (
     <>
-      {messages.length === 0 ? (
+      {filteredMessages.length === 0 ? (
         <Box
           css={css`
             text-align: center;
