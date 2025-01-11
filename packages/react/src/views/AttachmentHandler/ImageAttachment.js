@@ -71,7 +71,13 @@ const ImageAttachment = ({
                   />
                 )}
               </>
-              <Box>@{authorName}</Box>
+              <Box
+                css={css`
+                  margin-bottom: ${hideAvatar ? '8px' : '0'};
+                `}
+              >
+                @{authorName}
+              </Box>
             </Box>
           </>
         ) : (
