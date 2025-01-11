@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme, Icon } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
+import { Markdown } from '../Markdown';
 
 const FileAttachment = ({
   attachment,
