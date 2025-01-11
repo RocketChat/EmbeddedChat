@@ -113,7 +113,7 @@ export const getCommonRecorderStyles = (theme) => {
       margin: auto;
     `,
     modal: {
-      '@media(max-width: 500px)': {
+      '@media(max-width: 768px)': {
         height: '100%',
         width: '100%',
         maxHeight: '100%',
