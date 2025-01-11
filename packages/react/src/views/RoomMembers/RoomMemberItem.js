@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, Icon, Avatar } from '@embeddedchat/ui-elements';
+import { Box, Icon, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
+import { RoomMemberItemStyles } from './RoomMembers.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import { useUserStore } from '../../store';
 
@@ -11,6 +11,9 @@ const RoomMemberItem = ({ user, host }) => {
   const { RCInstance } = useContext(RCContext);
   const [userStatus, setUserStatus] = useState('');
   const avatarUrl = new URL(`avatar/${user.username}`, host).toString();
+  const { theme } = useTheme();
+  const { mode } = useTheme();
+  const styles = RoomMemberItemStyles(theme, mode);
 
   useEffect(() => {
     const getStatus = async () => {
