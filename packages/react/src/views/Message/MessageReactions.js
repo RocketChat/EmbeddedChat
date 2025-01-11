@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   useComponentOverrides,
@@ -24,6 +24,44 @@ export const MessageReactions = ({
   );
   const { theme } = useTheme();
   const styles = getMessageReactionsStyles(theme);
+  const [hoveredReaction, setHoveredReaction] = useState(null);
+
+  const tooltipMap = useMemo(() => {
+    const map = {};
+    if (message.reactions) {
+      serializeReactions(message.reactions).forEach((reaction) => {
+        const usernames = reaction.usernames || [];
+        const updatedUsernames = [];
+        let isUserIncluded = false;
+
+        usernames.forEach((username) => {
+          if (username === authenticatedUserUsername) {
+            isUserIncluded = true;
+          } else {
+            updatedUsernames.push(username);
+          }
+        });
+
+        if (isUserIncluded) {
+          updatedUsernames.unshift('You');
+        }
+
+        const visibleNames = updatedUsernames.slice(0, 9);
+        const remainingCount = updatedUsernames.length - visibleNames.length;
+
+        let tooltipContent = visibleNames.join(', ');
+        if (remainingCount > 0) {
+          tooltipContent += `, and ${remainingCount} ${
+            remainingCount === 1 ? 'other' : 'others'
+          }`;
+        }
+
+        map[reaction.name] = `${tooltipContent} reacted with ${reaction.name}`;
+      });
+    }
+    return map;
+  }, [message.reactions, authenticatedUserUsername]);
+
   return (
     <Box
       css={styles.container}
@@ -32,27 +70,35 @@ export const MessageReactions = ({
       {...props}
     >
       {message.reactions &&
-        serializeReactions(message.reactions).map((reaction) => (
-          <Box
-            css={
-              isSameUser(reaction, authenticatedUserUsername)
-                ? [styles.reaction, styles.reactionMine]
-                : [styles.reaction]
-            }
-            key={reaction.name}
-            mine={isSameUser(reaction, authenticatedUserUsername)}
-            onClick={() =>
-              handleEmojiClick(
-                reaction,
-                message,
-                !isSameUser(reaction, authenticatedUserUsername)
-              )
-            }
-          >
-            <Markdown body={reaction.name} isReaction />
-            <p>{reaction.count}</p>
-          </Box>
-        ))}
+        serializeReactions(message.reactions).map((reaction) => {
+          const isUserReaction = isSameUser(
+            reaction,
+            authenticatedUserUsername
+          );
+          return (
+            <Box
+              key={reaction.name}
+              css={
+                isUserReaction
+                  ? [styles.reaction, styles.reactionMine]
+                  : [styles.reaction]
+              }
+              mine={isUserReaction}
+              onClick={() =>
+                handleEmojiClick(reaction, message, !isUserReaction)
+              }
+              onMouseEnter={() => setHoveredReaction(reaction.name)}
+              onMouseLeave={() => setHoveredReaction(null)}
+              style={{ position: 'relative' }}
+            >
+              <Markdown body={reaction.name} isReaction />
+              <p>{reaction.count}</p>
+              {hoveredReaction === reaction.name && (
+                <Box css={styles.emojiTooltip}>{tooltipMap[reaction.name]}</Box>
+              )}
+            </Box>
+          );
+        })}
     </Box>
   );
 };

@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 const EmojiReaction = ({ body }) => {
   const emojiHtml = emojione.toImage(body);
-
+  emojione.imageTitleTag = false;
   return (
     <Box
       css={css`
