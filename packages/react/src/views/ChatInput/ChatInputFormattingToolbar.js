@@ -26,7 +26,6 @@ const ChatInputFormattingToolbar = ({
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
   },
 }) => {
-  console.log('messageRef', messageRef);
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
     'ChatInputFormattingToolbar'
   );
@@ -131,9 +130,9 @@ const ChatInputFormattingToolbar = ({
         <ActionButton
           square
           ghost
-          disabled={isRecordingMessage}
+          disabled={isRecordingMessage || !(messageRef.current.value.length > 0)}
           onClick={() => {
-            addPreviewMessage(messageRef.current.value);
+              addPreviewMessage(messageRef.current.value);
           }}
         >
           <Icon name="eyeopen" size="1.25rem" />
