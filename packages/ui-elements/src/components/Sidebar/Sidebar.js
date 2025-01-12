@@ -11,6 +11,7 @@ const Sidebar = ({
   iconName,
   onClose,
   children,
+  filterProps = {},
   searchProps = {},
   footer,
   style = {},
@@ -26,7 +27,9 @@ const Sidebar = ({
       style={{ ...style, ...styleOverrides }}
     >
       <SidebarHeader title={title} iconName={iconName} onClose={onClose} />
-      <SidebarContent searchProps={searchProps}>{children}</SidebarContent>
+      <SidebarContent searchProps={searchProps} filterProps={filterProps}>
+        {children}
+      </SidebarContent>
       {footer && <SidebarFooter>{footer}</SidebarFooter>}
     </Box>
   );
