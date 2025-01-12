@@ -85,6 +85,11 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
         grid-template-columns: repeat(5, 0.2fr);
       }
     `,
+    dividerStyle: css`
+      width: 1px;
+      height: 1.5rem;
+      background: ${theme.colors.border};
+    `,
   };
   return styles;
 };

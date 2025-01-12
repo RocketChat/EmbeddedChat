@@ -156,7 +156,15 @@ const ChatInputFormattingToolbar = ({
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
     >
-      {surfaceItems.map((key) => chatToolMap[key])}
+      {surfaceItems.map((key, index) => (
+        <React.Fragment key={key}>
+          {chatToolMap[key]}
+          {((key === 'emoji' && index < surfaceItems.length - 1) ||
+            (key === 'link' && surfaceItems[index + 1] === 'audio')) && (
+            <Box css={styles.dividerStyle} />
+          )}
+        </React.Fragment>
+      ))}
 
       {isEmojiOpen && (
         <EmojiPicker
