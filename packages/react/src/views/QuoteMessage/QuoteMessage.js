@@ -13,6 +13,7 @@ import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
 import Attachment from '../AttachmentHandler/Attachment';
 import { Markdown } from '../Markdown';
+import { css } from '@emotion/react';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);
@@ -51,7 +52,23 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
           size="1.5em"
         />
         <Box>{message?.u.username}</Box>
-        <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
+        <Box
+          is="span"
+          css={css`
+            color: ${theme.colors.accentForeground};
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            letter-spacing: 0rem;
+            font-size: 0.7rem;
+            font-weight: 400;
+            line-height: 1rem;
+            flex-shrink: 0;
+            margin-left: 0.25rem;
+          `}
+        >
+          {format(new Date(message.ts), 'h:mm a')}
+        </Box>
       </Box>
       <Box css={styles.message}>
         {message.file ? (

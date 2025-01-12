@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
 import { format } from 'date-fns';
-import { useMemo } from 'react';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
@@ -155,6 +154,23 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                       size="1.2em"
                     />
                     <Box>{nestedAttachment?.author_name}</Box>
+                    <Box
+                      is="span"
+                      css={css`
+                        color: ${theme.colors.accentForeground};
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        letter-spacing: 0rem;
+                        font-size: 0.7rem;
+                        font-weight: 400;
+                        line-height: 1rem;
+                        flex-shrink: 0;
+                        margin-left: 0.25rem;
+                      `}
+                    >
+                      {formattedTimestamp}
+                    </Box>
                   </>
                 )}
               </Box>
