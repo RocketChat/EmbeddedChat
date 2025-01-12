@@ -9,6 +9,8 @@ const getMessageAggregatorStyles = () => {
       justify-content: initial;
       align-items: initial;
       max-width: 100%;
+      overflow-y: scroll;
+      padding-right: 0;
     `,
 
     noMessageStyles: css`

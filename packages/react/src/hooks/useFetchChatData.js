@@ -23,6 +23,12 @@ const useFetchChatData = (showRoles) => {
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const setUserPinPermissions = useUserStore(
+    (state) => state.setUserPinPermissions
+  );
+  const setEditMessagePermissions = useMessageStore(
+    (state) => state.setEditMessagePermissions
+  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -73,7 +79,13 @@ const useFetchChatData = (showRoles) => {
         }
 
         const permissions = await RCInstance.permissionInfo();
-        setViewUserInfoPermissions(permissions.update[70]);
+        const permissionsMap = permissions.update.reduce((map, item) => {
+          map[item._id] = item;
+          return map;
+        });
+        setUserPinPermissions(permissionsMap['pin-message']);
+        setEditMessagePermissions(permissionsMap['edit-message']);
+        setViewUserInfoPermissions(permissionsMap['view-full-other-user-info']);
       } catch (e) {
         console.error(e);
       }
