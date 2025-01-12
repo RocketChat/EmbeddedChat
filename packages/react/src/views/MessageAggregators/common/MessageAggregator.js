@@ -31,6 +31,7 @@ export const MessageAggregator = ({
   noMessageInfo,
   shouldRender,
   fetchedMessageList,
+  filterProps,
   searchProps,
   searchFiltered,
   fetching,
@@ -46,9 +47,10 @@ export const MessageAggregator = ({
   const currentUserRoles = useUserStore((state) => state.roles);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
-    () => [...messages, ...threadMessages],
+    () => [...messages, ...[...threadMessages].reverse()],
     [messages, threadMessages]
   );
+
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
@@ -147,6 +149,7 @@ export const MessageAggregator = ({
     <ViewComponent
       title={title}
       iconName={iconName}
+      filterProps={filterProps}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
       style={{
@@ -173,107 +176,110 @@ export const MessageAggregator = ({
             <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
           )}
 
-          {messageList.map((msg, index, arr) => {
-            const newDay = isMessageNewDay(msg, arr[index - 1]);
-            if (!messageRendered && shouldRender(msg)) {
-              setMessageRendered(true);
-            }
+          {[...new Map(messageList.map((msg) => [msg._id, msg])).values()].map(
+            (msg, index, arr) => {
+              const newDay = isMessageNewDay(msg, arr[index - 1]);
+              if (!messageRendered && shouldRender(msg)) {
+                setMessageRendered(true);
+              }
 
-            return (
-              <React.Fragment key={msg._id}>
-                {type === 'message' && newDay && (
-                  <MessageDivider>
-                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                  </MessageDivider>
-                )}
-                {type === 'file' ? (
-                  <FileDisplay
-                    key={`${msg._id}-aggregated`}
-                    fileMessage={msg}
-                  />
-                ) : (
-                  <Box
-                    position="relative"
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Message
+              return (
+                <React.Fragment key={msg._id}>
+                  {type === 'message' && newDay && (
+                    <MessageDivider>
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                    </MessageDivider>
+                  )}
+                  {type === 'file' ? (
+                    <FileDisplay
                       key={`${msg._id}-aggregated`}
-                      message={msg}
-                      newDay={false}
-                      type="default"
-                      showAvatar
-                      showToolbox={false}
-                      showRoles={showRoles}
-                      isInSidebar
-                      style={{
-                        flex: 1,
-                        padding: 0,
-                        marginLeft: '15px',
-                        minWidth: 0,
-                      }}
+                      fileMessage={msg}
                     />
-
-                    {!isStarredMessageDisplay && !isPinnedMessageDisplay && (
-                      <ActionButton
-                        square
-                        ghost
-                        onClick={() => setJumpToMessage(msg)}
-                        css={{
-                          position: 'relative',
-                          zIndex: 10,
-                          marginRight: '5px',
-                        }}
-                      >
-                        <Icon name="arrow-back" size="1.25rem" />
-                      </ActionButton>
-                    )}
-                    {(isStarredMessageDisplay || isPinnedMessageDisplay) && (
-                      <Box
+                  ) : (
+                    <Box
+                      position="relative"
+                      style={{
+                        display: 'flex',
+                      }}
+                    >
+                      <Message
+                        key={`${msg._id}-aggregated`}
+                        message={msg}
+                        newDay={false}
+                        type="default"
+                        showAvatar
+                        showToolbox={false}
+                        showRoles={showRoles}
+                        isInSidebar
                         style={{
-                          marginRight: '20px',
+                          flex: 1,
+                          padding: 0,
+                          marginLeft: '15px',
+                          minWidth: 0,
                         }}
-                      >
-                        <Menu
-                          isToolTip={false}
-                          options={[
-                            isPinnedMessageDisplay && isAllowedToPin
-                              ? {
-                                  id: 'unpin',
-                                  action: () => unpin(msg),
-                                  label: 'Unpin',
-                                  icon: 'pin',
-                                }
-                              : isStarredMessageDisplay
-                              ? {
-                                  id: 'unstar',
-                                  action: () => unstar(msg),
-                                  label: 'Remove star',
-                                  icon: 'star',
-                                }
-                              : {},
-                            {
-                              id: 'copyLink',
-                              action: () => copyLink(msg._id),
-                              label: 'Copy link',
-                              icon: 'link',
-                            },
-                            {
-                              id: 'jumptomessage',
-                              action: () => setJumpToMessage(msg),
-                              label: 'Jump to message',
-                              icon: 'arrow-jump',
-                            },
-                          ]}
-                        />
-                      </Box>
-                    )}
-                  </Box>
-                )}
-              </React.Fragment>
-            );
-          })}
+                      />
+
+                      {!isStarredMessageDisplay && !isPinnedMessageDisplay && (
+                        <ActionButton
+                          square
+                          ghost
+                          onClick={() => setJumpToMessage(msg)}
+                          css={{
+                            position: 'relative',
+                            zIndex: 10,
+                            marginRight: '5px',
+                          }}
+                        >
+                          <Icon name="arrow-back" size="1.25rem" />
+                        </ActionButton>
+                      )}
+
+                      {(isStarredMessageDisplay || isPinnedMessageDisplay) && (
+                        <Box
+                          style={{
+                            marginRight: '20px',
+                          }}
+                        >
+                          <Menu
+                            isToolTip={false}
+                            options={[
+                              isPinnedMessageDisplay && isAllowedToPin
+                                ? {
+                                    id: 'unpin',
+                                    action: () => unpin(msg),
+                                    label: 'Unpin',
+                                    icon: 'pin',
+                                  }
+                                : isStarredMessageDisplay
+                                ? {
+                                    id: 'unstar',
+                                    action: () => unstar(msg),
+                                    label: 'Remove star',
+                                    icon: 'star',
+                                  }
+                                : {},
+                              {
+                                id: 'copyLink',
+                                action: () => copyLink(msg._id),
+                                label: 'Copy link',
+                                icon: 'link',
+                              },
+                              {
+                                id: 'jumptomessage',
+                                action: () => setJumpToMessage(msg),
+                                label: 'Jump to message',
+                                icon: 'arrow-jump',
+                              },
+                            ]}
+                          />
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </React.Fragment>
+              );
+            }
+          )}
         </Box>
       )}
     </ViewComponent>
