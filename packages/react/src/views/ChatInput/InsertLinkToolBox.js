@@ -9,7 +9,7 @@ const InsertLinkToolBox = ({
 }) => {
   const { theme } = useTheme();
   const styles = getInsertLinkModalStyles(theme);
-  const [linkText, setLinkText] = useState(selectedText || 'Text');
+  const [linkText, setLinkText] = useState(selectedText);
   const [linkUrl, setLinkUrl] = useState(null);
 
   const handleLinkTextOnChange = (e) => {
@@ -26,16 +26,23 @@ const InsertLinkToolBox = ({
         <Modal.Close onClick={onClose} />
       </Modal.Header>
       <Modal.Content css={styles.modalContent}>
+        <p htmlFor="linkText" style={{ marginLeft: '1rem' }}>
+          Text
+        </p>
         <Input
+          id="linkText"
           type="text"
           onChange={handleLinkTextOnChange}
           value={linkText}
           css={styles.inputWithFormattingBox}
         />
+        <p htmlFor="linkUrl" style={{ marginLeft: '1rem' }}>
+          URL
+        </p>
         <Input
+          id="linkUrl"
           type="text"
           onChange={handleLinkUrlOnChange}
-          placeholder="URL"
           css={styles.inputWithFormattingBox}
         />
       </Modal.Content>
