@@ -154,19 +154,20 @@ const ChatHeader = ({
     };
 
     const setMessageAllowed = async () => {
-      const permissionRes = await RCInstance.permissionInfo();
       const channelRolesRes = await RCInstance.getChannelRoles(
         isChannelPrivate
       );
 
-      if (permissionRes.success && channelRolesRes.success) {
-        const postMsgRoles = permissionRes.update[140]?.roles || [];
+      if (channelRolesRes.success) {
         const channelLevelRoles = channelRolesRes.roles
           .filter((chRole) => chRole.u?._id === authenticatedUserId)
           .flatMap((chRole) => chRole.roles);
 
         const allRoles = [...channelLevelRoles, ...workspaceLevelRoles];
-        const canSendMsg = postMsgRoles.some((role) => allRoles.includes(role));
+        const canSendMsg =
+          allRoles.includes('admin') ||
+          allRoles.includes('moderator') ||
+          allRoles.includes('owner');
 
         setCanSendMsg(canSendMsg);
       }
