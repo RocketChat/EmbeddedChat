@@ -130,7 +130,7 @@ const ChatInputFormattingToolbar = ({
         <ActionButton
           square
           ghost
-          disabled={isRecordingMessage || !(messageRef.current.value.length > 0)}
+          disabled={isRecordingMessage || !(messageRef.current.value)}
           onClick={() => {
               addPreviewMessage(messageRef.current.value);
           }}
