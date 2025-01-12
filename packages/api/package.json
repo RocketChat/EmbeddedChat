@@ -23,7 +23,7 @@
     "rollup-plugin-serve": "^2.0.2"
   },
   "dependencies": {
-    "@embeddedchat/auth": "0.0.1",
+    "@embeddedchat/auth": "workspace:^",
     "@rocket.chat/sdk": "^1.0.0-alpha.42"
   }
 }

@@ -83,7 +83,8 @@
     "react-dom": ">=17.0.2 <19.0.0"
   },
   "dependencies": {
-    "@embeddedchat/api": "0.0.2",
+    "@embeddedchat/api": "workspace:^",
+    "@embeddedchat/markups": "workspace:^",
     "@embeddedchat/ui-elements": "workspace:^",
     "@embeddedchat/ui-kit": "workspace:^",
     "@emotion/babel-preset-css-prop": "^11.11.0",

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 export const getSidebarStyles = (theme) => {
   const styles = {
     sidebarContainer: css`
-      min-width: 350px;
+      width: 350px;
       height: 100%;
       box-shadow: ${theme.shadows[2]};
       z-index: ${theme.zIndex?.sidebar || 1200};
