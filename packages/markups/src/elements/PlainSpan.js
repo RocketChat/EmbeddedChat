@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { useTheme } from '@embeddedchat/ui-elements';
 
 const PlainSpan = ({ contents }) => {
-  console.log(contents);
   const { theme } = useTheme();
   if (contents === '>') {
     return (
