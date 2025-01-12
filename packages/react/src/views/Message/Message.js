@@ -10,6 +10,7 @@ import {
   lighten,
   darken,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
@@ -255,16 +256,22 @@ const Message = ({
               >
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
-                    <Markdown
-                      body={message}
-                      md={message.md}
-                      isReaction={false}
-                    />
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}
                       msg={message}
                     />
+                    <div
+                      css={css`
+                        margin-top: 0.3rem;
+                      `}
+                    >
+                      <Markdown
+                        body={message}
+                        md={message.md}
+                        isReaction={false}
+                      />
+                    </div>
                   </>
                 ) : (
                   <Markdown body={message} md={message.md} isReaction={false} />
