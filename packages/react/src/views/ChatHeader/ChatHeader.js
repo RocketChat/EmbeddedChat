@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   useTheme,
+  Avatar,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -21,6 +23,7 @@ import {
   usePinnedMessageStore,
   useStarredMessageStore,
   useFileStore,
+  useSidebarStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -84,17 +87,23 @@ const ChatHeader = ({
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const dispatchToastMessage = useToastBarDispatch();
-  const getMessagesAndRoles = useFetchChatData(showRoles);
+  const { getMessagesAndRoles } = useFetchChatData(showRoles);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
-
+  const setMessages = useMessageStore((state) => state.setMessages);
   const avatarUrl = useUserStore((state) => state.avatarUrl);
+  const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
-  const threadTitle = useMessageStore((state) => state.threadMainMessage?.msg);
+
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const threadMainMessage = useMessageStore((state) => state.threadMainMessage);
+  const threadTitle =
+    threadMainMessage?.msg ||
+    (threadMainMessage?.file ? threadMainMessage.file.name : '');
+
   const closeThread = useMessageStore((state) => state.closeThread);
 
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
@@ -108,7 +117,10 @@ const ChatHeader = ({
   );
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
-
+  const getChannelAvatarURL = (channelname) => {
+    const host = RCInstance.getHost();
+    return `${host}/avatar/${channelname}`;
+  };
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
       getMessagesAndRoles();
@@ -123,6 +135,11 @@ const ChatHeader = ({
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
+      setMessages([]);
+      setChannelInfo({});
+      setShowSidebar(false);
+      setUserAvatarUrl(null);
+      useMessageStore.setState({ isMessageLoaded: false });
     } catch (e) {
       console.error(e);
     } finally {
@@ -336,7 +353,6 @@ const ChatHeader = ({
     >
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>
-          <Icon name="hash" size={fullScreen ? '1.25rem' : '1rem'} />
           <Box>
             {isUserAuthenticated ? (
               <>
@@ -344,17 +360,44 @@ const ChatHeader = ({
                   level={3}
                   className="ec-chat-header--channelName"
                   css={styles.clearSpacing}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.2rem',
+                  }}
                 >
-                  {channelInfo.name || channelName || 'channelName'}
+                  <Avatar
+                    size="36px"
+                    style={{ marginRight: '6px' }}
+                    url={getChannelAvatarURL(channelInfo.name)}
+                  />
+                  <Box>
+                    <Box
+                      css={styles.channelName}
+                      onClick={() => setExclusiveState(setShowChannelinfo)}
+                    >
+                      <Icon
+                        name={isChannelPrivate ? 'hash_lock' : 'hash'}
+                        size={fullScreen ? '1.25rem' : '1rem'}
+                      />
+                      <div
+                        css={css`
+                          font-size: ${fullScreen ? '1.3rem' : '1.25rem'};
+                        `}
+                      >
+                        {channelInfo.name || channelName || 'channelName'}
+                      </div>
+                    </Box>
+                    {fullScreen && (
+                      <Box
+                        className="ec-chat-header--channelDescription"
+                        css={styles.channelTopic}
+                      >
+                        {channelInfo.topic || ''}
+                      </Box>
+                    )}
+                  </Box>
                 </Heading>
-                {fullScreen && (
-                  <p
-                    className="ec-chat-header--channelDescription"
-                    css={styles.clearSpacing}
-                  >
-                    {channelInfo.description || ''}
-                  </p>
-                )}
               </>
             ) : (
               <Heading

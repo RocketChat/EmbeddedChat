@@ -22,6 +22,9 @@ export const getChatInputStyles = (theme) => {
       justify-content: center;
       flex-direction: row;
       padding: 0.5rem;
+      @media (max-width: 383px) {
+        min-height: 100px;
+      }
     `,
 
     iconCursor: css`
@@ -51,6 +54,13 @@ export const getChatInputStyles = (theme) => {
       &::placeholder {
         padding-left: 5px;
       }
+      @media (max-width: 383px) {
+        font-size: 18px;
+      }
+    `,
+    quoteContainer: css`
+      max-height: 300px;
+      overflow: scroll;
     `,
   };
 
@@ -68,9 +78,12 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
         : lighten(theme.colors.background, 1)};
       display: flex;
       position: relative;
-      flex-direction: row;
-      gap: 0.375rem;
+      gap: 0.1rem;
       border-radius: 0 0 ${theme.radius} ${theme.radius};
+      @media (max-width: 383px) {
+        display: grid;
+        grid-template-columns: repeat(5, 0.2fr);
+      }
     `,
   };
   return styles;
@@ -98,6 +111,41 @@ export const getCommonRecorderStyles = (theme) => {
     record: css`
       display: flex;
       margin: auto;
+    `,
+    modal: {
+      '@media(max-width: 768px)': {
+        height: '100%',
+        width: '100%',
+        maxHeight: '100%',
+        maxWidth: '100%',
+      },
+    },
+  };
+
+  return styles;
+};
+
+export const getInsertLinkModalStyles = (theme) => {
+  const styles = {
+    inputWithFormattingBox: css`
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
+      margin: 0.5rem 1rem;
+      &.focused {
+        border: ${`1.5px solid ${theme.colors.ring}`};
+      }
+    `,
+    modalHeader: css`
+      padding: 0 0.5rem;
+    `,
+    modalContent: css`
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    `,
+    modalFooter: css`
+      padding: 0.75rem 1rem;
     `,
   };
 

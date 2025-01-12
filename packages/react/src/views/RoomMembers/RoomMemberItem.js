@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import { Box, Icon, Avatar } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { useUserStore } from '../../store';
 
 const RoomMemberItem = ({ user, host }) => {
   const { RCInstance } = useContext(RCContext);
@@ -18,15 +20,28 @@ const RoomMemberItem = ({ user, host }) => {
           setUserStatus(res.status);
         }
       } catch (err) {
-        console.error('Error fetching user status', err);
+        console.error('Error fetching user status:', err);
       }
     };
 
     getStatus();
   }, [RCInstance]);
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
 
+  const handleShowUserInfo = () => {
+    setExclusiveState(setShowCurrentUserInfo);
+    setCurrentUser(user);
+  };
   return (
-    <Box css={styles.container}>
+    <Box
+      css={styles.container}
+      style={{ cursor: 'pointer' }}
+      onClick={handleShowUserInfo}
+    >
       <Avatar
         url={avatarUrl}
         alt="avatar"
@@ -46,7 +61,9 @@ const RoomMemberItem = ({ user, host }) => {
         {userStatus && (
           <Icon name={userStatus} size="1.25rem" css={styles.icon} />
         )}
-        <Box is="span">{user.username}</Box>
+        <Box is="span">
+          {user.name} ({user.username})
+        </Box>
       </Box>
     </Box>
   );

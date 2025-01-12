@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
+import { darken, lighten } from '@embeddedchat/ui-elements';
 
-export const getChatbodyStyles = () => {
+export const getChatbodyStyles = (theme, mode) => {
   const styles = {
     chatbodyContainer: css`
       flex: 1;
@@ -9,10 +10,27 @@ export const getChatbodyStyles = () => {
       overflow-x: hidden;
       display: flex;
       flex-direction: column-reverse;
-      max-height: 600px;
+      max-height: 100%;
       position: relative;
       padding-top: 70px;
       margin-top: 0.25rem;
+    `,
+    announcementStyles: css`
+      display: flex;
+      justify-content: center;
+      padding: 7px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: ${mode === 'light'
+        ? lighten(theme.colors.info, 0.78)
+        : darken(theme.colors.primary, 0.7)};
+    `,
+    announcementTextBox: css`
+      max-width: 80%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     `,
   };
 

@@ -1,7 +1,12 @@
 import { useContext } from 'react';
 import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
-import { useUserStore, totpModalStore, useLoginStore } from '../store';
+import {
+  useUserStore,
+  totpModalStore,
+  useLoginStore,
+  useMessageStore,
+} from '../store';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);
@@ -20,11 +25,18 @@ export const useRCAuth = () => {
   );
   const setPassword = useUserStore((state) => state.setPassword);
   const setEmailorUser = useUserStore((state) => state.setEmailorUser);
+  const setUserPinPermissions = useUserStore(
+    (state) => state.setUserPinPermissions
+  );
+  const setEditMessagePermissions = useMessageStore(
+    (state) => state.setEditMessagePermissions
+  );
   const dispatchToastMessage = useToastBarDispatch();
 
   const handleLogin = async (userOrEmail, password, code) => {
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
+      const permissions = await RCInstance.permissionInfo();
       if (res.error === 'Unauthorized' || res.error === 403) {
         dispatchToastMessage({
           type: 'error',
@@ -56,6 +68,8 @@ export const useRCAuth = () => {
           setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);
+          setUserPinPermissions(permissions.update[150]);
+          setEditMessagePermissions(permissions.update[28]);
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',

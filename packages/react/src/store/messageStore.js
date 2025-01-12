@@ -8,7 +8,7 @@ const useMessageStore = create((set, get) => ({
   threadMessages: [],
   filtered: false,
   editMessage: {},
-  quoteMessage: {},
+  quoteMessage: [],
   messageToReport: NaN,
   showReportMessage: false,
   isRecordingMessage: false,
@@ -71,7 +71,22 @@ const useMessageStore = create((set, get) => ({
     }
   },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
-  setQuoteMessage: (quoteMessage) => set(() => ({ quoteMessage })),
+  editMessagePermissions: {},
+  setEditMessagePermissions: (editMessagePermissions) =>
+    set((state) => ({ ...state, editMessagePermissions })),
+  addQuoteMessage: (quoteMessage) =>
+    set((state) => {
+      const updatedQuoteMessages = state.quoteMessage.filter(
+        (msg) => msg._id !== quoteMessage._id
+      );
+      return { quoteMessage: [...updatedQuoteMessages, quoteMessage] };
+    }),
+  removeQuoteMessage: (quoteMessage) =>
+    set((state) => ({
+      quoteMessage: state.quoteMessage.filter((i) => i !== quoteMessage),
+    })),
+
+  clearQuoteMessages: () => set({ quoteMessage: [] }),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {

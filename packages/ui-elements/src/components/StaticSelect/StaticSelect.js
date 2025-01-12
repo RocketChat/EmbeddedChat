@@ -12,6 +12,7 @@ const StaticSelect = ({
   style = {},
   options = [],
   placeholder = '',
+  isFile,
   value,
   onSelect,
   disabled = false,
@@ -22,8 +23,17 @@ const StaticSelect = ({
   const styles = getStaticSelectStyles(theme);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [internalValue, setInternalValue] = useState('');
+  const [internalValue, setInternalValue] = useState(value || '');
+  const [selectedOption, setSelectedOption] = useState(null);
   const staticSelectRef = useRef(null);
+
+  useEffect(() => {
+    setInternalValue(value || '');
+    const option = options.find((opt) => opt.value === value);
+    if (option) {
+      setSelectedOption(option);
+    }
+  }, [value, options]);
 
   const toggleDropdown = () => {
     if (!disabled) {
@@ -32,16 +42,14 @@ const StaticSelect = ({
   };
 
   const handleSelect = (optionValue) => {
+    const selectedOpt = options.find((opt) => opt.value === optionValue);
     setInternalValue(optionValue);
+    setSelectedOption(selectedOpt);
     setIsOpen(false);
     if (onSelect) {
       onSelect(optionValue);
     }
   };
-
-  useEffect(() => {
-    setInternalValue(value || '');
-  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,6 +69,8 @@ const StaticSelect = ({
     };
   }, [isOpen]);
 
+  const displayValue = selectedOption?.label || placeholder;
+
   return (
     <Box
       className={`ec-static-select ${className} ${classNames}`}
@@ -78,19 +88,26 @@ const StaticSelect = ({
         {...props}
       >
         <Box is="span" className="selected-option">
-          {!isOpen && internalValue
-            ? options.find((option) => option.value === internalValue)?.label
-            : placeholder}
+          {displayValue}
         </Box>
         <Icon name="chevron-down" />
       </Box>
 
-      {isOpen && (
+      {isOpen && !isFile && (
         <ListBox
           options={options}
           onSelect={handleSelect}
           value={internalValue}
         />
+      )}
+      {isOpen && isFile && (
+        <Box css={styles.fileTypeSelect}>
+          <ListBox
+            options={options}
+            onSelect={handleSelect}
+            value={internalValue}
+          />
+        </Box>
       )}
     </Box>
   );

@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   Sidebar,
+  Input,
   Popup,
   useComponentOverrides,
   useTheme,
@@ -33,6 +34,9 @@ const RoomMembers = ({ members }) => {
   const [userInfo, setUserInfo] = useState(null);
   const setExclusiveState = useSetExclusiveState();
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMembers, setFilteredMembers] = useState(members);
+
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -47,14 +51,26 @@ const RoomMembers = ({ members }) => {
     getUserInfo();
   }, [RCInstance]);
 
+  useEffect(() => {
+    setFilteredMembers(
+      members.filter(
+        (member) =>
+          member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          member.username?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, members]);
+
   const roles = userInfo && userInfo.roles ? userInfo.roles : [];
   const isAdmin = roles.includes('admin');
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
   return (
     <ViewComponent
       title="Members"
       iconName="members"
       onClose={() => setExclusiveState(null)}
+      style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -69,10 +85,6 @@ const RoomMembers = ({ members }) => {
             <InviteMembers />
           ) : (
             <>
-              {members.map((member) => (
-                <RoomMemberItem user={member} host={host} key={member._id} />
-              ))}
-
               {isAdmin && (
                 <Button
                   style={{ marginTop: '10px', width: '100%' }}
@@ -83,6 +95,30 @@ const RoomMembers = ({ members }) => {
                   <Icon size="1em" name="link" /> Invite Link
                 </Button>
               )}
+              <Box css={styles.searchContainer}>
+                <Input
+                  css={styles.textInput}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search members"
+                />
+                <Icon name="magnifier" size="1.5rem" css={styles.searchIcon} />
+              </Box>
+              <Box css={styles.memberList}>
+                {filteredMembers.length > 0 ? (
+                  filteredMembers.map((member) => (
+                    <>
+                      <RoomMemberItem
+                        user={member}
+                        host={host}
+                        key={member._id}
+                      />
+                    </>
+                  ))
+                ) : (
+                  <Box css={styles.noMembers}>No members found</Box>
+                )}
+              </Box>
             </>
           )}
         </Box>
@@ -90,6 +126,7 @@ const RoomMembers = ({ members }) => {
     </ViewComponent>
   );
 };
+
 export default RoomMembers;
 
 RoomMembers.propTypes = {

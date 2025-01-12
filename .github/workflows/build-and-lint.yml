@@ -34,7 +34,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install
 
       - name: Format check
         run: yarn format:check

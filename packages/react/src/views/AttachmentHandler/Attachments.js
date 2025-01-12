@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Attachment from './Attachment';
 import RCContext from '../../context/RCInstance';
 
-const Attachments = ({ attachments, type, variantStyles = {} }) => {
+const Attachments = ({ attachments, type, variantStyles = {}, msg }) => {
   const { RCInstance } = useContext(RCContext);
   let host = RCInstance.getHost();
   host = host.replace(/\/$/, '');
@@ -15,6 +15,7 @@ const Attachments = ({ attachments, type, variantStyles = {} }) => {
       host={host}
       variantStyles={variantStyles}
       type={type}
+      msg={msg}
     />
   ));
 };

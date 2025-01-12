@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '@embeddedchat/ui-elements';
-import { Markup, MarkupInteractionContext } from '@embeddedchat/markups';
+import { Markup, MarkupInteractionContext } from '@embeddedchat/markups/src';
 import EmojiReaction from '../EmojiReaction/EmojiReaction';
 import { useMemberStore, useUserStore } from '../../store';
 
-const Markdown = ({ body, isReaction = false }) => {
+const Markdown = ({ body, md, isReaction = false }) => {
   const members = useMemberStore((state) => state.members);
   const username = useUserStore((state) => state.username);
   const value = useMemo(() => ({ members, username }), [members, username]);
@@ -23,12 +23,12 @@ const Markdown = ({ body, isReaction = false }) => {
     );
   }
 
-  if (!body || !body.md) return <></>;
+  if (!body || !md) return <></>;
 
   return (
     <Box>
       <MarkupInteractionContext.Provider value={value}>
-        <Markup tokens={body.md} />
+        <Markup tokens={md} />
       </MarkupInteractionContext.Provider>
     </Box>
   );

@@ -1,0 +1,36 @@
+name: Deploy PR-Preview
+
+on:
+  workflow_run:
+    workflows: ["Build PR-Preview"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: build/
+          github-token: ${{github.token}}
+          repository: ${{github.repository}}
+          run-id: ${{github.event.workflow_run.id}}
+
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-deploy
+          build_dir: build/
+          commit_message: "Deploy to Github Pages"
+          jekyll: false
+          keep_history: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

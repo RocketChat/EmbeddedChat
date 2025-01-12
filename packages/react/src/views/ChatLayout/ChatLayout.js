@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
@@ -36,9 +36,15 @@ import useUiKitStore from '../../store/uiKitStore';
 const ChatLayout = () => {
   const messageListRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-  const { ECOptions } = useRCContext();
+  const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
-  const showRoles = ECOptions?.anonymousMode;
+  const showRoles = ECOptions?.showRoles;
+  const setStarredMessages = useStarredMessageStore(
+    (state) => state.setStarredMessages
+  );
+  const starredMessages = useStarredMessageStore(
+    (state) => state.starredMessages
+  );
   const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);
@@ -57,6 +63,9 @@ const ChatLayout = () => {
   const attachmentWindowOpen = useAttachmentWindowStore(
     (state) => state.attachmentWindowOpen
   );
+  const isUserAuthenticated = useUserStore(
+    (state) => state.isUserAuthenticated
+  );
   const { data, handleDrag, handleDragDrop } = useDropBox();
   const { uiKitContextualBarOpen, uiKitContextualBarData } = useUiKitStore(
     (state) => ({
@@ -72,7 +81,22 @@ const ChatLayout = () => {
       });
     }
   };
-
+  const getStarredMessages = useCallback(async () => {
+    if (isUserAuthenticated) {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { messages } = await RCInstance.getStarredMessages();
+        setStarredMessages(messages);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isUserAuthenticated, anonymousMode, RCInstance]);
+  useEffect(() => {
+    getStarredMessages();
+  }, [showSidebar]);
   return (
     <Box
       css={styles.layout}

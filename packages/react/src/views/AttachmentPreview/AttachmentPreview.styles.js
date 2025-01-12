@@ -11,13 +11,29 @@ const getAttachmentPreviewStyles = () => {
     `,
 
     input: css`
-      width: 95.5%;
+      width: 100%;
     `,
 
     modalContent: css`
       overflow-y: auto;
       overflow-x: hidden;
       max-height: 350px;
+    `,
+
+    fileDescription: css`
+      width: 100%;
+      position: relative;
+      z-index: 1300;
+    `,
+
+    mentionListContainer: css`
+      position: absolute;
+      top: -100px;
+      width: 100%;
+      max-height: 100px;
+      overflow-y: auto;
+      background: white;
+      z-index: 1400;
     `,
   };
 

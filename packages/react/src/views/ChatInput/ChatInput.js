@@ -25,7 +25,6 @@ import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
-import { parseEmoji } from '../../lib/emoji';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
@@ -34,6 +33,7 @@ import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
+import { parseEmoji } from '../../lib/emoji';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -74,10 +74,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -90,20 +93,20 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage,
     setEditMessage,
     quoteMessage,
-    setQuoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
+    clearQuoteMessages,
     threadId,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
-    setQuoteMessage: state.setQuoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
+    clearQuoteMessages: state.clearQuoteMessages,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -168,7 +171,15 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleNewLine = (e, addLine = true) => {
-    if (addLine) messageRef.current.value += '\n';
+    if (addLine) {
+      const { selectionStart, selectionEnd, value } = messageRef.current;
+      messageRef.current.value = `${value.substring(
+        0,
+        selectionStart
+      )}\n${value.substring(selectionEnd)}`;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd;
+      messageRef.current.selectionEnd = selectionStart + 1;
+    }
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -255,14 +266,31 @@ const ChatInput = ({ scrollToBottom }) => {
     messageRef.current.value = '';
     setDisableButton(true);
 
-    const { msg, attachments, _id } = quoteMessage;
     let pendingMessage = '';
+    let quotedMessages = '';
 
-    if (msg || attachments) {
-      setQuoteMessage({});
-      const msgLink = await getMessageLink(_id);
+    if (quoteMessage.length > 0) {
+      // for (const quote of quoteMessage) {
+      //   const { msg, attachments, _id } = quote;
+      //   if (msg || attachments) {
+      //     const msgLink = await getMessageLink(_id);
+      //     quotedMessages += `[ ](${msgLink})`;
+      //   }
+      // }
+
+      const quoteArray = await Promise.all(
+        quoteMessage.map(async (quote) => {
+          const { msg, attachments, _id } = quote;
+          if (msg || attachments) {
+            const msgLink = await getMessageLink(_id);
+            quotedMessages += `[ ](${msgLink})`;
+          }
+          return quotedMessages;
+        })
+      );
+      quotedMessages = quoteArray.join('');
       pendingMessage = createPendingMessage(
-        `[ ](${msgLink})\n ${message}`,
+        `${quotedMessages}\n${message}`,
         userInfo
       );
     } else {
@@ -283,10 +311,9 @@ const ChatInput = ({ scrollToBottom }) => {
       ECOptions.enableThreads ? threadId : undefined
     );
 
-    if (!res.success) {
-      handleSendError('Error sending message, login again');
-    } else {
-      replaceMessage(pendingMessage._id, res.message);
+    if (res.success) {
+      clearQuoteMessages();
+      replaceMessage(pendingMessage, res.message);
     }
   };
 
@@ -362,14 +389,16 @@ const ChatInput = ({ scrollToBottom }) => {
     setData(event.target.files[0]);
   };
 
-  const onTextChange = (e) => {
+  const onTextChange = (e, val) => {
     sendTypingStart();
-    const message = e.target.value;
+    const message = val || e.target.value;
     messageRef.current.value = parseEmoji(message);
     setDisableButton(!messageRef.current.value.length);
-    handleNewLine(e, false);
-    searchMentionUser(message);
-    showCommands(e);
+    if (e !== null) {
+      handleNewLine(e, false);
+      searchMentionUser(message);
+      showCommands(e);
+    }
   };
 
   const handleFocus = () => {
@@ -423,10 +452,14 @@ const ChatInput = ({ scrollToBottom }) => {
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
-      <Box>
-        {(quoteMessage.msg || quoteMessage.attachments) && (
-          <QuoteMessage message={quoteMessage} />
-        )}
+      <Box css={styles.quoteContainer}>
+        <div>
+          {quoteMessage &&
+            quoteMessage.length > 0 &&
+            quoteMessage.map((message, index) => (
+              <QuoteMessage message={message} key={index} />
+            ))}
+        </div>
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
           <ChannelState
             status={
@@ -446,18 +479,23 @@ const ChatInput = ({ scrollToBottom }) => {
             }
           />
         ) : null}
-
-        {showMembersList && (
-          <MembersList
-            messageRef={messageRef}
-            mentionIndex={mentionIndex}
-            setMentionIndex={setMentionIndex}
-            filteredMembers={filteredMembers}
-            setFilteredMembers={setFilteredMembers}
-            setStartReadMentionUser={setStartReadMentionUser}
-            setShowMembersList={setShowMembersList}
-          />
-        )}
+        <Box
+          css={css`
+            margin: 0rem 2rem;
+          `}
+        >
+          {showMembersList && (
+            <MembersList
+              messageRef={messageRef}
+              mentionIndex={mentionIndex}
+              setMentionIndex={setMentionIndex}
+              filteredMembers={filteredMembers}
+              setFilteredMembers={setFilteredMembers}
+              setStartReadMentionUser={setStartReadMentionUser}
+              setShowMembersList={setShowMembersList}
+            />
+          )}
+        </Box>
 
         {showCommandList && (
           <CommandsList
@@ -486,7 +524,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message #${channelInfo.name}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'
@@ -528,6 +566,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
+            triggerButton={onTextChange}
           />
         )}
       </Box>

@@ -12,6 +12,7 @@ const styles = {
     flex: 1;
     flex-direction: column;
     position: relative;
+    min-width: 0;
   `,
 
   sidebar: css`
