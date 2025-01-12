@@ -25,6 +25,7 @@ export const MessageAggregator = ({
   noMessageInfo,
   shouldRender,
   fetchedMessageList,
+  filterProps,
   searchProps,
   searchFiltered,
   fetching,
@@ -262,6 +263,7 @@ export const MessageAggregator = ({
     <ViewComponent
       title={title}
       iconName={iconName}
+      filterProps={filterProps}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
       style={{
