@@ -130,7 +130,11 @@ const ChatInputFormattingToolbar = ({
     formatter: formatters
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) => (
-        <Tooltip text={item.name} position="top" key={`formatter-${item.name}`}>
+        <Tooltip
+          text={item.tooltip || item.name}
+          position="top"
+          key={`formatter-${item.name}`}
+        >
           <ActionButton
             square
             disabled={isRecordingMessage}
