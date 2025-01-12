@@ -8,12 +8,12 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
 import Attachment from '../AttachmentHandler/Attachment';
 import { Markdown } from '../Markdown';
-import { css } from '@emotion/react';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
   const { RCInstance } = useContext(RCContext);

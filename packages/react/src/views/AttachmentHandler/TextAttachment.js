@@ -2,9 +2,9 @@ import React, { useContext, useMemo } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import { format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
-import { format } from 'date-fns';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
