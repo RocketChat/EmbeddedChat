@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format, set } from 'date-fns';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -46,7 +46,11 @@ export const MessageAggregator = ({
   );
 
   const [messageRendered, setMessageRendered] = useState(false);
-  let { loading, messageList } = useSetMessageList(
+  let { messageList } = useSetMessageList(
+    fetchedMessageList || searchFiltered || allMessages,
+    shouldRender
+  );
+  const { loading } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
@@ -119,12 +123,12 @@ export const MessageAggregator = ({
     return result;
   };
 
-  function highlightSearchTerm(messages, searchedWords) {
+  function highlightSearchTerm(messagesArr, searchedWords) {
     const searchTerms = Array.isArray(searchedWords)
       ? searchedWords
       : [searchedWords];
 
-    return messages.map((message) => {
+    return messagesArr.map((message) => {
       message.md = message.md.map((paragraphBlock) => {
         if (paragraphBlock.type === 'PARAGRAPH') {
           const updatedValue = paragraphBlock.value.reduce(
@@ -252,10 +256,13 @@ export const MessageAggregator = ({
 
   if (title === 'Search Messages') {
     if (messageList) {
-      console.log('messageList: ' + JSON.stringify(messageList));
-      let highlightedMessages = highlightSearchTerm(messageList, searchedText);
+      // console.log('messageList: ' + JSON.stringify(messageList));
+      const highlightedMessages = highlightSearchTerm(
+        messageList,
+        searchedText
+      );
       messageList = highlightedMessages;
-      console.log('after messageList: ' + JSON.stringify(messageList));
+      // console.log('after messageList: ' + JSON.stringify(messageList));
     }
   }
 

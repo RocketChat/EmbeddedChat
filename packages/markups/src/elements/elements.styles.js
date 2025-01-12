@@ -82,10 +82,10 @@ export const EmojiStyles = {
 };
 
 export const useHighlightTextStyles = {
-    highlight: css`
-      background-color: yellow;  
-      font-weight: bold;         
-    `,
+  highlight: css`
+    background-color: yellow;
+    font-weight: bold;
+  `,
 };
 
 const useMentionStyles = (contents, username) => {

@@ -18,7 +18,7 @@ const StrikeSpan = ({ contents }) => (
         case 'BOLD':
           return <BoldSpan key={index} contents={content.value} />;
 
-        case 'HIGHLIGHT_TEXT': 
+        case 'HIGHLIGHT_TEXT':
           return <HighlightText key={index} contents={content.value} />;
 
         default:

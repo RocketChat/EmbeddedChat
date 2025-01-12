@@ -32,7 +32,7 @@ const BoldSpan = ({ contents }) => (
             />
           );
 
-        case 'HIGHLIGHT_TEXT': 
+        case 'HIGHLIGHT_TEXT':
           return <HighlightText key={index} contents={content.value} />;
 
         default:
