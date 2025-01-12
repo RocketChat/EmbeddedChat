@@ -4,6 +4,7 @@ import PlainSpan from './PlainSpan';
 import StrikeSpan from './StrikeSpan';
 import ItalicSpan from './ItalicSpan';
 import BoldSpan from './BoldSpan';
+import HighlightText from './highlightText';
 
 const getBaseURI = () => {
   if (document.baseURI) {
@@ -43,6 +44,9 @@ const LinkSpan = ({ href, label }) => {
 
         case 'BOLD':
           return <BoldSpan key={index} contents={content.value} />;
+
+        case 'HIGHLIGHT_TEXT': 
+          return <HighlightText key={index} contents={content.value} />;
 
         default:
           return null;

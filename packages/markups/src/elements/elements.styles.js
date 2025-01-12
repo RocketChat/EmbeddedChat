@@ -81,6 +81,13 @@ export const EmojiStyles = {
   `,
 };
 
+export const useHighlightTextStyles = {
+    highlight: css`
+      background-color: yellow;  
+      font-weight: bold;         
+    `,
+};
+
 const useMentionStyles = (contents, username) => {
   const { theme } = useTheme();
   const styles = {

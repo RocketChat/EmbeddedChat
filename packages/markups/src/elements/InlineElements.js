@@ -10,6 +10,7 @@ import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
 import UserMention from '../mentions/UserMention';
+import HighlightText from './highlightText';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -53,7 +54,11 @@ const InlineElements = ({ contents }) =>
             }
           />
         );
-      default:
+
+      case 'HIGHLIGHT_TEXT': 
+        return <HighlightText key={index} contents={content.value} />;
+      
+        default:
         return null;
     }
   });

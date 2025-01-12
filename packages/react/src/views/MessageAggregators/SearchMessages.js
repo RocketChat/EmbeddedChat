@@ -53,6 +53,7 @@ const SearchMessages = () => {
       searchFiltered={messageList}
       shouldRender={(msg) => !!msg}
       viewType={viewType}
+      searchedText={text}
     />
   );
 };
