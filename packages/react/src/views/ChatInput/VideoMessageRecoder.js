@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -12,15 +6,13 @@ import {
   ActionButton,
   Modal,
   useTheme,
-  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
-import RCContext from '../../context/RCInstance';
-import { useUserStore, useMessageStore } from '../../store';
+import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
-import { createPendingVideoMessage } from '../../lib/createPendingMessage';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = () => {
+const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -29,28 +21,16 @@ const VideoMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+    toggle: state.toggle,
+    setData: state.setData,
+  }));
+
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
-  const upsertMessage = useMessageStore((state) => state.upsertMessage);
-  const removeMessage = useMessageStore((state) => state.removeMessage);
-  const dispatchToastMessage = useToastBarDispatch();
-
-  const { username, userId, name } = useUserStore((state) => ({
-    username: state.username,
-    userId: state.userId,
-    name: state.name,
-  }));
-  const userInfo = { _id: userId, username, name };
-
-  const [messageQueue, setMessageQueue] = useState([]);
-  const addMessageInMessageQueue = (key, value) => {
-    setMessageQueue((prevState) => [...prevState, { key, value }]);
-  };
 
   const onStop = (videoChunks) => {
     const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
@@ -75,6 +55,7 @@ const VideoMessageRecorder = () => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
@@ -152,65 +133,9 @@ const VideoMessageRecorder = () => {
   }, [handleMount]);
 
   useEffect(() => {
-    const handleOnline = async () => {
-      if (navigator.onLine && messageQueue.length > 0) {
-        for (let i = 0; i < messageQueue.length; i++) {
-          const { key, value } = messageQueue[i];
-          const pendingVideoMessage = JSON.parse(value);
-
-          const res = await RCInstance.sendAttachment(
-            key,
-            undefined,
-            undefined,
-            ECOptions.enableThreads ? threadId : undefined
-          );
-
-          if (res.success) {
-            removeMessage(pendingVideoMessage._id);
-          }
-        }
-        setMessageQueue([]);
-      }
-    };
-
-    window.addEventListener('online', handleOnline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-    };
-  }, [messageQueue]);
-
-  const handleOffline = (file, pendingVideoMessage) => {
-    addMessageInMessageQueue(file, JSON.stringify(pendingVideoMessage));
-
-    dispatchToastMessage({
-      type: 'info',
-      message: 'Video will be sent automatically once you are back online!',
-    });
-  };
-
-  useEffect(() => {
-    const sendRecording = async () => {
-      let pendingVideoMessage = createPendingVideoMessage(file, userInfo);
-      upsertMessage(pendingVideoMessage, ECOptions.enableThreads);
-
-      if (!navigator.onLine) {
-        handleOffline(file, pendingVideoMessage);
-        return;
-      }
-
-      const res = await RCInstance.sendAttachment(
-        file,
-        undefined,
-        undefined,
-        ECOptions.enableThreads ? threadId : undefined
-      );
-
-      if (res.success) {
-        removeMessage(pendingVideoMessage._id);
-      }
-    };
     if (isRecorded && file) {
-      sendRecording();
+      toggle();
+      setData(file);
       setIsRecorded(false);
     }
     if (file) {
@@ -221,7 +146,12 @@ const VideoMessageRecorder = () => {
   return (
     <>
       {state === 'idle' && (
-        <ActionButton ghost square onClick={handleRecordButtonClick}>
+        <ActionButton
+          ghost
+          square
+          disabled={disabled}
+          onClick={handleRecordButtonClick}
+        >
           <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>
       )}
@@ -234,10 +164,7 @@ const VideoMessageRecorder = () => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
@@ -245,7 +172,9 @@ const VideoMessageRecorder = () => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>

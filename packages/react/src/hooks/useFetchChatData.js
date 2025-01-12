@@ -20,6 +20,9 @@ const useFetchChatData = (showRoles) => {
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
+  const setViewUserInfoPermissions = useUserStore(
+    (state) => state.setViewUserInfoPermissions
+  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -52,10 +55,10 @@ const useFetchChatData = (showRoles) => {
 
         if (showRoles) {
           const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
-          const fetchedAdmins = await RCInstance.getUsersInRole('admin');
-          const adminUsernames = fetchedAdmins?.users?.map(
-            (user) => user.username
-          );
+          const fetchedRoles = await RCInstance.getUserRoles();
+          const fetchedAdmins = fetchedRoles?.result;
+
+          const adminUsernames = fetchedAdmins?.map((user) => user.username);
           setAdmins(adminUsernames);
 
           const rolesObj =
@@ -68,6 +71,9 @@ const useFetchChatData = (showRoles) => {
 
           setMemberRoles(rolesObj);
         }
+
+        const permissions = await RCInstance.permissionInfo();
+        setViewUserInfoPermissions(permissions.update[70]);
       } catch (e) {
         console.error(e);
       }

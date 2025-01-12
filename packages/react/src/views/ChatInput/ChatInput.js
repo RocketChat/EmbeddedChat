@@ -76,10 +76,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -166,7 +169,7 @@ const ChatInput = ({ scrollToBottom }) => {
   useEffect(() => {
     const handleOnline = async () => {
       if (navigator.onLine && messageQueue.length > 0) {
-        for (let i = 0; i < messageQueue.length; i++) {
+        for (let i = 0; i < messageQueue.length; i += 1) {
           const pendingMessage = JSON.parse(messageQueue[i]);
           const res = await RCInstance.sendMessage(
             {
@@ -297,11 +300,6 @@ const ChatInput = ({ scrollToBottom }) => {
       ...prevQueue,
       JSON.stringify(pendingMessage),
     ]);
-
-    dispatchToastMessage({
-      type: 'info',
-      message: 'Message will be sent automatically once you are back online!',
-    });
   };
 
   const handleSendNewMessage = async (message) => {
@@ -365,14 +363,6 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleEditMessage = async (message) => {
-    if (!navigator.onLine) {
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Please try again after connecting to internet!',
-      });
-      return;
-    }
-
     messageRef.current.value = '';
     setDisableButton(true);
     const editMessageId = editMessage._id;
@@ -534,18 +524,23 @@ const ChatInput = ({ scrollToBottom }) => {
             }
           />
         ) : null}
-
-        {showMembersList && (
-          <MembersList
-            messageRef={messageRef}
-            mentionIndex={mentionIndex}
-            setMentionIndex={setMentionIndex}
-            filteredMembers={filteredMembers}
-            setFilteredMembers={setFilteredMembers}
-            setStartReadMentionUser={setStartReadMentionUser}
-            setShowMembersList={setShowMembersList}
-          />
-        )}
+        <Box
+          css={css`
+            margin: 0rem 2rem;
+          `}
+        >
+          {showMembersList && (
+            <MembersList
+              messageRef={messageRef}
+              mentionIndex={mentionIndex}
+              setMentionIndex={setMentionIndex}
+              filteredMembers={filteredMembers}
+              setFilteredMembers={setFilteredMembers}
+              setStartReadMentionUser={setStartReadMentionUser}
+              setShowMembersList={setShowMembersList}
+            />
+          )}
+        </Box>
 
         {showCommandList && (
           <CommandsList
@@ -574,7 +569,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message #${channelInfo.name}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'

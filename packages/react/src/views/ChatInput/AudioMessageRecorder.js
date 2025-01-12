@@ -1,24 +1,11 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react';
-import {
-  Box,
-  Icon,
-  ActionButton,
-  useTheme,
-  useToastBarDispatch,
-} from '@embeddedchat/ui-elements';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Box, Icon, ActionButton, useTheme } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
-import RCContext from '../../context/RCInstance';
-import { useUserStore, useMessageStore } from '../../store';
+import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
-import { createPendingAudioMessage } from '../../lib/createPendingMessage';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const AudioMessageRecorder = () => {
+const AudioMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -26,28 +13,16 @@ const AudioMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+    toggle: state.toggle,
+    setData: state.setData,
+  }));
+
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
-  const upsertMessage = useMessageStore((state) => state.upsertMessage);
-  const removeMessage = useMessageStore((state) => state.removeMessage);
-  const dispatchToastMessage = useToastBarDispatch();
-
-  const { username, userId, name } = useUserStore((state) => ({
-    username: state.username,
-    userId: state.userId,
-    name: state.name,
-  }));
-  const userInfo = { _id: userId, username, name };
-
-  const [messageQueue, setMessageQueue] = useState([]);
-  const addMessageInMessageQueue = (key, value) => {
-    setMessageQueue((prevState) => [...prevState, { key, value }]);
-  };
 
   const onStop = (audioChunks) => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
@@ -72,6 +47,7 @@ const AudioMessageRecorder = () => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start();
@@ -143,65 +119,9 @@ const AudioMessageRecorder = () => {
   }, [handleMount]);
 
   useEffect(() => {
-    const handleOnline = async () => {
-      if (navigator.onLine && messageQueue.length > 0) {
-        for (let i = 0; i < messageQueue.length; i++) {
-          const { key, value } = messageQueue[i];
-          const pendingAudioMessage = JSON.parse(value);
-
-          const res = await RCInstance.sendAttachment(
-            key,
-            undefined,
-            undefined,
-            ECOptions.enableThreads ? threadId : undefined
-          );
-
-          if (res.success) {
-            removeMessage(pendingAudioMessage._id);
-          }
-        }
-        setMessageQueue([]);
-      }
-    };
-
-    window.addEventListener('online', handleOnline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-    };
-  }, [messageQueue]);
-
-  const handleOffline = (file, pendingAudioMessage) => {
-    addMessageInMessageQueue(file, JSON.stringify(pendingAudioMessage));
-
-    dispatchToastMessage({
-      type: 'info',
-      message: 'Audio will be sent automatically once you are back online!',
-    });
-  };
-
-  useEffect(() => {
-    const sendRecording = async () => {
-      let pendingAudioMessage = createPendingAudioMessage(file, userInfo);
-      upsertMessage(pendingAudioMessage, ECOptions.enableThreads);
-
-      if (!navigator.onLine) {
-        handleOffline(file, pendingAudioMessage);
-        return;
-      }
-
-      const res = await RCInstance.sendAttachment(
-        file,
-        undefined,
-        undefined,
-        ECOptions.enableThreads ? threadId : undefined
-      );
-
-      if (res.success) {
-        removeMessage(pendingAudioMessage._id);
-      }
-    };
     if (isRecorded && file) {
-      sendRecording();
+      toggle();
+      setData(file);
       setIsRecorded(false);
     }
     if (file) {
@@ -211,7 +131,12 @@ const AudioMessageRecorder = () => {
 
   if (state === 'idle') {
     return (
-      <ActionButton ghost square onClick={handleRecordButtonClick}>
+      <ActionButton
+        ghost
+        square
+        disabled={disabled}
+        onClick={handleRecordButtonClick}
+      >
         <Icon size="1.25rem" name="mic" />
       </ActionButton>
     );

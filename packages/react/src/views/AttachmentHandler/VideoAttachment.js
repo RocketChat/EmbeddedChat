@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
@@ -21,6 +21,7 @@ const VideoAttachment = ({
   type,
   author,
   variantStyles = {},
+  msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
@@ -30,6 +31,12 @@ const VideoAttachment = ({
     return URL;
   };
   const { authorIcon, authorName } = author;
+
+  const [isExpanded, setIsExpanded] = useState(true);
+  const toggleExpanded = () => {
+    setIsExpanded((prevState) => !prevState);
+  };
+
   return (
     <Box css={variantStyles.videoAttachmentContainer}>
       <Box
@@ -74,20 +81,25 @@ const VideoAttachment = ({
           attachment={attachment}
           url={host + (attachment.title_url || attachment.video_url)}
           variantStyles={variantStyles}
+          msg={msg}
+          onExpandCollapseClick={toggleExpanded}
+          isExpanded={isExpanded}
         />
-        <video
-          width={300}
-          controls
-          style={{
-            borderBottomLeftRadius: 'inherit',
-            borderBottomRightRadius: 'inherit',
-          }}
-        >
-          <source
-            src={host + attachment.video_url}
-            type={userAgentMIMETypeFallback(attachment.video_type)}
-          />
-        </video>
+        {isExpanded && (
+          <video
+            width={300}
+            controls
+            style={{
+              borderBottomLeftRadius: 'inherit',
+              borderBottomRightRadius: 'inherit',
+            }}
+          >
+            <source
+              src={host + attachment.video_url}
+              type={userAgentMIMETypeFallback(attachment.video_type)}
+            />
+          </video>
+        )}
         {attachment.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box css={variantStyles.videoAttachmentContainer} key={index}>
