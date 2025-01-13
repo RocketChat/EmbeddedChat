@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import getPreviewMessageStyles from './PreviewMessage.styles';
 import {
   useComponentOverrides,
@@ -8,7 +8,8 @@ import {
   Icon,
 } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
-import { css } from '@emotion/react';
+import { marked } from 'marked';
+import Dompurify from 'dompurify';
 
 const PreviewMessage = ({ className = '', style = {}, message }) => {
   const { theme } = useTheme();
@@ -17,6 +18,13 @@ const PreviewMessage = ({ className = '', style = {}, message }) => {
   const removePreviewMessage = useMessageStore(
     (state) => state.removePreviewMessage
   );
+
+  const formatMessage = () => {
+    const markedText = marked.parse(message);
+    const sanitizedText = Dompurify.sanitize(markedText);
+    return <div dangerouslySetInnerHTML={{ __html: sanitizedText }} />;
+  };
+
   return (
     <Box
       className={`ec-quote-msg ${className} ${classNames}`}
@@ -33,7 +41,7 @@ const PreviewMessage = ({ className = '', style = {}, message }) => {
         </ActionButton>
       </Box>
       <Box css={styles.message}>
-        {message}
+        {formatMessage()}
       </Box>
     </Box>
   );
