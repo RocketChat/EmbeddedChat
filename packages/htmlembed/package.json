@@ -1,7 +1,7 @@
 {
   "name": "@embeddedchat/htmlembed",
   "description": "A lightweight and easy-to-use package that allows seamless integration of Embedded Chat into web applications using a simple HTML snippet. Ideal for quickly embedding chat functionalities without complex setup",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.js",
   "license": "MIT",
   "type": "module",
@@ -13,7 +13,7 @@
     "format:check": "prettier --check 'src/' "
   },
   "dependencies": {
-    "@embeddedchat/react": "0.1.12",
+    "@embeddedchat/react": "0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

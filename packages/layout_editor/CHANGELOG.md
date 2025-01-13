@@ -1,4 +1,4 @@
-# @embeddedchat/api
+# layout_editor
 
 ## 0.1.0
 
@@ -9,14 +9,5 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @embeddedchat/auth@0.1.0
-
-## 0.0.2
-
-### Patch Changes
-
-- Fixed: Implement Token Handling Utilities Compatible with SSR
-  Fixed: Broken Behavior of Emoji picker in toolbar
-  Fixed: Message reactions size
-  Fixed: Remove unused menu options
-  Fixed: Fixed fullscreen action button
+  - @embeddedchat/markups@0.1.0
+  - @embeddedchat/ui-elements@0.1.0
