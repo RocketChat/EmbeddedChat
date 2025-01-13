@@ -86,7 +86,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
           ) : (
             <Box css={styles.message}>
               {message.msg ? (
-                <Markdown body={message} isReaction={false} />
+                <Markdown body={message} md={message.md} isReaction={false} />
               ) : (
                 `${message.file?.name} (${
                   message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
@@ -97,7 +97,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         ) : message?.msg[0] === '[' ? (
           message?.msg.match(/\n(.*)/)[1]
         ) : (
-          <Markdown body={message} isReaction={false} />
+          <Markdown body={message} md={message.md} isReaction={false} />
         )}
         {message.attachments &&
           message.attachments.length > 0 &&

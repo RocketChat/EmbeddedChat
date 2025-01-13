@@ -34,7 +34,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import { Markdown } from '../Markdown';
 import PreviewMessage from '../PreviewMessage/PreviewMessage';
 
 const ChatInput = ({ scrollToBottom }) => {
@@ -76,10 +75,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -172,7 +174,15 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleNewLine = (e, addLine = true) => {
-    if (addLine) messageRef.current.value += '\n';
+    if (addLine) {
+      const { selectionStart, selectionEnd, value } = messageRef.current;
+      messageRef.current.value = `${value.substring(
+        0,
+        selectionStart
+      )}\n${value.substring(selectionEnd)}`;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd;
+      messageRef.current.selectionEnd = selectionStart + 1;
+    }
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -524,7 +534,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message #${channelInfo.name}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'

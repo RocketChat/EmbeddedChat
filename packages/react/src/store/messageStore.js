@@ -76,11 +76,17 @@ const useMessageStore = create((set, get) => ({
   setEditMessagePermissions: (editMessagePermissions) =>
     set((state) => ({ ...state, editMessagePermissions })),
   addQuoteMessage: (quoteMessage) =>
-    set((state) => ({ quoteMessage: [...state.quoteMessage, quoteMessage] })),
+    set((state) => {
+      const updatedQuoteMessages = state.quoteMessage.filter(
+        (msg) => msg._id !== quoteMessage._id
+      );
+      return { quoteMessage: [...updatedQuoteMessages, quoteMessage] };
+    }),
   removeQuoteMessage: (quoteMessage) =>
     set((state) => ({
       quoteMessage: state.quoteMessage.filter((i) => i !== quoteMessage),
     })),
+
   clearQuoteMessages: () => set({ quoteMessage: [] }),
   addPreviewMessage: (previewMessage) =>
     set((state) => ({ previewMessage: [...state.previewMessage, previewMessage] })),
