@@ -1,6 +1,6 @@
 {
   "name": "embeddedchat",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
   "packageManager": "yarn@3.6.4",
   "workspaces": [

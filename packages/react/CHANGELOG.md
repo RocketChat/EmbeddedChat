@@ -1,5 +1,20 @@
 # @embeddedchat/react
 
+## 0.2.0
+
+### Minor Changes
+
+- Performance and stability have been improved.
+
+### Patch Changes
+
+- c8c9dee0: Fix: Room members avatar invalid avatar url creation
+- 100c5f79: Improve: Added confirmation modal on deleting message
+- Updated dependencies
+  - @embeddedchat/api@0.1.0
+  - @embeddedchat/ui-elements@0.1.0
+  - @embeddedchat/ui-kit@0.1.0
+
 ## 0.1.12
 
 ### Patch Changes
