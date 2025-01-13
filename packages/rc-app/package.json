@@ -1,6 +1,6 @@
 {
     "name": "@embeddedchat/rc-app",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "private": true,
     "devDependencies": {
         "@rocket.chat/apps-engine": "^1.36.0",
