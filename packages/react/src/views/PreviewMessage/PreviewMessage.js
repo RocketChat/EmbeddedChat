@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import getPreviewMessageStyles from './PreviewMessage.styles';
+import React from 'react';
 import {
   useComponentOverrides,
   useTheme,
@@ -7,9 +6,10 @@ import {
   ActionButton,
   Icon,
 } from '@embeddedchat/ui-elements';
-import { useMessageStore } from '../../store';
 import { marked } from 'marked';
 import Dompurify from 'dompurify';
+import getPreviewMessageStyles from './PreviewMessage.styles';
+import { useMessageStore } from '../../store';
 
 const PreviewMessage = ({ className = '', style = {}, message }) => {
   const { theme } = useTheme();
@@ -40,9 +40,7 @@ const PreviewMessage = ({ className = '', style = {}, message }) => {
           <Icon name="cross" size="0.75rem" />
         </ActionButton>
       </Box>
-      <Box css={styles.message}>
-        {formatMessage()}
-      </Box>
+      <Box css={styles.message}>{formatMessage()}</Box>
     </Box>
   );
 };

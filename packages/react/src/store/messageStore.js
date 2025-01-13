@@ -83,7 +83,9 @@ const useMessageStore = create((set, get) => ({
     })),
   clearQuoteMessages: () => set({ quoteMessage: [] }),
   addPreviewMessage: (previewMessage) =>
-    set((state) => ({ previewMessage: [...state.previewMessage, previewMessage] })),
+    set((state) => ({
+      previewMessage: [...state.previewMessage, previewMessage],
+    })),
   removePreviewMessage: (previewMessage) =>
     set((state) => ({
       previewMessage: state.previewMessage.filter((i) => i !== previewMessage),

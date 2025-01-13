@@ -454,7 +454,7 @@ const ChatInput = ({ scrollToBottom }) => {
             ))}
         </div>
         <div>
-        {previewMessage &&
+          {previewMessage &&
             previewMessage.length > 0 &&
             previewMessage.map((message, index) => (
               <PreviewMessage message={message} key={index} />
