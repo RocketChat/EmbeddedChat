@@ -76,6 +76,7 @@
         "@emotion/react": "11.7.1",
         "@rollup/plugin-json": "^6.0.0",
         "emoji-toolkit": "^7.0.1",
-        "prop-types": "^15.8.1"
+        "prop-types": "^15.8.1",
+        "react-syntax-highlighter": "^15.6.1"
     }
 }
