@@ -123,8 +123,10 @@ export const getInsertLinkModalStyles = (theme) => {
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
       margin: 0rem 1rem 0.5rem 1rem;
-      &.focused {
-        border: ${`1.5px solid ${theme.colors.ring}`};
+      transition: border 0.3s ease;
+
+      &:focus {
+        border: 1.5px solid ${theme.colors.ring};
       }
     `,
     modalHeader: css`

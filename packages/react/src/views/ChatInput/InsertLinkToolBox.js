@@ -17,7 +17,7 @@ const InsertLinkToolBox = ({
 }) => {
   const { theme } = useTheme();
   const styles = getInsertLinkModalStyles(theme);
-  const [linkText, setLinkText] = useState(selectedText || 'Text');
+  const [linkText, setLinkText] = useState(selectedText);
   const [linkUrl, setLinkUrl] = useState(null);
 
   const handleLinkTextOnChange = (e) => {
@@ -25,6 +25,11 @@ const InsertLinkToolBox = ({
   };
   const handleLinkUrlOnChange = (e) => {
     setLinkUrl(e.target.value);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleAddLink(linkText, linkUrl);
+    }
   };
 
   return (
@@ -48,15 +53,15 @@ const InsertLinkToolBox = ({
             css={css`
               font-weight: 550;
               margin-left: 1rem;
+              font-size: 0.8rem;
             `}
           >
-            Link Text
+            Text
           </Box>
           <Input
             type="text"
             onChange={handleLinkTextOnChange}
-            value={linkText}
-            placeholder="Text"
+            onKeyDown={handleKeyDown}
             css={styles.inputWithFormattingBox}
           />
           <Box
@@ -64,14 +69,15 @@ const InsertLinkToolBox = ({
             css={css`
               font-weight: 550;
               margin-left: 1rem;
+              font-size: 0.8rem;
             `}
           >
-            Link URL
+            URL
           </Box>
           <Input
             type="text"
             onChange={handleLinkUrlOnChange}
-            placeholder="URL"
+            onKeyDown={handleKeyDown}
             css={styles.inputWithFormattingBox}
           />
         </Box>
