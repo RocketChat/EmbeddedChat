@@ -1,4 +1,4 @@
-name: Build and Publish Storybook to GitHub Pages
+name: Build and Publish
 
 on:
   push:
@@ -30,19 +30,10 @@ jobs:
           node-version: "16.19.0"
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn install
 
-      - name: Build Storybook
-        run: yarn build:storybook
-        working-directory: packages/react
-
-      - name: Build UI-Elements
-        run: yarn build:storybook
-        working-directory: packages/ui-elements
-
-      - name: Build Layout Editor
-        run: npm run build
-        working-directory: packages/layout_editor
+      - name: Build packages
+        run: yarn build && yarn build:storybook
 
       - name: Setup Node.js for Docs
         uses: actions/setup-node@v4

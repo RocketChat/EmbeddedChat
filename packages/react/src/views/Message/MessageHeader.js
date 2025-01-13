@@ -68,6 +68,18 @@ const MessageHeader = ({
         return 'unarchived room';
       case 'room-allowed-reacting':
         return 'allowed reactions';
+      case 'room_changed_announcement':
+        return `changed announcement to: ${
+          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
+        }`;
+      case 'room_changed_description':
+        return `changed description to: ${
+          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
+        }`;
+      case 'room_changed_topic':
+        return `changed topic to: ${
+          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
+        }`;
       default:
         return '';
     }
@@ -115,7 +127,7 @@ const MessageHeader = ({
               css={styles.userRole}
               className={appendClassNames('ec-message-user-role')}
             >
-              admin
+              Admin
             </Box>
           )}
 
@@ -126,7 +138,7 @@ const MessageHeader = ({
               css={styles.userRole}
               className={appendClassNames('ec-message-user-role')}
             >
-              {role}
+              {role.charAt(0).toUpperCase() + role.slice(1)}
             </Box>
           ))}
         </>

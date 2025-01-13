@@ -1,0 +1,34 @@
+name: Pull Request Cleanup
+on:
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: gh-deploy
+
+      - name: Check if Deployment Exists
+        id: check_deployment
+        run: |
+          if [ -d "pulls/pr-${{ github.event.pull_request.number }}" ]; then
+          echo "deployment_exists=true" >> $GITHUB_ENV
+          else
+          echo "deployment_exists=false" >> $GITHUB_ENV
+          fi
+
+      - name: Remove Deployment
+        if: env.deployment_exists == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git fetch origin gh-deploy
+          git checkout gh-deploy
+          git rm -r pulls/pr-${{github.event.pull_request.number}}
+          git commit -m "Remove deployment for PR #${{github.event.pull_request.number}}"
+          git push origin gh-deploy

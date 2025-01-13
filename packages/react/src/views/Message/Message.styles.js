@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
-import { lighten, darken } from '@embeddedchat/ui-elements';
 
-export const getMessageStyles = ({ theme, mode }) => {
+export const getMessageStyles = ({ theme }) => {
   const styles = {
     main: css`
       display: flex;
@@ -12,12 +11,6 @@ export const getMessageStyles = ({ theme, mode }) => {
       padding-left: 2.25rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
-
-      &:hover {
-        background-color: ${mode === 'light'
-          ? darken(theme.colors.background, 0.03)
-          : lighten(theme.colors.background, 1)};
-      }
     `,
     messageEditing: css`
       background-color: ${theme.colors.secondary};
@@ -81,6 +74,9 @@ export const getMessageDividerStyles = (theme) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
     `,
 
     dividerContent: css`
