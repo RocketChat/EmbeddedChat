@@ -4,4 +4,4 @@
 
 ### Minor Changes
 
--
+- Implemented UiKit elements for Rocket.Chat Apps built under EmbeddedChat design system

@@ -4,7 +4,8 @@
 
 ### Patch Changes
 
--
+- Various small bug fixes have been made in e2e-react.
+
 - Updated dependencies
 - Updated dependencies [c8c9dee0]
 - Updated dependencies [100c5f79]

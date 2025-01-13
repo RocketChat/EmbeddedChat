@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
--
+- Implemented dynamic layout rendering with drag and drop functionality.
 
 ### Patch Changes
 

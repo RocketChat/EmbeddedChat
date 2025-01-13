@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
--
+- Support for new markup syntaxes has been introduced.
 
 ### Patch Changes
 

@@ -4,4 +4,4 @@
 
 ### Minor Changes
 
--
+- Performance and stability have been improved.
