@@ -22,7 +22,15 @@ const ChatInputFormattingToolbar = ({
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
+    surfaceItems: [
+      'emoji',
+      'formatter',
+      'link',
+      'audio',
+      'video',
+      'file',
+      'preview',
+    ],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
   },
 }) => {
@@ -39,6 +47,8 @@ const ChatInputFormattingToolbar = ({
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
   );
+
+  const addPreviewMessage = useMessageStore((state) => state.addPreviewMessage);
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
@@ -124,6 +134,20 @@ const ChatInputFormattingToolbar = ({
           }}
         >
           <Icon name="link" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+    preview: (
+      <Tooltip text="Preview" position="top" key="preview">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={() => {
+            addPreviewMessage(messageRef.current.value);
+          }}
+        >
+          <Icon name="eyeopen" size="1.25rem" />
         </ActionButton>
       </Tooltip>
     ),
