@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format, set } from 'date-fns';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -18,6 +18,7 @@ import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
+import { highlightSearchTerm } from '../../../lib/highlightUtils';
 
 export const MessageAggregator = ({
   title,
@@ -29,6 +30,7 @@ export const MessageAggregator = ({
   searchProps,
   searchFiltered,
   fetching,
+  searchedText,
   type = 'message',
   viewType = 'Sidebar',
 }) => {
@@ -45,7 +47,11 @@ export const MessageAggregator = ({
   );
 
   const [messageRendered, setMessageRendered] = useState(false);
-  const { loading, messageList } = useSetMessageList(
+  let { messageList } = useSetMessageList(
+    fetchedMessageList || searchFiltered || allMessages,
+    shouldRender
+  );
+  const { loading } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
@@ -108,6 +114,16 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  if (title === 'Search Messages') {
+    if (messageList) {
+      const highlightedMessages = highlightSearchTerm(
+        messageList,
+        searchedText
+      );
+      messageList = highlightedMessages;
+    }
+  }
 
   return (
     <ViewComponent

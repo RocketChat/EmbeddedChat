@@ -4,6 +4,7 @@ import PlainSpan from './PlainSpan';
 import ItalicSpan from './ItalicSpan';
 import StrikeSpan from './StrikeSpan';
 import LinkSpan from './LinkSpan';
+import HighlightText from './highlightText';
 
 const BoldSpan = ({ contents }) => (
   <strong>
@@ -17,6 +18,7 @@ const BoldSpan = ({ contents }) => (
 
         case 'ITALIC':
           return <ItalicSpan key={index} contents={content.value} />;
+
         case 'LINK':
           return (
             <LinkSpan
@@ -29,6 +31,9 @@ const BoldSpan = ({ contents }) => (
               }
             />
           );
+
+        case 'HIGHLIGHT_TEXT':
+          return <HighlightText key={index} contents={content.value} />;
 
         default:
           return null;
