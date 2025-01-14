@@ -24,13 +24,7 @@ const ChatInputFormattingToolbar = ({
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: [
-      'emoji',
-      'popoverItems',
-      'audio',
-      'video',
-      'file',
-    ],
+    smallScreenSurfaceItems: ['emoji', 'audio', 'video', 'file'],
     popOverItems: ['formatter', 'link'],
   },
 }) => {
@@ -56,19 +50,6 @@ const ChatInputFormattingToolbar = ({
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setPopoverOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -259,21 +240,6 @@ const ChatInputFormattingToolbar = ({
           </Tooltip>
         )
       ),
-    popoverItems: (
-      <Tooltip text="More" position="top" key="more-btn">
-        <ActionButton
-          square
-          ghost
-          disabled={isRecordingMessage}
-          onClick={() => {
-            if (isRecordingMessage) return;
-            setPopoverOpen(true);
-          }}
-        >
-          <Icon name="kebab" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
   };
 
   return (
@@ -355,6 +321,21 @@ const ChatInputFormattingToolbar = ({
           }
           return chatToolMap[name];
         })}
+        {popOverItems.length > 0 && (
+          <Tooltip text="More" position="top" key="more-btn">
+            <ActionButton
+              square
+              ghost
+              disabled={isRecordingMessage}
+              onClick={() => {
+                if (isRecordingMessage) return;
+                setPopoverOpen(!isPopoverOpen);
+              }}
+            >
+              <Icon name="kebab" size="1.25rem" />
+            </ActionButton>
+          </Tooltip>
+        )}
       </Box>
       {isEmojiOpen && (
         <EmojiPicker
