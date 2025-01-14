@@ -1,10 +1,18 @@
 import React, { useContext, useState, useRef } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  Button,
+  Input,
+  Modal,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useMemberStore } from '../../store';
+import useSettingsStore from '../../store/settingsStore';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
 import MembersList from '../Mentions/MembersList';
@@ -13,6 +21,7 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const { theme } = useTheme();
   const styles = getAttachmentPreviewStyles();
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
@@ -24,6 +33,7 @@ const AttachmentPreview = () => {
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [mentionIndex, setMentionIndex] = useState(-1);
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
+  const [isMsgLong, setIsMsgLong] = useState(false);
 
   const [fileName, setFileName] = useState(data?.name);
 
@@ -45,12 +55,6 @@ const AttachmentPreview = () => {
     setShowMembersList
   );
 
-  const handleFileDescription = (e) => {
-    const description = e.target.value;
-    messageRef.current.value = parseEmoji(description);
-    searchMentionUser(description);
-  };
-
   const submit = async () => {
     setIsPending(true);
     await RCInstance.sendAttachment(
@@ -65,6 +69,29 @@ const AttachmentPreview = () => {
       setIsPending(false);
     }
   };
+
+  const msgMaxLength = useSettingsStore((state) => state.messageLimit);
+  const descAboveMaxLengthMsg = `Cannot upload file, description is over the ${msgMaxLength} character limit`;
+
+  const checkIfMsgLong = (description) => {
+    if (description.length > msgMaxLength) {
+      setIsMsgLong(true);
+      return;
+    }
+    submit();
+  };
+
+  const handleFileDescription = (e) => {
+    const description = e.target.value;
+    messageRef.current.value = parseEmoji(description);
+    if (isMsgLong) {
+      if (description.length <= msgMaxLength) {
+        setIsMsgLong(false);
+      }
+    }
+    searchMentionUser(description);
+  };
+
   return (
     <Modal onClose={toggle}>
       <Modal.Header>
@@ -147,10 +174,29 @@ const AttachmentPreview = () => {
                   onChange={(e) => {
                     handleFileDescription(e);
                   }}
-                  css={styles.input}
+                  css={css`
+                    ${styles.input};
+                    border-color: ${isMsgLong
+                      ? theme.colors.destructive
+                      : null};
+                    color: ${isMsgLong ? theme.colors.destructive : null};
+                  `}
                   placeholder="Description"
                   ref={messageRef}
                 />
+                <Box>
+                  {isMsgLong && (
+                    <Box
+                      css={css`
+                        color: ${theme.colors.destructive};
+                        font-size: 12px;
+                        margin-top: 5px;
+                      `}
+                    >
+                      {descAboveMaxLengthMsg}
+                    </Box>
+                  )}
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -168,7 +214,7 @@ const AttachmentPreview = () => {
         <Button
           disabled={isPending}
           onClick={() => {
-            submit();
+            checkIfMsgLong(messageRef.current.value);
           }}
         >
           {isPending ? 'Sending...' : 'Send'}
