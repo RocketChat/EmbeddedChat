@@ -1,6 +1,13 @@
 import React, { useContext, useState, useRef } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  Button,
+  Input,
+  Modal,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
@@ -86,7 +93,9 @@ const AttachmentPreview = () => {
             css={css`
               text-align: center;
               margin-top: 1rem;
-              padding: 0 100px 0 100px;
+              display: flex;
+              justify-content: center;
+              padding: 0 50px 0 50px;
             `}
           >
             <CheckPreviewType data={data} />
@@ -97,6 +106,7 @@ const AttachmentPreview = () => {
             `}
           >
             <Box css={styles.inputContainer}>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label
                 htmlFor="file-name"
                 css={css`
@@ -137,6 +147,7 @@ const AttachmentPreview = () => {
             </Box>
 
             <Box css={styles.inputContainer}>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label
                 htmlFor="file-description"
                 css={css`
