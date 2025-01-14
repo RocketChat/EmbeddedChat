@@ -18,6 +18,7 @@ import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
+import { highlightSearchTerm } from '../../../lib/highlightUtils';
 
 export const MessageAggregator = ({
   title,
@@ -114,155 +115,13 @@ export const MessageAggregator = ({
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
-  const highlightText = (text, searchTerm) => {
-    const parts = text.split(searchTerm);
-    const result = [];
-    result.push({ type: 'PLAIN_TEXT', value: parts[0] });
-    result.push({ type: 'HIGHLIGHT_TEXT', value: searchTerm });
-    result.push({ type: 'PLAIN_TEXT', value: parts[1] });
-    return result;
-  };
-
-  function highlightSearchTerm(messagesArr, searchedWords) {
-    const searchTerms = Array.isArray(searchedWords)
-      ? searchedWords
-      : [searchedWords];
-
-    return messagesArr.map((message) => {
-      message.md = message.md.map((paragraphBlock) => {
-        if (paragraphBlock.type === 'PARAGRAPH') {
-          const updatedValue = paragraphBlock.value.reduce(
-            (accumulatedValue, content) => {
-              if (content.type === 'PLAIN_TEXT') {
-                let updatedContent = content.value;
-                searchTerms.forEach((searchTerm) => {
-                  if (updatedContent.includes(searchTerm)) {
-                    // Highlight the search term and clear the updated content
-                    accumulatedValue.push(
-                      ...highlightText(updatedContent, searchTerm)
-                    );
-                    updatedContent = '';
-                  }
-                });
-
-                if (updatedContent) {
-                  accumulatedValue.push({
-                    type: 'PLAIN_TEXT',
-                    value: updatedContent,
-                  });
-                }
-              } else if (content.type === 'LINK') {
-                // Handle LINK elements, applying highlight only to label if it exists
-                if (content.label && Array.isArray(content.label)) {
-                  console.log('====== 1 ======');
-                  const updatedLabel = content.label.reduce(
-                    (labelAccumulatedValue, labelContent) => {
-                      console.log('====== 2 ======');
-                      if (labelContent.type === 'PLAIN_TEXT') {
-                        let updatedContent = labelContent.value;
-                        searchTerms.forEach((searchTerm) => {
-                          if (updatedContent.includes(searchTerm)) {
-                            labelAccumulatedValue.push(
-                              ...highlightText(updatedContent, searchTerm)
-                            );
-                            updatedContent = '';
-                          }
-                        });
-
-                        if (updatedContent) {
-                          labelAccumulatedValue.push({
-                            type: 'PLAIN_TEXT',
-                            value: updatedContent,
-                          });
-                        }
-                      } else {
-                        labelAccumulatedValue.push(labelContent); // For non-PLAIN_TEXT content, leave as is
-                      }
-                      return labelAccumulatedValue;
-                    },
-                    []
-                  );
-
-                  // Push the updated LINK with modified label
-                  accumulatedValue.push({
-                    ...content,
-                    label: updatedLabel,
-                  });
-                } else {
-                  // If no label found, just push the content as is
-                  console.log('No value found');
-                  accumulatedValue.push(content);
-                }
-              } else if (
-                content.type === 'STRIKE' ||
-                content.type === 'BOLD' ||
-                content.type === 'ITALIC'
-              ) {
-                // For custom formatting tags like STRIKE, BOLD, ITALIC, recursively highlight the inner contents
-                const updatedContents = content.value.reduce(
-                  (innerAccumulatedValue, innerContent) => {
-                    if (innerContent.type === 'PLAIN_TEXT') {
-                      let updatedContent = innerContent.value;
-                      searchTerms.forEach((searchTerm) => {
-                        if (updatedContent.includes(searchTerm)) {
-                          innerAccumulatedValue.push(
-                            ...highlightText(updatedContent, searchTerm)
-                          );
-                          updatedContent = '';
-                        }
-                      });
-
-                      if (updatedContent) {
-                        innerAccumulatedValue.push({
-                          type: 'PLAIN_TEXT',
-                          value: updatedContent,
-                        });
-                      }
-                    } else {
-                      innerAccumulatedValue.push(innerContent); // For non-PLAIN_TEXT content, keep unchanged
-                    }
-
-                    return innerAccumulatedValue;
-                  },
-                  []
-                );
-
-                // Push the modified formatting tags with updated contents
-                accumulatedValue.push({
-                  ...content,
-                  value: updatedContents,
-                });
-              } else {
-                accumulatedValue.push(content); // For non-PLAIN_TEXT or non-formatted content, add as is
-              }
-
-              return accumulatedValue;
-            },
-            []
-          );
-
-          // Return the updated paragraph block
-          return {
-            ...paragraphBlock,
-            value: updatedValue,
-          };
-        }
-        return paragraphBlock; // For non-PARAGRAPH blocks, return unchanged
-      });
-
-      return message;
-    });
-  }
-
   if (title === 'Search Messages') {
     if (messageList) {
-      // console.log('messageList: ' + JSON.stringify(messageList));
       const highlightedMessages = highlightSearchTerm(
         messageList,
         searchedText
       );
       messageList = highlightedMessages;
-      // console.log('after messageList: ' + JSON.stringify(messageList));
     }
   }
 

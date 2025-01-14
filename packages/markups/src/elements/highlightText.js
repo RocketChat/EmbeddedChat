@@ -10,7 +10,7 @@ const HighlightText = ({ contents }) => (
 );
 
 HighlightText.propTypes = {
-  contents: PropTypes.object.isRequired,
+  contents: PropTypes.string.isRequired,
 };
 
 export default HighlightText;
