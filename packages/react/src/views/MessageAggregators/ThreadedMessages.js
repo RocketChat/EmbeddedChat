@@ -10,7 +10,7 @@ const ThreadedMessages = () => {
   const { variantOverrides } = useComponentOverrides('ThreadedMessages');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const [text, setText] = useState('');
-
+  const allThreadMessages = useMessageStore((state) => state.allThreadMessages);
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
@@ -26,6 +26,7 @@ const ThreadedMessages = () => {
   return (
     <MessageAggregator
       title="Threads"
+      fetchedMessageList={allThreadMessages}
       iconName="thread"
       noMessageInfo="No threads found"
       searchProps={{

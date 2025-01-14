@@ -132,6 +132,7 @@ class EmbeddedChatApi {
         field?: object | undefined;
     }): Promise<any>;
     getThreadMessages(tmid: string): Promise<any>;
+    getAllThreadMessages( type?: string, text?: string): Promise<any>;
     getChannelRoles(): Promise<any>;
     sendTypingStatus(username: string, typing: boolean): Promise<void>;
     sendMessage(message: any, threadId: string): Promise<any>;
