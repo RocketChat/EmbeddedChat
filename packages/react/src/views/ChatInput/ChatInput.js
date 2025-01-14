@@ -39,7 +39,8 @@ const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const { theme } = useTheme();
-  const styles = getChatInputStyles(theme);
+  const { mode } = useTheme();
+  const styles = getChatInputStyles(theme, mode);
 
   const inputRef = useRef(null);
   const typingRef = useRef();
@@ -517,7 +518,13 @@ const ChatInput = ({ scrollToBottom }) => {
           (editMessage.msg || editMessage.attachments) && styles.editMessage,
         ]}
       >
-        <Box css={styles.inputBox}>
+        <Box
+          css={[
+            styles.inputBox,
+            (editMessage.msg || editMessage.attachments) &&
+              styles.messageEditing,
+          ]}
+        >
           <Input
             textArea
             rows={1}
@@ -529,7 +536,11 @@ const ChatInput = ({ scrollToBottom }) => {
                 ? 'This room is read only'
                 : 'Sign in to chat'
             }
-            css={styles.textInput}
+            css={[
+              styles.textInput,
+              (editMessage.msg || editMessage.attachments) &&
+                styles.messageEditing,
+            ]}
             onChange={onTextChange}
             onBlur={() => {
               sendTypingStop();

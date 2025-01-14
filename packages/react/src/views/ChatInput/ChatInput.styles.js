@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { darken, lighten } from '@embeddedchat/ui-elements';
 
-export const getChatInputStyles = (theme) => {
+export const getChatInputStyles = (theme, mode) => {
   const styles = {
     inputWithFormattingBox: css`
       border: 1px solid ${theme.colors.border};
@@ -14,6 +14,7 @@ export const getChatInputStyles = (theme) => {
 
     editMessage: css`
       border: 2px solid ${theme.colors.border};
+      // border: 2px solid red;
     `,
 
     inputBox: css`
@@ -58,9 +59,22 @@ export const getChatInputStyles = (theme) => {
         font-size: 18px;
       }
     `,
+
     quoteContainer: css`
       max-height: 300px;
       overflow: scroll;
+    `,
+
+    messageEditing: css`
+      background-color: ${mode === 'light'
+        ? lighten(theme.colors.warning, 0.85)
+        : darken(theme.colors.warningForeground, 0.75)};
+
+      &:hover {
+        background-color: ${mode === 'light'
+          ? lighten(theme.colors.warning, 0.85)
+          : darken(theme.colors.warningForeground, 0.75)};
+      }
     `,
   };
 

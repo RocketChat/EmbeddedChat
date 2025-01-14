@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
+import { lighten, darken } from '@embeddedchat/ui-elements';
 
-export const getMessageStyles = ({ theme }) => {
+export const getMessageStyles = ({ theme, mode }) => {
   const styles = {
     main: css`
       display: flex;
@@ -13,9 +14,14 @@ export const getMessageStyles = ({ theme }) => {
       color: ${theme.colors.foreground};
     `,
     messageEditing: css`
-      background-color: ${theme.colors.secondary};
+      background-color: ${mode === 'light'
+        ? lighten(theme.colors.warning, 0.85)
+        : darken(theme.colors.warningForeground, 0.75)};
+
       &:hover {
-        background-color: ${theme.colors.secondary};
+        background-color: ${mode === 'light'
+          ? lighten(theme.colors.warning, 0.85)
+          : darken(theme.colors.warningForeground, 0.75)};
       }
     `,
 
