@@ -23,6 +23,10 @@ const useFetchChatData = (showRoles) => {
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const AllThreadMessages = useMessageStore((state) => state.allThreadMessages);
+  const setAllThreadMessages = useMessageStore(
+    (state) => state.setAllThreadMessages
+  );
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -90,6 +94,24 @@ const useFetchChatData = (showRoles) => {
     ]
   );
 
+  const getAllThreadMessages = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const { threads: allThreadMessages } =
+            await RCInstance.getAllThreadMessages();
+          setAllThreadMessages(allThreadMessages);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setAllThreadMessages]
+  );
+
   const getStarredMessages = useCallback(
     async (anonymousMode) => {
       if (isUserAuthenticated) {
@@ -107,7 +129,7 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
-  return { getMessagesAndRoles, getStarredMessages };
+  return { getMessagesAndRoles, getStarredMessages, getAllThreadMessages };
 };
 
 export default useFetchChatData;

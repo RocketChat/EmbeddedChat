@@ -6,6 +6,7 @@ const useMessageStore = create((set, get) => ({
   messages: [],
   isMessageLoaded: false,
   threadMessages: [],
+  allThreadMessages: [],
   filtered: false,
   editMessage: {},
   quoteMessage: [],
@@ -113,6 +114,8 @@ const useMessageStore = create((set, get) => ({
   },
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
+  setAllThreadMessages: (messages) =>
+    set(() => ({ allThreadMessages: messages })),
 }));
 
 export default useMessageStore;

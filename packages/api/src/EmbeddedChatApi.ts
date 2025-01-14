@@ -572,6 +572,26 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getAllThreadMessages(type?: string, text?: string) {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const allthreads = await fetch(
+        `${this.host}/api/v1/chat.getThreadsList?rid=${this.rid}&type=${type}&text=${text}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await allthreads.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async getChannelRoles(isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {

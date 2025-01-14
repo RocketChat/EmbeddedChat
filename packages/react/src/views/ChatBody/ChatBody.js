@@ -59,6 +59,10 @@ const ChatBody = ({
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const setAllThreadMessages = useMessageStore(
+    (state) => state.setAllThreadMessages
+  );
+  const { getAllThreadMessages } = useFetchChatData();
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -92,6 +96,8 @@ const ChatBody = ({
           isChannelPrivate
         );
         setThreadMessages(messages.reverse());
+
+        getAllThreadMessages();
       } catch (e) {
         console.error(e);
       }
