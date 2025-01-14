@@ -15,9 +15,9 @@ const getAttachmentPreviewStyles = () => {
     `,
 
     modalContent: css`
-      overflow-y: auto;
       overflow-x: hidden;
-      max-height: 350px;
+      overflow-y: auto;
+      height: auto;
     `,
 
     fileDescription: css`
@@ -34,6 +34,7 @@ const getAttachmentPreviewStyles = () => {
       overflow-y: auto;
       background: white;
       z-index: 1400;
+      scroll-behavior: smooth;
     `,
   };
 
