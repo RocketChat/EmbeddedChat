@@ -4,9 +4,10 @@ import { darken, lighten } from '@embeddedchat/ui-elements';
 export const getChatInputStyles = (theme) => {
   const styles = {
     inputWithFormattingBox: css`
+      width: 100%;
+      margin-bottom: 5px;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
-      margin: 0.5rem 2rem 1rem 2rem;
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
       }
@@ -22,9 +23,6 @@ export const getChatInputStyles = (theme) => {
       justify-content: center;
       flex-direction: row;
       padding: 0.5rem;
-      @media (max-width: 383px) {
-        min-height: 100px;
-      }
     `,
 
     iconCursor: css`
@@ -32,6 +30,7 @@ export const getChatInputStyles = (theme) => {
     `,
 
     textInput: css`
+      min-width: 0;
       flex: 1;
       word-wrap: break-word;
       white-space: pre-wrap;
@@ -41,7 +40,6 @@ export const getChatInputStyles = (theme) => {
       border: none;
       outline: none;
       font-size: 14px;
-
       &:focus {
         border: none;
         outline: none;
@@ -54,7 +52,7 @@ export const getChatInputStyles = (theme) => {
       &::placeholder {
         padding-left: 5px;
       }
-      @media (max-width: 383px) {
+      @media (min-width: 383px) {
         font-size: 18px;
       }
     `,
@@ -80,10 +78,27 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
       position: relative;
       gap: 0.1rem;
       border-radius: 0 0 ${theme.radius} ${theme.radius};
-      @media (max-width: 383px) {
-        display: grid;
-        grid-template-columns: repeat(5, 0.2fr);
-      }
+    `,
+    popOverStyles: css`
+      position: absolute;
+      bottom: 3rem;
+      left: 0;
+      width: 100%;
+      background: ${theme.colors.background};
+      box-shadow: 0 -8px 10px ${mode === 'light' ? darken(theme.colors.background, 0.1) : lighten(theme.colors.background, 1)};
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 1300;
+    `,
+    popOverItemStyles: css`
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      cursor: pointer;
+      padding: 0.5rem;
     `,
   };
   return styles;
