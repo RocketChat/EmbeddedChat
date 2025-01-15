@@ -18,6 +18,8 @@ import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
+import searchNote from '../data/searchMessageNote';
+import { Markdown } from '../../Markdown';
 
 export const MessageAggregator = ({
   title,
@@ -33,7 +35,8 @@ export const MessageAggregator = ({
   viewType = 'Sidebar',
 }) => {
   const { theme } = useTheme();
-  const styles = getMessageAggregatorStyles(theme);
+  const { mode } = useTheme();
+  const styles = getMessageAggregatorStyles(theme, mode);
   const setExclusiveState = useSetExclusiveState();
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
@@ -109,6 +112,8 @@ export const MessageAggregator = ({
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
+  const showSearchNote = title === 'Search Messages';
+
   return (
     <ViewComponent
       title={title}
@@ -127,6 +132,16 @@ export const MessageAggregator = ({
           }
         : {})}
     >
+      {showSearchNote && (
+        <Box css={styles.noteStyle}>
+          <Markdown
+            body={searchNote.msg}
+            md={searchNote.md}
+            isReaction={false}
+          />
+        </Box>
+      )}
+
       {fetching || loading ? (
         <LoadingIndicator />
       ) : (
