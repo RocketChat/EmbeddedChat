@@ -69,22 +69,28 @@ const ReportWindowButtons = ({
   return (
     <Modal onClose={handleOnClose}>
       <Modal.Header>
-        <Modal.Title>
-          <Icon
-            name="report"
-            size="1.5rem"
-            css={css`
-              margin: 0.2rem 0.5rem 0rem 0.7rem;
-              color: red;
-            `}
-          />
-          Report this message?
-        </Modal.Title>
+        <Box
+          css={css`
+            margin: 0.7rem 0rem 0rem 0.45rem;
+          `}
+        >
+          <Modal.Title>
+            <Icon
+              name="report"
+              size="1.5rem"
+              css={css`
+                color: red;
+                margin: 0.2rem 0.4rem 0rem 0rem;
+              `}
+            />
+            Report this message?
+          </Modal.Title>
+        </Box>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>
       <Box
         css={css`
-          margin-top: 1rem;
+          margin-top: 0.9rem;
           margin-left: 0.7rem;
         `}
       >
