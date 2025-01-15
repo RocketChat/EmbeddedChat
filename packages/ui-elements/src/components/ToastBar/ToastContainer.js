@@ -7,7 +7,8 @@ import { getToastBarContainerStyles } from './ToastBar.styles';
 
 const ToastContainer = () => {
   const { theme } = useTheme();
-  const styles = getToastBarContainerStyles(theme);
+  const { mode } = useTheme();
+  const styles = getToastBarContainerStyles(theme, mode);
   const { position, toasts, setToasts } = useContext(ToastContext);
   const positionStyle = useMemo(() => {
     const positions = position.split(/\s+/);
