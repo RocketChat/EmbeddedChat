@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '@embeddedchat/ui-elements';
 import PlainSpan from './PlainSpan';
 import StrikeSpan from './StrikeSpan';
 import ItalicSpan from './ItalicSpan';
@@ -27,6 +28,9 @@ const getBaseURI = () => {
 const isExternal = (href) => href.indexOf(getBaseURI()) !== 0;
 
 const LinkSpan = ({ href, label }) => {
+  const { theme } = useTheme();
+  const { mode } = useTheme();
+
   const contents = React.useMemo(() => {
     const labelArray = Array.isArray(label) ? label : [label];
 
@@ -54,13 +58,31 @@ const LinkSpan = ({ href, label }) => {
 
   if (isExternal(href)) {
     return (
-      <a href={href} title={href} rel="noopener noreferrer" target="_blank">
+      <a
+        href={href}
+        title={href}
+        style={{
+          color:
+            mode === 'light'
+              ? theme.colors.info
+              : theme.colors.warningForeground,
+        }}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
         {contents}
       </a>
     );
   }
   return (
-    <a href={href} title={href}>
+    <a
+      href={href}
+      title={href}
+      style={{
+        color:
+          mode === 'light' ? theme.colors.info : theme.colors.warningForeground,
+      }}
+    >
       {contents}
     </a>
   );

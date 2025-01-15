@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { css } from '@emotion/react';
 import {
   Box,
   ActionButton,
@@ -20,6 +19,7 @@ const LinkPreview = ({
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('LinkPreview');
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getLinkPreviewStyles(theme);
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
@@ -88,9 +88,12 @@ const LinkPreview = ({
           <Box style={{ padding: '8px' }}>
             <a
               href={url}
-              css={css`
-                color: ${theme.colors.foreground};
-              `}
+              style={{
+                color:
+                  mode === 'light'
+                    ? theme.colors.info
+                    : theme.colors.warningForeground,
+              }}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -100,9 +103,12 @@ const LinkPreview = ({
             {isSiteName && (
               <a
                 href={url}
-                css={css`
-                  color: ${theme.colors.foreground};
-                `}
+                style={{
+                  color:
+                    mode === 'light'
+                      ? theme.colors.info
+                      : theme.colors.warningForeground,
+                }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
