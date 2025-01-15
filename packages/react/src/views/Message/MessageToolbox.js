@@ -229,9 +229,6 @@ export const MessageToolbox = ({
           style={styleOverrides}
           {...props}
         >
-          {surfaceOptions?.length > 0 && (
-            <SurfaceMenu options={surfaceOptions} size="small" />
-          )}
           {menuOptions?.length > 0 && (
             <Menu
               size="small"
@@ -239,6 +236,15 @@ export const MessageToolbox = ({
               tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
               useWrapper={false}
               style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
+            />
+          )}
+          {surfaceOptions?.length > 0 && (
+            <SurfaceMenu
+              options={surfaceOptions.map(option => ({
+                ...option,
+                tooltipPosition: 'top'
+              }))}
+              size="small"
             />
           )}
 
