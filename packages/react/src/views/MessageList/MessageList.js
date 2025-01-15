@@ -19,6 +19,8 @@ const MessageList = ({ messages }) => {
 
   const filteredMessages = messages.filter((msg) => !msg.tmid);
 
+  const reportedMessage = messages.find((msg) => msg._id === messageToReport);
+
   return (
     <>
       {filteredMessages.length === 0 ? (
@@ -60,7 +62,10 @@ const MessageList = ({ messages }) => {
             );
           })}
           {showReportMessage && (
-            <MessageReportWindow messageId={messageToReport} />
+            <MessageReportWindow
+              messageId={messageToReport}
+              message={reportedMessage}
+            />
           )}
         </>
       )}

@@ -80,6 +80,8 @@ export const MessageToolbox = ({
 
   const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
 
+  const isAllowedToReport = message.u._id !== authenticatedUserId;
+
   const isAllowedToEditMessage = userRoles.some((role) =>
     editMessageRoles.has(role)
   )
@@ -171,7 +173,7 @@ export const MessageToolbox = ({
         id: 'report',
         onClick: () => handlerReportMessage(message),
         iconName: 'report',
-        visible: true,
+        visible: isAllowedToReport,
         type: 'destructive',
       },
     }),
