@@ -19,6 +19,12 @@ const MessageList = ({ messages }) => {
 
   const filteredMessages = messages.filter((msg) => !msg.tmid);
 
+  const foundMessage = messages.find(
+    (message) => message._id === messageToReport
+  );
+  // console.log("messageToReport: " + JSON.stringify(messageToReport));
+  // console.log("foundMessage: " + JSON.stringify(foundMessage));
+
   return (
     <>
       {filteredMessages.length === 0 ? (
@@ -60,7 +66,10 @@ const MessageList = ({ messages }) => {
             );
           })}
           {showReportMessage && (
-            <MessageReportWindow messageId={messageToReport} />
+            <MessageReportWindow
+              messageId={messageToReport}
+              reportedMessage={foundMessage}
+            />
           )}
         </>
       )}

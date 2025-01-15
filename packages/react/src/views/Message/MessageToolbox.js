@@ -171,7 +171,7 @@ export const MessageToolbox = ({
         id: 'report',
         onClick: () => handlerReportMessage(message),
         iconName: 'report',
-        visible: true,
+        visible: message.u._id !== authenticatedUserId,
         type: 'destructive',
       },
     }),

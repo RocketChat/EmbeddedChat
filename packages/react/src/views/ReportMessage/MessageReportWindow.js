@@ -4,7 +4,7 @@ import { Box, Input } from '@embeddedchat/ui-elements';
 import ReportWindowButtons from './ReportWindowButtons';
 import styles from './ReportMessage.styles';
 
-const MessageReportWindow = ({ messageId }) => {
+const MessageReportWindow = ({ messageId, reportedMessage }) => {
   const [reportDescription, setDescription] = useState('');
   return (
     <ReportWindowButtons
@@ -14,6 +14,7 @@ const MessageReportWindow = ({ messageId }) => {
       cancelText="Cancel"
       reportDescription={reportDescription}
       messageId={messageId}
+      message={reportedMessage}
     >
       <Box css={styles.conatiner}>
         <Input
