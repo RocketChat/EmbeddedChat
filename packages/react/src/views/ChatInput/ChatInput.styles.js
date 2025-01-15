@@ -14,7 +14,6 @@ export const getChatInputStyles = (theme, mode) => {
 
     editMessage: css`
       border: 2px solid ${theme.colors.border};
-      // border: 2px solid red;
     `,
 
     inputBox: css`
