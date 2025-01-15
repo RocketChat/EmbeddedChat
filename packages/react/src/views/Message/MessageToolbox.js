@@ -9,6 +9,7 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
@@ -261,14 +262,22 @@ export const MessageToolbox = ({
       {showDeleteModal && (
         <Modal onClose={handleOnClose}>
           <Modal.Header>
+            <Box 
+            css={
+              css `
+              margin: 0.8rem 0px 1rem 0.5rem;
+              `
+            }
+             >
             <Modal.Title>
               <Icon
                 name="trash"
                 size="1.25rem"
                 style={{ marginRight: '0.5rem' }}
               />{' '}
-              Delete this message?
+              Are you sure?
             </Modal.Title>
+            </Box>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
           <Modal.Content
