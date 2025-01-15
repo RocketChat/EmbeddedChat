@@ -7,11 +7,14 @@ import { Icon } from '../Icon';
 import { ActionButton } from '../ActionButton';
 import { getToastbarStyles } from './ToastBar.styles';
 import useTheme from '../../hooks/useTheme';
+import ProgressBar from './ProgressBar';
+import { darken, lighten } from '../../lib';
 
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
   const { theme } = useTheme();
+  const { mode } = useTheme();
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const styles = getToastbarStyles(theme);
@@ -45,17 +48,27 @@ const ToastBar = ({ toast, onClose }) => {
     setTimeout(onClose, time);
   }, [onClose, time]);
 
+  let progressBarBgColor = darken(bgColor, 0.5);
+  if (mode === 'dark') {
+    progressBarBgColor = lighten(bgColor, 0.85);
+  }
+
   return (
-    <Box
-      ref={toastRef}
-      css={styles.toastbar(color, bgColor, time)}
-      className={appendClassNames('ec-toast-bar', classNames)}
-      style={styleOverrides}
-    >
-      <Icon size="1em" name={iconName} />
-      {message}
-      <ActionButton icon="cross" size="small" onClick={onClose} ghost />
-    </Box>
+    <>
+      <Box
+        ref={toastRef}
+        css={styles.toastbar(color, bgColor, time)}
+        className={appendClassNames('ec-toast-bar', classNames)}
+        style={styleOverrides}
+      >
+        <Icon size="1em" name={iconName} />
+        {message}
+        <ActionButton icon="cross" size="small" onClick={onClose} ghost />
+      </Box>
+      <Box>
+        <ProgressBar color={progressBarBgColor} time={time} />
+      </Box>
+    </>
   );
 };
 
