@@ -2,6 +2,7 @@ import File from './File';
 import Mobile from './Mobile';
 import Star from './Star';
 import Pin from './Pin';
+import Reaction from './Reaction';
 import ReplyDirectly from './ReplyDirectly';
 import Hash from './Hash';
 import HashLock from './HashLock';
@@ -69,6 +70,7 @@ const icons = {
   mobile: Mobile,
   star: Star,
   pin: Pin,
+  reaction: Reaction,
   'reply-directly': ReplyDirectly,
   hash: Hash,
   hash_lock: HashLock,
