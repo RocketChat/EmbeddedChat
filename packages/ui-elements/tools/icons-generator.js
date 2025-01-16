@@ -17,6 +17,7 @@ const iconsList = [
   'circle-check',
   'send',
   'emoji',
+  'reaction',
   'plus',
   'thread',
   'user',

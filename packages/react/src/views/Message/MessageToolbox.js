@@ -126,7 +126,7 @@ export const MessageToolbox = ({
         label: 'Add reaction',
         id: 'reaction',
         onClick: () => setEmojiOpen(true),
-        iconName: 'emoji',
+        iconName: 'reaction',
         visible: true,
       },
       pin: {
@@ -262,83 +262,47 @@ export const MessageToolbox = ({
       {showDeleteModal && (
         <Modal onClose={handleOnClose}>
           <Modal.Header>
-            <Box 
-            css={
-              css `
-              margin: 0.8rem 0px 1rem 0.5rem;
-              `
-            }
-             >
-            <Modal.Title>
-              <Icon
-                name="trash"
-                size="1.25rem"
-                style={{ marginRight: '0.5rem' }}
-              />{' '}
-              Are you sure?
-            </Modal.Title>
+            <Box
+              css={css`
+                margin: 0.6rem 0px 0rem 0.45rem;
+              `}
+            >
+              <Modal.Title>
+                <Icon
+                  name="trash"
+                  size="1.35rem"
+                  style={{ marginRight: '0.2rem', color: 'red' }}
+                />
+                Are you sure?
+              </Modal.Title>
             </Box>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
           <Modal.Content
             style={{
-              overflow: 'scroll',
               whiteSpace: 'wrap',
-              padding: '1rem',
               maxHeight: '50vh',
+              overflow: 'hidden',
             }}
           >
-            {message.file ? (
-              message.file.type.startsWith('image/') ? (
-                <div>
-                  <img
-                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
-                    alt={message.file.name}
-                    style={{ maxWidth: '100px', maxHeight: '100px' }}
-                  />
-                  <div>{`${message.file.name} (${(
-                    message.file.size / 1024
-                  ).toFixed(2)} kB)`}</div>
-                </div>
-              ) : message.file.type.startsWith('video/') ? (
-                <video
-                  controls
-                  style={{ maxWidth: '100%', maxHeight: '200px' }}
-                >
-                  <source
-                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
-                    type={message.file.type}
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              ) : message.file.type.startsWith('audio/') ? (
-                <audio controls style={{ maxWidth: '100%' }}>
-                  <source
-                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
-                    type={message.file.type}
-                  />
-                  Your browser does not support the audio element.
-                </audio>
-              ) : (
-                <Markdown body={message} md={message.md} isReaction={false} />
-              )
-            ) : (
-              <Markdown body={message} md={message.md} isReaction={false} />
-            )}
-            {message.attachments &&
-              message.attachments.length > 0 &&
-              message.msg &&
-              message.msg[0] === '[' &&
-              message.attachments.map((attachment, index) => (
-                <Attachment
-                  key={index}
-                  attachment={attachment}
-                  type={attachment.type}
-                  host={instanceHost}
-                />
-              ))}
+
+            <Box
+              css={css`
+                margin-top: 1.5rem;
+                font-size: 0.9rem;
+                margin-left: 1rem;
+                margin-down: 1rem;
+              `}
+            >
+              You will not be able to recover this message!
+            </Box>
           </Modal.Content>
-          <Modal.Footer>
+          <Modal.Footer
+            style={{
+              marginTop: '1rem',
+              padding: '0.5rem 1rem',
+            }}
+          >
             <Button type="secondary" onClick={handleOnClose}>
               Cancel
             </Button>
@@ -349,7 +313,7 @@ export const MessageToolbox = ({
                 handleOnClose();
               }}
             >
-              Delete message
+              Yes, delete
             </Button>
           </Modal.Footer>
         </Modal>
