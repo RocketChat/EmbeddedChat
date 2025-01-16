@@ -5,6 +5,7 @@ import { MessageAggregator } from './common/MessageAggregator';
 
 const MentionedMessages = () => {
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const username = useUserStore((state) => state.username);
   const { variantOverrides } = useComponentOverrides('MentionedMessages');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const hasMention = (msg) => {
@@ -14,7 +15,9 @@ const MentionedMessages = () => {
 
     return msg.attachments.some((attachment) =>
       attachment.descriptionMd?.some((desc) =>
-        desc.value?.some((val) => val.type === 'MENTION_USER')
+        desc.value?.some(
+          (val) => val.type === 'MENTION_USER' && val.value.value === username
+        )
       )
     );
   };
