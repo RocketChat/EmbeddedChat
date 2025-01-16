@@ -285,7 +285,6 @@ export const MessageToolbox = ({
               overflow: 'hidden',
             }}
           >
-
             <Box
               css={css`
                 margin-top: 1.5rem;
