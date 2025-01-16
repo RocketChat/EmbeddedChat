@@ -33,8 +33,13 @@ const InsertLinkToolBox = ({
   };
 
   return (
-    <Modal>
-      <Modal.Header>
+    <Modal onClose={onClose}>
+      <Modal.Header
+        style={{
+          marginTop: '0.7rem',
+          marginLeft: '0.5rem',
+        }}
+      >
         <Icon
           name="link"
           size="1.5rem"
@@ -54,11 +59,21 @@ const InsertLinkToolBox = ({
               font-weight: 550;
               margin-left: 1rem;
               font-size: 0.8rem;
+              margin-top: 0.5rem;
             `}
           >
-            Text
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label
+              htmlFor="link-text"
+              css={css`
+                display: block;
+              `}
+            >
+              Text
+            </label>
           </Box>
           <Input
+            id="link-text"
             type="text"
             onChange={handleLinkTextOnChange}
             onKeyDown={handleKeyDown}
@@ -70,11 +85,21 @@ const InsertLinkToolBox = ({
               font-weight: 550;
               margin-left: 1rem;
               font-size: 0.8rem;
+              margin-top: 0.3rem;
             `}
           >
-            URL
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label
+              htmlFor="link-url"
+              css={css`
+                display: block;
+              `}
+            >
+              URL
+            </label>
           </Box>
           <Input
+            id="link-url"
             type="text"
             onChange={handleLinkUrlOnChange}
             onKeyDown={handleKeyDown}
