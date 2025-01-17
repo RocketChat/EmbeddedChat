@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { formatDistance } from 'date-fns';
 import {
   Box,
   Button,
@@ -6,6 +7,7 @@ import {
   useComponentOverrides,
   appendClassNames,
   Avatar,
+  Tooltip,
 } from '@embeddedchat/ui-elements';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import RCContext from '../../context/RCInstance';
@@ -34,6 +36,9 @@ export const MessageMetrics = ({
     return `${host}/avatar/${username}`;
   };
 
+	const participantsList = (message.replies.length - 1) > 0 ? `+${message.replies.length - 1}` : null;
+
+
   return (
     <Box
       css={variantStyles.metricsContainer || styles.metrics}
@@ -59,27 +64,40 @@ export const MessageMetrics = ({
             </Button>
             {!!message.tcount && (
               <>
-                <Box css={styles.metricsItem} title="Participants">
+                  <Tooltip text='Followers' position='top'>
+                <Box css={styles.metricsItem} >
                   <Avatar
                     url={getUserAvatarUrl(message?.u.username)}
                     alt="avatar"
                     size="1rem"
                   />
+                    {participantsList && (
+                      <span css={styles.metricsItemLabel}>
+                        {participantsList}
+                      </span>
+                    )}
                 </Box>
+                  </Tooltip>
               </>
             )}
 
-            <Box css={styles.metricsItem(true)} title="Replies">
-              <Icon size="1.25rem" name="thread" />
-              <Box css={styles.metricsItemLabel}>
-                {message.tcount} replies,{' '}
-                {new Date(message.tlm).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                })}
+            <Tooltip text={`Last message: ${new Date(message.tlm).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}`} position='top'>
+              <Box css={styles.metricsItem(true)}>
+                <Icon size="1.25rem" name="thread" />
+                <Box css={styles.metricsItemLabel}>
+                  {message.tcount} replies,{' '}
+                  {new Date(message.tlm).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}
+                </Box>
               </Box>
-            </Box>
+            </Tooltip>
           </>
         ))}
     </Box>
