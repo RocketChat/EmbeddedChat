@@ -33,7 +33,7 @@ export const MessageMetrics = ({
     const host = RCInstance.getHost();
     return `${host}/avatar/${username}`;
   };
-  
+
   return (
     <Box
       css={variantStyles.metricsContainer || styles.metrics}

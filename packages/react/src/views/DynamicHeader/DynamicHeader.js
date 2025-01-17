@@ -12,7 +12,6 @@ const DynamicHeader = ({
   iconName,
   headerIconName,
 }) => {
-
   const messageDescription = (msg) => {
     if (msg.file) {
       if (msg.attachments[0]?.description) {
