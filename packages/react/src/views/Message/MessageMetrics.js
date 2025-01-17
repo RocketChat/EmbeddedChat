@@ -1,13 +1,15 @@
-import React from 'react';
-import { formatDistance } from 'date-fns';
+import React, { useContext } from 'react';
 import {
   Box,
   Button,
   Icon,
   useComponentOverrides,
   appendClassNames,
+  Avatar,
 } from '@embeddedchat/ui-elements';
 import { MessageMetricsStyles as styles } from './Message.styles';
+import RCContext from '../../context/RCInstance';
+
 import BubbleThreadBtn from './BubbleVariant/BubbleThreadBtn';
 
 export const MessageMetrics = ({
@@ -19,11 +21,21 @@ export const MessageMetrics = ({
   variantStyles = {},
   ...props
 }) => {
+  console.log('message', message);
   const { styleOverrides, classNames } = useComponentOverrides(
     'MessageMetrics',
     className,
     style
   );
+
+  const { RCInstance } = useContext(RCContext);
+
+  const getUserAvatarUrl = (username) => {
+    const host = RCInstance.getHost();
+    return `${host}/avatar/${username}`;
+  };
+  
+  console.log(getUserAvatarUrl(message?.u.username));
 
   return (
     <Box
@@ -46,28 +58,28 @@ export const MessageMetrics = ({
               onClick={handleOpenThread(message)}
               css={variantStyles && variantStyles.threadReplyButton}
             >
-              Reply
+              View thread
             </Button>
+            {!!message.tcount && (
+              <>
+                <Box css={styles.metricsItem} title="Participants">
+                  <Avatar
+                    url={getUserAvatarUrl(message?.u.username)}
+                    alt="avatar"
+                    size="1rem"
+                  />
+                </Box>
+              </>
+            )}
+
             <Box css={styles.metricsItem(true)} title="Replies">
               <Icon size="1.25rem" name="thread" />
-              <Box css={styles.metricsItemLabel}>{message.tcount}</Box>
-            </Box>
-            {!!message.tcount && (
-              <Box css={styles.metricsItem} title="Participants">
-                <Icon size="1.25rem" name="user" />
-                <Box css={styles.metricsItemLabel}>
-                  {message.replies.length}
-                </Box>
-              </Box>
-            )}
-            <Box
-              css={styles.metricsItem}
-              title={new Date(message.tlm).toLocaleString()}
-            >
-              <Icon size="1.25rem" name="clock" />
               <Box css={styles.metricsItemLabel}>
-                {formatDistance(new Date(message.tlm), new Date(), {
-                  addSuffix: true,
+                {message.tcount} replies,{' '}
+                {new Date(message.tlm).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
                 })}
               </Box>
             </Box>
