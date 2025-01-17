@@ -114,32 +114,38 @@ const AttachmentMetadata = ({
           kB)
         </Box>
 
-        <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
-          <ActionButton
-            ghost
-            icon={isExpanded ? 'chevron-down' : 'chevron-left'}
-            size="small"
-            onClick={() => {
-              onExpandCollapseClick();
-            }}
-            css={css`
-              margin-left: 10px;
-              margin-top: ${attachment.description ? '3px' : '10px'};
-            `}
-          />
-        </Tooltip>
-        <Tooltip text="Download" position="top">
-          <ActionButton
-            ghost
-            icon="download"
-            size="small"
-            onClick={handleDownload}
-            css={css`
-              margin-left: 10px;
-              margin-top: 5px;
-            `}
-          />
-        </Tooltip>
+        <Box
+          css={css`
+            margin-left: 10px;
+            margin-top: ${attachment.description ? '3px' : '10px'};
+          `}
+        >
+          <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
+            <ActionButton
+              ghost
+              icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+              size="small"
+              onClick={() => {
+                onExpandCollapseClick();
+              }}
+            />
+          </Tooltip>
+        </Box>
+        <Box
+          css={css`
+            margin-left: 10px;
+            margin-top: 5px;
+          `}
+        >
+          <Tooltip text="Download" position="top">
+            <ActionButton
+              ghost
+              icon="download"
+              size="small"
+              onClick={handleDownload}
+            />
+          </Tooltip>
+        </Box>
       </Box>
     </Box>
   );
