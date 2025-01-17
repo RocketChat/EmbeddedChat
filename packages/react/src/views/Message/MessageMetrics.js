@@ -36,8 +36,8 @@ export const MessageMetrics = ({
     return `${host}/avatar/${username}`;
   };
 
-	const participantsList = (message.replies.length - 1) > 0 ? `+${message.replies.length - 1}` : null;
-
+  const participantsList =
+    message.replies.length - 1 > 0 ? `+${message.replies.length - 1}` : null;
 
   return (
     <Box
@@ -64,28 +64,34 @@ export const MessageMetrics = ({
             </Button>
             {!!message.tcount && (
               <>
-                  <Tooltip text='Followers' position='top'>
-                <Box css={styles.metricsItem} >
-                  <Avatar
-                    url={getUserAvatarUrl(message?.u.username)}
-                    alt="avatar"
-                    size="1rem"
-                  />
+                <Tooltip text="Followers" position="top">
+                  <Box css={styles.metricsItem}>
+                    <Avatar
+                      url={getUserAvatarUrl(message?.u.username)}
+                      alt="avatar"
+                      size="1rem"
+                    />
                     {participantsList && (
                       <span css={styles.metricsItemLabel}>
                         {participantsList}
                       </span>
                     )}
-                </Box>
-                  </Tooltip>
+                  </Box>
+                </Tooltip>
               </>
             )}
 
-            <Tooltip text={`Last message: ${new Date(message.tlm).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                  })}`} position='top'>
+            <Tooltip
+              text={`Last message: ${new Date(message.tlm).toLocaleTimeString(
+                [],
+                {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }
+              )}`}
+              position="top"
+            >
               <Box css={styles.metricsItem(true)}>
                 <Icon size="1.25rem" name="thread" />
                 <Box css={styles.metricsItemLabel}>
