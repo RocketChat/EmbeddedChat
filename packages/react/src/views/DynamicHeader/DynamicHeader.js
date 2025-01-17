@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Icon, ActionButton, Heading } from '@embeddedchat/ui-elements';
 import useDynamicHeaderStyles from './DynamicHeader.styles';
+import { Markdown } from '../Markdown';
 
 const DynamicHeader = ({
   title,
@@ -11,6 +12,23 @@ const DynamicHeader = ({
   iconName,
   headerIconName,
 }) => {
+
+  const messageDescription = (msg) => {
+    if (msg.file) {
+      if (msg.attachments[0]?.description) {
+        return (
+          <Markdown
+            body={msg.attachments[0].description}
+            md={msg.attachments[0].descriptionMd}
+            isReaction={false}
+          />
+        );
+      }
+      return msg.file.name;
+    }
+    return <Markdown body={msg} md={msg.md} isReaction={false} />;
+  };
+
   const styles = useDynamicHeaderStyles();
   return (
     <Box css={styles.container}>
@@ -32,8 +50,8 @@ const DynamicHeader = ({
           <Icon name={iconName} size="1.25rem" />
         </ActionButton>
 
-        <Heading level={6} css={styles.clearSpacing}>
-          {title}
+        <Heading level={5} css={styles.clearSpacing}>
+          {messageDescription(title)}
         </Heading>
         {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
       </Box>

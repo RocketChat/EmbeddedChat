@@ -21,7 +21,6 @@ export const MessageMetrics = ({
   variantStyles = {},
   ...props
 }) => {
-  console.log('message', message);
   const { styleOverrides, classNames } = useComponentOverrides(
     'MessageMetrics',
     className,
@@ -35,8 +34,6 @@ export const MessageMetrics = ({
     return `${host}/avatar/${username}`;
   };
   
-  console.log(getUserAvatarUrl(message?.u.username));
-
   return (
     <Box
       css={variantStyles.metricsContainer || styles.metrics}
