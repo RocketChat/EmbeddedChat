@@ -183,7 +183,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               </Box>
             </Box>
           ))}
-          {attachment?.text ? (
+        {attachment?.text ? (
           attachment.text[0] === '[' ? (
             attachment.text.match(/\n(.*)/)?.[1] || ''
           ) : (
