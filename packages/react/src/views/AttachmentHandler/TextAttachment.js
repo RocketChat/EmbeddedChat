@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import { format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
 
@@ -14,6 +15,17 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   };
 
   const { theme } = useTheme();
+
+  const formattedTimestamp = useMemo(() => {
+    let timestamp;
+    if (typeof attachment.ts === 'object') {
+      timestamp = attachment.ts.$date;
+    } else if (typeof attachment.ts === 'string') {
+      timestamp = new Date(attachment.ts).getTime();
+    }
+    const formattedTime = format(new Date(timestamp), 'h:mm a');
+    return formattedTime;
+  }, [attachment.ts]);
 
   return (
     <Box
@@ -53,7 +65,24 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               alt="avatar"
               size="1.2em"
             />
-            <Box>@{attachment?.author_name}</Box>
+            <Box>{attachment?.author_name}</Box>
+            <Box
+              is="span"
+              css={css`
+                color: ${theme.colors.accentForeground};
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                letter-spacing: 0rem;
+                font-size: 0.7rem;
+                font-weight: 400;
+                line-height: 1rem;
+                flex-shrink: 0;
+                margin-left: 0.25rem;
+              `}
+            >
+              {formattedTimestamp}
+            </Box>
           </>
         )}
       </Box>
@@ -63,19 +92,6 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachment?.text ? (
-          attachment.text[0] === '[' ? (
-            attachment.text.match(/\n(.*)/)?.[1] || ''
-          ) : (
-            <Markdown
-              body={attachment.text}
-              md={attachment.md}
-              isReaction={false}
-            />
-          )
-        ) : (
-          ''
-        )}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box
@@ -88,7 +104,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                   font-weight: 400;
                   word-break: break-word;
                   border-inline-start: 3px solid ${theme.colors.border};
-                  margin-top: 0.75rem;
+                  margin-top: 0rem;
                   padding: 0.5rem;
                 `,
                 (nestedAttachment?.type ? variantStyles.pinnedContainer : '') ||
@@ -124,7 +140,24 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                       alt="avatar"
                       size="1.2em"
                     />
-                    <Box>@{nestedAttachment?.author_name}</Box>
+                    <Box>{nestedAttachment?.author_name}</Box>
+                    <Box
+                      is="span"
+                      css={css`
+                        color: ${theme.colors.accentForeground};
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        letter-spacing: 0rem;
+                        font-size: 0.7rem;
+                        font-weight: 400;
+                        line-height: 1rem;
+                        flex-shrink: 0;
+                        margin-left: 0.25rem;
+                      `}
+                    >
+                      {formattedTimestamp}
+                    </Box>
                   </>
                 )}
               </Box>
@@ -150,6 +183,19 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               </Box>
             </Box>
           ))}
+        {attachment?.text ? (
+          attachment.text[0] === '[' ? (
+            attachment.text.match(/\n(.*)/)?.[1] || ''
+          ) : (
+            <Markdown
+              body={attachment.text}
+              md={attachment.md}
+              isReaction={false}
+            />
+          )
+        ) : (
+          ''
+        )}
       </Box>
     </Box>
   );
