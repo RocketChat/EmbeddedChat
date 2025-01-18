@@ -92,19 +92,6 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachment?.text ? (
-          attachment.text[0] === '[' ? (
-            attachment.text.match(/\n(.*)/)?.[1] || ''
-          ) : (
-            <Markdown
-              body={attachment.text}
-              md={attachment.md}
-              isReaction={false}
-            />
-          )
-        ) : (
-          ''
-        )}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box
@@ -117,7 +104,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                   font-weight: 400;
                   word-break: break-word;
                   border-inline-start: 3px solid ${theme.colors.border};
-                  margin-top: 0.75rem;
+                  margin-top: 0rem;
                   padding: 0.5rem;
                 `,
                 (nestedAttachment?.type ? variantStyles.pinnedContainer : '') ||
@@ -196,6 +183,19 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               </Box>
             </Box>
           ))}
+          {attachment?.text ? (
+          attachment.text[0] === '[' ? (
+            attachment.text.match(/\n(.*)/)?.[1] || ''
+          ) : (
+            <Markdown
+              body={attachment.text}
+              md={attachment.md}
+              isReaction={false}
+            />
+          )
+        ) : (
+          ''
+        )}
       </Box>
     </Box>
   );
