@@ -36,6 +36,8 @@ import useUiKitStore from '../../store/uiKitStore';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
+  const threadListRef = useRef(null);
+  const [isFetching, setIsFetching]=useState(false);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
@@ -102,23 +104,10 @@ const ChatLayout = () => {
     getStarredMessages();
   }, [showSidebar]);
 
-  const getAllThreads = useCallback(async () => {
-    if (isUserAuthenticated) {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { threads: allThreadMessages } =
-          await RCInstance.getAllThreadMessages();
-        setAllThreadMessages(allThreadMessages);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }, [isUserAuthenticated, RCInstance, setAllThreadMessages]);
-  useEffect(() => {
-    getAllThreads();
-  }, [showSidebar]);
+
+  
+
+  
   return (
     <Box
       css={styles.layout}
@@ -145,7 +134,7 @@ const ChatLayout = () => {
           {showMembers && <RoomMembers members={members} />}
           {showSearch && <SearchMessages />}
           {showChannelinfo && <Roominfo />}
-          {showAllThreads && <ThreadedMessages />}
+          {showAllThreads && <ThreadedMessages threadListRef={threadListRef}/>}
           {showAllFiles && <FileGallery />}
           {showMentions && <MentionedMessages />}
           {showPinned && <PinnedMessages />}

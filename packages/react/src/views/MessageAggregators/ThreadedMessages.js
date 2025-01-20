@@ -1,11 +1,9 @@
-import React, { useState, useMemo } from 'react';
-
+import React, { useState, useMemo, forwardRef } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
-
 import { MessageAggregator } from './common/MessageAggregator';
 
-const ThreadedMessages = () => {
+const ThreadedMessages = ({threadListRef}) => {
   const messages = useMessageStore((state) => state.messages);
   const { variantOverrides } = useComponentOverrides('ThreadedMessages');
   const viewType = variantOverrides.viewType || 'Sidebar';
@@ -24,20 +22,23 @@ const ThreadedMessages = () => {
   );
 
   return (
-    <MessageAggregator
-      title="Threads"
-      fetchedMessageList={allThreadMessages}
-      iconName="thread"
-      noMessageInfo="No threads found"
-      searchProps={{
-        isSearch: true,
-        handleInputChange,
-        placeholder: 'Search Threads',
-      }}
-      searchFiltered={searchFiltered}
-      shouldRender={(msg) => !msg.t && msg.tcount}
-      viewType={viewType}
-    />
+  
+      <MessageAggregator
+        threadListRef={threadListRef}
+        title="Threads"
+        fetchedMessageList={allThreadMessages}
+        iconName="thread"
+        noMessageInfo="No threads found"
+        searchProps={{
+          isSearch: true,
+          handleInputChange,
+          placeholder: 'Search Threads',
+        }}
+        searchFiltered={searchFiltered}
+        shouldRender={(msg) => !msg.t && msg.tcount}
+        viewType={viewType}
+      />
+
   );
 };
 
