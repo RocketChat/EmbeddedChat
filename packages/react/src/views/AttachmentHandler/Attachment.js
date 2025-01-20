@@ -6,6 +6,7 @@ import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import TextAttachment from './TextAttachment';
+import FileAttachment from './FileAttachment';
 
 const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
   const author = {
@@ -97,6 +98,28 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
         type={attachment.attachments[0].type}
         variantStyles={variantStyles}
         author={author}
+      />
+    );
+  }
+  if (attachment && attachment.format) {
+    return (
+      <FileAttachment
+        attachment={attachment}
+        host={host}
+        variantStyles={variantStyles}
+      />
+    );
+  }
+  if (
+    attachment.attachments &&
+    Array.isArray(attachment.attachments) &&
+    attachment.attachments[0]?.format
+  ) {
+    return (
+      <FileAttachment
+        attachment={attachment.attachments[0]}
+        host={host}
+        variantStyles={variantStyles}
       />
     );
   }

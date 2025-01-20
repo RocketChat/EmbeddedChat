@@ -85,26 +85,33 @@ const AttachmentMetadata = ({
         >
           {attachment.title}
         </p>
-        <ActionButton
-          ghost
-          icon={isExpanded ? 'chevron-down' : 'chevron-left'}
-          size="small"
-          onClick={onExpandCollapseClick}
+        <Box
           css={css`
-            margin-left: 10px;
-            margin-top: ${attachment.description ? '3px' : '13px'};
+            margin-top: ${attachment.description ? '3px' : '1px'};
+            display: flex;
           `}
-        />
-        <ActionButton
-          ghost
-          icon="download"
-          size="small"
-          onClick={handleDownload}
-          css={css`
-            margin-left: 10px;
-            margin-top: 5px;
-          `}
-        />
+        >
+          <ActionButton
+            ghost
+            icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+            size="small"
+            onClick={onExpandCollapseClick}
+            css={css`
+              margin-left: 10px;
+              margin-top: ${attachment.description ? '3px' : '13px'};
+            `}
+          />
+          <ActionButton
+            ghost
+            icon="download"
+            size="small"
+            onClick={handleDownload}
+            css={css`
+              margin-left: 10px;
+              margin-top: ${attachment.description ? '3px' : '13px'};
+            `}
+          />
+        </Box>
       </Box>
     </Box>
   );
