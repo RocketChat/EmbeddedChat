@@ -12,7 +12,7 @@ import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = () => {
+const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -55,6 +55,7 @@ const VideoMessageRecorder = () => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
@@ -145,7 +146,12 @@ const VideoMessageRecorder = () => {
   return (
     <>
       {state === 'idle' && (
-        <ActionButton ghost square onClick={handleRecordButtonClick}>
+        <ActionButton
+          ghost
+          square
+          disabled={disabled}
+          onClick={handleRecordButtonClick}
+        >
           <Icon size="1.25rem" name="video-recorder" />
         </ActionButton>
       )}
@@ -158,10 +164,7 @@ const VideoMessageRecorder = () => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
@@ -169,7 +172,9 @@ const VideoMessageRecorder = () => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>
