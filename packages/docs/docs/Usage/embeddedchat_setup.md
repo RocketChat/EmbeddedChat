@@ -34,7 +34,7 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 ### **Note (Required when using EmbeddedChat on a Vite Project):**
 - To ensure proper functionality with the EmbeddedChat component in a `Vite` project, modify your `vite.config.js` or `vite.config.ts` as follows:
 - Add these lines 👇 after `plugins: [react()]`, in the `defineConfig` function:
-```json
+```
 base: "/",
 define: {
   "process.env": {},
