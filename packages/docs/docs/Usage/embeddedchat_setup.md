@@ -31,6 +31,22 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 <EmbeddedChat host="http://your-rocketchat-server.com" roomId="YOUR_ROOM_ID" />
 ```
 
+### **Note (Required when using EmbeddedChat on a Vite Project):**
+- To ensure proper functionality with the EmbeddedChat component in a `Vite` project, modify your `vite.config.js` or `vite.config.ts` as follows:
+- Add these lines 👇 after `plugins: [react()]`, in the `defineConfig` function:
+```json
+base: "/",
+define: {
+  "process.env": {},
+},
+```
+These changes allow you to access environment variables in the browser.
+
+To use environment variables:
+
+1. Create a `.env` file in your project root and declare variables using the `VITE_` prefix. For example: `VITE_HOST=<host-url>`.
+2. Access these variables in your code using `import.meta.env.<environment_variable>`. For example: `import.meta.env.VITE_HOST`.
+
 ## Props
 
 EmbeddedChat supports various props that are used to customize different aspects of this component. A brief description of all the supported props is listed as follows:
