@@ -7,11 +7,6 @@ import getEmojiPickerStyles from './EmojiPicker.styles';
 
 const CustomEmojiPicker = ({
   handleEmojiClick,
-  positionStyles = css`
-    position: absolute;
-    top: 0;
-    right: 0;
-  `,
   wrapperId = 'emoji-popup',
   onClose = () => {},
 }) => {
@@ -21,12 +16,16 @@ const CustomEmojiPicker = ({
   const previewConfig = {
     defaultEmoji: '1f60d',
     defaultCaption: 'None',
-    showPreview: false,
+    showPreview: true,
   };
 
   return (
     <Popup
-      positionStyles={positionStyles}
+    positionStyles={css`
+      position: fixed;
+     bottom:150px;
+     left:47px
+    `}
       wrapperId={wrapperId}
       onClose={onClose}
       height="auto"
@@ -34,11 +33,11 @@ const CustomEmojiPicker = ({
     >
       <Box css={styles.inputBox}>
         <EmojiPicker
-          height={350}
-          width={300}
+          height={400}
+          width={350}
           onEmojiClick={handleEmojiClick}
           previewConfig={previewConfig}
-          searchDisabled
+          searchDisabled={false}
           emojiStyle="facebook"
           lazyLoadEmojis
         />
