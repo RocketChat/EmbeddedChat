@@ -1,5 +1,12 @@
 # e2e-react
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @embeddedchat/react@1.0.0
+
 ## 0.0.1
 
 ### Patch Changes

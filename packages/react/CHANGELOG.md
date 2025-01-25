@@ -1,5 +1,11 @@
 # @embeddedchat/react
 
+## 1.0.0
+
+### Major Changes
+
+- - This release marks the `@embeddedchat/react` package as feature-complete and stable for general use. While the project remains under active development, this version provides a reliable foundation and can be considered a usable release.
+
 ## 0.2.0
 
 ### Minor Changes
