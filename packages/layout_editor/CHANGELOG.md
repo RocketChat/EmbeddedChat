@@ -1,5 +1,23 @@
 # layout_editor
 
+## 0.1.2
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/ui-elements@0.1.2
+  - @embeddedchat/markups@0.1.2
+
+## 0.1.1
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/ui-elements@0.1.1
+  - @embeddedchat/markups@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

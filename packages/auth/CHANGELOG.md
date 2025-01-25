@@ -1,5 +1,17 @@
 # @embeddedchat/auth
 
+## 0.1.2
+
+### Patch Changes
+
+- Version Bump
+
+## 0.1.1
+
+### Patch Changes
+
+- Version Bump
+
 ## 0.1.0
 
 ### Minor Changes

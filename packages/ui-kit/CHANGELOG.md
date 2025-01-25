@@ -1,5 +1,21 @@
 # @embeddedchat/ui-kit
 
+## 0.1.2
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/markups@0.1.2
+
+## 0.1.1
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/markups@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

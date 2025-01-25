@@ -1,6 +1,6 @@
 {
     "name": "@embeddedchat/ui-kit",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "UiKit elements for Rocket.Chat Apps built under EmbeddedChat design system",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",

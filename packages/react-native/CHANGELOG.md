@@ -1,5 +1,21 @@
 # @embeddedchat/react-native
 
+## 0.0.5
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/api@0.1.2
+
+## 0.0.4
+
+### Patch Changes
+
+- Version Bump
+- Updated dependencies
+  - @embeddedchat/api@0.1.1
+
 ## 0.0.3
 
 ### Patch Changes
