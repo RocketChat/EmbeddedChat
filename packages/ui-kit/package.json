@@ -73,6 +73,7 @@
         "react-dom": ">=17.0.2 <19.0.0"
     },
     "dependencies": {
+        "@embeddedchat/markups": "workspace:^",
         "@emotion/babel-preset-css-prop": "^11.11.0",
         "@emotion/react": "11.7.1",
         "@rocket.chat/message-parser": "^0.31.29",
