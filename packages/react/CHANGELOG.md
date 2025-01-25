@@ -1,5 +1,12 @@
 # @embeddedchat/react
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @embeddedchat/api@0.1.1
+
 ## 1.0.0
 
 ### Major Changes

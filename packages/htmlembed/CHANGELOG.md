@@ -1,5 +1,11 @@
 # @embeddedchat/htmlembed
 
+## 0.0.8
+
+### Patch Changes
+
+- @embeddedchat/react@1.0.1
+
 ## 0.0.7
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@embeddedchat/api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A comprehensive API wrapper for Rocket.Chat, facilitating seamless integration and interaction with chat functionalities in web applications.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

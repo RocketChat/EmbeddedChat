@@ -1,5 +1,11 @@
 # @embeddedchat/api
 
+## 0.1.1
+
+### Patch Changes
+
+- - Fixed dependency
+
 ## 0.1.0
 
 ### Minor Changes
