@@ -15,6 +15,23 @@ npm install @embeddedchat/react
 yarn add @embeddedchat/react
 ```
 
+## Vite Configuration (If Applicable)
+
+If you're using EmbeddedChat in a Vite project, you need to make adjustments to your Vite configuration file to ensure compatibility with how environment variables are handled in the browser.
+
+### Update `vite.config.js` or `vite.config.ts`
+
+Add the following settings inside the `defineConfig` function of your Vite configuration file:
+
+```javascript
+base: "/",
+define: {
+  "process.env": {},
+},
+```
+
+These changes address compatibility issues and allow EmbeddedChat to function properly in Vite projects.
+
 ## Importing the Component
 
 Import the `EmbeddedChat` component into your file:
@@ -30,22 +47,6 @@ To use the `EmbeddedChat` component, include it in your component's render metho
 ```jsx
 <EmbeddedChat host="http://your-rocketchat-server.com" roomId="YOUR_ROOM_ID" />
 ```
-
-### **Note (Required when using EmbeddedChat on a Vite Project):**
-- To ensure proper functionality with the EmbeddedChat component in a `Vite` project, modify your `vite.config.js` or `vite.config.ts` as follows:
-- Add these lines 👇 after `plugins: [react()]`, in the `defineConfig` function:
-```
-base: "/",
-define: {
-  "process.env": {},
-},
-```
-These changes allow you to access environment variables in the browser.
-
-To use environment variables:
-
-1. Create a `.env` file in your project root and declare variables using the `VITE_` prefix. For example: `VITE_HOST=<host-url>`.
-2. Access these variables in your code using `import.meta.env.<environment_variable>`. For example: `import.meta.env.VITE_HOST`.
 
 ## Props
 
