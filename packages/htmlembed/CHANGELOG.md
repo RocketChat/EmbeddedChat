@@ -1,5 +1,25 @@
 # @embeddedchat/htmlembed
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [c8c9dee0]
+- Updated dependencies [5f604c59]
+- Updated dependencies [5f604c59]
+- Updated dependencies [100c5f79]
+  - @embeddedchat/react@0.2.0
+
 ## 0.0.5
 
 ### Patch Changes
