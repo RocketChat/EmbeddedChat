@@ -16,8 +16,6 @@ const getAttachmentPreviewStyles = () => {
 
     modalContent: css`
       overflow-x: hidden;
-      overflow-y: auto;
-      height: auto;
     `,
 
     fileDescription: css`
