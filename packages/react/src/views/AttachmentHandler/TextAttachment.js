@@ -65,7 +65,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               alt="avatar"
               size="1.2em"
             />
-            <Box>{attachment?.author_name}</Box>
+            <Box>@{attachment?.author_name}</Box>
             <Box
               is="span"
               css={css`
@@ -140,7 +140,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                       alt="avatar"
                       size="1.2em"
                     />
-                    <Box>{nestedAttachment?.author_name}</Box>
+                    <Box>@{nestedAttachment?.author_name}</Box>
                     <Box
                       is="span"
                       css={css`
