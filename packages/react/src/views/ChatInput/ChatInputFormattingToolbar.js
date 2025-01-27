@@ -91,12 +91,18 @@ const ChatInputFormattingToolbar = ({
     ),
     audio: (
       <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder disabled={isRecordingMessage || isTyping} key="audio" />
+        <AudioMessageRecorder
+          disabled={isRecordingMessage || isTyping}
+          key="audio"
+        />
       </Tooltip>
     ),
     video: (
       <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder disabled={isRecordingMessage || isTyping} key="video" />
+        <VideoMessageRecorder
+          disabled={isRecordingMessage || isTyping}
+          key="video"
+        />
       </Tooltip>
     ),
     file: (
