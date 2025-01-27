@@ -115,26 +115,22 @@ const ChatInputFormattingToolbar = ({
       ),
 
     audio: (
-      <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder
-          displayName={
-            isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
-          }
-          disabled={isRecordingMessage}
-          popOverItemStyles={styles.popOverItemStyles}
-        />
-      </Tooltip>
+      <AudioMessageRecorder
+        displayName={
+          isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
+        }
+        disabled={isRecordingMessage}
+        popOverItemStyles={styles.popOverItemStyles}
+      />
     ),
     video: (
-      <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder
-          displayName={
-            isPopoverOpen && popOverItems.includes('video') ? 'video' : null
-          }
-          popOverItemStyles={styles.popOverItemStyles}
-          disabled={isRecordingMessage}
-        />
-      </Tooltip>
+      <VideoMessageRecorder
+        displayName={
+          isPopoverOpen && popOverItems.includes('video') ? 'video' : null
+        }
+        popOverItemStyles={styles.popOverItemStyles}
+        disabled={isRecordingMessage}
+      />
     ),
     file:
       isPopoverOpen && popOverItems.includes('file') ? (
@@ -218,7 +214,7 @@ const ChatInputFormattingToolbar = ({
           </>
         ) : (
           <Tooltip
-            text={item.tooltip || item.name}
+            text={item.name}
             position="top"
             key={`formatter-${item.name}`}
           >

@@ -4,6 +4,7 @@ import {
   Box,
   Icon,
   ActionButton,
+  Tooltip,
   Modal,
   useTheme,
 } from '@embeddedchat/ui-elements';
@@ -158,14 +159,16 @@ const VideoMessageRecorder = (props) => {
             <span>{displayName}</span>
           </Box>
         ) : (
-          <ActionButton
-            ghost
-            square
-            onClick={handleRecordButtonClick}
-            disabled={disabled}
-          >
-            <Icon size="1.25rem" name="video-recorder" />
-          </ActionButton>
+          <Tooltip text="Video Message" position="top">
+            <ActionButton
+              ghost
+              square
+              disabled={disabled}
+              onClick={handleRecordButtonClick}
+            >
+              <Icon size="1.25rem" name="video-recorder" />
+            </ActionButton>
+          </Tooltip>
         ))}
 
       {state === 'recording' && (
@@ -190,16 +193,20 @@ const VideoMessageRecorder = (props) => {
               `}
             />
             <Box css={styles.controller}>
-              <ActionButton ghost onClick={handleCancelRecordButton}>
-                <Icon size="1.25rem" name="circle-cross" />
-              </ActionButton>
+              <Tooltip text="Cancel Recording" position="bottom">
+                <ActionButton ghost onClick={handleCancelRecordButton}>
+                  <Icon size="1.25rem" name="circle-cross" />
+                </ActionButton>
+              </Tooltip>
               <Box css={styles.record}>
                 <Box is="span" css={styles.dot} />
                 <Box css={styles.timer}>{time}</Box>
               </Box>
-              <ActionButton ghost onClick={handleStopRecordButton}>
-                <Icon name="circle-check" size="1.25rem" />
-              </ActionButton>
+              <Tooltip text="Finish Recording" position="bottom">
+                <ActionButton ghost onClick={handleStopRecordButton}>
+                  <Icon name="circle-check" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
             </Box>
           </Modal>
         </>
