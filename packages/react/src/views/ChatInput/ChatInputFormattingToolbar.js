@@ -218,7 +218,7 @@ const ChatInputFormattingToolbar = ({
           </>
         ) : (
           <Tooltip
-            text={item.name}
+            text={item.tooltip || item.name}
             position="top"
             key={`formatter-${item.name}`}
           >
