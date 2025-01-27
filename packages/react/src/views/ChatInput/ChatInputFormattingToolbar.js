@@ -24,8 +24,8 @@ const ChatInputFormattingToolbar = ({
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: ['emoji', 'audio', 'video', 'file'],
-    popOverItems: ['formatter', 'link'],
+    smallScreenSurfaceItems: ['emoji', 'video', 'file'],
+    popOverItems: ['formatter', 'link', 'audio'],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
@@ -115,8 +115,6 @@ const ChatInputFormattingToolbar = ({
       ),
 
     audio: (
-      isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
-    ) ? (
       <AudioMessageRecorder
         displayName={
           isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
@@ -124,16 +122,6 @@ const ChatInputFormattingToolbar = ({
         disabled={isRecordingMessage}
         popOverItemStyles={styles.popOverItemStyles}
       />
-    ) : (
-      <Tooltip text="">
-        <AudioMessageRecorder
-          displayName={
-            isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
-          }
-          disabled={isRecordingMessage}
-          popOverItemStyles={styles.popOverItemStyles}
-        />
-      </Tooltip>
     ),
     video: (
       <VideoMessageRecorder
