@@ -92,7 +92,6 @@ const MessageHeader = ({
       style={styleOverrides}
     >
       {showDisplayName && showName && (
-        // add a tooltip to the username to show @username at top
         <Tooltip
           text={`@${message.u?.username || message.u?.name}`}
           position="top"
