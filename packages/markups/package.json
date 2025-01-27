@@ -1,6 +1,6 @@
 {
     "name": "@embeddedchat/markups",
-    "version": "0.0.0",
+    "version": "0.1.2",
     "description": "A React component library for handling markup interactions in EmbeddedChat",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
@@ -76,6 +76,7 @@
         "@emotion/react": "11.7.1",
         "@rollup/plugin-json": "^6.0.0",
         "emoji-toolkit": "^7.0.1",
-        "prop-types": "^15.8.1"
+        "prop-types": "^15.8.1",
+        "react-syntax-highlighter": "^15.6.1"
     }
 }

@@ -1,24 +1,19 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
   Icon,
   ActionButton,
+  Tooltip,
   Modal,
   useTheme,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
-import RCContext from '../../context/RCInstance';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
+import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = () => {
+const VideoMessageRecorder = ({ disabled }) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -27,13 +22,16 @@ const VideoMessageRecorder = () => {
     (state) => state.toogleRecordingMessage
   );
 
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+    toggle: state.toggle,
+    setData: state.setData,
+  }));
+
   const [state, setRecordState] = useState('idle');
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
-  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
 
   const onStop = (videoChunks) => {
     const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
@@ -58,6 +56,7 @@ const VideoMessageRecorder = () => {
   };
 
   const handleRecordButtonClick = () => {
+    if (disabled) return;
     setRecordState('recording');
     try {
       start(videoRef.current);
@@ -135,16 +134,9 @@ const VideoMessageRecorder = () => {
   }, [handleMount]);
 
   useEffect(() => {
-    const sendRecording = async () => {
-      await RCInstance.sendAttachment(
-        file,
-        undefined,
-        undefined,
-        ECOptions.enableThreads ? threadId : undefined
-      );
-    };
     if (isRecorded && file) {
-      sendRecording();
+      toggle();
+      setData(file);
       setIsRecorded(false);
     }
     if (file) {
@@ -155,9 +147,16 @@ const VideoMessageRecorder = () => {
   return (
     <>
       {state === 'idle' && (
-        <ActionButton ghost square onClick={handleRecordButtonClick}>
-          <Icon size="1.25rem" name="video-recorder" />
-        </ActionButton>
+        <Tooltip text="Video Message" position="top">
+          <ActionButton
+            ghost
+            square
+            disabled={disabled}
+            onClick={handleRecordButtonClick}
+          >
+            <Icon size="1.25rem" name="video-recorder" />
+          </ActionButton>
+        </Tooltip>
       )}
 
       {state === 'recording' && (
@@ -168,10 +167,7 @@ const VideoMessageRecorder = () => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
@@ -179,20 +175,26 @@ const VideoMessageRecorder = () => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>
-              <ActionButton ghost onClick={handleCancelRecordButton}>
-                <Icon size="1.25rem" name="circle-cross" />
-              </ActionButton>
+              <Tooltip text="Cancel Recording" position="bottom">
+                <ActionButton ghost onClick={handleCancelRecordButton}>
+                  <Icon size="1.25rem" name="circle-cross" />
+                </ActionButton>
+              </Tooltip>
               <Box css={styles.record}>
                 <Box is="span" css={styles.dot} />
                 <Box css={styles.timer}>{time}</Box>
               </Box>
-              <ActionButton ghost onClick={handleStopRecordButton}>
-                <Icon name="circle-check" size="1.25rem" />
-              </ActionButton>
+              <Tooltip text="Finish Recording" position="bottom">
+                <ActionButton ghost onClick={handleStopRecordButton}>
+                  <Icon name="circle-check" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
             </Box>
           </Modal>
         </>
