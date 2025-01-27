@@ -115,6 +115,8 @@ const ChatInputFormattingToolbar = ({
       ),
 
     audio: (
+      isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
+    ) ? (
       <AudioMessageRecorder
         displayName={
           isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
@@ -122,6 +124,16 @@ const ChatInputFormattingToolbar = ({
         disabled={isRecordingMessage}
         popOverItemStyles={styles.popOverItemStyles}
       />
+    ) : (
+      <Tooltip text="">
+        <AudioMessageRecorder
+          displayName={
+            isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
+          }
+          disabled={isRecordingMessage}
+          popOverItemStyles={styles.popOverItemStyles}
+        />
+      </Tooltip>
     ),
     video: (
       <VideoMessageRecorder

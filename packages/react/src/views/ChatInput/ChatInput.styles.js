@@ -4,12 +4,16 @@ import { darken, lighten } from '@embeddedchat/ui-elements';
 export const getChatInputStyles = (theme) => {
   const styles = {
     inputWithFormattingBox: css`
-      width: 100%;
       margin-bottom: 5px;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
+      margin: 0.5rem 2rem 1rem 2rem;
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
+      }
+      @media (max-width: 500px) {
+        margin: 0;
+        width: 100%;
       }
     `,
 

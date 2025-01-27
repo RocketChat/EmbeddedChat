@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 const getQuoteMessageStyles = (theme) => {
   const styles = {
     messageContainer: css`
+      margin: 0.2rem 2rem;
       position: relative;
       font-size: 0.85rem;
       background-color: ${theme.colors.background};
@@ -11,8 +12,13 @@ const getQuoteMessageStyles = (theme) => {
       z-index: 1200;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
-      width: 100%;
+      max-width: 100%;
       box-sizing: border-box;
+
+      @media (max-width: 500px) {
+        margin: 0;
+        width: 100%;
+      }
     `,
 
     avatarContainer: css`
