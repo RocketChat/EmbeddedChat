@@ -48,6 +48,7 @@ const ChatBody = ({
   const [, setIsUserScrolledUp] = useState(false);
   const [otherUserMessage, setOtherUserMessage] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const firstUnreadMessageIdRef = useRef('');
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
@@ -117,7 +118,13 @@ const ChatBody = ({
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
           setOtherUserMessage(true);
+
+          if (firstUnreadMessageIdRef.current === '') {
+            firstUnreadMessageIdRef.current = message._id;
+          }
         }
+      } else {
+        firstUnreadMessageIdRef.current = '';
       }
       upsertMessage(message, ECOptions?.enableThreads);
     },
@@ -180,6 +187,7 @@ const ChatBody = ({
       setPopupVisible(false);
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
+      firstUnreadMessageIdRef.current = '';
     }
   }, [
     messageListRef,
@@ -292,7 +300,10 @@ const ChatBody = ({
             threadMessages={threadMessages}
           />
         ) : (
-          <MessageList messages={messages} />
+          <MessageList
+            messages={messages}
+            firstUnreadMessageId={firstUnreadMessageIdRef.current}
+          />
         )}
 
         <TotpModal handleLogin={handleLogin} />

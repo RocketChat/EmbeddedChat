@@ -62,7 +62,7 @@ export const MessageBodyStyles = {
   `,
 };
 
-export const getMessageDividerStyles = (theme) => {
+export const getMessageDividerStyles = (theme, mode) => {
   const styles = {
     divider: css`
       letter-spacing: 0rem;
@@ -102,6 +102,42 @@ export const getMessageDividerStyles = (theme) => {
       flex-grow: 1;
       height: 1px;
       background-color: ${theme.colors.secondary};
+    `,
+
+    unreadDivider: css`
+      letter-spacing: 0rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1rem;
+      position: relative;
+      display: flex;
+      z-index: 1000;
+      align-items: center;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
+    `,
+
+    unreadDividerContent: css`
+      color: ${mode === 'light'
+        ? theme.colors.destructive
+        : theme.colors.warningForeground};
+      font-size: 0.875rem;
+      font-weight: 750;
+      margin-left: 10px;
+    `,
+
+    unreadBar: css`
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-grow: 1;
+      height: 0.7px;
+      background-color: ${mode === 'light'
+        ? theme.colors.destructive
+        : theme.colors.warningForeground};
     `,
   };
 
