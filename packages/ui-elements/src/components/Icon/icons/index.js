@@ -63,7 +63,7 @@ import Arc from './Arc';
 import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
-import Team from './Team'
+import Team from './Team';
 
 const icons = {
   file: File,
