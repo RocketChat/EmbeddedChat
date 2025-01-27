@@ -11,6 +11,9 @@ export const getMessageStyles = ({ theme }) => {
       padding-left: 2.25rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
+      @media (max-width: 768px) {
+        padding-left: 0.8rem;
+      }
     `,
     messageEditing: css`
       background-color: ${theme.colors.secondary};
