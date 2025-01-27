@@ -12,6 +12,7 @@ import {
   useThreadsMessageStore,
   useMemberStore,
   useSidebarStore,
+  useMessageStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -35,6 +36,8 @@ import useUiKitStore from '../../store/uiKitStore';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
+  const threadListRef = useRef(null);
+  const [isFetching, setIsFetching]=useState(false);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
@@ -44,6 +47,9 @@ const ChatLayout = () => {
   );
   const starredMessages = useStarredMessageStore(
     (state) => state.starredMessages
+  );
+  const setAllThreadMessages = useMessageStore(
+    (state) => state.setAllThreadMessages
   );
   const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
@@ -97,6 +103,11 @@ const ChatLayout = () => {
   useEffect(() => {
     getStarredMessages();
   }, [showSidebar]);
+
+
+  
+
+  
   return (
     <Box
       css={styles.layout}
@@ -123,7 +134,7 @@ const ChatLayout = () => {
           {showMembers && <RoomMembers members={members} />}
           {showSearch && <SearchMessages />}
           {showChannelinfo && <Roominfo />}
-          {showAllThreads && <ThreadedMessages />}
+          {showAllThreads && <ThreadedMessages threadListRef={threadListRef}/>}
           {showAllFiles && <FileGallery />}
           {showMentions && <MentionedMessages />}
           {showPinned && <PinnedMessages />}

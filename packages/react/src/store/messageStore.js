@@ -6,6 +6,9 @@ const useMessageStore = create((set, get) => ({
   messages: [],
   isMessageLoaded: false,
   threadMessages: [],
+  allThreadMessages: [],
+  threadOffset:0,
+  
   filtered: false,
   editMessage: {},
   quoteMessage: [],
@@ -113,6 +116,19 @@ const useMessageStore = create((set, get) => ({
   },
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
+  setAllThreadMessages: (newMessages, append = false) =>
+    set((state) => {
+      const allMessages = append
+        ? [...state.allThreadMessages, ...newMessages]
+        : newMessages;
+      const uniqueMessages = Array.from(
+        new Map(allMessages.map((msg) => [msg._id, msg])).values()
+      );
+      return {
+        allThreadMessages: uniqueMessages,
+      };
+    }),
+  setOffset: (offset) => set(() => ({ threadOffset: offset })),
 }));
 
 export default useMessageStore;

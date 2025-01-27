@@ -59,6 +59,12 @@ const ChatBody = ({
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const setOffset = useMessageStore((state) => state.setOffset);
+  const threadOffset = useMessageStore((state) => state.threadOffset);
+  const setAllThreadMessages = useMessageStore(
+    (state) => state.setAllThreadMessages
+  );
+  const { getAllThreadMessages } = useFetchChatData();
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -80,6 +86,30 @@ const ChatBody = ({
   const username = useUserStore((state) => state.username);
 
   const { getMessagesAndRoles } = useFetchChatData(showRoles);
+  const loadMoreThreadMessages = useCallback(async (currentLength) => {
+    if (isUserAuthenticated && threadMainMessage?._id) {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { threads: moreThreadMessages } = await RCInstance.getAllThreadMessages(
+          '', '', threadOffset, 30
+        );
+        setThreadMessages((prevMessages) => [...prevMessages, ...moreThreadMessages]);
+        setOffset(threadOffset + 30);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [
+    isUserAuthenticated,
+    anonymousMode,
+    RCInstance,
+    threadMainMessage?._id,
+    setThreadMessages,
+    threadOffset,
+    setOffset,
+  ]);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -92,6 +122,8 @@ const ChatBody = ({
           isChannelPrivate
         );
         setThreadMessages(messages.reverse());
+
+        // getAllThreadMessages('','',10,30);
       } catch (e) {
         console.error(e);
       }
@@ -181,12 +213,15 @@ const ChatBody = ({
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
     }
+   
   }, [
     messageListRef,
     setScrollPosition,
     setIsUserScrolledUp,
     setPopupVisible,
     setOtherUserMessage,
+ 
+
   ]);
 
   const showNewMessagesPopup = () => {

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext,useState } from 'react';
 import RCContext from '../context/RCInstance';
 import {
   useUserStore,
@@ -17,12 +17,19 @@ const useFetchChatData = (showRoles) => {
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );
+  const [loading, setLoading] = useState(false);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const AllThreadMessages = useMessageStore((state) => state.allThreadMessages);
+  const setAllThreadMessages = useMessageStore(
+    (state) => state.setAllThreadMessages
+  );
+  const setOffset=useMessageStore((state)=>state.setOffset);
+  const threadOffset= useMessageStore((state)=>state.threadOffset);
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -90,6 +97,27 @@ const useFetchChatData = (showRoles) => {
     ]
   );
 
+  const getAllThreadMessages = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          setLoading(true);
+          const { threads: allThreadMessages } = await RCInstance.getAllThreadMessages('', '', threadOffset, 30);
+          setAllThreadMessages(allThreadMessages,true);
+          setOffset((prevOffset) => prevOffset + 30);
+          setLoading(false);
+        } catch (e) {
+          console.log(e);
+          setLoading(false);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setAllThreadMessages]
+  );
+
   const getStarredMessages = useCallback(
     async (anonymousMode) => {
       if (isUserAuthenticated) {
@@ -107,7 +135,7 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
-  return { getMessagesAndRoles, getStarredMessages };
+  return { getMessagesAndRoles, getStarredMessages, getAllThreadMessages };
 };
 
 export default useFetchChatData;
