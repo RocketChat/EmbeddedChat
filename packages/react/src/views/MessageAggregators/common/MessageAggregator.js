@@ -19,18 +19,7 @@ import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
 
-export const MessageAggregator = ({
-  title,
-  iconName,
-  noMessageInfo,
-  shouldRender,
-  fetchedMessageList,
-  filterProps,
-  searchProps,
-  searchFiltered,
-  fetching,
-  type = 'message',
-  viewType = 'Sidebar',
+export const MessageAggregator = ({title,iconName,noMessageInfo,shouldRender,fetchedMessageList,filterProps,searchProps,searchFiltered,fetching,type = 'message',viewType = 'Sidebar',
 }) => {
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
@@ -49,7 +38,7 @@ export const MessageAggregator = ({
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
-
+  const { value: searchText } = searchProps;
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const openThread = useMessageStore((state) => state.openThread);
   const closeThread = useMessageStore((state) => state.closeThread);
@@ -181,6 +170,7 @@ export const MessageAggregator = ({
                           marginLeft: '15px',
                           minWidth: 0,
                         }}
+                        searchText={searchText}
                       />
 
                       <ActionButton

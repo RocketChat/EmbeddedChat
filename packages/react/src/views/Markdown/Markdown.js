@@ -6,7 +6,7 @@ import { Markup, MarkupInteractionContext } from '@embeddedchat/markups/src';
 import EmojiReaction from '../EmojiReaction/EmojiReaction';
 import { useMemberStore, useUserStore } from '../../store';
 
-const Markdown = ({ body, md, isReaction = false }) => {
+const Markdown = ({ body, md, isReaction = false ,searchText}) => {
   const members = useMemberStore((state) => state.members);
   const username = useUserStore((state) => state.username);
   const value = useMemo(() => ({ members, username }), [members, username]);
@@ -28,7 +28,7 @@ const Markdown = ({ body, md, isReaction = false }) => {
   return (
     <Box>
       <MarkupInteractionContext.Provider value={value}>
-        <Markup tokens={md} />
+        <Markup tokens={md} searchText={searchText}/>
       </MarkupInteractionContext.Provider>
     </Box>
   );

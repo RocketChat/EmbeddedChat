@@ -9,12 +9,11 @@ import UnOrderedListBlock from './blocks/UnOrderedListBlock';
 import QuoteBlock from './blocks/QuoteBlock';
 import TaskListBlock from './blocks/TaskListBlock';
 
-const Markup = ({ tokens }) =>
+const Markup = ({ tokens ,searchText}) =>
   tokens.map((token, index) => {
     switch (token.type) {
       case 'PARAGRAPH':
-        return <ParagraphBlock key={index} contents={token.value} />;
-
+        return <ParagraphBlock key={index} contents={token.value} searchText={searchText}/>;
       case 'CODE':
         return <CodeBlock key={index} lines={token.value} />;
 

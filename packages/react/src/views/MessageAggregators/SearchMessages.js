@@ -14,7 +14,6 @@ const SearchMessages = () => {
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
-
   const searchMessages = useCallback(async () => {
     const { messages } = await RCInstance.getSearchMessages(text);
     setMessageList(messages);
@@ -39,7 +38,6 @@ const SearchMessages = () => {
       debouncedSearch.cancel();
     };
   }, [text, debouncedSearch, messageList.length]);
-
   return (
     <MessageAggregator
       title="Search Messages"
@@ -49,6 +47,7 @@ const SearchMessages = () => {
         isSearch: true,
         handleInputChange,
         placeholder: 'Search Messages',
+        value :{text},
       }}
       searchFiltered={messageList}
       shouldRender={(msg) => !!msg}

@@ -41,6 +41,7 @@ const Message = ({
   showRoles = true,
   isLinkPreview = true,
   isInSidebar = false,
+  searchText,
 }) => {
   const { classNames, styleOverrides, variantOverrides } =
     useComponentOverrides(
@@ -267,7 +268,7 @@ const Message = ({
                     />
                   </>
                 ) : (
-                  <Markdown body={message} md={message.md} isReaction={false} />
+                  <Markdown body={message} md={message.md} isReaction={false}  searchText={searchText}/>
                 )}
 
                 {message.blocks && (
