@@ -24,7 +24,7 @@ const ChatInputFormattingToolbar = ({
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: ['emoji', 'video','audio', 'file'],
+    smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file'],
     popOverItems: ['formatter', 'link'],
   },
 }) => {
