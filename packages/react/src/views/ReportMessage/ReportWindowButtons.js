@@ -92,6 +92,8 @@ const ReportWindowButtons = ({
         css={css`
           margin-top: 0.9rem;
           margin-left: 0.7rem;
+          margin-right: 0.3rem;
+          overflow-y: auto;
         `}
       >
         <Modal.Content>
