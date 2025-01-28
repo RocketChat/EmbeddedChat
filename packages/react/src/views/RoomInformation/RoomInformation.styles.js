@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const getRoomInformationStyles = (theme) => {
+const getRoomInformationStyles = (theme, mode) => {
   const styles = {
     infoContainer: css`
       margin: 16px;
@@ -22,7 +22,10 @@ const getRoomInformationStyles = (theme) => {
 
     archivedRoomInfo: css`
       display: flex;
-      border: 1px solid ${theme.colors.ring};
+      border: 1px solid
+        ${mode === 'light'
+          ? theme.colors.warning
+          : theme.colors.warningForeground};
       border-radius: ${theme.radius};
       padding: 0.75rem 1rem;
       width: 100%;

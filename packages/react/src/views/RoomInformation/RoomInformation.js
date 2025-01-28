@@ -27,8 +27,8 @@ const Roominfo = () => {
   };
   const { channelName } = ECOptions ?? {};
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
-  const { theme } = useTheme();
-  const styles = getRoomInformationStyles(theme);
+  const { theme, mode } = useTheme();
+  const styles = getRoomInformationStyles(theme, mode);
 
   return (
     <ViewComponent
@@ -63,7 +63,15 @@ const Roominfo = () => {
         </Box>
         <Box css={styles.infoContainer}>
           <Box css={styles.archivedRoomInfo}>
-            <Icon name="report" size="1.25rem" />
+            <Icon
+              name="report"
+              size="1.25rem"
+              fill={
+                mode === 'light'
+                  ? theme.colors.warning
+                  : theme.colors.warningForeground
+              }
+            />
             <Box css={styles.archivedText}>Room Archived</Box>
           </Box>
           <Box css={styles.infoHeader}>
