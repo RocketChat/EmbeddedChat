@@ -19,7 +19,18 @@ import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
 
-export const MessageAggregator = ({title,iconName,noMessageInfo,shouldRender,fetchedMessageList,filterProps,searchProps,searchFiltered,fetching,type = 'message',viewType = 'Sidebar',
+export const MessageAggregator = ({
+  title,
+  iconName,
+  noMessageInfo,
+  shouldRender,
+  fetchedMessageList,
+  filterProps,
+  searchProps,
+  searchFiltered,
+  fetching,
+  type = 'message',
+  viewType = 'Sidebar',
 }) => {
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
@@ -38,10 +49,11 @@ export const MessageAggregator = ({title,iconName,noMessageInfo,shouldRender,fet
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
-  const { value: searchText } = searchProps;
+
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const openThread = useMessageStore((state) => state.openThread);
-  const closeThread = useMessageStore((state) => state.closeThread);
+  const closeThread = useMessageStore((state) => state.closeThread);;
+  const { value: searchText } = searchProps;
 
   const setJumpToMessage = (msg) => {
     if (!msg || !msg._id) {
