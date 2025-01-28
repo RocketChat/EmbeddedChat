@@ -37,7 +37,7 @@ export const MessageMetrics = ({
   };
 
   const participantsList =
-    message.replies.length - 1 > 0 ? `+${message.replies.length - 1}` : null;
+    message?.replies?.length - 1 > 0 ? `+${message.replies.length - 1}` : null;
 
   return (
     <Box
