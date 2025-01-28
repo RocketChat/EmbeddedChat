@@ -24,8 +24,8 @@ const ChatInputFormattingToolbar = ({
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: ['emoji', 'video', 'file'],
-    popOverItems: ['formatter', 'link', 'audio'],
+    smallScreenSurfaceItems: ['emoji', 'video','audio', 'file'],
+    popOverItems: ['formatter', 'link'],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
