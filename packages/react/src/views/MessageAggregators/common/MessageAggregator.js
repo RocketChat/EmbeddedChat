@@ -89,8 +89,8 @@ export const MessageAggregator = ({
 
                 element.style.backgroundColor =
                   mode === 'light'
-                    ? darken(theme.colors.warning, 0.03)
-                    : lighten(theme.colors.warningForeground, 0.03);
+                    ? lighten(theme.colors.warning, 0.85)
+                    : darken(theme.colors.warningForeground, 0.3);
 
                 setTimeout(() => {
                   element.style.backgroundColor = '';
