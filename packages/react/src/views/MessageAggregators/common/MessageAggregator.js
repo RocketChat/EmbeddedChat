@@ -1,27 +1,33 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { isSameDay, format, set } from 'date-fns';
 import {
   Box,
+  Menu,
   Sidebar,
   Popup,
   useTheme,
   ActionButton,
   Icon,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
+import RCContext from '../../../context/RCInstance';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore, useSidebarStore } from '../../../store';
+import { useMessageStore, useSidebarStore, useUserStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
-import { useRCContext } from '../../../context/RCInstance';
 
 export const MessageAggregator = ({
   title,
   iconName,
+  isStarredMessageDisplay = false,
+  isPinnedMessageDisplay = false,
+  unstar,
+  unpin,
   noMessageInfo,
   shouldRender,
   fetchedMessageList,
@@ -35,9 +41,10 @@ export const MessageAggregator = ({
   const { theme } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
-  const { ECOptions } = useRCContext();
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
+  const currentUserRoles = useUserStore((state) => state.roles);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
     () => [...messages, ...[...threadMessages].reverse()],
@@ -49,6 +56,13 @@ export const MessageAggregator = ({
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
   );
+  const dispatchToastMessage = useToastBarDispatch();
+  const pinPermissions = useUserStore(
+    (state) => state.userPinPermissions.roles
+  );
+
+  const pinRoles = new Set(pinPermissions);
+  const isAllowedToPin = currentUserRoles.some((role) => pinRoles.has(role));
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
   const openThread = useMessageStore((state) => state.openThread);
@@ -98,6 +112,28 @@ export const MessageAggregator = ({
           }
         }, 300);
       }
+    }
+  };
+
+  const getMessageLink = async (id) => {
+    const host = await RCInstance.getHost();
+    const res = await RCInstance.channelInfo();
+    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  };
+
+  const copyLink = async (id) => {
+    try {
+      const messageLink = await getMessageLink(id);
+      await navigator.clipboard.writeText(messageLink);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message link copied successfully',
+      });
+    } catch (err) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error in copying message link',
+      });
     }
   };
 
@@ -183,18 +219,61 @@ export const MessageAggregator = ({
                         }}
                       />
 
-                      <ActionButton
-                        square
-                        ghost
-                        onClick={() => setJumpToMessage(msg)}
-                        css={{
-                          position: 'relative',
-                          zIndex: 10,
-                          marginRight: '5px',
-                        }}
-                      >
-                        <Icon name="arrow-back" size="1.25rem" />
-                      </ActionButton>
+                      {!isStarredMessageDisplay && !isPinnedMessageDisplay && (
+                        <ActionButton
+                          square
+                          ghost
+                          onClick={() => setJumpToMessage(msg)}
+                          css={{
+                            position: 'relative',
+                            zIndex: 10,
+                            marginRight: '5px',
+                          }}
+                        >
+                          <Icon name="arrow-back" size="1.25rem" />
+                        </ActionButton>
+                      )}
+
+                      {(isStarredMessageDisplay || isPinnedMessageDisplay) && (
+                        <Box
+                          style={{
+                            marginRight: '20px',
+                          }}
+                        >
+                          <Menu
+                            isToolTip={false}
+                            options={[
+                              isPinnedMessageDisplay && isAllowedToPin
+                                ? {
+                                    id: 'unpin',
+                                    action: () => unpin(msg),
+                                    label: 'Unpin',
+                                    icon: 'pin',
+                                  }
+                                : isStarredMessageDisplay
+                                ? {
+                                    id: 'unstar',
+                                    action: () => unstar(msg),
+                                    label: 'Remove star',
+                                    icon: 'star',
+                                  }
+                                : {},
+                              {
+                                id: 'copyLink',
+                                action: () => copyLink(msg._id),
+                                label: 'Copy link',
+                                icon: 'link',
+                              },
+                              {
+                                id: 'jumptomessage',
+                                action: () => setJumpToMessage(msg),
+                                label: 'Jump to message',
+                                icon: 'arrow-jump',
+                              },
+                            ]}
+                          />
+                        </Box>
+                      )}
                     </Box>
                   )}
                 </React.Fragment>
