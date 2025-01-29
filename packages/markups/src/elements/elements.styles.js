@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useTheme, darken } from '@embeddedchat/ui-elements';
+import { useTheme, darken, lighten } from '@embeddedchat/ui-elements';
 
 export const InlineElementsStyles = () => {
   const { theme } = useTheme();
@@ -81,11 +81,17 @@ export const EmojiStyles = {
   `,
 };
 
-export const useHighlightTextStyles = {
-  highlight: css`
-    background-color: yellow;
-    font-weight: bold;
-  `,
+export const useHighlightTextStyles = (theme, mode) => {
+  const styles = {
+    highlight: css`
+      background-color: ${mode === 'light'
+        ? lighten(theme.colors.warning, 0.25)
+        : darken(theme.colors.warningForeground, 0.3)};
+      font-weight: bold;
+    `,
+  };
+
+  return styles;
 };
 
 const useMentionStyles = (contents, username) => {
