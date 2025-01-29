@@ -140,6 +140,7 @@ const VideoMessageRecorder = ({ disabled }) => {
   };
 
   const handleSendRecording = () => {
+    if (isRecording) return;
     if (file) {
       toggle();
       setData(file);
