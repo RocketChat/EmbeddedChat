@@ -25,6 +25,7 @@ import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
 
+
 const EmbeddedChat = (props) => {
   const [config, setConfig] = useState(() => props);
 
@@ -41,6 +42,7 @@ const EmbeddedChat = (props) => {
     roomId = 'GENERAL',
     channelName,
     anonymousMode = false,
+    headerColor = 'white',
     toastBarPosition = 'bottom right',
     showRoles = false,
     showAvatar = true,
@@ -259,6 +261,7 @@ const EmbeddedChat = (props) => {
                 setClosableState={setClosableState}
                 fullScreen={fullScreen}
                 setFullScreen={setFullScreen}
+                style={{ backgroundColor: headerColor }} 
               />
             )}
 
@@ -299,6 +302,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  headerColor: PropTypes.string
 };
 
 export default memo(EmbeddedChat);

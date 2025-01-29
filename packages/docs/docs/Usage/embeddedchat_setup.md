@@ -60,6 +60,7 @@ EmbeddedChat supports various props that are used to customize different aspects
 - `roomId` (string): ID of the chat room. Defaults to `GENERAL`.
 - `channelName` (string): Fallback channel name for the chat. Defaults to `general`.
 - `anonymousMode` (boolean): Enables anonymous mode. Defaults to `false`.
+- `headerColor` (string): Sets the color of the header. Defaults to `white`.
 - `toastBarPosition` (string): Position of the toast bar. Defaults to `'bottom right'`.
 - `showRoles` (boolean): Displays user roles. Defaults to `false`.
 - `showAvatar` (boolean): Shows user avatars. Defaults to `true`.

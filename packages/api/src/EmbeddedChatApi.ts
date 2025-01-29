@@ -535,6 +535,7 @@ export default class EmbeddedChatApi {
       : "";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      console.log(this.host, "host")
       const messages = await fetch(
         `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
         {
