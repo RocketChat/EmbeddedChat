@@ -138,6 +138,14 @@ export const getCommonRecorderStyles = (theme) => {
       align-items: right;
       margin-top: 0.3rem;
     `,
+    modal: {
+      '@media(max-width: 768px)': {
+        height: '100%',
+        width: '100%',
+        maxHeight: '100%',
+        maxWidth: '100%',
+      },
+    },
   };
 
   return styles;

@@ -6,6 +6,7 @@ import {
   ActionButton,
   Button,
   Modal,
+  Tooltip,
   useTheme,
   lighten,
   darken,
@@ -162,14 +163,16 @@ const VideoMessageRecorder = ({ disabled }) => {
   return (
     <>
       {state === 'idle' && (
-        <ActionButton
-          ghost
-          square
-          disabled={disabled}
-          onClick={openWindowToRecord}
-        >
-          <Icon size="1.25rem" name="video-recorder" />
-        </ActionButton>
+        <Tooltip text="Video Message" position="top">
+          <ActionButton
+            ghost
+            square
+            disabled={disabled}
+            onClick={openWindowToRecord}
+          >
+            <Icon size="1.25rem" name="video-recorder" />
+          </ActionButton>
+        </Tooltip>
       )}
 
       {state === 'preview' && (
@@ -191,25 +194,32 @@ const VideoMessageRecorder = ({ disabled }) => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>
               <Box css={styles.leftSection}>
-                <ActionButton
-                  ghost
-                  onClick={
-                    isRecording ? handleStopRecording : handleStartRecording
-                  }
-                  css={css`
-                    margin-top: 0.3rem;
-                  `}
+                <Tooltip
+                  text={isRecording ? 'Stop recording' : 'Start recording'}
+                  position="bottom"
                 >
-                  <Icon
-                    name={isRecording ? 'stop-record' : 'record'}
-                    size="1.25rem"
-                  />
-                </ActionButton>
+                  <ActionButton
+                    ghost
+                    onClick={
+                      isRecording ? handleStopRecording : handleStartRecording
+                    }
+                    css={css`
+                      margin-top: 0.3rem;
+                    `}
+                  >
+                    <Icon
+                      name={isRecording ? 'stop-record' : 'record'}
+                      size="1.25rem"
+                    />
+                  </ActionButton>
+                </Tooltip>
                 <Box css={styles.record}>
                   <Box
                     is="span"
