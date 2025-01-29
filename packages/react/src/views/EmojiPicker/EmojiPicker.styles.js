@@ -14,7 +14,7 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-picker-border-color: ${theme.colors.border};
         --epr-category-label-bg-color: ${theme.colors.background};
         --epr-category-icon-active-color: ${theme.colors.secondary};
-        --epr-emoji-size: 20px;
+        --epr-emoji-size: 25px;
         --epr-category-navigation-button-size: 20px;
         --epr-emoji-gap: 10px;
 
@@ -38,7 +38,7 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-search-bar-inner-padding: var(--epr-horizontal-padding);
         --epr-emoji-variation-picker-height: 45px;
         --epr-emoji-variation-picker-bg-color: var(--epr-bg-color);
-        --epr-preview-height: 70px;
+        --epr-preview-height: 65px;
         --epr-preview-text-size: 14px;
         --epr-preview-text-padding: 0 var(--epr-horizontal-padding);
         --epr-preview-border-color: var(--epr-picker-border-color);
@@ -49,9 +49,9 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-category-label-height: 40px;
 
         --epr-emoji-padding: 5px;
-        --epr-emoji-fullsize: calc(
-          var(--epr-emoji-size) + var(--epr-emoji-padding) * 2
-        );
+        // --epr-emoji-fullsize: calc(
+        //   var(--epr-emoji-size) + var(--epr-emoji-padding) * 2
+        // );
         --epr-emoji-hover-color: var(--epr-hover-bg-color);
         --epr-emoji-variation-indicator-color: var(--epr-picker-border-color);
         --epr-emoji-variation-indicator-color-hover: var(--epr-text-color);
@@ -60,11 +60,11 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-category-label-z-index: 2;
         --epr-skin-variation-picker-z-index: 5;
         --epr-preview-z-index: 6;
+        --epr-search-input-bg-color: ${calculatedColors};
 
         /* Use these properties of color if needed ->
 
       --epr-shadow: 'theme-color';
-      --epr-search-input-bg-color: 'theme-color';
       --epr-skin-tone-picker-menu-color: 'theme-color';
       --epr-dark: 'theme-color'
       --epr-dark-emoji-variation-picker-bg-color: var(--epr-dark);

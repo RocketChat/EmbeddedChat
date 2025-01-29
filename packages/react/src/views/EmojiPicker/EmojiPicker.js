@@ -12,7 +12,6 @@ const CustomEmojiPicker = ({
 }) => {
   const theme = useTheme();
   const styles = getEmojiPickerStyles(theme);
-
   const previewConfig = {
     defaultEmoji: '1f60d',
     defaultCaption: 'None',
@@ -22,16 +21,16 @@ const CustomEmojiPicker = ({
   return (
     <Popup
     positionStyles={css`
-      position: fixed;
-     bottom:150px;
-     left:47px
-    `}
+      position:fixed;
+      bottom:150px;
+      left:47px;
+      `}
       wrapperId={wrapperId}
       onClose={onClose}
       height="auto"
       width="auto"
     >
-      <Box css={styles.inputBox}>
+      <Box css={styles.emojiPicker}>
         <EmojiPicker
           height={400}
           width={350}
