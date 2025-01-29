@@ -87,11 +87,12 @@ const VideoAttachment = ({
         />
         {isExpanded && (
           <video
-            width={300}
             controls
             style={{
               borderBottomLeftRadius: 'inherit',
               borderBottomRightRadius: 'inherit',
+              maxWidth: '100%',
+              maxHeight: '200px',
             }}
           >
             <source

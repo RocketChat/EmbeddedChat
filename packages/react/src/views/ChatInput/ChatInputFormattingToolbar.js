@@ -88,16 +88,8 @@ const ChatInputFormattingToolbar = ({
         </ActionButton>
       </Tooltip>
     ),
-    audio: (
-      <Tooltip text="Audio Message" position="top" key="audio">
-        <AudioMessageRecorder disabled={isRecordingMessage} />
-      </Tooltip>
-    ),
-    video: (
-      <Tooltip text="Video Message" position="top" key="video">
-        <VideoMessageRecorder disabled={isRecordingMessage} />
-      </Tooltip>
-    ),
+    audio: <AudioMessageRecorder disabled={isRecordingMessage} key="audio" />,
+    video: <VideoMessageRecorder disabled={isRecordingMessage} key="video" />,
     file: (
       <Tooltip text="Upload File" position="top" key="file">
         <ActionButton
