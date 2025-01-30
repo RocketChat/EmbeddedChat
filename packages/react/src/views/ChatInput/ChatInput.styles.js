@@ -4,7 +4,6 @@ import { darken, lighten } from '@embeddedchat/ui-elements';
 export const getChatInputStyles = (theme) => {
   const styles = {
     inputWithFormattingBox: css`
-      margin-bottom: 5px;
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
       margin: 0.5rem 2rem 1rem 2rem;
@@ -27,6 +26,9 @@ export const getChatInputStyles = (theme) => {
       justify-content: center;
       flex-direction: row;
       padding: 0.5rem;
+      @media (max-width: 383px) {
+        min-height: 100px;
+      }
     `,
 
     iconCursor: css`
@@ -34,7 +36,6 @@ export const getChatInputStyles = (theme) => {
     `,
 
     textInput: css`
-      min-width: 0;
       flex: 1;
       word-wrap: break-word;
       white-space: pre-wrap;
@@ -44,6 +45,7 @@ export const getChatInputStyles = (theme) => {
       border: none;
       outline: none;
       font-size: 14px;
+
       &:focus {
         border: none;
         outline: none;
@@ -56,7 +58,7 @@ export const getChatInputStyles = (theme) => {
       &::placeholder {
         padding-left: 5px;
       }
-      @media (min-width: 383px) {
+      @media (max-width: 383px) {
         font-size: 18px;
       }
     `,
