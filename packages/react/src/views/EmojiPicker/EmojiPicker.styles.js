@@ -49,9 +49,7 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-category-label-height: 40px;
 
         --epr-emoji-padding: 5px;
-        // --epr-emoji-fullsize: calc(
-        //   var(--epr-emoji-size) + var(--epr-emoji-padding) * 2
-        // );
+
         --epr-emoji-hover-color: var(--epr-hover-bg-color);
         --epr-emoji-variation-indicator-color: var(--epr-picker-border-color);
         --epr-emoji-variation-indicator-color-hover: var(--epr-text-color);
