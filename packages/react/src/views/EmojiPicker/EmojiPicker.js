@@ -25,7 +25,7 @@ const CustomEmojiPicker = ({
 
   return (
     <Popup
-    positionStyles={ positionStyles}
+      positionStyles={positionStyles}
       wrapperId={wrapperId}
       onClose={onClose}
       height="auto"
