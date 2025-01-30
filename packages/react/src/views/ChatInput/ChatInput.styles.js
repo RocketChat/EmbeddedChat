@@ -120,8 +120,8 @@ export const getCommonRecorderStyles = (theme) => {
     `,
 
     controller: css`
-      display: flex;
       gap: 0.15rem;
+      display: inline-flex;
     `,
 
     timer: css`
