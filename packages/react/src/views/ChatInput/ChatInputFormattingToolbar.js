@@ -152,7 +152,7 @@ const ChatInputFormattingToolbar = ({
           <ActionButton
             square
             ghost
-            disabled={isRecordingMessage}
+            disabled={isRecordingMessage || isTyping}
             onClick={() => {
               if (isRecordingMessage) return;
               handleClickToOpenFiles();
