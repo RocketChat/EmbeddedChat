@@ -273,6 +273,12 @@ export const getMessageToolboxStyles = (theme) => {
       gap: 0.25rem;
       padding: 0.25rem;
       border-radius: ${theme.radius};
+      @media (max-width: 602px) {
+        margin-right: -2rem;
+      }
+      @media (max-width: 360px) {
+        margin-right: -4rem;
+      }
     `,
 
     emojiPickerStyles: css`
@@ -280,6 +286,24 @@ export const getMessageToolboxStyles = (theme) => {
       bottom: 100%;
       right: 1.5rem;
     `,
+
+    modal: {
+      '@media(max-width: 602px)': {
+        maxWidth: '80%',
+      },
+    },
+
+    modalTitle: css`
+      @media (max-width: 602px) {
+        font-size: 20px;
+      }
+    `,
+
+    modal: {
+      '@media(max-width: 870px)': {
+        maxWidth: '75%',
+      },
+    },
   };
 
   return styles;

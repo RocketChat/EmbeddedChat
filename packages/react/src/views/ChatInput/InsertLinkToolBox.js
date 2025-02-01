@@ -20,7 +20,7 @@ const InsertLinkToolBox = ({
   };
 
   return (
-    <Modal>
+    <Modal css={styles.modal}>
       <Modal.Header css={styles.modalHeader}>
         <Modal.Title>Add link</Modal.Title>
         <Modal.Close onClick={onClose} />

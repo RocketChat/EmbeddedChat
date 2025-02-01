@@ -9,6 +9,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
+import styles from './ReportMessage.styles';
 
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [
@@ -42,9 +43,9 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   };
 
   return (
-    <Modal onClose={handleOnClose}>
+    <Modal onClose={handleOnClose} css={styles.modal}>
       <Modal.Header>
-        <Modal.Title>
+        <Modal.Title css={styles.modalTitle}>
           <Icon
             name="report"
             size="1.25rem"

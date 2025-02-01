@@ -106,6 +106,14 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
       .EmojiPickerReact .epr-emoji-list::-webkit-scrollbar-thumb:hover {
         background: ${theme.colors.primary};
       }
+      @media (max-width: 602px) {
+        max-width: 70%;
+        max-height: 60h;
+      }
+      @media (max-width: 370px) {
+        max-width: 60%;
+        max-height: 60h;
+      }
     `,
   };
 

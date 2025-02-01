@@ -117,9 +117,9 @@ const FileMessage = ({ fileMessage }) => {
       </Box>
 
       {fileToDelete && Object.keys(fileToDelete).length > 0 && (
-        <Modal onClose={handleOnClose}>
+        <Modal onClose={handleOnClose} css={styles.modal}>
           <Modal.Header>
-            <Modal.Title>
+            <Modal.Title css={styles.modalTitle}>
               <Icon
                 name="trash"
                 size="1.25rem"

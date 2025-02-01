@@ -66,9 +66,9 @@ const AttachmentPreview = () => {
     }
   };
   return (
-    <Modal onClose={toggle}>
+    <Modal onClose={toggle} css={styles.modal}>
       <Modal.Header>
-        <Modal.Title>
+        <Modal.Title css={styles.modalTitle}>
           <Icon
             name="attachment"
             size="1.25rem"

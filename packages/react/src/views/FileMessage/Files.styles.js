@@ -115,6 +115,23 @@ export const fileDisplayStyles = {
     padding: 0 0.5rem 0.5rem;
   `,
 
+  modal: {
+    '@media(max-width: 602px)': {
+      maxWidth: '85%',
+    },
+  },
+
+  modalTitle: css`
+    @media (max-width: 602px) {
+      font-size: 20px;
+    }
+  `,
+
+  modal: {
+    '@media(max-width: 870px)': {
+      maxWidth: '75%',
+    },
+  },
   centeredColumnStyles: css`
     display: flex;
     flex-direction: column;

@@ -11,6 +11,9 @@ const CustomEmojiPicker = ({
     position: absolute;
     top: 0;
     right: 0;
+    @media (max-width: 602px) {
+      right: -3rem;
+    }
   `,
   wrapperId = 'emoji-popup',
   onClose = () => {},
@@ -34,7 +37,7 @@ const CustomEmojiPicker = ({
       <Box css={styles.emojiPicker}>
         <EmojiPicker
           height={400}
-          width={350}
+          width={300}
           onEmojiClick={handleEmojiClick}
           previewConfig={previewConfig}
           searchDisabled={false}

@@ -35,6 +35,22 @@ const styles = {
     position: absolute;
     right: 1em;
   `,
+
+  modal: {
+    '@media(max-width: 602px)': {
+      maxWidth: '80%',
+    },
+  },
+  modalTitle: css`
+    @media (max-width: 602px) {
+      font-size: 20px;
+    }
+  `,
+  modal: {
+    '@media(max-width: 870px)': {
+      maxWidth: '85%',
+    },
+  },
 };
 
 export default styles;
