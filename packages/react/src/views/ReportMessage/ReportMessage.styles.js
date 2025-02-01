@@ -11,17 +11,15 @@ const styles = {
     '@media(max-width: 602px)': {
       maxWidth: '87%',
     },
+    '@media(max-width: 870px)': {
+      maxWidth: '75%',
+    },
   },
   modalTitle: css`
     @media (max-width: 602px) {
       font-size: 20px;
     }
   `,
-  modal: {
-    '@media(max-width: 870px)': {
-      maxWidth: '75%',
-    },
-  },
 };
 
 export default styles;

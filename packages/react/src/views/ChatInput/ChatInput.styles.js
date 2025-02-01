@@ -79,12 +79,6 @@ export const getChatInputStyles = (theme) => {
         font-size: 20px;
       }
     `,
-
-    modal: {
-      '@media(max-width: 602px)': {
-        maxWidth: '75%',
-      },
-    },
   };
 
   return styles;
@@ -180,12 +174,11 @@ export const getInsertLinkModalStyles = (theme) => {
         maxHeight: '70%',
         maxWidth: '80%',
       },
-    },
-    modal: {
       '@media(max-width: 870px)': {
         maxWidth: '70%',
       },
     },
+
     modalHeader: css`
       padding: 0 0.5rem;
     `,

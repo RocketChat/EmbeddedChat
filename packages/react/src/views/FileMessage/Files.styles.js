@@ -119,6 +119,9 @@ export const fileDisplayStyles = {
     '@media(max-width: 602px)': {
       maxWidth: '85%',
     },
+    '@media(max-width: 870px)': {
+      maxWidth: '75%',
+    },
   },
 
   modalTitle: css`
@@ -127,11 +130,6 @@ export const fileDisplayStyles = {
     }
   `,
 
-  modal: {
-    '@media(max-width: 870px)': {
-      maxWidth: '75%',
-    },
-  },
   centeredColumnStyles: css`
     display: flex;
     flex-direction: column;

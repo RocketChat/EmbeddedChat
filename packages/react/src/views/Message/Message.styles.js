@@ -291,6 +291,9 @@ export const getMessageToolboxStyles = (theme) => {
       '@media(max-width: 602px)': {
         maxWidth: '80%',
       },
+      '@media(max-width: 870px)': {
+        maxWidth: '75%',
+      },
     },
 
     modalTitle: css`
@@ -298,12 +301,6 @@ export const getMessageToolboxStyles = (theme) => {
         font-size: 20px;
       }
     `,
-
-    modal: {
-      '@media(max-width: 870px)': {
-        maxWidth: '75%',
-      },
-    },
   };
 
   return styles;

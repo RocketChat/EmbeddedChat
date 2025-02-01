@@ -18,6 +18,9 @@ const getAttachmentPreviewStyles = () => {
       '@media(max-width: 602px)': {
         maxWidth: '80%',
       },
+      '@media(max-width: 870px)': {
+        maxWidth: '70%',
+      },
     },
 
     modalTitle: css`
@@ -25,12 +28,6 @@ const getAttachmentPreviewStyles = () => {
         font-size: 20px;
       }
     `,
-
-    modal: {
-      '@media(max-width: 870px)': {
-        maxWidth: '70%',
-      },
-    },
 
     modalContent: css`
       overflow-y: auto;
