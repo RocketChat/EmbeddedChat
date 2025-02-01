@@ -4,9 +4,9 @@
  * @returns
  */
 const cloneArray = (array: any[]) => {
-  const newArray = [...array].map((item) =>
+  const newArr = [...array].map((item) =>
     typeof item === "object" ? { ...item } : item
   );
-  return newArray;
+  return newArr;
 };
 export default cloneArray;
