@@ -10,6 +10,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -67,7 +68,7 @@ const RoomMembers = ({ members }) => {
 
   return (
     <ViewComponent
-      title="Members"
+      title={i18n.t('Members')}
       iconName="members"
       onClose={() => setExclusiveState(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}

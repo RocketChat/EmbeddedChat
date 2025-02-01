@@ -37,6 +37,7 @@ export default [
       '@embeddedchat/ui-elements',
       '@embeddedchat/api',
       '@embeddedchat/ui-kit',
+      '@embeddedchat/i18n',
       '@embeddedchat/markups',
     ],
     plugins: [

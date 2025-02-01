@@ -15,6 +15,7 @@ import {
   useComponentOverrides,
   ThemeProvider,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
@@ -96,6 +97,12 @@ const EmbeddedChat = (props) => {
       'Please provide a setClosableState to props when isClosable = true'
     );
   }
+
+  useEffect(() => {
+    if (props.language) {
+      i18n.changeLanguage(props.language);
+    }
+  }, [props.language]);
 
   const initializeRCInstance = useCallback(() => {
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
@@ -273,6 +280,7 @@ const EmbeddedChat = (props) => {
 };
 
 EmbeddedChat.propTypes = {
+  language: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string,
   isClosable: PropTypes.bool,
