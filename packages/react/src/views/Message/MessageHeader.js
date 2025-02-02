@@ -106,18 +106,23 @@ const MessageHeader = ({
       style={styleOverrides}
     >
       {showDisplayName && showName && (
-        <Box
-          is="span"
-          css={styles.name}
-          className={appendClassNames('ec-message-header-name')}
-          style={
-            displayNameVariant === 'colorize'
-              ? { color: getDisplayNameColor(message.u.username) }
-              : null
-          }
+        <Tooltip
+          text={`@${message.u?.username || message.u?.name}`}
+          position="top"
         >
-          {message.u?.name}
-        </Box>
+          <Box
+            is="span"
+            css={styles.name}
+            className={appendClassNames('ec-message-header-name')}
+            style={
+              displayNameVariant === 'colorize'
+                ? { color: getDisplayNameColor(message.u.username) }
+                : null
+            }
+          >
+            {message.u?.name}
+          </Box>
+        </Tooltip>
       )}
       {showDisplayName && showUsername && (
         <Box
@@ -169,13 +174,18 @@ const MessageHeader = ({
       )}
 
       {isTimeStamped && (
-        <Box
-          is="span"
-          css={styles.timestamp}
-          className={appendClassNames('ec-message-header-timestamp')}
+        <Tooltip
+          text={format(new Date(message.ts), 'MMM dd, yyyy h:mm a')}
+          position="top"
         >
-          {format(new Date(message.ts), 'h:mm a')}
-        </Box>
+          <Box
+            is="span"
+            css={styles.timestamp}
+            className={appendClassNames('ec-message-header-timestamp')}
+          >
+            {format(new Date(message.ts), 'h:mm a')}
+          </Box>
+        </Tooltip>
       )}
 
       {!message.t && (

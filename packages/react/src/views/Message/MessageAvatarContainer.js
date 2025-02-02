@@ -40,20 +40,22 @@ const MessageAvatarContainer = ({
   return (
     <Box css={styles.container}>
       {!sequential ? (
-        <Avatar
-          url={getUserAvatarUrl(message.u.username)}
-          alt="avatar"
-          size={
-            window.matchMedia('(max-width: 768px)').matches
-              ? message.t
-                ? '1.2em'
-                : '1.5em'
-              : message.t
-              ? '1.5em'
-              : '2.25em'
-          }
-          onClick={handleAvatarClick}
-        />
+        <Tooltip text={message.u?.name} position="top">
+          <Avatar
+            url={getUserAvatarUrl(message.u.username)}
+            alt="avatar"
+            size={
+              window.matchMedia('(max-width: 768px)').matches
+                ? message.t
+                  ? '1.2em'
+                  : '1.5em'
+                : message.t
+                ? '1.5em'
+                : '2.25em'
+            }
+            onClick={handleAvatarClick}
+          />
+        </Tooltip>
       ) : null}
       {isStarred && sequential ? (
         <Tooltip text="Starred" position="top">
