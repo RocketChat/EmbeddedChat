@@ -52,7 +52,7 @@ jobs:
       run: cd packages/e2e-react && npx playwright test
       
     - name: Upload Playwright report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: playwright-report
