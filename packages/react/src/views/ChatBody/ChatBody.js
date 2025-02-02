@@ -265,11 +265,12 @@ const ChatBody = ({
           </Modal.Header>
           <Modal.Content
             css={css`
-              height: auto;
+              height: 300px;
               word-wrap: break-word;
               overflow-wrap: anywhere;
               white-space: normal;
               padding: 20px;
+              overflow-y: auto;
             `}
           >
             {channelInfo.announcement}
