@@ -449,6 +449,40 @@ const ChatInput = ({ scrollToBottom }) => {
         break;
     }
   };
+  const handlePasteImages = (e) => {
+    const { items } = e.clipboardData;
+    Array.from(items).forEach((item) => {
+      if (item.type.indexOf('image') !== -1) {
+        const imageBlob = item.getAsFile();
+        const file = new File(
+          [imageBlob],
+          `Clipboard- ${new Date().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+          })}.png`,
+          {
+            type: imageBlob.type,
+            lastModified: Date.now(),
+          }
+        );
+
+        toggle();
+        setData(file);
+        e.preventDefault();
+      }
+    });
+  };
+
+  useEffect(() => {
+    const inputElement = messageRef.current;
+    inputElement.addEventListener('paste', handlePasteImages);
+    return () => {
+      inputElement.removeEventListener('paste', handlePasteImages);
+    };
+  });
 
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
