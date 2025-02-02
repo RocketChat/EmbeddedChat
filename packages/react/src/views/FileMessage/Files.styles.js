@@ -113,19 +113,30 @@ export const fileDisplayStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0 0.5rem 0.5rem;
+    @media (max-width: 600px) {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
   `,
 
   modal: {
-    '@media(max-width: 602px)': {
+    '@media(max-width: 320px)': {
+      maxWidth: '70%',
+    },
+    '@media(max-width: 480px)': {
+      maxWidth: '70%',
+    },
+    '@media(max-width: 600px)': {
       maxWidth: '85%',
     },
-    '@media(max-width: 870px)': {
+    '@media(max-width: 768px)': {
       maxWidth: '75%',
     },
   },
 
   modalTitle: css`
-    @media (max-width: 602px) {
+    @media (max-width: 320px) {
       font-size: 20px;
     }
   `,

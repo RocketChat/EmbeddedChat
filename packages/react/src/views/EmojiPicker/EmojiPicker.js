@@ -37,7 +37,7 @@ const CustomEmojiPicker = ({
       <Box css={styles.emojiPicker}>
         <EmojiPicker
           height={400}
-          width={300}
+          width={350}
           onEmojiClick={handleEmojiClick}
           previewConfig={previewConfig}
           searchDisabled={false}

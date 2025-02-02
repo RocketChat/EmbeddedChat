@@ -288,17 +288,26 @@ export const getMessageToolboxStyles = (theme) => {
     `,
 
     modal: {
-      '@media(max-width: 602px)': {
+      '@media(max-width: 320px)': {
         maxWidth: '80%',
       },
-      '@media(max-width: 870px)': {
+      '@media(max-width: 480px)': {
+        maxWidth: '80%',
+      },
+      '@media(max-width: 600px)': {
+        maxWidth: '70%',
+      },
+      '@media(max-width: 768px)': {
         maxWidth: '75%',
       },
     },
 
     modalTitle: css`
-      @media (max-width: 602px) {
+      @media (max-width: 480px) {
         font-size: 20px;
+      }
+      @media (max-width: 360px) {
+        font-size: 16px;
       }
     `,
   };

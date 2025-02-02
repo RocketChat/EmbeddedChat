@@ -69,7 +69,10 @@ export const getChatInputStyles = (theme) => {
     `,
 
     modal: {
-      '@media(max-width: 602px)': {
+      '@media(max-width: 600px)': {
+        maxWidth: '70%',
+      },
+      '@media(max-width: 480px)': {
         maxWidth: '80%',
       },
     },
@@ -77,6 +80,9 @@ export const getChatInputStyles = (theme) => {
     modalTitle: css`
       @media (max-width: 602px) {
         font-size: 20px;
+      }
+      @media (max-width: 320px) {
+        font-size: 16px;
       }
     `,
   };
@@ -170,12 +176,15 @@ export const getInsertLinkModalStyles = (theme) => {
       }
     `,
     modal: {
-      '@media(max-width: 602px)': {
-        maxHeight: '70%',
+      '@media(max-width: 320px)': {
         maxWidth: '80%',
       },
-      '@media(max-width: 870px)': {
+      '@media(max-width: 600px)': {
+        maxHeight: '70%',
         maxWidth: '70%',
+      },
+      '@media(max-width: 768px)': {
+        maxWidth: '65%',
       },
     },
 
@@ -188,8 +197,27 @@ export const getInsertLinkModalStyles = (theme) => {
       gap: 0.5rem;
       margin: 1rem 0;
     `,
+
     modalFooter: css`
       padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      @media (max-width: 320px) {
+        padding: 0.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      button {
+        margin-left: 0.5rem;
+
+        @media (max-width: 320px) {
+          margin-left: 0;
+          width: 100%;
+        }
+      }
     `,
   };
 

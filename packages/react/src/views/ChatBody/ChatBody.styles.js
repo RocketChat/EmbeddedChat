@@ -32,6 +32,11 @@ export const getChatbodyStyles = (theme, mode) => {
       text-overflow: ellipsis;
       white-space: nowrap;
     `,
+    modal: {
+      '@media(max-width:768px)': {
+        maxWidth: '75%',
+      },
+    },
   };
 
   return styles;

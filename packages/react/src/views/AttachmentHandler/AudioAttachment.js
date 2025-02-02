@@ -136,7 +136,7 @@ const AudioAttachment = ({
                 />
                 <audio
                   src={host + nestedAttachment.audio_url}
-                  width="100%"
+                  width="50%"
                   controls
                 />
               </Box>

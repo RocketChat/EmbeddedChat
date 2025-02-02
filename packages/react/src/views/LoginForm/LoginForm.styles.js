@@ -37,11 +37,11 @@ const styles = {
   `,
 
   modal: {
-    '@media(max-width: 602px)': {
-      maxWidth: '80%',
+    '@media(max-width: 600px)': {
+      maxWidth: '70%',
     },
     '@media(max-width: 870px)': {
-      maxWidth: '85%',
+      maxWidth: '75%',
     },
   },
   modalTitle: css`
