@@ -104,6 +104,7 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
     <Box
       css={css`
         display: flex;
+        flex-direction: column;
       `}
     >
       {attachment?.description}
