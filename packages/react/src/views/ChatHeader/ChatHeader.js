@@ -427,7 +427,16 @@ const ChatHeader = ({
           {surfaceOptions.length > 0 && (
             <SurfaceMenu options={surfaceOptions} />
           )}
-          {menuOptions.length > 0 && <Menu options={menuOptions} />}
+          {menuOptions.length > 0 && (
+            <Menu
+              options={menuOptions}
+              tooltip={{
+                isToolTip: true,
+                position: 'bottom',
+                text: i18n.t('Options'),
+              }}
+            />
+          )}
         </Box>
       </Box>
       {isThreadOpen && (

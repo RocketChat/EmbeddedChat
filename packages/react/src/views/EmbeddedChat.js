@@ -43,6 +43,7 @@ const EmbeddedChat = (props) => {
     channelName,
     anonymousMode = false,
     toastBarPosition = 'bottom right',
+    language = 'en',
     showRoles = false,
     showAvatar = true,
     showAnnouncement = true,
@@ -280,7 +281,6 @@ const EmbeddedChat = (props) => {
 };
 
 EmbeddedChat.propTypes = {
-  language: PropTypes.string,
   width: PropTypes.string,
   height: PropTypes.string,
   isClosable: PropTypes.bool,
@@ -290,6 +290,7 @@ EmbeddedChat.propTypes = {
   channelName: PropTypes.string,
   anonymousMode: PropTypes.bool,
   toastBarPosition: PropTypes.string,
+  language: PropTypes.string,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
   showAnnouncement: PropTypes.bool,
