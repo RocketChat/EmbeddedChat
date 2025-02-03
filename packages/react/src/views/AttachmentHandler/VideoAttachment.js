@@ -45,6 +45,9 @@ const VideoAttachment = ({
             line-height: 0;
             border-radius: inherit;
             padding: 0.5rem;
+            @media (max-width: 450px) {
+              padding: 0.3rem;
+            }
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
@@ -62,6 +65,10 @@ const VideoAttachment = ({
                   display: flex;
                   gap: 0.3rem;
                   align-items: center;
+                  @media (max-width: 450px) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                  }
                 `,
                 variantStyles.textUserInfo,
               ]}
@@ -87,11 +94,12 @@ const VideoAttachment = ({
         />
         {isExpanded && (
           <video
-            width={300}
+            width="100%"
             controls
             style={{
               borderBottomLeftRadius: 'inherit',
               borderBottomRightRadius: 'inherit',
+              maxWidth: '300px',
             }}
           >
             <source
@@ -109,6 +117,9 @@ const VideoAttachment = ({
                     line-height: 0;
                     border-radius: inherit;
                     padding: 0.5rem;
+                    @media (max-width: 450px) {
+                      padding: 0.3rem;
+                    }
                   `,
                   (nestedAttachment.type
                     ? variantStyles.pinnedContainer
@@ -128,6 +139,10 @@ const VideoAttachment = ({
                           display: flex;
                           gap: 0.3rem;
                           align-items: center;
+                          @media (max-width: 450px) {
+                            flex-direction: column;
+                            align-items: flex-start;
+                          }
                         `,
                         variantStyles.textUserInfo,
                       ]}
@@ -152,11 +167,12 @@ const VideoAttachment = ({
                   variantStyles={variantStyles}
                 />
                 <video
-                  width={300}
+                  width="100%"
                   controls
                   style={{
                     borderBottomLeftRadius: 'inherit',
                     borderBottomRightRadius: 'inherit',
+                    maxWidth: '300px',
                   }}
                 >
                   <source
