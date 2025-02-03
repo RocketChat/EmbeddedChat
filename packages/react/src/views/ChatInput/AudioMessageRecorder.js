@@ -6,6 +6,7 @@ import {
   Tooltip,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
@@ -148,7 +149,7 @@ const AudioMessageRecorder = (props) => {
         <span>{displayName}</span>
       </Box>
     ) : (
-      <Tooltip text="Audio Message" position="top">
+      <Tooltip text={i18n.t('Tooltip_Audio_Message')} position="top">
         <ActionButton
           ghost
           square
@@ -165,7 +166,7 @@ const AudioMessageRecorder = (props) => {
     <Box css={styles.controller}>
       {state === 'recording' && (
         <>
-          <Tooltip text="Cancel Recording" position="top">
+          <Tooltip text={i18n.t('Tooltip_Cancel_Recording')} position="top">
             <ActionButton ghost onClick={handleCancelRecordButton}>
               <Icon size="1.25rem" name="circle-cross" />
             </ActionButton>
@@ -176,7 +177,7 @@ const AudioMessageRecorder = (props) => {
               {time}
             </Box>
           </Box>
-          <Tooltip text="Finish Recording" position="top">
+          <Tooltip text={i18n.t('Tooltip_Finish_Recording')} position="top">
             <ActionButton ghost onClick={handleStopRecordButton}>
               <Icon name="circle-check" size="1.25rem" />
             </ActionButton>

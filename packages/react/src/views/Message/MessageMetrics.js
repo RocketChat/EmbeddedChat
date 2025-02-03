@@ -7,6 +7,7 @@ import {
   useComponentOverrides,
   appendClassNames,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import BubbleThreadBtn from './BubbleVariant/BubbleThreadBtn';
 
@@ -46,7 +47,7 @@ export const MessageMetrics = ({
               onClick={handleOpenThread(message)}
               css={variantStyles && variantStyles.threadReplyButton}
             >
-              Reply
+              {i18n.t('Reply')}
             </Button>
             <Box css={styles.metricsItem(true)} title="Replies">
               <Icon size="1.25rem" name="thread" />

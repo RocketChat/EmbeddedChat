@@ -8,6 +8,7 @@ import {
   useComponentOverrides,
   Icon,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
 import getRoomInformationStyles from './RoomInformation.styles';
@@ -31,7 +32,9 @@ const Roominfo = () => {
 
   return (
     <ViewComponent
-      title={isRoomTeam ? 'Team Information' : 'Room Information'}
+      title={
+        isRoomTeam ? i18n.t('Team_Information') : i18n.t('Room_Information')
+      }
       iconName="info"
       onClose={() => setExclusiveState(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
@@ -73,19 +76,19 @@ const Roominfo = () => {
           </Box>
           {channelInfo.description && (
             <>
-              <Box css={styles.infoHeader}>Description</Box>
+              <Box css={styles.infoHeader}>{i18n.t('Description')}</Box>
               <Box css={styles.info}>{channelInfo.description}</Box>
             </>
           )}
           {channelInfo.topic && (
             <>
-              <Box css={styles.infoHeader}>Topic</Box>
+              <Box css={styles.infoHeader}>{i18n.t('Topic')}</Box>
               <Box css={styles.info}>{channelInfo.topic}</Box>
             </>
           )}
           {channelInfo.announcement && (
             <>
-              <Box css={styles.infoHeader}>Announcement</Box>
+              <Box css={styles.infoHeader}>{i18n.t('Announcement')}</Box>
               <Box css={styles.info}>{channelInfo.announcement}</Box>
             </>
           )}

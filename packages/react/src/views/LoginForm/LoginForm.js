@@ -8,6 +8,7 @@ import {
   Icon,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import styles from './LoginForm.styles';
@@ -68,13 +69,13 @@ export default function LoginForm() {
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
   const fields = [
     {
-      label: 'Email or username',
+      label: i18n.t('Email_Or_Username'),
       onChange: handleEdituserOrEmail,
       placeholder: 'example@example.com',
       error: usernameError,
     },
     {
-      label: 'Password',
+      label: i18n.t('Password'),
       type: showPassword ? 'text' : 'password',
       onChange: handleEditPassword,
       error: passwordError,
@@ -124,7 +125,7 @@ export default function LoginForm() {
                     font-size: 13px;
                   `}
                 >
-                  This field is required
+                  {i18n.t('Field_Required')}
                 </Box>
               )}
             </Box>
@@ -136,7 +137,7 @@ export default function LoginForm() {
               margin: 10px 0;
             `}
           >
-            Login
+            {i18n.t('Login')}
           </Button>
         </Box>
       </GenericModal>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
 import { Box, Icon, Throbber, useTheme } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
@@ -55,7 +56,7 @@ const MessageList = ({
                 zIndex: 10,
               }}
             >
-              Start of conversation
+              {i18n.t('Start_Of_Conversation')}
             </MessageBody>
           )}
           {loadingOlderMessages && isUserAuthenticated && (

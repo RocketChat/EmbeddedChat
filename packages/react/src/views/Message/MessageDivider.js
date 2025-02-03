@@ -5,7 +5,6 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
-
 import { getMessageDividerStyles } from './Message.styles';
 
 export const MessageDivider = ({

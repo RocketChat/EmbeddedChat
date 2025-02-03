@@ -8,6 +8,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
@@ -99,7 +100,7 @@ const ChatInputFormattingToolbar = ({
           <span>emoji</span>
         </Box>
       ) : (
-        <Tooltip text="Emoji" position="top" key="emoji-btn">
+        <Tooltip text={i18n.t('Tooltip_Emoji')} position="top" key="emoji-btn">
           <ActionButton
             square
             ghost
@@ -147,7 +148,7 @@ const ChatInputFormattingToolbar = ({
           <span>file</span>
         </Box>
       ) : (
-        <Tooltip text="Upload File" position="top" key="file">
+        <Tooltip text={i18n.t('Tooltip_Upload_File')} position="top" key="file">
           <ActionButton
             square
             ghost
@@ -176,7 +177,7 @@ const ChatInputFormattingToolbar = ({
           <span>link</span>
         </Box>
       ) : (
-        <Tooltip text="Link" position="top" key="link">
+        <Tooltip text={i18n.t('Tooltip_Link')} position="top" key="link">
           <ActionButton
             square
             ghost
@@ -318,7 +319,7 @@ const ChatInputFormattingToolbar = ({
           return chatToolMap[name];
         })}
         {popOverItems.length > 0 && (
-          <Tooltip text="More" position="top" key="more-btn">
+          <Tooltip text={i18n.t('Tooltip_More')} position="top" key="more-btn">
             <ActionButton
               square
               ghost

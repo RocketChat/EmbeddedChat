@@ -8,6 +8,7 @@ import {
   Heading,
   useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import useInviteStore from '../../store/inviteStore';
 import { InviteMemberStyles as styles } from './RoomMembers.styles';
 import RCContext from '../../context/RCInstance';
@@ -41,7 +42,7 @@ const InviteMembers = () => {
         .then(() => {
           dispatchToastMessage({
             type: 'success',
-            message: 'Copied to clipboard',
+            message: i18n.t('Toast_Copied_To_Clipboard'),
           });
         })
         .catch((error) => {
@@ -69,7 +70,7 @@ const InviteMembers = () => {
             `}
           >
             <Heading level={3} style={{ display: 'contents' }}>
-              Invite Members
+              {i18n.t('Invite_Members')}
             </Heading>
 
             <ActionButton onClick={() => toggleInviteView()} ghost size="small">
@@ -80,7 +81,7 @@ const InviteMembers = () => {
           <Box css={styles.parentContainer}>
             <Box css={styles.childContainer}>
               <Box is="span">
-                <b>Invite Link</b>
+                <b>{i18n.t('Invite_Link')}</b>
               </Box>
               <ActionButton onClick={copyToClipboard} ghost size="small">
                 <Icon name="copy" size="1.25rem" />
@@ -100,7 +101,7 @@ const InviteMembers = () => {
               `}
             >
               <b>
-                Your invite link will expire on{' '}
+                {i18n.t('Invite_Link_Will_Expire_On')}
                 {new Date(inviteData.expires).toString().split('GMT')[0]}
               </b>
             </p>

@@ -8,6 +8,7 @@ import {
   useTheme,
   ReactPortal,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useRCContext } from '../../context/RCInstance';
 import { Swiper, SwiperSlide } from './Swiper';
 import getImageGalleryStyles from './ImageGallery.styles';
@@ -79,7 +80,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
                 color: theme.colors.primaryForeground,
               }}
             >
-              Something went wrong
+              {i18n.t('Something_Wrong')}
             </Box>
             <Button
               type="primary"
@@ -89,7 +90,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
                 margin: '10px',
               }}
             >
-              Close
+              {i18n.t('Close')}
             </Button>
           </Box>
         ) : (

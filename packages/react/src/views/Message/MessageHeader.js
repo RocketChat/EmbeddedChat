@@ -9,6 +9,7 @@ import {
   useTheme,
   appendClassNames,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMemberStore, useUserStore } from '../../store';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
@@ -41,59 +42,75 @@ const MessageHeader = ({
   const userActions = () => {
     switch (message.t) {
       case 'ul':
-        return 'left the channel';
+        return i18n.t('User_Action_Left_The_Channel');
       case 'uj':
-        return 'joined the channel';
+        return i18n.t('User_Action_Joined_The_Channel');
       case 'ru':
-        return `removed @${message.message || message.msg}`;
+        return i18n.t('User_Action_Removed_Message', {
+          message: message.message || message.msg,
+        });
       case 'au':
-        return `added @${message.message || message.msg}`;
+        return i18n.t('User_Action_Added_Message', {
+          message: message.message || message.msg,
+        });
       case 'message_pinned':
-        return 'Pinned a message:';
+        return i18n.t('User_Action_Pinned_Message');
       case 'rm':
-        return 'message removed';
+        return i18n.t('User_Action_Message_Removed');
       case 'subscription-role-added':
-        return `set ${message?.msg} as ${message?.role}`;
+        return i18n.t('User_Action_Set_Role', {
+          message: message?.msg,
+          role: message?.role,
+        });
       case 'subscription-role-removed':
-        return `removed ${message?.msg} as ${message?.role}`;
+        return i18n.t('User_Action_Removed_Role', {
+          message: message?.msg,
+          role: message?.role,
+        });
       case 'room_changed_privacy':
-        return `changed room to ${message?.msg}`;
+        return i18n.t('User_Action_Changed_Room', { message: message?.msg });
       case 'room-set-read-only':
-        return 'set room to read only';
+        return i18n.t('User_Action_Set_Room_Read_Only');
       case 'room-removed-read-only':
-        return 'removed read only permission';
+        return i18n.t('User_Action_Removed_Read_Only');
       case 'room-archived':
-        return 'archived room';
+        return i18n.t('User_Action_Archived_Room');
       case 'room-unarchived':
-        return 'unarchived room';
+        return i18n.t('User_Action_Unarchived_Room');
       case 'room-allowed-reacting':
-        return 'allowed reactions';
+        return i18n.t('User_Action_Allowed_Reactions');
       case 'room_changed_avatar':
-        return `changed room avatar`;
+        return i18n.t('User_Action_Changed_Room_Avatar');
       case 'room_changed_announcement':
-        return `changed room announcement to: ${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        }`;
+        return i18n.t('User_Action_Changed_Room_Announcement', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       case 'room_changed_description':
-        return `changed room description to: ${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        }`;
+        return i18n.t('User_Action_Changed_Room_Description', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       case 'room_changed_topic':
-        return `changed room topic to: ${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        }`;
+        return i18n.t('User_Action_Changed_Room_Topic', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       case 'r':
-        return `changed room name to ${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        }`;
+        return i18n.t('User_Action_Changed_Room_Name', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       case 'user-converted-to-team':
-        return `converted #${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        } to team`;
+        return i18n.t('User_Action_Converted_Room', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       case 'user-converted-to-channel':
-        return `converted #${
-          message?.msg && message.msg.length > 0 ? message.msg : '(none)'
-        } to channel`;
+        return i18n.t('User_Action_Converted_Room', {
+          message:
+            message?.msg && message.msg.length > 0 ? message.msg : '(none)',
+        });
       default:
         return '';
     }
@@ -141,7 +158,7 @@ const MessageHeader = ({
               css={styles.userRole}
               className={appendClassNames('ec-message-user-role')}
             >
-              Admin
+              {i18n.t('Admin')}
             </Box>
           )}
 
@@ -189,7 +206,7 @@ const MessageHeader = ({
             />
           )}
           {isStarred ? (
-            <Tooltip text="Starred" position="top">
+            <Tooltip text={i18n.t('Tooltip_Starred')} position="top">
               <Icon
                 style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
                 name="star-filled"
@@ -199,7 +216,7 @@ const MessageHeader = ({
             </Tooltip>
           ) : null}
           {isPinned ? (
-            <Tooltip text="Pinned" position="top">
+            <Tooltip text={i18n.t('Tooltip_Pinned')} position="top">
               <Icon
                 style={{ marginInlineEnd: '0.4rem', opacity: 0.5 }}
                 name="pin"

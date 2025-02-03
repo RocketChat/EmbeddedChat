@@ -12,6 +12,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
@@ -328,7 +329,7 @@ const ChatInput = ({ scrollToBottom }) => {
       message.replace(/\n/g, '\\n')
     );
     if (!res.success) {
-      handleSendError('Error editing message, login again');
+      handleSendError(i18n.t('Toast_Error_In_Editing_Message'));
     }
   };
 
@@ -464,9 +465,9 @@ const ChatInput = ({ scrollToBottom }) => {
           <ChannelState
             status={
               editMessage.msg || editMessage.attachments
-                ? 'Editing Message'
+                ? i18n.t('Editing_Message')
                 : isChannelReadOnly
-                ? 'This room is read only'
+                ? i18n.t('Read_Only_Room')
                 : undefined
             }
             iconName={
@@ -474,7 +475,7 @@ const ChatInput = ({ scrollToBottom }) => {
             }
             instructions={
               editMessage.msg || editMessage.attachments
-                ? 'esc to cancel · enter to save'
+                ? i18n.t('Esc_Enter_Instruction')
                 : undefined
             }
           />
@@ -526,8 +527,8 @@ const ChatInput = ({ scrollToBottom }) => {
               isUserAuthenticated && canSendMsg
                 ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
                 : isUserAuthenticated
-                ? 'This room is read only'
-                : 'Sign in to chat'
+                ? i18n.t('Read_Only_Room')
+                : i18n.t('Sign_In_To_Chat')
             }
             css={styles.textInput}
             onChange={onTextChange}
@@ -557,7 +558,7 @@ const ChatInput = ({ scrollToBottom }) => {
               />
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
-                {isLoginIn ? <Throbber /> : 'JOIN'}
+                {isLoginIn ? <Throbber /> : i18n.t('Join')}
               </Button>
             )}
           </Box>
@@ -580,7 +581,7 @@ const ChatInput = ({ scrollToBottom }) => {
           <Modal.Header>
             <Modal.Title>
               <Icon name="report" size="1.25rem" />
-              Message Too Long!
+              {i18n.t('Message_Too_Long')}
             </Modal.Title>
             <Modal.Close onClick={() => setIsMsgLong(false)} />
           </Modal.Header>
@@ -589,14 +590,15 @@ const ChatInput = ({ scrollToBottom }) => {
               margin: 1em;
             `}
           >
-            Send it as attachment instead?
+            {i18n.t('Send_It_As_Attachment_Instead')}
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={() => setIsMsgLong(false)}>
+              {i18n.t('Cancel')}
               Cancel
             </Button>
             <Button onClick={textToAttach} type="primary">
-              Ok
+              {i18n.t('Ok')}
             </Button>
           </Modal.Footer>
         </Modal>

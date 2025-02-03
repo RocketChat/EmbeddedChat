@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import getMemberListStyles from './MembersList.styles';
 
 function MembersList({
@@ -155,7 +156,7 @@ function MembersList({
           }}
         >
           <Box is="span" css={styles.listText}>
-            all
+            {i18n.t('all')}
           </Box>
         </li>
         <li
@@ -179,7 +180,7 @@ function MembersList({
           }}
         >
           <Box is="span" css={styles.listText}>
-            here
+            {i18n.t('here')}
           </Box>
         </li>
       </ul>

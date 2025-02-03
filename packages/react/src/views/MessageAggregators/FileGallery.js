@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useChannelStore, useMessageStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
@@ -18,12 +19,12 @@ const FileGallery = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
 
   const options = [
-    { value: 'all', label: 'All' },
-    { value: 'application', label: 'Files' },
-    { value: 'video', label: 'Videos' },
-    { value: 'image', label: 'Images' },
-    { value: 'audio', label: 'Audios' },
-    { value: 'text', label: 'Texts' },
+    { value: 'all', label: i18n.t('All') },
+    { value: 'application', label: i18n.t('Files') },
+    { value: 'video', label: i18n.t('Videos') },
+    { value: 'image', label: i18n.t('Images') },
+    { value: 'audio', label: i18n.t('Audios') },
+    { value: 'text', label: i18n.t('Texts') },
   ];
 
   const handleInputChange = (e) => {
@@ -70,9 +71,9 @@ const FileGallery = () => {
 
   return (
     <MessageAggregator
-      title="Files"
+      title={i18n.t('Files')}
       iconName="attachment"
-      noMessageInfo="No Files Found"
+      noMessageInfo={i18n.t('No_Files_Found')}
       filterProps={{
         isFile: true,
         options,
@@ -82,7 +83,7 @@ const FileGallery = () => {
       searchProps={{
         isSearch: true,
         handleInputChange,
-        placeholder: 'Search Files',
+        placeholder: i18n.t('Search_Files'),
       }}
       fetching={isFetching}
       shouldRender={(file) => file.path}

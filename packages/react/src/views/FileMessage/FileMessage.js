@@ -13,6 +13,7 @@ import {
   lighten,
   darken,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import FilePreviewContainer from './FilePreviewContainer';
 import FileBodyContainer from '../Message/MessageBodyContainer';
 
@@ -62,12 +63,12 @@ const FileMessage = ({ fileMessage }) => {
           if (res.success) {
             dispatchToastMessage({
               type: 'success',
-              message: 'File deleted',
+              message: i18n.t('Toast_File_Deleted'),
             });
           } else {
             dispatchToastMessage({
               type: 'error',
-              message: 'Error in deleting file',
+              message: i18n.t('Toast_Error_In_File_Deleting'),
             });
           }
         }
@@ -103,13 +104,13 @@ const FileMessage = ({ fileMessage }) => {
             {
               id: 'download',
               action: () => downloadFile(fileMessage?.url, fileMessage?.title),
-              label: 'Download',
+              label: i18n.t('Download'),
               icon: 'circle-arrow-down',
             },
             {
               id: 'delete',
               action: () => setFileToDelete(fileMessage),
-              label: 'Delete',
+              label: i18n.t('Delete'),
               icon: 'trash',
             },
           ]}
@@ -125,19 +126,19 @@ const FileMessage = ({ fileMessage }) => {
                 size="1.25rem"
                 style={{ marginRight: '0.5rem' }}
               />
-              Are you sure?
+              {i18n.t('Are_You_Sure')}
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
           <Modal.Content css={styles.modalContent}>
-            Deleting a file will delete it forever. This cannot be undone.
+            {i18n.t('Delete_Forever_Warning')}
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={handleOnClose}>
-              Cancel
+              {i18n.t('Cancel')}
             </Button>
             <Button type="destructive" onClick={() => deleteFile(fileToDelete)}>
-              Delete
+              {i18n.t('Delete')}
             </Button>
           </Modal.Footer>
         </Modal>

@@ -17,8 +17,19 @@ class I18n {
     }
   }
 
-  t(key) {
-    return this.translations[key] || key;
+  t(key, params = null) {
+    let translation = this.translations[key] || key;
+
+    if (params) {
+      Object.keys(params).forEach((param) => {
+        translation = translation.replace(
+          new RegExp(`{{${param}}}`, 'g'),
+          params[param]
+        );
+      });
+    }
+
+    return translation;
   }
 
   changeLanguage(lang) {

@@ -11,6 +11,7 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
@@ -113,7 +114,7 @@ const UserInformation = () => {
             )}
             {currentUserInfo?.nickname && (
               <UserInfoField
-                label="Nickname"
+                label={i18n.t('Nickname')}
                 value={currentUserInfo?.nickname}
                 isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
@@ -122,7 +123,7 @@ const UserInformation = () => {
             )}
             {currentUserInfo?.roles?.length && (
               <UserInfoField
-                label="Roles"
+                label={i18n.t('Roles')}
                 value={
                   <Box css={styles.roleContainer}>
                     {currentUserInfo?.roles?.map((role, index) => (
@@ -133,9 +134,9 @@ const UserInformation = () => {
                         className={appendClassNames('ec-message-user-role')}
                       >
                         {role === 'admin'
-                          ? 'Admin'
+                          ? i18n.t('Admin')
                           : role === 'user'
-                          ? 'user'
+                          ? i18n.t('user')
                           : role.charAt(0).toUpperCase() + role.slice(1)}
                       </Box>
                     ))}
@@ -147,14 +148,14 @@ const UserInformation = () => {
               />
             )}
             <UserInfoField
-              label="Username"
+              label={i18n.t('Username')}
               value={currentUserInfo?.username}
               isAdmin
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
-              label="Last login"
+              label={i18n.t('Last_Login')}
               value={
                 currentUserInfo?.username === 'rocket.cat'
                   ? 'Never'
@@ -165,7 +166,7 @@ const UserInformation = () => {
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
-              label="Full Name"
+              label={i18n.t('Full_Name')}
               value={currentUserInfo.name}
               isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
@@ -173,7 +174,7 @@ const UserInformation = () => {
             />
             {currentUserInfo?.bio && (
               <UserInfoField
-                label="Bio"
+                label={i18n.t('Bio')}
                 value={currentUserInfo?.bio}
                 isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
@@ -181,17 +182,19 @@ const UserInformation = () => {
               />
             )}
             <UserInfoField
-              label="Email"
+              label={i18n.t('Email')}
               value={currentUserInfo.emails?.map((email, index) => (
                 <Box key={index} css={styles.emailContainer}>
                   <a
-                    href={`mailto:${email.address}`}
+                    href={i18n.t('Mailto_Email', { email: email.address })}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     {email.address}
                   </a>
                   <Box css={styles.userRole}>
-                    {email.verified ? 'Verified' : 'Not Verified'}
+                    {email.verified
+                      ? i18n.t('Verified')
+                      : i18n.t('Verified_Not')}
                   </Box>
                 </Box>
               ))}
@@ -200,7 +203,7 @@ const UserInformation = () => {
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
-              label="Created at"
+              label={i18n.t('Created_At')}
               value={formatTimestamp(currentUserInfo.createdAt)}
               isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}

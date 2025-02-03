@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button, useTheme } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { getInsertLinkModalStyles } from './ChatInput.styles';
 
 const InsertLinkToolBox = ({
@@ -41,10 +42,10 @@ const InsertLinkToolBox = ({
       </Modal.Content>
       <Modal.Footer css={styles.modalFooter}>
         <Button type="secondary" onClick={onClose}>
-          Cancel
+          {i18n.t('Cancel')}
         </Button>
         <Button type="primary" onClick={() => handleAddLink(linkText, linkUrl)}>
-          Add
+          {i18n.t('Add')}
         </Button>
       </Modal.Footer>
     </Modal>
