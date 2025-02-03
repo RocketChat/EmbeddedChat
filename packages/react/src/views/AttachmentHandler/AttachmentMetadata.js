@@ -35,7 +35,7 @@ const AttachmentMetadata = ({
         css`
           display: flex;
           flex-direction: column;
-          @media (max-width: 300px) {
+          @media (max-width: 420px) {
             flex-direction: column;
             align-items: flex-start;
           }
@@ -49,14 +49,14 @@ const AttachmentMetadata = ({
             ? [
                 css`
                   margin: 10px 0px;
-                  @media (max-width: 300px) {
+                  @media (max-width: 420px) {
                     margin: 5px 0px;
                   }
                 `,
               ]
             : css`
                 margin: -7px 0px;
-                @media (max-width: 300px) {
+                @media (max-width: 420px) {
                   margin: -5px 0px;
                 }
               `
@@ -73,80 +73,91 @@ const AttachmentMetadata = ({
           display: flex;
           flex-direction: row;
           align-items: center;
-          @media (max-width: 300px) {
+          @media (max-width: 420px) {
             flex-direction: column;
             align-items: flex-start;
           }
         `}
       >
-        <Tooltip text={attachment.title} position="down">
-          <p
+        <Box
+          css={css`
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            @media (max-width: 420px) {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+          `}
+        >
+          <Tooltip text={attachment.title} position="down">
+            <p
+              css={
+                attachment.description
+                  ? [
+                      css`
+                        margin: 3px 0 0 0;
+                        font-size: 12px;
+                        opacity: 0.7;
+                        @media (max-width: 420px) {
+                          margin: 8px 0 0 0;
+                        }
+                      `,
+                    ]
+                  : css`
+                      margin: 22px 0 15px 0;
+                      font-size: 12px;
+                      opacity: 0.7;
+                      @media (max-width: 420px) {
+                        margin: 10px 0 10px 0;
+                      }
+                    `
+              }
+            >
+              {attachment.title.length > 24
+                ? `${attachment.title.substring(0, 24)}...`
+                : attachment.title}
+            </p>
+          </Tooltip>
+          <Box
             css={
               attachment.description
                 ? [
                     css`
-                      margin: 3px 0 0 0;
                       font-size: 12px;
                       opacity: 0.7;
-                      @media (max-width: 300px) {
-                        margin: 2px 0 0 0;
+                      margin-left: 3px;
+                      margin-top: 2px;
+                      @media (max-width: 420px) {
+                        display: none;
                       }
                     `,
                   ]
                 : css`
-                    margin: 22px 0 15px 0;
                     font-size: 12px;
                     opacity: 0.7;
-                    @media (max-width: 300px) {
-                      margin: 10px 0 10px 0;
+                    margin-left: 3px;
+                    margin-top: 7px;
+                    @media (max-width: 420px) {
+                      margin-left: 0;
+                      margin-top: 5px;
                     }
                   `
             }
           >
-            {attachment.title.length > 24
-              ? `${attachment.title.substring(0, 24)}...`
-              : attachment.title}
-          </p>
-        </Tooltip>
-        <Box
-          css={
-            attachment.description
-              ? [
-                  css`
-                    font-size: 12px;
-                    opacity: 0.7;
-                    margin-left: 3px;
-                    margin-top: 2px;
-                    @media (max-width: 300px) {
-                      margin-left: 0;
-                      margin-top: 2px;
-                    }
-                  `,
-                ]
-              : css`
-                  font-size: 12px;
-                  opacity: 0.7;
-                  margin-left: 3px;
-                  margin-top: 7px;
-                  @media (max-width: 300px) {
-                    margin-left: 0;
-                    margin-top: 5px;
-                  }
-                `
-          }
-        >
-          (
-          {attachment.image_size
-            ? (attachment.image_size / 1024).toFixed(2)
-            : 0}{' '}
-          kB)
+            (
+            {attachment.image_size
+              ? (attachment.image_size / 1024).toFixed(2)
+              : 0}{' '}
+            kB)
+          </Box>
         </Box>
         <Box
           css={css`
             display: flex;
             flex-direction: row;
             align-items: center;
-            @media (max-width: 300px) {
+            @media (max-width: 420px) {
               flex-direction: row;
               align-items: flex-start;
             }
@@ -156,7 +167,7 @@ const AttachmentMetadata = ({
             css={css`
               margin-left: 10px;
               margin-top: ${attachment.description ? '3px' : '10px'};
-              @media (max-width: 300px) {
+              @media (max-width: 420px) {
                 margin-left: 0;
                 margin-top: 5px;
               }
@@ -177,7 +188,7 @@ const AttachmentMetadata = ({
             css={css`
               margin-left: 10px;
               margin-top: 5px;
-              @media (max-width: 300px) {
+              @media (max-width: 420px) {
                 margin-left: 0;
                 margin-top: 5px;
               }

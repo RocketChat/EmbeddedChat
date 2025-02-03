@@ -94,7 +94,7 @@ const VideoAttachment = ({
         <Box
           css={css`
             @media (max-width: 450px) {
-              margin-top: 0.3rem;
+              margin-top: 0.4rem;
             }
           `}
         >

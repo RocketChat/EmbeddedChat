@@ -76,14 +76,23 @@ const ImageAttachment = ({
         ) : (
           ''
         )}
-        <AttachmentMetadata
-          attachment={attachment}
-          url={host + (attachment.title_link || attachment.image_url)}
-          variantStyles={variantStyles}
-          msg={msg}
-          onExpandCollapseClick={toggleExpanded}
-          isExpanded={isExpanded}
-        />
+        <Box
+          css={css`
+            align-items: center;
+            @media (max-width: 420px) {
+              margin-top: 0.4rem;
+            }
+          `}
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_link || attachment.image_url)}
+            variantStyles={variantStyles}
+            msg={msg}
+            onExpandCollapseClick={toggleExpanded}
+            isExpanded={isExpanded}
+          />
+        </Box>
         {isExpanded && (
           <Box onClick={() => setShowGallery(true)}>
             <img
