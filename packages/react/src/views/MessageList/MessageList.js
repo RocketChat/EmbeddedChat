@@ -39,8 +39,8 @@ const MessageList = ({
           <Icon name="thread" size="2rem" />
           <Box>
             {isMessageLoaded
-              ? 'No messages'
-              : 'Ready to chat? Login now to join the fun.'}
+              ? i18n.t('No_Messages_Found')
+              : i18n.t('Ready_To_Chat')}
           </Box>
         </Box>
       ) : (

@@ -160,7 +160,7 @@ const VideoMessageRecorder = (props) => {
             <span>{displayName}</span>
           </Box>
         ) : (
-          <Tooltip text="Video Message" position="top">
+          <Tooltip text={i18n.t('Tooltip_Video_Message')} position="top">
             <ActionButton
               ghost
               square

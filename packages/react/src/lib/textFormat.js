@@ -1,11 +1,13 @@
+import i18n from '@embeddedchat/i18n';
+
 export const formatter = [
-  { name: 'bold', pattern: '*{{text}}*', tooltip: 'Bold' },
-  { name: 'italic', pattern: '_{{text}}_', tooltip: 'Italic' },
-  { name: 'strike', pattern: '~{{text}}~', tooltip: 'Strikethrough' },
-  { name: 'code', pattern: '`{{text}}`', tooltip: 'Inline code' },
+  { name: 'bold', pattern: '*{{text}}*', tooltip: i18n.t('Tooltip_Bold') },
+  { name: 'italic', pattern: '_{{text}}_', tooltip: i18n.t('Tooltip_Italic') },
+  { name: 'strike', pattern: '~{{text}}~', tooltip: i18n.t('Tooltip_Strike') },
+  { name: 'code', pattern: '`{{text}}`', tooltip: i18n.t('Tooltip_Inline') },
   {
     name: 'multiline',
     pattern: '```\n{{text}}\n```',
-    tooltip: 'Multi-line code',
+    tooltip: i18n.t('Tooltip_Multiline'),
   },
 ];
