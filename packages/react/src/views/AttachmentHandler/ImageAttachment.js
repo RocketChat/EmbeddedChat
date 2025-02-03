@@ -79,7 +79,7 @@ const ImageAttachment = ({
         <Box
           css={css`
             align-items: center;
-            @media (max-width: 420px) {
+            @media (max-width: 450px) {
               margin-top: 0.4rem;
             }
           `}
