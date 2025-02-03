@@ -66,7 +66,6 @@ const VideoAttachment = ({
                   gap: 0.3rem;
                   align-items: center;
                   @media (max-width: 450px) {
-                    flex-direction: column;
                     align-items: flex-start;
                   }
                 `,
@@ -78,20 +77,36 @@ const VideoAttachment = ({
                 alt="avatar"
                 size="1.2em"
               />
-              <Box>@{authorName}</Box>
+              <Box
+                css={css`
+                  @media (max-width: 450px) {
+                    margin-top: 0.5rem;
+                  }
+                `}
+              >
+                @{authorName}
+              </Box>
             </Box>
           </>
         ) : (
           ''
         )}
-        <AttachmentMetadata
-          attachment={attachment}
-          url={host + (attachment.title_url || attachment.video_url)}
-          variantStyles={variantStyles}
-          msg={msg}
-          onExpandCollapseClick={toggleExpanded}
-          isExpanded={isExpanded}
-        />
+        <Box
+          css={css`
+            @media (max-width: 450px) {
+              margin-top: 0.5rem;
+            }
+          `}
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_url || attachment.video_url)}
+            variantStyles={variantStyles}
+            msg={msg}
+            onExpandCollapseClick={toggleExpanded}
+            isExpanded={isExpanded}
+          />
+        </Box>
         {isExpanded && (
           <video
             controls

@@ -141,46 +141,57 @@ const AttachmentMetadata = ({
             : 0}{' '}
           kB)
         </Box>
-
         <Box
           css={css`
-            margin-left: 10px;
-            margin-top: ${attachment.description ? '3px' : '10px'};
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             @media (max-width: 420px) {
-              margin-left: 0;
-              margin-top: 5px;
+              flex-direction: row;
+              align-items: flex-start;
             }
           `}
         >
-          <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
-            <ActionButton
-              ghost
-              icon={isExpanded ? 'chevron-down' : 'chevron-left'}
-              size="small"
-              onClick={() => {
-                onExpandCollapseClick();
-              }}
-            />
-          </Tooltip>
-        </Box>
-        <Box
-          css={css`
-            margin-left: 10px;
-            margin-top: 5px;
-            @media (max-width: 420px) {
-              margin-left: 0;
+          <Box
+            css={css`
+              margin-left: 10px;
+              margin-top: ${attachment.description ? '3px' : '10px'};
+              @media (max-width: 420px) {
+                margin-left: 0;
+                margin-top: 5px;
+              }
+            `}
+          >
+            <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
+              <ActionButton
+                ghost
+                icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+                size="small"
+                onClick={() => {
+                  onExpandCollapseClick();
+                }}
+              />
+            </Tooltip>
+          </Box>
+          <Box
+            css={css`
+              margin-left: 10px;
               margin-top: 5px;
-            }
-          `}
-        >
-          <Tooltip text="Download" position="top">
-            <ActionButton
-              ghost
-              icon="download"
-              size="small"
-              onClick={handleDownload}
-            />
-          </Tooltip>
+              @media (max-width: 420px) {
+                margin-left: 0;
+                margin-top: 5px;
+              }
+            `}
+          >
+            <Tooltip text="Download" position="top">
+              <ActionButton
+                ghost
+                icon="download"
+                size="small"
+                onClick={handleDownload}
+              />
+            </Tooltip>
+          </Box>
         </Box>
       </Box>
     </Box>
