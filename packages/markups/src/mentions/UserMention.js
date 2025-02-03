@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, Tooltip } from '@embeddedchat/ui-elements';
 import { useUserStore } from '@embeddedchat/react/src/store';
 import useSetExclusiveState from '@embeddedchat/react/src/hooks/useSetExclusiveState';
 import RCContext from '@embeddedchat/react/src/context/RCInstance';
@@ -27,7 +27,9 @@ const UserMention = ({ contents }) => {
   };
 
   const hasMember = (user) => {
-    if (user === 'all' || user === 'here') return true;
+    if (user === 'all' || user === 'here') {
+      return true;
+    }
     let found = false;
     Object.keys(members).forEach((ele) => {
       if (members[ele].username === user) {
@@ -39,20 +41,27 @@ const UserMention = ({ contents }) => {
 
   const styles = useMentionStyles(contents, username);
 
+  const handleClick = () => {
+    if (!['here', 'all'].includes(contents.value)) {
+      handleUserInfo(contents.value);
+    }
+  };
+
+  const tooltipMap = {
+    all: 'Mentions all the room members',
+    here: 'Mentions online room members',
+    [username]: 'Mentions you',
+  };
+  const tooltipText = tooltipMap[contents.value] || 'Mentions user';
+
   return (
     <>
       {hasMember(contents.value) ? (
-        <Box
-          is="span"
-          css={styles.mention}
-          onClick={
-            ['here', 'all'].includes(contents.value)
-              ? null
-              : () => handleUserInfo(contents.value)
-          }
-        >
-          {contents.value}
-        </Box>
+        <Tooltip text={tooltipText} position="top" key={username}>
+          <Box is="span" css={styles.mention} onClick={handleClick}>
+            {contents.value}
+          </Box>
+        </Tooltip>
       ) : (
         `@${contents.value}`
       )}

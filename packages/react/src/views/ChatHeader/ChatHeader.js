@@ -73,6 +73,8 @@ const ChatHeader = ({
   const setIsChannelPrivate = useChannelStore(
     (state) => state.setIsChannelPrivate
   );
+  const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
+  const setIsRoomTeam = useChannelStore((state) => state.setIsRoomTeam);
   const setIsChannelReadOnly = useChannelStore(
     (state) => state.setIsChannelReadOnly
   );
@@ -136,6 +138,7 @@ const ChatHeader = ({
     try {
       await RCInstance.logout();
       setMessages([]);
+      setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
@@ -176,6 +179,7 @@ const ChatHeader = ({
       if (res.success) {
         setChannelInfo(res.room);
         if (res.room.t === 'p') setIsChannelPrivate(true);
+        if (res.room?.teamMain) setIsRoomTeam(true);
         if (res.room.ro) {
           setIsChannelReadOnly(true);
           setMessageAllowed();
@@ -376,10 +380,20 @@ const ChatHeader = ({
                       onClick={() => setExclusiveState(setShowChannelinfo)}
                     >
                       <Icon
-                        name="hash"
+                        name={
+                          isRoomTeam
+                            ? 'team'
+                            : isChannelPrivate
+                            ? 'hash_lock'
+                            : 'hash'
+                        }
                         size={fullScreen ? '1.25rem' : '1rem'}
                       />
-                      <div>
+                      <div
+                        css={css`
+                          font-size: ${fullScreen ? '1.3rem' : '1.25rem'};
+                        `}
+                      >
                         {channelInfo.name || channelName || 'channelName'}
                       </div>
                     </Box>

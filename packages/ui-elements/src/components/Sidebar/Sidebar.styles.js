@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 export const getSidebarStyles = (theme) => {
   const styles = {
     sidebarContainer: css`
-      min-width: 350px;
+      width: 350px;
       height: 100%;
       box-shadow: ${theme.shadows[2]};
       z-index: ${theme.zIndex?.sidebar || 1200};
@@ -34,10 +34,15 @@ export const getSidebarContentStyles = (theme) => {
       padding: 0 0.5rem;
       border-radius: ${theme.radius};
       position: relative;
-      margin: 0 1rem 1rem;
       &.focused {
         outline: 1px solid ${theme.colors.ring};
       }
+    `,
+    filesHeader: css`
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1px 1rem 0;
     `,
 
     textInput: css`
