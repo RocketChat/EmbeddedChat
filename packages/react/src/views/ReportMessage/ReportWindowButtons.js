@@ -9,6 +9,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
+
 const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
   const [toggleReportMessage, setMessageToReport] = useMessageStore((state) => [
     state.toggleShowReportMessage,
