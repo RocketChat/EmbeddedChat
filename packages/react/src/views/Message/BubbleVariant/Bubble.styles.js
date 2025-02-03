@@ -167,7 +167,7 @@ export const getBubbleStylesMe = (theme) => {
       .ec-message-body:hover & {
         left: auto;
         right: calc(100% - 20px);
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
           right: 0;
         }
       }
@@ -184,7 +184,7 @@ export const getBubbleStylesMe = (theme) => {
 
     emojiPickerStylesMe: css`
       left: auto;
-      right: calc(100% + 5px);
+      right: 0;
     `,
   };
 
