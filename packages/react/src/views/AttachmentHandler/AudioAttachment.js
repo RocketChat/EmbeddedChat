@@ -32,7 +32,6 @@ const AudioAttachment = ({
       <Box
         css={[
           css`
-            line-height: 0;
             border-radius: inherit;
             padding: 0.5rem;
           `,
@@ -89,7 +88,6 @@ const AudioAttachment = ({
               <Box
                 css={[
                   css`
-                    line-height: 0;
                     border-radius: inherit;
                     padding: 0.5rem;
                   `,

@@ -42,7 +42,6 @@ const ImageAttachment = ({
           css`
             cursor: pointer;
             border-radius: inherit;
-            line-height: 0;
             padding: 0.5rem;
           `,
           (type ? variantStyles.pinnedContainer : '') ||
@@ -106,7 +105,6 @@ const ImageAttachment = ({
                   css`
                     cursor: pointer;
                     border-radius: inherit;
-                    line-height: 0;
                     padding: 0.5rem;
                   `,
                   (nestedAttachment.attachments[0].type
