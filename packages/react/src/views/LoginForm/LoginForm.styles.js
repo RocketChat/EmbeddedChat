@@ -35,20 +35,6 @@ const styles = {
     position: absolute;
     right: 1em;
   `,
-
-  modal: {
-    '@media(max-width: 600px)': {
-      maxWidth: '70%',
-    },
-    '@media(max-width: 870px)': {
-      maxWidth: '75%',
-    },
-  },
-  modalTitle: css`
-    @media (max-width: 602px) {
-      font-size: 20px;
-    }
-  `,
 };
 
 export default styles;

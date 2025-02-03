@@ -18,6 +18,10 @@ export const ModalClose = ({
     <Box
       css={css`
         margin: 0.25rem !important;
+        @media (max-width: 320px) {
+          margin: 0.2rem;
+          size: 0.2rem;
+        }
       `}
       className={`ec-modal-close ${className} ${classNames}`}
       style={{ ...style, ...styleOverrides }}

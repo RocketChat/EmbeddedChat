@@ -571,9 +571,14 @@ const ChatInput = ({ scrollToBottom }) => {
         )}
       </Box>
       {isMsgLong && (
-        <Modal css={styles.modal} onClose={() => setIsMsgLong(false)}>
+        <Modal
+          css={css`
+            padding: 1em;
+          `}
+          onClose={() => setIsMsgLong(false)}
+        >
           <Modal.Header>
-            <Modal.Title css={styles.modalTitle}>
+            <Modal.Title>
               <Icon name="report" size="1.25rem" />
               Message Too Long!
             </Modal.Title>

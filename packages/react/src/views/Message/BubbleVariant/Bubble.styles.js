@@ -167,6 +167,9 @@ export const getBubbleStylesMe = (theme) => {
       .ec-message-body:hover & {
         left: auto;
         right: calc(100% - 20px);
+        @media (max-width: 500px) {
+          right: 0;
+        }
       }
     `,
 

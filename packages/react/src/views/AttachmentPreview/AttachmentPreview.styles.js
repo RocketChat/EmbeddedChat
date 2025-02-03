@@ -14,25 +14,6 @@ const getAttachmentPreviewStyles = () => {
       width: 100%;
     `,
 
-    modal: {
-      '@media(max-width: 480px)': {
-        maxWidth: '70%',
-        maxHeight: '60%',
-      },
-      '@media(max-width: 600px)': {
-        maxWidth: '60%',
-      },
-      '@media(max-width: 768px)': {
-        maxWidth: '65%',
-      },
-    },
-
-    modalTitle: css`
-      @media (max-width: 320px) {
-        font-size: 20px;
-      }
-    `,
-
     modalContent: css`
       overflow-y: auto;
       overflow-x: hidden;

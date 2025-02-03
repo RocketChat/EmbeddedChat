@@ -120,27 +120,6 @@ export const fileDisplayStyles = {
     }
   `,
 
-  modal: {
-    '@media(max-width: 320px)': {
-      maxWidth: '70%',
-    },
-    '@media(max-width: 480px)': {
-      maxWidth: '70%',
-    },
-    '@media(max-width: 600px)': {
-      maxWidth: '85%',
-    },
-    '@media(max-width: 768px)': {
-      maxWidth: '75%',
-    },
-  },
-
-  modalTitle: css`
-    @media (max-width: 320px) {
-      font-size: 20px;
-    }
-  `,
-
   centeredColumnStyles: css`
     display: flex;
     flex-direction: column;

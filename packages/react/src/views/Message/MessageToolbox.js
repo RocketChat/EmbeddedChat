@@ -255,9 +255,9 @@ export const MessageToolbox = ({
       </Box>
 
       {showDeleteModal && (
-        <Modal onClose={handleOnClose} css={styles.modal}>
+        <Modal onClose={handleOnClose}>
           <Modal.Header>
-            <Modal.Title css={styles.modalTitle}>
+            <Modal.Title>
               <Icon
                 name="trash"
                 size="1.25rem"

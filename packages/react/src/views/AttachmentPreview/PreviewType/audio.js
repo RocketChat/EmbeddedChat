@@ -10,18 +10,24 @@ function PreviewAudio({ previewURL }) {
         width: 100%;
 
         @media (max-width: 320px) {
-          max-width: 270px;
+          max-width: 250px;
           margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-          max-width: 300px;
+        @media (max-width: 420px) {
+          max-width: 280px;
           margin: 0 auto;
+        }
+        @media (min-width: 481px) and (max-width: 600px) {
+          width: ;
         }
 
         audio {
           width: 100%;
           max-width: 100%;
+          @media (max-width: 600px) {
+            max-width: 80%;
+          }
         }
       `}
     >

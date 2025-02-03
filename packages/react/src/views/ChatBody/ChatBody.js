@@ -316,7 +316,7 @@ const ChatBody = ({
         </Box>
       )}
       {isModalOpen && (
-        <Modal css={styles.modal}>
+        <Modal>
           <Modal.Header>
             <Modal.Title>Announcement</Modal.Title>
             <Modal.Close onClick={toggleModal} />

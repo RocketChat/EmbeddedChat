@@ -66,9 +66,9 @@ const AttachmentPreview = () => {
     }
   };
   return (
-    <Modal onClose={toggle} css={styles.modal}>
+    <Modal onClose={toggle}>
       <Modal.Header>
-        <Modal.Title css={styles.modalTitle}>
+        <Modal.Title>
           <Icon
             name="attachment"
             size="1.25rem"
@@ -93,6 +93,9 @@ const AttachmentPreview = () => {
           <Box
             css={css`
               margin: 30px;
+              @media (max-width: 768px) {
+                margin: 25px;
+              }
             `}
           >
             <Box css={styles.inputContainer}>
@@ -160,6 +163,9 @@ const AttachmentPreview = () => {
       <Modal.Footer
         css={css`
           margin-top: 1.5rem;
+          @media (max-width: 768px) {
+            margin-top: 0rem;
+          }
         `}
       >
         <Button type="secondary" onClick={toggle}>

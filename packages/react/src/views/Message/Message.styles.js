@@ -273,42 +273,12 @@ export const getMessageToolboxStyles = (theme) => {
       gap: 0.25rem;
       padding: 0.25rem;
       border-radius: ${theme.radius};
-      @media (max-width: 602px) {
-        margin-right: -2rem;
-      }
-      @media (max-width: 360px) {
-        margin-right: -4rem;
-      }
     `,
 
     emojiPickerStyles: css`
       position: absolute;
       bottom: 100%;
       right: 1.5rem;
-    `,
-
-    modal: {
-      '@media(max-width: 320px)': {
-        maxWidth: '80%',
-      },
-      '@media(max-width: 480px)': {
-        maxWidth: '80%',
-      },
-      '@media(max-width: 600px)': {
-        maxWidth: '70%',
-      },
-      '@media(max-width: 768px)': {
-        maxWidth: '75%',
-      },
-    },
-
-    modalTitle: css`
-      @media (max-width: 480px) {
-        font-size: 20px;
-      }
-      @media (max-width: 360px) {
-        font-size: 16px;
-      }
     `,
   };
 
