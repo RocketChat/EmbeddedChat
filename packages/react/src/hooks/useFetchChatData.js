@@ -117,8 +117,13 @@ const useFetchChatData = (showRoles) => {
           if (!isUserAuthenticated && !anonymousMode) {
             return;
           }
-          const { members } = await RCInstance.getChannelMembers();
-          setMembersHandler(members);
+          const response = await RCInstance.getChannelMembers();
+          const { members } = response || {};
+          if (Array.isArray(members)) {
+            setMembersHandler(members);
+          } else {
+            console.error('Invalid members response:', members);
+          }
         } catch (e) {
           console.error(e);
         }
