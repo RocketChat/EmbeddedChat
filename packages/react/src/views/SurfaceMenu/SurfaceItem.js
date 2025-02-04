@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip, ActionButton } from '@embeddedchat/ui-elements';
 
 const SurfaceItem = ({ item, size }) => (
-  <Tooltip text={item.label} position="top" key={item.id}>
+  <Tooltip text={item.label} position="bottom" key={item.id}>
     <ActionButton
       square
       ghost
