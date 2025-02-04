@@ -154,7 +154,7 @@ const ChatInputFormattingToolbar = ({
           }}
         >
           <Icon name="attachment" size="1rem" />
-          <span>file</span>
+          <span>File</span>
         </Box>
       ) : (
         <Tooltip text="Upload File" position="top" key="file">
@@ -183,7 +183,7 @@ const ChatInputFormattingToolbar = ({
           }}
         >
           <Icon name="link" size="1rem" />
-          <span>link</span>
+          <span>Link</span>
         </Box>
       ) : (
         <Tooltip text="Link" position="top" key="link">
@@ -197,6 +197,35 @@ const ChatInputFormattingToolbar = ({
             }}
           >
             <Icon name="link" size="1.25rem" />
+          </ActionButton>
+        </Tooltip>
+      ),
+    preview:
+      isPopoverOpen && popOverItems.includes('link') ? (
+        <Box
+          key="preview"
+          css={styles.popOverItemStyles}
+          disabled={isRecordingMessage}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            addPreviewMessage(messageRef.current.value);
+          }}
+        >
+          <Icon name="eyeopen" size="1rem" />
+          <span>Preview</span>
+        </Box>
+      ) : (
+        <Tooltip text="Preview" position="top" key="preview">
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage}
+            onClick={() => {
+              if (isRecordingMessage) return;
+              addPreviewMessage(messageRef.current.value);
+            }}
+          >
+            <Icon name="eyeopen" size="1.25rem" />
           </ActionButton>
         </Tooltip>
       ),
