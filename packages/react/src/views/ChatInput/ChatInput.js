@@ -34,7 +34,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import { Markdown } from '../Markdown';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -209,7 +208,15 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleNewLine = (e, addLine = true) => {
-    if (addLine) messageRef.current.value += '\n';
+    if (addLine) {
+      const { selectionStart, selectionEnd, value } = messageRef.current;
+      messageRef.current.value = `${value.substring(
+        0,
+        selectionStart
+      )}\n${value.substring(selectionEnd)}`;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd;
+      messageRef.current.selectionEnd = selectionStart + 1;
+    }
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -569,7 +576,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? `Message #${channelInfo.name}`
+                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'

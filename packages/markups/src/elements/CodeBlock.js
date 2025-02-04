@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import SyntaxHighlighter from 'react-syntax-highlighter';
