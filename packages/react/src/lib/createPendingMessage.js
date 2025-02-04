@@ -90,10 +90,8 @@ const createPendingAttachmentMessage = (
         ],
       },
     ],
-    ...additionalFields, // Add extra fields for file-specific types like audio, video, or image
   };
 
-  // Add fileType-specific fields
   if (fileType === 'audio') {
     attachment.audio_url = `/file-upload/${
       file._id || file.name

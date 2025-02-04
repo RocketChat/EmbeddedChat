@@ -170,6 +170,7 @@ const ChatInput = ({ scrollToBottom }) => {
       if (navigator.onLine && messageQueue.length > 0) {
         for (let i = 0; i < messageQueue.length; i += 1) {
           const pendingMessage = JSON.parse(messageQueue[i]);
+          // eslint-disable-next-line no-await-in-loop
           const res = await RCInstance.sendMessage(
             {
               msg: pendingMessage.msg,
