@@ -123,20 +123,35 @@ const ChatInputFormattingToolbar = ({
         </ActionButton>
       </Tooltip>
     ),
-    link: (
-      <Tooltip text="Link" position="top" key="link">
-        <ActionButton
-          square
-          ghost
+    link:
+      isPopoverOpen && popOverItems.includes('link') ? (
+        <Box
+          key="link"
+          css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
+            if (isRecordingMessage) return;
             setInsertLinkOpen(true);
           }}
         >
-          <Icon name="link" size="1.25rem" />
-        </ActionButton>
-      </Tooltip>
-    ),
+          <Icon name="link" size="1rem" />
+          <span>link</span>
+        </Box>
+      ) : (
+        <Tooltip text="Link" position="top" key="link">
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage}
+            onClick={() => {
+              if (isRecordingMessage) return;
+              setInsertLinkOpen(true);
+            }}
+          >
+            <Icon name="link" size="1.25rem" />
+          </ActionButton>
+        </Tooltip>
+      ),
     preview: (
       <Tooltip text="Preview" position="top" key="preview">
         <ActionButton
