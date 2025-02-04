@@ -2287,11 +2287,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@embeddedchat/api@0.0.2, @embeddedchat/api@workspace:packages/api":
+"@embeddedchat/api@workspace:^, @embeddedchat/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/api@workspace:packages/api"
   dependencies:
-    "@embeddedchat/auth": 0.0.1
+    "@embeddedchat/auth": "workspace:^"
     "@rocket.chat/sdk": ^1.0.0-alpha.42
     parcel: ^2.10.3
     rollup: ^3.23.0
@@ -2301,7 +2301,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@embeddedchat/auth@0.0.1, @embeddedchat/auth@workspace:packages/auth":
+"@embeddedchat/auth@workspace:^, @embeddedchat/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/auth@workspace:packages/auth"
   dependencies:
@@ -2316,7 +2316,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@embeddedchat/htmlembed@workspace:packages/htmlembed"
   dependencies:
-    "@embeddedchat/react": 0.1.12
+    "@embeddedchat/react": "workspace:^"
     "@vitejs/plugin-react": ^3.1.0
     live-server: ^1.2.2
     react: ^18.2.0
@@ -2400,7 +2400,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.19.3
     "@babel/eslint-parser": ^7.22.15
-    "@embeddedchat/api": 0.0.2
+    "@embeddedchat/api": "workspace:^"
     "@emotion/native": ^11.11.0
     "@emotion/react": 11.7.1
     "@expo/vector-icons": ^13.0.0
@@ -2441,7 +2441,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@embeddedchat/react@0.1.12, @embeddedchat/react@workspace:*, @embeddedchat/react@workspace:packages/react":
+"@embeddedchat/react@workspace:*, @embeddedchat/react@workspace:^, @embeddedchat/react@workspace:packages/react":
   version: 0.0.0-use.local
   resolution: "@embeddedchat/react@workspace:packages/react"
   dependencies:
@@ -2449,7 +2449,8 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@babel/preset-env": ^7.16.11
     "@babel/preset-react": ^7.16.7
-    "@embeddedchat/api": 0.0.2
+    "@embeddedchat/api": "workspace:^"
+    "@embeddedchat/markups": "workspace:^"
     "@embeddedchat/ui-elements": "workspace:^"
     "@embeddedchat/ui-kit": "workspace:^"
     "@emotion/babel-plugin": ^11.11.0
@@ -2594,6 +2595,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@babel/preset-env": ^7.16.11
     "@babel/preset-react": ^7.16.7
+    "@embeddedchat/markups": "workspace:^"
     "@emotion/babel-plugin": ^11.11.0
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1

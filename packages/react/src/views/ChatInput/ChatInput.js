@@ -534,7 +534,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? `Message #${channelInfo.name}`
+                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'
