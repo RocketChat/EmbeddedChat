@@ -51,14 +51,19 @@ const ChatBody = ({
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
+  const offset = useMessageStore((state) => state.messagesOffset);
+  const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const threadMessages = useMessageStore((state) => state.threadMessages);
   const [isModalOpen, setModalOpen] = useState(false);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const setMessages = useMessageStore((state) => state.setMessages);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -91,7 +96,7 @@ const ChatBody = ({
           threadMainMessage._id,
           isChannelPrivate
         );
-        setThreadMessages(messages);
+        setThreadMessages(messages.reverse());
       } catch (e) {
         console.error(e);
       }
@@ -153,6 +158,7 @@ const ChatBody = ({
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         getMessagesAndRoles();
+        setHasMoreMessages(true);
       } else {
         getMessagesAndRoles(anonymousMode);
       }
@@ -166,13 +172,57 @@ const ChatBody = ({
     setPopupVisible(false);
   };
 
-  const handleScroll = useCallback(() => {
+  const handleScroll = useCallback(async () => {
     if (messageListRef && messageListRef.current) {
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
           messageListRef.current.scrollHeight
       );
+
+      if (
+        messageListRef.current.scrollTop === 0 &&
+        !loadingOlderMessages &&
+        hasMoreMessages
+      ) {
+        setLoadingOlderMessages(true);
+
+        try {
+          const olderMessages = await RCInstance.getOlderMessages(
+            anonymousMode,
+            ECOptions?.enableThreads
+              ? {
+                  query: {
+                    tmid: {
+                      $exists: false,
+                    },
+                  },
+                  offset,
+                }
+              : undefined,
+            anonymousMode ? false : isChannelPrivate
+          );
+          const messageList = messageListRef.current;
+          if (olderMessages?.messages?.length) {
+            const previousScrollHeight = messageList.scrollHeight;
+
+            setMessages(olderMessages.messages, true);
+            setMessagesOffset(offset + olderMessages.messages.length);
+
+            requestAnimationFrame(() => {
+              const newScrollHeight = messageList.scrollHeight;
+              messageList.scrollTop = newScrollHeight - previousScrollHeight;
+            });
+          } else {
+            setHasMoreMessages(false);
+          }
+        } catch (error) {
+          console.error('Error fetching older messages:', error);
+          setHasMoreMessages(false);
+        } finally {
+          setLoadingOlderMessages(false);
+        }
+      }
     }
 
     const isAtBottom = messageListRef?.current?.scrollTop === 0;
@@ -183,6 +233,15 @@ const ChatBody = ({
     }
   }, [
     messageListRef,
+    offset,
+    setMessagesOffset,
+    setMessages,
+    anonymousMode,
+    hasMoreMessages,
+    RCInstance,
+    isChannelPrivate,
+    ECOptions?.enableThreads,
+    loadingOlderMessages,
     setScrollPosition,
     setIsUserScrolledUp,
     setPopupVisible,
@@ -206,6 +265,12 @@ const ChatBody = ({
       );
     }
   };
+
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     checkOverflow();
@@ -292,7 +357,12 @@ const ChatBody = ({
             threadMessages={threadMessages}
           />
         ) : (
-          <MessageList messages={messages} />
+          <MessageList
+            messages={messages}
+            loadingOlderMessages={loadingOlderMessages}
+            isUserAuthenticated={isUserAuthenticated}
+            hasMoreMessages={hasMoreMessages}
+          />
         )}
 
         <TotpModal handleLogin={handleLogin} />

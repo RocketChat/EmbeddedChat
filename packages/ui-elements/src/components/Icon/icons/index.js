@@ -6,6 +6,8 @@ import Star from './Star';
 import Pin from './Pin';
 import ReplyDirectly from './ReplyDirectly';
 import Hash from './Hash';
+import HashLock from './HashLock';
+import Lock from './Lock';
 import Computer from './Computer';
 import Cross from './Cross';
 import Mic from './Mic';
@@ -63,6 +65,7 @@ import Arc from './Arc';
 import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
+import Team from './Team';
 
 const icons = {
   file: File,
@@ -71,11 +74,14 @@ const icons = {
   pin: Pin,
   'reply-directly': ReplyDirectly,
   hash: Hash,
+  hash_lock: HashLock,
+  lock: Lock,
   computer: Computer,
   bell: Bell,
   'bell-slash': BellSlash,
   cross: Cross,
   copy: Copy,
+  team: Team,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
