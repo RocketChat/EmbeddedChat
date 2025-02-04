@@ -344,7 +344,11 @@ const ChatInputFormattingToolbar = ({
           positionStyles={css`
             position: absolute;
             bottom: 7rem;
-            left: 0.7rem;
+            left: 2rem;
+            @media (max-width: 499px) {
+              bottom: 0rem;
+              left: 0.7rem;
+            }
           `}
         />
       )}
