@@ -205,9 +205,9 @@ const ChatInputFormattingToolbar = ({
         <Box
           key="preview"
           css={styles.popOverItemStyles}
-          disabled={isRecordingMessage}
+          disabled={isRecordingMessage || !messageRef.current?.value}
           onClick={() => {
-            if (isRecordingMessage) return;
+            if (isRecordingMessage || !messageRef.current?.value) return;
             addPreviewMessage(messageRef.current.value);
           }}
         >
@@ -219,9 +219,9 @@ const ChatInputFormattingToolbar = ({
           <ActionButton
             square
             ghost
-            disabled={isRecordingMessage}
+            disabled={isRecordingMessage || !messageRef.current?.value}
             onClick={() => {
-              if (isRecordingMessage) return;
+              if (isRecordingMessage || !messageRef.current?.value) return;
               addPreviewMessage(messageRef.current.value);
             }}
           >
