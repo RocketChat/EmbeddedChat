@@ -55,6 +55,10 @@ const ChatInputFormattingToolbar = ({
   );
 
   const addPreviewMessage = useMessageStore((state) => state.addPreviewMessage);
+  const previewMessage = useMessageStore((state) => state.previewMessage);
+  const removePreviewMessage = useMessageStore(
+    (state) => state.removePreviewMessage
+  );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
@@ -201,13 +205,16 @@ const ChatInputFormattingToolbar = ({
         </Tooltip>
       ),
     preview:
-      isPopoverOpen && popOverItems.includes('link') ? (
+      isPopoverOpen && popOverItems.includes('preview') ? (
         <Box
           key="preview"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage || !messageRef.current?.value}
           onClick={() => {
             if (isRecordingMessage || !messageRef.current?.value) return;
+            if (previewMessage) {
+              removePreviewMessage(previewMessage[0]);
+            }
             addPreviewMessage(messageRef.current.value);
           }}
         >
@@ -222,6 +229,9 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage || !messageRef.current?.value}
             onClick={() => {
               if (isRecordingMessage || !messageRef.current?.value) return;
+              if (previewMessage) {
+                removePreviewMessage(previewMessage[0]);
+              }
               addPreviewMessage(messageRef.current.value);
             }}
           >
