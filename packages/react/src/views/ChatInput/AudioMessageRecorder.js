@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Box, Icon, ActionButton, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  ActionButton,
+  Tooltip,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const AudioMessageRecorder = ({ disabled }) => {
+const AudioMessageRecorder = (props) => {
+  const { disabled, displayName, popOverItemStyles } = props;
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
@@ -130,15 +137,27 @@ const AudioMessageRecorder = ({ disabled }) => {
   }, [isRecorded, file]);
 
   if (state === 'idle') {
-    return (
-      <ActionButton
-        ghost
-        square
-        disabled={disabled}
+    return displayName ? (
+      <Box
+        key="audio"
+        css={popOverItemStyles}
         onClick={handleRecordButtonClick}
+        disabled={disabled}
       >
-        <Icon size="1.25rem" name="mic" />
-      </ActionButton>
+        <Icon name="mic" size="1rem" />
+        <span>{displayName}</span>
+      </Box>
+    ) : (
+      <Tooltip text="Audio Message" position="top">
+        <ActionButton
+          ghost
+          square
+          disabled={disabled}
+          onClick={handleRecordButtonClick}
+        >
+          <Icon size="1.25rem" name="mic" />
+        </ActionButton>
+      </Tooltip>
     );
   }
 
@@ -146,18 +165,22 @@ const AudioMessageRecorder = ({ disabled }) => {
     <Box css={styles.controller}>
       {state === 'recording' && (
         <>
-          <ActionButton ghost onClick={handleCancelRecordButton}>
-            <Icon size="1.25rem" name="circle-cross" />
-          </ActionButton>
+          <Tooltip text="Cancel Recording" position="top">
+            <ActionButton ghost onClick={handleCancelRecordButton}>
+              <Icon size="1.25rem" name="circle-cross" />
+            </ActionButton>
+          </Tooltip>
           <Box css={styles.record}>
             <Box is="span" css={styles.dot} />
             <Box is="span" css={styles.timer}>
               {time}
             </Box>
           </Box>
-          <ActionButton ghost onClick={handleStopRecordButton}>
-            <Icon name="circle-check" size="1.25rem" />
-          </ActionButton>
+          <Tooltip text="Finish Recording" position="top">
+            <ActionButton ghost onClick={handleStopRecordButton}>
+              <Icon name="circle-check" size="1.25rem" />
+            </ActionButton>
+          </Tooltip>
         </>
       )}
     </Box>
