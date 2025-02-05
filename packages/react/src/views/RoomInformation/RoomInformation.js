@@ -18,6 +18,7 @@ const Roominfo = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
@@ -32,7 +33,7 @@ const Roominfo = () => {
 
   return (
     <ViewComponent
-      title="Room Information"
+      title={isRoomTeam ? 'Team Information' : 'Room Information'}
       iconName="info"
       onClose={() => setExclusiveState(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
@@ -76,12 +77,13 @@ const Roominfo = () => {
           </Box>
           <Box css={styles.infoHeader}>
             <Icon
-              name={isChannelPrivate ? 'lock' : 'hash'}
+              name={
+                isRoomTeam ? 'team' : isChannelPrivate ? 'hash_lock' : 'hash'
+              }
               size="1.25rem"
               css={css`
                 vertical-align: middle;
                 margin-right: 0.5rem;
-                margin-bottom: 0.25rem;
               `}
             />
             {channelInfo.name || channelName}
