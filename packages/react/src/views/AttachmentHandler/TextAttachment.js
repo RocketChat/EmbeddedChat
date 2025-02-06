@@ -33,12 +33,9 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
         date.getMonth() === now.getMonth() &&
         date.getFullYear() === now.getFullYear();
 
-      const isSameWeek = (() => {
-        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(endOfWeek.getDate() + 6);
-        return date >= startOfWeek && date <= endOfWeek;
-      })();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      const isSameWeek = date >= startOfWeek;
 
       const isSameMonth =
         date.getMonth() === now.getMonth() &&
@@ -101,9 +98,14 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
             />
             <Box
               css={css`
+                color: ${theme.colors.accentForeground};
+                font-weight: 300;
+                letter-spacing: 0rem;
+                line-height: 1.25rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                flex-shrink: 0;
+                white-space: nowrap;
+                flex-shrink: 1;
               `}
             >
               @{attachment?.author_name}
@@ -188,9 +190,14 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                     />
                     <Box
                       css={css`
+                        color: ${theme.colors.accentForeground};
+                        font-weight: 300;
+                        letter-spacing: 0rem;
+                        line-height: 1.25rem;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        flex-shrink: 0;
+                        white-space: nowrap;
+                        flex-shrink: 1;
                       `}
                     >
                       @{nestedAttachment?.author_name}
