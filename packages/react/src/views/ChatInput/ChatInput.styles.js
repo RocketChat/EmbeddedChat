@@ -10,6 +10,10 @@ export const getChatInputStyles = (theme) => {
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
       }
+      @media (max-width: 500px) {
+        margin: 0;
+        width: 100%;
+      }
     `,
 
     editMessage: css`
@@ -80,10 +84,27 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
       position: relative;
       gap: 0.1rem;
       border-radius: 0 0 ${theme.radius} ${theme.radius};
-      @media (max-width: 383px) {
-        display: grid;
-        grid-template-columns: repeat(5, 0.2fr);
-      }
+    `,
+    popOverStyles: css`
+      position: absolute;
+      bottom: 3rem;
+      left: 0;
+      width: 100%;
+      background: ${theme.colors.background};
+      box-shadow: 0 -8px 10px ${mode === 'light' ? darken(theme.colors.background, 0.1) : lighten(theme.colors.background, 1)};
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 1300;
+    `,
+    popOverItemStyles: css`
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      cursor: pointer;
+      padding: 0.5rem;
     `,
   };
   return styles;
@@ -101,8 +122,8 @@ export const getCommonRecorderStyles = (theme) => {
     `,
 
     controller: css`
-      display: flex;
       gap: 0.15rem;
+      display: inline-flex;
     `,
 
     timer: css`
@@ -112,6 +133,14 @@ export const getCommonRecorderStyles = (theme) => {
       display: flex;
       margin: auto;
     `,
+    modal: {
+      '@media(max-width: 768px)': {
+        height: '100%',
+        width: '100%',
+        maxHeight: '100%',
+        maxWidth: '100%',
+      },
+    },
   };
 
   return styles;
