@@ -99,25 +99,31 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
               alt="avatar"
               size="1.2em"
             />
-            <Box>@{attachment?.author_name}</Box>
+            <Box
+              css={css`
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex-shrink: 0;
+              `}
+            >
+              @{attachment?.author_name}
+            </Box>
             <Box
               is="span"
               css={css`
                 color: ${theme.colors.accentForeground};
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
                 letter-spacing: 0rem;
                 font-size: 0.7rem;
                 font-weight: 400;
                 line-height: 1rem;
-                flex-shrink: 0;
                 margin-left: 0.25rem;
                 text-decoration: underline;
 
                 @media (max-width: 380px) {
                   font-size: 0.6rem;
-                  display: block;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: wrap;
                 }
               `}
             >
@@ -180,21 +186,32 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                       alt="avatar"
                       size="1.2em"
                     />
-                    <Box>@{nestedAttachment?.author_name}</Box>
+                    <Box
+                      css={css`
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        flex-shrink: 0;
+                      `}
+                    >
+                      @{nestedAttachment?.author_name}
+                    </Box>
                     <Box
                       is="span"
                       css={css`
                         color: ${theme.colors.accentForeground};
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
                         letter-spacing: 0rem;
                         font-size: 0.7rem;
                         font-weight: 400;
                         line-height: 1rem;
-                        flex-shrink: 0;
                         margin-left: 0.25rem;
-                        text-decoraction: underline;
+                        text-decoration: underline;
+
+                        @media (max-width: 380px) {
+                          font-size: 0.6rem;
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: wrap;
+                        }
                       `}
                     >
                       {formattedTimestamp}
