@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
-import { format } from 'date-fns';
+import { format, isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
 
@@ -18,13 +18,29 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
 
   const formattedTimestamp = useMemo(() => {
     let timestamp;
+    let date;
+
     if (typeof attachment.ts === 'object') {
       timestamp = attachment.ts.$date;
-    } else if (typeof attachment.ts === 'string') {
-      timestamp = new Date(attachment.ts).getTime();
+      return format(new Date(timestamp), 'h:mm a');
     }
-    const formattedTime = format(new Date(timestamp), 'h:mm a');
-    return formattedTime;
+    if (typeof attachment.ts === 'string') {
+      date = new Date(attachment.ts);
+
+      if (isToday(date)) {
+        return format(date, 'h:mm a');
+      }
+      if (isThisWeek(date, { weekStartsOn: 0 })) {
+        return format(date, 'EEEE, h:mm a');
+      }
+      if (isThisMonth(date)) {
+        return format(date, 'dd/MM/yyyy');
+      }
+      if (isThisYear(date)) {
+        return format(date, 'MMMM d, yyyy');
+      }
+      return format(date, 'MMMM d, yyyy');
+    }
   }, [attachment.ts]);
 
   return (
@@ -79,6 +95,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 line-height: 1rem;
                 flex-shrink: 0;
                 margin-left: 0.25rem;
+                text-decoraction: underline;
               `}
             >
               {formattedTimestamp}
@@ -154,6 +171,7 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                         line-height: 1rem;
                         flex-shrink: 0;
                         margin-left: 0.25rem;
+                        text-decoraction: underline;
                       `}
                     >
                       {formattedTimestamp}
