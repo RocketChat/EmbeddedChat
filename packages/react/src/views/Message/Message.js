@@ -148,7 +148,7 @@ const Message = ({
       await navigator.clipboard.writeText(textToCopy);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message copied successfully',
+        message: 'Copied',
       });
     } catch (error) {
       dispatchToastMessage({
@@ -170,7 +170,7 @@ const Message = ({
       await navigator.clipboard.writeText(messageLink);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message link copied successfully',
+        message: 'Copied',
       });
     } catch (err) {
       dispatchToastMessage({
