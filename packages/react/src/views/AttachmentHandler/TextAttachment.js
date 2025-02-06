@@ -113,7 +113,12 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                 line-height: 1rem;
                 flex-shrink: 0;
                 margin-left: 0.25rem;
-                text-decoraction: underline;
+                text-decoration: underline;
+
+                @media (max-width: 380px) {
+                  font-size: 0.6rem;
+                  display: block;
+                }
               `}
             >
               {formattedTimestamp}

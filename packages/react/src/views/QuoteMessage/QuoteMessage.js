@@ -65,6 +65,12 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
             line-height: 1rem;
             flex-shrink: 0;
             margin-left: 0.25rem;
+            text-decoration: underline;
+
+            @media (max-width: 380px) {
+              font-size: 0.6rem;
+              display: block;
+            }
           `}
         >
           {format(new Date(message.ts), 'h:mm a')}
