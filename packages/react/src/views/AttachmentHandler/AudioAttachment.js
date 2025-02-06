@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';

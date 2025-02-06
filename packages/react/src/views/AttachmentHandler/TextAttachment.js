@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
-import { format, isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
+import { format } from 'date-fns';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
 
@@ -26,20 +26,38 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
     }
     if (typeof attachment.ts === 'string') {
       date = new Date(attachment.ts);
+      const now = new Date();
 
-      if (isToday(date)) {
-        return format(date, 'h:mm a');
+      const isSameDay =
+        date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear();
+
+      const isSameWeek = (() => {
+        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+        return date >= startOfWeek && date <= endOfWeek;
+      })();
+
+      const isSameMonth =
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear();
+
+      const isSameYear = date.getFullYear() === now.getFullYear();
+
+      switch (true) {
+        case isSameDay:
+          return format(date, 'h:mm a');
+        case isSameWeek:
+          return format(date, 'EEEE, h:mm a');
+        case isSameMonth:
+          return format(date, 'dd/MM/yyyy');
+        case isSameYear:
+          return format(date, 'MMMM d, yyyy');
+        default:
+          return format(date, 'MMMM d, yyyy');
       }
-      if (isThisWeek(date, { weekStartsOn: 0 })) {
-        return format(date, 'EEEE, h:mm a');
-      }
-      if (isThisMonth(date)) {
-        return format(date, 'dd/MM/yyyy');
-      }
-      if (isThisYear(date)) {
-        return format(date, 'MMMM d, yyyy');
-      }
-      return format(date, 'MMMM d, yyyy');
     }
   }, [attachment.ts]);
 
