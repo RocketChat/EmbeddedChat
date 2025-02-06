@@ -2,7 +2,6 @@ import React, { useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
-import { format, isToday, isThisWeek, isThisMonth, isThisYear } from 'date-fns';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 
@@ -27,33 +26,6 @@ const AudioAttachment = ({
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
-
-  const formattedTimestamp = useMemo(() => {
-    let timestamp;
-    let date;
-
-    if (typeof attachment.ts === 'object') {
-      timestamp = attachment.ts.$date;
-      return format(new Date(timestamp), 'h:mm a');
-    }
-    if (typeof attachment.ts === 'string') {
-      date = new Date(attachment.ts);
-
-      if (isToday(date)) {
-        return format(date, 'h:mm a');
-      }
-      if (isThisWeek(date, { weekStartsOn: 0 })) {
-        return format(date, 'EEEE, h:mm a');
-      }
-      if (isThisMonth(date)) {
-        return format(date, 'dd/MM/yyyy');
-      }
-      if (isThisYear(date)) {
-        return format(date, 'MMMM d, yyyy');
-      }
-      return format(date, 'MMMM d, yyyy');
-    }
-  }, [attachment.ts]);
 
   return (
     <Box>
@@ -90,24 +62,6 @@ const AudioAttachment = ({
                 size="1.2em"
               />
               <Box>@{authorName}</Box>
-              <Box
-                is="span"
-                css={css`
-                  color: ${theme.colors.accentForeground};
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  letter-spacing: 0rem;
-                  font-size: 0.7rem;
-                  font-weight: 400;
-                  line-height: 1rem;
-                  flex-shrink: 0;
-                  margin-left: 0.25rem;
-                  text-decoraction: underline;
-                `}
-              >
-                {formattedTimestamp}
-              </Box>
             </Box>
           </>
         ) : (
