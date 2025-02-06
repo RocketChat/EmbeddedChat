@@ -23,7 +23,8 @@ const VideoAttachment = ({
   variantStyles = {},
   msg,
 }) => {
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
+  const hideAvatar = ECOptions?.showAvatar === false;
   const { theme } = useTheme();
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
@@ -66,12 +67,20 @@ const VideoAttachment = ({
                 variantStyles.textUserInfo,
               ]}
             >
-              <Avatar
-                url={getUserAvatarUrl(authorIcon)}
-                alt="avatar"
-                size="1.2em"
-              />
-              <Box>@{authorName}</Box>
+              {!hideAvatar && (
+                <Avatar
+                  url={getUserAvatarUrl(authorIcon)}
+                  alt="avatar"
+                  size="1.2em"
+                />
+              )}
+              <Box
+                css={css`
+                  margin-bottom: ${hideAvatar ? '8px' : '0'};
+                `}
+              >
+                @{authorName}
+              </Box>
             </Box>
           </>
         ) : (
@@ -133,11 +142,13 @@ const VideoAttachment = ({
                         variantStyles.textUserInfo,
                       ]}
                     >
-                      <Avatar
-                        url={getUserAvatarUrl(authorIcon)}
-                        alt="avatar"
-                        size="1.2em"
-                      />
+                      {!hideAvatar && (
+                        <Avatar
+                          url={getUserAvatarUrl(nestedAttachment?.author_icon)}
+                          alt="avatar"
+                          size="1.2em"
+                        />
+                      )}
                       <Box>@{authorName}</Box>
                     </Box>
                   </>
