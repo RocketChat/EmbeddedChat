@@ -14,14 +14,26 @@ const Emoji = ({ big = false, emoji }) => {
     [emoji]
   );
 
-  const emojiHtml = big
-    ? emojione.toImage(fallback).replace('joypixels', 'joypixels_BigEmoji')
-    : emojione.toImage(fallback);
+  let emojiHtml;
+
+  if (!emoji.unicode) {
+    emojiHtml = big
+      ? emojione.toImage(fallback).replace('joypixels', 'joypixels_BigEmoji')
+      : emojione.toImage(fallback);
+  }
+
+  if ('unicode' in emoji) {
+    emojiHtml = emoji.unicode;
+  }
 
   return (
     <Box
       is="span"
-      css={[styles.emojione, styles.emojiInMessage]}
+      css={[
+        styles.emojione,
+        styles.emojiInMessage,
+        big && { fontSize: '2.25rem', lineHeight: '2.25rem' },
+      ]}
       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emojiHtml) }}
     />
   );
