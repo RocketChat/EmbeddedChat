@@ -114,8 +114,8 @@ const AttachmentMetadata = ({
                     `
               }
             >
-              {attachment.title.length > 24
-                ? `${attachment.title.substring(0, 24)}...`
+              {attachment.title.length > 22
+                ? `${attachment.title.substring(0, 22)}...`
                 : attachment.title}
             </p>
           </Tooltip>
