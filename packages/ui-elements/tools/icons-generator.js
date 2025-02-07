@@ -13,6 +13,7 @@ const iconsList = [
   'computer',
   'cross',
   'mic',
+  'team',
   'circle-cross',
   'circle-check',
   'send',

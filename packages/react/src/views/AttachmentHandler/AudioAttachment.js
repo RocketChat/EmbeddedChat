@@ -76,7 +76,11 @@ const AudioAttachment = ({
           isExpanded={isExpanded}
         />
         {isExpanded && (
-          <audio src={host + attachment.audio_url} width="100%" controls />
+          <audio
+            src={host + attachment.audio_url}
+            style={{ maxHeight: '100%', maxWidth: '100%' }}
+            controls
+          />
         )}
 
         {attachment.attachments &&

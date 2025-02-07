@@ -87,10 +87,6 @@ export const MessageToolbox = ({
     ? true
     : message.u._id === authenticatedUserId;
 
-  const isVisibleForMessageType =
-    message.files?.[0].type !== 'audio/mpeg' &&
-    message.files?.[0].type !== 'video/mp4';
-
   const options = useMemo(
     () => ({
       reply: {
@@ -141,7 +137,7 @@ export const MessageToolbox = ({
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: isAllowedToEditMessage && isVisibleForMessageType,
+        visible: isAllowedToEditMessage,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },
