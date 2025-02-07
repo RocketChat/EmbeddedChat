@@ -60,10 +60,12 @@ const ChatInputFormattingToolbar = ({
   };
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
-    const message = `${messageRef.current.value} :${emoji.replace(
-      /[\s-]+/g,
-      '_'
-    )}: `;
+    const start = messageRef.current.selectionStart;
+    const end = messageRef.current.selectionEnd;
+    const msg = messageRef.current.value;
+    const emojiText = `:${emoji.replace(/[\s-]+/g, '_')}: `;
+    const message = msg.slice(0, start) + emojiText + msg.slice(end);
+
     triggerButton?.(null, message);
   };
 
@@ -344,8 +346,8 @@ const ChatInputFormattingToolbar = ({
           onClose={() => setEmojiOpen(false)}
           positionStyles={css`
             position: absolute;
-            bottom: 7rem;
-            left: 0.7rem;
+            bottom: 8.5rem;
+            left: 2rem;
           `}
         />
       )}
