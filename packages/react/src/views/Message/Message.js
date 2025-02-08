@@ -13,7 +13,12 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
+import {
+  useMessageStore,
+  useUserStore,
+  useSidebarStore,
+  useChannelStore,
+} from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -58,6 +63,7 @@ const Message = ({
   const pinPermissions = useUserStore(
     (state) => state.userPinPermissions.roles
   );
+
   const editMessagePermissions = useMessageStore(
     (state) => state.editMessagePermissions.roles
   );
@@ -72,8 +78,26 @@ const Message = ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
   }));
+  const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
 
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const isMe = message.u._id === authenticatedUserId;
+  const getThreadMessages = async (msgId, callback) => {
+    if (msgId) {
+      try {
+        const { messages } = await RCInstance.getThreadMessages(
+          msgId,
+          isChannelPrivate
+        );
+        setThreadMessages(messages);
+        setTimeout(() => {
+          callback?.(messages);
+        }, 0);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   const theme = useTheme();
   const { mode } = useTheme();
@@ -94,7 +118,6 @@ const Message = ({
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
   const editMessageRoles = new Set(editMessagePermissions);
-
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
 
@@ -115,6 +138,19 @@ const Message = ({
       });
     }
     getStarredMessages();
+  };
+  const deleteThreadMessages = async (messagesToDelete) => {
+    for (const msg of messagesToDelete) {
+      try {
+        await RCInstance.deleteMessage(msg._id);
+      } catch (error) {
+        console.error(`Failed to delete message ${msg._id}:`, error);
+        dispatchToastMessage({
+          type: 'error',
+          message: `Failed to delete message ${msg._id}`,
+        });
+      }
+    }
   };
 
   const handlePinMessage = async (msg) => {
@@ -187,6 +223,12 @@ const Message = ({
       dispatchToastMessage({
         type: 'success',
         message: 'Message deleted successfully',
+      });
+
+      getThreadMessages(msg._id, async (threadMsgs) => {
+        if (threadMsgs.length > 0) {
+          await deleteThreadMessages(threadMsgs);
+        }
       });
     } else {
       dispatchToastMessage({
