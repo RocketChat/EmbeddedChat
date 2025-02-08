@@ -63,9 +63,10 @@ const ChatInputFormattingToolbar = ({
     const start = messageRef.current.selectionStart;
     const end = messageRef.current.selectionEnd;
     const msg = messageRef.current.value;
-    const message = `${msg.slice(0, start)}:${emoji.replace(/[\s-]+/g, '_')}: 
-    `;
-    +msg.slice(end);
+    const message = `${msg.slice(0, start)}:${emoji.replace(
+      /[\s-]+/g,
+      '_'
+    )}: ${msg.slice(end)}`;
 
     triggerButton?.(null, message);
   };
