@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -33,6 +33,7 @@ const AttachmentPreview = () => {
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [mentionIndex, setMentionIndex] = useState(-1);
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
+  const [keyPressed, setKeyPressed] = useState(null);
   const [isMsgLong, setIsMsgLong] = useState(false);
 
   const [fileName, setFileName] = useState(data?.name);
@@ -91,6 +92,26 @@ const AttachmentPreview = () => {
     }
     searchMentionUser(description);
   };
+  useEffect(() => {
+    const keyHandler = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        setKeyPressed('Enter');
+      }
+    };
+
+    document.addEventListener('keydown', keyHandler);
+    return () => {
+      document.removeEventListener('keydown', keyHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (keyPressed === 'Enter') {
+      submit();
+      setKeyPressed(null);
+    }
+  }, [keyPressed, submit]);
 
   return (
     <Modal onClose={toggle}>
