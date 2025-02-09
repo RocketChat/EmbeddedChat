@@ -4,6 +4,7 @@ import {
   Box,
   Icon,
   ActionButton,
+  Tooltip,
   Modal,
   useTheme,
 } from '@embeddedchat/ui-elements';
@@ -12,8 +13,9 @@ import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = ({ disabled }) => {
+const VideoMessageRecorder = (props) => {
   const videoRef = useRef(null);
+  const { disabled, displayName, popOverItemStyles } = props;
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
 
@@ -145,16 +147,29 @@ const VideoMessageRecorder = ({ disabled }) => {
 
   return (
     <>
-      {state === 'idle' && (
-        <ActionButton
-          ghost
-          square
-          disabled={disabled}
-          onClick={handleRecordButtonClick}
-        >
-          <Icon size="1.25rem" name="video-recorder" />
-        </ActionButton>
-      )}
+      {state === 'idle' &&
+        (displayName ? (
+          <Box
+            key="video"
+            css={popOverItemStyles}
+            onClick={handleRecordButtonClick}
+            disabled={disabled}
+          >
+            <Icon name="video-recorder" size="1rem" />
+            <span>{displayName}</span>
+          </Box>
+        ) : (
+          <Tooltip text="Video Message" position="top">
+            <ActionButton
+              ghost
+              square
+              disabled={disabled}
+              onClick={handleRecordButtonClick}
+            >
+              <Icon size="1.25rem" name="video-recorder" />
+            </ActionButton>
+          </Tooltip>
+        ))}
 
       {state === 'recording' && (
         <>
@@ -164,10 +179,7 @@ const VideoMessageRecorder = ({ disabled }) => {
           <Modal
             open={state === 'recording'}
             onClose={handleCancelRecordButton}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
@@ -175,20 +187,26 @@ const VideoMessageRecorder = ({ disabled }) => {
               playsInline
               ref={videoRef}
               css={css`
-                margin-bottom: 2px;
+                object-fit: cover;
+                width: 100%;
+                height: 95%;
               `}
             />
             <Box css={styles.controller}>
-              <ActionButton ghost onClick={handleCancelRecordButton}>
-                <Icon size="1.25rem" name="circle-cross" />
-              </ActionButton>
+              <Tooltip text="Cancel Recording" position="bottom">
+                <ActionButton ghost onClick={handleCancelRecordButton}>
+                  <Icon size="1.25rem" name="circle-cross" />
+                </ActionButton>
+              </Tooltip>
               <Box css={styles.record}>
                 <Box is="span" css={styles.dot} />
                 <Box css={styles.timer}>{time}</Box>
               </Box>
-              <ActionButton ghost onClick={handleStopRecordButton}>
-                <Icon name="circle-check" size="1.25rem" />
-              </ActionButton>
+              <Tooltip text="Finish Recording" position="bottom">
+                <ActionButton ghost onClick={handleStopRecordButton}>
+                  <Icon name="circle-check" size="1.25rem" />
+                </ActionButton>
+              </Tooltip>
             </Box>
           </Modal>
         </>

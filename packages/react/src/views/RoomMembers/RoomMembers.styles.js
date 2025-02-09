@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { lighten, darken } from '@embeddedchat/ui-elements';
 
 export const getRoomMemberStyles = (theme) => {
   const styles = {
@@ -55,20 +56,29 @@ export const getRoomMemberStyles = (theme) => {
   return styles;
 };
 
-export const RoomMemberItemStyles = {
-  container: css`
-    width: 100%;
-    padding-bottom: 8px;
-    padding-top: 8px;
-    display: flex;
-    align-items: center;
-  `,
+export const RoomMemberItemStyles = (theme, mode) => {
+  const styles = {
+    container: css`
+      width: 100%;
+      padding-bottom: 8px;
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
 
-  icon: css`
-    padding: 0.125em;
-    margin-right: 0.5rem;
-    align-self: center;
-  `,
+      &:hover {
+        background-color: ${mode === 'light'
+          ? darken(theme.colors.background, 0.03)
+          : lighten(theme.colors.background, 1)};
+      }
+    `,
+
+    icon: css`
+      padding: 0.125em;
+      margin-right: 0.5rem;
+      align-self: center;
+    `,
+  };
+  return styles;
 };
 
 export const InviteMemberStyles = {
