@@ -4,7 +4,8 @@ import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
-import { useMessageStore, useMemberStore } from '../../store';
+import { useMessageStore, useMemberStore, useUserStore } from '../../store';
+import { createPendingAttachmentMessage } from '../../lib/createPendingMessage';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
 import MembersList from '../Mentions/MembersList';
@@ -52,15 +53,43 @@ const AttachmentPreview = () => {
     searchMentionUser(description);
   };
 
+  const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
+  const { username, userId, name } = useUserStore((state) => ({
+    username: state.username,
+    userId: state.userId,
+    name: state.name,
+  }));
+  const userInfo = { _id: userId, username, name };
+
   const submit = async () => {
     setIsPending(true);
-    await RCInstance.sendAttachment(
+
+    const type = data ? data.type.split('/')[0] : '';
+    const pendingFileMessage = createPendingAttachmentMessage(
+      data,
+      userInfo,
+      messageRef.current.value,
+      type
+    );
+
+    upsertMessage(pendingFileMessage, ECOptions.enableThreads);
+    if (isPending) {
+      setIsPending(false);
+    }
+    toggle();
+
+    const res = await RCInstance.sendAttachment(
       data,
       fileName,
       messageRef.current.value,
       ECOptions?.enableThreads ? threadId : undefined
     );
-    toggle();
+
+    if (res.success) {
+      removeMessage(pendingFileMessage._id);
+    }
+
     setData(null);
     if (isPending) {
       setIsPending(false);
