@@ -772,6 +772,42 @@ export default class EmbeddedChatApi {
       console.error(err);
     }
   }
+   
+  async followMessage(mid: string) {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(`${this.host}/api/v1/chat.followMessage`, {
+        body: JSON.stringify({ mid }), 
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "POST",
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  async unfollowMessage(mid: string) {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(`${this.host}/api/v1/chat.unfollowMessage`, {
+        body: JSON.stringify({ mid }), 
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "POST",
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   async getAllFiles(isChannelPrivate = false, typeGroup: string) {
     const roomType = isChannelPrivate ? "groups" : "channels";

@@ -32,6 +32,8 @@ const iconsList = [
   'arrow-back',
   'google',
   'multiline',
+  'bell',
+  'bell-slash',
   'code',
   'strike',
   'bold',
