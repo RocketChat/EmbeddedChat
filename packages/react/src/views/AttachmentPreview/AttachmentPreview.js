@@ -1,6 +1,13 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  Button,
+  Input,
+  Modal,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
@@ -14,6 +21,7 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
   const styles = getAttachmentPreviewStyles();
+  const { theme } = useTheme();
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
@@ -109,46 +117,72 @@ const AttachmentPreview = () => {
             css={css`
               text-align: center;
               margin-top: 1rem;
+              display: flex;
+              justify-content: center;
+              padding: 0 50px 0 50px;
             `}
           >
             <CheckPreviewType data={data} />
           </Box>
           <Box
             css={css`
-              margin: 30px;
+              margin: 10px;
             `}
           >
             <Box css={styles.inputContainer}>
-              <Box
-                is="span"
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label
+                htmlFor="file-name"
                 css={css`
                   font-weight: 550;
                   margin-bottom: 0.5rem;
+                  font-size: 0.8rem;
                 `}
               >
                 File name
-              </Box>
+              </label>
               <Input
                 onChange={(e) => {
                   handleFileName(e);
                 }}
                 value={fileName}
-                css={styles.input}
-                placeholder="name"
+                id="file-name"
+                css={css`
+                  ${styles.input}
+                  &:focus {
+                    border-color: ${fileName === ''
+                      ? theme.colors.destructive
+                      : theme.colors.ring};
+                    transition: border 0.1s ease-in;
+                  }
+                `}
               />
+              {fileName === '' && (
+                <Box
+                  css={css`
+                    color: red;
+                    margin-top: 0.5rem;
+                    font-size: 0.65rem;
+                  `}
+                >
+                  The field File name is required.
+                </Box>
+              )}
               <TypingUsers />
             </Box>
 
             <Box css={styles.inputContainer}>
-              <Box
-                is="span"
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label
+                htmlFor="file-description"
                 css={css`
                   font-weight: 550;
                   margin-bottom: 0.5rem;
+                  font-size: 0.8rem;
                 `}
               >
                 File description
-              </Box>
+              </label>
               <Box css={styles.fileDescription}>
                 <Box css={styles.mentionListContainer}>
                   {showMembersList && (
@@ -170,8 +204,14 @@ const AttachmentPreview = () => {
                   onChange={(e) => {
                     handleFileDescription(e);
                   }}
-                  css={styles.input}
-                  placeholder="Description"
+                  id="file-description"
+                  css={css`
+                    ${styles.input}
+                    &:focus {
+                      border: ${theme.colors.ring};
+                      transition: border 0.9s ease-in, border 0.9s ease-out;
+                    }
+                  `}
                   ref={messageRef}
                 />
               </Box>
@@ -182,16 +222,19 @@ const AttachmentPreview = () => {
 
       <Modal.Footer
         css={css`
-          margin-top: 1.5rem;
+          margin-bottom: 1rem;
+          padding-right: 1rem;
         `}
       >
         <Button type="secondary" onClick={toggle}>
           Cancel
         </Button>
         <Button
-          disabled={isPending}
+          disabled={isPending || fileName === ''}
           onClick={() => {
-            submit();
+            if (fileName !== '') {
+              submit();
+            }
           }}
         >
           {isPending ? 'Sending...' : 'Send'}
