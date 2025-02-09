@@ -135,7 +135,7 @@ const MessageHeader = ({
       {showDisplayName && showUsername && (
         <Box
           is="span"
-          css={[styles.userName, {cursor: 'pointer'}]}
+          css={[styles.userName, { cursor: 'pointer' }]}
           className={appendClassNames('ec-message-header-username')}
           style={
             displayNameVariant === 'colorize'

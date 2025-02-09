@@ -52,7 +52,7 @@ const UserInformation = () => {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
           setLoader(false);
-        }else{
+        } else {
           setError('No user found');
           setLoader(false);
         }
