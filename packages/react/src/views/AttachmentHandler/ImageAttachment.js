@@ -1,7 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
-import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Avatar,
+  useTheme,
+  lighten,
+  darken,
+} from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import RCContext from '../../context/RCInstance';
@@ -27,6 +33,7 @@ const ImageAttachment = ({
   };
 
   const { theme } = useTheme();
+  const { mode } = useTheme();
 
   const { authorIcon, authorName } = author;
 
@@ -48,7 +55,13 @@ const ImageAttachment = ({
           (type ? variantStyles.pinnedContainer : '') ||
             css`
               ${type === 'file'
-                ? `border: 2px solid ${theme.colors.border};`
+                ? `border: 2px solid ${
+                    theme.colors.border
+                  }; background-color: ${
+                    mode === 'light'
+                      ? darken(theme.colors.background, 0.015)
+                      : lighten(theme.colors.background, 0.5)
+                  };`
                 : ''}
             `,
         ]}
