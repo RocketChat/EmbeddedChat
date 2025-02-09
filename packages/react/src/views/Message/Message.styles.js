@@ -203,7 +203,20 @@ export const MessageMetricsStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
+    margin-left: ${isFirstMessage ? '0.5rem' : '0.3rem'};
+    margin-top: 1.2px;
+  `,
+
+  metricsAvatarItem: css`
+    letter-spacing: 0rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 2px;
   `,
 
   metricsItemLabel: css`
