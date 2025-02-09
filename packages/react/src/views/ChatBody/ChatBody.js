@@ -14,6 +14,7 @@ import {
   useComponentOverrides,
   Modal,
   useTheme,
+  Button,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
@@ -316,9 +317,15 @@ const ChatBody = ({
         </Box>
       )}
       {isModalOpen && (
-        <Modal>
+        <Modal onClose={toggleModal}>
           <Modal.Header>
-            <Modal.Title>Announcement</Modal.Title>
+            <Modal.Title
+              css={css`
+                padding: 15px;
+              `}
+            >
+              Announcement
+            </Modal.Title>
             <Modal.Close onClick={toggleModal} />
           </Modal.Header>
           <Modal.Content
@@ -328,10 +335,22 @@ const ChatBody = ({
               overflow-wrap: anywhere;
               white-space: normal;
               padding: 20px;
+              overflow-y: auto;
             `}
           >
             {channelInfo.announcement}
           </Modal.Content>
+          <Modal.Footer>
+            <Button
+              type="secondary"
+              onClick={toggleModal}
+              css={css`
+                margin: 15px;
+              `}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
       <Box

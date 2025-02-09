@@ -129,7 +129,9 @@ const MessageHeader = ({
           }
           onClick={handleUsernameClick}
         >
-          {message.u?.name}
+          {message.u?._id === 'rocket.cat'
+            ? message.u.username
+            : message.u.name}
         </Box>
       )}
       {showDisplayName && showUsername && (
