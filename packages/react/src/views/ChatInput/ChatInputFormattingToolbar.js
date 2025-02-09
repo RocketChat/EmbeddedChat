@@ -60,10 +60,14 @@ const ChatInputFormattingToolbar = ({
   };
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
-    const message = `${messageRef.current.value} :${emoji.replace(
+    const start = messageRef.current.selectionStart;
+    const end = messageRef.current.selectionEnd;
+    const msg = messageRef.current.value;
+    const message = `${msg.slice(0, start)}:${emoji.replace(
       /[\s-]+/g,
       '_'
-    )}: `;
+    )}: ${msg.slice(end)}`;
+
     triggerButton?.(null, message);
   };
 
@@ -83,6 +87,7 @@ const ChatInputFormattingToolbar = ({
     setInsertLinkOpen(false);
   };
 
+  const isTyping = messageRef.current?.value.length > 0;
   const chatToolMap = {
     emoji:
       isPopoverOpen && popOverItems.includes('emoji') ? (
@@ -119,7 +124,7 @@ const ChatInputFormattingToolbar = ({
         displayName={
           isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
         }
-        disabled={isRecordingMessage}
+        disabled={isRecordingMessage || isTyping}
         popOverItemStyles={styles.popOverItemStyles}
       />
     ),
@@ -129,7 +134,7 @@ const ChatInputFormattingToolbar = ({
           isPopoverOpen && popOverItems.includes('video') ? 'video' : null
         }
         popOverItemStyles={styles.popOverItemStyles}
-        disabled={isRecordingMessage}
+        disabled={isRecordingMessage || isTyping}
       />
     ),
     file:
@@ -137,9 +142,9 @@ const ChatInputFormattingToolbar = ({
         <Box
           key="file"
           css={styles.popOverItemStyles}
-          disabled={isRecordingMessage}
+          disabled={isRecordingMessage || isTyping}
           onClick={() => {
-            if (isRecordingMessage) return;
+            if (isRecordingMessage || isTyping) return;
             handleClickToOpenFiles();
           }}
         >
@@ -151,7 +156,7 @@ const ChatInputFormattingToolbar = ({
           <ActionButton
             square
             ghost
-            disabled={isRecordingMessage}
+            disabled={isRecordingMessage || isTyping}
             onClick={() => {
               if (isRecordingMessage) return;
               handleClickToOpenFiles();
@@ -343,8 +348,8 @@ const ChatInputFormattingToolbar = ({
           onClose={() => setEmojiOpen(false)}
           positionStyles={css`
             position: absolute;
-            bottom: 7rem;
-            left: 0.7rem;
+            bottom: 8.5rem;
+            left: 2rem;
           `}
         />
       )}

@@ -59,7 +59,6 @@ export const EmojiStyles = {
     img.joypixels {
       height: 1.5rem;
       width: 1.5rem;
-      image-rendering: pixelated;
       font-size: inherit;
       vertical-align: middle;
     }
@@ -67,7 +66,6 @@ export const EmojiStyles = {
     img.joypixels_BigEmoji {
       height: 2.25rem;
       width: 2.25rem;
-      image-rendering: pixelated;
       font-size: inherit;
     }
   `,
