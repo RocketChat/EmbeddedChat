@@ -67,7 +67,7 @@ export const MessageMetrics = ({
             {!!message.tcount && (
               <>
                 <Tooltip text="Followers" position="top">
-                  <Box css={styles.metricsItem}>
+                  <Box css={styles.metricsAvatarItem}>
                     <Avatar
                       url={getUserAvatarUrl(message?.u.username)}
                       alt="avatar"
@@ -95,7 +95,7 @@ export const MessageMetrics = ({
               position="top"
             >
               <Box css={styles.metricsItem(true)}>
-                <Icon size="1.25rem" name="thread" />
+                <Icon size="1.15rem" name="thread" />
                 <Box css={styles.metricsItemLabel}>
                   {message.tcount} replies,{' '}
                   {new Date(message.tlm).toLocaleTimeString([], {
