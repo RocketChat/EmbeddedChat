@@ -4,29 +4,32 @@ import {
   Box,
   Icon,
   ActionButton,
-  Button,
-  Modal,
   Tooltip,
+  Modal,
   useTheme,
+  Button,
   lighten,
   darken,
 } from '@embeddedchat/ui-elements';
 import { useNewMediaRecorder } from '../../hooks/useMediaRecorder';
+import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
-const VideoMessageRecorder = ({ disabled }) => {
+const VideoMessageRecorder = (props) => {
   const videoRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
-
+  const { disabled, displayName, popOverItemStyles } = props;
   const { theme } = useTheme();
   const { mode } = useTheme();
   const styles = getCommonRecorderStyles(theme);
 
   const [state, setRecordState] = useState('idle'); // 1. idle, 2. preview.
+
   const [time, setTime] = useState('00:00');
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
+
   const [isSendDisabled, setIsSendDisabled] = useState(true);
 
   const { toggle, setData } = useAttachmentWindowStore((state_) => ({
@@ -163,18 +166,29 @@ const VideoMessageRecorder = ({ disabled }) => {
 
   return (
     <>
-      {state === 'idle' && (
-        <Tooltip text="Video Message" position="top">
-          <ActionButton
-            ghost
-            square
-            disabled={disabled}
+      {state === 'idle' &&
+        (displayName ? (
+          <Box
+            key="video"
+            css={popOverItemStyles}
             onClick={openWindowToRecord}
+            disabled={disabled}
           >
-            <Icon size="1.25rem" name="video-recorder" />
-          </ActionButton>
-        </Tooltip>
-      )}
+            <Icon name="video-recorder" size="1rem" />
+            <span>{displayName}</span>
+          </Box>
+        ) : (
+          <Tooltip text="Video Message" position="top">
+            <ActionButton
+              ghost
+              square
+              disabled={disabled}
+              onClick={openWindowToRecord}
+            >
+              <Icon size="1.25rem" name="video-recorder" />
+            </ActionButton>
+          </Tooltip>
+        ))}
 
       {state === 'preview' && (
         <>
@@ -184,10 +198,7 @@ const VideoMessageRecorder = ({ disabled }) => {
           <Modal
             open={state === 'preview'}
             onClose={closeWindowStopRecord}
-            style={{
-              display: 'flex',
-              width: '28rem',
-            }}
+            css={styles.modal}
           >
             <video
               muted
