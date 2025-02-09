@@ -8,6 +8,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
@@ -50,8 +51,36 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
           alt="avatar"
           size="1.5em"
         />
-        <Box>{message?.u.username}</Box>
-        <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
+        <Box
+          css={css`
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+          `}
+        >
+          {message?.u.username}
+        </Box>
+        <Box
+          is="span"
+          css={css`
+            color: ${theme.colors.accentForeground};
+            letter-spacing: 0rem;
+            font-size: 0.7rem;
+            font-weight: 400;
+            line-height: 1rem;
+            margin-left: 0.25rem;
+            text-decoration: underline;
+
+            @media (max-width: 380px) {
+              font-size: 0.6rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: wrap;
+            }
+          `}
+        >
+          {format(new Date(message.ts), 'h:mm a')}
+        </Box>
       </Box>
       <Box css={styles.message}>
         {message.file ? (
