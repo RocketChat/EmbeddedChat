@@ -105,6 +105,20 @@ const ChatHeader = ({
 
   const closeThread = useMessageStore((state) => state.closeThread);
 
+  const handleCloseThread = useCallback(() => {
+    const threadMessageId = threadMainMessage?._id;
+    closeThread();
+    setTimeout(() => {
+      const element = document.getElementById(`ec-message-body-${threadMessageId}`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'instant',
+          block: 'start',
+        });
+      }
+    }, 300);
+  }, [closeThread, threadMainMessage]);
+
   const setShowMembers = useMemberStore((state) => state.setShowMembers);
   const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
   const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
@@ -430,7 +444,7 @@ const ChatHeader = ({
       {isThreadOpen && (
         <DynamicHeader
           title={threadMainMessage}
-          handleClose={closeThread}
+          handleClose={handleCloseThread}
           iconName="arrow-back"
         />
       )}
