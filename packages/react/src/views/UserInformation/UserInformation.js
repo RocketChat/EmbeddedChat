@@ -27,6 +27,8 @@ const UserInformation = () => {
   const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
+  const [error, setError] = useState(null);
+  const [loader, setLoader] = useState(true);
   const currentUser = useUserStore((state) => state.currentUser);
   const currentUserRoles = useUserStore((state) => state.roles);
   const viewUserFullInfoRoles = useUserStore(
@@ -49,6 +51,10 @@ const UserInformation = () => {
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
+          setLoader(false);
+        }else{
+          setError('No user found');
+          setLoader(false);
         }
       } catch (err) {
         console.error('Error fetching current user info', err);
@@ -56,7 +62,7 @@ const UserInformation = () => {
     };
 
     getCurrentUserInfo();
-  }, [RCInstance, setCurrentUserInfo]);
+  }, [RCInstance, setCurrentUserInfo, currentUser._id]);
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
@@ -75,6 +81,9 @@ const UserInformation = () => {
           }
         : {})}
     >
+      <Box css={styles.centeredColumnStyles}>
+        {loader ? <Throbber /> : null}
+      </Box>
       {isUserInfoFetched ? (
         <Box css={styles.userSidebar}>
           <Avatar
@@ -208,11 +217,22 @@ const UserInformation = () => {
             />
           </Box>
         </Box>
-      ) : (
-        <Box css={styles.centeredColumnStyles}>
-          <Throbber />
+      ) : error ? (
+        <Box
+          css={css`
+            margin: 16px;
+            margin-top: 210px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.15rem;
+          `}
+        >
+          <Icon name="user" size="2rem" />
+          <br />
+          No Info Found
+          <br />
         </Box>
-      )}
+      ) : null}
     </ViewComponent>
   );
 };
