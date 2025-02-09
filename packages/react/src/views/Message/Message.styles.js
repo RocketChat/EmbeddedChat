@@ -203,7 +203,20 @@ export const MessageMetricsStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
+    margin-left: ${isFirstMessage ? '0.5rem' : '0.3rem'};
+    margin-top: 1.2px;
+  `,
+
+  metricsAvatarItem: css`
+    letter-spacing: 0rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 2px;
   `,
 
   metricsItemLabel: css`
@@ -244,6 +257,22 @@ export const getMessageReactionsStyles = (theme) => {
 
     reactionMine: css`
       background: ${theme.colors.secondary};
+    `,
+    emojiTooltip: css`
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-40%);
+      background-color: ${theme.invertedColors.secondary};
+      color: ${theme.invertedColors.secondaryForeground};
+      z-index: ${theme.zIndex?.tooltip || 1400};
+      border-radius: ${theme.radius};
+      padding: 8px 10px;
+      width: 200px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      font-size: 0.85rem;
     `,
   };
 
