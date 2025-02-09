@@ -10,6 +10,7 @@ const useMessageStore = create((set, get) => ({
   editMessage: {},
   messagesOffset: 0,
   quoteMessage: [],
+  previewMessage: [],
   messageToReport: NaN,
   showReportMessage: false,
   isRecordingMessage: false,
@@ -97,6 +98,14 @@ const useMessageStore = create((set, get) => ({
     })),
 
   clearQuoteMessages: () => set({ quoteMessage: [] }),
+  addPreviewMessage: (previewMessage) =>
+    set((state) => ({
+      previewMessage: [...state.previewMessage, previewMessage],
+    })),
+  removePreviewMessage: (previewMessage) =>
+    set((state) => ({
+      previewMessage: state.previewMessage.filter((i) => i !== previewMessage),
+    })),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {
