@@ -245,6 +245,22 @@ export const getMessageReactionsStyles = (theme) => {
     reactionMine: css`
       background: ${theme.colors.secondary};
     `,
+    emojiTooltip: css`
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-40%);
+      background-color: ${theme.invertedColors.secondary};
+      color: ${theme.invertedColors.secondaryForeground};
+      z-index: ${theme.zIndex?.tooltip || 1400};
+      border-radius: ${theme.radius};
+      padding: 8px 10px;
+      width: 200px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      font-size: 0.85rem;
+    `,
   };
 
   return styles;
