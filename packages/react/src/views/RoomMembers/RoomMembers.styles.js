@@ -19,7 +19,13 @@ export const getRoomMemberStyles = (theme) => {
       padding: 0 0.5rem;
       border-radius: ${theme.radius};
       position: relative;
-      margin-top: 1rem;
+      width: 60%;
+    `,
+    filterContainer: css`
+      width: 40%;
+      margin-left: 0.5rem;
+      border-radius: ${theme.radius};
+      position: relative;
     `,
     textInput: css`
       flex: 1;
