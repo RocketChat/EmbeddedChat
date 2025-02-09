@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PlainSpan from './PlainSpan';
 import BoldSpan from './BoldSpan';
 import ItalicSpan from './ItalicSpan';
+import HighlightText from './highlightText';
 
 const StrikeSpan = ({ contents }) => (
   <del>
@@ -16,6 +17,9 @@ const StrikeSpan = ({ contents }) => (
 
         case 'BOLD':
           return <BoldSpan key={index} contents={content.value} />;
+
+        case 'HIGHLIGHT_TEXT':
+          return <HighlightText key={index} contents={content.value} />;
 
         default:
           return null;
