@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { css } from '@emotion/react';
+import { Box, Icon } from '@embeddedchat/ui-elements';
 import ImageAttachment from './ImageAttachment';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import TextAttachment from './TextAttachment';
-import FileAttachment from './FileAttachment';
 
 const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
   const author = {
@@ -100,14 +101,16 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
     );
   }
   return (
-    <FileAttachment
-      attachment={attachment}
-      host={host}
-      type="file"
-      author={author}
-      variantStyles={variantStyles}
-      msg={msg}
-    />
+    <Box
+      css={css`
+        display: flex;
+      `}
+    >
+      {attachment?.description}
+
+      <Icon name="file" size="20px" />
+      <a href={`${host}${attachment.title_link}`}>{attachment.title}</a>
+    </Box>
   );
 };
 
