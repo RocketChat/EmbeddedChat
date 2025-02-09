@@ -113,6 +113,11 @@ export const fileDisplayStyles = {
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0 0.5rem 0.5rem;
+    @media (max-width: 600px) {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
   `,
 
   centeredColumnStyles: css`

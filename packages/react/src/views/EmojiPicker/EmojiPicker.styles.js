@@ -15,6 +15,9 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-category-label-bg-color: ${theme.colors.background};
         --epr-category-icon-active-color: ${theme.colors.secondary};
         --epr-emoji-size: 25px;
+        @media(max-width:500px){
+        --epr-emoji-size: 30px;
+        }
         --epr-category-navigation-button-size: 20px;
         --epr-emoji-gap: 10px;
 
@@ -60,6 +63,7 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         --epr-preview-z-index: 6;
         --epr-search-input-bg-color: ${calculatedColors};
 
+               }
         /* Use these properties of color if needed ->
 
       --epr-shadow: 'theme-color';

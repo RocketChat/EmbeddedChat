@@ -62,6 +62,7 @@ export const getChatInputStyles = (theme) => {
         font-size: 18px;
       }
     `,
+
     quoteContainer: css`
       max-height: 300px;
       overflow: scroll;
@@ -165,6 +166,7 @@ export const getInsertLinkModalStyles = (theme) => {
       gap: 0.5rem;
       margin: 1rem 0;
     `,
+
     modalFooter: css`
       padding: 0.75rem 1rem;
     `,

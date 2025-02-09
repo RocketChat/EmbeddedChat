@@ -20,6 +20,27 @@ export const getModalstyles = (theme) => {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      @media (max-width: 320px) {
+        width: 90%;
+        padding: 0.3rem;
+        border-radius: 10px;
+      }
+      @media (min-width: 321px) and (max-width: 390px) {
+        width: 85%;
+        border-radius: 10px;
+      }
+      @media (min-width: 391px) and (max-width: 480px) {
+        width: 70%;
+        border-radius: 15px;
+      }
+      @media (min-width: 481px) and (max-width: 600px) {
+        width: 60%;
+        border-radius: 10px;
+      }
+      @media (min-width: 601px) and (max-width: 768px) {
+        width: 65%;
+        border-radius: 12px;
+      }
     `,
   };
 
@@ -31,6 +52,9 @@ export const ModalContentStyles = {
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
+    @media (max-width: 320px) {
+      font-size: 1rem;
+    }
   `,
 };
 
@@ -65,6 +89,19 @@ export const ModalFooterStyles = {
     justify-content: flex-end;
     width: 100%;
     gap: 0.5rem;
+    @media (max-width: 420px) {
+      padding: 0.5rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    button {
+      margin-left: 0.5rem;
+      @media (max-width: 420px) {
+        margin-left: 0;
+        width: 100%;
+        font-weight: 1.2rem;
+      }
+    }
   `,
 };
 
@@ -74,6 +111,20 @@ export const ModalHeaderStyles = {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    icon {
+      @media (max-width: 320px) {
+        size: 1rem;
+      }
+      @media (min-width: 321px) and (max-width: 390px) {
+        font-size: 1.3rem;
+      }
+      @media (min-width: 391px) and (max-width: 480px) {
+        font-size: 1.1rem;
+      }
+      @media (min-width: 481px) and (max-width: 600px) {
+        font-size: 1.2rem;
+      }
+    }
   `,
 };
 
@@ -94,6 +145,22 @@ export const ModalTitleStyles = {
     white-space: nowrap;
     display: flex;
     align-items: center;
+    @media (max-width: 320px) {
+      font-size: 1.2rem;
+      margin: 0.15rem !important;
+    }
+    @media (min-width: 321px) and (max-width: 390px) {
+      font-size: 1.2rem;
+    }
+    @media (min-width: 391px) and (max-width: 480px) {
+      font-size: 1.3rem;
+    }
+    @media (min-width: 481px) and (max-width: 600px) {
+      font-size: 1.3rem;
+    }
+    @media (min-width: 601px) and (max-width: 768px) {
+      font-size: 1.2rem;
+    }
   `,
 };
 
