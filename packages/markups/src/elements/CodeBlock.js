@@ -22,6 +22,9 @@ const CodeBlock = ({ lines }) => {
         style={mode === 'dark' ? monokai : vs}
         wrapLines
         css={styles.codeBlock}
+        codeTagProps={{
+          style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
+        }}
       >
         {code}
       </SyntaxHighlighter>
