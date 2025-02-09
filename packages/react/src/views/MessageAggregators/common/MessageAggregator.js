@@ -92,7 +92,7 @@ export const MessageAggregator = ({
                 element.style.backgroundColor =
                   mode === 'light'
                     ? lighten(theme.colors.warning, 0.85)
-                    : darken(theme.colors.warningForeground, 0.3);
+                    : darken(theme.colors.warningForeground, 0.75);
 
                 setTimeout(() => {
                   element.style.backgroundColor = '';
@@ -117,7 +117,7 @@ export const MessageAggregator = ({
             element.style.backgroundColor =
               mode === 'light'
                 ? lighten(theme.colors.warning, 0.85)
-                : darken(theme.colors.warningForeground, 0.3);
+                : darken(theme.colors.warningForeground, 0.75);
 
             setTimeout(() => {
               element.style.backgroundColor = '';
