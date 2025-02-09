@@ -194,6 +194,7 @@ const Message = ({
         message: 'Error in deleting message',
       });
     }
+    getStarredMessages();
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
