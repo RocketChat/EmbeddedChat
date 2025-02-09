@@ -73,6 +73,9 @@ const ChatHeader = ({
   const setIsChannelPrivate = useChannelStore(
     (state) => state.setIsChannelPrivate
   );
+  const setIsChannelArchived = useChannelStore(
+    (state) => state.setIsChannelArchived
+  );
   const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
   const setIsRoomTeam = useChannelStore((state) => state.setIsRoomTeam);
   const setIsChannelReadOnly = useChannelStore(
@@ -130,7 +133,6 @@ const ChatHeader = ({
   };
   const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
   const authenticatedUserId = useUserStore((state) => state.userId);
-
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
@@ -190,6 +192,14 @@ const ChatHeader = ({
           message: "Channel doesn't exist. Logging out.",
         });
         await RCInstance.logout();
+      } else if (
+        'errorType' in res &&
+        res.errorType === 'error-room-archived'
+      ) {
+        setIsChannelArchived(true);
+        const roomInfo = await RCInstance.getRoomInfo();
+        const roomData = roomInfo.result[roomInfo.result.length - 1];
+        setChannelInfo(roomData);
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
         dispatchToastMessage({
           type: 'error',
@@ -369,9 +379,9 @@ const ChatHeader = ({
                   <Avatar
                     size="36px"
                     style={{ marginRight: '6px' }}
-                    url={getChannelAvatarURL(channelInfo.name)}
+                    url={getChannelAvatarURL(channelInfo.name || channelName)}
                   />
-                  <Box>
+                  <Box css={styles.channelInfoContainer}>
                     <Box
                       css={styles.channelName}
                       onClick={() => setExclusiveState(setShowChannelinfo)}

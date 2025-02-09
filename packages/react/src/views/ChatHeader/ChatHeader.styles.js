@@ -32,8 +32,17 @@ const getChatHeaderStyles = ({ theme, mode }) => {
       box-shadow: ${theme.shadows[1]};
     `,
 
+    channelInfoContainer: css`
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    `,
+
     channelDescription: css`
       ${rowCentreAlign}
+      flex: 1;
+      min-width: 0;
       gap: 0.5rem;
     `,
 
@@ -50,7 +59,13 @@ const getChatHeaderStyles = ({ theme, mode }) => {
     `,
     channelTopic: css`
       opacity: 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+      overflow: hidden;
       font-size: 1rem;
+      text-overflow: ellipsis;
     `,
   };
   return styles;
