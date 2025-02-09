@@ -6,6 +6,7 @@ import {
   useMemberStore,
   useMessageStore,
   useStarredMessageStore,
+  usePinnedMessageStore,
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
@@ -17,6 +18,9 @@ const useFetchChatData = (showRoles) => {
   const setAdmins = useMemberStore((state) => state.setAdmins);
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
+  );
+  const setPinnedMessages = usePinnedMessageStore(
+    (state) => state.setPinnedMessages
   );
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -109,7 +113,28 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
-  return { getMessagesAndRoles, getStarredMessages };
+  const getPinnedMessages = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const { messages } = await RCInstance.getPinnedMessages();
+          const sortedMessages = messages.sort(
+            (a, b) => new Date(b.ts) - new Date(a.ts)
+          );
+
+          setPinnedMessages(sortedMessages);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setPinnedMessages]
+  );
+
+  return { getMessagesAndRoles, getStarredMessages, getPinnedMessages };
 };
 
 export default useFetchChatData;
