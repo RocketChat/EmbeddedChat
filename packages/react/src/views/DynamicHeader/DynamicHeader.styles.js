@@ -12,7 +12,7 @@ const useDynamicHeaderStyles = () => {
     `,
 
     clearSpacing: css`
-      margin: 0;
+      margin-bottom: 1px;
       padding: 0;
       text-overflow: ellipsis;
       white-space: nowrap;

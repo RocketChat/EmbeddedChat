@@ -213,6 +213,11 @@ const Message = ({
 
   return (
     <>
+      {newDay && (
+        <MessageDivider>
+          {format(new Date(message.ts), 'MMMM d, yyyy')}
+        </MessageDivider>
+      )}
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
@@ -356,11 +361,6 @@ const Message = ({
           ) : null}
         </MessageBodyContainer>
       </Box>
-      {newDay && (
-        <MessageDivider>
-          {format(new Date(message.ts), 'MMMM d, yyyy')}
-        </MessageDivider>
-      )}
     </>
   );
 };

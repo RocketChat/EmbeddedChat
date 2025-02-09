@@ -45,6 +45,9 @@ const VideoAttachment = ({
             line-height: 0;
             border-radius: inherit;
             padding: 0.5rem;
+            @media (max-width: 450px) {
+              padding: 0.3rem;
+            }
           `,
           (type ? variantStyles.pinnedContainer : '') ||
             css`
@@ -62,6 +65,9 @@ const VideoAttachment = ({
                   display: flex;
                   gap: 0.3rem;
                   align-items: center;
+                  @media (max-width: 450px) {
+                    align-items: flex-start;
+                  }
                 `,
                 variantStyles.textUserInfo,
               ]}
@@ -71,27 +77,44 @@ const VideoAttachment = ({
                 alt="avatar"
                 size="1.2em"
               />
-              <Box>@{authorName}</Box>
+              <Box
+                css={css`
+                  @media (max-width: 450px) {
+                    margin-top: 0.5rem;
+                  }
+                `}
+              >
+                @{authorName}
+              </Box>
             </Box>
           </>
         ) : (
           ''
         )}
-        <AttachmentMetadata
-          attachment={attachment}
-          url={host + (attachment.title_url || attachment.video_url)}
-          variantStyles={variantStyles}
-          msg={msg}
-          onExpandCollapseClick={toggleExpanded}
-          isExpanded={isExpanded}
-        />
+        <Box
+          css={css`
+            @media (max-width: 450px) {
+              margin-top: 0.4rem;
+            }
+          `}
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_url || attachment.video_url)}
+            variantStyles={variantStyles}
+            msg={msg}
+            onExpandCollapseClick={toggleExpanded}
+            isExpanded={isExpanded}
+          />
+        </Box>
         {isExpanded && (
           <video
-            width={300}
             controls
             style={{
               borderBottomLeftRadius: 'inherit',
               borderBottomRightRadius: 'inherit',
+              maxWidth: '100%',
+              maxHeight: '200px',
             }}
           >
             <source
@@ -109,6 +132,9 @@ const VideoAttachment = ({
                     line-height: 0;
                     border-radius: inherit;
                     padding: 0.5rem;
+                    @media (max-width: 450px) {
+                      padding: 0.3rem;
+                    }
                   `,
                   (nestedAttachment.type
                     ? variantStyles.pinnedContainer
@@ -128,6 +154,10 @@ const VideoAttachment = ({
                           display: flex;
                           gap: 0.3rem;
                           align-items: center;
+                          @media (max-width: 450px) {
+                            flex-direction: column;
+                            align-items: flex-start;
+                          }
                         `,
                         variantStyles.textUserInfo,
                       ]}
@@ -152,11 +182,12 @@ const VideoAttachment = ({
                   variantStyles={variantStyles}
                 />
                 <video
-                  width={300}
+                  width="100%"
                   controls
                   style={{
                     borderBottomLeftRadius: 'inherit',
                     borderBottomRightRadius: 'inherit',
+                    maxWidth: '300px',
                   }}
                 >
                   <source

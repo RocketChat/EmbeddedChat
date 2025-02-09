@@ -34,7 +34,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import { Markdown } from '../Markdown';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -75,10 +74,13 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly } = useChannelStore((state) => ({
-    isChannelPrivate: state.isChannelPrivate,
-    isChannelReadOnly: state.isChannelReadOnly,
-  }));
+  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
+    (state) => ({
+      isChannelPrivate: state.isChannelPrivate,
+      isChannelReadOnly: state.isChannelReadOnly,
+      channelInfo: state.channelInfo,
+    })
+  );
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -169,7 +171,15 @@ const ChatInput = ({ scrollToBottom }) => {
   };
 
   const handleNewLine = (e, addLine = true) => {
-    if (addLine) messageRef.current.value += '\n';
+    if (addLine) {
+      const { selectionStart, selectionEnd, value } = messageRef.current;
+      messageRef.current.value = `${value.substring(
+        0,
+        selectionStart
+      )}\n${value.substring(selectionEnd)}`;
+      messageRef.current.selectionStart = messageRef.current.selectionEnd;
+      messageRef.current.selectionEnd = selectionStart + 1;
+    }
 
     e.target.style.height = 'auto';
     if (e.target.scrollHeight <= 150) {
@@ -435,6 +445,25 @@ const ChatInput = ({ scrollToBottom }) => {
           sendMessage();
         }
         break;
+      case e.altKey && (e.code === 'ArrowUp' || 'ArrowRight'): {
+        e.preventDefault();
+        e.stopPropagation();
+        if (messageRef && messageRef.current) {
+          messageRef.current.setSelectionRange(0, 0);
+          messageRef.current.focus();
+        }
+        break;
+      }
+      case e.altKey && (e.code === 'ArrowDown' || 'ArrowLeft'): {
+        e.preventDefault();
+        e.stopPropagation();
+        if (messageRef && messageRef.current) {
+          const endlength = messageRef.current.value.length;
+          messageRef.current.setSelectionRange(endlength, endlength);
+          messageRef.current.focus();
+        }
+        break;
+      }
       default:
         break;
     }
@@ -514,7 +543,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? 'Message'
+                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'
