@@ -24,6 +24,7 @@ const useFetchChatData = (showRoles) => {
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const setMembersHandler = useMemberStore((state) => state.setMembersHandler);
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -109,7 +110,29 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
-  return { getMessagesAndRoles, getStarredMessages };
+  const getChannelMembers = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const response = await RCInstance.getChannelMembers();
+          const { members } = response || {};
+          if (Array.isArray(members)) {
+            setMembersHandler(members);
+          } else {
+            console.error('Invalid members response:', members);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [RCInstance, setMembersHandler, isUserAuthenticated]
+  );
+
+  return { getMessagesAndRoles, getStarredMessages, getChannelMembers };
 };
 
 export default useFetchChatData;
