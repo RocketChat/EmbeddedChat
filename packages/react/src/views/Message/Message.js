@@ -140,16 +140,18 @@ const Message = ({
     getStarredMessages();
   };
   const deleteThreadMessages = async (messagesToDelete) => {
-    for (const msg of messagesToDelete) {
-      try {
-        await RCInstance.deleteMessage(msg._id);
-      } catch (error) {
-        console.error(`Failed to delete message ${msg._id}:`, error);
-        dispatchToastMessage({
-          type: 'error',
-          message: `Failed to delete message ${msg._id}`,
-        });
-      }
+    try {
+      await Promise.all(
+        messagesToDelete.map(async (msg) => {
+          await RCInstance.deleteMessage(msg._id);
+        })
+      );
+    } catch (error) {
+      console.error('Failed to delete messages:', error);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Failed to delete messages',
+      });
     }
   };
 
