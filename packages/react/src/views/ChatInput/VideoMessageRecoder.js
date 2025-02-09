@@ -7,6 +7,7 @@ import {
   Tooltip,
   Modal,
   useTheme,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import useMessageStore from '../../store/messageStore';
@@ -33,6 +34,7 @@ const VideoMessageRecorder = (props) => {
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
+  const dispatchToastMessage = useToastBarDispatch();
 
   const onStop = (videoChunks) => {
     const videoBlob = new Blob(videoChunks, { type: 'video/mp4' });
@@ -56,10 +58,11 @@ const VideoMessageRecorder = (props) => {
     setRecordState('idle');
   };
 
-  const handleRecordButtonClick = () => {
+  const handleRecordButtonClick = async () => {
     if (disabled) return;
-    setRecordState('recording');
     try {
+      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      setRecordState('recording');
       start(videoRef.current);
       toogleRecordingMessage();
       const startTime = new Date();
@@ -78,7 +81,11 @@ const VideoMessageRecorder = (props) => {
         }, 1000)
       );
     } catch (error) {
-      console.log(error);
+      dispatchToastMessage({
+        type: 'error',
+        message:
+          'Unable to access microphone or camera. Please grant permissions.',
+      });
       setRecordState('idle');
     }
   };

@@ -3,8 +3,9 @@ import {
   Box,
   Icon,
   ActionButton,
-  Tooltip,
   useTheme,
+  useToastBarDispatch,
+  Tooltip,
 } from '@embeddedchat/ui-elements';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import useMessageStore from '../../store/messageStore';
@@ -30,6 +31,8 @@ const AudioMessageRecorder = (props) => {
   const [recordingInterval, setRecordingInterval] = useState(null);
   const [file, setFile] = useState(null);
   const [isRecorded, setIsRecorded] = useState(false);
+  const threadId = useMessageStore((_state) => _state.threadMainMessage?._id);
+  const dispatchToastMessage = useToastBarDispatch();
 
   const onStop = (audioChunks) => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
@@ -53,10 +56,12 @@ const AudioMessageRecorder = (props) => {
     setRecordState('idle');
   };
 
-  const handleRecordButtonClick = () => {
+  const handleRecordButtonClick = async () => {
     if (disabled) return;
-    setRecordState('recording');
     try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      setRecordState('recording');
       start();
       toogleRecordingMessage();
       const startTime = new Date();
@@ -76,6 +81,10 @@ const AudioMessageRecorder = (props) => {
       );
     } catch (error) {
       console.log(error);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Unable to access the microphone. Please grant permissions.',
+      });
       setRecordState('idle');
     }
   };
