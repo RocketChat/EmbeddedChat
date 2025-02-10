@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -22,9 +22,16 @@ const Roominfo = () => {
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
-  const getChannelAvatarURL = (channelname) => {
+  const getChannelAvatarURL = (RoomId) => {
     const host = RCInstance.getHost();
-    return `${host}/avatar/${channelname}`;
+    const etag =
+      channelInfo && channelInfo.avatarETag
+        ? `?etag=${channelInfo.avatarETag}`
+        : '';
+    const channelAvatarUrl = `${host}/avatar/room/${encodeURIComponent(
+      RoomId
+    )}${etag}`;
+    return channelAvatarUrl;
   };
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
@@ -55,7 +62,7 @@ const Roominfo = () => {
             justify-content: center;
           `}
         >
-          <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
+          <Avatar size="100%" url={getChannelAvatarURL(RCInstance.rid)} />
         </Box>
         <Box css={styles.infoContainer}>
           <Box css={styles.infoHeader}>

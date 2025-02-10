@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+} from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import {
@@ -11,7 +17,7 @@ import {
   useTheme,
   Avatar,
 } from '@embeddedchat/ui-elements';
-import { useRCContext } from '../../context/RCInstance';
+import RCContext from '../../context/RCInstance';
 import {
   useUserStore,
   useMessageStore,
@@ -80,7 +86,7 @@ const ChatHeader = ({
   );
   const workspaceLevelRoles = useUserStore((state) => state.roles);
 
-  const { RCInstance, ECOptions } = useRCContext();
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
 
   const isUserAuthenticated = useUserStore(
@@ -116,10 +122,20 @@ const ChatHeader = ({
   );
   const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
   const setShowMentions = useMentionsStore((state) => state.setShowMentions);
-  const getChannelAvatarURL = (channelname) => {
+
+  const getChannelAvatarURL = (RoomId) => {
     const host = RCInstance.getHost();
-    return `${host}/avatar/${channelname}`;
+    const etag =
+      channelInfo && channelInfo.avatarETag
+        ? `?etag=${channelInfo.avatarETag}`
+        : '';
+    const res = RCInstance.channelInfo();
+    const channelAvatarUrl = `${host}/avatar/room/${encodeURIComponent(
+      RoomId
+    )}${etag}`;
+    return channelAvatarUrl;
   };
+
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
       getMessagesAndRoles();
@@ -369,7 +385,7 @@ const ChatHeader = ({
                   <Avatar
                     size="36px"
                     style={{ marginRight: '6px' }}
-                    url={getChannelAvatarURL(channelInfo.name)}
+                    url={getChannelAvatarURL(RCInstance.rid)}
                   />
                   <Box>
                     <Box
