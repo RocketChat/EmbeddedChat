@@ -268,10 +268,14 @@ const ChatBody = ({
   };
 
   useEffect(() => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    const lastMessage = messages[0];
+    if (
+      lastMessage &&
+      lastMessage.t !== "message_pinned"
+    ) {
+      scrollToBottom();
     }
-  }, [messages]);
+  }, [messages.length]);
 
   useEffect(() => {
     checkOverflow();
