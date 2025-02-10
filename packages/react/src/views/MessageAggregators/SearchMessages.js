@@ -10,14 +10,26 @@ const SearchMessages = () => {
   const { RCInstance } = useContext(RCContext);
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const [cooldown, setCooldown] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
 
   const searchMessages = useCallback(async () => {
-    const { messages } = await RCInstance.getSearchMessages(text);
-    setMessageList(messages);
+    const data = await RCInstance.getSearchMessages(text);
+    if (data.success) {
+      const { messages } = data;
+      setMessageList(messages);
+      setLoading(false);
+    } else {
+      setMessageList([]);
+      setCooldown(true);
+      setTimeout(() => {
+        setCooldown(false);
+      }, 20000);
+    }
   }, [text, RCInstance]);
 
   const debouncedSearch = useCallback(
@@ -28,17 +40,19 @@ const SearchMessages = () => {
   );
 
   useEffect(() => {
+    if (cooldown) return;
     if (!text.trim()) {
       if (messageList.length > 0) {
         setMessageList([]);
       }
     } else {
+      setLoading(true)
       debouncedSearch();
     }
     return () => {
       debouncedSearch.cancel();
     };
-  }, [text, debouncedSearch, messageList.length]);
+  }, [text, debouncedSearch, messageList.length, cooldown]);
 
   return (
     <MessageAggregator
@@ -50,6 +64,7 @@ const SearchMessages = () => {
         handleInputChange,
         placeholder: 'Search Messages',
       }}
+      fetching={loading}
       searchFiltered={messageList}
       shouldRender={(msg) => !!msg}
       viewType={viewType}
