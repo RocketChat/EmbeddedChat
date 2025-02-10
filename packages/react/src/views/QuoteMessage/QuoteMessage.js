@@ -12,6 +12,7 @@ import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
 import Attachment from '../AttachmentHandler/Attachment';
+import FileAttachment from '../AttachmentHandler/TextAttachment';
 import { Markdown } from '../Markdown';
 
 const QuoteMessage = ({ className = '', style = {}, message }) => {
@@ -21,6 +22,10 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
     const host = instanceHost;
     const URL = `${host}/avatar/${username}`;
     return URL;
+  };
+  const author = {
+    authorIcon: message?.author_icon,
+    authorName: message?.author_name,
   };
   const { theme } = useTheme();
   const styles = getQuoteMessageStyles(theme);
@@ -82,6 +87,15 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
               />
               Your browser does not support the audio element.
             </audio>
+          ) : message.file.type.startsWith('application/') ||
+            message.file.type.startsWith('text/') ? (
+            <FileAttachment
+              attachment={message.attachments[0]}
+              host={instanceHost}
+              type={message.attachments[0].type}
+              msg={message}
+              author={author}
+            />
           ) : (
             <Box css={styles.message}>
               {message.msg ? (
