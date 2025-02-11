@@ -7,6 +7,7 @@ import {
   Input,
   Icon,
   useTheme,
+  Throbber,
 } from '@embeddedchat/ui-elements';
 import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
@@ -22,7 +23,7 @@ export default function LoginForm() {
   const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
-  const { handleLogin } = useRCAuth();
+  const { handleLogin, loading } = useRCAuth();
 
   const { theme } = useTheme();
 
@@ -132,11 +133,12 @@ export default function LoginForm() {
           <Button
             type="primary"
             onClick={handleSubmit}
+            disabled={loading}
             css={css`
               margin: 10px 0;
             `}
           >
-            Login
+            {loading ? <Throbber /> : 'Login'}
           </Button>
         </Box>
       </GenericModal>
