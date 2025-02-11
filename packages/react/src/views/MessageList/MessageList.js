@@ -72,7 +72,7 @@ const MessageList = ({
               <Throbber />
             </Box>
           )}
-          {messages
+          {filteredMessages
             .slice()
             .reverse()
             .map((msg, index, arr) => {
