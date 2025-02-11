@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
 import {
@@ -10,6 +10,7 @@ import {
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);
+  const [loading, setLoading] = useState(false);
   const setIsTotpModalOpen = totpModalStore(
     (state) => state.setIsTotpModalOpen
   );
@@ -34,6 +35,7 @@ export const useRCAuth = () => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const handleLogin = async (userOrEmail, password, code) => {
+    setLoading(true);
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
       const permissions = await RCInstance.permissionInfo();
@@ -78,10 +80,13 @@ export const useRCAuth = () => {
       }
     } catch (e) {
       console.error('A error occurred while setting up user', e);
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
     handleLogin,
+    loading,
   };
 };

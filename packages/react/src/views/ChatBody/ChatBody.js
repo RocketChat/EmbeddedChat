@@ -25,7 +25,6 @@ import {
 } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
-import { useRCAuth } from '../../hooks/useRCAuth';
 import LoginForm from '../LoginForm/LoginForm';
 import ThreadMessageList from '../Thread/ThreadMessageList';
 import RecentMessageButton from './RecentMessageButton';
@@ -76,7 +75,6 @@ const ChatBody = ({
     uiKitModalData: state.uiKitModalData,
   }));
 
-  const { handleLogin } = useRCAuth();
   const { handleServerInteraction } = useUiKitActionManager();
 
   const isUserAuthenticated = useUserStore(
@@ -384,7 +382,7 @@ const ChatBody = ({
           />
         )}
 
-        <TotpModal handleLogin={handleLogin} />
+        <TotpModal />
         <LoginForm />
 
         {uiKitModalOpen && (

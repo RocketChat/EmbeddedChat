@@ -7,10 +7,13 @@ import {
   Modal,
   Input,
   Button,
+  Throbber,
 } from '@embeddedchat/ui-elements';
 import { totpModalStore, useUserStore } from '../../store';
+import { useRCAuth } from '../../hooks/useRCAuth';
 
-export default function TotpModal({ handleLogin }) {
+export default function TotpModal() {
+  let { handleLogin, loading } = useRCAuth();
   const [accessCode, setAccessCode] = useState(null);
   const isTotpModalOpen = totpModalStore((state) => state.isTotpModalOpen);
   const setIsTotpModalOpen = totpModalStore(
@@ -55,8 +58,13 @@ export default function TotpModal({ handleLogin }) {
             <Button type="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button type="primary" onClick={handleSubmit}>
-              Submit
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              disabled={loading}
+              style={{ height: '36px' }}
+            >
+              {loading ? <Throbber /> : "Submit"}
             </Button>
           </Modal.Footer>
         </Box>
