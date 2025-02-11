@@ -13,27 +13,30 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+
+  const sortedMessages = [...(threadMessages || []), threadMainMessage]
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.ts) - new Date(b.ts));
+
   return (
     <>
-      {threadMessages?.concat(threadMainMessage).map((msg, index, arr) => {
-        const prev = arr[index + 1];
-        const next = arr[index - 1];
+      {sortedMessages.map((msg, index, arr) => {
+        const prev = arr[index - 1];
+        const next = arr[index + 1];
         const newDay = isMessageNewDay(msg, prev);
         const sequential = isMessageSequential(msg, prev, 300);
         const lastSequential = sequential && isMessageLastSequential(msg, next);
 
         return (
-          msg && (
-            <Message
-              key={msg._id}
-              message={msg}
-              newDay={newDay}
-              sequential={sequential}
-              lastSequential={lastSequential}
-              type="thread"
-              showAvatar
-            />
-          )
+          <Message
+            key={msg._id}
+            message={msg}
+            newDay={newDay}
+            sequential={sequential}
+            lastSequential={lastSequential}
+            type="thread"
+            showAvatar
+          />
         );
       })}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
