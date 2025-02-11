@@ -10,6 +10,8 @@ import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
 import UserMention from '../mentions/UserMention';
+import KatexErrorBoundary from '../katex/KatexErrorBoundary';
+import KatexElement from '../katex/KatexElement';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -53,6 +55,14 @@ const InlineElements = ({ contents }) =>
             }
           />
         );
+
+      case 'INLINE_KATEX':
+        return (
+          <KatexErrorBoundary key={index} code={content.value}>
+            <KatexElement code={content.value} />
+          </KatexErrorBoundary>
+        );
+
       default:
         return null;
     }
