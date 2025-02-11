@@ -484,7 +484,7 @@ const ChatInput = ({ scrollToBottom }) => {
             status={
               editMessage.msg || editMessage.attachments
                 ? 'Editing Message'
-                : isChannelReadOnly
+                : isChannelReadOnly && canSendMsg && isUserAuthenticated
                 ? 'This room is read only'
                 : undefined
             }
@@ -548,7 +548,10 @@ const ChatInput = ({ scrollToBottom }) => {
                 ? 'This room is read only'
                 : 'Sign in to chat'
             }
-            css={styles.textInput}
+            css={css`
+              ${styles.textInput}
+              ${!canSendMsg && isUserAuthenticated && `text-align: center;`}
+            `}
             onChange={onTextChange}
             onBlur={() => {
               sendTypingStop();
@@ -566,14 +569,16 @@ const ChatInput = ({ scrollToBottom }) => {
             `}
           >
             {isUserAuthenticated ? (
-              <ActionButton
-                ghost
-                size="large"
-                onClick={() => sendMessage()}
-                type="primary"
-                disabled={disableButton || isRecordingMessage}
-                icon="send"
-              />
+              canSendMsg ? (
+                <ActionButton
+                  ghost
+                  size="large"
+                  onClick={() => sendMessage()}
+                  type="primary"
+                  disabled={disableButton || isRecordingMessage}
+                  icon="send"
+                />
+              ) : null
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
                 {isLoginIn ? <Throbber /> : 'JOIN'}
@@ -581,7 +586,7 @@ const ChatInput = ({ scrollToBottom }) => {
             )}
           </Box>
         </Box>
-        {isUserAuthenticated && (
+        {isUserAuthenticated && canSendMsg && (
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
