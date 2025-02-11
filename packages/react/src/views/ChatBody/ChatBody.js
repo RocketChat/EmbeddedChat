@@ -85,7 +85,8 @@ const ChatBody = ({
 
   const username = useUserStore((state) => state.username);
 
-  const { getMessagesAndRoles } = useFetchChatData(showRoles);
+  const { getMessagesAndRoles, fetchAndSetPermissions, permissionsRef } =
+    useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -165,6 +166,16 @@ const ChatBody = ({
       }
     });
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
+
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        fetchAndSetPermissions();
+      } else {
+        permissionsRef.current = null;
+      }
+    });
+  }, []);
 
   const handlePopupClick = () => {
     scrollToBottom();
