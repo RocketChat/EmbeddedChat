@@ -20,7 +20,7 @@ jobs:
           node-version: 16.19.0
           
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.yarn
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -37,7 +37,7 @@ jobs:
         id: playwright-version
         run: echo "version=$(yarn why --json @playwright/test | grep -h 'workspace:.' | jq --raw-output '.children[].locator' | sed -e 's/@playwright\/test@.*://')" >> $GITHUB_OUTPUT
         
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: playwright-cache
         with:
           path: '~/.cache/ms-playwright'

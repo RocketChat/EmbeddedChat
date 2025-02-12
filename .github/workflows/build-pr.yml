@@ -2,7 +2,7 @@ name: Build PR-Preview
 
 on:
   pull_request_review:
-    types: submitted
+    types: [submitted]
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
