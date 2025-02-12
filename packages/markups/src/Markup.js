@@ -8,6 +8,8 @@ import ParagraphBlock from './blocks/ParagraphBlock';
 import UnOrderedListBlock from './blocks/UnOrderedListBlock';
 import QuoteBlock from './blocks/QuoteBlock';
 import TaskListBlock from './blocks/TaskListBlock';
+import KatexErrorBoundary from './katex/KatexErrorBoundary';
+import KatexBlock from './katex/KatexBlock';
 
 const Markup = ({ tokens }) =>
   tokens.map((token, index) => {
@@ -44,6 +46,13 @@ const Markup = ({ tokens }) =>
 
       case 'LINE_BREAK':
         return <br key={index} />;
+
+      case 'KATEX':
+        return (
+          <KatexErrorBoundary code={token.value} key={index}>
+            <KatexBlock code={token.value} />
+          </KatexErrorBoundary>
+        );
 
       default:
         return null;
