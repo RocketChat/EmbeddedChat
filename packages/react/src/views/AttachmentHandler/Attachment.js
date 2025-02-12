@@ -8,6 +8,13 @@ import VideoAttachment from './VideoAttachment';
 import TextAttachment from './TextAttachment';
 
 const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
+  console.log('Attachment Data:', {
+    attachment,
+    host,
+    type,
+    msg
+  });
+
   const author = {
     authorIcon: attachment?.author_icon,
     authorName: attachment?.author_name,
@@ -34,14 +41,40 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
       />
     );
   }
-  if (attachment && attachment.image_url) {
+  if (attachment && (attachment.image_url || attachment.title_link)) {
+    // Check if it's a GIF by checking the URL or title_link
+    const url = attachment.image_url || attachment.title_link;
+    console.log('Image URL:', {
+      url,
+      isImageUrl: !!attachment.image_url,
+      isTitleLink: !!attachment.title_link,
+      imageType: attachment.image_type,
+      description: attachment.description
+    });
+
+    const isGif = url && (
+      url.toLowerCase().endsWith('.gif') || 
+      (attachment.image_type && attachment.image_type.toLowerCase() === 'image/gif') ||
+      (attachment.description && attachment.description.toLowerCase().includes('gif'))
+    );
+
+    console.log('Is GIF:', isGif);
+
+    // Ensure we have a complete URL
+    const imageUrl = url.startsWith('http') ? url : (host + url);
+    console.log('Final Image URL:', imageUrl);
+
     return (
       <ImageAttachment
-        attachment={attachment}
+        attachment={{
+          ...attachment,
+          image_url: imageUrl
+        }}
         host={host}
         author={author}
         variantStyles={variantStyles}
         msg={msg}
+        isGif={isGif}
       />
     );
   }
