@@ -34,14 +34,61 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
       />
     );
   }
-  if (attachment && attachment.image_url) {
+  if (attachment && (attachment.image_url || attachment.title_link)) {
+    console.log('Attachment Data:', {
+      attachment,
+      host,
+      type
+    });
+
+    // Check if it's a GIF by checking the URL or title_link
+    const url = attachment.image_url || attachment.title_link;
+    console.log('Processing URL:', url);
+
+    const isGif = url && (
+      url.toLowerCase().endsWith('.gif') || 
+      (attachment.image_type && attachment.image_type.toLowerCase() === 'image/gif') ||
+      (attachment.description && attachment.description.toLowerCase().includes('gif'))
+    );
+
+    console.log('Is GIF:', isGif);
+
+    // Ensure we have a complete URL
+    const imageUrl = url.startsWith('http') ? url : (host + url);
+    console.log('Final Image URL:', imageUrl);
+
+    // Check if the URL has a file-upload path
+    if (url && url.includes('/file-upload/')) {
+      // For file uploads, always prepend host if not already present
+      const fullUrl = url.startsWith('http') ? url : `${host}/file-upload/${url.split('/file-upload/')[1]}`;
+      console.log('File Upload URL:', fullUrl);
+      
+      return (
+        <ImageAttachment
+          attachment={{
+            ...attachment,
+            image_url: fullUrl
+          }}
+          host={host}
+          author={author}
+          variantStyles={variantStyles}
+          msg={msg}
+          isGif={isGif}
+        />
+      );
+    }
+
     return (
       <ImageAttachment
-        attachment={attachment}
+        attachment={{
+          ...attachment,
+          image_url: imageUrl
+        }}
         host={host}
         author={author}
         variantStyles={variantStyles}
         msg={msg}
+        isGif={isGif}
       />
     );
   }
