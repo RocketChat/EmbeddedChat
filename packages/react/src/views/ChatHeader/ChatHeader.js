@@ -109,7 +109,9 @@ const ChatHeader = ({
     const threadMessageId = threadMainMessage?._id;
     closeThread();
     setTimeout(() => {
-      const element = document.getElementById(`ec-message-body-${threadMessageId}`);
+      const element = document.getElementById(
+        `ec-message-body-${threadMessageId}`
+      );
       if (element) {
         element.scrollIntoView({
           behavior: 'instant',

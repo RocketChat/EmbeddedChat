@@ -269,10 +269,7 @@ const ChatBody = ({
 
   useEffect(() => {
     const lastMessage = messages[0];
-    if (
-      lastMessage &&
-      lastMessage.t !== "message_pinned"
-    ) {
+    if (lastMessage && lastMessage.t !== 'message_pinned') {
       scrollToBottom();
     }
   }, [messages.length]);
