@@ -22,9 +22,9 @@ const ChatInputFormattingToolbar = ({
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
+    surfaceItems: ['emoji', 'formatter', 'link', 'katex', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file'],
+    smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file', 'katex'],
     popOverItems: ['formatter', 'link'],
   },
 }) => {
@@ -56,6 +56,9 @@ const ChatInputFormattingToolbar = ({
   };
   const handleFormatterClick = (item) => {
     formatSelection(messageRef, item.pattern);
+    if (item.onClick) {
+      item.onClick();
+    }
     setPopoverOpen(false);
   };
   const handleEmojiClick = (emojiEvent) => {
@@ -190,6 +193,33 @@ const ChatInputFormattingToolbar = ({
           </ActionButton>
         </Tooltip>
       ),
+    katex: (
+      <Tooltip text="KaTeX" position="top" key="katex">
+        <ActionButton
+          ghost
+          style={{
+            padding: '0 8px',
+            minWidth: 'auto',
+            fontSize: '17px',
+            fontFamily: 'KaTeX_Math-Italic, Times New Roman',
+            color: theme.palette?.mode === 'dark' ? '#fff' : '#2f343d',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: 'scaleX(0.9) rotate(-2deg)',
+            position: 'relative',
+            top: '-1px'
+          }}
+          disabled={isRecordingMessage}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            window.open('https://katex.org/docs/supported.html', '_blank');
+          }}
+        >
+          𝒇
+        </ActionButton>
+      </Tooltip>
+    ),
     formatter: formatters
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) =>
@@ -214,7 +244,7 @@ const ChatInputFormattingToolbar = ({
           </>
         ) : (
           <Tooltip
-            text={item.name}
+            text={item.tooltip}
             position="top"
             key={`formatter-${item.name}`}
           >
@@ -225,6 +255,9 @@ const ChatInputFormattingToolbar = ({
               onClick={() => {
                 if (isRecordingMessage) return;
                 formatSelection(messageRef, item.pattern);
+                if (item.onClick) {
+                  item.onClick();
+                }
               }}
             >
               <Icon
@@ -294,7 +327,7 @@ const ChatInputFormattingToolbar = ({
           if (itemInFormatter) {
             return (
               <Tooltip
-                text={itemInFormatter.name}
+                text={itemInFormatter.tooltip}
                 position="top"
                 key={`formatter-${itemInFormatter.name}`}
               >

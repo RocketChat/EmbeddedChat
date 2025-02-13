@@ -47,6 +47,7 @@ import Download from './Download';
 import ChevronDown from './ChevronDown';
 import ChevronLeft from './ChevronLeft';
 import Key from './Key';
+import KaTeX from './KaTeX';
 import Attachment from './Attachment';
 import CircleArrowDown from './CircleArrowDown';
 import Online from './Online';
@@ -116,6 +117,7 @@ const icons = {
   'chevron-down': ChevronDown,
   'chevron-left': ChevronLeft,
   key: Key,
+  katex: KaTeX,
   attachment: Attachment,
   'circle-arrow-down': CircleArrowDown,
   online: Online,
