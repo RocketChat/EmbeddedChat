@@ -15,6 +15,7 @@ import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
+import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
@@ -25,6 +26,7 @@ const UserInformation = () => {
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
@@ -63,7 +65,7 @@ const UserInformation = () => {
 
   return (
     <ViewComponent
-      title="User Info"
+      title={i18n.t('User_Info')}
       iconName="user"
       onClose={() => setExclusiveState(null)}
       style={{
@@ -187,7 +189,13 @@ const UserInformation = () => {
                 <Box key={index} css={styles.emailContainer}>
                   <a
                     href={i18n.t('Mailto_Email', { email: email.address })}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{
+                      textDecoration: 'underline',
+                      color:
+                        mode === 'light'
+                          ? theme.colors.info
+                          : theme.colors.warningForeground,
+                    }}
                   >
                     {email.address}
                   </a>
@@ -204,7 +212,7 @@ const UserInformation = () => {
             />
             <UserInfoField
               label={i18n.t('Created_At')}
-              value={formatTimestamp(currentUserInfo.createdAt)}
+              value={formatTimestampGetDate(currentUserInfo.createdAt)}
               isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}

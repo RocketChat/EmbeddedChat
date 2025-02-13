@@ -14,6 +14,7 @@ import {
   useComponentOverrides,
   Modal,
   useTheme,
+  Button,
 } from '@embeddedchat/ui-elements';
 import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
@@ -317,9 +318,15 @@ const ChatBody = ({
         </Box>
       )}
       {isModalOpen && (
-        <Modal>
+        <Modal onClose={toggleModal}>
           <Modal.Header>
-            <Modal.Title>{i18n.t('Announcement')}</Modal.Title>
+            <Modal.Title
+              css={css`
+                padding: 15px;
+              `}
+            >
+              {i18n.t('Announcement')}
+            </Modal.Title>
             <Modal.Close onClick={toggleModal} />
           </Modal.Header>
           <Modal.Content
@@ -329,10 +336,22 @@ const ChatBody = ({
               overflow-wrap: anywhere;
               white-space: normal;
               padding: 20px;
+              overflow-y: auto;
             `}
           >
             {channelInfo.announcement}
           </Modal.Content>
+          <Modal.Footer>
+            <Button
+              type="secondary"
+              onClick={toggleModal}
+              css={css`
+                margin: 15px;
+              `}
+            >
+              {i18n.t('Close')}
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
       <Box

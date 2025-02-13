@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} এবং {{user2}} লিখছেন...",
   "Verified": "যাচাইকৃত",
   "Verified_Not": "যাচাইকৃত নয়",
-  "Videos": "ভিডিও"
+  "Videos": "ভিডিও",
+  "View_Thread": "থ্রেড দেখুন",
+  "Followers": "অনুসরণকারী",
+  "Last_Message": "শেষ বার্তা: {{time}}",
+  "User_Info": "ব্যবহারকারী তথ্য",
+  "Username": "ব্যবহারকারীর নাম"
 }

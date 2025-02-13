@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} و{{user2}} يكتبان...",
   "Verified": "موثق",
   "Verified_Not": "غير موثق",
-  "Videos": "فيديوهات"
+  "Videos": "فيديوهات",
+  "View_Thread": "عرض الموضوع",
+  "Followers": "المتابعون",
+  "Last_Message": "الرسالة الأخيرة: {{time}}",
+  "User_Info": "معلومات المستخدم",
+  "Username": "اسم المستخدم"
 }

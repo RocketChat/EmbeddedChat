@@ -103,9 +103,6 @@ const ChatHeader = ({
 
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const threadMainMessage = useMessageStore((state) => state.threadMainMessage);
-  const threadTitle =
-    threadMainMessage?.msg ||
-    (threadMainMessage?.file ? threadMainMessage.file.name : '');
 
   const closeThread = useMessageStore((state) => state.closeThread);
 
@@ -441,7 +438,7 @@ const ChatHeader = ({
       </Box>
       {isThreadOpen && (
         <DynamicHeader
-          title={threadTitle}
+          title={threadMainMessage}
           handleClose={closeThread}
           iconName="arrow-back"
         />

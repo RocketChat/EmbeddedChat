@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} e {{user2}} estão a escrever...",
   "Verified": "Verificado",
   "Verified_Not": "Não verificado",
-  "Videos": "Vídeos"
+  "Videos": "Vídeos",
+  "View_Thread": "Ver thread",
+  "Followers": "Seguidores",
+  "Last_Message": "Última mensagem: {{time}}",
+  "User_Info": "Informações do usuário",
+  "Username": "Nome de usuário"
 }

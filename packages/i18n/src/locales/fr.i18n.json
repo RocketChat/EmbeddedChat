@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} et {{user2}} sont en train d'écrire...",
   "Verified": "Vérifié",
   "Verified_Not": "Non vérifié",
-  "Videos": "Vidéos"
+  "Videos": "Vidéos",
+  "View_Thread": "Voir le fil",
+  "Followers": "Abonnés",
+  "Last_Message": "Dernier message : {{time}}",
+  "User_Info": "Informations sur l'utilisateur",
+  "Username": "Nom d'utilisateur"
 }

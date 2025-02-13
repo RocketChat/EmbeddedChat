@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} и {{user2}} пишут...",
   "Verified": "Подтверждено",
   "Verified_Not": "Не подтверждено",
-  "Videos": "Видео"
+  "Videos": "Видео",
+  "View_Thread": "Просмотр темы",
+  "Followers": "Подписчики",
+  "Last_Message": "Последнее сообщение: {{time}}",
+  "User_Info": "Информация о пользователе",
+  "Username": "Имя пользователя"
 }

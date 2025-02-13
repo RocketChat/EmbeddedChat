@@ -158,5 +158,10 @@
   "User_Action_User_Typing_Two": "{{user1}} और {{user2}} टाइप कर रहे हैं...",
   "Verified": "पुष्ट",
   "Verified_Not": "अविकसित",
-  "Videos": "वीडियो"
+  "Videos": "वीडियो",
+  "View_Thread": "थ्रेड देखें",
+  "Followers": "अनुयायी",
+  "Last_Message": "आखिरी संदेश: {{time}}",
+  "User_Info": "उपयोगकर्ता जानकारी",
+  "Username": "उपयोगकर्ता नाम"
 }
