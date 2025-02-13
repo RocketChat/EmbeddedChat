@@ -13,9 +13,19 @@ const ImageAttachment = ({
   author,
   variantStyles = {},
   msg,
+  isGif = false,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const [showGallery, setShowGallery] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  console.log('ImageAttachment Render:', {
+    attachment,
+    host,
+    isGif,
+    imageUrl: attachment.image_url
+  });
+
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
     const URL = `${instanceHost}${icon}`;
@@ -94,16 +104,53 @@ const ImageAttachment = ({
           />
         </Box>
         {isExpanded && (
-          <Box onClick={() => setShowGallery(true)}>
+          <Box 
+            onClick={() => !isGif && setShowGallery(true)}
+            css={css`
+              width: ${isGif ? '200px' : '300px'};
+              height: ${isGif ? '200px' : 'auto'};
+              overflow: hidden;
+              border-radius: inherit;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: ${theme.colors.surface};
+            `}
+          >
             <img
-              src={host + attachment.image_url}
+              src={attachment.image_url} // URL is now fully formed from Attachment component
               style={{
-                maxWidth: '100%',
-                objectFit: 'contain',
-                borderBottomLeftRadius: 'inherit',
-                borderBottomRightRadius: 'inherit',
+                width: isGif ? '200px' : '100%',
+                height: isGif ? '200px' : 'auto',
+                maxHeight: isGif ? '200px' : '200px',
+                objectFit: isGif ? 'cover' : 'scale-down',
+                borderRadius: 'inherit',
+                imageRendering: isGif ? 'auto' : 'inherit',
+              }}
+              onError={(e) => {
+                console.error('Image failed to load:', {
+                  src: e.target.src,
+                  isGif,
+                  error: e.target.error,
+                  originalUrl: attachment.image_url
+                });
+                setImageError(true);
+              }}
+              onClick={(e) => {
+                if (isGif) {
+                  e.stopPropagation();
+                }
               }}
             />
+            {imageError && (
+              <Box css={css`
+                color: ${theme.colors.danger};
+                padding: 8px;
+                font-size: 12px;
+              `}>
+                Failed to load image. URL: {host + attachment.image_url}
+              </Box>
+            )}
           </Box>
         )}
         {attachment.attachments &&
