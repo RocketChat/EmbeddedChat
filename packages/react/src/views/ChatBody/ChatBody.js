@@ -16,6 +16,7 @@ import {
   useTheme,
   Button,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import {
   useMessageStore,
@@ -324,7 +325,7 @@ const ChatBody = ({
                 padding: 15px;
               `}
             >
-              Announcement
+              {i18n.t('Announcement')}
             </Modal.Title>
             <Modal.Close onClick={toggleModal} />
           </Modal.Header>
@@ -348,7 +349,7 @@ const ChatBody = ({
                 margin: 15px;
               `}
             >
-              Close
+              {i18n.t('Close')}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -395,7 +396,7 @@ const ChatBody = ({
       {popupVisible && otherUserMessage && (
         <RecentMessageButton
           visible
-          text="New messages"
+          text={i18n.t('New_Messages')}
           onClick={handlePopupClick}
         />
       )}

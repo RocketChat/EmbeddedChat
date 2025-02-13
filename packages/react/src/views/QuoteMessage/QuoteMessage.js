@@ -8,6 +8,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
 import getQuoteMessageStyles from './QuoteMessage.styles';
@@ -72,7 +73,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
                 src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                 type={message.file.type}
               />
-              Your browser does not support the video tag.
+              {i18n.t('Browser_Not_Support_Video')}
             </video>
           ) : message.file.type.startsWith('audio/') ? (
             <audio controls style={{ maxWidth: '100%' }}>
@@ -80,7 +81,7 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
                 src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                 type={message.file.type}
               />
-              Your browser does not support the audio element.
+              {i18n.t('Browser_Not_Support_Audio')}
             </audio>
           ) : (
             <Box css={styles.message}>

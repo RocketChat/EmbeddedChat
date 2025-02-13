@@ -5,7 +5,6 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
-
 import { getMessageBodyContainerStyles } from './Message.styles';
 
 const MessageBodyContainer = ({

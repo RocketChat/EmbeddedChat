@@ -9,6 +9,7 @@ import {
   Avatar,
   Tooltip,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { MessageMetricsStyles as styles } from './Message.styles';
 import RCContext from '../../context/RCInstance';
 
@@ -62,11 +63,11 @@ export const MessageMetrics = ({
               onClick={handleOpenThread(message)}
               css={variantStyles && variantStyles.threadReplyButton}
             >
-              View thread
+              {i18n.t('View_Thread')}
             </Button>
             {!!message.tcount && (
               <>
-                <Tooltip text="Followers" position="top">
+                <Tooltip text={i18n.t('Followers')} position="top">
                   <Box css={styles.metricsAvatarItem}>
                     <Avatar
                       url={getUserAvatarUrl(message?.u.username)}
@@ -84,14 +85,13 @@ export const MessageMetrics = ({
             )}
 
             <Tooltip
-              text={`Last message: ${new Date(message.tlm).toLocaleTimeString(
-                [],
-                {
+              text={i18n.t('Last_Message', {
+                time: new Date(message.tlm).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
                   hour12: false,
-                }
-              )}`}
+                }),
+              })}
               position="top"
             >
               <Box css={styles.metricsItem(true)}>

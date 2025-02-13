@@ -6,6 +6,7 @@ import {
   Tooltip,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { getMessageAvatarContainerStyles } from './Message.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
@@ -42,7 +43,7 @@ const MessageAvatarContainer = ({
       {!sequential ? (
         <Avatar
           url={getUserAvatarUrl(message.u.username)}
-          alt="avatar"
+          alt={i18n.t('avatar')}
           size={
             window.matchMedia('(max-width: 768px)').matches
               ? message.t
@@ -56,12 +57,12 @@ const MessageAvatarContainer = ({
         />
       ) : null}
       {isStarred && sequential ? (
-        <Tooltip text="Starred" position="top">
+        <Tooltip text={i18n.t('Tooltip_Starred')} position="top">
           <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
         </Tooltip>
       ) : null}
       {isPinned && sequential ? (
-        <Tooltip text="Pinned" position="top">
+        <Tooltip text={i18n.t('Tooltip_Pinned')} position="top">
           <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />
         </Tooltip>
       ) : null}

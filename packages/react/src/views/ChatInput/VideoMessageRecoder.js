@@ -8,6 +8,7 @@ import {
   Modal,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMediaRecorder } from '../../hooks/useMediaRecorder';
 import useMessageStore from '../../store/messageStore';
 import { getCommonRecorderStyles } from './ChatInput.styles';
@@ -159,7 +160,7 @@ const VideoMessageRecorder = (props) => {
             <span>{displayName}</span>
           </Box>
         ) : (
-          <Tooltip text="Video Message" position="top">
+          <Tooltip text={i18n.t('Tooltip_Video_Message')} position="top">
             <ActionButton
               ghost
               square
@@ -193,7 +194,10 @@ const VideoMessageRecorder = (props) => {
               `}
             />
             <Box css={styles.controller}>
-              <Tooltip text="Cancel Recording" position="bottom">
+              <Tooltip
+                text={i18n.t('Tooltip_Cancel_Recording')}
+                position="bottom"
+              >
                 <ActionButton ghost onClick={handleCancelRecordButton}>
                   <Icon size="1.25rem" name="circle-cross" />
                 </ActionButton>
@@ -202,7 +206,10 @@ const VideoMessageRecorder = (props) => {
                 <Box is="span" css={styles.dot} />
                 <Box css={styles.timer}>{time}</Box>
               </Box>
-              <Tooltip text="Finish Recording" position="bottom">
+              <Tooltip
+                text={i18n.t('Tooltip_Finish_Recording')}
+                position="bottom"
+              >
                 <ActionButton ghost onClick={handleStopRecordButton}>
                   <Icon name="circle-check" size="1.25rem" />
                 </ActionButton>

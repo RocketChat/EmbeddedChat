@@ -9,6 +9,7 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
@@ -89,14 +90,14 @@ export const MessageToolbox = ({
   const options = useMemo(
     () => ({
       reply: {
-        label: 'Reply in thread',
+        label: i18n.t('Reply'),
         id: 'reply',
         onClick: handleOpenThread(message),
         iconName: 'thread',
         visible: !isThreadMessage,
       },
       quote: {
-        label: 'Quote',
+        label: i18n.t('Quote'),
         id: 'quote',
         onClick: () => handleQuoteMessage(message),
         iconName: 'quote',
@@ -106,8 +107,8 @@ export const MessageToolbox = ({
         label:
           message.starred &&
           message.starred.find((u) => u._id === authenticatedUserId)
-            ? 'Unstar'
-            : 'Star',
+            ? i18n.t('Unstar')
+            : i18n.t('Star'),
         id: 'star',
         onClick: () => handleStarMessage(message),
         iconName:
@@ -118,21 +119,21 @@ export const MessageToolbox = ({
         visible: true,
       },
       reaction: {
-        label: 'Add reaction',
+        label: i18n.t('Add_Reaction'),
         id: 'reaction',
         onClick: () => setEmojiOpen(true),
         iconName: 'emoji',
         visible: true,
       },
       pin: {
-        label: message.pinned ? 'Unpin' : 'Pin',
+        label: message.pinned ? i18n.t('Unpin') : i18n.t('Pin'),
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
         visible: isAllowedToPin,
       },
       edit: {
-        label: 'Edit',
+        label: i18n.t('Edit'),
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
@@ -141,21 +142,21 @@ export const MessageToolbox = ({
         ghost: !isEditing,
       },
       copy: {
-        label: 'Copy message',
+        label: i18n.t('Copy_Message'),
         id: 'copy',
         onClick: () => handleCopyMessage(message),
         iconName: 'copy',
         visible: true,
       },
       link: {
-        label: 'Copy link',
+        label: i18n.t('Copy_link'),
         id: 'link',
         onClick: () => handleCopyMessageLink(message),
         iconName: 'link',
         visible: true,
       },
       delete: {
-        label: 'Delete',
+        label: i18n.t('Delete'),
         id: 'delete',
         onClick: () => setShowDeleteModal(true),
         iconName: 'trash',
@@ -163,7 +164,7 @@ export const MessageToolbox = ({
         type: 'destructive',
       },
       report: {
-        label: 'Report',
+        label: i18n.t('Report'),
         id: 'report',
         onClick: () => handlerReportMessage(message),
         iconName: 'report',
@@ -232,7 +233,11 @@ export const MessageToolbox = ({
             <Menu
               size="small"
               options={menuOptions}
-              tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
+              tooltip={{
+                isToolTip: true,
+                position: 'top',
+                text: i18n.t('Tooltip_More'),
+              }}
               useWrapper={false}
               style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
             />
@@ -263,7 +268,7 @@ export const MessageToolbox = ({
                 size="1.25rem"
                 style={{ marginRight: '0.5rem' }}
               />{' '}
-              Delete this message?
+              {i18n.t('Delete_Message_Ask')}
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
@@ -296,7 +301,7 @@ export const MessageToolbox = ({
                     src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                     type={message.file.type}
                   />
-                  Your browser does not support the video tag.
+                  {i18n.t('Browser_Not_Support_Video')}
                 </video>
               ) : message.file.type.startsWith('audio/') ? (
                 <audio controls style={{ maxWidth: '100%' }}>
@@ -304,7 +309,7 @@ export const MessageToolbox = ({
                     src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                     type={message.file.type}
                   />
-                  Your browser does not support the audio element.
+                  {i18n.t('Browser_Not_Support_Audio')}
                 </audio>
               ) : (
                 <Markdown body={message} md={message.md} isReaction={false} />
@@ -327,7 +332,7 @@ export const MessageToolbox = ({
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={handleOnClose}>
-              Cancel
+              {i18n.t('Cancel')}
             </Button>
             <Button
               type="destructive"
@@ -336,7 +341,7 @@ export const MessageToolbox = ({
                 handleOnClose();
               }}
             >
-              Delete message
+              {i18n.t('Delete_Message')}
             </Button>
           </Modal.Footer>
         </Modal>

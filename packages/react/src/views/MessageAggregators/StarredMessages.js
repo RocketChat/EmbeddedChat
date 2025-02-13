@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useStarredMessageStore, useUserStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';
 
@@ -18,9 +19,9 @@ const StarredMessages = () => {
   );
   return (
     <MessageAggregator
-      title="Starred Messages"
+      title={i18n.t('Starred_Messages')}
       iconName="star"
-      noMessageInfo="No Starred Messages"
+      noMessageInfo={i18n.t('No_Starred_Messages')}
       fetchedMessageList={starredMessages}
       shouldRender={shouldRender}
       viewType={viewType}

@@ -1,0 +1,16 @@
+{
+    "name": "@embeddedchat/i18n",
+    "version": "0.1.0",
+    "main": "src/index.js",
+    "scripts": {
+        "format": "prettier --write 'src/' ",
+        "format:check": "prettier --check 'src/' ",
+        "lint": "eslint 'src/**/*.js'",
+        "lint:fix": "eslint 'src/**/*.js' --fix",
+        "test:lint": "eslint src/**/*.js"
+    },
+    "devDependencies": {
+        "eslint": "^8.30.0",
+        "prettier": "^2.8.1"
+    }
+}

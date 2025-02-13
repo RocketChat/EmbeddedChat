@@ -7,6 +7,7 @@ import {
   Modal,
   useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMessageStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 
@@ -29,12 +30,12 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
-        message: 'Message reported successfully',
+        message: i18n.t('Toast_Message_Reported'),
       });
     } else {
       dispatchToastMessage({
         type: 'error',
-        message: 'Error in reporting message',
+        message: i18n.t('Toast_Error_In_Reporting_Message'),
       });
     }
 
@@ -52,17 +53,17 @@ const ReportWindowButtons = ({ children, reportDescription, messageId }) => {
               margin-right: 0.5rem;
             `}
           />
-          Report this message?
+          {i18n.t('Report_this_message')}
         </Modal.Title>
         <Modal.Close onClick={handleOnClose} />
       </Modal.Header>
       <Modal.Content>{children}</Modal.Content>
       <Modal.Footer>
         <Button type="secondary" onClick={handleOnClose}>
-          Cancel
+          {i18n.t('Cancel')}
         </Button>
         <Button onClick={handleReportMessage} type="destructive">
-          Report message
+          {i18n.t('Report_message')}
         </Button>
       </Modal.Footer>
     </Modal>

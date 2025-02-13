@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Input } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import ReportWindowButtons from './ReportWindowButtons';
 import styles from './ReportMessage.styles';
 
@@ -9,7 +10,7 @@ const MessageReportWindow = ({ messageId }) => {
   return (
     <ReportWindowButtons
       variant="danger"
-      title="Report_this_message_question_mark"
+      title={i18n.t('Report_this_message')}
       confirmText="Report!"
       cancelText="Cancel"
       reportDescription={reportDescription}
@@ -18,7 +19,7 @@ const MessageReportWindow = ({ messageId }) => {
       <Box css={styles.conatiner}>
         <Input
           textArea
-          placeholder="Why do you want to report this message?"
+          placeholder={i18n.t('Report_this_message_Why')}
           onChange={(e) => {
             setDescription(e.target.value);
           }}

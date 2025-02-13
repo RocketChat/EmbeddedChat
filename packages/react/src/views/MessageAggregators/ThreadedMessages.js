@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
-
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useMessageStore } from '../../store';
-
 import { MessageAggregator } from './common/MessageAggregator';
 
 const ThreadedMessages = () => {
@@ -25,13 +24,13 @@ const ThreadedMessages = () => {
 
   return (
     <MessageAggregator
-      title="Threads"
+      title={i18n.t('Threads')}
       iconName="thread"
-      noMessageInfo="No threads found"
+      noMessageInfo={i18n.t('No_Threads_Found')}
       searchProps={{
         isSearch: true,
         handleInputChange,
-        placeholder: 'Search Threads',
+        placeholder: i18n.t('Search_Threads'),
       }}
       searchFiltered={searchFiltered}
       shouldRender={(msg) => !msg.t && msg.tcount}

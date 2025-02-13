@@ -10,6 +10,7 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
@@ -67,7 +68,7 @@ const RoomMembers = ({ members }) => {
 
   return (
     <ViewComponent
-      title="Members"
+      title={i18n.t('Members')}
       iconName="members"
       onClose={() => setExclusiveState(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
@@ -92,7 +93,8 @@ const RoomMembers = ({ members }) => {
                     toggleInviteView();
                   }}
                 >
-                  <Icon size="1em" name="link" /> Invite Link
+                  <Icon size="1em" name="link" />
+                  {i18n.t('Invite_Link')}
                 </Button>
               )}
               <Box css={styles.searchContainer}>
@@ -100,7 +102,7 @@ const RoomMembers = ({ members }) => {
                   css={styles.textInput}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search members"
+                  placeholder={i18n.t('Search_Members')}
                 />
                 <Icon name="magnifier" size="1.5rem" css={styles.searchIcon} />
               </Box>
@@ -116,7 +118,7 @@ const RoomMembers = ({ members }) => {
                     </>
                   ))
                 ) : (
-                  <Box css={styles.noMembers}>No members found</Box>
+                  <Box css={styles.noMembers}>{i18n.t('No_Members_Found')}</Box>
                 )}
               </Box>
             </>

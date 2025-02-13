@@ -10,6 +10,7 @@ import {
   lighten,
   darken,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
@@ -105,13 +106,13 @@ const Message = ({
       await RCInstance.starMessage(msg._id);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message starred',
+        message: i18n.t('Toast_Message_Starred'),
       });
     } else {
       await RCInstance.unstarMessage(msg._id);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message unstarred',
+        message: i18n.t('Toast_Message_Unstarred'),
       });
     }
     getStarredMessages();
@@ -127,12 +128,14 @@ const Message = ({
       msg.pinned = isPinned;
       dispatchToastMessage({
         type: 'error',
-        message: 'Error pinning message',
+        message: i18n.t('Toast_Error_In_Pinning_Message'),
       });
     } else {
       dispatchToastMessage({
         type: 'success',
-        message: isPinned ? 'Message unpinned' : 'Message pinned',
+        message: isPinned
+          ? i18n.t('Toast_Message_Unpinned')
+          : i18n.t('Toast_Message_Pinned'),
       });
     }
   };
@@ -148,12 +151,12 @@ const Message = ({
       await navigator.clipboard.writeText(textToCopy);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message copied successfully',
+        message: i18n.t('Toast_Message_Copied'),
       });
     } catch (error) {
       dispatchToastMessage({
         type: 'error',
-        message: 'Error in copying message',
+        message: i18n.t('Toast_Error_In_Copying_Message'),
       });
     }
   };
@@ -170,12 +173,12 @@ const Message = ({
       await navigator.clipboard.writeText(messageLink);
       dispatchToastMessage({
         type: 'success',
-        message: 'Message link copied successfully',
+        message: i18n.t('Toast_Message_Link_Copied'),
       });
     } catch (err) {
       dispatchToastMessage({
         type: 'error',
-        message: 'Error in copying message link',
+        message: i18n.t('Toast_Error_In_Copying_Message_Link'),
       });
     }
   };
@@ -186,12 +189,12 @@ const Message = ({
     if (res.success) {
       dispatchToastMessage({
         type: 'success',
-        message: 'Message deleted successfully',
+        message: i18n.t('Toast_Message_Deleted'),
       });
     } else {
       dispatchToastMessage({
         type: 'error',
-        message: 'Error in deleting message',
+        message: i18n.t('Toast_Error_In_Deleting_Message'),
       });
     }
   };

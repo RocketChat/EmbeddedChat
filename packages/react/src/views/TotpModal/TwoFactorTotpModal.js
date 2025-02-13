@@ -8,6 +8,7 @@ import {
   Input,
   Button,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { totpModalStore, useUserStore } from '../../store';
 
 export default function TotpModal({ handleLogin }) {
@@ -38,7 +39,7 @@ export default function TotpModal({ handleLogin }) {
     <>
       <GenericModal
         variant="info"
-        title="Enter TOTP"
+        title={i18n.t('Enter_TOTP')}
         icon="key"
         onClose={handleClose}
       >
@@ -53,10 +54,10 @@ export default function TotpModal({ handleLogin }) {
           </Box>
           <Modal.Footer>
             <Button type="secondary" onClick={handleClose}>
-              Cancel
+              {i18n.t('Cancel')}
             </Button>
             <Button type="primary" onClick={handleSubmit}>
-              Submit
+              {i18n.t('Submit')}
             </Button>
           </Modal.Footer>
         </Box>

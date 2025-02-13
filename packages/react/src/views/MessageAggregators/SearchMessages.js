@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import RCContext from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
 
@@ -42,13 +43,13 @@ const SearchMessages = () => {
 
   return (
     <MessageAggregator
-      title="Search Messages"
+      title={i18n.t('Search_Messages')}
       iconName="magnifier"
-      noMessageInfo="No results found"
+      noMessageInfo={i18n.t('No_Messages_Found')}
       searchProps={{
         isSearch: true,
         handleInputChange,
-        placeholder: 'Search Messages',
+        placeholder: i18n.t('Search_Messages'),
       }}
       searchFiltered={messageList}
       shouldRender={(msg) => !!msg}

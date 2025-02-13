@@ -84,6 +84,7 @@
   },
   "dependencies": {
     "@embeddedchat/api": "workspace:^",
+    "@embeddedchat/i18n": "workspace:^",
     "@embeddedchat/markups": "workspace:^",
     "@embeddedchat/ui-elements": "workspace:^",
     "@embeddedchat/ui-kit": "workspace:^",

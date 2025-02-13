@@ -11,6 +11,7 @@ import {
   useTheme,
   Avatar,
 } from '@embeddedchat/ui-elements';
+import i18n from '@embeddedchat/i18n';
 import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
@@ -187,14 +188,13 @@ const ChatHeader = ({
       ) {
         dispatchToastMessage({
           type: 'error',
-          message: "Channel doesn't exist. Logging out.",
+          message: i18n.t('Toast_Channel_Not_Exist'),
         });
         await RCInstance.logout();
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
         dispatchToastMessage({
           type: 'error',
-          message:
-            "You don't have permission to access this channel. Logging out",
+          message: i18n.t('Toast_Not_Have_Permission_To_Access_Channel'),
         });
         await RCInstance.logout();
       }
@@ -221,77 +221,77 @@ const ChatHeader = ({
   const options = useMemo(
     () => ({
       minmax: {
-        label: `${fullScreen ? 'Minimize' : 'Maximize'}`,
+        label: `${fullScreen ? i18n.t('Minimize') : i18n.t('Maximize')}`,
         id: 'minmax',
         onClick: () => setFullScreen((prev) => !prev),
         iconName: `${fullScreen ? 'collapse' : 'expand'}`,
         visible: true,
       },
       close: {
-        label: 'Close',
+        label: i18n.t('Close'),
         id: 'close',
         onClick: () => setClosableState((prev) => !prev),
         iconName: 'cross',
         visible: isClosable,
       },
       thread: {
-        label: 'Threads',
+        label: i18n.t('Threads'),
         id: 'thread',
         onClick: () => setExclusiveState(setShowAllThreads),
         iconName: 'thread',
         visible: true,
       },
       mentions: {
-        label: 'Mentions',
+        label: i18n.t('Mentions'),
         id: 'mention',
         onClick: () => setExclusiveState(setShowMentions),
         iconName: 'at',
         visible: true,
       },
       starred: {
-        label: 'Starred Messages',
+        label: i18n.t('Starred_Messages'),
         id: 'starred',
         onClick: () => setExclusiveState(setShowStarred),
         iconName: 'star',
         visible: true,
       },
       pinned: {
-        label: 'Pinned Messages',
+        label: i18n.t('Pinned_Messages'),
         id: 'pinned',
         onClick: () => setExclusiveState(setShowPinned),
         iconName: 'pin',
         visible: true,
       },
       members: {
-        label: 'Members',
+        label: i18n.t('Members'),
         id: 'members',
         onClick: () => setExclusiveState(setShowMembers),
         iconName: 'members',
         visible: isUserAuthenticated,
       },
       files: {
-        label: 'Files',
+        label: i18n.t('Files'),
         id: 'files',
         onClick: () => setExclusiveState(setShowAllFiles),
         iconName: 'clip',
         visible: isUserAuthenticated,
       },
       search: {
-        label: 'Search Messages',
+        label: i18n.t('Search_Messages'),
         id: 'search',
         onClick: () => setExclusiveState(setShowSearch),
         iconName: 'magnifier',
         visible: isUserAuthenticated,
       },
       rInfo: {
-        label: 'Room Information',
+        label: i18n.t('Room_Information'),
         id: 'rInfo',
         onClick: () => setExclusiveState(setShowChannelinfo),
         iconName: 'info',
         visible: isUserAuthenticated,
       },
       logout: {
-        label: 'Logout',
+        label: i18n.t('Logout'),
         id: 'logout',
         onClick: handleLogout,
         iconName: 'reply-directly',
@@ -411,7 +411,7 @@ const ChatHeader = ({
                 className="ec-chat-header--channelName"
                 css={styles.clearSpacing}
               >
-                {channelName || 'Login to chat'}
+                {channelName || i18n.t('Login_To_Chat')}
               </Heading>
             )}
           </Box>
@@ -424,7 +424,16 @@ const ChatHeader = ({
           {surfaceOptions.length > 0 && (
             <SurfaceMenu options={surfaceOptions} />
           )}
-          {menuOptions.length > 0 && <Menu options={menuOptions} />}
+          {menuOptions.length > 0 && (
+            <Menu
+              options={menuOptions}
+              tooltip={{
+                isToolTip: true,
+                position: 'bottom',
+                text: i18n.t('Options'),
+              }}
+            />
+          )}
         </Box>
       </Box>
       {isThreadOpen && (
