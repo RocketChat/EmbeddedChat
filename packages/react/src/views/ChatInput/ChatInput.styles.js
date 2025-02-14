@@ -172,3 +172,137 @@ export const getInsertLinkModalStyles = (theme) => {
 
   return styles;
 };
+
+export const getTimestampStyles = (theme, mode) => {
+  const styles = {
+    timestampModal: css`
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1300;
+
+      // Not hardcoding the color; this value will be the same for all themes.
+      background-color: rgba(0, 0, 0, 0.2);
+    `,
+    timestampModalContent: css`
+      background-color: ${theme.colors.card};
+      color: ${theme.colors.cardForeground};
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    `,
+    modalHeader: css`
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid ${theme.colors.border};
+      padding-bottom: 10px;
+    `,
+    timestampPreview: css`
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: ${mode === 'light'
+        ? theme.commonColors.white
+        : theme.commonColors.black};
+      border: 1px solid ${theme.colors.border};
+      border-radius: 5px;
+    `,
+    previewText: css`
+      font-weight: bold;
+    `,
+    previewCode: css`
+      font-family: monospace;
+      color: ${theme.colors.info};
+      word-wrap: break-word;
+    `,
+    timestampInputs: css`
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    `,
+    dateInput: css`
+      width: 48%;
+    `,
+    timeInput: css`
+      width: 48%;
+    `,
+    inputLabel: css`
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      color: ${theme.colors.foreground};
+    `,
+    inputField: css`
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid ${theme.colors.input};
+      font-size: 14px;
+      background-color: ${lighten(theme.colors.background, 1)};
+      color: ${theme.colors.foreground};
+    `,
+    formatSelection: css`
+      margin-bottom: 20px;
+    `,
+    formatOptions: css`
+      max-height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    `,
+    formatOption: css`
+      width: calc(50% - 5px);
+      display: flex;
+      align-items: flex-start;
+      padding: 10px;
+      border: 1px solid ${theme.colors.border};
+      border-radius: 5px;
+      margin-bottom: 10px;
+      cursor: pointer;
+
+      &:nth-last-child(-n + 3) {
+        width: 100%;
+      }
+    `,
+    formatOptionSelected: css`
+      background-color: ${theme.colors.accent};
+      border-color: ${theme.colors.primary};
+    `,
+    formatRadio: css`
+      margin-right: 10px;
+    `,
+    formatDetails: css`
+      flex: 1;
+      cursor: pointer;
+    `,
+    formatLabel: css`
+      font-size: 17px;
+      font-weight: bold;
+      color: ${theme.colors.foreground};
+    `,
+    formatDescription: css`
+      font-size: 14px;
+      color: ${theme.colors.mutedForeground};
+    `,
+    formatExample: css`
+      font-size: 12px;
+      color: ${theme.colors.accentForeground};
+    `,
+    modalFooter: css`
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    `,
+  };
+
+  return styles;
+};

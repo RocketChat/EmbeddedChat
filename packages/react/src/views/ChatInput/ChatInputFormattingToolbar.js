@@ -16,6 +16,7 @@ import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
 import InsertLinkToolBox from './InsertLinkToolBox';
+import { TimestampSelector } from './TimestampSelector';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -81,6 +82,23 @@ const ChatInputFormattingToolbar = ({
 
     triggerButton?.(null, message);
     setInsertLinkOpen(false);
+  };
+
+  const handleTimestampSelect = (timestamp) => {
+    const messageInput = messageRef.current;
+
+    const start = messageInput.selectionStart;
+    const end = messageInput.selectionEnd;
+    const msg = messageInput.value;
+
+    const updatedMessage = msg.slice(0, start) + timestamp + msg.slice(end);
+    messageInput.value = updatedMessage;
+
+    const newCursorPosition = start + timestamp.length;
+    messageInput.selectionStart = newCursorPosition;
+    messageInput.selectionEnd = newCursorPosition;
+
+    triggerButton?.(null, updatedMessage);
   };
 
   const chatToolMap = {
@@ -356,6 +374,8 @@ const ChatInputFormattingToolbar = ({
           onClose={() => setInsertLinkOpen(false)}
         />
       )}
+
+      <TimestampSelector onSelect={handleTimestampSelect} />
     </Box>
   );
 };
