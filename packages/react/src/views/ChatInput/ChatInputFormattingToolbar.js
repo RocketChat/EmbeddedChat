@@ -23,9 +23,17 @@ const ChatInputFormattingToolbar = ({
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
+    surfaceItems: [
+      'emoji',
+      'formatter',
+      'link',
+      'audio',
+      'video',
+      'file',
+      'timestamp',
+    ],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
-    smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file'],
+    smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file', 'timestamp'],
     popOverItems: ['formatter', 'link'],
   },
 }) => {
@@ -47,6 +55,7 @@ const ChatInputFormattingToolbar = ({
     (state) => state.isRecordingMessage
   );
 
+  const [isTimestampSelectorOpen, setIsTimestampSelectorOpen] = useState(false);
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
@@ -141,6 +150,7 @@ const ChatInputFormattingToolbar = ({
         popOverItemStyles={styles.popOverItemStyles}
       />
     ),
+
     video: (
       <VideoMessageRecorder
         displayName={
@@ -150,6 +160,7 @@ const ChatInputFormattingToolbar = ({
         disabled={isRecordingMessage}
       />
     ),
+
     file:
       isPopoverOpen && popOverItems.includes('file') ? (
         <Box
@@ -179,6 +190,7 @@ const ChatInputFormattingToolbar = ({
           </ActionButton>
         </Tooltip>
       ),
+
     link:
       isPopoverOpen && popOverItems.includes('link') ? (
         <Box
@@ -208,6 +220,23 @@ const ChatInputFormattingToolbar = ({
           </ActionButton>
         </Tooltip>
       ),
+
+    timestamp: (
+      <Tooltip text="Insert timestamp" position="top" key="timestamp">
+        <ActionButton
+          square
+          ghost
+          disabled={isRecordingMessage}
+          onClick={() => {
+            if (isRecordingMessage) return;
+            setIsTimestampSelectorOpen(!isTimestampSelectorOpen);
+          }}
+        >
+          <Icon name="clock" size="1.25rem" />
+        </ActionButton>
+      </Tooltip>
+    ),
+
     formatter: formatters
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) =>
@@ -375,7 +404,13 @@ const ChatInputFormattingToolbar = ({
         />
       )}
 
-      <TimestampSelector onSelect={handleTimestampSelect} />
+      {isTimestampSelectorOpen && (
+        <TimestampSelector
+          onSelect={handleTimestampSelect}
+          isTimestampSelectorOpen={isTimestampSelectorOpen}
+          onClose={() => setIsTimestampSelectorOpen(false)}
+        />
+      )}
     </Box>
   );
 };
