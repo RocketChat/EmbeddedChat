@@ -42,7 +42,7 @@ const ImageAttachment = ({
           css`
             cursor: pointer;
             border-radius: inherit;
-            line-height: 0;
+            line-height: 0.75rem;
             padding: 0.5rem;
           `,
           (type ? variantStyles.pinnedContainer : '') ||

@@ -14,9 +14,10 @@ const getTooltipStyles = (theme, position) => {
       z-index: ${theme.zIndex?.tooltip || 1400};
       font-size: 12.5px;
       font-weight: 500;
-      white-space: nowrap;
+      max-width: 160px;
+      width: max-content;
       font-family: sans-serif;
-      top: ${position === 'top' ? 'calc(-100% - 20px)' : 'calc(100% + 10px)'};
+      ${position === 'top' ? 'bottom: calc(100% + 10px)' : 'top: calc(100% + 10px)'};
     `,
     tooltipArrow: css`
       content: '';

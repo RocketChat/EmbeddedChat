@@ -1,32 +1,30 @@
-// import colors from '@rocket.chat/fuselage-tokens/colors.json';
 import React, { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
-import { Box } from '@embeddedchat/ui-elements';
+import { Box, Tooltip, useTheme } from '@embeddedchat/ui-elements';
 import { css } from '@emotion/react';
-
-// const Fallback = styled('span')`
-// 	text-decoration: underline;
-// 	text-decoration-color: ${colors.r400};
-// `;
 
 const KatexErrorBoundary = ({ children, code }) => {
   const [error, setError] = useState(null);
+  const { theme } = useTheme();
   return (
     <ErrorBoundary
-      //   children={children}
       onError={setError}
       fallback={
-        <Box
-          is="span"
-          title={error?.message}
-          css={css`
-            text-decoration: underline;
-            text-decoration-color: red;
-          `}
+        <Tooltip
+          text={error?.message}
+          position="top"
         >
-          <span>{code}</span>
-        </Box>
+          <Box
+            is="span"
+            css={css`
+              text-decoration: underline;
+              text-decoration-color: ${theme.colors.destructive};
+            `}
+          >
+            <span>{code}</span>
+          </Box>
+        </Tooltip>
       }
     >
       {children}
