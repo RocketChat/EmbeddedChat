@@ -25,11 +25,7 @@ const ProgressBar = ({ color, time }) => {
     return () => clearInterval(interval);
   }, [time]);
 
-  return (
-    <Box css={styles.progressBarContainer}>
-      <Box css={styles.progressbar} />
-    </Box>
-  );
+  return <Box css={styles.progressbar} />;
 };
 
 export default ProgressBar;

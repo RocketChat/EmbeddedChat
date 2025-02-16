@@ -15,24 +15,39 @@ const animation = keyframes`
 }
 `;
 
-export const getToastbarStyles = (theme) => {
+export const getToastbarStyles = (theme, mode) => {
   const styles = {
     toastbar: (color, bgColor, time) => css`
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: 1em;
-      align-items: center;
-      justify-content: space-between;
+      align-items: flex-start;
+      justify-content: flex-start;
       width: fit-content;
       max-width: 20rem;
       color: ${color};
       background-color: ${bgColor};
-      border-radius: ${theme.radius > 0.2
-        ? `${theme.radius} ${theme.radius} 0 0`
-        : `${theme.radius}`};
+      border-radius: ${theme.radius};
       padding: 0.75em 1em;
       z-index: ${theme.zIndex?.toastbar || 1600};
       animation: ${animation} ${time}ms ease-in-out forwards;
+      position: relative;
+      overflow: hidden;
+    `,
+    content: css`
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    `,
+    progressBarContainer: css`
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      width: 100%;
+      background-color: ${mode === 'dark' ? theme.colors.foreground : null};
+      clip-path: inset(0 0 0 0 round ${theme.radius});
     `,
   };
 
@@ -56,17 +71,10 @@ export const getToastBarContainerStyles = (theme, mode) => {
 
 export const getProgressBarStyles = (theme, mode, progress, color) => {
   const styles = {
-    progressBarContainer: css`
-      width: 100%;
-      height: 7px;
-      border-radius: 0 0 ${theme.radius} ${theme.radius};
-      background-color: ${mode === 'dark' ? theme.colors.foreground : null};
-    `,
     progressbar: css`
       width: ${progress}%;
       height: 100%;
       background-color: ${color};
-      border-radius: 0 0 ${theme.radius} ${theme.radius};
       transition: width 0.02s linear;
     `,
   };

@@ -15,10 +15,9 @@ const ToastBar = ({ toast, onClose }) => {
   const toastRef = useRef();
   const { theme } = useTheme();
   const { mode } = useTheme();
-  const showProgressBar = parseFloat(theme.radius) < 0.3;
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
-  const styles = getToastbarStyles(theme);
+  const styles = getToastbarStyles(theme, mode);
   const { iconName, bgColor, color } = useMemo(() => {
     const color =
       type === 'error'
@@ -62,15 +61,15 @@ const ToastBar = ({ toast, onClose }) => {
         className={appendClassNames('ec-toast-bar', classNames)}
         style={styleOverrides}
       >
-        <Icon size="1em" name={iconName} />
-        {message}
-        <ActionButton icon="cross" size="small" onClick={onClose} ghost />
-      </Box>
-      {showProgressBar && (
-        <Box>
+        <Box css={styles.content}>
+          <Icon size="1em" name={iconName} />
+          {message}
+          <ActionButton icon="cross" size="small" onClick={onClose} ghost />
+        </Box>
+        <Box css={styles.progressBarContainer}>
           <ProgressBar color={progressBarBgColor} time={time} />
         </Box>
-      )}
+      </Box>
     </>
   );
 };
