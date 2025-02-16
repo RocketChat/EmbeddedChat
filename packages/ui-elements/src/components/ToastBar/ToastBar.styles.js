@@ -27,7 +27,9 @@ export const getToastbarStyles = (theme) => {
       max-width: 20rem;
       color: ${color};
       background-color: ${bgColor};
-      border-radius: ${theme.radius} ${theme.radius} 0 0;
+      border-radius: ${theme.radius > 0.2
+        ? `${theme.radius} ${theme.radius} 0 0`
+        : `${theme.radius}`};
       padding: 0.75em 1em;
       z-index: ${theme.zIndex?.toastbar || 1600};
       animation: ${animation} ${time}ms ease-in-out forwards;

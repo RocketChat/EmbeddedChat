@@ -15,6 +15,7 @@ const ToastBar = ({ toast, onClose }) => {
   const toastRef = useRef();
   const { theme } = useTheme();
   const { mode } = useTheme();
+  const showProgressBar = parseFloat(theme.radius) < 0.3;
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
   const styles = getToastbarStyles(theme);
@@ -65,9 +66,11 @@ const ToastBar = ({ toast, onClose }) => {
         {message}
         <ActionButton icon="cross" size="small" onClick={onClose} ghost />
       </Box>
-      <Box>
-        <ProgressBar color={progressBarBgColor} time={time} />
-      </Box>
+      {showProgressBar && (
+        <Box>
+          <ProgressBar color={progressBarBgColor} time={time} />
+        </Box>
+      )}
     </>
   );
 };
