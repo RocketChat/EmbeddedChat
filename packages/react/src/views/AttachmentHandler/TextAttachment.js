@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
+import { Markdown } from '../Markdown';
 
 const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
   const { RCInstance } = useContext(RCContext);
@@ -62,11 +63,19 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
           white-space: pre-line;
         `}
       >
-        {attachment?.text
-          ? attachment.text[0] === '['
-            ? attachment.text.match(/\n(.*)/)?.[1] || ''
-            : attachment.text
-          : ''}
+        {attachment?.text ? (
+          attachment.text[0] === '[' ? (
+            attachment.text.match(/\n(.*)/)?.[1] || ''
+          ) : (
+            <Markdown
+              body={attachment.text}
+              md={attachment.md}
+              isReaction={false}
+            />
+          )
+        ) : (
+          ''
+        )}
         {attachment?.attachments &&
           attachment.attachments.map((nestedAttachment, index) => (
             <Box
@@ -125,11 +134,19 @@ const TextAttachment = ({ attachment, type, variantStyles = {} }) => {
                   white-space: pre-line;
                 `}
               >
-                {nestedAttachment?.text
-                  ? nestedAttachment.text[0] === '['
-                    ? nestedAttachment.text.match(/\n(.*)/)?.[1] || ''
-                    : nestedAttachment.text
-                  : ''}
+                {nestedAttachment?.text ? (
+                  nestedAttachment.text[0] === '[' ? (
+                    nestedAttachment.text.match(/\n(.*)/)?.[1] || ''
+                  ) : (
+                    <Markdown
+                      body={nestedAttachment.text}
+                      md={nestedAttachment.md}
+                      isReaction={false}
+                    />
+                  )
+                ) : (
+                  ''
+                )}
               </Box>
             </Box>
           ))}

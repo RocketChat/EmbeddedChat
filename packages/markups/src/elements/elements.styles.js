@@ -99,6 +99,13 @@ const useMentionStyles = (contents, username) => {
       cursor: pointer;
       padding: 1.5px;
       border-radius: 3px;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-color: ${contents.value === username
+          ? theme.colors.destructiveForeground
+          : theme.colors.mutedForeground};
+      }
     `,
   };
 

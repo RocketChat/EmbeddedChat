@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { isSameDay, format, set } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -25,6 +25,7 @@ export const MessageAggregator = ({
   noMessageInfo,
   shouldRender,
   fetchedMessageList,
+  filterProps,
   searchProps,
   searchFiltered,
   fetching,
@@ -39,9 +40,10 @@ export const MessageAggregator = ({
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
-    () => [...messages, ...threadMessages],
+    () => [...messages, ...[...threadMessages].reverse()],
     [messages, threadMessages]
   );
+
   const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
@@ -49,16 +51,52 @@ export const MessageAggregator = ({
   );
 
   const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
-  const setJumpToMessage = (msgId) => {
+  const openThread = useMessageStore((state) => state.openThread);
+  const closeThread = useMessageStore((state) => state.closeThread);
+
+  const setJumpToMessage = (msg) => {
+    if (!msg || !msg._id) {
+      console.error('Invalid message object:', msg);
+      return;
+    }
+    const { _id: msgId, tmid: threadId } = msg;
     if (msgId) {
-      const element = document.getElementById(`ec-message-body-${msgId}`);
-      if (element) {
-        setShowSidebar(false);
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        element.style.backgroundColor = theme.colors.warning;
+      let element;
+      if (threadId) {
+        const parentMessage = messages.find((m) => m._id === threadId);
+        if (parentMessage) {
+          closeThread();
+          setTimeout(() => {
+            openThread(parentMessage);
+            setShowSidebar(false);
+            setTimeout(() => {
+              element = document.getElementById(`ec-message-body-${msgId}`);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                });
+                element.style.backgroundColor = theme.colors.warning;
+                setTimeout(() => {
+                  element.style.backgroundColor = '';
+                }, 1000);
+              }
+            }, 300);
+          }, 300);
+        }
+      } else {
+        closeThread();
         setTimeout(() => {
-          element.style.backgroundColor = '';
-        }, 1000);
+          element = document.getElementById(`ec-message-body-${msgId}`);
+          if (element) {
+            setShowSidebar(false);
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            element.style.backgroundColor = theme.colors.warning;
+            setTimeout(() => {
+              element.style.backgroundColor = '';
+            }, 1000);
+          }
+        }, 300);
       }
     }
   };
@@ -75,6 +113,7 @@ export const MessageAggregator = ({
     <ViewComponent
       title={title}
       iconName={iconName}
+      filterProps={filterProps}
       searchProps={searchProps}
       onClose={() => setExclusiveState(null)}
       style={{
@@ -101,65 +140,67 @@ export const MessageAggregator = ({
             <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
           )}
 
-          {messageList.map((msg, index, arr) => {
-            const newDay = isMessageNewDay(msg, arr[index - 1]);
-            if (!messageRendered && shouldRender(msg)) {
-              setMessageRendered(true);
-            }
+          {[...new Map(messageList.map((msg) => [msg._id, msg])).values()].map(
+            (msg, index, arr) => {
+              const newDay = isMessageNewDay(msg, arr[index - 1]);
+              if (!messageRendered && shouldRender(msg)) {
+                setMessageRendered(true);
+              }
 
-            return (
-              <React.Fragment key={msg._id}>
-                {type === 'message' && newDay && (
-                  <MessageDivider>
-                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                  </MessageDivider>
-                )}
-                {type === 'file' ? (
-                  <FileDisplay
-                    key={`${msg._id}-aggregated`}
-                    fileMessage={msg}
-                  />
-                ) : (
-                  <Box
-                    position="relative"
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Message
+              return (
+                <React.Fragment key={msg._id}>
+                  {type === 'message' && newDay && (
+                    <MessageDivider>
+                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                    </MessageDivider>
+                  )}
+                  {type === 'file' ? (
+                    <FileDisplay
                       key={`${msg._id}-aggregated`}
-                      message={msg}
-                      newDay={false}
-                      type="default"
-                      showAvatar
-                      showToolbox={false}
-                      showRoles={showRoles}
-                      isInSidebar
-                      style={{
-                        flex: 1,
-                        padding: 0,
-                        marginLeft: '15px',
-                        minWidth: 0,
-                      }}
+                      fileMessage={msg}
                     />
-
-                    <ActionButton
-                      square
-                      ghost
-                      onClick={() => setJumpToMessage(msg._id)}
-                      css={{
-                        position: 'relative',
-                        zIndex: 10,
-                        marginRight: '5px',
+                  ) : (
+                    <Box
+                      position="relative"
+                      style={{
+                        display: 'flex',
                       }}
                     >
-                      <Icon name="arrow-back" size="1.25rem" />
-                    </ActionButton>
-                  </Box>
-                )}
-              </React.Fragment>
-            );
-          })}
+                      <Message
+                        key={`${msg._id}-aggregated`}
+                        message={msg}
+                        newDay={false}
+                        type="default"
+                        showAvatar
+                        showToolbox={false}
+                        showRoles={showRoles}
+                        isInSidebar
+                        style={{
+                          flex: 1,
+                          padding: 0,
+                          marginLeft: '15px',
+                          minWidth: 0,
+                        }}
+                      />
+
+                      <ActionButton
+                        square
+                        ghost
+                        onClick={() => setJumpToMessage(msg)}
+                        css={{
+                          position: 'relative',
+                          zIndex: 10,
+                          marginRight: '5px',
+                        }}
+                      >
+                        <Icon name="arrow-back" size="1.25rem" />
+                      </ActionButton>
+                    </Box>
+                  )}
+                </React.Fragment>
+              );
+            }
+          )}
         </Box>
       )}
     </ViewComponent>

@@ -1,5 +1,5 @@
 const DefaultTheme = {
-  radius: '0.2rem',
+  radius: '1.5rem',
 
   commonColors: {
     black: 'hsl(0, 100%, 0%)',

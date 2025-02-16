@@ -16,6 +16,8 @@ const getRoomInformationStyles = () => {
       word-wrap: break-word;
       overflow-wrap: anywhere;
       white-space: normal;
+      opacity: 0.7;
+      font-size: 0.9rem;
     `,
   };
 
