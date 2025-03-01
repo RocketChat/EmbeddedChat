@@ -1,6 +1,6 @@
 {
   "name": "@embeddedchat/api",
-  "version": "0.0.2",
+  "version": "0.1.2",
   "description": "A comprehensive API wrapper for Rocket.Chat, facilitating seamless integration and interaction with chat functionalities in web applications.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,7 +23,7 @@
     "rollup-plugin-serve": "^2.0.2"
   },
   "dependencies": {
-    "@embeddedchat/auth": "0.0.1",
+    "@embeddedchat/auth": "workspace:^",
     "@rocket.chat/sdk": "^1.0.0-alpha.42"
   }
 }
