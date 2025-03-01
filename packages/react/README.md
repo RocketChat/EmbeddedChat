@@ -13,6 +13,23 @@ npm install @embeddedchat/react
 yarn add @embeddedchat/react
 ```
 
+## Vite Configuration (If Applicable)
+
+If you're using EmbeddedChat in a Vite project, you need to make adjustments to your Vite configuration file to ensure compatibility with how environment variables are handled in the browser.
+
+### Update `vite.config.js` or `vite.config.ts`
+
+Add the following settings inside the `defineConfig` function of your Vite configuration file:
+
+```javascript
+base: "/",
+define: {
+  "process.env": {},
+},
+```
+
+These changes address compatibility issues and allow EmbeddedChat to function properly in Vite projects.
+
 ## Importing the Component
 
 Import the `EmbeddedChat` component into your file:

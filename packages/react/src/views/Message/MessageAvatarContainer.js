@@ -43,7 +43,15 @@ const MessageAvatarContainer = ({
         <Avatar
           url={getUserAvatarUrl(message.u.username)}
           alt="avatar"
-          size={message.t ? '1.2em' : '2.25em'}
+          size={
+            window.matchMedia('(max-width: 768px)').matches
+              ? message.t
+                ? '1.2em'
+                : '1.5em'
+              : message.t
+              ? '1.5em'
+              : '2.25em'
+          }
           onClick={handleAvatarClick}
         />
       ) : null}

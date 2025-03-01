@@ -445,6 +445,25 @@ const ChatInput = ({ scrollToBottom }) => {
           sendMessage();
         }
         break;
+      case e.altKey && (e.code === 'ArrowUp' || 'ArrowRight'): {
+        e.preventDefault();
+        e.stopPropagation();
+        if (messageRef && messageRef.current) {
+          messageRef.current.setSelectionRange(0, 0);
+          messageRef.current.focus();
+        }
+        break;
+      }
+      case e.altKey && (e.code === 'ArrowDown' || 'ArrowLeft'): {
+        e.preventDefault();
+        e.stopPropagation();
+        if (messageRef && messageRef.current) {
+          const endlength = messageRef.current.value.length;
+          messageRef.current.setSelectionRange(endlength, endlength);
+          messageRef.current.focus();
+        }
+        break;
+      }
       default:
         break;
     }
@@ -524,7 +543,7 @@ const ChatInput = ({ scrollToBottom }) => {
             disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
             placeholder={
               isUserAuthenticated && canSendMsg
-                ? `Message #${channelInfo.name}`
+                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
                 : isUserAuthenticated
                 ? 'This room is read only'
                 : 'Sign in to chat'

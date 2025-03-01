@@ -67,16 +67,28 @@ const AudioAttachment = ({
         ) : (
           ''
         )}
-        <AttachmentMetadata
-          attachment={attachment}
-          url={host + (attachment.title_url || attachment.audio_url)}
-          variantStyles={variantStyles}
-          msg={msg}
-          onExpandCollapseClick={toggleExpanded}
-          isExpanded={isExpanded}
-        />
+        <Box
+          css={css`
+            @media (max-width: 450px) {
+              margin-top: 0.4rem;
+            }
+          `}
+        >
+          <AttachmentMetadata
+            attachment={attachment}
+            url={host + (attachment.title_url || attachment.audio_url)}
+            variantStyles={variantStyles}
+            msg={msg}
+            onExpandCollapseClick={toggleExpanded}
+            isExpanded={isExpanded}
+          />
+        </Box>
         {isExpanded && (
-          <audio src={host + attachment.audio_url} width="100%" controls />
+          <audio
+            src={host + attachment.audio_url}
+            style={{ maxHeight: '100%', maxWidth: '100%' }}
+            controls
+          />
         )}
 
         {attachment.attachments &&
