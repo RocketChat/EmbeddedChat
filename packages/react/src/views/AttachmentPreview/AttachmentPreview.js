@@ -147,6 +147,8 @@ const AttachmentPreview = () => {
                 }}
                 value={fileName}
                 id="file-name"
+                type="text"
+                placeholder="name"
                 css={css`
                   ${styles.input}
                   &:focus {
@@ -205,6 +207,9 @@ const AttachmentPreview = () => {
                     handleFileDescription(e);
                   }}
                   id="file-description"
+                  type="text"
+                  value={description}
+                  placeholder="Description"
                   css={css`
                     ${styles.input}
                     &:focus {
