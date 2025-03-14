@@ -5,6 +5,9 @@
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
     "types": "dist/esm/index.d.ts",
+    "publishConfig": {
+    "access": "public"
+  },
     "repository": {
         "type": "git",
         "url": "https://github.com/RocketChat/EmbeddedChat"
