@@ -1,5 +1,12 @@
 # @embeddedchat/htmlembed
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies
+  - @embeddedchat/react@0.2.3
+
 ## 0.0.8
 
 ### Patch Changes

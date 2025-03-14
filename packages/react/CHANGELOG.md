@@ -1,5 +1,16 @@
 # @embeddedchat/react
 
+## 0.2.3
+
+### Patch Changes
+
+- Version Bump for publishing
+- Updated dependencies
+  - @embeddedchat/ui-elements@0.1.3
+  - @embeddedchat/markups@0.1.3
+  - @embeddedchat/ui-kit@0.1.3
+  - @embeddedchat/api@0.1.3
+
 ## 0.2.2
 
 ### Patch Changes
