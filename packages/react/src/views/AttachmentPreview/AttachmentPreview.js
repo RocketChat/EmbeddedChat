@@ -127,7 +127,7 @@ const AttachmentPreview = () => {
                 `}
               >
                 File name
-              </Box> 
+              </Box>
               <Input
                 onChange={(e) => {
                   handleFileName(e);
@@ -174,7 +174,6 @@ const AttachmentPreview = () => {
                   type="text"
                   css={styles.input}
                   placeholder="Description"
-                  value={description}
                   ref={messageRef}
                 />
               </Box>
