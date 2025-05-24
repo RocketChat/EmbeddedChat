@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 const getPreviewMessageStyles = (theme) => {
   const styles = {
     messageContainer: css`
-      margin: 0.2rem 2rem;
+      margin: 0.2rem 1.9rem;
       position: relative;
       font-size: 0.85rem;
       background-color: ${theme.colors.background};
