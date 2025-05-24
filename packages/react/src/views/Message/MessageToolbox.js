@@ -25,6 +25,9 @@ export const MessageToolbox = ({
   authenticatedUserId,
   userRoles,
   pinRoles,
+  deleteMessageRoles,
+  deleteOwnMessageRoles,
+  forceDeleteMessageRoles,
   editMessageRoles,
   handleOpenThread,
   handleEmojiClick,
@@ -80,11 +83,35 @@ export const MessageToolbox = ({
 
   const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
 
+  const isAllowedToReport = message.u._id !== authenticatedUserId;
+
   const isAllowedToEditMessage = userRoles.some((role) =>
     editMessageRoles.has(role)
   )
     ? true
     : message.u._id === authenticatedUserId;
+
+  const isAllowedToDeleteMessage = userRoles.some((role) =>
+    deleteMessageRoles.has(role)
+  );
+  const isAllowedToDeleteOwnMessage = userRoles.some((role) =>
+    deleteOwnMessageRoles.has(role)
+  );
+  const isAllowedToForceDeleteMessage = userRoles.some((role) =>
+    forceDeleteMessageRoles.has(role)
+  );
+
+  const isVisibleForMessageType =
+    message.files?.[0].type !== 'audio/mpeg' &&
+    message.files?.[0].type !== 'video/mp4';
+
+  const canDeleteMessage = isAllowedToForceDeleteMessage
+    ? true
+    : isAllowedToDeleteMessage
+    ? true
+    : isAllowedToDeleteOwnMessage
+    ? message.u._id === authenticatedUserId
+    : false;
 
   const options = useMemo(
     () => ({
@@ -159,7 +186,7 @@ export const MessageToolbox = ({
         id: 'delete',
         onClick: () => setShowDeleteModal(true),
         iconName: 'trash',
-        visible: message.u._id === authenticatedUserId,
+        visible: canDeleteMessage,
         type: 'destructive',
       },
       report: {
@@ -167,7 +194,7 @@ export const MessageToolbox = ({
         id: 'report',
         onClick: () => handlerReportMessage(message),
         iconName: 'report',
-        visible: true,
+        visible: isAllowedToReport,
         type: 'destructive',
       },
     }),

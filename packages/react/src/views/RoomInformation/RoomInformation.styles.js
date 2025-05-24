@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const getRoomInformationStyles = () => {
+const getRoomInformationStyles = (theme, mode) => {
   const styles = {
     infoContainer: css`
       margin: 16px;
@@ -18,6 +18,22 @@ const getRoomInformationStyles = () => {
       white-space: normal;
       opacity: 0.7;
       font-size: 0.9rem;
+    `,
+
+    archivedRoomInfo: css`
+      display: flex;
+      border: 1px solid
+        ${mode === 'light'
+          ? theme.colors.warning
+          : theme.colors.warningForeground};
+      border-radius: ${theme.radius};
+      padding: 0.75rem 1rem;
+      width: 100%;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    `,
+    archivedText: css`
+      font-size: 1rem;
     `,
   };
 
