@@ -1,4 +1,10 @@
-import React, { useState, useCallback, memo, useContext } from 'react';
+import React, {
+  useState,
+  useCallback,
+  memo,
+  useContext,
+  useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -20,16 +26,18 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
-import { useMessageStore } from '../../store';
+import { useChannelStore, useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
-const FileMessage = ({ fileMessage }) => {
+const FileMessage = ({ fileMessage, onDeleteFile }) => {
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
-
+  const [files, setFiles] = useState([]);
   const theme = useTheme();
+  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const [isFetching, setIsFetching] = useState(true);
   const { mode } = theme;
   const messageStyles = styles.message;
 
@@ -75,6 +83,19 @@ const FileMessage = ({ fileMessage }) => {
     },
     [messages, RCInstance, dispatchToastMessage]
   );
+  useEffect(() => {
+    const fetchAllFiles = async () => {
+      const res = await RCInstance.getAllFiles(isChannelPrivate, '');
+      if (res?.files) {
+        const sortedFiles = res.files.sort(
+          (a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)
+        );
+        setFiles(sortedFiles);
+        setIsFetching(false);
+      }
+    };
+    fetchAllFiles();
+  }, [RCInstance, isChannelPrivate, messages, fileToDelete]);
 
   const handleOnClose = () => {
     setFileToDelete({});
@@ -148,6 +169,7 @@ const FileMessage = ({ fileMessage }) => {
 
 FileMessage.propTypes = {
   fileMessage: PropTypes.any.isRequired,
+  onDeleteFile: PropTypes.func,
 };
 
 export default memo(FileMessage);

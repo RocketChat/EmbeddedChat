@@ -18,7 +18,7 @@ const AttachmentMetadata = ({
       const downloadUrl = URL.createObjectURL(data);
       const anchor = document.createElement('a');
       anchor.href = downloadUrl;
-      anchor.download = attachment.title || 'download';
+      anchor.download = attachment?.title || 'download';
 
       document.body.appendChild(anchor);
       anchor.click();
@@ -27,6 +27,25 @@ const AttachmentMetadata = ({
     } catch (error) {
       console.error('Error downloading the file:', error);
     }
+  };
+
+  const getFormattedFileSize = () => {
+    let sizeInBytes;
+
+    if (attachment?.image_type && attachment?.image_size) {
+      sizeInBytes = attachment.image_size;
+    } else if (attachment?.video_type && attachment?.video_size) {
+      sizeInBytes = attachment.video_size;
+    } else if (attachment?.audio_type && attachment?.audio_size) {
+      sizeInBytes = attachment.audio_size;
+    } else if (attachment?.size) {
+      sizeInBytes = attachment.size;
+    } else {
+      sizeInBytes = 0;
+    }
+
+    const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+    return `${sizeInKB} kB`;
   };
 
   return (
@@ -43,36 +62,29 @@ const AttachmentMetadata = ({
         variantStyles.attachmentMetaContainer,
       ]}
     >
-      <div
-        css={
-          attachment.description !== ''
-            ? [
-                css`
-                  margin: 10px 0px;
-                  @media (max-width: 420px) {
-                    margin: 5px 0px;
-                  }
-                `,
-              ]
-            : css`
-                margin: -7px 0px;
-                @media (max-width: 420px) {
-                  margin: -5px 0px;
-                }
-              `
-        }
-      >
-        {msg ? (
-          <Markdown body={msg} md={attachment.descriptionMd} />
-        ) : (
-          attachment.description
-        )}
-      </div>
+      {attachment?.description && (
+        <div
+          css={css`
+            margin: 10px 0px;
+            @media (max-width: 420px) {
+              margin: 5px 0px;
+            }
+          `}
+        >
+          {msg ? (
+            <Markdown body={msg} md={attachment?.descriptionMd} />
+          ) : (
+            attachment?.description
+          )}
+        </div>
+      )}
+
       <Box
         css={css`
           display: flex;
           flex-direction: row;
           align-items: center;
+          gap: 8px;
           @media (max-width: 420px) {
             flex-direction: column;
             align-items: flex-start;
@@ -84,125 +96,66 @@ const AttachmentMetadata = ({
             display: flex;
             flex-direction: row;
             align-items: center;
+            gap: 4px;
             @media (max-width: 420px) {
               flex-direction: column;
               align-items: flex-start;
             }
           `}
         >
-          <Tooltip text={attachment.title} position="down">
+          <Tooltip text={attachment?.title} position="down">
             <p
-              css={
-                attachment.description
-                  ? [
-                      css`
-                        margin: 3px 0 0 0;
-                        font-size: 12px;
-                        opacity: 0.7;
-                        @media (max-width: 420px) {
-                          margin: 8px 0 0 0;
-                        }
-                      `,
-                    ]
-                  : css`
-                      margin: 22px 0 15px 0;
-                      font-size: 12px;
-                      opacity: 0.7;
-                      @media (max-width: 420px) {
-                        margin: 10px 0 10px 0;
-                      }
-                    `
-              }
+              css={css`
+                margin: 0;
+                font-size: 12px;
+                opacity: 0.7;
+              `}
             >
-              {attachment.title.length > 22
+              {attachment?.title?.length > 22
                 ? `${attachment.title.substring(0, 22)}...`
-                : attachment.title}
+                : attachment?.title}
             </p>
           </Tooltip>
           <Box
-            css={
-              attachment.description
-                ? [
-                    css`
-                      font-size: 12px;
-                      opacity: 0.7;
-                      margin-left: 3px;
-                      margin-top: 2px;
-                      @media (max-width: 420px) {
-                        display: none;
-                      }
-                    `,
-                  ]
-                : css`
-                    font-size: 12px;
-                    opacity: 0.7;
-                    margin-left: 3px;
-                    margin-top: 7px;
-                    @media (max-width: 420px) {
-                      margin-left: 0;
-                      margin-top: 5px;
-                    }
-                  `
-            }
+            css={css`
+              font-size: 12px;
+              opacity: 0.7;
+              @media (max-width: 420px) {
+                margin-left: 0;
+              }
+            `}
           >
-            (
-            {attachment.image_size
-              ? (attachment.image_size / 1024).toFixed(2)
-              : 0}{' '}
-            kB)
+            ({getFormattedFileSize()})
           </Box>
         </Box>
+
         <Box
           css={css`
             display: flex;
             flex-direction: row;
             align-items: center;
+            gap: 8px;
             @media (max-width: 420px) {
-              flex-direction: row;
-              align-items: flex-start;
+              margin-top: 5px;
             }
           `}
         >
-          <Box
-            css={css`
-              margin-left: 10px;
-              margin-top: ${attachment.description ? '3px' : '10px'};
-              @media (max-width: 420px) {
-                margin-left: 0;
-                margin-top: 5px;
-              }
-            `}
-          >
-            <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
-              <ActionButton
-                ghost
-                icon={isExpanded ? 'chevron-down' : 'chevron-left'}
-                size="small"
-                onClick={() => {
-                  onExpandCollapseClick();
-                }}
-              />
-            </Tooltip>
-          </Box>
-          <Box
-            css={css`
-              margin-left: 10px;
-              margin-top: 5px;
-              @media (max-width: 420px) {
-                margin-left: 0;
-                margin-top: 5px;
-              }
-            `}
-          >
-            <Tooltip text="Download" position="top">
-              <ActionButton
-                ghost
-                icon="download"
-                size="small"
-                onClick={handleDownload}
-              />
-            </Tooltip>
-          </Box>
+          <Tooltip text={isExpanded ? 'Collapse' : 'Expand'} position="top">
+            <ActionButton
+              ghost
+              icon={isExpanded ? 'chevron-down' : 'chevron-left'}
+              size="small"
+              onClick={onExpandCollapseClick}
+            />
+          </Tooltip>
+          <Tooltip text="Download" position="top">
+            <ActionButton
+              ghost
+              icon="download"
+              size="small"
+              onClick={handleDownload}
+            />
+          </Tooltip>
         </Box>
       </Box>
     </Box>
