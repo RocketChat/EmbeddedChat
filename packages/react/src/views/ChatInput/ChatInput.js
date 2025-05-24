@@ -74,13 +74,17 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
-    (state) => ({
-      isChannelPrivate: state.isChannelPrivate,
-      isChannelReadOnly: state.isChannelReadOnly,
-      channelInfo: state.channelInfo,
-    })
-  );
+  const {
+    isChannelPrivate,
+    isChannelReadOnly,
+    channelInfo,
+    isChannelArchived,
+  } = useChannelStore((state) => ({
+    isChannelPrivate: state.isChannelPrivate,
+    isChannelReadOnly: state.isChannelReadOnly,
+    channelInfo: state.channelInfo,
+    isChannelArchived: state.isChannelArchived,
+  }));
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -540,15 +544,27 @@ const ChatInput = ({ scrollToBottom }) => {
           <Input
             textArea
             rows={1}
-            disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
+            disabled={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+            }
             placeholder={
-              isUserAuthenticated && canSendMsg
-                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
-                : isUserAuthenticated
-                ? 'This room is read only'
+              isUserAuthenticated
+                ? isChannelArchived
+                  ? 'Room archived'
+                  : canSendMsg
+                  ? `Message #${channelInfo.name}`
+                  : 'This room is read only'
                 : 'Sign in to chat'
             }
-            css={styles.textInput}
+            css={css`
+              ${styles.textInput}
+              ${isChannelArchived &&
+              isUserAuthenticated &&
+              `text-align: center;`}
+            `}
             onChange={onTextChange}
             onBlur={() => {
               sendTypingStop();
@@ -566,14 +582,16 @@ const ChatInput = ({ scrollToBottom }) => {
             `}
           >
             {isUserAuthenticated ? (
-              <ActionButton
-                ghost
-                size="large"
-                onClick={() => sendMessage()}
-                type="primary"
-                disabled={disableButton || isRecordingMessage}
-                icon="send"
-              />
+              !isChannelArchived ? (
+                <ActionButton
+                  ghost
+                  size="large"
+                  onClick={() => sendMessage()}
+                  type="primary"
+                  disabled={disableButton || isRecordingMessage}
+                  icon="send"
+                />
+              ) : null
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
                 {isLoginIn ? <Throbber /> : 'JOIN'}
@@ -581,7 +599,7 @@ const ChatInput = ({ scrollToBottom }) => {
             )}
           </Box>
         </Box>
-        {isUserAuthenticated && (
+        {isUserAuthenticated && !isChannelArchived && (
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}

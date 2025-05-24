@@ -10,6 +10,7 @@ import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
 import UserMention from '../mentions/UserMention';
+import TimestampElement from './TimestampElement';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -53,6 +54,10 @@ const InlineElements = ({ contents }) =>
             }
           />
         );
+
+      case 'TIMESTAMP':
+        return <TimestampElement key={index} contents={content.value} />;
+
       default:
         return null;
     }

@@ -7,6 +7,7 @@ import {
   Popup,
   useComponentOverrides,
   Icon,
+  useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useChannelStore } from '../../store';
@@ -14,8 +15,7 @@ import getRoomInformationStyles from './RoomInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const Roominfo = () => {
-  const { RCInstance } = useContext(RCContext);
-  const styles = getRoomInformationStyles();
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
@@ -26,8 +26,10 @@ const Roominfo = () => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
-
+  const { channelName } = ECOptions ?? {};
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+  const { theme, mode } = useTheme();
+  const styles = getRoomInformationStyles(theme, mode);
 
   return (
     <ViewComponent
@@ -55,9 +57,24 @@ const Roominfo = () => {
             justify-content: center;
           `}
         >
-          <Avatar size="100%" url={getChannelAvatarURL(channelInfo.name)} />
+          <Avatar
+            size="100%"
+            url={getChannelAvatarURL(channelInfo.name || channelName)}
+          />
         </Box>
         <Box css={styles.infoContainer}>
+          <Box css={styles.archivedRoomInfo}>
+            <Icon
+              name="report"
+              size="1.25rem"
+              fill={
+                mode === 'light'
+                  ? theme.colors.warning
+                  : theme.colors.warningForeground
+              }
+            />
+            <Box css={styles.archivedText}>Room Archived</Box>
+          </Box>
           <Box css={styles.infoHeader}>
             <Icon
               name={
@@ -69,7 +86,7 @@ const Roominfo = () => {
                 margin-right: 0.5rem;
               `}
             />
-            {channelInfo.name}
+            {channelInfo.name || channelName}
           </Box>
           {channelInfo.description && (
             <>
@@ -77,16 +94,16 @@ const Roominfo = () => {
               <Box css={styles.info}>{channelInfo.description}</Box>
             </>
           )}
-          {channelInfo.topic && (
-            <>
-              <Box css={styles.infoHeader}>Topic</Box>
-              <Box css={styles.info}>{channelInfo.topic}</Box>
-            </>
-          )}
           {channelInfo.announcement && (
             <>
               <Box css={styles.infoHeader}>Announcement</Box>
               <Box css={styles.info}>{channelInfo.announcement}</Box>
+            </>
+          )}
+          {channelInfo.topic && (
+            <>
+              <Box css={styles.infoHeader}>Topic</Box>
+              <Box css={styles.info}>{channelInfo.topic}</Box>
             </>
           )}
         </Box>
