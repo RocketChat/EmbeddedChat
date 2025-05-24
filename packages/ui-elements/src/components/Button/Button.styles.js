@@ -14,7 +14,9 @@ const getButtonStyles = (theme) => {
   const styles = {
     main: (type, size) => css`
       cursor: pointer;
-      display: inline-block;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       background-color: ${theme.colors[type] || 'currentColor'};
       color: ${theme.colors[`${type}Foreground`] || 'currentColor'};
       border: none;
@@ -63,9 +65,6 @@ const getButtonStyles = (theme) => {
         min-width: ${getSquareSize(size)};
         height: ${getSquareSize(size)};
         padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         flex-shrink: 0;
       }
 

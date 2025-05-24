@@ -10,6 +10,9 @@ const useMessageStore = create((set, get) => ({
   editMessage: {},
   messagesOffset: 0,
   quoteMessage: [],
+  deleteMessageRoles: {},
+  deleteOwnMessageRoles: {},
+  forceDeleteMessageRoles: {},
   messageToReport: NaN,
   showReportMessage: false,
   isRecordingMessage: false,
@@ -121,6 +124,12 @@ const useMessageStore = create((set, get) => ({
       threadMessages: [],
     }));
   },
+  setDeleteMessageRoles: (deleteMessageRoles) =>
+    set((state) => ({ ...state, deleteMessageRoles })),
+  setDeleteOwnMessageRoles: (deleteOwnMessageRoles) =>
+    set((state) => ({ ...state, deleteOwnMessageRoles })),
+  setForceDeleteMessageRoles: (forceDeleteMessageRoles) =>
+    set((state) => ({ ...state, forceDeleteMessageRoles })),
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
 }));
