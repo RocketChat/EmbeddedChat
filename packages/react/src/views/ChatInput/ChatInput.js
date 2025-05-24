@@ -34,7 +34,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import PreviewMessage from '../PreviewMessage/PreviewMessage';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -98,7 +97,6 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage,
     setEditMessage,
     quoteMessage,
-    previewMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
@@ -108,7 +106,6 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
-    previewMessage: state.previewMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
@@ -520,13 +517,6 @@ const ChatInput = ({ scrollToBottom }) => {
             quoteMessage.length > 0 &&
             quoteMessage.map((message, index) => (
               <QuoteMessage message={message} key={index} />
-            ))}
-        </div>
-        <div>
-          {previewMessage &&
-            previewMessage.length > 0 &&
-            previewMessage.map((message, index) => (
-              <PreviewMessage message={message} key={index} />
             ))}
         </div>
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
