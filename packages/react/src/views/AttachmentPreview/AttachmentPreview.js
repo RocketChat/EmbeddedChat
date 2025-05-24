@@ -174,7 +174,6 @@ const AttachmentPreview = () => {
                   type="text"
                   css={styles.input}
                   placeholder="Description"
-                  value={description}
                   ref={messageRef}
                 />
               </Box>
