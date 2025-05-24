@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format, set } from 'date-fns';
+import { isSameDay, format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -7,6 +7,8 @@ import {
   useTheme,
   ActionButton,
   Icon,
+  lighten,
+  darken,
 } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
@@ -33,6 +35,7 @@ export const MessageAggregator = ({
   viewType = 'Sidebar',
 }) => {
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const { ECOptions } = useRCContext();
@@ -59,42 +62,66 @@ export const MessageAggregator = ({
       console.error('Invalid message object:', msg);
       return;
     }
+
     const { _id: msgId, tmid: threadId } = msg;
+
     if (msgId) {
       let element;
       if (threadId) {
         const parentMessage = messages.find((m) => m._id === threadId);
+
         if (parentMessage) {
           closeThread();
+
           setTimeout(() => {
             openThread(parentMessage);
             setShowSidebar(false);
+
             setTimeout(() => {
-              element = document.getElementById(`ec-message-body-${msgId}`);
+              const childElement = document.getElementById(
+                `ec-message-body-${msgId}`
+              );
+              element = childElement.closest('.ec-message');
+
               if (element) {
                 element.scrollIntoView({
                   behavior: 'smooth',
                   block: 'nearest',
                 });
-                element.style.backgroundColor = theme.colors.warning;
+
+                element.style.backgroundColor =
+                  mode === 'light'
+                    ? lighten(theme.colors.warning, 0.85)
+                    : darken(theme.colors.warningForeground, 0.75);
+
                 setTimeout(() => {
                   element.style.backgroundColor = '';
-                }, 1000);
+                }, 2000);
               }
             }, 300);
           }, 300);
         }
       } else {
         closeThread();
+
         setTimeout(() => {
-          element = document.getElementById(`ec-message-body-${msgId}`);
+          const childElement = document.getElementById(
+            `ec-message-body-${msgId}`
+          );
+          element = childElement.closest('.ec-message');
+
           if (element) {
             setShowSidebar(false);
             element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            element.style.backgroundColor = theme.colors.warning;
+
+            element.style.backgroundColor =
+              mode === 'light'
+                ? lighten(theme.colors.warning, 0.85)
+                : darken(theme.colors.warningForeground, 0.75);
+
             setTimeout(() => {
               element.style.backgroundColor = '';
-            }, 1000);
+            }, 2000);
           }
         }, 300);
       }
