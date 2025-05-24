@@ -14,6 +14,11 @@ const getQuoteMessageStyles = (theme) => {
       border-radius: ${theme.radius};
       max-width: 100%;
       box-sizing: border-box;
+
+      @media (max-width: 500px) {
+        margin: 0;
+        width: 100%;
+      }
     `,
 
     avatarContainer: css`
