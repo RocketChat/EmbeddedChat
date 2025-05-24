@@ -485,6 +485,41 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getRoomInfo() {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(
+        `${this.host}/api/v1/method.call/rooms%3Aget`,
+        {
+          body: JSON.stringify({
+            message: JSON.stringify({
+              msg: "method",
+              id: null,
+              method: "rooms/get",
+              params: [],
+            }),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "POST",
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success && result.message) {
+        const parsedMessage = JSON.parse(result.message);
+        return parsedMessage;
+      }
+      return null;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async permissionInfo() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
@@ -537,6 +572,47 @@ export default class EmbeddedChatApi {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
         `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+      return await messages.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getOlderMessages(
+    anonymousMode = false,
+    options: {
+      query?: object | undefined;
+      field?: object | undefined;
+      offset?: number;
+    } = {
+      query: undefined,
+      field: undefined,
+      offset: 50,
+    },
+    isChannelPrivate = false
+  ) {
+    const roomType = isChannelPrivate ? "groups" : "channels";
+    const endp = anonymousMode ? "anonymousread" : "messages";
+    const query = options?.query
+      ? `&query=${JSON.stringify(options.query)}`
+      : "";
+    const field = options?.field
+      ? `&field=${JSON.stringify(options.field)}`
+      : "";
+    const offset = options?.offset ? options.offset : 0;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const messages = await fetch(
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -700,7 +776,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
-        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","asUser" : true }`,
+        body: `{"roomId": "${this.rid}", "msgId": "${msgId}"}`,
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
