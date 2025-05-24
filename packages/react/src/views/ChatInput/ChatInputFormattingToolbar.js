@@ -22,7 +22,15 @@ const ChatInputFormattingToolbar = ({
   inputRef,
   triggerButton,
   optionConfig = {
-    surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
+    surfaceItems: [
+      'emoji',
+      'formatter',
+      'link',
+      'audio',
+      'video',
+      'file',
+      'preview',
+    ],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
     smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file'],
     popOverItems: ['formatter', 'link'],
@@ -44,6 +52,12 @@ const ChatInputFormattingToolbar = ({
     configOverrides.optionConfig?.popOverItems || optionConfig.popOverItems;
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
+  );
+
+  const addPreviewMessage = useMessageStore((state) => state.addPreviewMessage);
+  const previewMessage = useMessageStore((state) => state.previewMessage);
+  const removePreviewMessage = useMessageStore(
+    (state) => state.removePreviewMessage
   );
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
@@ -144,7 +158,7 @@ const ChatInputFormattingToolbar = ({
           }}
         >
           <Icon name="attachment" size="1rem" />
-          <span>file</span>
+          <span>File</span>
         </Box>
       ) : (
         <Tooltip text="Upload File" position="top" key="file">
@@ -173,7 +187,7 @@ const ChatInputFormattingToolbar = ({
           }}
         >
           <Icon name="link" size="1rem" />
-          <span>link</span>
+          <span>Link</span>
         </Box>
       ) : (
         <Tooltip text="Link" position="top" key="link">
@@ -187,6 +201,41 @@ const ChatInputFormattingToolbar = ({
             }}
           >
             <Icon name="link" size="1.25rem" />
+          </ActionButton>
+        </Tooltip>
+      ),
+    preview:
+      isPopoverOpen && popOverItems.includes('preview') ? (
+        <Box
+          key="preview"
+          css={styles.popOverItemStyles}
+          disabled={isRecordingMessage || !messageRef.current?.value}
+          onClick={() => {
+            if (isRecordingMessage || !messageRef.current?.value) return;
+            if (previewMessage) {
+              removePreviewMessage(previewMessage[0]);
+            }
+            addPreviewMessage(messageRef.current.value);
+          }}
+        >
+          <Icon name="eyeopen" size="1rem" />
+          <span>Preview</span>
+        </Box>
+      ) : (
+        <Tooltip text="Preview" position="top" key="preview">
+          <ActionButton
+            square
+            ghost
+            disabled={isRecordingMessage || !messageRef.current?.value}
+            onClick={() => {
+              if (isRecordingMessage || !messageRef.current?.value) return;
+              if (previewMessage) {
+                removePreviewMessage(previewMessage[0]);
+              }
+              addPreviewMessage(messageRef.current.value);
+            }}
+          >
+            <Icon name="eyeopen" size="1.25rem" />
           </ActionButton>
         </Tooltip>
       ),

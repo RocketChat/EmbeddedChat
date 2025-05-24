@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useRef, useMemo } from 'react';
 import RCContext from '../context/RCInstance';
 import {
   useUserStore,
@@ -15,6 +15,7 @@ const useFetchChatData = (showRoles) => {
   const setMessages = useMessageStore((state) => state.setMessages);
   const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const setAdmins = useMemberStore((state) => state.setAdmins);
+  const permissionsRef = useRef(null);
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );
@@ -24,6 +25,96 @@ const useFetchChatData = (showRoles) => {
   const setViewUserInfoPermissions = useUserStore(
     (state) => state.setViewUserInfoPermissions
   );
+  const setDeleteMessageRoles = useMessageStore(
+    (state) => state.setDeleteMessageRoles
+  );
+  const setDeleteOwnMessageRoles = useMessageStore(
+    (state) => state.setDeleteOwnMessageRoles
+  );
+  const setForceDeleteMessageRoles = useMessageStore(
+    (state) => state.setForceDeleteMessageRoles
+  );
+  const setUserPinPermissions = useUserStore(
+    (state) => state.setUserPinPermissions
+  );
+  const setEditMessagePermissions = useMessageStore(
+    (state) => state.setEditMessagePermissions
+  );
+
+  const setters = useMemo(
+    () =>
+      new Map([
+        ['viewUserInfo', setViewUserInfoPermissions],
+        ['deleteMessage', setDeleteMessageRoles],
+        ['deleteOwnMessage', setDeleteOwnMessageRoles],
+        ['forceDeleteMessage', setForceDeleteMessageRoles],
+        ['userPin', setUserPinPermissions],
+        ['editMessage', setEditMessagePermissions],
+      ]),
+    [
+      setViewUserInfoPermissions,
+      setDeleteMessageRoles,
+      setDeleteOwnMessageRoles,
+      setForceDeleteMessageRoles,
+      setUserPinPermissions,
+      setEditMessagePermissions,
+    ]
+  );
+
+  const permissionKeys = useMemo(
+    () =>
+      new Map([
+        ['viewUserInfo', 'view-full-other-user-info'],
+        ['deleteMessage', 'delete-message'],
+        ['deleteOwnMessage', 'delete-own-message'],
+        ['forceDeleteMessage', 'force-delete-message'],
+        ['userPin', 'pin-message'],
+        ['editMessage', 'edit-message'],
+      ]),
+    []
+  );
+
+  const applyPermissions = useCallback(
+    (permissionsMap) => {
+      Array.from(permissionKeys).forEach(([key, permissionId]) => {
+        const setter = setters.get(key);
+        if (setter) {
+          setter(permissionsMap.get(permissionId));
+        }
+      });
+    },
+    [permissionKeys, setters]
+  );
+
+  const createPermissionsMap = useCallback(
+    (permissions) =>
+      new Map(permissions.update.map((item) => [item._id, item])),
+    []
+  );
+  const fetchAndSetPermissions = useCallback(async () => {
+    try {
+      const permissions = await RCInstance.permissionInfo();
+
+      if (
+        !permissionsRef.current ||
+        JSON.stringify(permissions) !==
+          JSON.stringify(permissionsRef.current.raw)
+      ) {
+        const permissionsMap = createPermissionsMap(permissions);
+
+        permissionsRef.current = {
+          map: permissionsMap,
+        };
+
+        applyPermissions(permissionsMap);
+      }
+
+      return permissionsRef.current.map;
+    } catch (error) {
+      console.error('Error fetching permissions:', error);
+      return null;
+    }
+  }, [RCInstance, applyPermissions, createPermissionsMap]);
 
   const getMessagesAndRoles = useCallback(
     async (anonymousMode) => {
@@ -73,9 +164,6 @@ const useFetchChatData = (showRoles) => {
 
           setMemberRoles(rolesObj);
         }
-
-        const permissions = await RCInstance.permissionInfo();
-        setViewUserInfoPermissions(permissions.update[70]);
       } catch (e) {
         console.error(e);
       }
@@ -109,7 +197,12 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
-  return { getMessagesAndRoles, getStarredMessages };
+  return {
+    getMessagesAndRoles,
+    getStarredMessages,
+    fetchAndSetPermissions,
+    permissionsRef,
+  };
 };
 
 export default useFetchChatData;

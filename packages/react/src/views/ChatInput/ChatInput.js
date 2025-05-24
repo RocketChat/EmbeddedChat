@@ -34,6 +34,7 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import PreviewMessage from '../PreviewMessage/PreviewMessage';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -74,13 +75,17 @@ const ChatInput = ({ scrollToBottom }) => {
     name: state.name,
   }));
 
-  const { isChannelPrivate, isChannelReadOnly, channelInfo } = useChannelStore(
-    (state) => ({
-      isChannelPrivate: state.isChannelPrivate,
-      isChannelReadOnly: state.isChannelReadOnly,
-      channelInfo: state.channelInfo,
-    })
-  );
+  const {
+    isChannelPrivate,
+    isChannelReadOnly,
+    channelInfo,
+    isChannelArchived,
+  } = useChannelStore((state) => ({
+    isChannelPrivate: state.isChannelPrivate,
+    isChannelReadOnly: state.isChannelReadOnly,
+    channelInfo: state.channelInfo,
+    isChannelArchived: state.isChannelArchived,
+  }));
 
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
@@ -93,6 +98,7 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage,
     setEditMessage,
     quoteMessage,
+    previewMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
@@ -102,6 +108,7 @@ const ChatInput = ({ scrollToBottom }) => {
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
+    previewMessage: state.previewMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
@@ -445,21 +452,57 @@ const ChatInput = ({ scrollToBottom }) => {
           sendMessage();
         }
         break;
-      case e.altKey && (e.code === 'ArrowUp' || 'ArrowRight'): {
+      case (e.ctrlKey || e.altKey) && e.code === 'ArrowLeft': {
         e.preventDefault();
-        e.stopPropagation();
+        if (messageRef && messageRef.current) {
+          const { value, selectionStart } = messageRef.current;
+          let newPosition = selectionStart;
+
+          while (newPosition > 0 && /\s/.test(value[newPosition - 1])) {
+            newPosition -= 1;
+          }
+          while (newPosition > 0 && !/\s/.test(value[newPosition - 1])) {
+            newPosition -= 1;
+          }
+
+          messageRef.current.setSelectionRange(newPosition, newPosition);
+          messageRef.current.focus();
+        }
+        break;
+      }
+      case (e.ctrlKey || e.altKey) && e.code === 'ArrowRight': {
+        e.preventDefault();
+        if (messageRef && messageRef.current) {
+          const { value, selectionEnd } = messageRef.current;
+          let newPosition = selectionEnd;
+
+          while (newPosition < value.length && /\s/.test(value[newPosition])) {
+            newPosition += 1;
+          }
+          while (newPosition < value.length && !/\s/.test(value[newPosition])) {
+            newPosition += 1;
+          }
+
+          messageRef.current.setSelectionRange(newPosition, newPosition);
+          messageRef.current.focus();
+        }
+        break;
+      }
+      case (e.ctrlKey || e.altKey) && e.code === 'ArrowUp': {
+        e.preventDefault();
         if (messageRef && messageRef.current) {
           messageRef.current.setSelectionRange(0, 0);
           messageRef.current.focus();
         }
         break;
       }
-      case e.altKey && (e.code === 'ArrowDown' || 'ArrowLeft'): {
+      case (e.ctrlKey || e.altKey) && e.code === 'ArrowDown': {
         e.preventDefault();
-        e.stopPropagation();
         if (messageRef && messageRef.current) {
-          const endlength = messageRef.current.value.length;
-          messageRef.current.setSelectionRange(endlength, endlength);
+          const { current } = messageRef;
+          const { value } = current;
+          const { length } = value;
+          messageRef.current.setSelectionRange(length, length);
           messageRef.current.focus();
         }
         break;
@@ -477,6 +520,13 @@ const ChatInput = ({ scrollToBottom }) => {
             quoteMessage.length > 0 &&
             quoteMessage.map((message, index) => (
               <QuoteMessage message={message} key={index} />
+            ))}
+        </div>
+        <div>
+          {previewMessage &&
+            previewMessage.length > 0 &&
+            previewMessage.map((message, index) => (
+              <PreviewMessage message={message} key={index} />
             ))}
         </div>
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
@@ -540,15 +590,27 @@ const ChatInput = ({ scrollToBottom }) => {
           <Input
             textArea
             rows={1}
-            disabled={!isUserAuthenticated || !canSendMsg || isRecordingMessage}
+            disabled={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+            }
             placeholder={
-              isUserAuthenticated && canSendMsg
-                ? `Message ${channelInfo.name ? `#${channelInfo.name}` : ''}`
-                : isUserAuthenticated
-                ? 'This room is read only'
+              isUserAuthenticated
+                ? isChannelArchived
+                  ? 'Room archived'
+                  : canSendMsg
+                  ? `Message #${channelInfo.name}`
+                  : 'This room is read only'
                 : 'Sign in to chat'
             }
-            css={styles.textInput}
+            css={css`
+              ${styles.textInput}
+              ${isChannelArchived &&
+              isUserAuthenticated &&
+              `text-align: center;`}
+            `}
             onChange={onTextChange}
             onBlur={() => {
               sendTypingStop();
@@ -566,14 +628,16 @@ const ChatInput = ({ scrollToBottom }) => {
             `}
           >
             {isUserAuthenticated ? (
-              <ActionButton
-                ghost
-                size="large"
-                onClick={() => sendMessage()}
-                type="primary"
-                disabled={disableButton || isRecordingMessage}
-                icon="send"
-              />
+              !isChannelArchived ? (
+                <ActionButton
+                  ghost
+                  size="large"
+                  onClick={() => sendMessage()}
+                  type="primary"
+                  disabled={disableButton || isRecordingMessage}
+                  icon="send"
+                />
+              ) : null
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
                 {isLoginIn ? <Throbber /> : 'JOIN'}
@@ -581,7 +645,7 @@ const ChatInput = ({ scrollToBottom }) => {
             )}
           </Box>
         </Box>
-        {isUserAuthenticated && (
+        {isUserAuthenticated && !isChannelArchived && (
           <ChatInputFormattingToolbar
             messageRef={messageRef}
             inputRef={inputRef}
