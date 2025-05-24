@@ -208,7 +208,6 @@ const AttachmentPreview = () => {
                   }}
                   id="file-description"
                   type="text"
-                  value={description}
                   placeholder="Description"
                   css={css`
                     ${styles.input}
