@@ -123,6 +123,11 @@ const config = {
           },
         ],
       },
+    colorMode: {
+     defaultMode: 'light',
+     disableSwitch: false,
+     respectPrefersColorScheme: true, 
+    },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
