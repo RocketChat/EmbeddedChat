@@ -3,12 +3,14 @@ import RocketChatAuth from "./RocketChatAuth";
 
 const rocketChatAuth = ({
   host,
+  rcClient,
   saveToken,
   getToken,
   deleteToken,
 }: IRocketChatAuthOptions) => {
   return new RocketChatAuth({
     host,
+    rcClient,
     saveToken,
     getToken,
     deleteToken,

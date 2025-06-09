@@ -1,15 +1,15 @@
-import { Api } from "./Api";
+import { DDPSDK } from "@rocket.chat/ddp-client";
 
 const loginWithResumeToken = async (
   config: {
-    api: Api;
+    api: DDPSDK;
   },
   credentials: {
     resume: string;
   }
 ) => {
-  const response = await config.api.post("/api/v1/login", credentials);
-  return response.data;
+  const response = await config.api.rest.post("/v1/login", credentials as any);
+  return response;
 };
 
 export default loginWithResumeToken;

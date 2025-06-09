@@ -5,9 +5,11 @@ import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
 import { Api, ApiError } from "./Api";
 import loginWithRocketChatOAuth from "./loginWithRocketChatOAuth";
 import handleSecureLogin from "./handleSecureLogin";
+import { DDPSDK } from "@rocket.chat/ddp-client";
 class RocketChatAuth {
   host: string;
   api: Api;
+  rcClient: DDPSDK
   currentUser: any;
   lastFetched: Date;
   authListeners: ((user: object | null) => void)[] = [];
@@ -16,12 +18,14 @@ class RocketChatAuth {
   getToken: () => Promise<string>;
   constructor({
     host,
+    rcClient,
     saveToken,
     getToken,
     deleteToken,
   }: IRocketChatAuthOptions) {
     this.host = host;
     this.api = new Api(host);
+    this.rcClient = rcClient;
     this.lastFetched = new Date(0);
     this.currentUser = null;
     this.getToken = getToken;
@@ -59,11 +63,11 @@ class RocketChatAuth {
   }: {
     user: string;
     password: string;
-    code?: string | number;
+    code?: string;
   }) {
     const response = await loginWithPassword(
       {
-        api: this.api,
+        api: this.rcClient,
       },
       {
         user,
@@ -87,7 +91,7 @@ class RocketChatAuth {
   }) {
     const response = await loginWithOAuthServiceToken(
       {
-        api: this.api,
+        api: this.rcClient,
       },
       credentials
     );
@@ -118,7 +122,7 @@ class RocketChatAuth {
   async loginWithResumeToken(resume: string) {
     const response = await loginWithResumeToken(
       {
-        api: this.api,
+        api: this.rcClient,
       },
       {
         resume,
@@ -207,7 +211,7 @@ class RocketChatAuth {
    */
   async logout() {
     try {
-      await this.api.post(`/api/v1/logout`, undefined, {
+      await this.rcClient.rest.post('/v1/logout', undefined, {
         headers: {
           "X-Auth-Token": this.currentUser.authToken,
           "X-User-Id": this.currentUser.userId,

@@ -1,8 +1,8 @@
-import { Api } from "./Api";
+import { DDPSDK } from "@rocket.chat/ddp-client";
 
 const loginWithPassword = async (
   config: {
-    api: Api;
+    api: DDPSDK;
   },
   {
     user,
@@ -14,12 +14,12 @@ const loginWithPassword = async (
     code?: string | number;
   }
 ) => {
-  const response = await config.api.post("/api/v1/login", {
+  const response = await config.api.rest.post("/v1/login", {
     user,
     password,
-    code,
+    code: code !== undefined ? String(code) : undefined,
   });
-  return response.data;
+  return response;
 };
 
 export default loginWithPassword;

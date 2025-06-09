@@ -1,8 +1,8 @@
-import { Api } from "./Api";
+import { DDPSDK } from "@rocket.chat/ddp-client";
 
 const loginWithOAuthServiceToken = async (
   config: {
-    api: Api;
+    api: DDPSDK;
   },
   credentials: {
     service: string;
@@ -10,8 +10,8 @@ const loginWithOAuthServiceToken = async (
     [key: string]: string;
   }
 ) => {
-  const response = await config.api.post("/api/v1/login", credentials);
-  return response.data;
+  const response = await config.api.rest.post("/v1/login", credentials as any);
+  return response
 };
 
 export default loginWithOAuthServiceToken;

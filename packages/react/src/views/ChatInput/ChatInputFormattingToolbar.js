@@ -194,24 +194,18 @@ const ChatInputFormattingToolbar = ({
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) =>
         isPopoverOpen && popOverItems.includes('formatter') ? (
-          <>
-            <Box
-              key={item.name}
-              disabled={isRecordingMessage}
-              onClick={() => {
-                if (isRecordingMessage) return;
-                handleFormatterClick(item);
-              }}
-              css={styles.popOverItemStyles}
-            >
-              <Icon
-                disabled={isRecordingMessage}
-                name={item.name}
-                size="1rem"
-              />
-              <span>{item.name}</span>
-            </Box>
-          </>
+          <Box
+            key={item.name}
+            disabled={isRecordingMessage}
+            onClick={() => {
+              if (isRecordingMessage) return;
+              handleFormatterClick(item);
+            }}
+            css={styles.popOverItemStyles}
+          >
+            <Icon disabled={isRecordingMessage} name={item.name} size="1rem" />
+            <span>{item.name}</span>
+          </Box>
         ) : (
           <Tooltip
             text={item.name}

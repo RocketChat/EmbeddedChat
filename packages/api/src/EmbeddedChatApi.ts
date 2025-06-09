@@ -7,12 +7,15 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
+import { DDPSDK } from "@rocket.chat/ddp-client";
+import { Emitter } from "@rocket.chat/emitter";
+
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
-  rcClient: Rocketchat;
+  rcClient: DDPSDK;
   onMessageCallbacks: ((message: any) => void)[];
   onMessageDeleteCallbacks: ((messageId: string) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
@@ -28,12 +31,7 @@ export default class EmbeddedChatApi {
   ) {
     this.host = host;
     this.rid = rid;
-    this.rcClient = new Rocketchat({
-      protocol: "ddp",
-      host: this.host,
-      useSsl: !/http:\/\//.test(host),
-      reopen: 20000,
-    });
+    this.rcClient = DDPSDK.create(this.host);
     this.onMessageCallbacks = [];
     this.onMessageDeleteCallbacks = [];
     this.onTypingStatusCallbacks = [];
@@ -42,6 +40,7 @@ export default class EmbeddedChatApi {
     this.onUiInteractionCallbacks = [];
     this.auth = new RocketChatAuth({
       host: this.host,
+      rcClient: this.rcClient,
       deleteToken,
       getToken,
       saveToken,
@@ -161,6 +160,7 @@ export default class EmbeddedChatApi {
           break;
         case "TOKEN":
           if (!auth.credentials) {
+            console.log("No Token found");
             return;
           }
           await this.auth.loginWithOAuthServiceToken(auth.credentials);
@@ -187,18 +187,33 @@ export default class EmbeddedChatApi {
    */
   async connect() {
     try {
-      await this.close(); // before connection, all previous subscriptions should be cancelled
-      await this.rcClient.connect({});
+      await this.rcClient.connection.connect();
       const token = (await this.auth.getCurrentUser())?.authToken;
-      await this.rcClient.resume({ token });
-      await this.rcClient.subscribeRoom(this.rid);
-      await this.rcClient.onMessage((data: any) => {
+      await this.rcClient.account.loginWithToken(token)
+      await this.rcClient.stream(
+        "notify-room",
+        `${this.rid}/user-activity`,
+        (...props: [string, string[]]) => {
+          const [username, activities] = props;
+          this.handleTypingEvent({ typingUser: username, isTyping: activities.includes("user-typing") });
+        }
+      );
+      
+      await this.rcClient.stream(
+        "notify-room",
+        `${this.rid}/deleteMessage`,
+        (ddpMessage: any) => {
+          const messageId = ddpMessage._id;
+          this.onMessageDeleteCallbacks.map((callback) => callback(messageId));
+        }
+      );
+
+      await this.rcClient.stream("room-messages",this.rid, (data: any) => {
         if (!data) {
           return;
         }
         const message = JSON.parse(JSON.stringify(data));
         if (message.ts?.$date) {
-          console.log(message.ts?.$date);
           message.ts = message.ts.$date;
         }
         if (!message.ts) {
@@ -206,69 +221,6 @@ export default class EmbeddedChatApi {
         }
         this.onMessageCallbacks.map((callback) => callback(message));
       });
-      await this.rcClient.subscribe(
-        "stream-notify-room",
-        `${this.rid}/user-activity`
-      );
-      await this.rcClient.onStreamData(
-        "stream-notify-room",
-        (ddpMessage: any) => {
-          const [roomId, event] = ddpMessage.fields.eventName.split("/");
-
-          if (roomId !== this.rid) {
-            return;
-          }
-
-          if (event === "user-activity") {
-            const typingUser = ddpMessage.fields.args[0];
-            const isTyping = ddpMessage.fields.args[1]?.includes("user-typing");
-            this.handleTypingEvent({ typingUser, isTyping });
-          }
-
-          if (event === "typing") {
-            const typingUser = ddpMessage.fields.args[0];
-            const isTyping = ddpMessage.fields.args[1];
-            this.handleTypingEvent({ typingUser, isTyping });
-          }
-          if (event === "deleteMessage") {
-            const messageId = ddpMessage.fields.args[0]?._id;
-            this.onMessageDeleteCallbacks.map((callback) =>
-              callback(messageId)
-            );
-          }
-        }
-      );
-      await this.rcClient.subscribeNotifyUser();
-      await this.rcClient.onStreamData(
-        "stream-notify-user",
-        (ddpMessage: any) => {
-          const [, event] = ddpMessage.fields.eventName.split("/");
-          const args: any[] = ddpMessage.fields.args
-            ? Array.isArray(ddpMessage.fields.args)
-              ? ddpMessage.fields.args
-              : [ddpMessage.fields.args]
-            : [];
-          if (event === "message") {
-            const data = args[0];
-            if (!data || data?.rid !== this.rid) {
-              return;
-            }
-            const message = JSON.parse(JSON.stringify(data));
-            if (message.ts?.$date) {
-              message.ts = message.ts.$date;
-            }
-            if (!message.ts) {
-              message.ts = new Date().toISOString();
-            }
-            message.renderType = "blocks";
-            this.onMessageCallbacks.map((callback) => callback(message));
-          } else if (event === "uiInteraction") {
-            this.onUiInteractionCallbacks.forEach((callback) =>
-              callback(args[0])
-            );
-          }
-        }
-      );
     } catch (err) {
       await this.close();
     }
@@ -531,15 +483,15 @@ export default class EmbeddedChatApi {
         },
         method: "GET",
       });
-      return await response.json();
+      return response.json();
     } catch (err) {
       console.error(err);
     }
   }
 
   async close() {
-    await this.rcClient.unsubscribeAll();
-    await this.rcClient.disconnect();
+    await this.rcClient.client.unsubscribe(this.rid);
+    this.rcClient.connection.close();
   }
 
   /**
@@ -652,18 +604,15 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const roles = await fetch(
-        `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
+      const roles = await this.rcClient.rest.get(
+        `/v1/${roomType}.roles` as any,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
+          roomId: this.rid,
+          userId: userId,
+          authToken: authToken,
+        } as any
       );
-      return await roles.json();
+      return roles;
     } catch (err) {
       console.log(err);
     }
@@ -726,7 +675,7 @@ export default class EmbeddedChatApi {
 
   async sendTypingStatus(username: string, typing: boolean) {
     try {
-      this.rcClient.methodCall(
+      await this.rcClient.call(
         "stream-notify-room",
         `${this.rid}/user-activity`,
         username,
@@ -736,6 +685,7 @@ export default class EmbeddedChatApi {
       console.error(err);
     }
   }
+  
 
   /**
    * @param {*} message should be a string or an rc message object
