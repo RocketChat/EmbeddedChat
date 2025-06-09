@@ -11,7 +11,7 @@ const loginWithOAuthServiceToken = async (
   }
 ) => {
   const response = await config.api.rest.post("/v1/login", credentials as any);
-  return response
+  return response;
 };
 
 export default loginWithOAuthServiceToken;

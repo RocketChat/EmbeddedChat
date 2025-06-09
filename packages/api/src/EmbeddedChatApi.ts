@@ -189,16 +189,19 @@ export default class EmbeddedChatApi {
     try {
       await this.rcClient.connection.connect();
       const token = (await this.auth.getCurrentUser())?.authToken;
-      await this.rcClient.account.loginWithToken(token)
+      await this.rcClient.account.loginWithToken(token);
       await this.rcClient.stream(
         "notify-room",
         `${this.rid}/user-activity`,
         (...props: [string, string[]]) => {
           const [username, activities] = props;
-          this.handleTypingEvent({ typingUser: username, isTyping: activities.includes("user-typing") });
+          this.handleTypingEvent({
+            typingUser: username,
+            isTyping: activities.includes("user-typing"),
+          });
         }
       );
-      
+
       await this.rcClient.stream(
         "notify-room",
         `${this.rid}/deleteMessage`,
@@ -208,7 +211,7 @@ export default class EmbeddedChatApi {
         }
       );
 
-      await this.rcClient.stream("room-messages",this.rid, (data: any) => {
+      await this.rcClient.stream("room-messages", this.rid, (data: any) => {
         if (!data) {
           return;
         }
@@ -685,7 +688,6 @@ export default class EmbeddedChatApi {
       console.error(err);
     }
   }
-  
 
   /**
    * @param {*} message should be a string or an rc message object

@@ -9,7 +9,7 @@ import { DDPSDK } from "@rocket.chat/ddp-client";
 class RocketChatAuth {
   host: string;
   api: Api;
-  rcClient: DDPSDK
+  rcClient: DDPSDK;
   currentUser: any;
   lastFetched: Date;
   authListeners: ((user: object | null) => void)[] = [];
@@ -211,7 +211,7 @@ class RocketChatAuth {
    */
   async logout() {
     try {
-      await this.rcClient.rest.post('/v1/logout', undefined, {
+      await this.rcClient.rest.post("/v1/logout", undefined, {
         headers: {
           "X-Auth-Token": this.currentUser.authToken,
           "X-User-Id": this.currentUser.userId,
