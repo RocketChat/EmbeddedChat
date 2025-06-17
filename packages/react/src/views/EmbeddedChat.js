@@ -124,8 +124,14 @@ const EmbeddedChat = (props) => {
       setIsLoginIn(true);
       try {
         await RCInstance.autoLogin(auth);
+
+        // Todo: Fix error 401 when fetching permissions List on autologin
+
+        // const permissions = await RCInstance.permissionInfo();
+        // setUserPinPermissions(permissions.update[150]);
+        // setEditMessagePermissions(permissions.update[28]);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       } finally {
         setIsLoginIn(false);
       }

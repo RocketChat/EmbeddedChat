@@ -2,12 +2,7 @@
 import { EmbeddedChat } from "@embeddedchat/react";
 
 function App() {
-  return (
-    <EmbeddedChat
-      host="https://demo.qa.rocket.chat/"
-      roomId="66ccc4f1e050428c76256939"
-    />
-  );
+  return <EmbeddedChat host="http://localhost:3000" roomId="GENERAL" />;
 }
 
 export default App;
