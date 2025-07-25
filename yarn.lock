@@ -15209,6 +15209,7 @@ __metadata:
     husky: ^9.0.11
     lerna: ^6.6.2
     typescript: ^5.1.3
+    validator: ^13.15.15
   languageName: unknown
   linkType: soft
 
@@ -31650,6 +31651,13 @@ __metadata:
   dependencies:
     builtins: ^5.0.0
   checksum: 5342a994986199b3c28e53a8452a14b2bb5085727691ea7aa0d284a6606b127c371e0925ae99b3f1ef7cc7d2c9de75f52eb61a3d1cc45e39bca1e3a9444cbb4e
+  languageName: node
+  linkType: hard
+
+"validator@npm:^13.15.15":
+  version: 13.15.15
+  resolution: "validator@npm:13.15.15"
+  checksum: 10c1b9215a25c31497c481cf4a3ee3e17dcf0b8a219445788e7167ed1b93b8597bbf657bd5c8ca22199b699c3ab41df902c23526cc514075c4b71bd19a13d02c
   languageName: node
   linkType: hard
 
