@@ -58,7 +58,7 @@ const UserInformation = () => {
     };
 
     getCurrentUserInfo();
-  }, [RCInstance, setCurrentUserInfo]);
+  }, [RCInstance, currentUser]);
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
