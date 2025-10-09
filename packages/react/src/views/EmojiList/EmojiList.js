@@ -124,8 +124,8 @@ function EmojiList({
               }
             }}
             style={{
-              backgroundColor: index === emojiIndex && theme.colors.primary,
-              color: index === emojiIndex && theme.colors.primaryForeground,
+              backgroundColor: index === emojiIndex && 'rgba(0, 0, 0, 0.1)',
+              color: index === emojiIndex && theme.colors.foreground,
             }}
           >
             <Box css={styles.emoji}>

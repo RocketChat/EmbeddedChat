@@ -30,7 +30,6 @@ const useSearchEmoji = (
         if (query.length >= 2) {
           setStartReadEmoji(true);
           
-          // Filter emojis by shortname or aliases
           const filteredEmojis = emojiList
             .filter(
               (emoji) =>
@@ -39,19 +38,17 @@ const useSearchEmoji = (
                   alias.toLowerCase().includes(query)
                 )
             )
-            .slice(0, 10); // Limit to 10 results for better UX
+            .slice(0, 10); 
           
           setFilteredEmojis(filteredEmojis);
           setEmojiIndex(filteredEmojis.length > 0 ? 0 : -1);
           setShowEmojiList(filteredEmojis.length > 0);
         } else {
-          // Query too short, hide suggestions
           setShowEmojiList(false);
           setFilteredEmojis([]);
           setEmojiIndex(-1);
         }
       } else if (startReadEmoji) {
-        // User is no longer typing emoji syntax, hide suggestions
         setStartReadEmoji(false);
         setFilteredEmojis([]);
         setEmojiIndex(-1);
