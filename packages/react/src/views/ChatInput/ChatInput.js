@@ -410,11 +410,11 @@ const ChatInput = ({ scrollToBottom }) => {
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    
+
     // Don't parse emojis if user is currently typing emoji autocomplete
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
     messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
-    
+
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
