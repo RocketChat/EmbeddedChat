@@ -20,19 +20,22 @@ function EmojiList({
     (selectedEmoji) => {
       const currentMessage = messageRef.current.value;
       const emojiMatch = currentMessage.match(/:(.*?)$/);
-      
+
       if (emojiMatch) {
         // Replace the :query with the selected emoji
-        const beforeQuery = currentMessage.substring(0, currentMessage.lastIndexOf(':'));
+        const beforeQuery = currentMessage.substring(
+          0,
+          currentMessage.lastIndexOf(':')
+        );
         const insertionText = `${beforeQuery}${selectedEmoji.emoji} `;
-        
+
         messageRef.current.value = insertionText;
-        
+
         // Set cursor position after the emoji and space
         const cursorPosition = insertionText.length;
         messageRef.current.setSelectionRange(cursorPosition, cursorPosition);
         messageRef.current.focus();
-        
+
         // Clear emoji autocomplete state
         setFilteredEmojis([]);
         setEmojiIndex(-1);
@@ -94,7 +97,16 @@ function EmojiList({
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [emojiIndex, filteredEmojis, handleEmojiClick, setEmojiIndex, setFilteredEmojis, setStartReadEmoji, setShowEmojiList, messageRef]);
+  }, [
+    emojiIndex,
+    filteredEmojis,
+    handleEmojiClick,
+    setEmojiIndex,
+    setFilteredEmojis,
+    setStartReadEmoji,
+    setShowEmojiList,
+    messageRef,
+  ]);
 
   useEffect(() => {
     if (itemRefs.current[emojiIndex]) {
@@ -128,12 +140,8 @@ function EmojiList({
               color: index === emojiIndex && theme.colors.foreground,
             }}
           >
-            <Box css={styles.emoji}>
-              {emoji.emoji}
-            </Box>
-            <Box css={styles.shortname}>
-              :{emoji.shortname}:
-            </Box>
+            <Box css={styles.emoji}>{emoji.emoji}</Box>
+            <Box css={styles.shortname}>:{emoji.shortname}:</Box>
           </li>
         ))}
       </ul>
