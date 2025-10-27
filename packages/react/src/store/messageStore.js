@@ -8,6 +8,7 @@ const useMessageStore = create((set, get) => ({
   threadMessages: [],
   filtered: false,
   editMessage: {},
+  deletedMessage: {},
   messagesOffset: 0,
   quoteMessage: [],
   deleteMessageRoles: {},
@@ -51,6 +52,7 @@ const useMessageStore = create((set, get) => ({
     const message = get().messages.find((m) => m._id === messageId);
     if (threadMessage) {
       return set((state) => ({
+        deletedMessage: threadMessage,
         threadMessages: cloneArray(state.threadMessages).filter(
           (m) => m._id !== messageId
         ),
@@ -58,6 +60,7 @@ const useMessageStore = create((set, get) => ({
     }
     if (message) {
       return set((state) => ({
+        deletedMessage: message,
         messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
       }));
     }

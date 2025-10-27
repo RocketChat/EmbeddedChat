@@ -102,6 +102,7 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage,
     clearQuoteMessages,
     threadId,
+    deletedMessage,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
@@ -111,6 +112,7 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
     clearQuoteMessages: state.clearQuoteMessages,
+    deletedMessage: state.deletedMessage,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -167,6 +169,18 @@ const ChatInput = ({ scrollToBottom }) => {
       messageRef.current.value = '';
     }
   }, [editMessage]);
+
+  useEffect(() => {
+    if (
+      deletedMessage._id &&
+      editMessage._id &&
+      deletedMessage._id === editMessage._id
+    ) {
+      messageRef.current.value = '';
+      setDisableButton(true);
+      setEditMessage({});
+    }
+  }, [deletedMessage]);
 
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
