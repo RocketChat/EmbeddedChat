@@ -161,8 +161,10 @@ const ChatInput = ({ scrollToBottom }) => {
     if (editMessage.attachments) {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
+      messageRef.current.focus();
     } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
+      messageRef.current.focus();
     } else {
       messageRef.current.value = '';
     }
