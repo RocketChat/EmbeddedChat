@@ -5,6 +5,7 @@ import { Box, Avatar, useTheme, Icon } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
+import { parse } from '@rocket.chat/message-parser';
 
 const FileAttachment = ({
   attachment,
@@ -14,6 +15,8 @@ const FileAttachment = ({
   variantStyles = {},
   msg,
 }) => {
+  console.log("Text Attachment file log")
+  console.log(attachment)
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -113,8 +116,8 @@ const FileAttachment = ({
                 attachment.text.match(/\n(.*)/)?.[1] || ''
               ) : (
                 <Markdown
-                  body={attachment.text}
-                  md={attachment.md}
+                  body={attachment?.text}
+                  md={parse(attachment?.text)} 
                   isReaction={false}
                 />
               )
