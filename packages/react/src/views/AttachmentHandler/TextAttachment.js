@@ -15,8 +15,7 @@ const FileAttachment = ({
   variantStyles = {},
   msg,
 }) => {
-  console.log("Text Attachment file log")
-  console.log(attachment)
+
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -116,7 +115,7 @@ const FileAttachment = ({
                 attachment.text.match(/\n(.*)/)?.[1] || ''
               ) : (
                 <Markdown
-                  body={attachment?.text}
+                  body={attachment.text}
                   md={parse(attachment?.text)} 
                   isReaction={false}
                 />
