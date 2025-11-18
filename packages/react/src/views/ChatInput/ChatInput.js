@@ -158,16 +158,14 @@ const ChatInput = ({ scrollToBottom }) => {
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
-    if (editMessage.attachments) {
-      messageRef.current.value =
-        editMessage.attachments[0]?.description || editMessage.msg;
-    } else if (editMessage.msg) {
-      messageRef.current.value = editMessage.msg;
-    } else {
-      messageRef.current.value = '';
-    }
-  }, [editMessage]);
+    if((editMessage.msg || editMessage.attachments)&&
+  messageRef.current){
+    //move cursor to the end of message 
+    const val = messageRef.current.value;
+    messageRef.current.setSelectionRange(val.length, val.length);
 
+  }
+},[editMessage]);
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
     const res = await RCInstance.channelInfo();
