@@ -15,7 +15,6 @@ const FileAttachment = ({
   variantStyles = {},
   msg,
 }) => {
-
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -116,7 +115,7 @@ const FileAttachment = ({
               ) : (
                 <Markdown
                   body={attachment.text}
-                  md={parse(attachment?.text)} 
+                  md={parse(attachment?.text)}
                   isReaction={false}
                 />
               )
