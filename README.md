@@ -27,6 +27,20 @@ Test credentials:
 
 Installation and usage documentation could be found here [EmbeddedChat installation and usage](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/embeddedchat_setup)
 
+### Matrix Support (Experimental)
+
+EmbeddedChat now supports connecting to a Matrix homeserver.
+
+To use Matrix mode, set the `mode` prop to `'matrix'` and provide the `host` and `roomId`.
+
+```jsx
+<EmbeddedChat
+  mode="matrix"
+  host="https://matrix.org"
+  roomId="!roomId:matrix.org"
+/>
+```
+
 ## Development
 
 ### Local Setup

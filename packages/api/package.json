@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@embeddedchat/auth": "workspace:^",
-    "@rocket.chat/sdk": "^1.0.0-alpha.42"
+    "@rocket.chat/sdk": "^1.0.0-alpha.42",
+    "matrix-js-sdk": "^39.3.0-rc.0"
   }
 }

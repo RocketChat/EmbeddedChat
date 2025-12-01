@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { EmbeddedChatApi } from '@embeddedchat/api';
+import { EmbeddedChatApi, MatrixProvider } from '@embeddedchat/api';
 import {
   Box,
   ToastBarProvider,
@@ -34,7 +34,7 @@ const EmbeddedChat = (props) => {
 
   const {
     isClosable = false,
-    setClosableState = () => {},
+    setClosableState = () => { },
     width = '100%',
     height = '95vh',
     host = 'http://localhost:3000',
@@ -58,6 +58,7 @@ const EmbeddedChat = (props) => {
     secure = false,
     dark = false,
     remoteOpt = false,
+    mode = 'rocketchat', // 'rocketchat' or 'matrix'
   } = config;
 
   const hasMounted = useRef(false);
@@ -90,6 +91,9 @@ const EmbeddedChat = (props) => {
   }
 
   const initializeRCInstance = useCallback(() => {
+    if (mode === 'matrix') {
+      return new MatrixProvider(host, roomId);
+    }
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
       getToken,
       deleteToken,
@@ -97,7 +101,7 @@ const EmbeddedChat = (props) => {
     });
 
     return newRCInstance;
-  }, [host, roomId, getToken, deleteToken, saveToken]);
+  }, [host, roomId, getToken, deleteToken, saveToken, mode]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
 
@@ -138,7 +142,7 @@ const EmbeddedChat = (props) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
-            console.log(`Connected to RocketChat ${RCInstance.host}`);
+            console.log(`Connected to chat provider ${RCInstance.host}`);
             const { me } = user;
             setAuthenticatedAvatarUrl(me.avatarUrl);
             setAuthenticatedUsername(me.username);
@@ -288,6 +292,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  mode: PropTypes.oneOf(['rocketchat', 'matrix']),
 };
 
 export default memo(EmbeddedChat);
