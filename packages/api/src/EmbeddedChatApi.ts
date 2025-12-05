@@ -632,7 +632,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/chat.getThreadMessages?roomId=$tmid=${tmid}`,
+        `${this.host}/api/v1/chat.getThreadMessages?tmid=${tmid}`,
         {
           headers: {
             "Content-Type": "application/json",
