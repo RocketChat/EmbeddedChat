@@ -74,21 +74,21 @@ export default class EmbeddedChatApi implements IChatProvider {
 
     const payload = acsCode
       ? JSON.stringify({
-        serviceName: "google",
-        accessToken: tokens.access_token,
-        idToken: tokens.id_token,
-        expiresIn: 3600,
-        totp: {
-          code: acsPayload,
-        },
-      })
+          serviceName: "google",
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          totp: {
+            code: acsPayload,
+          },
+        })
       : JSON.stringify({
-        serviceName: "google",
-        accessToken: tokens.access_token,
-        idToken: tokens.id_token,
-        expiresIn: 3600,
-        scope: "profile",
-      });
+          serviceName: "google",
+          accessToken: tokens.access_token,
+          idToken: tokens.id_token,
+          expiresIn: 3600,
+          scope: "profile",
+        });
 
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
@@ -364,7 +364,7 @@ export default class EmbeddedChatApi implements IChatProvider {
       typingHandlerLock = 0;
     }, 2000);
     // eslint-disable-next-line no-empty
-    while (typingHandlerLock) { }
+    while (typingHandlerLock) {}
     typingHandlerLock = 1;
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
@@ -535,9 +535,9 @@ export default class EmbeddedChatApi implements IChatProvider {
       query?: object | undefined;
       field?: object | undefined;
     } = {
-        query: undefined,
-        field: undefined,
-      },
+      query: undefined,
+      field: undefined,
+    },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -574,10 +574,10 @@ export default class EmbeddedChatApi implements IChatProvider {
       field?: object | undefined;
       offset?: number;
     } = {
-        query: undefined,
-        field: undefined,
-        offset: 50,
-      },
+      query: undefined,
+      field: undefined,
+      offset: 50,
+    },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -703,13 +703,13 @@ export default class EmbeddedChatApi implements IChatProvider {
     const messageObj =
       typeof message === "string"
         ? {
-          rid: this.rid,
-          msg: message,
-        }
+            rid: this.rid,
+            msg: message,
+          }
         : {
-          ...message,
-          rid: this.rid,
-        };
+            ...message,
+            rid: this.rid,
+          };
     if (threadId) {
       messageObj.tmid = threadId;
     }

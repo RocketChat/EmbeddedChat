@@ -34,7 +34,7 @@ const EmbeddedChat = (props) => {
 
   const {
     isClosable = false,
-    setClosableState = () => { },
+    setClosableState = () => {},
     width = '100%',
     height = '95vh',
     host = 'http://localhost:3000',
