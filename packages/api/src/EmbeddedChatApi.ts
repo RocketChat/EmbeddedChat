@@ -487,34 +487,7 @@ export default class EmbeddedChatApi {
 
   async getRoomInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
-        {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
-      }
-      return null;
+      return await this.channelInfo();
     } catch (err) {
       console.error(err);
     }
@@ -692,25 +665,14 @@ export default class EmbeddedChatApi {
   async getUserRoles() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/method.call/getUserRoles`,
-        {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "getUserRoles",
-              params: [],
-            }),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        }
-      );
+      const response = await fetch(`${this.host}/api/v1/roles.getUsersInPublicRoles`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "GET",
+      });
 
       const result = await response.json();
 
