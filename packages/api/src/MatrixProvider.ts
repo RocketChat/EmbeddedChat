@@ -55,6 +55,10 @@ export default class MatrixProvider implements IChatProvider {
     this.client.on(
       "Room.timeline",
       (event: any, room: any, toStartOfTimeline: boolean) => {
+        // Ignore historical messages to prevent duplicates
+        if (toStartOfTimeline) {
+          return;
+        }
         if (
           event.getType() !== "m.room.message" &&
           event.getType() !== "m.room.encrypted"
@@ -64,10 +68,16 @@ export default class MatrixProvider implements IChatProvider {
         if (room.roomId !== this.roomId) {
           return;
         }
+
         const isEncrypted = event.getType() === "m.room.encrypted";
         const text = isEncrypted
           ? "⚠️ [Encrypted Message]"
           : event.getContent().body;
+
+        // Get display name from room member
+        const senderId = event.getSender();
+        const member = room.getMember(senderId);
+        const displayName = member?.name || senderId;
 
         // Convert Matrix event to RC message format
         const message = {
@@ -86,11 +96,13 @@ export default class MatrixProvider implements IChatProvider {
           ],
           ts: new Date(event.getTs()).toISOString(),
           u: {
-            _id: event.getSender(),
-            username: event.getSender(),
+            _id: senderId,
+            username: displayName,
+            name: displayName,
           },
           rid: room.roomId,
         };
+
         this.onMessageCallbacks.forEach((cb) => cb(message));
       }
     );
@@ -218,6 +230,12 @@ export default class MatrixProvider implements IChatProvider {
         const text = isEncrypted
           ? "⚠️ [Encrypted Message]"
           : event.getContent().body;
+
+        // Get display name from room member
+        const senderId = event.getSender();
+        const member = room.getMember(senderId);
+        const displayName = member?.name || senderId;
+
         return {
           _id: event.getId(),
           msg: text,
@@ -234,8 +252,9 @@ export default class MatrixProvider implements IChatProvider {
           ],
           ts: new Date(event.getTs()).toISOString(),
           u: {
-            _id: event.getSender(),
-            username: event.getSender(),
+            _id: senderId,
+            username: displayName,
+            name: displayName,
           },
           rid: room.roomId,
         };

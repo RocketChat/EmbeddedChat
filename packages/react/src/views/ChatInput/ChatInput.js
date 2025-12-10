@@ -344,7 +344,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       pendingMessage.tmid = threadId;
     }
 
-    upsertMessage(pendingMessage, ECOptions.enableThreads);
+    // Skip optimistic rendering for Matrix - it provides real-time updates via Room.timeline
+    if (ECOptions.mode !== 'matrix') {
+      upsertMessage(pendingMessage, ECOptions.enableThreads);
+    }
 
     const res = await RCInstance.sendMessage(
       {
@@ -356,7 +359,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     if (res.success) {
       clearQuoteMessages();
-      replaceMessage(pendingMessage, res.message);
+      // In Matrix mode, don't replace - the message will come via Room.timeline
+      if (ECOptions.mode !== 'matrix') {
+        replaceMessage(pendingMessage, res.message);
+      }
     }
   };
 

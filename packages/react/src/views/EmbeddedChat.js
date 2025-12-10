@@ -202,6 +202,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      mode,
     }),
     [
       enableThreads,
@@ -218,6 +219,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      mode,
     ]
   );
 

@@ -9,7 +9,7 @@ export const MatrixMode = {
   args: {
     mode: 'matrix',
     host: 'https://matrix.org', // Replace with your Matrix homeserver URL
-    roomId: '!mLGtEDRtJGxNKvXHPH:matrix.org', // Replace with a public room ID (e.g., Matrix HQ)
+    roomId: '', // Replace with a public room ID (e.g., Matrix HQ)
     channelName: 'Matrix Room',
     headerColor: 'white',
     toastBarPosition: 'bottom right',
