@@ -665,14 +665,17 @@ export default class EmbeddedChatApi {
   async getUserRoles() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/roles.getUsersInPublicRoles`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "GET",
-      });
+      const response = await fetch(
+        `${this.host}/api/v1/roles.getUsersInPublicRoles`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
 
       const result = await response.json();
 
