@@ -405,8 +405,8 @@ const ChatHeader = ({
                           isRoomTeam
                             ? 'team'
                             : isChannelPrivate
-                              ? 'hash_lock'
-                              : 'hash'
+                            ? 'hash_lock'
+                            : 'hash'
                         }
                         size={fullScreen ? '1.25rem' : '1rem'}
                       />
