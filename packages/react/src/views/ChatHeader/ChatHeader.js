@@ -24,6 +24,7 @@ import {
   useStarredMessageStore,
   useFileStore,
   useSidebarStore,
+  useThemeStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -40,7 +41,7 @@ const ChatHeader = ({
   className = '',
   style = {},
   optionConfig = {
-    surfaceItems: ['minmax', 'close'],
+    surfaceItems: ['minmax', 'theme', 'close'],
     menuItems: [
       'thread',
       'mentions',
@@ -102,6 +103,10 @@ const ChatHeader = ({
   const headerTitle = useMessageStore((state) => state.headerTitle);
   const filtered = useMessageStore((state) => state.filtered);
   const setFilter = useMessageStore((state) => state.setFilter);
+
+  // Theme toggle
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
   const threadMainMessage = useMessageStore((state) => state.threadMainMessage);
@@ -244,6 +249,13 @@ const ChatHeader = ({
         iconName: 'cross',
         visible: isClosable,
       },
+      theme: {
+        label: isDarkMode ? 'Light Mode' : 'Dark Mode',
+        id: 'theme',
+        onClick: toggleTheme,
+        iconName: isDarkMode ? 'sun' : 'moon',
+        visible: true,
+      },
       thread: {
         label: 'Threads',
         id: 'thread',
@@ -312,6 +324,8 @@ const ChatHeader = ({
       fullScreen,
       isClosable,
       isUserAuthenticated,
+      isDarkMode,
+      toggleTheme,
       handleLogout,
       setFullScreen,
       setClosableState,
@@ -391,8 +405,8 @@ const ChatHeader = ({
                           isRoomTeam
                             ? 'team'
                             : isChannelPrivate
-                            ? 'hash_lock'
-                            : 'hash'
+                              ? 'hash_lock'
+                              : 'hash'
                         }
                         size={fullScreen ? '1.25rem' : '1rem'}
                       />

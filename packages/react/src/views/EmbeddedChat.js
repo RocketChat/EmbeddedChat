@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import { useUserStore, useLoginStore, useMessageStore, useThemeStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -34,7 +34,7 @@ const EmbeddedChat = (props) => {
 
   const {
     isClosable = false,
-    setClosableState = () => {},
+    setClosableState = () => { },
     width = '100%',
     height = '95vh',
     host = 'http://localhost:3000',
@@ -64,6 +64,15 @@ const EmbeddedChat = (props) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
+
+  // Theme store for runtime theme toggle
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
+  const setIsDarkMode = useThemeStore((state) => state.setIsDarkMode);
+
+  // Initialize theme store from prop on mount
+  useEffect(() => {
+    setIsDarkMode(dark);
+  }, [dark, setIsDarkMode]);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
   const {
     setIsUserAuthenticated,
@@ -225,11 +234,11 @@ const EmbeddedChat = (props) => {
   if (!isSynced) return null;
 
   return (
-    <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
+    <ThemeProvider theme={theme || DefaultTheme} mode={isDarkMode ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[
-            styles.embeddedchat(theme || DefaultTheme, dark),
+            styles.embeddedchat(theme || DefaultTheme, isDarkMode),
             css`
               width: ${width};
               height: ${height};

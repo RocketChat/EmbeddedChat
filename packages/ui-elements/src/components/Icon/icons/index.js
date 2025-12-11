@@ -64,6 +64,8 @@ import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
 import Team from './Team';
+import Sun from './Sun';
+import Moon from './Moon';
 
 const icons = {
   file: File,
@@ -132,6 +134,8 @@ const icons = {
   avatar: Avatar,
   'format-text': FormatText,
   cog: Cog,
+  sun: Sun,
+  moon: Moon,
 };
 
 export default icons;
