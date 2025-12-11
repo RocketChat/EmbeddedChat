@@ -1,41 +1,59 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect, useMemo } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal } from '@embeddedchat/ui-elements';
+import { Box, Icon, Button, Input, Modal, useTheme } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore, useMemberStore } from '../../store';
+import useSettingsStore from '../../store/settingsStore';
 import getAttachmentPreviewStyles from './AttachmentPreview.styles';
 import { parseEmoji } from '../../lib/emoji';
 import MembersList from '../Mentions/MembersList';
 import TypingUsers from '../TypingUsers/TypingUsers';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 
+const DEFAULT_CHAR_LIMIT = 5000;
+
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const { theme } = useTheme();
   const styles = getAttachmentPreviewStyles();
 
   const toggle = useAttachmentWindowStore((state) => state.toggle);
   const data = useAttachmentWindowStore((state) => state.data);
   const setData = useAttachmentWindowStore((state) => state.setData);
+
   const [isPending, setIsPending] = useState(false);
   const messageRef = useRef(null);
+
+  // Mention UI states
   const [showMembersList, setShowMembersList] = useState(false);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [mentionIndex, setMentionIndex] = useState(-1);
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
-  const [keyPressed, setKeyPressed] = useState(null);
 
-  const [fileName, setFileName] = useState(data?.name);
+  // File name
+  const [fileName, setFileName] = useState(data?.name ?? '');
+  useEffect(() => setFileName(data?.name ?? ''), [data?.name]);
+
+  // Description
+  const [description, setDescription] = useState('');
+  const charCount = description.length;
+
+  // Get configurable limit from settings if present
+  const settingsMsgLimit = useSettingsStore((s) => s?.messageLimit);
+  const msgMaxLength = useMemo(
+    () =>
+      typeof settingsMsgLimit === 'number' && settingsMsgLimit > 0
+        ? settingsMsgLimit
+        : DEFAULT_CHAR_LIMIT,
+    [settingsMsgLimit]
+  );
+
+  const isOverLimit = charCount > msgMaxLength;
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
-  const handleFileName = (e) => {
-    setFileName(e.target.value);
-  };
-
-  const { members } = useMemberStore((state) => ({
-    members: state.members,
-  }));
+  const { members } = useMemberStore((state) => ({ members: state.members }));
 
   const searchMentionUser = useSearchMentionUser(
     members,
@@ -46,92 +64,74 @@ const AttachmentPreview = () => {
     setShowMembersList
   );
 
+  const handleFileName = (e) => setFileName(e.target.value);
+
   const handleFileDescription = (e) => {
-    const description = e.target.value;
-    messageRef.current.value = parseEmoji(description);
-    searchMentionUser(description);
+    const raw = e.target.value || '';
+    setDescription(raw);
+
+    // If Input forwards ref to native input, keep it in sync (safe-guard)
+    if (messageRef.current && typeof messageRef.current.value !== 'undefined') {
+      try {
+        messageRef.current.value = raw;
+      } catch (err) {
+        // ignore if ref doesn't allow direct value set
+      }
+    }
+
+    searchMentionUser(raw);
   };
 
   const submit = async () => {
+    if (isPending) return;
+    if (description.length > msgMaxLength) return;
+
     setIsPending(true);
-    await RCInstance.sendAttachment(
-      data,
-      fileName,
-      messageRef.current.value,
-      ECOptions?.enableThreads ? threadId : undefined
-    );
-    toggle();
-    setData(null);
-    if (isPending) {
+    try {
+      await RCInstance.sendAttachment(
+        data,
+        fileName,
+        parseEmoji(description),
+        ECOptions?.enableThreads ? threadId : undefined
+      );
+      toggle();
+      setData(null);
+    } finally {
       setIsPending(false);
     }
   };
 
-  useEffect(() => {
-    const keyHandler = (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        setKeyPressed('Enter');
-      }
-    };
-
-    document.addEventListener('keydown', keyHandler);
-    return () => {
-      document.removeEventListener('keydown', keyHandler);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (keyPressed === 'Enter') {
+  const onDescKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       submit();
-      setKeyPressed(null);
     }
-  }, [keyPressed, submit]);
+  };
 
   return (
     <Modal onClose={toggle}>
       <Modal.Header>
         <Modal.Title>
-          <Icon
-            name="attachment"
-            size="1.25rem"
-            css={css`
-              margin-right: 0.5rem;
-            `}
-          />{' '}
+          <Icon name="attachment" size="1.25rem" css={css` margin-right: 0.5rem; `} />
           File Upload
         </Modal.Title>
         <Modal.Close onClick={toggle} />
       </Modal.Header>
+
       <Modal.Content>
         <Box css={styles.modalContent}>
-          <Box
-            css={css`
-              text-align: center;
-              margin-top: 1rem;
-            `}
-          >
+          <Box css={css` text-align: center; margin-top: 1rem; `}>
             <CheckPreviewType data={data} />
           </Box>
-          <Box
-            css={css`
-              margin: 30px;
-            `}
-          >
+
+          <Box css={css` margin: 30px; `}>
+            {/* FILE NAME */}
             <Box css={styles.inputContainer}>
-              <Box
-                is="span"
-                css={css`
-                  font-weight: 550;
-                  margin-bottom: 0.5rem;
-                `}
-              >
+              <Box is="span" css={css` font-weight: 550; margin-bottom: 0.5rem; `}>
                 File name
               </Box>
               <Input
-                onChange={(e) => {
-                  handleFileName(e);
-                }}
+                onChange={handleFileName}
                 value={fileName}
                 type="text"
                 css={styles.input}
@@ -140,16 +140,12 @@ const AttachmentPreview = () => {
               <TypingUsers />
             </Box>
 
+            {/* FILE DESCRIPTION */}
             <Box css={styles.inputContainer}>
-              <Box
-                is="span"
-                css={css`
-                  font-weight: 550;
-                  margin-bottom: 0.5rem;
-                `}
-              >
+              <Box is="span" css={css` font-weight: 550; margin-bottom: 0.5rem; `}>
                 File description
               </Box>
+
               <Box css={styles.fileDescription}>
                 <Box css={styles.mentionListContainer}>
                   {showMembersList && (
@@ -161,41 +157,80 @@ const AttachmentPreview = () => {
                       setFilteredMembers={setFilteredMembers}
                       setStartReadMentionUser={setStartReadMentionUser}
                       setShowMembersList={setShowMembersList}
-                      css={css`
-                        width: auto;
-                      `}
                     />
                   )}
                 </Box>
+
+                {/* DESCRIPTION INPUT */}
                 <Input
-                  onChange={(e) => {
-                    handleFileDescription(e);
-                  }}
+                  onChange={handleFileDescription}
+                  onKeyDown={onDescKeyDown}
                   type="text"
-                  css={styles.input}
                   placeholder="Description"
                   ref={messageRef}
+                  value={description}
+                  css={css`
+                    ${styles.input};
+                    border-color: ${isOverLimit ? theme.colors.destructive : null};
+                    color: ${isOverLimit ? theme.colors.destructive : null};
+                  `}
                 />
+
+                {/* ALERT (left) and COUNTER (right) on the same row below the input */}
+                <Box
+                  css={css`
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 6px;
+                    gap: 12px;
+                    font-size: 0.875rem;
+                  `}
+                >
+                  {/* ALERT: left aligned (starts at left of the box). Only visible when over limit. */}
+                  <Box
+                    css={css`
+                      color: ${isOverLimit ? theme.colors.destructive : 'transparent'};
+                      font-weight: 500;
+                      text-align: left;
+                      flex: 1 1 auto;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    `}
+                    aria-hidden={!isOverLimit}
+                    role={isOverLimit ? 'alert' : undefined}
+                  >
+                    {isOverLimit ? `Cannot upload file, description is over the ${msgMaxLength} character limit` : ''}
+                  </Box>
+
+                  {/* COUNTER: right aligned */}
+                  <Box
+                    css={css`
+                      color: ${isOverLimit ? theme.colors.destructive : '#6b7280'};
+                      min-width: 68px;
+                      text-align: right;
+                      flex: 0 0 auto;
+                    `}
+                    aria-hidden="true"
+                  >
+                    ({charCount}/{msgMaxLength})
+                  </Box>
+                </Box>
+
               </Box>
             </Box>
           </Box>
         </Box>
       </Modal.Content>
 
-      <Modal.Footer
-        css={css`
-          margin-top: 1.5rem;
-        `}
-      >
+      <Modal.Footer css={css` margin-top: 1.5rem; `}>
         <Button type="secondary" onClick={toggle}>
           Cancel
         </Button>
-        <Button
-          disabled={isPending}
-          onClick={() => {
-            submit();
-          }}
-        >
+
+        <Button disabled={isPending || isOverLimit} onClick={submit}>
           {isPending ? 'Sending...' : 'Send'}
         </Button>
       </Modal.Footer>
