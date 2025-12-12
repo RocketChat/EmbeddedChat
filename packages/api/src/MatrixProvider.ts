@@ -37,9 +37,9 @@ export default class MatrixProvider implements IChatProvider {
     this.roomId = roomId;
     this.auth = new MatrixAuth({
       host: this.host,
-      deleteToken: async () => {},
+      deleteToken: async () => { },
       getToken: async () => "",
-      saveToken: async () => {},
+      saveToken: async () => { },
     });
   }
 
@@ -163,29 +163,39 @@ export default class MatrixProvider implements IChatProvider {
         baseUrl: this.host,
       });
     }
-    const response = await this.client.login("m.login.password", {
-      identifier: {
-        type: "m.id.user",
-        user: userOrEmail,
-      },
-      password: password,
-    });
 
-    // Ensure we connect (start client and sync) after login
-    await this.connect();
+    try {
+      const response = await this.client.login("m.login.password", {
+        identifier: {
+          type: "m.id.user",
+          user: userOrEmail,
+        },
+        password: password,
+      });
 
-    const user = {
-      username: response.user_id,
-      _id: response.user_id,
-      name: response.user_id,
-      avatarUrl: "", // Placeholder
-      roles: [],
-    };
+      // Ensure we connect (start client and sync) after login
+      await this.connect();
 
-    // Notify auth change to update UI
-    this.auth.notifyAuthChange({ me: user });
+      const user = {
+        username: response.user_id,
+        _id: response.user_id,
+        name: response.user_id,
+        avatarUrl: "", // Placeholder
+        roles: [],
+      };
 
-    return { status: "success", me: user };
+      // Notify auth change to update UI
+      this.auth.notifyAuthChange({ me: user });
+
+      return { status: "success", me: user };
+    } catch (error: any) {
+      // Return error in Rocket.Chat format for toast notifications
+      console.error("Matrix login failed:", error);
+      return {
+        error: error.httpStatus === 403 ? 403 : "Unauthorized",
+        message: error.message || "Invalid username or password"
+      };
+    }
   }
 
   async close(): Promise<void> {
@@ -353,21 +363,21 @@ export default class MatrixProvider implements IChatProvider {
     );
   }
 
-  addMessageDeleteListener(callback: (messageId: string) => void): void {}
+  addMessageDeleteListener(callback: (messageId: string) => void): void { }
 
-  removeMessageDeleteListener(callback: (messageId: string) => void): void {}
+  removeMessageDeleteListener(callback: (messageId: string) => void): void { }
 
-  addTypingStatusListener(callback: (users: string[]) => void): void {}
+  addTypingStatusListener(callback: (users: string[]) => void): void { }
 
-  removeTypingStatusListener(callback: (users: string[]) => void): void {}
+  removeTypingStatusListener(callback: (users: string[]) => void): void { }
 
-  addActionTriggeredListener(callback: (data: any) => void): void {}
+  addActionTriggeredListener(callback: (data: any) => void): void { }
 
-  removeActionTriggeredListener(callback: (data: any) => void): void {}
+  removeActionTriggeredListener(callback: (data: any) => void): void { }
 
-  addUiInteractionListener(callback: (data: any) => void): void {}
+  addUiInteractionListener(callback: (data: any) => void): void { }
 
-  removeUiInteractionListener(callback: (data: any) => void): void {}
+  removeUiInteractionListener(callback: (data: any) => void): void { }
 
   async logout(): Promise<void> {
     if (this.client) {
@@ -379,9 +389,9 @@ export default class MatrixProvider implements IChatProvider {
   async autoLogin(auth: {
     flow: "PASSWORD" | "OAUTH" | "TOKEN";
     credentials: any;
-  }): Promise<void> {}
+  }): Promise<void> { }
 
-  async googleSSOLogin(signIn: Function, acsCode: string): Promise<any> {}
+  async googleSSOLogin(signIn: Function, acsCode: string): Promise<any> { }
 
   async getRCAppInfo(): Promise<any> {
     return null;
