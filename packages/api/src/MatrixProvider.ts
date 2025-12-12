@@ -112,13 +112,19 @@ export default class MatrixProvider implements IChatProvider {
     }
 
     await new Promise<void>((resolve) => {
+      if (!this.client) {
+        resolve();
+        return;
+      }
       const state = this.client.getSyncState();
       if (state === "PREPARED" || state === "SYNCING") {
         resolve();
       } else {
         const checkSync = (state: any) => {
           if (state === "PREPARED" || state === "SYNCING") {
-            this.client.removeListener("Sync", checkSync);
+            if (this.client) {
+              this.client.removeListener("Sync", checkSync);
+            }
             resolve();
           }
         };
@@ -126,11 +132,18 @@ export default class MatrixProvider implements IChatProvider {
 
         // Timeout after 5 seconds to prevent hanging
         setTimeout(() => {
-          this.client.removeListener("Sync", checkSync);
+          if (this.client) {
+            this.client.removeListener("Sync", checkSync);
+          }
           resolve();
         }, 5000);
       }
     });
+
+    if (!this.client) {
+      console.log('Matrix: client became null during sync wait');
+      return;
+    }
 
     let room = this.client.getRoom(this.roomId);
     if (!room) {
@@ -139,9 +152,9 @@ export default class MatrixProvider implements IChatProvider {
 
         // Wait for room to appear in store
         let retries = 0;
-        while (!room && retries < 20) {
+        while (!room && retries < 20 && this.client) {
           await new Promise((r) => setTimeout(r, 1000));
-          room = this.client.getRoom(this.roomId);
+          room = this.client?.getRoom(this.roomId);
           retries++;
         }
       } catch (error) {
@@ -274,9 +287,21 @@ export default class MatrixProvider implements IChatProvider {
   }
 
   async channelInfo(): Promise<any> {
-    if (!this.client) return {};
+    if (!this.client) {
+      return {
+        success: false,
+        errorType: 'error-room-not-found',
+        error: 'Not connected to Matrix server'
+      };
+    }
     const room = this.client.getRoom(this.roomId);
-    if (!room) return {};
+    if (!room) {
+      return {
+        success: false,
+        errorType: 'error-room-not-found',
+        error: `Room ${this.roomId} not found`
+      };
+    }
     return {
       success: true,
       room: {
@@ -288,9 +313,21 @@ export default class MatrixProvider implements IChatProvider {
   }
 
   async getRoomInfo(): Promise<any> {
-    if (!this.client) return {};
+    if (!this.client) {
+      return {
+        success: false,
+        errorType: 'error-room-not-found',
+        error: 'Not connected to Matrix server'
+      };
+    }
     const room = this.client.getRoom(this.roomId);
-    if (!room) return {};
+    if (!room) {
+      return {
+        success: false,
+        errorType: 'error-room-not-found',
+        error: `Room ${this.roomId} not found`
+      };
+    }
     return {
       success: true,
       room: {
@@ -306,12 +343,17 @@ export default class MatrixProvider implements IChatProvider {
       msgtype: "m.text",
       body: typeof message === "string" ? message : message.msg,
     };
-    const response = await this.client.sendEvent(
-      this.roomId,
-      "m.room.message",
-      content
-    );
-    return { _id: response.event_id };
+    try {
+      const response = await this.client.sendEvent(
+        this.roomId,
+        "m.room.message",
+        content
+      );
+      return { success: true, message: { _id: response.event_id } };
+    } catch (error: any) {
+      console.error("Matrix sendMessage failed:", error);
+      return { success: false, error: error.message };
+    }
   }
 
   async getOlderMessages(
@@ -330,11 +372,36 @@ export default class MatrixProvider implements IChatProvider {
   }
 
   async deleteMessage(msgId: string): Promise<any> {
-    return {};
+    // Matrix message deletion not implemented
+    return { success: false, error: "Message deletion not supported in Matrix mode" };
   }
 
   async updateMessage(msgId: string, text: string): Promise<any> {
-    return {};
+    // Matrix message editing not implemented
+    return { success: false, error: "Message editing not supported in Matrix mode" };
+  }
+
+  async starMessage(msgId: string): Promise<any> {
+    // Matrix doesn't have native starring - could use room account data
+    return { success: true }; // Silently succeed for now
+  }
+
+  async unstarMessage(msgId: string): Promise<any> {
+    return { success: true };
+  }
+
+  async pinMessage(msgId: string): Promise<any> {
+    // Matrix has m.room.pinned_events state event
+    return { success: true }; // Stub for now
+  }
+
+  async unpinMessage(msgId: string): Promise<any> {
+    return { success: true };
+  }
+
+  async reactToMessage(emoji: string, msgId: string, shouldReact: boolean): Promise<any> {
+    // Matrix supports reactions via m.reaction
+    return { success: true }; // Stub for now
   }
 
   async getChannelRoles(isChannelPrivate?: boolean): Promise<any> {
@@ -419,5 +486,68 @@ export default class MatrixProvider implements IChatProvider {
 
   async getMessageLimit(): Promise<any> {
     return { value: 5000 }; // Default limit
+  }
+
+  // Additional methods for toast compatibility
+  async reportMessage(messageId: string, description: string): Promise<any> {
+    // Matrix doesn't have built-in message reporting
+    return { success: false, error: "Message reporting not supported in Matrix mode" };
+  }
+
+  async getSearchMessages(text: string): Promise<any> {
+    // Matrix search would require server-side search API
+    return { messages: [] };
+  }
+
+  async me(): Promise<any> {
+    if (!this.client) return {};
+    const userId = this.client.getUserId();
+    if (!userId) return {};
+    return {
+      _id: userId,
+      username: userId,
+      name: userId,
+    };
+  }
+
+  async userData(username: string): Promise<any> {
+    // Matrix user profile lookup
+    return { user: null };
+  }
+
+  async getUserStatus(userId: string): Promise<any> {
+    // Matrix presence API
+    return { status: "online" };
+  }
+
+  async findOrCreateInvite(): Promise<any> {
+    // Matrix room invite link
+    return { url: "", expires: new Date().toISOString() };
+  }
+
+  async getAllImages(): Promise<any> {
+    return { files: [] };
+  }
+
+  async execCommand(command: { command: string; params: string }): Promise<any> {
+    // Matrix doesn't have slash commands in the same way
+    return { success: false, error: "Commands not supported in Matrix mode" };
+  }
+
+  async getChannelMembers(isChannelPrivate?: boolean): Promise<any> {
+    if (!this.client) return { members: [] };
+    const room = this.client.getRoom(this.roomId);
+    if (!room) return { members: [] };
+
+    const members = room.getJoinedMembers().map((member: any) => ({
+      _id: member.userId,
+      username: member.name || member.userId,
+      name: member.name || member.userId,
+    }));
+    return { members };
+  }
+
+  async getCommandsList(): Promise<any> {
+    return { commands: [] };
   }
 }

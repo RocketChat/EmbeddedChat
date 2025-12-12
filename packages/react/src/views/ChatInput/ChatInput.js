@@ -377,7 +377,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       message.replace(/\n/g, '\\n')
     );
     if (!res.success) {
-      handleSendError('Error editing message, login again');
+      dispatchToastMessage({
+        type: 'error',
+        message: res.error || 'Message editing not supported',
+      });
     }
   };
 
@@ -613,8 +616,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
               editMessage.msg || editMessage.attachments
                 ? 'Editing Message'
                 : isChannelReadOnly
-                ? 'This room is read only'
-                : undefined
+                  ? 'This room is read only'
+                  : undefined
             }
             iconName={
               editMessage.msg || editMessage.attachments ? 'edit' : undefined
@@ -691,8 +694,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 ? isChannelArchived
                   ? 'Room archived'
                   : canSendMsg
-                  ? `Message #${channelInfo.name}`
-                  : 'This room is read only'
+                    ? `Message #${channelInfo.name}`
+                    : 'This room is read only'
                 : 'Sign in to chat'
             }
             css={css`
