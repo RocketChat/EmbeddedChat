@@ -37,9 +37,9 @@ export default class MatrixProvider implements IChatProvider {
     this.roomId = roomId;
     this.auth = new MatrixAuth({
       host: this.host,
-      deleteToken: async () => { },
+      deleteToken: async () => {},
       getToken: async () => "",
-      saveToken: async () => { },
+      saveToken: async () => {},
     });
   }
 
@@ -141,7 +141,7 @@ export default class MatrixProvider implements IChatProvider {
     });
 
     if (!this.client) {
-      console.log('Matrix: client became null during sync wait');
+      console.log("Matrix: client became null during sync wait");
       return;
     }
 
@@ -206,7 +206,7 @@ export default class MatrixProvider implements IChatProvider {
       console.error("Matrix login failed:", error);
       return {
         error: error.httpStatus === 403 ? 403 : "Unauthorized",
-        message: error.message || "Invalid username or password"
+        message: error.message || "Invalid username or password",
       };
     }
   }
@@ -290,16 +290,16 @@ export default class MatrixProvider implements IChatProvider {
     if (!this.client) {
       return {
         success: false,
-        errorType: 'error-room-not-found',
-        error: 'Not connected to Matrix server'
+        errorType: "error-room-not-found",
+        error: "Not connected to Matrix server",
       };
     }
     const room = this.client.getRoom(this.roomId);
     if (!room) {
       return {
         success: false,
-        errorType: 'error-room-not-found',
-        error: `Room ${this.roomId} not found`
+        errorType: "error-room-not-found",
+        error: `Room ${this.roomId} not found`,
       };
     }
     return {
@@ -316,16 +316,16 @@ export default class MatrixProvider implements IChatProvider {
     if (!this.client) {
       return {
         success: false,
-        errorType: 'error-room-not-found',
-        error: 'Not connected to Matrix server'
+        errorType: "error-room-not-found",
+        error: "Not connected to Matrix server",
       };
     }
     const room = this.client.getRoom(this.roomId);
     if (!room) {
       return {
         success: false,
-        errorType: 'error-room-not-found',
-        error: `Room ${this.roomId} not found`
+        errorType: "error-room-not-found",
+        error: `Room ${this.roomId} not found`,
       };
     }
     return {
@@ -373,12 +373,18 @@ export default class MatrixProvider implements IChatProvider {
 
   async deleteMessage(msgId: string): Promise<any> {
     // Matrix message deletion not implemented
-    return { success: false, error: "Message deletion not supported in Matrix mode" };
+    return {
+      success: false,
+      error: "Message deletion not supported in Matrix mode",
+    };
   }
 
   async updateMessage(msgId: string, text: string): Promise<any> {
     // Matrix message editing not implemented
-    return { success: false, error: "Message editing not supported in Matrix mode" };
+    return {
+      success: false,
+      error: "Message editing not supported in Matrix mode",
+    };
   }
 
   async starMessage(msgId: string): Promise<any> {
@@ -399,7 +405,11 @@ export default class MatrixProvider implements IChatProvider {
     return { success: true };
   }
 
-  async reactToMessage(emoji: string, msgId: string, shouldReact: boolean): Promise<any> {
+  async reactToMessage(
+    emoji: string,
+    msgId: string,
+    shouldReact: boolean
+  ): Promise<any> {
     // Matrix supports reactions via m.reaction
     return { success: true }; // Stub for now
   }
@@ -430,21 +440,21 @@ export default class MatrixProvider implements IChatProvider {
     );
   }
 
-  addMessageDeleteListener(callback: (messageId: string) => void): void { }
+  addMessageDeleteListener(callback: (messageId: string) => void): void {}
 
-  removeMessageDeleteListener(callback: (messageId: string) => void): void { }
+  removeMessageDeleteListener(callback: (messageId: string) => void): void {}
 
-  addTypingStatusListener(callback: (users: string[]) => void): void { }
+  addTypingStatusListener(callback: (users: string[]) => void): void {}
 
-  removeTypingStatusListener(callback: (users: string[]) => void): void { }
+  removeTypingStatusListener(callback: (users: string[]) => void): void {}
 
-  addActionTriggeredListener(callback: (data: any) => void): void { }
+  addActionTriggeredListener(callback: (data: any) => void): void {}
 
-  removeActionTriggeredListener(callback: (data: any) => void): void { }
+  removeActionTriggeredListener(callback: (data: any) => void): void {}
 
-  addUiInteractionListener(callback: (data: any) => void): void { }
+  addUiInteractionListener(callback: (data: any) => void): void {}
 
-  removeUiInteractionListener(callback: (data: any) => void): void { }
+  removeUiInteractionListener(callback: (data: any) => void): void {}
 
   async logout(): Promise<void> {
     if (this.client) {
@@ -456,9 +466,9 @@ export default class MatrixProvider implements IChatProvider {
   async autoLogin(auth: {
     flow: "PASSWORD" | "OAUTH" | "TOKEN";
     credentials: any;
-  }): Promise<void> { }
+  }): Promise<void> {}
 
-  async googleSSOLogin(signIn: Function, acsCode: string): Promise<any> { }
+  async googleSSOLogin(signIn: Function, acsCode: string): Promise<any> {}
 
   async getRCAppInfo(): Promise<any> {
     return null;
@@ -491,7 +501,10 @@ export default class MatrixProvider implements IChatProvider {
   // Additional methods for toast compatibility
   async reportMessage(messageId: string, description: string): Promise<any> {
     // Matrix doesn't have built-in message reporting
-    return { success: false, error: "Message reporting not supported in Matrix mode" };
+    return {
+      success: false,
+      error: "Message reporting not supported in Matrix mode",
+    };
   }
 
   async getSearchMessages(text: string): Promise<any> {
@@ -529,7 +542,10 @@ export default class MatrixProvider implements IChatProvider {
     return { files: [] };
   }
 
-  async execCommand(command: { command: string; params: string }): Promise<any> {
+  async execCommand(command: {
+    command: string;
+    params: string;
+  }): Promise<any> {
     // Matrix doesn't have slash commands in the same way
     return { success: false, error: "Commands not supported in Matrix mode" };
   }
