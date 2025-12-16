@@ -20,6 +20,7 @@ import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
+import { applyHighlightToMessages } from '../../../lib/highlightUtils';
 
 export const MessageAggregator = ({
   title,
@@ -48,8 +49,22 @@ export const MessageAggregator = ({
   );
 
   const [messageRendered, setMessageRendered] = useState(false);
+
+  // Apply highlighting to search results when searchedText is provided
+  const highlightedMessages = useMemo(() => {
+    const sourceMessages = fetchedMessageList || searchFiltered || allMessages;
+    if (searchFiltered && searchProps?.searchedText) {
+      const { messages: highlighted } = applyHighlightToMessages(
+        sourceMessages,
+        searchProps.searchedText
+      );
+      return highlighted;
+    }
+    return sourceMessages;
+  }, [fetchedMessageList, searchFiltered, allMessages, searchProps?.searchedText]);
+
   const { loading, messageList } = useSetMessageList(
-    fetchedMessageList || searchFiltered || allMessages,
+    highlightedMessages,
     shouldRender
   );
 
