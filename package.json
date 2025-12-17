@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Integrate RocketChat into any React based web app using this extensible, robust component library",
   "packageManager": "yarn@3.6.4",
+  "resolutions": {
+    "@rocket.chat/core-typings": "6.10.0",
+    "@rocket.chat/media-signaling": "https://registry.yarnpkg.com/@rocket.chat/ddp-client/-/ddp-client-0.3.45.tgz"
+  },
   "workspaces": [
     "packages/*",
     "!packages/docs"
