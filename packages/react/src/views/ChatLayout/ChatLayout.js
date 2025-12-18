@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
@@ -35,6 +35,7 @@ import useUiKitStore from '../../store/uiKitStore';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
+  const clearUnreadDividerRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
@@ -113,8 +114,12 @@ const ChatLayout = () => {
           showRoles={showRoles}
           messageListRef={messageListRef}
           scrollToBottom={scrollToBottom}
+          clearUnreadDividerRef={clearUnreadDividerRef}
         />
-        <ChatInput scrollToBottom={scrollToBottom} />
+        <ChatInput
+          scrollToBottom={scrollToBottom}
+          clearUnreadDividerRef={clearUnreadDividerRef}
+        />
         <div id="emoji-popup" />
       </Box>
 
