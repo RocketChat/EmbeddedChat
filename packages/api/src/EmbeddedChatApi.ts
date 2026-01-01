@@ -467,7 +467,17 @@ export default class EmbeddedChatApi {
 
   async channelInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const currentUser = await this.auth.getCurrentUser();
+      if (!currentUser || !currentUser.authToken || !currentUser.userId) {
+        // User not authenticated yet, return error response
+        return {
+          success: false,
+          error: "User not authenticated",
+          errorType: "unauthorized",
+        };
+      }
+      
+      const { userId, authToken } = currentUser;
       const response = await fetch(
         `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
@@ -482,6 +492,10 @@ export default class EmbeddedChatApi {
       return await response.json();
     } catch (err) {
       console.error(err);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : "Unknown error",
+      };
     }
   }
 
