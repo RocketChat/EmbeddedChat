@@ -32,22 +32,16 @@ import { overrideECProps } from '../lib/overrideECProps';
 
 const EmbeddedChat = (props) => {
   const [config, setConfig] = useState(() => props);
-  // Track if roomId was explicitly provided (not just the default)
   const [explicitRoomId, setExplicitRoomId] = useState(() => props.roomId);
-  // Don't default to GENERAL if channelName is provided - wait for resolution
   const [resolvedRoomId, setResolvedRoomId] = useState(() => {
-    // If roomId is explicitly provided, use it
     if (props.roomId) {
       return props.roomId;
     }
-    // If channelName is provided, we'll resolve it, so start with null to indicate pending
-    // Otherwise default to GENERAL
     return props.channelName ? null : 'GENERAL';
   });
 
   useEffect(() => {
     setConfig(props);
-    // Track if roomId is explicitly provided
     setExplicitRoomId(props.roomId);
   }, [props]);
 
@@ -111,8 +105,6 @@ const EmbeddedChat = (props) => {
   }
 
   const initializeRCInstance = useCallback(() => {
-    // Use resolvedRoomId or fallback to GENERAL if not resolved yet
-    // This ensures we always have a valid roomId for the RCInstance
     const roomIdToUse = resolvedRoomId || 'GENERAL';
     const newRCInstance = new EmbeddedChatApi(host, roomIdToUse, {
       getToken,
@@ -123,10 +115,7 @@ const EmbeddedChat = (props) => {
     return newRCInstance;
   }, [host, resolvedRoomId, getToken, deleteToken, saveToken]);
 
-  // Initialize RCInstance - use GENERAL temporarily if resolving channelName
   const [RCInstance, setRCInstance] = useState(() => {
-    // If we're resolving channelName (resolvedRoomId is null), use GENERAL temporarily
-    // It will be re-instantiated when resolution completes
     const initialRoomId = resolvedRoomId || 'GENERAL';
     return new EmbeddedChatApi(host, initialRoomId, {
       getToken,
@@ -137,28 +126,20 @@ const EmbeddedChat = (props) => {
   const setMessages = useMessageStore((state) => state.setMessages);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
 
-  // Resolve roomId from channelName when channelName is provided and no explicit roomId
-  // Priority: explicit roomId prop > resolved channelName > 'GENERAL'
   useEffect(() => {
     const resolveRoomId = async () => {
-      // If roomId is explicitly provided, use it directly
       if (explicitRoomId) {
         setResolvedRoomId(explicitRoomId);
         return;
       }
 
-      // If channelName is provided but no explicit roomId, resolve it to roomId
       if (channelName) {
         try {
-          // We need auth token, but RCInstance might not be ready yet
           if (!RCInstance) {
-            // Don't set resolvedRoomId yet - wait for RCInstance
             return;
           }
 
-          // Wait for authentication before resolving
           if (!isUserAuthenticated) {
-            // Not authenticated yet, wait for authentication - don't set to GENERAL
             return;
           }
 
@@ -167,11 +148,9 @@ const EmbeddedChat = (props) => {
           const userId = currentUser?.userId || currentUser?._id;
 
           if (!authToken || !userId) {
-            // No auth token available, wait - don't set to GENERAL yet
             return;
           }
 
-          // Resolve channelName to roomId using the API
           const response = await fetch(
             `${host}/api/v1/rooms.info?roomName=${encodeURIComponent(
               channelName
@@ -187,9 +166,7 @@ const EmbeddedChat = (props) => {
           );
 
           if (!response.ok) {
-            // Handle 401 or other errors
             if (response.status === 401) {
-              // Don't set to GENERAL - wait for auth to complete
               return;
             }
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -197,18 +174,14 @@ const EmbeddedChat = (props) => {
 
           const data = await response.json();
           if (data?.success && data?.room?._id) {
-            // Successfully resolved channelName to roomId
             setResolvedRoomId(data.room._id);
           } else {
-            // Fallback to GENERAL if resolution fails
             setResolvedRoomId('GENERAL');
           }
         } catch (error) {
-          // Fallback to GENERAL on error
           setResolvedRoomId('GENERAL');
         }
       } else {
-        // No channelName and no explicit roomId, use GENERAL
         setResolvedRoomId('GENERAL');
       }
     };
@@ -218,37 +191,27 @@ const EmbeddedChat = (props) => {
 
   useEffect(() => {
     const reInstantiate = async () => {
-      // On first mount, mark as mounted
       if (!hasMounted.current) {
         hasMounted.current = true;
         previousResolvedRoomId.current = resolvedRoomId;
-        // If resolvedRoomId is null, we're waiting for resolution - don't do anything yet
         if (resolvedRoomId === null) {
           return;
         }
-        // If resolvedRoomId is already set on first mount, we're good (roomId was provided)
         return;
       }
 
-      // If resolvedRoomId is null, we're still waiting for resolution
-      // Don't re-instantiate yet - wait for resolution to complete
       if (resolvedRoomId === null) {
         return;
       }
 
-      // Check if resolvedRoomId actually changed
       if (previousResolvedRoomId.current === resolvedRoomId) {
-        // No change, don't re-instantiate
         return;
       }
 
-      // Update the ref
       previousResolvedRoomId.current = resolvedRoomId;
 
-      // First, close the old connection completely
       await RCInstance.close();
 
-      // Clear messages and channel info AFTER closing old connection
       setMessages([], false);
       setChannelInfo({});
       useMessageStore.setState({
@@ -263,7 +226,6 @@ const EmbeddedChat = (props) => {
         isMessageLoaded: false,
       });
 
-      // Create new instance with new roomId
       const newRCInstance = initializeRCInstance();
       setRCInstance(newRCInstance);
     };

@@ -184,8 +184,6 @@ const ChatHeader = ({
           setMessageAllowed();
         }
       } else if ('errorType' in res && res.errorType === 'unauthorized') {
-        // User not authenticated yet, wait and retry
-        // The effect will re-run when isUserAuthenticated changes
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'

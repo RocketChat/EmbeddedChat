@@ -469,7 +469,6 @@ export default class EmbeddedChatApi {
     try {
       const currentUser = await this.auth.getCurrentUser();
       if (!currentUser || !currentUser.authToken || !currentUser.userId) {
-        // User not authenticated yet, return error response
         return {
           success: false,
           error: "User not authenticated",
