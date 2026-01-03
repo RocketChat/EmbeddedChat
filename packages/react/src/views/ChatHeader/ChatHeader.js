@@ -183,7 +183,6 @@ const ChatHeader = ({
           setIsChannelReadOnly(true);
           setMessageAllowed();
         }
-      } else if ('errorType' in res && res.errorType === 'unauthorized') {
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'
