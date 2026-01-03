@@ -475,7 +475,7 @@ export default class EmbeddedChatApi {
           errorType: "unauthorized",
         };
       }
-      
+
       const { userId, authToken } = currentUser;
       const response = await fetch(
         `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
