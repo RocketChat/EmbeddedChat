@@ -1,7 +1,6 @@
 node_modules
 .parcel-cache
 
-# Environment variables (may contain sensitive credentials)
 .env
 .env.local
 .env.*.local
