@@ -325,3 +325,31 @@ export const getMessageBodyContainerStyles = () => {
 
   return styles;
 };
+
+export const getThreadPreviewContainerStyles = () => {
+  const styles = {
+    container: css`
+      display: flex;
+      flex-direction: row;
+      gap: '5px';
+      alignItems: 'center';
+      gap: 5px;
+      
+    `
+  }
+  return styles
+}
+
+export const getThreadPreviewAvatarStylesContainer = (theme) => {
+  const styles = {
+    container: css`
+      margin: 3px;
+      width: 2.25em;
+      max-height: 2.25em;
+      display: flex;
+      justify-content: flex-end;
+      color: ${theme.colors.primary};
+    `,
+  };
+  return styles;
+};

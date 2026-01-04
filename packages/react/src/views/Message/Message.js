@@ -27,6 +27,7 @@ import { getMessageStyles } from './Message.styles';
 import useBubbleStyles from './BubbleVariant/useBubbleStyles';
 import UiKitMessageBlock from './uiKit/UiKitMessageBlock';
 import useFetchChatData from '../../hooks/useFetchChatData';
+import { ThreadMessagePreview } from './ThreadMessagePreview';
 
 const Message = ({
   message,
@@ -41,6 +42,7 @@ const Message = ({
   showRoles = true,
   isLinkPreview = true,
   isInSidebar = false,
+  prev
 }) => {
   const { classNames, styleOverrides, variantOverrides } =
     useComponentOverrides(
@@ -50,7 +52,7 @@ const Message = ({
     );
 
   const { RCInstance, ECOptions } = useContext(RCContext);
-  showAvatar = ECOptions?.showAvatar && showAvatar;
+  showAvatar = (type === 'thread') || (ECOptions?.showAvatar && showAvatar && (!message.tshow));
   const { showSidebar, setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
@@ -221,7 +223,8 @@ const Message = ({
 
   const isStarred = message.starred?.find((u) => u._id === authenticatedUserId);
   const isPinned = message.pinned;
-  const shouldShowHeader = !sequential || (!showAvatar && isStarred);
+  // const shouldShowHeader = (!sequential || (!showAvatar && isStarred)) && !message.tshow;
+   const shouldShowHeader = (type === 'thread' && !sequential) || (type === 'default' && (!sequential && !message.tshow));
 
   return (
     <>
@@ -260,7 +263,7 @@ const Message = ({
               })}
             />
           )}
-          {!message.t ? (
+          {!message.t && (type === 'thread' || !message.tshow) ? (
             <>
               <MessageBody
                 className="ec-message-body"
@@ -374,6 +377,13 @@ const Message = ({
               variantStyles={variantStyles}
             />
           ) : null}
+          {!!message.tshow && type !== 'thread' ? (
+            <ThreadMessagePreview 
+              message={message}
+              sequential={sequential}
+              prev={prev}
+            />
+          ):null}
         </MessageBodyContainer>
       </Box>
     </>

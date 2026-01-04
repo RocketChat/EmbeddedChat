@@ -5,7 +5,7 @@ const isMessageSequential = (current, previous, groupingRange) => {
     return false;
   }
 
-  if (current.t || previous.t) {
+  if (current.t || previous.t || current.tshow || previous.tshow) {
     return false;
   }
 

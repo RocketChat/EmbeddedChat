@@ -34,6 +34,7 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import { CheckBox } from '@embeddedchat/ui-elements';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -57,6 +58,7 @@ const ChatInput = ({ scrollToBottom }) => {
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [isAlsoSendToChannel, setIsAlsoSendToChannel] = useState(false);
 
   const {
     isUserAuthenticated,
@@ -142,6 +144,10 @@ const ChatInput = ({ scrollToBottom }) => {
     setMentionIndex,
     setShowMembersList
   );
+
+  const [isThreadOpen] = useMessageStore((state) => ([
+    state.isThreadOpen
+  ]))
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -328,10 +334,12 @@ const ChatInput = ({ scrollToBottom }) => {
         msg: pendingMessage.msg,
         _id: pendingMessage._id,
       },
-      ECOptions.enableThreads ? threadId : undefined
+      ECOptions.enableThreads ? threadId : undefined,
+      ECOptions.enableThreads && threadId && isAlsoSendToChannel? true: false
     );
 
     if (res.success) {
+      setIsAlsoSendToChannel(false)
       clearQuoteMessages();
       replaceMessage(pendingMessage, res.message);
     }
@@ -432,6 +440,10 @@ const ChatInput = ({ scrollToBottom }) => {
       chatInputContainer.current.classList.remove('focused');
     }
   };
+
+  const handleAlsoSendToChannel =() => {
+    setIsAlsoSendToChannel(!isAlsoSendToChannel)
+  }
 
   const onKeyDown = (e) => {
     switch (true) {
@@ -585,14 +597,38 @@ const ChatInput = ({ scrollToBottom }) => {
 
         <TypingUsers />
       </Box>
+      
+      <Box
+        css={css`
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+
+        `}
+      >
+        {isThreadOpen && ( 
+          <Box
+          css={[
+            styles.sendToChannelCheckBox,
+          ]}
+        >
+         <CheckBox 
+          onClick={handleAlsoSendToChannel}
+          checked={isAlsoSendToChannel}
+         />
+         <p css={css`
+            display: inline
+          `}>Also Send to channel</p>
+        </Box>)}
+       
       <Box
         ref={chatInputContainer}
         css={[
           styles.inputWithFormattingBox,
           (editMessage.msg || editMessage.attachments) && styles.editMessage,
         ]}
-      >
-        <Box css={styles.inputBox}>
+      >  
+        <Box css={styles.inputBox}>  
           <Input
             textArea
             rows={1}
@@ -658,6 +694,7 @@ const ChatInput = ({ scrollToBottom }) => {
             triggerButton={onTextChange}
           />
         )}
+      </Box>
       </Box>
       {isMsgLong && (
         <Modal

@@ -10,6 +10,7 @@ import { Message } from '../Message';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { MessageBody } from '../Message/MessageBody';
 
+
 const MessageList = ({
   messages,
   loadingOlderMessages,
@@ -24,8 +25,10 @@ const MessageList = ({
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
-  const filteredMessages = messages.filter((msg) => !msg.tmid);
 
+  const filteredMessages = messages.filter((msg) => (
+    (!!msg.tmid && msg.tshow) || (!msg.tmid)
+  ))
   const reportedMessage = messages.find((msg) => msg._id === messageToReport);
 
   return (
@@ -96,6 +99,7 @@ const MessageList = ({
                   lastSequential={lastSequential}
                   type="default"
                   showAvatar
+                  prev={prev}
                 />
               );
             })}

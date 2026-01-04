@@ -41,6 +41,11 @@ const useMessageStore = create((set, get) => ({
           threadMessages: upsertMessage(state.threadMessages, message),
         }));
       }
+      if (message.tshow) {
+        set((state) => ({
+          messages: upsertMessage(state.messages, message),
+        }));
+      }
     } else {
       set((state) => ({
         messages: upsertMessage(state.messages, message),

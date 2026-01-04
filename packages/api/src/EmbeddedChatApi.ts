@@ -741,7 +741,7 @@ export default class EmbeddedChatApi {
    * @param {*} message should be a string or an rc message object
    * Refer https://developer.rocket.chat/reference/api/schema-definition/message#message-object
    */
-  async sendMessage(message: any, threadId: string) {
+  async sendMessage(message: any, threadId: string, isAlsoSendToChannel: boolean) {
     const messageObj =
       typeof message === "string"
         ? {
@@ -750,15 +750,27 @@ export default class EmbeddedChatApi {
           }
         : {
             ...message,
-            rid: this.rid,
+            rid: this.rid,  
           };
     if (threadId) {
       messageObj.tmid = threadId;
     }
+    if(isAlsoSendToChannel){
+      messageObj.tshow = true
+    }
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
-        body: JSON.stringify({ message: messageObj }),
+      const response = await fetch(`${this.host}/api/v1/method.call/sendMessage`, {
+        body: JSON.stringify({
+          message: JSON.stringify({
+            msg: "method",
+            id: null,
+            method: "sendMessage",
+            params: [
+              messageObj
+            ],
+          }),
+        }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -766,7 +778,8 @@ export default class EmbeddedChatApi {
         },
         method: "POST",
       });
-      return await response.json();
+      const result = await response.json();
+      return result;
     } catch (err) {
       console.error(err);
     }

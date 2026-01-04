@@ -112,7 +112,7 @@ const ChatInput = ({ style }) => {
 					await RCInstance.logout();
 					setIsUserAuthenticated(false);
 				} else {
-					replaceMessage(pendingMessage._id, res.message);
+					replaceMessage(pendingMessage._id, res.message.id);
 				}
 			} else {
 				// A message is being edited

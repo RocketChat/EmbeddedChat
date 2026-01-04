@@ -3,6 +3,12 @@ import { darken, lighten } from '@embeddedchat/ui-elements';
 
 export const getChatInputStyles = (theme) => {
   const styles = {
+    sendToChannelCheckBox :
+      css`
+         margin: 0.5rem 0rem 0rem 2rem;
+         display: flex,
+         flex-direction: row;
+      `,
     inputWithFormattingBox: css`
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
