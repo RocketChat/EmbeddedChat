@@ -332,13 +332,12 @@ export const getThreadPreviewContainerStyles = () => {
       display: flex;
       flex-direction: row;
       gap: '5px';
-      alignItems: 'center';
+      alignitems: 'center';
       gap: 5px;
-      
-    `
-  }
-  return styles
-}
+    `,
+  };
+  return styles;
+};
 
 export const getThreadPreviewAvatarStylesContainer = (theme) => {
   const styles = {

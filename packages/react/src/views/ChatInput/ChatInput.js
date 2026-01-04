@@ -11,6 +11,7 @@ import {
   useToastBarDispatch,
   useComponentOverrides,
   useTheme,
+  CheckBox,
 } from '@embeddedchat/ui-elements';
 import { useRCContext } from '../../context/RCInstance';
 import {
@@ -34,7 +35,6 @@ import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
-import { CheckBox } from '@embeddedchat/ui-elements';
 
 const ChatInput = ({ scrollToBottom }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -145,9 +145,7 @@ const ChatInput = ({ scrollToBottom }) => {
     setShowMembersList
   );
 
-  const [isThreadOpen] = useMessageStore((state) => ([
-    state.isThreadOpen
-  ]))
+  const [isThreadOpen] = useMessageStore((state) => [state.isThreadOpen]);
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -335,11 +333,11 @@ const ChatInput = ({ scrollToBottom }) => {
         _id: pendingMessage._id,
       },
       ECOptions.enableThreads ? threadId : undefined,
-      ECOptions.enableThreads && threadId && isAlsoSendToChannel? true: false
+      ECOptions.enableThreads && threadId && isAlsoSendToChannel
     );
 
     if (res.success) {
-      setIsAlsoSendToChannel(false)
+      setIsAlsoSendToChannel(false);
       clearQuoteMessages();
       replaceMessage(pendingMessage, res.message);
     }
@@ -441,9 +439,9 @@ const ChatInput = ({ scrollToBottom }) => {
     }
   };
 
-  const handleAlsoSendToChannel =() => {
-    setIsAlsoSendToChannel(!isAlsoSendToChannel)
-  }
+  const handleAlsoSendToChannel = () => {
+    setIsAlsoSendToChannel(!isAlsoSendToChannel);
+  };
 
   const onKeyDown = (e) => {
     switch (true) {
@@ -597,104 +595,109 @@ const ChatInput = ({ scrollToBottom }) => {
 
         <TypingUsers />
       </Box>
-      
+
       <Box
         css={css`
           display: flex;
           flex-direction: column;
           width: 100%;
-
         `}
       >
-        {isThreadOpen && ( 
-          <Box
+        {isThreadOpen && (
+          <Box css={[styles.sendToChannelCheckBox]}>
+            <CheckBox
+              onClick={handleAlsoSendToChannel}
+              checked={isAlsoSendToChannel}
+            />
+            <p
+              css={css`
+                display: inline;
+              `}
+            >
+              Also Send to channel
+            </p>
+          </Box>
+        )}
+
+        <Box
+          ref={chatInputContainer}
           css={[
-            styles.sendToChannelCheckBox,
+            styles.inputWithFormattingBox,
+            (editMessage.msg || editMessage.attachments) && styles.editMessage,
           ]}
         >
-         <CheckBox 
-          onClick={handleAlsoSendToChannel}
-          checked={isAlsoSendToChannel}
-         />
-         <p css={css`
-            display: inline
-          `}>Also Send to channel</p>
-        </Box>)}
-       
-      <Box
-        ref={chatInputContainer}
-        css={[
-          styles.inputWithFormattingBox,
-          (editMessage.msg || editMessage.attachments) && styles.editMessage,
-        ]}
-      >  
-        <Box css={styles.inputBox}>  
-          <Input
-            textArea
-            rows={1}
-            disabled={
-              !isUserAuthenticated ||
-              !canSendMsg ||
-              isRecordingMessage ||
-              isChannelArchived
-            }
-            placeholder={
-              isUserAuthenticated
-                ? isChannelArchived
-                  ? 'Room archived'
-                  : canSendMsg
-                  ? `Message #${channelInfo.name}`
-                  : 'This room is read only'
-                : 'Sign in to chat'
-            }
-            css={css`
-              ${styles.textInput}
-              ${isChannelArchived &&
-              isUserAuthenticated &&
-              `text-align: center;`}
-            `}
-            onChange={onTextChange}
-            onBlur={() => {
-              sendTypingStop();
-              handleBlur();
-            }}
-            onFocus={handleFocus}
-            onKeyDown={onKeyDown}
-            ref={messageRef}
-          />
+          <Box css={styles.inputBox}>
+            <Input
+              textArea
+              rows={1}
+              disabled={
+                !isUserAuthenticated ||
+                !canSendMsg ||
+                isRecordingMessage ||
+                isChannelArchived
+              }
+              placeholder={
+                isUserAuthenticated
+                  ? isChannelArchived
+                    ? 'Room archived'
+                    : canSendMsg
+                    ? `Message #${channelInfo.name}`
+                    : 'This room is read only'
+                  : 'Sign in to chat'
+              }
+              css={css`
+                ${styles.textInput}
+                ${isChannelArchived &&
+                isUserAuthenticated &&
+                `text-align: center;`}
+              `}
+              onChange={onTextChange}
+              onBlur={() => {
+                sendTypingStop();
+                handleBlur();
+              }}
+              onFocus={handleFocus}
+              onKeyDown={onKeyDown}
+              ref={messageRef}
+            />
 
-          <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          <Box
-            css={css`
-              padding: 0.25rem;
-            `}
-          >
-            {isUserAuthenticated ? (
-              !isChannelArchived ? (
-                <ActionButton
-                  ghost
-                  size="large"
-                  onClick={() => sendMessage()}
-                  type="primary"
-                  disabled={disableButton || isRecordingMessage}
-                  icon="send"
-                />
-              ) : null
-            ) : (
-              <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
-                {isLoginIn ? <Throbber /> : 'JOIN'}
-              </Button>
-            )}
+            <input
+              type="file"
+              hidden
+              ref={inputRef}
+              onChange={sendAttachment}
+            />
+            <Box
+              css={css`
+                padding: 0.25rem;
+              `}
+            >
+              {isUserAuthenticated ? (
+                !isChannelArchived ? (
+                  <ActionButton
+                    ghost
+                    size="large"
+                    onClick={() => sendMessage()}
+                    type="primary"
+                    disabled={disableButton || isRecordingMessage}
+                    icon="send"
+                  />
+                ) : null
+              ) : (
+                <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
+                  {isLoginIn ? <Throbber /> : 'JOIN'}
+                </Button>
+              )}
+            </Box>
           </Box>
+          {isUserAuthenticated && !isChannelArchived && (
+            <ChatInputFormattingToolbar
+              messageRef={messageRef}
+              inputRef={inputRef}
+              triggerButton={onTextChange}
+            />
+          )}
         </Box>
-        {isUserAuthenticated && !isChannelArchived && (
-          <ChatInputFormattingToolbar
-            messageRef={messageRef}
-            inputRef={inputRef}
-            triggerButton={onTextChange}
-          />
-        )}
-      </Box>
       </Box>
       {isMsgLong && (
         <Modal
