@@ -13,13 +13,41 @@ function CommandsList({
   style = {},
   messageRef,
   setFilteredCommands,
-  filteredCommands,
+  filteredCommands: propsFilteredCommands,
   execCommand,
   commandIndex,
   setCommandIndex,
   setShowCommandList,
   ...props
 }) {
+  // Fix for issue #968: Filter out duplicate keyboard shortcut descriptions
+  // The server returns multiple shortcuts with the same description for message navigation.
+  // We want to dedup them here to avoid confusing the user.
+  const filteredCommands = React.useMemo(() => {
+    if (!propsFilteredCommands) return [];
+
+    const seenDescriptions = new Set();
+    return propsFilteredCommands.filter((cmd) => {
+      // Allow all commands that aren't navigation shortcuts or "shortcuts" in general
+      if (!cmd.description || !cmd.command) return true;
+
+      // Strategies to identify duplicates we want to hide
+      // Strategy 1: exact description match for the specific known duplicates
+      const isDuplicateTarget =
+        cmd.description === 'Move to the beginning of the message' ||
+        cmd.description === 'Move to the end of the message';
+
+      if (isDuplicateTarget) {
+        if (seenDescriptions.has(cmd.description)) {
+          return false; // Skip duplicate
+        }
+        seenDescriptions.add(cmd.description);
+        return true;
+      }
+
+      return true;
+    });
+  }, [propsFilteredCommands]);
   const { classNames, styleOverrides } = useComponentOverrides('CommandsList');
   const { theme } = useTheme();
   const styles = getCommandListStyles(theme);
