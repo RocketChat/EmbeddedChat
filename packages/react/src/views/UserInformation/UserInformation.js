@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -18,6 +18,7 @@ import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { parseUrls } from './parseUrls';
 
 const UserInformation = () => {
   const { variantOverrides } = useComponentOverrides('UserInformation');
@@ -176,7 +177,7 @@ const UserInformation = () => {
             {currentUserInfo?.bio && (
               <UserInfoField
                 label="Bio"
-                value={currentUserInfo?.bio}
+                value={parseUrls(currentUserInfo?.bio, theme, mode)}
                 isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
                 currentUserInfo={currentUserInfo}
