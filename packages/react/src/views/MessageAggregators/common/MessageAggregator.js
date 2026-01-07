@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
@@ -182,10 +182,13 @@ export const MessageAggregator = ({
                     </MessageDivider>
                   )}
                   {type === 'file' ? (
-                    <FileDisplay
-                      key={`${msg._id}-aggregated`}
-                      fileMessage={msg}
-                    />
+                    <>
+                      <FileDisplay
+                        key={`${msg._id}-aggregated`}
+                        fileMessage={msg}
+                        onClick={setJumpToMessage}
+                      />
+                    </>
                   ) : (
                     <Box
                       position="relative"

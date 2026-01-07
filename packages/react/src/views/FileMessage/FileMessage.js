@@ -4,6 +4,7 @@ import React, {
   memo,
   useContext,
   useEffect,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -29,12 +30,19 @@ import { useRCContext } from '../../context/RCInstance';
 import { useChannelStore, useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
-const FileMessage = ({ fileMessage, onDeleteFile }) => {
+const FileMessage = ({ fileMessage, onDeleteFile, onClick }) => {
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
+  const [fileId, setFileId] = useState(null);
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
+  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const allMessages = useMemo(
+    () => [...messages, ...[...threadMessages].reverse()],
+    [messages, threadMessages]
+  );
   const [files, setFiles] = useState([]);
+  const [fileMessageId, setFileMessageId] = useState(null);
   const theme = useTheme();
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const [isFetching, setIsFetching] = useState(true);
@@ -84,6 +92,12 @@ const FileMessage = ({ fileMessage, onDeleteFile }) => {
     [messages, RCInstance, dispatchToastMessage]
   );
   useEffect(() => {
+    const targetFileId = fileMessage._id;
+    const matchedMessages = allMessages.filter((message) =>
+      message.file ? message.file._id === targetFileId : false
+    );
+    const messageObject = matchedMessages[0];
+    setFileMessageId(messageObject);
     const fetchAllFiles = async () => {
       const res = await RCInstance.getAllFiles(isChannelPrivate, '');
       if (res?.files) {
@@ -107,6 +121,7 @@ const FileMessage = ({ fileMessage, onDeleteFile }) => {
         className={appendClassNames('ec-file', classNames)}
         style={styleOverrides}
         css={[messageStyles, hoverStyle]}
+        onClick={() => onClick(fileMessageId)}
       >
         <FilePreviewContainer file={fileMessage} />
         <FileBodyContainer style={{ width: '75%' }}>
