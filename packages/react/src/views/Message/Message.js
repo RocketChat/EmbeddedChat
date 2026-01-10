@@ -231,6 +231,7 @@ const Message = ({
         </MessageDivider>
       )}
       <Box
+        id={message._id}
         className={appendClassNames('ec-message', classNames)}
         css={[
           variantStyles.messageParent || styles.main,
