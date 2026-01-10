@@ -45,10 +45,6 @@ const MessageAvatarContainer = ({
           alt="avatar"
           size={
             window.matchMedia('(max-width: 768px)').matches
-              ? message.t
-                ? '1.2em'
-                : '1.5em'
-              : message.t
               ? '1.5em'
               : '2.25em'
           }
