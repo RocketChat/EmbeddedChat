@@ -57,7 +57,6 @@ export const MessageMetrics = ({
       );
 
       const userNames = results.map((user) => user.user.username);
-      console.log(userNames);
       setFollowedUsernames(userNames);
     };
 
