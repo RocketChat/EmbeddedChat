@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { formatDistance } from 'date-fns';
 import {
   Box,
@@ -23,6 +23,8 @@ export const MessageMetrics = ({
   variantStyles = {},
   ...props
 }) => {
+  const [followMessage, setFollowMessage] = useState(false);
+  const [followedUsernames, setFollowedUsernames] = useState([]);
   const { styleOverrides, classNames } = useComponentOverrides(
     'MessageMetrics',
     className,
@@ -38,8 +40,45 @@ export const MessageMetrics = ({
 
   const participantsList =
     (message?.replies?.length ?? 0) - 1 > 0
-      ? `+${message.replies.length - 1}`
+      ? message.replies.length - 2 > 0
+        ? `+${message.replies.length - 2}`
+        : null
       : null;
+
+  const getUserInfo = async (userId) => {
+    const results = await RCInstance.userInfo(userId);
+    return results;
+  };
+
+  useEffect(() => {
+    const userDetails = async () => {
+      const results = await Promise.all(
+        message.replies.slice(0, 2).map((userId) => getUserInfo(userId))
+      );
+
+      const userNames = results.map((user) => user.user.username);
+      console.log(userNames);
+      setFollowedUsernames(userNames);
+    };
+
+    if (message.replies.length > 0) {
+      userDetails();
+    }
+  }, [message.replies, followMessage]);
+
+  const handleThreadFollow = async (messageId) => {
+    if (followMessage) {
+      const res = await RCInstance.followThread({
+        mid: message._id,
+      });
+    } else {
+      const res = await RCInstance.unfollowThread({
+        mid: message._id,
+      });
+    }
+
+    setFollowMessage(!followMessage);
+  };
 
   return (
     <Box
@@ -68,11 +107,14 @@ export const MessageMetrics = ({
               <>
                 <Tooltip text="Followers" position="top">
                   <Box css={styles.metricsAvatarItem}>
-                    <Avatar
-                      url={getUserAvatarUrl(message?.u.username)}
-                      alt="avatar"
-                      size="1rem"
-                    />
+                    {followedUsernames.map((userName, index) => (
+                      <Avatar
+                        key={userName}
+                        url={getUserAvatarUrl(userName)}
+                        alt="avatar"
+                        size="1rem"
+                      />
+                    ))}
                     {participantsList && (
                       <span css={styles.metricsItemLabel}>
                         {participantsList}
@@ -83,6 +125,15 @@ export const MessageMetrics = ({
               </>
             )}
 
+            <Tooltip text={`${followMessage ? 'Unfollow' : 'Following'}`}>
+              <Box>
+                <Icon
+                  size="1.15rem"
+                  name={followMessage ? 'bell-off' : 'bell'}
+                  onClick={handleThreadFollow}
+                />
+              </Box>
+            </Tooltip>
             <Tooltip
               text={`Last message: ${new Date(message.tlm).toLocaleTimeString(
                 [],

@@ -217,6 +217,7 @@ export const MessageMetricsStyles = {
     align-items: center;
     margin-left: 10px;
     margin-top: 2px;
+    gap: 3px;
   `,
 
   metricsItemLabel: css`

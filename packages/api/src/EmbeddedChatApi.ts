@@ -1261,4 +1261,34 @@ export default class EmbeddedChatApi {
     const data = response.json();
     return data;
   }
+
+  async followThread(mid: string) {
+    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const response = await fetch(`${this.host}/api/v1/chat.followMessage`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+      body: JSON.stringify(mid),
+    });
+    const data = response.json();
+    return data;
+  }
+
+  async unfollowThread(mid: string) {
+    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const response = await fetch(`${this.host}/api/v1/chat.unfollowMessage`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      },
+      body: JSON.stringify(mid),
+    });
+    const data = response.json();
+    return data;
+  }
 }

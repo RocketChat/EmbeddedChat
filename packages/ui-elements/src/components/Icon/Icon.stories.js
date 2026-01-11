@@ -21,6 +21,28 @@ export const GoogleIcon = {
   ),
 };
 
+export const BellIcon = {
+  args: {
+    name: 'bell',
+  },
+  render: (args) => (
+    <ThemeProvider theme={DefaultTheme}>
+      <Icon {...args} />
+    </ThemeProvider>
+  ),
+};
+
+export const ThreadIcon = {
+  args: {
+    name: 'thread',
+  },
+  render: (args) => (
+    <ThemeProvider theme={DefaultTheme}>
+      <Icon {...args} />
+    </ThemeProvider>
+  ),
+};
+
 export const CustomStyle = {
   args: {
     name: 'google',

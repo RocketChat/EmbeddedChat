@@ -64,8 +64,12 @@ import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
 import Team from './Team';
+import Bell from './Bell';
+import BellOff from './BellOff';
 
 const icons = {
+  bell: Bell,
+  'bell-off': BellOff,
   file: File,
   mobile: Mobile,
   star: Star,
