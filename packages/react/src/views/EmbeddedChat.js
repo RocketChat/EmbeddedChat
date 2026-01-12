@@ -92,7 +92,11 @@ const EmbeddedChat = (props) => {
 
   const initializeRCInstance = useCallback(() => {
     if (mode === 'matrix') {
-      return new MatrixProvider(host, roomId);
+      return new MatrixProvider(host, roomId, {
+        getToken,
+        deleteToken,
+        saveToken,
+      });
     }
     const newRCInstance = new EmbeddedChatApi(host, roomId, {
       getToken,
