@@ -8,8 +8,8 @@ import bundleSize from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
 import analyze from 'rollup-plugin-analyzer';
+import packageJson from './package.json' with { type: 'json' };
 
-const packageJson = require('./package.json');
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
 export default [

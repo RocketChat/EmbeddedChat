@@ -28,23 +28,14 @@ function CommandsList({
 
     const seenDescriptions = new Set();
     return propsFilteredCommands.filter((cmd) => {
-      // Allow all commands that aren't navigation shortcuts or "shortcuts" in general
+      // If there's no description or command name, let it through (shouldn't happen for shortcuts)
       if (!cmd.description || !cmd.command) return true;
 
-      // Strategies to identify duplicates we want to hide
-      // Strategy 1: exact description match for the specific known duplicates
-      const isDuplicateTarget =
-        cmd.description === 'Move to the beginning of the message' ||
-        cmd.description === 'Move to the end of the message';
-
-      if (isDuplicateTarget) {
-        if (seenDescriptions.has(cmd.description)) {
-          return false; // Skip duplicate
-        }
-        seenDescriptions.add(cmd.description);
-        return true;
+      // Deduplicate by description to avoid confusing the user with multiple keys for the same action
+      if (seenDescriptions.has(cmd.description)) {
+        return false;
       }
-
+      seenDescriptions.add(cmd.description);
       return true;
     });
   }, [propsFilteredCommands]);
