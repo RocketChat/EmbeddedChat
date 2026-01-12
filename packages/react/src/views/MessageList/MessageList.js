@@ -41,7 +41,7 @@ const MessageList = ({
           <Box>
             {isMessageLoaded
               ? 'No messages'
-              : 'Ready to chat? Login now to join the fun.'}
+              : 'Ready to chat? Sign in to start the conversation.'}
           </Box>
         </Box>
       ) : (
