@@ -35,7 +35,7 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 
-const ChatInput = ({ scrollToBottom }) => {
+const ChatInput = ({ scrollToBottom}) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const { theme } = useTheme();

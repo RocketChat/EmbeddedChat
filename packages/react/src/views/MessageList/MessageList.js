@@ -19,6 +19,9 @@ const MessageList = ({
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
+
+  
+
   const { theme } = useTheme();
 
   const isMessageNewDay = (current, previous) =>
@@ -30,21 +33,33 @@ const MessageList = ({
 
   return (
     <>
-      {filteredMessages.length === 0 ? (
+     {filteredMessages.length === 0 ? (
         <Box
           css={css`
             text-align: center;
             margin: auto;
           `}
         >
-          <Icon name="thread" size="2rem" />
-          <Box>
-            {isMessageLoaded
-              ? 'No messages'
-              : 'Ready to chat? Sign in to start the conversation.'}
-          </Box>
+          {!isUserAuthenticated ? (
+            <>
+              <Icon name="thread" size="2rem" />
+              <Box>Sign in to start the conversation.</Box>
+            </>
+          ) : !isMessageLoaded ? (
+            <>
+              <Throbber />
+              <Box mt="8px">Loading messages...</Box>
+            </>
+          ) : (
+            <>
+              <Icon name="thread" size="2rem" />
+              <Box>No messages yet</Box>
+            </>
+          )}
         </Box>
       ) : (
+
+
         <>
           {!hasMoreMessages && isUserAuthenticated && (
             <MessageBody

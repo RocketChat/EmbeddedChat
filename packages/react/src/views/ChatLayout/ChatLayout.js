@@ -34,6 +34,12 @@ import UiKitContextualBar from '../ContextualBarBlock/uiKit/UiKitContextualBar';
 import useUiKitStore from '../../store/uiKitStore';
 
 const ChatLayout = () => {
+
+    const [mode, setMode] = useState('light');
+    const toggleTheme = () => {
+    setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   const messageListRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
@@ -102,11 +108,33 @@ const ChatLayout = () => {
       css={styles.layout}
       style={{
         ...styleOverrides,
+        position:'relative',
+        backgroundColor: mode === 'light' ? '#000' : '#fff',
+        color: mode === 'light' ? '#fff' : '#000',
+        border: '1px solid black',
       }}
       className={`ec-chat-layout ${classNames}`}
       onDragOver={(e) => handleDrag(e)}
       onDrop={(e) => handleDragDrop(e)}
     >
+    <Box
+      css={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 9999,
+        padding: '6px 12px',
+        background: mode === 'dark' ? '#fff' : '#000',
+        color: mode === 'dark' ? '#000' : '#fff',
+        border: mode==='dark' ? '1px solid black':'1px solid white',
+        borderRadius: '6px',
+        fontSize: '14px',
+        cursor: 'pointer',
+      }}
+      onClick={toggleTheme}
+    >
+      {mode === 'light' ? '🌙 Dark' : '☀️ Light'}
+    </Box>
       <Box css={styles.chatMain}>
         <ChatBody
           anonymousMode={anonymousMode}
@@ -114,7 +142,7 @@ const ChatLayout = () => {
           messageListRef={messageListRef}
           scrollToBottom={scrollToBottom}
         />
-        <ChatInput scrollToBottom={scrollToBottom} />
+        <ChatInput scrollToBottom={scrollToBottom} mode={mode} />
         <div id="emoji-popup" />
       </Box>
 
