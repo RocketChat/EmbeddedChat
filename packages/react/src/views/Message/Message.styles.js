@@ -113,7 +113,6 @@ export const getMessageHeaderStyles = (theme) => {
     header: css`
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
       flex-grow: 0;
       flex-shrink: 1;
       min-width: 1px;
@@ -128,10 +127,8 @@ export const getMessageHeaderStyles = (theme) => {
       font-size: 0.875rem;
       font-weight: 700;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userName: css`
@@ -140,10 +137,8 @@ export const getMessageHeaderStyles = (theme) => {
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userRole: css`
@@ -165,8 +160,10 @@ export const getMessageHeaderStyles = (theme) => {
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      flex-basis: 100%;
-      order: 3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 1;
     `,
 
     timestamp: css`
@@ -180,7 +177,6 @@ export const getMessageHeaderStyles = (theme) => {
       line-height: 1rem;
       flex-shrink: 0;
       margin-left: 0.25rem;
-      order: 2;
     `,
   };
 
