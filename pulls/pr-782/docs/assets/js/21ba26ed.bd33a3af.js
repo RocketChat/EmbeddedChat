@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[620],{7876:e=>{e.exports=JSON.parse('{"metadata":{"permalink":"/EmbeddedChat/pulls/pr-782/docs/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":3,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
