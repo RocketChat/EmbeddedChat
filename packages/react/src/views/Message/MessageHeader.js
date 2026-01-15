@@ -165,6 +165,7 @@ const MessageHeader = ({
           css={styles.userActions}
           className={appendClassNames('ec-message-header-useractions')}
           style={{ marginLeft: '2px' }}
+          title={userActions()}
         >
           {userActions()}
         </Box>

@@ -1191,7 +1191,15 @@ export default class EmbeddedChatApi {
     return data;
   }
 
-  async execCommand({ command, params }: { command: string; params: string }) {
+  async execCommand({
+    command,
+    params,
+    tmid,
+  }: {
+    command: string;
+    params: string;
+    tmid?: string;
+  }) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(`${this.host}/api/v1/commands.run`, {
       headers: {
@@ -1203,6 +1211,7 @@ export default class EmbeddedChatApi {
       body: JSON.stringify({
         command,
         params,
+        tmid,
         roomId: this.rid,
         triggerId: Math.random().toString(32).slice(2, 20),
       }),
