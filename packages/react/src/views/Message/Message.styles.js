@@ -179,10 +179,8 @@ export const getMessageHeaderStyles = (theme) => {
       font-size: 0.875rem;
       font-weight: 700;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userName: css`
@@ -191,10 +189,8 @@ export const getMessageHeaderStyles = (theme) => {
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userRole: css`
