@@ -18,6 +18,8 @@ const getChatHeaderStyles = ({ theme, mode }) => {
       padding: 0 0.75rem;
       justify-content: space-between;
       width: 100%;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     `,
 
     chatHeaderParent: css`
@@ -42,7 +44,7 @@ const getChatHeaderStyles = ({ theme, mode }) => {
     channelDescription: css`
       ${rowCentreAlign}
       flex: 1;
-      min-width: 0;
+      min-width: 120px;
       gap: 0.5rem;
       overflow: hidden;
     `,
@@ -52,8 +54,10 @@ const getChatHeaderStyles = ({ theme, mode }) => {
       position: relative;
       gap: 0.5rem;
       flex-shrink: 0;
-      @media (max-width: 480px) {
+      @media (max-width: 380px) {
         gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
     `,
     channelName: css`
