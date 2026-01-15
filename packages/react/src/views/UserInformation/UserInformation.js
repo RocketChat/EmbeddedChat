@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+import { parse } from '@rocket.chat/message-parser';
 import {
   Box,
   Sidebar,
@@ -18,7 +19,7 @@ import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import { parseUrls } from './parseUrls';
+import { Markdown } from '../Markdown';
 
 const UserInformation = () => {
   const { variantOverrides } = useComponentOverrides('UserInformation');
@@ -177,7 +178,12 @@ const UserInformation = () => {
             {currentUserInfo?.bio && (
               <UserInfoField
                 label="Bio"
-                value={parseUrls(currentUserInfo?.bio, theme, mode)}
+                value={
+                  <Markdown
+                    body={currentUserInfo.bio}
+                    md={parse(currentUserInfo.bio)}
+                  />
+                }
                 isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
                 currentUserInfo={currentUserInfo}
