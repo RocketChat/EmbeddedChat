@@ -6,11 +6,15 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 
-import { getMessageDividerStyles } from './Message.styles';
+import {
+  getMessageDividerStyles,
+  getUnreadMessageDividerStyles,
+} from './Message.styles';
 
 export const MessageDivider = ({
   children,
   unreadLabel,
+  unread = false,
   className = '',
   style = {},
   ...props
@@ -20,8 +24,10 @@ export const MessageDivider = ({
     className,
     style
   );
-  const { theme } = useTheme();
-  const styles = getMessageDividerStyles(theme);
+  const { theme, mode } = useTheme();
+  const styles = unread
+    ? getUnreadMessageDividerStyles(theme, mode)
+    : getMessageDividerStyles(theme);
   return (
     <Box
       role="separator"
