@@ -33,7 +33,7 @@ const MessageList = ({
 
   return (
     <>
-   {filteredMessages.length === 0 ? (
+    {filteredMessages.length === 0 ? (
         <Box
           css={css`
             text-align: center;
