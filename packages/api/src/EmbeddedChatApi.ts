@@ -1046,26 +1046,55 @@ export default class EmbeddedChatApi {
   ) {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const form = new FormData();
-      if (threadId) {
-        form.append("tmid", threadId);
+      if (!userId || !authToken) {
+        console.error("sendAttachment: User not authenticated");
+        return;
       }
+
+      // Step 1: Upload file to rooms.media endpoint (RC 8.x)
+      const form = new FormData();
       form.append("file", file, fileName);
-      form.append(
-        "description",
-        fileDescription.length !== 0 ? fileDescription : ""
+
+      const uploadResponse = await fetch(
+        `${this.host}/api/v1/rooms.media/${this.rid}`,
+        {
+          method: "POST",
+          body: form,
+          headers: {
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+        }
       );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
-        method: "POST",
-        body: form,
-        headers: {
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }).then((r) => r.json());
-      return response;
+
+      const uploadResult = await uploadResponse.json();
+
+      if (!uploadResult.success || !uploadResult.file?._id) {
+        console.error("sendAttachment: Upload failed", uploadResult);
+        return uploadResult;
+      }
+
+      // Step 2: Confirm the upload with message details
+      const confirmResponse = await fetch(
+        `${this.host}/api/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          body: JSON.stringify(
+            threadId
+              ? { msg: "", description: fileDescription || "", tmid: threadId }
+              : { msg: "", description: fileDescription || "" }
+          ),
+        }
+      );
+
+      return await confirmResponse.json();
     } catch (err) {
-      console.log(err);
+      console.error("sendAttachment error:", err);
     }
   }
 
