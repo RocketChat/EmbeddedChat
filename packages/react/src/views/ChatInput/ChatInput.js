@@ -354,7 +354,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const handleCommandExecution = async (message) => {
     const execCommand = async (command, params) => {
-      await RCInstance.execCommand({ command, params });
+      await RCInstance.execCommand({ command, params, tmid: threadId });
       setFilteredCommands([]);
     };
 
