@@ -108,10 +108,10 @@ const FileAttachment = ({
             background: ${theme.colors.background};
           `,
           (type ? variantStyles.pinnedContainer : '') ||
-          css`
+            css`
               ${type === 'file'
-              ? `border: 2px solid ${theme.colors.border};`
-              : ''}
+                ? `border: 2px solid ${theme.colors.border};`
+                : ''}
             `,
         ]}
       >
@@ -239,7 +239,10 @@ const FileAttachment = ({
                 <AudioAttachment
                   attachment={nestedAttachment}
                   host={host}
-                  author={{ authorIcon: nestedAttachment?.author_icon, authorName: nestedAttachment?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -251,7 +254,10 @@ const FileAttachment = ({
                 <VideoAttachment
                   attachment={nestedAttachment}
                   host={host}
-                  author={{ authorIcon: nestedAttachment?.author_icon, authorName: nestedAttachment?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -263,7 +269,10 @@ const FileAttachment = ({
                 <ImageAttachment
                   attachment={nestedAttachment}
                   host={host}
-                  author={{ authorIcon: nestedAttachment?.author_icon, authorName: nestedAttachment?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -276,7 +285,10 @@ const FileAttachment = ({
                 <AudioAttachment
                   attachment={nestedAttachment.attachments[0]}
                   host={host}
-                  author={{ authorIcon: nestedAttachment.attachments[0]?.author_icon, authorName: nestedAttachment.attachments[0]?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -288,7 +300,10 @@ const FileAttachment = ({
                 <VideoAttachment
                   attachment={nestedAttachment.attachments[0]}
                   host={host}
-                  author={{ authorIcon: nestedAttachment.attachments[0]?.author_icon, authorName: nestedAttachment.attachments[0]?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -300,7 +315,10 @@ const FileAttachment = ({
                 <ImageAttachment
                   attachment={nestedAttachment.attachments[0]}
                   host={host}
-                  author={{ authorIcon: nestedAttachment.attachments[0]?.author_icon, authorName: nestedAttachment.attachments[0]?.author_name }}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
                   variantStyles={variantStyles}
                   msg={msg}
                   key={index}
@@ -325,14 +343,14 @@ const FileAttachment = ({
                   (nestedAttachment?.type
                     ? variantStyles.pinnedContainer
                     : '') ||
-                  css`
+                    css`
                       ${!attachment?.type
-                      ? `border: 2px solid ${theme.colors.border};`
-                      : ''}
+                        ? `border: 2px solid ${theme.colors.border};`
+                        : ''}
                     `,
                   css`
                     ${variantStyles.name !== undefined &&
-                      variantStyles.name.includes('bubble')
+                    variantStyles.name.includes('bubble')
                       ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
                       : ''}
                   `,
