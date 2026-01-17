@@ -49,8 +49,8 @@ const MessageAvatarContainer = ({
                 ? '1.2em'
                 : '1.5em'
               : message.t
-                ? '1.5em'
-                : '2.25em'
+              ? '1.5em'
+              : '2.25em'
           }
           onClick={handleAvatarClick}
         />
