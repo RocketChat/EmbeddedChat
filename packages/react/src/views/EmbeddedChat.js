@@ -269,7 +269,7 @@ const EmbeddedChat = (props) => {
 
   if (!isSynced) return null;
 
-  if (!RCInstance) {
+  if (!RCInstance && roomIdError) {
     return (
       <ThemeProvider
         theme={theme || DefaultTheme}
@@ -316,24 +316,26 @@ const EmbeddedChat = (props) => {
                     margin-bottom: 8px;
                   `}
                 >
-                  {roomIdError || 'Loading channel...'}
+                  {roomIdError}
                 </Box>
-                {roomIdError && (
-                  <Box
-                    css={css`
-                      font-size: 0.9rem;
-                      opacity: 0.7;
-                    `}
-                  >
-                    Please check the channel name and try again.
-                  </Box>
-                )}
+                <Box
+                  css={css`
+                    font-size: 0.9rem;
+                    opacity: 0.7;
+                  `}
+                >
+                  Please check the channel name and try again.
+                </Box>
               </Box>
             </Box>
           </ToastBarProvider>
         </Box>
       </ThemeProvider>
     );
+  }
+
+  if (!RCInstance) {
+    return null;
   }
 
   return (

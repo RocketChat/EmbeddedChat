@@ -30,7 +30,7 @@ export const useRoomId = (
       return { roomId, error: null };
     }
     return channelName
-      ? { roomId: null, error: null }
+      ? { roomId: 'GENERAL', error: null }
       : { roomId: 'GENERAL', error: null };
   });
 
@@ -43,6 +43,7 @@ export const useRoomId = (
 
       if (channelName) {
         if (!isUserAuthenticated) {
+          setResolvedRoomId({ roomId: 'GENERAL', error: null });
           return;
         }
 
