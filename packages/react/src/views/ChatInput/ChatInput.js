@@ -148,7 +148,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
-          .then((data) => setCommands(data.commands || []))
+          .then((response) => setCommands(response.commands || []))
           .catch(console.error);
 
         RCInstance.getChannelMembers(isChannelPrivate)
