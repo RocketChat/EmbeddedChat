@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-  useRef,
-} from 'react';
+import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
@@ -14,6 +7,7 @@ import {
   ToastBarProvider,
   useComponentOverrides,
   ThemeProvider,
+  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
@@ -29,20 +23,13 @@ import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
+import { useRoomId } from '../hooks/useRoomId';
 
 const EmbeddedChat = (props) => {
   const [config, setConfig] = useState(() => props);
-  const [explicitRoomId, setExplicitRoomId] = useState(() => props.roomId);
-  const [resolvedRoomId, setResolvedRoomId] = useState(() => {
-    if (props.roomId) {
-      return props.roomId;
-    }
-    return props.channelName ? null : 'GENERAL';
-  });
 
   useEffect(() => {
     setConfig(props);
-    setExplicitRoomId(props.roomId);
   }, [props]);
 
   const {
@@ -73,12 +60,9 @@ const EmbeddedChat = (props) => {
     remoteOpt = false,
   } = config;
 
-  const hasMounted = useRef(false);
-  const previousResolvedRoomId = useRef(resolvedRoomId);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
   const {
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
@@ -104,114 +88,49 @@ const EmbeddedChat = (props) => {
     );
   }
 
-  const initializeRCInstance = useCallback(() => {
+  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
+  const { roomId: resolvedRoomId, error: roomIdError } = useRoomId(
+    roomId,
+    channelName,
+    host,
+    getToken,
+    deleteToken,
+    saveToken,
+    isUserAuthenticated
+  );
+
+  const dispatchToastMessage = useToastBarDispatch();
+
+  const RCInstance = useMemo(() => {
+    if (resolvedRoomId === null) {
+      return null;
+    }
     const roomIdToUse = resolvedRoomId || 'GENERAL';
-    const newRCInstance = new EmbeddedChatApi(host, roomIdToUse, {
+    return new EmbeddedChatApi(host, roomIdToUse, {
       getToken,
       deleteToken,
       saveToken,
     });
-
-    return newRCInstance;
   }, [host, resolvedRoomId, getToken, deleteToken, saveToken]);
 
-  const [RCInstance, setRCInstance] = useState(() => {
-    const initialRoomId = resolvedRoomId || 'GENERAL';
-    return new EmbeddedChatApi(host, initialRoomId, {
-      getToken,
-      deleteToken,
-      saveToken,
-    });
-  });
   const setMessages = useMessageStore((state) => state.setMessages);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
 
   useEffect(() => {
-    const resolveRoomId = async () => {
-      if (explicitRoomId) {
-        setResolvedRoomId(explicitRoomId);
-        return;
-      }
-
-      if (channelName) {
-        try {
-          if (!RCInstance) {
-            return;
-          }
-
-          if (!isUserAuthenticated) {
-            return;
-          }
-
-          const currentUser = await RCInstance.auth.getCurrentUser();
-          const authToken = currentUser?.authToken;
-          const userId = currentUser?.userId || currentUser?._id;
-
-          if (!authToken || !userId) {
-            return;
-          }
-
-          const response = await fetch(
-            `${host}/api/v1/rooms.info?roomName=${encodeURIComponent(
-              channelName
-            )}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Token': authToken,
-                'X-User-Id': userId,
-              },
-            }
-          );
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              return;
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-          if (data?.success && data?.room?._id) {
-            setResolvedRoomId(data.room._id);
-          } else {
-            setResolvedRoomId('GENERAL');
-          }
-        } catch (error) {
-          setResolvedRoomId('GENERAL');
-        }
-      } else {
-        setResolvedRoomId('GENERAL');
-      }
-    };
-
-    resolveRoomId();
-  }, [channelName, explicitRoomId, host, RCInstance, isUserAuthenticated]);
+    if (roomIdError) {
+      dispatchToastMessage({
+        type: 'error',
+        message: roomIdError,
+      });
+    }
+  }, [roomIdError, dispatchToastMessage]);
 
   useEffect(() => {
-    const reInstantiate = async () => {
-      if (!hasMounted.current) {
-        hasMounted.current = true;
-        previousResolvedRoomId.current = resolvedRoomId;
-        if (resolvedRoomId === null) {
-          return;
-        }
-        return;
-      }
+    if (resolvedRoomId === null || !RCInstance) {
+      return;
+    }
 
-      if (resolvedRoomId === null) {
-        return;
-      }
-
-      if (previousResolvedRoomId.current === resolvedRoomId) {
-        return;
-      }
-
-      previousResolvedRoomId.current = resolvedRoomId;
-
-      await RCInstance.close();
-
+    const cleanup = async () => {
       setMessages([], false);
       setChannelInfo({});
       useMessageStore.setState({
@@ -225,26 +144,19 @@ const EmbeddedChat = (props) => {
         messagesOffset: 0,
         isMessageLoaded: false,
       });
-
-      const newRCInstance = initializeRCInstance();
-      setRCInstance(newRCInstance);
     };
 
-    reInstantiate().catch(console.error);
+    cleanup();
 
     return () => {
       RCInstance.close().catch(console.error);
     };
-  }, [
-    resolvedRoomId,
-    host,
-    initializeRCInstance,
-    setMessages,
-    setChannelInfo,
-    RCInstance,
-  ]);
+  }, [resolvedRoomId, setMessages, setChannelInfo, RCInstance]);
 
   useEffect(() => {
+    if (!RCInstance) {
+      return;
+    }
     const autoLogin = async () => {
       setIsLoginIn(true);
       try {
@@ -259,6 +171,9 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
+    if (!RCInstance) {
+      return;
+    }
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.connect()
@@ -287,6 +202,10 @@ const EmbeddedChat = (props) => {
   ]);
 
   useEffect(() => {
+    if (!RCInstance) {
+      setIsSynced(true);
+      return;
+    }
     const getConfig = async () => {
       try {
         const appInfo = await RCInstance.getRCAppInfo();
@@ -341,16 +260,88 @@ const EmbeddedChat = (props) => {
     ]
   );
 
-  const RCContextValue = useMemo(
-    () => ({ RCInstance, ECOptions }),
-    [RCInstance, ECOptions]
-  );
+  const RCContextValue = useMemo(() => {
+    if (!RCInstance) {
+      return { RCInstance: null, ECOptions };
+    }
+    return { RCInstance, ECOptions };
+  }, [RCInstance, ECOptions]);
 
   if (!isSynced) return null;
 
+  if (!RCInstance) {
+    return (
+      <ThemeProvider
+        theme={theme || DefaultTheme}
+        mode={dark ? 'dark' : 'light'}
+      >
+        <Box
+          css={[
+            styles.embeddedchat(theme || DefaultTheme, dark),
+            css`
+              width: ${width};
+              height: ${height};
+              position: relative;
+            `,
+            fullScreen && styles.fullscreen,
+          ]}
+          className={`ec-embedded-chat ${className} ${classNames}`}
+          style={{ ...style, ...styleOverrides }}
+        >
+          <GlobalStyles />
+          <ToastBarProvider position={toastBarPosition}>
+            {hideHeader ? null : (
+              <ChatHeader
+                isClosable={isClosable}
+                setClosableState={setClosableState}
+                fullScreen={fullScreen}
+                setFullScreen={setFullScreen}
+              />
+            )}
+            <Box
+              css={css`
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                padding: 20px;
+                text-align: center;
+              `}
+            >
+              <Box>
+                <Box
+                  css={css`
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                  `}
+                >
+                  {roomIdError || 'Loading channel...'}
+                </Box>
+                {roomIdError && (
+                  <Box
+                    css={css`
+                      font-size: 0.9rem;
+                      opacity: 0.7;
+                    `}
+                  >
+                    Please check the channel name and try again.
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          </ToastBarProvider>
+        </Box>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
-      <RCInstanceProvider value={RCContextValue}>
+      <RCInstanceProvider
+        key={resolvedRoomId || 'pending'}
+        value={RCContextValue}
+      >
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),

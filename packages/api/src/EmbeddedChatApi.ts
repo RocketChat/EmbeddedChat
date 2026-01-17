@@ -498,6 +498,46 @@ export default class EmbeddedChatApi {
     }
   }
 
+  async getRoomIdByName(channelName: string): Promise<string | null> {
+    try {
+      const currentUser = await this.auth.getCurrentUser();
+      if (!currentUser || !currentUser.authToken || !currentUser.userId) {
+        return null;
+      }
+
+      const { userId, authToken } = currentUser;
+      const response = await fetch(
+        `${this.host}/api/v1/rooms.info?roomName=${encodeURIComponent(
+          channelName
+        )}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          return null;
+        }
+        return null;
+      }
+
+      const data = await response.json();
+      if (data?.success === true && data?.room?._id) {
+        return data.room._id;
+      }
+      return null;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
   async getRoomInfo() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
