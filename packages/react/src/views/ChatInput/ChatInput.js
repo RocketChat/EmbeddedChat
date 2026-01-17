@@ -185,7 +185,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   }, [deletedMessage]);
 
- 
   useEffect(() => {
     if (data === null && inputRef.current) {
       inputRef.current.value = '';
