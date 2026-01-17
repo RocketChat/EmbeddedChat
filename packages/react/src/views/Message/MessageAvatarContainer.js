@@ -49,8 +49,8 @@ const MessageAvatarContainer = ({
                 ? '1.2em'
                 : '1.5em'
               : message.t
-              ? '1.5em'
-              : '2.25em'
+                ? '1.5em'
+                : '2.25em'
           }
           onClick={handleAvatarClick}
         />
@@ -58,6 +58,11 @@ const MessageAvatarContainer = ({
       {isStarred && sequential ? (
         <Tooltip text="Starred" position="top">
           <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
+        </Tooltip>
+      ) : null}
+      {message.editedAt && sequential ? (
+        <Tooltip text="Edited" position="top">
+          <Icon style={{ opacity: 0.5 }} name="edit" size="1.2em" />
         </Tooltip>
       ) : null}
       {isPinned && sequential ? (
