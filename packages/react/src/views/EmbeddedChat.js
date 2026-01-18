@@ -7,7 +7,6 @@ import {
   ToastBarProvider,
   useComponentOverrides,
   ThemeProvider,
-  useToastBarDispatch,
 } from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
@@ -99,8 +98,6 @@ const EmbeddedChat = (props) => {
     isUserAuthenticated
   );
 
-  const dispatchToastMessage = useToastBarDispatch();
-
   const RCInstance = useMemo(() => {
     const roomIdToUse = resolvedRoomId || roomId || 'GENERAL';
     try {
@@ -117,15 +114,6 @@ const EmbeddedChat = (props) => {
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
-
-  useEffect(() => {
-    if (roomIdError) {
-      dispatchToastMessage({
-        type: 'error',
-        message: roomIdError,
-      });
-    }
-  }, [roomIdError, dispatchToastMessage]);
 
   useEffect(() => {
     if (resolvedRoomId === null || !RCInstance) {
