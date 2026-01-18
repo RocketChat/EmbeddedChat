@@ -102,16 +102,18 @@ const EmbeddedChat = (props) => {
   const dispatchToastMessage = useToastBarDispatch();
 
   const RCInstance = useMemo(() => {
-    if (resolvedRoomId === null) {
+    const roomIdToUse = resolvedRoomId || roomId || 'GENERAL';
+    try {
+      return new EmbeddedChatApi(host, roomIdToUse, {
+        getToken,
+        deleteToken,
+        saveToken,
+      });
+    } catch (error) {
+      console.error('Failed to create RCInstance:', error);
       return null;
     }
-    const roomIdToUse = resolvedRoomId || 'GENERAL';
-    return new EmbeddedChatApi(host, roomIdToUse, {
-      getToken,
-      deleteToken,
-      saveToken,
-    });
-  }, [host, resolvedRoomId, getToken, deleteToken, saveToken]);
+  }, [host, resolvedRoomId, roomId, getToken, deleteToken, saveToken]);
 
   const setMessages = useMessageStore((state) => state.setMessages);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
@@ -269,7 +271,7 @@ const EmbeddedChat = (props) => {
 
   if (!isSynced) return null;
 
-  if (!RCInstance && roomIdError) {
+  if (roomIdError && !RCInstance) {
     return (
       <ThemeProvider
         theme={theme || DefaultTheme}
