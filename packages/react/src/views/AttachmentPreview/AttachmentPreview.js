@@ -1,6 +1,13 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
-import { Box, Icon, Button, Input, Modal, useTheme } from '@embeddedchat/ui-elements';
+import {
+  Box,
+  Icon,
+  Button,
+  Input,
+  Modal,
+  useTheme,
+} from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import CheckPreviewType from './CheckPreviewType';
 import RCContext from '../../context/RCInstance';
@@ -104,7 +111,13 @@ const AttachmentPreview = () => {
     <Modal onClose={toggle}>
       <Modal.Header>
         <Modal.Title>
-          <Icon name="attachment" size="1.25rem" css={css` margin-right: 0.5rem; `} />
+          <Icon
+            name="attachment"
+            size="1.25rem"
+            css={css`
+              margin-right: 0.5rem;
+            `}
+          />
           File Upload
         </Modal.Title>
         <Modal.Close onClick={toggle} />
@@ -112,14 +125,29 @@ const AttachmentPreview = () => {
 
       <Modal.Content>
         <Box css={styles.modalContent}>
-          <Box css={css` text-align: center; margin-top: 1rem; `}>
+          <Box
+            css={css`
+              text-align: center;
+              margin-top: 1rem;
+            `}
+          >
             <CheckPreviewType data={data} />
           </Box>
 
-          <Box css={css` margin: 30px; `}>
+          <Box
+            css={css`
+              margin: 30px;
+            `}
+          >
             {/* FILE NAME */}
             <Box css={styles.inputContainer}>
-              <Box is="span" css={css` font-weight: 550; margin-bottom: 0.5rem; `}>
+              <Box
+                is="span"
+                css={css`
+                  font-weight: 550;
+                  margin-bottom: 0.5rem;
+                `}
+              >
                 File name
               </Box>
               <Input
@@ -134,7 +162,13 @@ const AttachmentPreview = () => {
 
             {/* FILE DESCRIPTION */}
             <Box css={styles.inputContainer}>
-              <Box is="span" css={css` font-weight: 550; margin-bottom: 0.5rem; `}>
+              <Box
+                is="span"
+                css={css`
+                  font-weight: 550;
+                  margin-bottom: 0.5rem;
+                `}
+              >
                 File description
               </Box>
 
@@ -163,7 +197,9 @@ const AttachmentPreview = () => {
                   value={description}
                   css={css`
                     ${styles.input};
-                    border-color: ${isOverLimit ? theme.colors.destructive : null};
+                    border-color: ${isOverLimit
+                      ? theme.colors.destructive
+                      : null};
                     color: ${isOverLimit ? theme.colors.destructive : null};
                   `}
                 />
@@ -184,7 +220,9 @@ const AttachmentPreview = () => {
                     {/* ALERT: left aligned (starts at left of the box). Only visible when over limit. */}
                     <Box
                       css={css`
-                        color: ${isOverLimit ? theme.colors.destructive : 'transparent'};
+                        color: ${isOverLimit
+                          ? theme.colors.destructive
+                          : 'transparent'};
                         font-weight: 500;
                         text-align: left;
                         flex: 1 1 auto;
@@ -195,13 +233,17 @@ const AttachmentPreview = () => {
                       aria-hidden={!isOverLimit}
                       role={isOverLimit ? 'alert' : undefined}
                     >
-                      {isOverLimit ? `Cannot upload file, description is over the ${msgMaxLength} character limit` : ''}
+                      {isOverLimit
+                        ? `Cannot upload file, description is over the ${msgMaxLength} character limit`
+                        : ''}
                     </Box>
 
                     {/* COUNTER: right aligned */}
                     <Box
                       css={css`
-                        color: ${isOverLimit ? theme.colors.destructive : '#6b7280'};
+                        color: ${isOverLimit
+                          ? theme.colors.destructive
+                          : '#6b7280'};
                         min-width: 68px;
                         text-align: right;
                         flex: 0 0 auto;
@@ -212,14 +254,17 @@ const AttachmentPreview = () => {
                     </Box>
                   </Box>
                 )}
-
               </Box>
             </Box>
           </Box>
         </Box>
       </Modal.Content>
 
-      <Modal.Footer css={css` margin-top: 1.5rem; `}>
+      <Modal.Footer
+        css={css`
+          margin-top: 1.5rem;
+        `}
+      >
         <Button type="secondary" onClick={toggle}>
           Cancel
         </Button>
