@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { Box, Icon, Button, Input, Modal, useTheme } from '@embeddedchat/ui-elements';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -11,8 +11,6 @@ import { parseEmoji } from '../../lib/emoji';
 import MembersList from '../Mentions/MembersList';
 import TypingUsers from '../TypingUsers/TypingUsers';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
-
-const DEFAULT_CHAR_LIMIT = 5000;
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -40,17 +38,11 @@ const AttachmentPreview = () => {
   const [description, setDescription] = useState('');
   const charCount = description.length;
 
-  // Get configurable limit from settings if present
-  const settingsMsgLimit = useSettingsStore((s) => s?.messageLimit);
-  const msgMaxLength = useMemo(
-    () =>
-      typeof settingsMsgLimit === 'number' && settingsMsgLimit > 0
-        ? settingsMsgLimit
-        : DEFAULT_CHAR_LIMIT,
-    [settingsMsgLimit]
-  );
+  // Character limit is fetched from RC server (Message_MaxAllowedSize)
+  // via ChatHeader and stored in settingsStore.
+  const msgMaxLength = useSettingsStore((s) => s?.messageLimit);
 
-  const isOverLimit = charCount > msgMaxLength;
+  const isOverLimit = msgMaxLength && charCount > msgMaxLength;
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
   const { members } = useMemberStore((state) => ({ members: state.members }));
@@ -84,7 +76,7 @@ const AttachmentPreview = () => {
 
   const submit = async () => {
     if (isPending) return;
-    if (description.length > msgMaxLength) return;
+    if (msgMaxLength && description.length > msgMaxLength) return;
 
     setIsPending(true);
     try {
@@ -177,47 +169,49 @@ const AttachmentPreview = () => {
                 />
 
                 {/* ALERT (left) and COUNTER (right) on the same row below the input */}
-                <Box
-                  css={css`
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-top: 6px;
-                    gap: 12px;
-                    font-size: 0.875rem;
-                  `}
-                >
-                  {/* ALERT: left aligned (starts at left of the box). Only visible when over limit. */}
+                {msgMaxLength && (
                   <Box
                     css={css`
-                      color: ${isOverLimit ? theme.colors.destructive : 'transparent'};
-                      font-weight: 500;
-                      text-align: left;
-                      flex: 1 1 auto;
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
+                      width: 100%;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-top: 6px;
+                      gap: 12px;
+                      font-size: 0.875rem;
                     `}
-                    aria-hidden={!isOverLimit}
-                    role={isOverLimit ? 'alert' : undefined}
                   >
-                    {isOverLimit ? `Cannot upload file, description is over the ${msgMaxLength} character limit` : ''}
-                  </Box>
+                    {/* ALERT: left aligned (starts at left of the box). Only visible when over limit. */}
+                    <Box
+                      css={css`
+                        color: ${isOverLimit ? theme.colors.destructive : 'transparent'};
+                        font-weight: 500;
+                        text-align: left;
+                        flex: 1 1 auto;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                      `}
+                      aria-hidden={!isOverLimit}
+                      role={isOverLimit ? 'alert' : undefined}
+                    >
+                      {isOverLimit ? `Cannot upload file, description is over the ${msgMaxLength} character limit` : ''}
+                    </Box>
 
-                  {/* COUNTER: right aligned */}
-                  <Box
-                    css={css`
-                      color: ${isOverLimit ? theme.colors.destructive : '#6b7280'};
-                      min-width: 68px;
-                      text-align: right;
-                      flex: 0 0 auto;
-                    `}
-                    aria-hidden="true"
-                  >
-                    ({charCount}/{msgMaxLength})
+                    {/* COUNTER: right aligned */}
+                    <Box
+                      css={css`
+                        color: ${isOverLimit ? theme.colors.destructive : '#6b7280'};
+                        min-width: 68px;
+                        text-align: right;
+                        flex: 0 0 auto;
+                      `}
+                      aria-hidden="true"
+                    >
+                      ({charCount}/{msgMaxLength})
+                    </Box>
                   </Box>
-                </Box>
+                )}
 
               </Box>
             </Box>
