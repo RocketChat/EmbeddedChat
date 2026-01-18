@@ -100,6 +100,9 @@ const EmbeddedChat = (props) => {
 
   const RCInstance = useMemo(() => {
     const roomIdToUse = resolvedRoomId || roomId || 'GENERAL';
+    if (!roomIdToUse) {
+      return null;
+    }
     try {
       return new EmbeddedChatApi(host, roomIdToUse, {
         getToken,
