@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { format } from 'date-fns';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme, Icon } from '@embeddedchat/ui-elements';
@@ -11,12 +12,11 @@ const FileAttachment = ({
   attachment,
   host,
   type,
-  author,
   variantStyles = {},
   msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
-  const { theme } = useTheme();
+  const { theme, mode } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
 
   const getUserAvatarUrl = (icon) => {
@@ -26,6 +26,51 @@ const FileAttachment = ({
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
+  };
+
+  const getMessageIdFromAttachment = (quoteAttachment) => {
+    const link = quoteAttachment?.title_link || quoteAttachment?.message_link;
+    if (!link) return null;
+
+    try {
+      const query = link.includes('?') ? link.split('?')[1] : '';
+      const params = new URLSearchParams(query);
+      return params.get('msg');
+    } catch {
+      return null;
+    }
+  };
+
+  const handleQuoteClick = (quoteAttachment) => {
+    const msgId = getMessageIdFromAttachment(quoteAttachment);
+    if (!msgId) return;
+
+    const element = document.getElementById(`ec-message-body-${msgId}`);
+    if (!element) return;
+
+    const container = element.closest('.ec-message');
+    if (!container) return;
+
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const highlightColor =
+      mode === 'light' ? theme.colors.warningForeground : theme.colors.warning;
+
+    container.style.transition = 'background-color 1s ease-out';
+    container.style.backgroundColor = highlightColor;
+
+    setTimeout(() => {
+      container.style.backgroundColor = '';
+    }, 2000);
+  };
+
+  const getTimeString = (ts) => {
+    if (!ts) return null;
+    if (typeof ts === 'object' && ts.$date) {
+      ts = ts.$date;
+    }
+    const date = new Date(ts);
+    return !Number.isNaN(date.getTime()) ? format(date, 'h:mm a') : ts;
   };
 
   const formatFileSize = (bytes) => {
@@ -44,9 +89,9 @@ const FileAttachment = ({
     return `${size.toFixed(decimals)} ${units[unitIndex]}`;
   };
 
-  const getFileSizeWithFormat = (size, format) => {
+  const getFileSizeWithFormat = (size, fileFormat) => {
     const formattedSize = formatFileSize(size);
-    return format ? `${formattedSize} - ${format}` : formattedSize;
+    return fileFormat ? `${formattedSize} - ${fileFormat}` : formattedSize;
   };
 
   return (
@@ -84,6 +129,21 @@ const FileAttachment = ({
               size="1.2em"
             />
             <Box>@{attachment?.author_name}</Box>
+            {getTimeString(attachment?.ts) && (
+              <Box
+                onClick={() => handleQuoteClick(attachment)}
+                css={css`
+                  font-size: 0.75rem;
+                  color: ${theme.colors.mutedForeground};
+                  cursor: pointer;
+                  &:hover {
+                    text-decoration: underline;
+                  }
+                `}
+              >
+                {getTimeString(attachment.ts)}
+              </Box>
+            )}
           </Box>
         )}
 
@@ -217,6 +277,21 @@ const FileAttachment = ({
                       size="1.2em"
                     />
                     <Box>@{nestedAttachment?.author_name}</Box>
+                    {getTimeString(nestedAttachment?.ts) && (
+                      <Box
+                        onClick={() => handleQuoteClick(nestedAttachment)}
+                        css={css`
+                          font-size: 0.75rem;
+                          color: ${theme.colors.mutedForeground};
+                          cursor: pointer;
+                          &:hover {
+                            text-decoration: underline;
+                          }
+                        `}
+                      >
+                        {getTimeString(nestedAttachment.ts)}
+                      </Box>
+                    )}
                   </>
                 )}
               </Box>
@@ -309,7 +384,6 @@ FileAttachment.propTypes = {
   attachment: PropTypes.object,
   host: PropTypes.string,
   type: PropTypes.string,
-  author: PropTypes.object,
   variantStyles: PropTypes.object,
   msg: PropTypes.object,
 };
