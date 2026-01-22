@@ -92,13 +92,13 @@ const Message = ({
   const hoverStyle = hasType
     ? {}
     : {
-        '&:hover': {
-          backgroundColor:
-            mode === 'light'
-              ? darken(theme.theme.colors.background, 0.03)
-              : lighten(theme.theme.colors.background, 1),
-        },
-      };
+      '&:hover': {
+        backgroundColor:
+          mode === 'light'
+            ? darken(theme.theme.colors.background, 0.03)
+            : lighten(theme.theme.colors.background, 1),
+      },
+    };
 
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);
@@ -273,15 +273,15 @@ const Message = ({
               >
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
-                    <Markdown
-                      body={message}
-                      md={message.md}
-                      isReaction={false}
-                    />
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}
                       msg={message}
+                    />
+                    <Markdown
+                      body={message}
+                      md={message.md}
+                      isReaction={false}
                     />
                   </>
                 ) : (
