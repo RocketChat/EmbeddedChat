@@ -1,4 +1,6 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useState } from 'react';
+import { css } from '@emotion/react';
+import { RiWifiOffLine } from 'react-icons/ri';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -9,6 +11,7 @@ import {
   useTheme,
   lighten,
   darken,
+  Icon,
 } from '@embeddedchat/ui-elements';
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
@@ -81,6 +84,11 @@ const Message = ({
   const forceDeleteMessagePermissions = useMessageStore(
     (state) => state.forceDeleteMessageRoles.roles
   );
+  const { removeMessage, replaceMessage } = useMessageStore((state) => ({
+    removeMessage: state.removeMessage,
+    replaceMessage: state.replaceMessage,
+  }));
+  const [isErrorMenuOpen, setIsErrorMenuOpen] = useState(false);
 
   const isMe = message.u._id === authenticatedUserId;
 
@@ -193,6 +201,14 @@ const Message = ({
   };
 
   const handleDeleteMessage = async (msg) => {
+    if (msg.isError) {
+      removeMessage(msg._id);
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Message deleted successfully',
+      });
+      return;
+    }
     const res = await RCInstance.deleteMessage(msg._id);
 
     if (res.success) {
@@ -207,6 +223,47 @@ const Message = ({
       });
     }
     getStarredMessages();
+  };
+
+  const handleResendMessage = async () => {
+    const now = new Date().toISOString();
+    const pendingMessage = {
+      ...message,
+      isError: false,
+      isPending: true,
+      ts: now,
+      _updatedAt: now,
+    };
+    replaceMessage(message._id, pendingMessage);
+
+    if (!navigator.onLine) {
+      const erroredMessage = {
+        ...pendingMessage,
+        isError: true,
+        isPending: false,
+      };
+      replaceMessage(pendingMessage._id, erroredMessage);
+      return;
+    }
+
+    const res = await RCInstance.sendMessage(
+      {
+        msg: message.msg,
+        _id: message._id,
+      },
+      message.tmid
+    );
+
+    if (res.success) {
+      replaceMessage(pendingMessage._id, res.message);
+    } else {
+      const erroredMessage = {
+        ...pendingMessage,
+        isError: true,
+        isPending: false,
+      };
+      replaceMessage(pendingMessage._id, erroredMessage);
+    }
   };
 
   const handleEmojiClick = async (e, msg, canReact) => {
@@ -236,6 +293,10 @@ const Message = ({
           variantStyles.messageParent || styles.main,
           hoverStyle,
           editMessage._id === message._id && styles.messageEditing,
+          message.isError &&
+            css`
+              color: ${theme.theme.colors.destructive};
+            `,
         ]}
         style={styleOverrides}
       >
@@ -296,7 +357,7 @@ const Message = ({
                   />
                 )}
 
-                {!message.t && showToolbox ? (
+                {!message.t && showToolbox && !message.isError ? (
                   <MessageToolbox
                     message={message}
                     isEditing={editMessage._id === message._id}
@@ -329,10 +390,91 @@ const Message = ({
                     isThreadMessage={type === 'thread'}
                     variantStyles={variantStyles}
                   />
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </MessageBody>
+              {message.isError && (
+                <Box
+                  css={css`
+                    position: absolute;
+                    top: 50%;
+                    right: 0.5rem;
+                    transform: translateY(-50%);
+                    z-index: 10;
+                  `}
+                >
+                  <RiWifiOffLine
+                    size="1.25rem"
+                    style={{ cursor: 'pointer', color: 'red' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsErrorMenuOpen(!isErrorMenuOpen);
+                    }}
+                  />
+                  {isErrorMenuOpen && (
+                    <Box
+                      css={css`
+                        position: absolute;
+                        bottom: 110%;
+                        right: 0;
+                        background-color: ${theme.theme.colors.background};
+                        box-shadow: ${theme.theme.shadows[2]};
+                        border-radius: ${theme.theme.radius};
+                        z-index: 100;
+                        border: 1px solid ${theme.theme.colors.border};
+                        display: flex;
+                        flex-direction: column;
+                        width: fit-content;
+                        overflow: hidden;
+                      `}
+                    >
+                      <Box
+                        css={css`
+                          padding: 0.5rem 1rem;
+                          display: flex;
+                          align-items: center;
+                          gap: 0.5rem;
+                          cursor: pointer;
+                          white-space: nowrap;
+                          font-size: 0.875rem;
+                          color: ${theme.theme.colors.foreground};
+                          &:hover {
+                            background-color: ${theme.theme.colors.secondary};
+                          }
+                        `}
+                        onClick={() => {
+                          handleResendMessage();
+                          setIsErrorMenuOpen(false);
+                        }}
+                      >
+                        <Icon name="send" size="1em" />
+                        Resend
+                      </Box>
+                      <Box
+                        css={css`
+                          padding: 0.5rem 1rem;
+                          display: flex;
+                          align-items: center;
+                          gap: 0.5rem;
+                          cursor: pointer;
+                          white-space: nowrap;
+                          font-size: 0.875rem;
+                          color: ${theme.theme.colors.destructive};
+                          &:hover {
+                            background-color: ${theme.theme.colors.secondary};
+                          }
+                        `}
+                        onClick={() => {
+                          handleDeleteMessage(message);
+                          setIsErrorMenuOpen(false);
+                        }}
+                      >
+                        <Icon name="trash" size="1em" />
+                        Delete
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              )}
 
               {isLinkPreview &&
                 message.urls &&

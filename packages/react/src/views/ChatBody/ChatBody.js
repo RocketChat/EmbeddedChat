@@ -174,6 +174,12 @@ const ChatBody = ({
     });
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
+  const setRid = useMessageStore((state) => state.setRid);
+
+  useEffect(() => {
+    setRid(RCInstance.rid);
+  }, [RCInstance.rid, setRid]);
+
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {

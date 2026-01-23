@@ -323,6 +323,16 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
+    if (!navigator.onLine) {
+      const erroredMessage = {
+        ...pendingMessage,
+        isError: true,
+        isPending: false,
+      };
+      replaceMessage(pendingMessage._id, erroredMessage);
+      return;
+    }
+
     const res = await RCInstance.sendMessage(
       {
         msg: pendingMessage.msg,
@@ -333,7 +343,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     if (res.success) {
       clearQuoteMessages();
-      replaceMessage(pendingMessage, res.message);
+      replaceMessage(pendingMessage._id, res.message);
+    } else {
+      const erroredMessage = {
+        ...pendingMessage,
+        isError: true,
+        isPending: false,
+      };
+      replaceMessage(pendingMessage._id, erroredMessage);
     }
   };
 
