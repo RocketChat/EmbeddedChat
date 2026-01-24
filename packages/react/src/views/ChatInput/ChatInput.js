@@ -298,17 +298,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       //   }
       // }
 
-      const quoteArray = await Promise.all(
+      const quoteLinks = await Promise.all(
         quoteMessage.map(async (quote) => {
           const { msg, attachments, _id } = quote;
           if (msg || attachments) {
             const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
+            return `[ ](${msgLink})`;
           }
-          return quotedMessages;
+          return '';
         })
       );
-      quotedMessages = quoteArray.join('');
+      quotedMessages = quoteLinks.join('');
       pendingMessage = createPendingMessage(
         `${quotedMessages}\n${message}`,
         userInfo
