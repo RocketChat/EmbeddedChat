@@ -116,6 +116,7 @@ const ChatInputFormattingToolbar = ({
 
     audio: (
       <AudioMessageRecorder
+        key="audio"
         displayName={
           isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
         }
@@ -125,6 +126,7 @@ const ChatInputFormattingToolbar = ({
     ),
     video: (
       <VideoMessageRecorder
+        key="video"
         displayName={
           isPopoverOpen && popOverItems.includes('video') ? 'video' : null
         }
@@ -194,7 +196,7 @@ const ChatInputFormattingToolbar = ({
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) =>
         isPopoverOpen && popOverItems.includes('formatter') ? (
-          <>
+          <React.Fragment key={item.name}>
             <Box
               key={item.name}
               disabled={isRecordingMessage}
@@ -211,7 +213,7 @@ const ChatInputFormattingToolbar = ({
               />
               <span>{item.name}</span>
             </Box>
-          </>
+          </React.Fragment>
         ) : (
           <Tooltip
             text={item.name}
