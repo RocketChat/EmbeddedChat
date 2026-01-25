@@ -29,8 +29,16 @@ const useMessageStore = create((set, get) => ({
       const uniqueMessages = Array.from(
         new Map(allMessages.map((msg) => [msg._id, msg])).values()
       );
+
+      uniqueMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
+
+      const cappedMessages =
+        uniqueMessages.length > 500
+          ? uniqueMessages.slice(-500)
+          : uniqueMessages;
+
       return {
-        messages: uniqueMessages,
+        messages: cappedMessages,
         isMessageLoaded: true,
       };
     }),
@@ -42,9 +50,12 @@ const useMessageStore = create((set, get) => ({
         }));
       }
     } else {
-      set((state) => ({
-        messages: upsertMessage(state.messages, message),
-      }));
+      set((state) => {
+        const updated = upsertMessage(state.messages, message);
+        return {
+          messages: updated.length > 500 ? updated.slice(-500) : updated,
+        };
+      });
     }
   },
   removeMessage: (messageId) => {

@@ -2501,6 +2501,7 @@ __metadata:
     prop-types: ^15.8.1
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-virtuoso: ^4.18.1
     rimraf: ^5.0.1
     rollup: ^2.70.1
     rollup-plugin-analyzer: ^4.0.0
@@ -27237,6 +27238,16 @@ __metadata:
   peerDependencies:
     react: ">= 0.14.0"
   checksum: 417b6f1f2e0c1e00dcc12d34da457b94c7419345306a951d0a8d2d031a0c964179d6b700137870ad1397572cbc3a4454e94de7bbef914a81674edae2098f02dc
+  languageName: node
+  linkType: hard
+
+"react-virtuoso@npm:^4.18.1":
+  version: 4.18.1
+  resolution: "react-virtuoso@npm:4.18.1"
+  peerDependencies:
+    react: ">=16 || >=17 || >= 18 || >= 19"
+    react-dom: ">=16 || >=17 || >= 18 || >=19"
+  checksum: 613261e9555a4d6fbb17ffc3443bc2d0b877c2f8ec52b5cd45ab40c91183e0e14d74151d1cf16195b0df91e41017d733d78aaf28b26987e55642d2b13aa733ed
   languageName: node
   linkType: hard
 
