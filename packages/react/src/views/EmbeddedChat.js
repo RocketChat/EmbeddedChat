@@ -64,7 +64,14 @@ const EmbeddedChat = (props) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
+  const storageKey = useMemo(
+    () => `ec_token_${host}_${roomId}`,
+    [host, roomId]
+  );
+  const { getToken, saveToken, deleteToken } = useMemo(
+    () => getTokenStorage(secure, storageKey),
+    [secure, storageKey]
+  );
   const {
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
