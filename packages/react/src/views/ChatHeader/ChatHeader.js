@@ -399,6 +399,9 @@ const ChatHeader = ({
                       <div
                         css={css`
                           font-size: ${fullScreen ? '1.3rem' : '1.25rem'};
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
                         `}
                       >
                         {channelInfo.name || channelName || 'channelName'}
