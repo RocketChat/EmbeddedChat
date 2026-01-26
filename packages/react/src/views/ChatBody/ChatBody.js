@@ -6,6 +6,7 @@ import React, {
   useState,
   useRef,
 } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import {
@@ -206,13 +207,47 @@ const ChatBody = ({
     setPopupVisible(false);
   };
 
+  const [floatingDate, setFloatingDate] = useState(null);
+  const floatingDateTimerRef = useRef(null);
+
   const handleScroll = useCallback(async () => {
     if (messageListRef && messageListRef.current) {
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight
+        messageListRef.current.scrollHeight
       );
+
+      // floating date logic
+      const list = messageListRef.current;
+      const listRect = list.getBoundingClientRect();
+      const x = listRect.left + listRect.width / 2;
+      // sampling point: slightly down from the top padding to catch the first visible message
+      const y = listRect.top + 10;
+
+      const topElement = document.elementFromPoint(x, y);
+
+      // attempt to find closest message container if we hit a child element
+      const messageElement = topElement?.closest('.ec-message');
+
+      if (messageElement) {
+        const bodyElement = messageElement.querySelector('.ec-message-body');
+        if (bodyElement && bodyElement.id) {
+          const id = bodyElement.id.replace('ec-message-body-', '');
+          const msg = messages.find((m) => m._id === id);
+          if (msg) {
+            const dateStr = format(new Date(msg.ts), 'MMMM d, yyyy');
+            setFloatingDate(dateStr);
+
+            if (floatingDateTimerRef.current) {
+              clearTimeout(floatingDateTimerRef.current);
+            }
+            floatingDateTimerRef.current = setTimeout(() => {
+              setFloatingDate(null);
+            }, 1000);
+          }
+        }
+      }
 
       if (
         messageListRef.current.scrollTop === 0 &&
@@ -226,13 +261,13 @@ const ChatBody = ({
             anonymousMode,
             ECOptions?.enableThreads
               ? {
-                  query: {
-                    tmid: {
-                      $exists: false,
-                    },
+                query: {
+                  tmid: {
+                    $exists: false,
                   },
-                  offset,
-                }
+                },
+                offset,
+              }
               : undefined,
             anonymousMode ? false : isChannelPrivate
           );
@@ -287,6 +322,7 @@ const ChatBody = ({
     setPopupVisible,
     setOtherUserMessage,
     firstUnreadMessageId,
+    messages
   ]);
 
   const showNewMessagesPopup = () => {
@@ -302,7 +338,7 @@ const ChatBody = ({
     if (announcementRef.current) {
       setIsOverflowing(
         announcementRef.current.scrollWidth >
-          announcementRef.current.clientWidth
+        announcementRef.current.clientWidth
       );
     }
   };
@@ -392,6 +428,14 @@ const ChatBody = ({
             </Button>
           </Modal.Footer>
         </Modal>
+      )}
+      {floatingDate && (
+        <Box
+          css={styles.dateIndicatorStyles}
+          className="ec-date-indicator"
+        >
+          {floatingDate}
+        </Box>
       )}
       <Box
         ref={messageListRef}
