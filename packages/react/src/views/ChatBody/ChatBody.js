@@ -215,7 +215,7 @@ const ChatBody = ({
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-        messageListRef.current.scrollHeight
+          messageListRef.current.scrollHeight
       );
 
       // floating date logic
@@ -261,13 +261,13 @@ const ChatBody = ({
             anonymousMode,
             ECOptions?.enableThreads
               ? {
-                query: {
-                  tmid: {
-                    $exists: false,
+                  query: {
+                    tmid: {
+                      $exists: false,
+                    },
                   },
-                },
-                offset,
-              }
+                  offset,
+                }
               : undefined,
             anonymousMode ? false : isChannelPrivate
           );
@@ -322,7 +322,7 @@ const ChatBody = ({
     setPopupVisible,
     setOtherUserMessage,
     firstUnreadMessageId,
-    messages
+    messages,
   ]);
 
   const showNewMessagesPopup = () => {
@@ -338,7 +338,7 @@ const ChatBody = ({
     if (announcementRef.current) {
       setIsOverflowing(
         announcementRef.current.scrollWidth >
-        announcementRef.current.clientWidth
+          announcementRef.current.clientWidth
       );
     }
   };
@@ -430,10 +430,7 @@ const ChatBody = ({
         </Modal>
       )}
       {floatingDate && (
-        <Box
-          css={styles.dateIndicatorStyles}
-          className="ec-date-indicator"
-        >
+        <Box css={styles.dateIndicatorStyles} className="ec-date-indicator">
           {floatingDate}
         </Box>
       )}

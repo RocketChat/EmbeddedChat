@@ -35,10 +35,10 @@ export const getChatbodyStyles = (theme, mode) => {
 
     dateIndicatorStyles: css`
       position: absolute;
-      top: 30px; 
+      top: 30px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 1050; 
+      z-index: 1050;
       padding: 1px 8px;
       border-radius: 2px;
       font-size: 0.75rem;
