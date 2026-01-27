@@ -31,6 +31,7 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import useRoomInfoUpdater from '../../hooks/useRoomInfoUpdater';
 
 const ChatHeader = ({
   isClosable,
@@ -56,6 +57,7 @@ const ChatHeader = ({
 }) => {
   const { classNames, styleOverrides, configOverrides } =
     useComponentOverrides('ChatHeader');
+  useRoomInfoUpdater();
 
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
