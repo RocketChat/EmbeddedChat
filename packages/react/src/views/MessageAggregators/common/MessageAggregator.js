@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
@@ -9,10 +9,12 @@ import {
   Icon,
   lighten,
   darken,
+  Throbber,
 } from '@embeddedchat/ui-elements';
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
+import { MessageNavigationContext } from '../../../context/MessageNavigationContext';
 import { useMessageStore, useSidebarStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
@@ -48,6 +50,7 @@ export const MessageAggregator = ({
   );
 
   const [messageRendered, setMessageRendered] = useState(false);
+  const [loadingMessageId, setLoadingMessageId] = useState(null);
   const { loading, messageList } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
@@ -57,7 +60,10 @@ export const MessageAggregator = ({
   const openThread = useMessageStore((state) => state.openThread);
   const closeThread = useMessageStore((state) => state.closeThread);
 
+  const { jumpToMessage } = useContext(MessageNavigationContext);
+
   const setJumpToMessage = (msg) => {
+    console.log('Jumping to message:', msg);
     if (!msg || !msg._id) {
       console.error('Invalid message object:', msg);
       return;
@@ -135,6 +141,16 @@ export const MessageAggregator = ({
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  const handleOnActionClick = async (msg) => {
+    if (!msg?._id) return;
+    setLoadingMessageId(msg._id);
+    try {
+      await jumpToMessage(msg._id);
+    } finally {
+      setLoadingMessageId(null);
+    }
+  };
 
   return (
     <ViewComponent
@@ -216,14 +232,19 @@ export const MessageAggregator = ({
                       <ActionButton
                         square
                         ghost
-                        onClick={() => setJumpToMessage(msg)}
+                        disabled={loadingMessageId === msg._id}
+                        onClick={() => handleOnActionClick(msg)}
                         css={{
                           position: 'relative',
                           zIndex: 10,
                           marginRight: '5px',
                         }}
                       >
-                        <Icon name="arrow-back" size="1.25rem" />
+                        {loadingMessageId === msg._id ? (
+                          <Throbber size="12px" />
+                        ) : (
+                          <Icon name="arrow-back" size="1.25rem" />
+                        )}
                       </ActionButton>
                     </Box>
                   )}

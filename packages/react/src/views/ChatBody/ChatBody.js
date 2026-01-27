@@ -40,6 +40,7 @@ const ChatBody = ({
   showRoles,
   messageListRef,
   scrollToBottom,
+  onRegisterJump,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { theme, mode } = useTheme();
@@ -60,11 +61,15 @@ const ChatBody = ({
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
   const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const hasMoreMessagesRef = useRef(hasMoreMessages);
+  const loadingOlderMessagesRef = useRef(loadingOlderMessages);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
   const setMessages = useMessageStore((state) => state.setMessages);
+  const offsetRef = useRef(offset);
+  const jumpFnRef = useRef(null);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -168,6 +173,18 @@ const ChatBody = ({
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
   useEffect(() => {
+    hasMoreMessagesRef.current = hasMoreMessages;
+  }, [hasMoreMessages]);
+
+  useEffect(() => {
+    loadingOlderMessagesRef.current = loadingOlderMessages;
+  }, [loadingOlderMessages]);
+
+  useEffect(() => {
+    offsetRef.current = offset;
+  }, [offset]);
+
+  useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         fetchAndSetPermissions();
@@ -259,6 +276,89 @@ const ChatBody = ({
     setPopupVisible,
     setOtherUserMessage,
   ]);
+
+  const loadOlderMessagesUntil = useCallback(
+    async (messageId, maxPages = 10) => {
+      if (!messageId) return false;
+      const hasMessage = () =>
+        useMessageStore
+          .getState()
+          .messages.some((msg) => msg._id === messageId);
+
+      if (hasMessage()) return true;
+
+      for (let attempt = 0; attempt < maxPages; attempt += 1) {
+        if (!hasMoreMessagesRef.current || loadingOlderMessagesRef.current) {
+          return false;
+        }
+
+        loadingOlderMessagesRef.current = true;
+        setLoadingOlderMessages(true);
+
+        try {
+          const olderMessages = await RCInstance.getOlderMessages(
+            anonymousMode,
+            ECOptions?.enableThreads
+              ? {
+                  query: {
+                    tmid: {
+                      $exists: false,
+                    },
+                  },
+                  offset: offsetRef.current,
+                }
+              : undefined,
+            anonymousMode ? false : isChannelPrivate
+          );
+
+          if (olderMessages?.messages?.length) {
+            setMessages(olderMessages.messages, true);
+            const newOffset = offsetRef.current + olderMessages.messages.length;
+            setMessagesOffset(newOffset);
+            offsetRef.current = newOffset;
+          } else {
+            setHasMoreMessages(false);
+            hasMoreMessagesRef.current = false;
+            return false;
+          }
+        } catch (error) {
+          console.error('Error fetching older messages:', error);
+          setHasMoreMessages(false);
+          hasMoreMessagesRef.current = false;
+          return false;
+        } finally {
+          setLoadingOlderMessages(false);
+          loadingOlderMessagesRef.current = false;
+        }
+
+        if (hasMessage()) return true;
+      }
+
+      return hasMessage();
+    },
+    [
+      RCInstance,
+      anonymousMode,
+      ECOptions?.enableThreads,
+      isChannelPrivate,
+      setMessages,
+      setMessagesOffset,
+    ]
+  );
+
+  const handleRegisterJump = useCallback(
+    (jumpFn) => {
+      jumpFnRef.current = jumpFn;
+      onRegisterJump?.(async (messageId) => {
+        const found = await loadOlderMessagesUntil(messageId);
+        if (!found) return;
+        requestAnimationFrame(() => {
+          jumpFnRef.current?.(messageId);
+        });
+      });
+    },
+    [loadOlderMessagesUntil, onRegisterJump]
+  );
 
   const showNewMessagesPopup = () => {
     setPopupVisible(true);
@@ -388,10 +488,12 @@ const ChatBody = ({
           />
         ) : (
           <MessageList
-            messages={messages}
+            messagesS={messages}
             loadingOlderMessages={loadingOlderMessages}
             isUserAuthenticated={isUserAuthenticated}
             hasMoreMessages={hasMoreMessages}
+            messageContainerRef={messageListRef}
+            onRegisterJump={handleRegisterJump}
           />
         )}
 
@@ -419,4 +521,5 @@ export default ChatBody;
 ChatBody.propTypes = {
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
+  onRegisterJump: PropTypes.func,
 };
