@@ -108,6 +108,7 @@ const AttachmentMetadata = ({
               css={css`
                 margin: 0;
                 font-size: 12px;
+                line-height: 1.5;
                 opacity: 0.7;
               `}
             >
@@ -119,6 +120,7 @@ const AttachmentMetadata = ({
           <Box
             css={css`
               font-size: 12px;
+              line-height: 1.5;
               opacity: 0.7;
               @media (max-width: 420px) {
                 margin-left: 0;
