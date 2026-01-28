@@ -16,8 +16,17 @@ const SearchMessages = () => {
   };
 
   const searchMessages = useCallback(async () => {
-    const { messages } = await RCInstance.getSearchMessages(text);
-    setMessageList(messages);
+    try {
+      // it is capture all responce first and prevent the crash (Error)
+      const response = await RCInstance.getSearchMessages(text);
+
+      //  using the optional chaining and fallback empty array([])
+      setMessageList(response?.messages || []);
+    } catch (error) {
+      // this is prevent the red-box UI crash , that meens the server are available Until Error (400/429) are Occurs
+      console.error("Search API Error:", error);
+      setMessageList([]);
+    }
   }, [text, RCInstance]);
 
   const debouncedSearch = useCallback(
@@ -29,7 +38,8 @@ const SearchMessages = () => {
 
   useEffect(() => {
     if (!text.trim()) {
-      if (messageList.length > 0) {
+      // make sure the even check to be safe 
+      if (messageList?.length > 0) {
         setMessageList([]);
       }
     } else {
@@ -38,7 +48,7 @@ const SearchMessages = () => {
     return () => {
       debouncedSearch.cancel();
     };
-  }, [text, debouncedSearch, messageList.length]);
+  }, [text, debouncedSearch, messageList?.length]);
 
   return (
     <MessageAggregator
@@ -50,7 +60,8 @@ const SearchMessages = () => {
         handleInputChange,
         placeholder: 'Search Messages',
       }}
-      searchFiltered={messageList}
+      // ensure prop is never undefined
+      searchFiltered={messageList || []}
       shouldRender={(msg) => !!msg}
       viewType={viewType}
     />
