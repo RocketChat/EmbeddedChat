@@ -569,10 +569,10 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
+      ? `&query=${encodeURIComponent(JSON.stringify(options.query))}`
       : "";
     const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
+      ? `&field=${encodeURIComponent(JSON.stringify(options.field))}`
       : "";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
@@ -609,10 +609,10 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
+      ? `&query=${encodeURIComponent(JSON.stringify(options.query))}`
       : "";
     const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
+      ? `&field=${encodeURIComponent(JSON.stringify(options.field))}`
       : "";
     const offset = options?.offset ? options.offset : 0;
     try {
