@@ -38,29 +38,47 @@ const loginWithRocketChatOAuth = async (config: { api: Api }) => {
     redirect_uri,
     client_id
   );
-  let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-width=800,height=600,left=-1000,top=-1000,rel=opener`;
+  let params = \`scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+width=800,height=600,left=-1000,top=-1000,rel=opener\`;
   const popup = window.open(authorizeUrl, "Login", params);
 
-  return new Promise<any>((resolve) => {
+  return new Promise<any>((resolve, reject) => {
     if (popup) {
+      let checkInterval: ReturnType<typeof setInterval>;
+      let settled = false;
+
+      const cleanup = () => {
+        clearInterval(checkInterval);
+        window.removeEventListener("message", onMessage);
+      };
+
       const onMessage = async (e: MessageEvent) => {
         if (e.data.type === "rc-oauth-callback") {
-          const { accessToken, expiresIn, serviceName } = e.data.credentials;
-          const response = await config.api.post("/api/v1/login", {
-            accessToken,
-            expiresIn,
-            serviceName,
-          });
-          popup.close();
-          resolve(response.data);
+          if (settled) return;
+          settled = true;
+          cleanup();
+          try {
+            const { accessToken, expiresIn, serviceName } = e.data.credentials;
+            const response = await config.api.post("/api/v1/login", {
+              accessToken,
+              expiresIn,
+              serviceName,
+            });
+            popup.close();
+            resolve(response.data);
+          } catch (error) {
+            popup.close();
+            reject(error);
+          }
         }
       };
       window.addEventListener("message", onMessage);
-      const checkInterval = setInterval(() => {
+      checkInterval = setInterval(() => {
         if (popup.closed) {
-          clearInterval(checkInterval);
-          window.removeEventListener("message", onMessage);
+          if (settled) return;
+          settled = true;
+          cleanup();
+          reject(new Error("OAuth popup closed before completing login"));
         }
       }, 1000);
     } else {
