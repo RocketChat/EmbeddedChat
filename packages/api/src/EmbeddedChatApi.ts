@@ -73,21 +73,21 @@ export default class EmbeddedChatApi {
 
     const payload = acsCode
       ? JSON.stringify({
-          serviceName: "google",
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-          totp: {
-            code: acsPayload,
-          },
-        })
+        serviceName: "google",
+        accessToken: tokens.access_token,
+        idToken: tokens.id_token,
+        expiresIn: 3600,
+        totp: {
+          code: acsPayload,
+        },
+      })
       : JSON.stringify({
-          serviceName: "google",
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-          scope: "profile",
-        });
+        serviceName: "google",
+        accessToken: tokens.access_token,
+        idToken: tokens.id_token,
+        expiresIn: 3600,
+        scope: "profile",
+      });
 
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
@@ -363,7 +363,7 @@ export default class EmbeddedChatApi {
       typingHandlerLock = 0;
     }, 2000);
     // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
+    while (typingHandlerLock) { }
     typingHandlerLock = 1;
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
@@ -495,34 +495,26 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
+        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
           headers: {
             "Content-Type": "application/json",
             "X-Auth-Token": authToken,
             "X-User-Id": userId,
           },
-          method: "POST",
+          method: "GET",
         }
       );
 
       const result = await response.json();
 
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
+      if (result.success && result.room) {
+        return { result: [result.room] };
       }
-      return null;
+      return { result: [] };
     } catch (err) {
       console.error(err);
+      return { result: [] };
     }
   }
 
@@ -561,9 +553,9 @@ export default class EmbeddedChatApi {
       query?: object | undefined;
       field?: object | undefined;
     } = {
-      query: undefined,
-      field: undefined,
-    },
+        query: undefined,
+        field: undefined,
+      },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -600,10 +592,10 @@ export default class EmbeddedChatApi {
       field?: object | undefined;
       offset?: number;
     } = {
-      query: undefined,
-      field: undefined,
-      offset: 50,
-    },
+        query: undefined,
+        field: undefined,
+        offset: 50,
+      },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -751,13 +743,13 @@ export default class EmbeddedChatApi {
     const messageObj =
       typeof message === "string"
         ? {
-            rid: this.rid,
-            msg: message,
-          }
+          rid: this.rid,
+          msg: message,
+        }
         : {
-            ...message,
-            rid: this.rid,
-          };
+          ...message,
+          rid: this.rid,
+        };
     if (threadId) {
       messageObj.tmid = threadId;
     }
