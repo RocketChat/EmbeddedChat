@@ -1,10 +1,10 @@
-# GSoC 2026 Proposal: EmbeddedChat Reliability & UX Overhaul - Vivek Yadav
+# GSoC 2026 Proposal: EmbeddedChat Stability & Input Hardening - Vivek Yadav
 
 ---
 
 ## 1. Abstract
 
-I am proposing a comprehensive overhaul of the **Rocket.Chat EmbeddedChat** component to ensure production-grade reliability and feature parity with the main web client. While EmbeddedChat serves as a powerful drop-in solution for integrating chat into external websites, critical user experience gaps—specifically in message composition, authentication stability, and real-time updates—hinder its adoption in enterprise environments. My project will leverage the **React SDK** internals to refactor the input handling system, optimize the authentication hooks, and implement a robust "quoting" mechanism that mirrors the core Rocket.Chat experience.
+I am proposing a targeted set of improvements for the **Rocket.Chat EmbeddedChat** component to ensure production-grade reliability. While EmbeddedChat serves as a powerful drop-in solution, specific user experience gaps—specifically in message composition and authentication stability—hinder its adoption. My project will leverage the **React SDK** internals to harden the input handling system, optimize the authentication hooks, and implement a robust "quoting" mechanism.
 
 ## 2. The Problem
 
@@ -81,25 +81,25 @@ I will implement a structured object model for the input state, separate from th
 ```javascript
 // Proposed Interface for Input State
 interface InputState {
-    text: string;
-    attachments: Attachment[];
-    quoting: {
-        messageId: string;
-        author: string;
-        contentSnippet: string;
-    } | null;
+  text: string;
+  attachments: Attachment[];
+  quoting: {
+    messageId: string,
+    author: string,
+    contentSnippet: string,
+  } | null;
 }
 
 // State Action Handler
 const handleQuote = (message) => {
-    setChatState(prev => ({
-        ...prev,
-        quoting: {
-            messageId: message._id,
-            author: message.u.username,
-            contentSnippet: message.msg.substring(0, 50) + "..."
-        }
-    }));
+  setChatState((prev) => ({
+    ...prev,
+    quoting: {
+      messageId: message._id,
+      author: message.u.username,
+      contentSnippet: message.msg.substring(0, 50) + "...",
+    },
+  }));
 };
 ```
 
