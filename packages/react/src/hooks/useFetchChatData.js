@@ -152,7 +152,8 @@ const useFetchChatData = (showRoles) => {
           const fetchedRoles = await RCInstance.getUserRoles();
           const fetchedAdmins = fetchedRoles?.result;
 
-          const adminUsernames = fetchedAdmins?.map((user) => user.username) || [];
+          const adminUsernames =
+            fetchedAdmins?.map((user) => user.username) || [];
           setAdmins(adminUsernames);
 
           const rolesObj =

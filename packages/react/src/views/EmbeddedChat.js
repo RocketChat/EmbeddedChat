@@ -12,6 +12,7 @@ import { EmbeddedChatApi } from '@embeddedchat/api';
 import {
   Box,
   ToastBarProvider,
+  useToastBarDispatch,
   useComponentOverrides,
   ThemeProvider,
 } from '@embeddedchat/ui-elements';
@@ -88,6 +89,7 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const dispatchToastMessage = useToastBarDispatch();
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'

@@ -27,9 +27,12 @@ const MessageList = ({
     () => messages.filter((msg) => !msg.tmid).reverse(),
     [messages]
   );
-  
+
   const reportedMessage = useMemo(
-    () => (messageToReport ? messages.find((msg) => msg._id === messageToReport) : null),
+    () =>
+      messageToReport
+        ? messages.find((msg) => msg._id === messageToReport)
+        : null,
     [messages, messageToReport]
   );
 
@@ -87,33 +90,33 @@ const MessageList = ({
             </Box>
           )}
           {filteredMessages.map((msg, index, arr) => {
-              const prev = arr[index - 1];
-              const next = arr[index + 1];
+            const prev = arr[index - 1];
+            const next = arr[index + 1];
 
-              if (!msg) return null;
-              const newDay = isMessageNewDay(msg, prev);
-              const sequential = isMessageSequential(msg, prev, 300);
-              const lastSequential =
-                sequential && isMessageLastSequential(msg, next);
-              const showUnreadDivider =
-                firstUnreadMessageId && msg._id === firstUnreadMessageId;
+            if (!msg) return null;
+            const newDay = isMessageNewDay(msg, prev);
+            const sequential = isMessageSequential(msg, prev, 300);
+            const lastSequential =
+              sequential && isMessageLastSequential(msg, next);
+            const showUnreadDivider =
+              firstUnreadMessageId && msg._id === firstUnreadMessageId;
 
-              return (
-                <React.Fragment key={msg._id}>
-                  {showUnreadDivider && (
-                    <MessageDivider unread>Unread Messages</MessageDivider>
-                  )}
-                  <Message
-                    message={msg}
-                    newDay={newDay}
-                    sequential={sequential}
-                    lastSequential={lastSequential}
-                    type="default"
-                    showAvatar
-                  />
-                </React.Fragment>
-              );
-            })}
+            return (
+              <React.Fragment key={msg._id}>
+                {showUnreadDivider && (
+                  <MessageDivider unread>Unread Messages</MessageDivider>
+                )}
+                <Message
+                  message={msg}
+                  newDay={newDay}
+                  sequential={sequential}
+                  lastSequential={lastSequential}
+                  type="default"
+                  showAvatar
+                />
+              </React.Fragment>
+            );
+          })}
           {showReportMessage && (
             <MessageReportWindow
               messageId={messageToReport}
@@ -127,7 +130,11 @@ const MessageList = ({
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.shape),
+  messages: PropTypes.arrayOf(PropTypes.object),
+  loadingOlderMessages: PropTypes.bool,
+  isUserAuthenticated: PropTypes.bool,
+  hasMoreMessages: PropTypes.bool,
+  firstUnreadMessageId: PropTypes.string,
 };
 
 export default MessageList;

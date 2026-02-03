@@ -7,7 +7,7 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
-// mutliple typing status can come at the same time they should be processed in order.
+// multiple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
@@ -776,7 +776,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
-        body: `{"roomId": "${this.rid}", "msgId": "${msgId}"}`,
+        body: JSON.stringify({ roomId: this.rid, msgId }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -794,7 +794,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.update`, {
-        body: `{"roomId": "${this.rid}", "msgId": "${msgId}","text" : "${text}" }`,
+        body: JSON.stringify({ roomId: this.rid, msgId, text }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -854,7 +854,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.starMessage`, {
-        body: `{"messageId": "${mid}"}`,
+        body: JSON.stringify({ messageId: mid }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -872,7 +872,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.unStarMessage`, {
-        body: `{"messageId": "${mid}"}`,
+        body: JSON.stringify({ messageId: mid }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -950,7 +950,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.pinMessage`, {
-        body: `{"messageId": "${mid}"}`,
+        body: JSON.stringify({ messageId: mid }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -970,7 +970,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.unPinMessage`, {
-        body: `{"messageId": "${mid}"}`,
+        body: JSON.stringify({ messageId: mid }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -988,7 +988,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.react`, {
-        body: `{"messageId": "${messageId}", "emoji": "${emoji}", "shouldReact": ${shouldReact}}`,
+        body: JSON.stringify({ messageId, emoji, shouldReact }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,
@@ -1006,7 +1006,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.reportMessage`, {
-        body: `{"messageId": "${messageId}", "description": "${description}"}`,
+        body: JSON.stringify({ messageId, description }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,

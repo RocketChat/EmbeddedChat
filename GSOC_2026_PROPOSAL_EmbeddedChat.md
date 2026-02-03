@@ -198,7 +198,11 @@ To demonstrate my familiarity with the codebase and my commitment to the project
 ### 3. Login Error Flow Optimization (Branch: fix/login-error-notification)
 
 - **Objective:** Improved the `useRCAuth` hook to better map and display server-side errors to the end-user.
-- **Technical Insight:** Refactored the error handling logic to ensure connection timeouts and invalid credentials provide actionable feedback via `ToastBarDispatch`.
+- **Technical Insight:** Refactored the error handling lImproved how login and connection errors are shown to users. Made error feedback clearer and more actionable.
+
+### Issue #1132 — Architecture RFC
+
+Opened a detailed proposal ([Issue #1132](https://github.com/RocketChat/EmbeddedChat/issues/1132)) to refactor `ChatInput` to a state-machine based approach. This serves as the blueprint for my Phase 1 implementation plan.
 
 ---
 
