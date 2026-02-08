@@ -10,6 +10,7 @@ import analyze from 'rollup-plugin-analyzer';
 import dts from 'rollup-plugin-dts';
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
+const TERSER_OPTIONS = { numWorkers: 1 };
 
 export default [
   {
@@ -21,7 +22,7 @@ export default [
         sourcemap: 'hidden',
         preserveModules: true,
         preserveModulesRoot: 'src',
-        plugins: [PRODUCTION && terser()],
+        plugins: [PRODUCTION && terser(TERSER_OPTIONS)],
         exports: 'auto',
       },
 
@@ -31,7 +32,7 @@ export default [
         sourcemap: 'hidden',
         preserveModules: true,
         preserveModulesRoot: 'src',
-        plugins: [PRODUCTION && terser()],
+        plugins: [PRODUCTION && terser(TERSER_OPTIONS)],
       },
     ],
     external: [
