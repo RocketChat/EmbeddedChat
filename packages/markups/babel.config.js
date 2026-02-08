@@ -11,4 +11,16 @@ module.exports = {
     '@babel/preset-react',
     '@emotion/babel-preset-css-prop',
   ],
+  env: {
+    test: {
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            modules: 'commonjs',
+          },
+        ],
+      ],
+    },
+  },
 };
