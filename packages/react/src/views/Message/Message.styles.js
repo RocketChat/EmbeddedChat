@@ -280,6 +280,29 @@ export const getMessageReactionsStyles = (theme) => {
   return styles;
 };
 
+export const getThreadFollowUnfollowButtonStyles = (theme) => {
+  const styles = {
+    notification: css`
+      position: relative;
+      width: fit-content;
+    `,
+
+    badge: css`
+      postion: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      color: orange;
+    `,
+  };
+
+  return styles;
+};
+
 export const getMessageToolboxStyles = (theme) => {
   const styles = {
     toolboxContainer: css`

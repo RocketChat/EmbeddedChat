@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import cloneArray from '../lib/cloneArray';
 import { upsertMessage } from '../lib/messageListHelpers';
+import useUserStore from './userStore';
 
 const useMessageStore = create((set, get) => ({
   messages: [],
@@ -20,6 +21,9 @@ const useMessageStore = create((set, get) => ({
   isThreadOpen: false,
   threadMainMessage: null,
   headerTitle: null,
+  lastNewThreadMessageAt: null,
+  threadIdsWithNewReplies: [],
+  threadIdsWithMentions: [],
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (newMessages, append = false) =>
     set((state) => {
@@ -36,11 +40,34 @@ const useMessageStore = create((set, get) => ({
     }),
   upsertMessage: (message, enableThreads = false) => {
     if (message.tmid && enableThreads) {
-      if (get().threadMainMessage?._id === message.tmid) {
-        set((state) => ({
-          threadMessages: upsertMessage(state.threadMessages, message),
-        }));
-      }
+      const state = get();
+      const currentUserId = useUserStore.getState().userId;
+      console.log(currentUserId)
+      const hasMention = message.mentions?.some(
+        (mention) => mention._id === currentUserId
+      ); 
+      const isOpenThread = state.threadMainMessage?._id === message.tmid;
+      set((s) => {
+        console.log(s)
+        const nextThreadMessages = isOpenThread
+          ? upsertMessage(s.threadMessages, message)
+          : s.threadMessages;
+        const alreadyHasNew = s.threadIdsWithNewReplies.includes(message.tmid);
+        const nextThreadIdsWithNewReplies = alreadyHasNew
+          ? s.threadIdsWithNewReplies
+          : [...s.threadIdsWithNewReplies, message.tmid];
+        const nextThreadIdsWithMentions = hasMention
+          ? [...s.threadIdsWithMentions, message.tmid]
+          : s.threadIdsWithMentions;
+        return {
+          threadMessages: nextThreadMessages,
+          lastNewThreadMessageAt: isOpenThread
+            ? (message.ts ?? new Date().toISOString())
+            : s.lastNewThreadMessageAt,
+          threadIdsWithNewReplies: nextThreadIdsWithNewReplies,
+          threadIdsWithMentions: nextThreadIdsWithMentions,
+        };
+      });
     } else {
       set((state) => ({
         messages: upsertMessage(state.messages, message),
@@ -114,19 +141,38 @@ const useMessageStore = create((set, get) => ({
     }));
   },
   openThread: (message) => {
-    set(() => ({
+    set((state) => ({
       isThreadOpen: true,
       threadMainMessage: message,
       threadMessages: [],
+      lastNewThreadMessageAt: null,
+      threadIdsWithNewReplies: state.threadIdsWithNewReplies.filter(
+        (id) => id !== message._id
+      ),
+      threadIdsWithMentions: state.threadIdsWithMentions.filter(
+        (id) => id !== message._id
+      ),
     }));
   },
   closeThread: () => {
-    set(() => ({
-      isThreadOpen: false,
-      threadMainMessage: null,
-      threadMessages: [],
-    }));
+    set((state) => {
+      const closedThreadId = state.threadMainMessage?._id;
+      return {
+        isThreadOpen: false,
+        threadMainMessage: null,
+        threadMessages: [],
+        lastNewThreadMessageAt: null,
+        threadIdsWithNewReplies: closedThreadId
+          ? state.threadIdsWithNewReplies.filter((id) => id !== closedThreadId)
+          : state.threadIdsWithNewReplies,
+        threadIdsWithMentions: closedThreadId
+          ? state.threadIdsWithMentions.filter((id) => id !== closedThreadId)
+          : state.threadIdsWithMentions,
+      };
+    });
   },
+  clearNewThreadMessageSignal: () =>
+    set({ lastNewThreadMessageAt: null }),
   setDeleteMessageRoles: (deleteMessageRoles) =>
     set((state) => ({ ...state, deleteMessageRoles })),
   setDeleteOwnMessageRoles: (deleteOwnMessageRoles) =>

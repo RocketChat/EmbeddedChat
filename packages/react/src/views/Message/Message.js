@@ -278,6 +278,7 @@ const Message = ({
                       md={message.md}
                       isReaction={false}
                     />
+                    <p>hai</p>
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}

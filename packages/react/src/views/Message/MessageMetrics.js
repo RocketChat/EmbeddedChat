@@ -10,7 +10,9 @@ import {
   Tooltip,
 } from '@embeddedchat/ui-elements';
 import { MessageMetricsStyles as styles } from './Message.styles';
+import { getThreadFollowUnfollowButtonStyles as getThreadFollowUnfollowButtonStyles } from './Message.styles';
 import RCContext from '../../context/RCInstance';
+import { useMessageStore } from '../../store';
 
 import BubbleThreadBtn from './BubbleVariant/BubbleThreadBtn';
 
@@ -32,6 +34,15 @@ export const MessageMetrics = ({
   );
 
   const { RCInstance } = useContext(RCContext);
+  const threadIdsWithNewReplies = useMessageStore(
+    (state) => state.threadIdsWithNewReplies
+  );
+  const threadIdsWithMentions = useMessageStore(
+    (state) => state.threadIdsWithMentions
+  );
+  const isThreadOpen = useMessageStore((state) => state.isThreadOpen);
+  const hasNewReplyNoOpen = !!message._id && threadIdsWithNewReplies.includes(message._id) && !isThreadOpen;
+  const hasMentionNoOpen = !!message._id && threadIdsWithMentions.includes(message._id) && !isThreadOpen;
 
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
@@ -79,6 +90,16 @@ export const MessageMetrics = ({
     setFollowMessage(!followMessage);
   };
 
+  const badgeColor = () => {
+    if(hasNewReplyNoOpen && !hasMentionNoOpen) {
+      return 'blue';
+    }
+    if(hasNewReplyNoOpen && hasMentionNoOpen) {
+      return 'red';
+    }
+    return null;
+  }
+
   return (
     <Box
       css={variantStyles.metricsContainer || styles.metrics}
@@ -99,9 +120,46 @@ export const MessageMetrics = ({
               size="small"
               onClick={handleOpenThread(message)}
               css={variantStyles && variantStyles.threadReplyButton}
+              style={{
+                backgroundColor: hasNewReplyNoOpen || hasMentionNoOpen  ? "blue" : null
+              }}  
             >
               View thread
             </Button>
+
+            <Tooltip text={`${followMessage ? 'Unfollow' : 'Following'}`}>
+              <Box
+                style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                }}
+              >
+                <Icon
+                  css={getThreadFollowUnfollowButtonStyles.notification}
+                  style={{
+                    position: 'relative',
+                    width: 'fit-content',
+                  }}
+                  size="1.15rem"
+                  name={followMessage ? 'bell-off' : 'bell'}
+                  onClick={handleThreadFollow}
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '0',
+                    right: '0',
+                    transform: 'translate(50%, -50%)',
+                    width: '0.6em',
+                    height: '0.6em',
+                    background: badgeColor(),
+                    borderRadius: '50%',
+                    display: 'inline-block',
+                  }}
+                ></span>
+              </Box>
+            </Tooltip>
+
             {!!message.tcount && (
               <>
                 <Tooltip text="Followers" position="top">
@@ -124,15 +182,6 @@ export const MessageMetrics = ({
               </>
             )}
 
-            <Tooltip text={`${followMessage ? 'Unfollow' : 'Following'}`}>
-              <Box>
-                <Icon
-                  size="1.15rem"
-                  name={followMessage ? 'bell-off' : 'bell'}
-                  onClick={handleThreadFollow}
-                />
-              </Box>
-            </Tooltip>
             <Tooltip
               text={`Last message: ${new Date(message.tlm).toLocaleTimeString(
                 [],
