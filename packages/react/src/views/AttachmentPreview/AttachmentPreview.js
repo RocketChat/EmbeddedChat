@@ -30,25 +30,17 @@ const AttachmentPreview = () => {
 
   const [isPending, setIsPending] = useState(false);
   const messageRef = useRef(null);
-
-  // Mention UI states
   const [showMembersList, setShowMembersList] = useState(false);
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [mentionIndex, setMentionIndex] = useState(-1);
   const [startReadMentionUser, setStartReadMentionUser] = useState(false);
 
-  // File name
   const [fileName, setFileName] = useState(data?.name ?? '');
   useEffect(() => setFileName(data?.name ?? ''), [data?.name]);
 
-  // Description
   const [description, setDescription] = useState('');
   const charCount = description.length;
-
-  // Character limit is fetched from RC server (Message_MaxAllowedSize)
-  // via ChatHeader and stored in settingsStore.
   const msgMaxLength = useSettingsStore((s) => s?.messageLimit);
-
   const isOverLimit = msgMaxLength && charCount > msgMaxLength;
 
   const threadId = useMessageStore((state) => state.threadMainMessage?._id);
@@ -69,12 +61,10 @@ const AttachmentPreview = () => {
     const raw = e.target.value || '';
     setDescription(raw);
 
-    // If Input forwards ref to native input, keep it in sync (safe-guard)
     if (messageRef.current && typeof messageRef.current.value !== 'undefined') {
       try {
         messageRef.current.value = raw;
       } catch (err) {
-        // ignore if ref doesn't allow direct value set
       }
     }
 
@@ -139,7 +129,6 @@ const AttachmentPreview = () => {
               margin: 30px;
             `}
           >
-            {/* FILE NAME */}
             <Box css={styles.inputContainer}>
               <Box
                 is="span"
@@ -160,7 +149,6 @@ const AttachmentPreview = () => {
               <TypingUsers />
             </Box>
 
-            {/* FILE DESCRIPTION */}
             <Box css={styles.inputContainer}>
               <Box
                 is="span"
@@ -187,7 +175,6 @@ const AttachmentPreview = () => {
                   )}
                 </Box>
 
-                {/* DESCRIPTION INPUT */}
                 <Input
                   onChange={handleFileDescription}
                   onKeyDown={onDescKeyDown}
@@ -204,7 +191,6 @@ const AttachmentPreview = () => {
                   `}
                 />
 
-                {/* ALERT (left) and COUNTER (right) on the same row below the input */}
                 {msgMaxLength && (
                   <Box
                     css={css`
@@ -217,7 +203,6 @@ const AttachmentPreview = () => {
                       font-size: 0.875rem;
                     `}
                   >
-                    {/* ALERT: left aligned (starts at left of the box). Only visible when over limit. */}
                     <Box
                       css={css`
                         color: ${isOverLimit
@@ -238,7 +223,6 @@ const AttachmentPreview = () => {
                         : ''}
                     </Box>
 
-                    {/* COUNTER: right aligned */}
                     <Box
                       css={css`
                         color: ${isOverLimit

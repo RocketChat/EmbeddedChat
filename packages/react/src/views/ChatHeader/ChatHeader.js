@@ -150,8 +150,14 @@ const ChatHeader = ({
 
   useEffect(() => {
     const getMessageLimit = async () => {
-      const messageLimitObj = await RCInstance.getMessageLimit();
-      setMessageLimit(messageLimitObj?.value);
+      try {
+        const messageLimitObj = await RCInstance.getMessageLimit();
+        setMessageLimit(messageLimitObj?.value);
+      } catch (e) {
+        // In case the server call fails, settingsStore keeps using its fallback (5000)
+        console.error('Failed to fetch message limit', e);
+        setMessageLimit(undefined);
+      }
     };
 
     const setMessageAllowed = async () => {
