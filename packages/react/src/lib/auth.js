@@ -18,7 +18,7 @@ async function deleteTokenLocalStorage() {
 }
 
 async function saveTokenSecure(token) {
-  return await this.handleSecureLogin('save', token);
+  return this.handleSecureLogin('save', token);
 }
 
 async function getTokenSecure() {
@@ -27,7 +27,7 @@ async function getTokenSecure() {
 }
 
 async function deleteTokenSecure() {
-  return await this.handleSecureLogin('delete');
+  return this.handleSecureLogin('delete');
 }
 
 export function getTokenStorage(secure = false) {
