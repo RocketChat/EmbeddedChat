@@ -18,8 +18,6 @@ const CustomEmojiPicker = ({
   const theme = useTheme();
   const styles = getEmojiPickerStyles(theme);
   const previewConfig = {
-    defaultEmoji: '1f60d',
-    defaultCaption: 'None',
     showPreview: true,
   };
 
@@ -40,6 +38,7 @@ const CustomEmojiPicker = ({
           searchDisabled={false}
           emojiStyle="facebook"
           lazyLoadEmojis
+          autoFocus={false}
         />
       </Box>
     </Popup>
