@@ -59,7 +59,7 @@ export default class EmbeddedChatApi {
   }
 
   private throwApiError(error: unknown): never {
-    if (error instanceof Error || error instanceof ApiError) {
+    if (error instanceof Error) {
       throw error;
     }
     throw new Error(String(error));
@@ -203,7 +203,6 @@ export default class EmbeddedChatApi {
         }
         const message = { ...data };
         if (message.ts?.$date) {
-          console.log(message.ts?.$date);
           message.ts = message.ts.$date;
         }
         if (!message.ts) {
@@ -968,7 +967,9 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      this.throwApiError(err);
+      return {
+        error: err,
+      };
     }
   }
 
@@ -1285,4 +1286,3 @@ export default class EmbeddedChatApi {
     return data;
   }
 }
-
