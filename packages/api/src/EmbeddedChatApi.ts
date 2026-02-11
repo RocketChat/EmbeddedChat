@@ -1109,9 +1109,9 @@ export default class EmbeddedChatApi {
 
   async getSearchMessages(text: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const { userId, authToken} = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
+        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${encodeURIComponent(text)}`,
         {
           headers: {
             "Content-Type": "application/json",
