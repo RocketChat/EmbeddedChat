@@ -2,7 +2,6 @@ import React, {
   useState,
   useCallback,
   memo,
-  useContext,
   useEffect,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -29,15 +28,15 @@ import { useRCContext } from '../../context/RCInstance';
 import { useChannelStore, useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
-const FileMessage = ({ fileMessage, onDeleteFile }) => {
+const FileMessage = ({ fileMessage }) => {
   const { classNames, styleOverrides } = useComponentOverrides('FileMessage');
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
-  const [files, setFiles] = useState([]);
+  const [, setFiles] = useState([]);
   const theme = useTheme();
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const [isFetching, setIsFetching] = useState(true);
+  const [, setIsFetching] = useState(true);
   const { mode } = theme;
   const messageStyles = styles.message;
 
@@ -169,7 +168,6 @@ const FileMessage = ({ fileMessage, onDeleteFile }) => {
 
 FileMessage.propTypes = {
   fileMessage: PropTypes.any.isRequired,
-  onDeleteFile: PropTypes.func,
 };
 
 export default memo(FileMessage);

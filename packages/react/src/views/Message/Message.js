@@ -51,7 +51,7 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-  const { showSidebar, setShowSidebar } = useSidebarStore();
+  const { setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const userRoles = useUserStore((state) => state.roles);

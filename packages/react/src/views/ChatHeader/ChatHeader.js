@@ -134,7 +134,7 @@ const ChatHeader = ({
   };
   const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(
+  const { deleteToken } = getTokenStorage(
     ECOptions?.secure
   );
   const handleLogout = useCallback(async () => {

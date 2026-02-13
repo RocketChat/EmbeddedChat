@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -40,9 +40,9 @@ export const MessageAggregator = ({
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
-  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const threadMessages = useMessageStore((state) => state.threadMessages);
   const allMessages = useMemo(
-    () => [...messages, ...[...threadMessages].reverse()],
+    () => [...messages, ...[...(threadMessages || [])].reverse()],
     [messages, threadMessages]
   );
 

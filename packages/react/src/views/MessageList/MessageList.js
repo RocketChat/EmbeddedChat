@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { isSameDay } from 'date-fns';
-import { Box, Icon, Throbber, useTheme } from '@embeddedchat/ui-elements';
+import { Box, Icon, Throbber } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
@@ -21,7 +20,6 @@ const MessageList = ({
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
-  const { theme } = useTheme();
 
   const filteredMessages = useMemo(
     () => messages.filter((msg) => !msg.tmid).reverse(),
