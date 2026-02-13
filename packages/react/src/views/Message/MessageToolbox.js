@@ -102,7 +102,6 @@ export const MessageToolbox = ({
       forceDeleteMessageRoles.has(role)
     );
 
-
     const canDelete = allowedToForceDelete
       ? true
       : allowedToDelete

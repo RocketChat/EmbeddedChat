@@ -94,13 +94,14 @@ const VideoMessageRecorder = (props) => {
     handleMount();
   }, [handleMount]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (recordingInterval) {
         clearInterval(recordingInterval);
       }
-    };
-  }, [recordingInterval]);
+    },
+    [recordingInterval]
+  );
 
   const startRecordingInterval = () => {
     const startTime = new Date();

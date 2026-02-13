@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  memo,
-  useEffect,
-} from 'react';
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,

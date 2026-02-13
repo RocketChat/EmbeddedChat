@@ -125,13 +125,14 @@ const AudioMessageRecorder = (props) => {
     handleMount();
   }, [handleMount]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (recordingInterval) {
         clearInterval(recordingInterval);
       }
-    };
-  }, [recordingInterval]);
+    },
+    [recordingInterval]
+  );
 
   useEffect(() => {
     if (isRecorded && file) {
