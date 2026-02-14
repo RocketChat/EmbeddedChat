@@ -33,10 +33,14 @@ class RocketChatAuth {
    * Add a callback that will be called when user login status changes
    * @param callback
    */
-  async onAuthChange(callback: (user: object | null) => void) {
+  onAuthChange(callback: (user: object | null) => void) {
     this.authListeners.push(callback);
-    const user = await this.getCurrentUser();
-    callback(user);
+    this.getCurrentUser().then((user) => {
+      callback(user);
+    });
+    return () => {
+      this.removeAuthListener(callback);
+    };
   }
 
   async removeAuthListener(callback: (user: object | null) => void) {

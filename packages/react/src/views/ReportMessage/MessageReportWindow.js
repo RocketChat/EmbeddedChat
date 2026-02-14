@@ -6,7 +6,7 @@ import ReportWindowButtons from './ReportWindowButtons';
 import styles from './ReportMessage.styles';
 
 const MessageReportWindow = ({ messageId, message }) => {
-  const [reportDescription, setDescription] = useState(' ');
+  const [reportDescription, setDescription] = useState('');
   return (
     <ReportWindowButtons
       variant="danger"
