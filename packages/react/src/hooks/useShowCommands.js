@@ -9,7 +9,11 @@ const useShowCommands = (commands, setFilteredCommands, setShowCommandList) =>
       const cursor = e.target.selectionStart;
       const tokens = e.target.value.slice(0, cursor).split(/\s+/);
 
-      if (tokens.length === 1 && tokens[0].startsWith('/')) {
+      if (
+        tokens.length === 1 &&
+        tokens[0].startsWith('/') &&
+        getFilteredCommands(tokens[0]).length > 0
+      ) {
         setFilteredCommands(getFilteredCommands(tokens[0]));
         setShowCommandList(true);
       } else {
