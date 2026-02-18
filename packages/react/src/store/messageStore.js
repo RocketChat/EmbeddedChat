@@ -8,7 +8,12 @@ const useMessageStore = create((set, get) => ({
   threadMessages: [],
   filtered: false,
   editMessage: {},
-  quoteMessage: {},
+  deletedMessage: {},
+  messagesOffset: 0,
+  quoteMessage: [],
+  deleteMessageRoles: {},
+  deleteOwnMessageRoles: {},
+  forceDeleteMessageRoles: {},
   messageToReport: NaN,
   showReportMessage: false,
   isRecordingMessage: false,
@@ -16,11 +21,19 @@ const useMessageStore = create((set, get) => ({
   threadMainMessage: null,
   headerTitle: null,
   setFilter: (filter) => set(() => ({ filtered: filter })),
-  setMessages: (messages) =>
-    set(() => ({
-      messages,
-      isMessageLoaded: true,
-    })),
+  setMessages: (newMessages, append = false) =>
+    set((state) => {
+      const allMessages = append
+        ? [...state.messages, ...newMessages]
+        : newMessages;
+      const uniqueMessages = Array.from(
+        new Map(allMessages.map((msg) => [msg._id, msg])).values()
+      );
+      return {
+        messages: uniqueMessages,
+        isMessageLoaded: true,
+      };
+    }),
   upsertMessage: (message, enableThreads = false) => {
     if (message.tmid && enableThreads) {
       if (get().threadMainMessage?._id === message.tmid) {
@@ -39,6 +52,7 @@ const useMessageStore = create((set, get) => ({
     const message = get().messages.find((m) => m._id === messageId);
     if (threadMessage) {
       return set((state) => ({
+        deletedMessage: threadMessage,
         threadMessages: cloneArray(state.threadMessages).filter(
           (m) => m._id !== messageId
         ),
@@ -46,6 +60,7 @@ const useMessageStore = create((set, get) => ({
     }
     if (message) {
       return set((state) => ({
+        deletedMessage: message,
         messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
       }));
     }
@@ -71,7 +86,23 @@ const useMessageStore = create((set, get) => ({
     }
   },
   setEditMessage: (editMessage) => set(() => ({ editMessage })),
-  setQuoteMessage: (quoteMessage) => set(() => ({ quoteMessage })),
+  setMessagesOffset: (newOffset) => set(() => ({ messagesOffset: newOffset })),
+  editMessagePermissions: {},
+  setEditMessagePermissions: (editMessagePermissions) =>
+    set((state) => ({ ...state, editMessagePermissions })),
+  addQuoteMessage: (quoteMessage) =>
+    set((state) => {
+      const updatedQuoteMessages = state.quoteMessage.filter(
+        (msg) => msg._id !== quoteMessage._id
+      );
+      return { quoteMessage: [...updatedQuoteMessages, quoteMessage] };
+    }),
+  removeQuoteMessage: (quoteMessage) =>
+    set((state) => ({
+      quoteMessage: state.quoteMessage.filter((i) => i !== quoteMessage),
+    })),
+
+  clearQuoteMessages: () => set({ quoteMessage: [] }),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {
@@ -96,6 +127,12 @@ const useMessageStore = create((set, get) => ({
       threadMessages: [],
     }));
   },
+  setDeleteMessageRoles: (deleteMessageRoles) =>
+    set((state) => ({ ...state, deleteMessageRoles })),
+  setDeleteOwnMessageRoles: (deleteOwnMessageRoles) =>
+    set((state) => ({ ...state, deleteOwnMessageRoles })),
+  setForceDeleteMessageRoles: (forceDeleteMessageRoles) =>
+    set((state) => ({ ...state, forceDeleteMessageRoles })),
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
 }));

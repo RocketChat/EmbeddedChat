@@ -4,6 +4,8 @@ import Star from './Star';
 import Pin from './Pin';
 import ReplyDirectly from './ReplyDirectly';
 import Hash from './Hash';
+import HashLock from './HashLock';
+import Lock from './Lock';
 import Computer from './Computer';
 import Cross from './Cross';
 import Mic from './Mic';
@@ -35,6 +37,8 @@ import Kebab from './Kebab';
 import Check from './Check';
 import ErrorCircle from './ErrorCircle';
 import ArrowDown from './ArrowDown';
+import Record from './Record';
+import StopRecord from './StopRecord';
 import PinFilled from './PinFilled';
 import VideoRecorder from './VideoRecoder';
 import DisabledRecorder from './DisableRecorder';
@@ -63,6 +67,7 @@ import FormatText from './FormatText';
 import Cog from './Cog';
 import ListNumbers from './ListNumbers';
 import ListBullets from './ListBullets';
+import Team from './Team';
 
 const icons = {
   file: File,
@@ -71,9 +76,12 @@ const icons = {
   pin: Pin,
   'reply-directly': ReplyDirectly,
   hash: Hash,
+  hash_lock: HashLock,
+  lock: Lock,
   computer: Computer,
   cross: Cross,
   copy: Copy,
+  team: Team,
   mic: Mic,
   'video-recorder': VideoRecorder,
   'disabled-recorder': DisabledRecorder,
@@ -105,6 +113,8 @@ const icons = {
   check: Check,
   'error-circle': ErrorCircle,
   'arrow-down': ArrowDown,
+  record: Record,
+  'stop-record': StopRecord,
   'pin-filled': PinFilled,
   clipboard: Clipboard,
   clip: Clip,

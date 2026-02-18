@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+import { parse } from '@rocket.chat/message-parser';
 import {
   Box,
   Sidebar,
@@ -14,9 +15,11 @@ import {
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
+import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { Markdown } from '../Markdown';
 
 const UserInformation = () => {
   const { variantOverrides } = useComponentOverrides('UserInformation');
@@ -24,13 +27,20 @@ const UserInformation = () => {
   const setExclusiveState = useSetExclusiveState();
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
+  const { mode } = useTheme();
   const styles = getUserInformationStyles(theme);
   const [currentUserInfo, setCurrentUserInfo] = useState({});
   const [isUserInfoFetched, setIsUserInfoFetched] = useState(false);
   const currentUser = useUserStore((state) => state.currentUser);
-  const authenticatedUserRoles = useUserStore((state) => state.roles);
+  const currentUserRoles = useUserStore((state) => state.roles);
+  const viewUserFullInfoRoles = useUserStore(
+    (state) => state.viewUserInfoPermissions.roles
+  );
   const authenticatedUserId = useUserStore((state) => state.userId);
-  const isAdmin = authenticatedUserRoles?.includes('admin');
+  const viewInfoRoles = new Set(viewUserFullInfoRoles);
+  const isAllowedToViewFullInfo = currentUserRoles.some((role) =>
+    viewInfoRoles.has(role)
+  );
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${username}`;
@@ -39,7 +49,7 @@ const UserInformation = () => {
   useEffect(() => {
     const getCurrentUserInfo = async () => {
       try {
-        const res = await RCInstance.userInfo(currentUser._id);
+        const res = await RCInstance.userData(currentUser.username);
         if (res?.user) {
           setCurrentUserInfo(res.user);
           setIsUserInfoFetched(true);
@@ -50,7 +60,7 @@ const UserInformation = () => {
     };
 
     getCurrentUserInfo();
-  }, [RCInstance, setCurrentUserInfo]);
+  }, [RCInstance, currentUser]);
 
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
@@ -59,6 +69,10 @@ const UserInformation = () => {
       title="User Info"
       iconName="user"
       onClose={() => setExclusiveState(null)}
+      style={{
+        width: '400px',
+        zIndex: window.innerWidth <= 780 ? 1 : null,
+      }}
       {...(viewType === 'Popup'
         ? {
             isPopupHeader: true,
@@ -92,6 +106,24 @@ const UserInformation = () => {
               />
               {currentUserInfo?.username}
             </Box>
+            {currentUserInfo?.statusText && (
+              <Box
+                css={css`
+                  margin-bottom: 20px;
+                `}
+              >
+                {currentUserInfo?.statusText}
+              </Box>
+            )}
+            {currentUserInfo?.nickname && (
+              <UserInfoField
+                label="Nickname"
+                value={currentUserInfo?.nickname}
+                isAdmin={isAllowedToViewFullInfo}
+                authenticatedUserId={authenticatedUserId}
+                currentUserInfo={currentUserInfo}
+              />
+            )}
             {currentUserInfo?.roles?.length && (
               <UserInfoField
                 label="Roles"
@@ -104,12 +136,16 @@ const UserInformation = () => {
                         css={styles.userRole}
                         className={appendClassNames('ec-message-user-role')}
                       >
-                        {role === 'admin' ? 'admin' : role}
+                        {role === 'admin'
+                          ? 'Admin'
+                          : role === 'user'
+                          ? 'user'
+                          : role.charAt(0).toUpperCase() + role.slice(1)}
                       </Box>
                     ))}
                   </Box>
                 }
-                isAdmin={isAdmin}
+                isAdmin={isAllowedToViewFullInfo}
                 authenticatedUserId={authenticatedUserId}
                 currentUserInfo={currentUserInfo}
               />
@@ -117,31 +153,55 @@ const UserInformation = () => {
             <UserInfoField
               label="Username"
               value={currentUserInfo?.username}
-              isAdmin={isAdmin}
+              isAdmin
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
               label="Last login"
-              value={formatTimestamp(currentUserInfo.lastLogin)}
-              isAdmin={isAdmin}
+              value={
+                currentUserInfo?.username === 'rocket.cat'
+                  ? 'Never'
+                  : formatTimestamp(currentUserInfo.lastLogin)
+              }
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
               label="Full Name"
               value={currentUserInfo.name}
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
+            {currentUserInfo?.bio && (
+              <UserInfoField
+                label="Bio"
+                value={
+                  <Markdown
+                    body={currentUserInfo.bio}
+                    md={parse(currentUserInfo.bio)}
+                  />
+                }
+                isAdmin={isAllowedToViewFullInfo}
+                authenticatedUserId={authenticatedUserId}
+                currentUserInfo={currentUserInfo}
+              />
+            )}
             <UserInfoField
               label="Email"
               value={currentUserInfo.emails?.map((email, index) => (
                 <Box key={index} css={styles.emailContainer}>
                   <a
                     href={`mailto:${email.address}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{
+                      textDecoration: 'underline',
+                      color:
+                        mode === 'light'
+                          ? theme.colors.info
+                          : theme.colors.warningForeground,
+                    }}
                   >
                     {email.address}
                   </a>
@@ -150,14 +210,14 @@ const UserInformation = () => {
                   </Box>
                 </Box>
               ))}
-              isAdmin={isAdmin}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />
             <UserInfoField
               label="Created at"
-              value={formatTimestamp(currentUserInfo.createdAt)}
-              isAdmin={isAdmin}
+              value={formatTimestampGetDate(currentUserInfo.createdAt)}
+              isAdmin={isAllowedToViewFullInfo}
               authenticatedUserId={authenticatedUserId}
               currentUserInfo={currentUserInfo}
             />

@@ -10,6 +10,10 @@ export const getChatInputStyles = (theme) => {
       &.focused {
         border: ${`1.5px solid ${theme.colors.ring}`};
       }
+      @media (max-width: 500px) {
+        margin: 0;
+        width: 100%;
+      }
     `,
 
     editMessage: css`
@@ -22,6 +26,9 @@ export const getChatInputStyles = (theme) => {
       justify-content: center;
       flex-direction: row;
       padding: 0.5rem;
+      @media (max-width: 383px) {
+        min-height: 100px;
+      }
     `,
 
     iconCursor: css`
@@ -51,6 +58,13 @@ export const getChatInputStyles = (theme) => {
       &::placeholder {
         padding-left: 5px;
       }
+      @media (max-width: 383px) {
+        font-size: 18px;
+      }
+    `,
+    quoteContainer: css`
+      max-height: 300px;
+      overflow: scroll;
     `,
   };
 
@@ -68,9 +82,29 @@ export const getChatInputFormattingToolbarStyles = ({ theme, mode }) => {
         : lighten(theme.colors.background, 1)};
       display: flex;
       position: relative;
-      flex-direction: row;
-      gap: 0.375rem;
+      gap: 0.1rem;
       border-radius: 0 0 ${theme.radius} ${theme.radius};
+    `,
+    popOverStyles: css`
+      position: absolute;
+      bottom: 3rem;
+      left: 0;
+      width: 100%;
+      background: ${theme.colors.background};
+      box-shadow: 0 -8px 10px ${mode === 'light' ? darken(theme.colors.background, 0.1) : lighten(theme.colors.background, 1)};
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      z-index: 1300;
+    `,
+    popOverItemStyles: css`
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      cursor: pointer;
+      padding: 0.5rem;
     `,
   };
   return styles;
@@ -84,20 +118,82 @@ export const getCommonRecorderStyles = (theme) => {
       border-radius: 50%;
       background-color: ${theme.colors.destructive};
       margin: auto;
-      margin-right: 8px;
+      margin-right: 5px;
+      margin-left: 5px;
+    `,
+
+    oppositeDot: css`
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background-color: ${theme.colors.background};
+      margin: auto;
+      margin-right: 5px;
+      margin-left: 5px;
     `,
 
     controller: css`
-      display: flex;
-      gap: 0.15rem;
+      width: 100%;
+      display: inline-flex;
     `,
 
     timer: css`
       margin: auto;
     `,
+
+    spacer: css`
+      flex-grow: 1;
+    `,
+
     record: css`
       display: flex;
       margin: auto;
+    `,
+
+    leftSection: css`
+      display: flex;
+      align-items: left;
+    `,
+
+    rightSection: css`
+      display: flex;
+      align-items: right;
+      margin-top: 0.3rem;
+    `,
+    modal: {
+      '@media(max-width: 768px)': {
+        height: '100%',
+        width: '100%',
+        maxHeight: '100%',
+        maxWidth: '100%',
+      },
+    },
+  };
+
+  return styles;
+};
+
+export const getInsertLinkModalStyles = (theme) => {
+  const styles = {
+    inputWithFormattingBox: css`
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
+      margin: 0.5rem 1rem;
+      &.focused {
+        border: ${`1.5px solid ${theme.colors.ring}`};
+      }
+    `,
+    modalHeader: css`
+      padding: 0 0.5rem;
+    `,
+    modalContent: css`
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    `,
+    modalFooter: css`
+      padding: 0.75rem 1rem;
     `,
   };
 

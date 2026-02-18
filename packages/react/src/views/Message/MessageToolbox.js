@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import {
   Box,
   Modal,
@@ -9,10 +9,12 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import RCContext from '../../context/RCInstance';
 import { EmojiPicker } from '../EmojiPicker';
-import { parseEmoji } from '../../lib/emoji';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { Markdown } from '../Markdown';
+import Attachment from '../AttachmentHandler/Attachment';
 
 export const MessageToolbox = ({
   className = '',
@@ -21,12 +23,20 @@ export const MessageToolbox = ({
   style = {},
   isThreadMessage = false,
   authenticatedUserId,
+  userRoles,
+  pinRoles,
+  deleteMessageRoles,
+  deleteOwnMessageRoles,
+  forceDeleteMessageRoles,
+  editMessageRoles,
   handleOpenThread,
   handleEmojiClick,
   handlePinMessage,
   handleStarMessage,
   handleDeleteMessage,
   handlerReportMessage,
+  handleCopyMessage,
+  handleCopyMessageLink,
   handleEditMessage,
   handleQuoteMessage,
   isEditing = false,
@@ -36,6 +46,8 @@ export const MessageToolbox = ({
       'reply',
       'quote',
       'star',
+      'copy',
+      'link',
       'pin',
       'edit',
       'delete',
@@ -52,6 +64,8 @@ export const MessageToolbox = ({
     className,
     style
   );
+  const { RCInstance } = useContext(RCContext);
+  const instanceHost = RCInstance.getHost();
   const { theme } = useTheme();
   const styles = getMessageToolboxStyles(theme);
   const surfaceItems =
@@ -66,6 +80,38 @@ export const MessageToolbox = ({
   const handleOnClose = () => {
     setShowDeleteModal(false);
   };
+
+  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+
+  const isAllowedToReport = message.u._id !== authenticatedUserId;
+
+  const isAllowedToEditMessage = userRoles.some((role) =>
+    editMessageRoles.has(role)
+  )
+    ? true
+    : message.u._id === authenticatedUserId;
+
+  const isAllowedToDeleteMessage = userRoles.some((role) =>
+    deleteMessageRoles.has(role)
+  );
+  const isAllowedToDeleteOwnMessage = userRoles.some((role) =>
+    deleteOwnMessageRoles.has(role)
+  );
+  const isAllowedToForceDeleteMessage = userRoles.some((role) =>
+    forceDeleteMessageRoles.has(role)
+  );
+
+  const isVisibleForMessageType =
+    message.files?.[0].type !== 'audio/mpeg' &&
+    message.files?.[0].type !== 'video/mp4';
+
+  const canDeleteMessage = isAllowedToForceDeleteMessage
+    ? true
+    : isAllowedToDeleteMessage
+    ? true
+    : isAllowedToDeleteOwnMessage
+    ? message.u._id === authenticatedUserId
+    : false;
 
   const options = useMemo(
     () => ({
@@ -110,23 +156,37 @@ export const MessageToolbox = ({
         id: 'pin',
         onClick: () => handlePinMessage(message),
         iconName: message.pinned ? 'pin-filled' : 'pin',
-        visible: !isThreadMessage,
+        visible: isAllowedToPin,
       },
       edit: {
         label: 'Edit',
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: message.u._id === authenticatedUserId,
+        visible: isAllowedToEditMessage,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
+      },
+      copy: {
+        label: 'Copy message',
+        id: 'copy',
+        onClick: () => handleCopyMessage(message),
+        iconName: 'copy',
+        visible: true,
+      },
+      link: {
+        label: 'Copy link',
+        id: 'link',
+        onClick: () => handleCopyMessageLink(message),
+        iconName: 'link',
+        visible: true,
       },
       delete: {
         label: 'Delete',
         id: 'delete',
         onClick: () => setShowDeleteModal(true),
         iconName: 'trash',
-        visible: message.u._id === authenticatedUserId,
+        visible: canDeleteMessage,
         type: 'destructive',
       },
       report: {
@@ -134,7 +194,7 @@ export const MessageToolbox = ({
         id: 'report',
         onClick: () => handlerReportMessage(message),
         iconName: 'report',
-        visible: true,
+        visible: isAllowedToReport,
         type: 'destructive',
       },
     }),
@@ -149,6 +209,8 @@ export const MessageToolbox = ({
       handlePinMessage,
       handleEditMessage,
       handlerReportMessage,
+      handleCopyMessage,
+      isAllowedToPin,
     ]
   );
 
@@ -234,13 +296,61 @@ export const MessageToolbox = ({
           </Modal.Header>
           <Modal.Content
             style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              padding: '0 0.5rem 0.5rem',
+              overflow: 'scroll',
+              whiteSpace: 'wrap',
+              padding: '1rem',
+              maxHeight: '50vh',
             }}
           >
-            {parseEmoji(message.msg)}
+            {message.file ? (
+              message.file.type.startsWith('image/') ? (
+                <div>
+                  <img
+                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                    alt={message.file.name}
+                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                  />
+                  <div>{`${message.file.name} (${(
+                    message.file.size / 1024
+                  ).toFixed(2)} kB)`}</div>
+                </div>
+              ) : message.file.type.startsWith('video/') ? (
+                <video
+                  controls
+                  style={{ maxWidth: '100%', maxHeight: '200px' }}
+                >
+                  <source
+                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                    type={message.file.type}
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              ) : message.file.type.startsWith('audio/') ? (
+                <audio controls style={{ maxWidth: '100%' }}>
+                  <source
+                    src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
+                    type={message.file.type}
+                  />
+                  Your browser does not support the audio element.
+                </audio>
+              ) : (
+                <Markdown body={message} md={message.md} isReaction={false} />
+              )
+            ) : (
+              <Markdown body={message} md={message.md} isReaction={false} />
+            )}
+            {message.attachments &&
+              message.attachments.length > 0 &&
+              message.msg &&
+              message.msg[0] === '[' &&
+              message.attachments.map((attachment, index) => (
+                <Attachment
+                  key={index}
+                  attachment={attachment}
+                  type={attachment.type}
+                  host={instanceHost}
+                />
+              ))}
           </Modal.Content>
           <Modal.Footer>
             <Button type="secondary" onClick={handleOnClose}>

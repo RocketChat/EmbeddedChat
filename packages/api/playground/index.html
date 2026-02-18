@@ -24,6 +24,14 @@
 		.playground-output #output{
 			white-space: pre-wrap;
 		}
+		#togglePassword {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+		cursor: pointer;
+        vertical-align: middle;
+		width: 50px;
+    	}
 	</style>
 </head>
 <body>
@@ -43,6 +51,9 @@
 			<div class="input-group">
 				<input type="text" id="email" placeholder="Email">
 				<input type="password" id="password" placeholder="Password">
+				<button id="togglePassword" class="toggle-icon">
+					Show
+				</button>
 				<button id="loginWithPassword">Sign in</button>
 			</div>
 			<div class="input-group">

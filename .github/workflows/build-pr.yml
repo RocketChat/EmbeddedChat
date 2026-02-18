@@ -1,0 +1,65 @@
+name: Build PR-Preview
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+env:
+  LAYOUT_EDITOR_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/layout_editor"
+  DOCS_BASE_URL: "/EmbeddedChat/pulls/pr-${{github.event.pull_request.number}}/docs"
+  STORYBOOK_RC_HOST: "https://demo.qa.rocket.chat"
+
+jobs:
+  build:
+    if: github.event.review.state == 'approved' && (github.event.review.author_association == 'COLLABORATOR' || github.event.review.author_association == 'OWNER')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.19.0"
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build packages
+        run: yarn build && yarn build:storybook
+
+      - name: Setup Node.js for Docs
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - name: "Install dependencies for docs"
+        run: yarn install
+        working-directory: packages/docs/
+
+      - name: Build Docs
+        run: yarn build
+        working-directory: packages/docs/
+
+      - name: Prepare Build Folder
+        run: |
+          mkdir -p build/pulls/pr-${{github.event.pull_request.number}}/
+          mkdir -p build/pulls/pr-${{github.event.pull_request.number}}/ui-elements
+          mkdir -p build/pulls/pr-${{github.event.pull_request.number}}/layout_editor
+          mkdir -p build/pulls/pr-${{github.event.pull_request.number}}/docs
+
+          mv -v packages/react/storybook-static/* build/pulls/pr-${{github.event.pull_request.number}}/
+          mv -v packages/ui-elements/storybook-static/* build/pulls/pr-${{github.event.pull_request.number}}/ui-elements/
+          mv -v packages/layout_editor/dist/* build/pulls/pr-${{github.event.pull_request.number}}/layout_editor/
+          mv -v packages/docs/build/* build/pulls/pr-${{github.event.pull_request.number}}/docs/
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: build/

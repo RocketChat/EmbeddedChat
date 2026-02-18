@@ -74,8 +74,6 @@ This method leverages the OAuth configuration established in Rocket.Chat, ensuri
 
 For instructions on installing the EmbeddedChat RC app on your Rocket.Chat server, refer to the [EmbeddedChat RC App installation guide](../Usage/ec_rc_setup.md).
 
-Certainly! Here are the instructions to enable OAuth login in the EmbeddedChat RC app, without using sub-bullets:
-
 #### Steps to Enable OAuth Login in EmbeddedChat RC App
 
 1. Copy Callback URL:
