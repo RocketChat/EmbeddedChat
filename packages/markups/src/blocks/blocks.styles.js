@@ -9,3 +9,8 @@ export const TaskListBlockStyles = {
     gap: 0.5em;
   `,
 };
+
+export const listStyles = css`
+  padding-left: 1.5em;
+  margin: 0;
+`;

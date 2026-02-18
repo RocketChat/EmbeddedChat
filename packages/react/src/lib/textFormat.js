@@ -4,4 +4,6 @@ export const formatter = [
   { name: 'strike', pattern: '~{{text}}~' },
   { name: 'code', pattern: '`{{text}}`' },
   { name: 'multiline', pattern: '```\n{{text}}\n``` ' },
+  { name: 'list-numbers', type: 'list', listPrefix: (n) => `${n}. ` },
+  { name: 'list-bullets', type: 'list', listPrefix: () => '- ' },
 ];

@@ -15,13 +15,22 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+import insertListPrefix from '../../lib/insertListPrefix';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'audio', 'video', 'file'],
-    formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
+    formatters: [
+      'bold',
+      'italic',
+      'strike',
+      'code',
+      'multiline',
+      'list-numbers',
+      'list-bullets',
+    ],
   },
 }) => {
   const { classNames, styleOverrides, configOverrides } = useComponentOverrides(
@@ -95,7 +104,11 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage}
             ghost
             onClick={() => {
-              formatSelection(messageRef, item.pattern);
+              if (item.type === 'list') {
+                insertListPrefix(messageRef, item.listPrefix);
+              } else {
+                formatSelection(messageRef, item.pattern);
+              }
             }}
           >
             <Icon
