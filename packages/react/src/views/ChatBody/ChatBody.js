@@ -438,7 +438,7 @@ const ChatBody = ({
         <LoginForm />
 
         {uiKitModalOpen && (
-          <UiKitModal key={Math.random()} initialView={uiKitModalData} />
+          <UiKitModal key={uiKitModalData?.viewId || 'uikit-modal'} initialView={uiKitModalData} />
         )}
       </Box>
 
@@ -458,4 +458,10 @@ export default ChatBody;
 ChatBody.propTypes = {
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
+  messageListRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
+  scrollToBottom: PropTypes.func,
+  clearUnreadDividerRef: PropTypes.shape({ current: PropTypes.func }),
 };

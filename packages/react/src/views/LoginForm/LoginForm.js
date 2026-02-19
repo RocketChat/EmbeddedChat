@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import {
   GenericModal,
@@ -12,7 +13,7 @@ import { useLoginStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import styles from './LoginForm.styles';
 
-export default function LoginForm() {
+const LoginForm = () => {
   const [userOrEmail, setUserOrEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -108,6 +109,7 @@ export default function LoginForm() {
                 />
                 {field.label === 'Password' && (
                   <Box
+                    is="button"
                     type="button"
                     css={styles.passwordEye}
                     onClick={handleTogglePassword}
@@ -142,4 +144,8 @@ export default function LoginForm() {
       </GenericModal>
     </>
   ) : null;
-}
+};
+
+LoginForm.propTypes = {}; // No props, but good to have for consistency
+
+export default LoginForm;
