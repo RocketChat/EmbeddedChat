@@ -238,7 +238,15 @@ export default class EmbeddedChatApi {
           }
         }
       );
+      const { userId } = (await this.auth.getCurrentUser()) || {};
       await this.rcClient.subscribeNotifyUser();
+      if (userId) {
+        await this.rcClient.subscribe(
+          "stream-notify-user",
+          `${userId}/uiInteraction`,
+          false
+        );
+      }
       await this.rcClient.onStreamData(
         "stream-notify-user",
         (ddpMessage: any) => {
@@ -1071,24 +1079,50 @@ export default class EmbeddedChatApi {
     return data;
   }
 
-  async execCommand({ command, params }: { command: string; params: string }) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.run`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "POST",
-      body: JSON.stringify({
-        command,
-        params,
-        roomId: this.rid,
-        triggerId: Math.random().toString(32).slice(2, 20),
-      }),
-    });
-    const data = await response.json();
-    return data;
+  async execCommand({
+    command,
+    params,
+    tmid,
+  }: {
+    command: string;
+    params: string;
+    tmid?: string;
+  }) {
+    const triggerId = Math.random().toString(36).slice(2, 18);
+    const msg = {
+      _id: Math.random().toString(36).slice(2),
+      rid: this.rid,
+      msg: `/${command} ${params}`,
+      ...(tmid && { tmid }),
+    };
+
+    try {
+      const result = await this.rcClient.methodCall(
+        "slashCommand",
+        { cmd: command, params, msg, triggerId }
+      );
+      return result;
+    } catch (e) {
+      console.error("DDP slashCommand failed, falling back to REST API", e);
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(`${this.host}/api/v1/commands.run`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          command,
+          params,
+          tmid,
+          roomId: this.rid,
+          triggerId,
+        }),
+      });
+      const data = await response.json();
+      return data;
+    }
   }
 
   async getUserStatus(reqUserId: string) {

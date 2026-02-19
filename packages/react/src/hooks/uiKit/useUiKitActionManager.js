@@ -2,6 +2,18 @@ import { useCallback, useContext } from 'react';
 import { Emitter } from '@rocket.chat/emitter';
 import RCContext from '../../context/RCInstance';
 import useUiKitStore from '../../store/uiKitStore';
+import {
+  useMemberStore,
+  useSearchMessageStore,
+  useChannelStore,
+  useThreadsMessageStore,
+  useMentionsStore,
+  usePinnedMessageStore,
+  useStarredMessageStore,
+  useFileStore,
+  useUserStore,
+  useSidebarStore,
+} from '../../store';
 
 const emitter = new Emitter();
 
@@ -20,16 +32,59 @@ const useUiKitActionManager = () => {
     setUiKitContextualBarData: state.setUiKitContextualBarData,
   }));
 
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const setShowMembers = useMemberStore((state) => state.setShowMembers);
+  const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
+  const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
+  const setShowStarred = useStarredMessageStore(
+    (state) => state.setShowStarred
+  );
+  const setShowAllThreads = useThreadsMessageStore(
+    (state) => state.setShowAllThreads
+  );
+  const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
+  const setShowMentions = useMentionsStore((state) => state.setShowMentions);
+  const setShowCurrentUserInfo = useUserStore(
+    (state) => state.setShowCurrentUserInfo
+  );
+  const setShowChannelinfo = useChannelStore(
+    (state) => state.setShowChannelinfo
+  );
+
+  const closeSidebarPanels = useCallback(() => {
+    setShowMembers(false);
+    setShowSearch(false);
+    setShowPinned(false);
+    setShowStarred(false);
+    setShowAllThreads(false);
+    setShowAllFiles(false);
+    setShowMentions(false);
+    setShowCurrentUserInfo(false);
+    setShowChannelinfo(false);
+  }, [
+    setShowMembers,
+    setShowSearch,
+    setShowPinned,
+    setShowStarred,
+    setShowAllThreads,
+    setShowAllFiles,
+    setShowMentions,
+    setShowCurrentUserInfo,
+    setShowChannelinfo,
+  ]);
+
   const disposeView = useCallback(() => {
     setUiKitModalOpen(false);
     setUiKitModalData(null);
     setUiKitContextualBarOpen(false);
     setUiKitContextualBarData(null);
+    setShowSidebar(false);
   }, [
     setUiKitModalOpen,
     setUiKitModalData,
     setUiKitContextualBarOpen,
     setUiKitContextualBarData,
+    setShowSidebar,
   ]);
 
   const handleServerInteraction = useCallback(
@@ -40,8 +95,10 @@ const useUiKitActionManager = () => {
           setUiKitModalOpen(true);
           break;
         case 'contextual_bar.open':
+          closeSidebarPanels();
           setUiKitContextualBarData(interaction.view);
           setUiKitContextualBarOpen(true);
+          setShowSidebar(true);
           break;
         case 'modal.update':
         case 'contextual_bar.update': {
@@ -66,6 +123,8 @@ const useUiKitActionManager = () => {
       setUiKitContextualBarOpen,
       setUiKitModalOpen,
       setUiKitModalData,
+      closeSidebarPanels,
+      setShowSidebar,
     ]
   );
 
