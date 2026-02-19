@@ -144,7 +144,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((data) => setCommands(data.commands || []))
@@ -157,6 +157,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           .catch(console.error);
       }
     });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
@@ -258,13 +263,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         return;
       }
       if (messageRef.current.value?.length) {
+        if (timerRef.current) clearTimeout(timerRef.current);
         typingRef.current = true;
         timerRef.current = setTimeout(() => {
           typingRef.current = false;
-        }, [15000]);
+        }, 15000);
         await RCInstance.sendTypingStatus(username, true);
       } else {
-        clearTimeout(timerRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
         typingRef.current = false;
         await RCInstance.sendTypingStatus(username, false);
       }
@@ -275,6 +281,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const sendTypingStop = async () => {
     try {
+      if (timerRef.current) clearTimeout(timerRef.current);
       typingRef.current = false;
       await RCInstance.sendTypingStatus(username, false);
     } catch (e) {
