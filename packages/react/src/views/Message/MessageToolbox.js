@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from "react";
 import {
   Box,
   Modal,
@@ -8,16 +8,16 @@ import {
   useComponentOverrides,
   appendClassNames,
   useTheme,
-} from '@embeddedchat/ui-elements';
-import RCContext from '../../context/RCInstance';
-import { EmojiPicker } from '../EmojiPicker';
-import { getMessageToolboxStyles } from './Message.styles';
-import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
-import { Markdown } from '../Markdown';
-import Attachment from '../AttachmentHandler/Attachment';
+} from "@embeddedchat/ui-elements";
+import RCContext from "../../context/RCInstance";
+import { EmojiPicker } from "../EmojiPicker";
+import { getMessageToolboxStyles } from "./Message.styles";
+import SurfaceMenu from "../SurfaceMenu/SurfaceMenu";
+import { Markdown } from "../Markdown";
+import Attachment from "../AttachmentHandler/Attachment";
 
 export const MessageToolbox = ({
-  className = '',
+  className = "",
   message,
   variantStyles = {},
   style = {},
@@ -42,16 +42,16 @@ export const MessageToolbox = ({
   isEditing = false,
   optionConfig = {
     surfaceItems: [
-      'reaction',
-      'reply',
-      'quote',
-      'star',
-      'copy',
-      'link',
-      'pin',
-      'edit',
-      'delete',
-      'report',
+      "reaction",
+      "reply",
+      "quote",
+      "star",
+      "copy",
+      "link",
+      "pin",
+      "edit",
+      "delete",
+      "report",
     ],
 
     menuItems: [],
@@ -60,9 +60,9 @@ export const MessageToolbox = ({
   ...props
 }) => {
   const { styleOverrides, classNames, configOverrides } = useComponentOverrides(
-    'MessageToolbox',
+    "MessageToolbox",
     className,
-    style
+    style,
   );
   const { RCInstance } = useContext(RCContext);
   const instanceHost = RCInstance.getHost();
@@ -81,121 +81,148 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+  const {
+    isAllowedToPin,
+    isAllowedToReport,
+    isAllowedToEditMessage,
+    isAllowedToDeleteMessage,
+    isAllowedToDeleteOwnMessage,
+    isAllowedToForceDeleteMessage,
+    isVisibleForMessageType,
+    canDeleteMessage,
+  } = useMemo(() => {
+    const isOwner = message.u._id === authenticatedUserId;
+    const allowedToPin = userRoles.some((role) => pinRoles.has(role));
+    const allowedToReport = !isOwner;
+    const allowedToEdit =
+      userRoles.some((role) => editMessageRoles.has(role)) || isOwner;
+    const allowedToDelete = userRoles.some((role) =>
+      deleteMessageRoles.has(role),
+    );
+    const allowedToDeleteOwn = userRoles.some((role) =>
+      deleteOwnMessageRoles.has(role),
+    );
+    const allowedToForceDelete = userRoles.some((role) =>
+      forceDeleteMessageRoles.has(role),
+    );
 
-  const isAllowedToReport = message.u._id !== authenticatedUserId;
+    const visibleForMessageType =
+      message.files?.[0]?.type !== "audio/mpeg" &&
+      message.files?.[0]?.type !== "video/mp4";
 
-  const isAllowedToEditMessage = userRoles.some((role) =>
-    editMessageRoles.has(role)
-  )
-    ? true
-    : message.u._id === authenticatedUserId;
+    const canDelete = allowedToForceDelete
+      ? true
+      : allowedToDelete
+        ? true
+        : allowedToDeleteOwn
+          ? isOwner
+          : false;
 
-  const isAllowedToDeleteMessage = userRoles.some((role) =>
-    deleteMessageRoles.has(role)
-  );
-  const isAllowedToDeleteOwnMessage = userRoles.some((role) =>
-    deleteOwnMessageRoles.has(role)
-  );
-  const isAllowedToForceDeleteMessage = userRoles.some((role) =>
-    forceDeleteMessageRoles.has(role)
-  );
-
-  const isVisibleForMessageType =
-    message.files?.[0].type !== 'audio/mpeg' &&
-    message.files?.[0].type !== 'video/mp4';
-
-  const canDeleteMessage = isAllowedToForceDeleteMessage
-    ? true
-    : isAllowedToDeleteMessage
-    ? true
-    : isAllowedToDeleteOwnMessage
-    ? message.u._id === authenticatedUserId
-    : false;
+    return {
+      isAllowedToPin: allowedToPin,
+      isAllowedToReport: allowedToReport,
+      isAllowedToEditMessage: allowedToEdit,
+      isAllowedToDeleteMessage: allowedToDelete,
+      isAllowedToDeleteOwnMessage: allowedToDeleteOwn,
+      isAllowedToForceDeleteMessage: allowedToForceDelete,
+      isVisibleForMessageType: visibleForMessageType,
+      canDeleteMessage: canDelete,
+    };
+  }, [
+    authenticatedUserId,
+    userRoles,
+    pinRoles,
+    deleteMessageRoles,
+    deleteOwnMessageRoles,
+    forceDeleteMessageRoles,
+    editMessageRoles,
+    message.u._id,
+    message.files,
+  ]);
 
   const options = useMemo(
     () => ({
       reply: {
-        label: 'Reply in thread',
-        id: 'reply',
+        label: "Reply in thread",
+        id: "reply",
         onClick: handleOpenThread(message),
-        iconName: 'thread',
+        iconName: "thread",
         visible: !isThreadMessage,
       },
       quote: {
-        label: 'Quote',
-        id: 'quote',
+        label: "Quote",
+        id: "quote",
         onClick: () => handleQuoteMessage(message),
-        iconName: 'quote',
+        iconName: "quote",
         visible: true,
       },
       star: {
         label:
           message.starred &&
           message.starred.find((u) => u._id === authenticatedUserId)
-            ? 'Unstar'
-            : 'Star',
-        id: 'star',
+            ? "Unstar"
+            : "Star",
+        id: "star",
         onClick: () => handleStarMessage(message),
         iconName:
           message.starred &&
           message.starred.find((u) => u._id === authenticatedUserId)
-            ? 'star-filled'
-            : 'star',
+            ? "star-filled"
+            : "star",
         visible: true,
       },
       reaction: {
-        label: 'Add reaction',
-        id: 'reaction',
+        label: "Add reaction",
+        id: "reaction",
         onClick: () => setEmojiOpen(true),
-        iconName: 'emoji',
+        iconName: "emoji",
         visible: true,
       },
       pin: {
-        label: message.pinned ? 'Unpin' : 'Pin',
-        id: 'pin',
+        label: message.pinned ? "Unpin" : "Pin",
+        id: "pin",
         onClick: () => handlePinMessage(message),
-        iconName: message.pinned ? 'pin-filled' : 'pin',
+        iconName: message.pinned ? "pin-filled" : "pin",
         visible: isAllowedToPin,
       },
       edit: {
-        label: 'Edit',
-        id: 'edit',
+        label: "Edit",
+        id: "edit",
         onClick: () => handleEditMessage(message),
-        iconName: 'edit',
+        iconName: "edit",
         visible: isAllowedToEditMessage,
-        color: isEditing ? 'secondary' : 'default',
+        color: isEditing ? "secondary" : "default",
         ghost: !isEditing,
       },
       copy: {
-        label: 'Copy message',
-        id: 'copy',
+        label: "Copy message",
+        id: "copy",
         onClick: () => handleCopyMessage(message),
-        iconName: 'copy',
+        iconName: "copy",
         visible: true,
       },
       link: {
-        label: 'Copy link',
-        id: 'link',
+        label: "Copy link",
+        id: "link",
         onClick: () => handleCopyMessageLink(message),
-        iconName: 'link',
+        iconName: "link",
         visible: true,
       },
       delete: {
-        label: 'Delete',
-        id: 'delete',
+        label: "Delete",
+        id: "delete",
         onClick: () => setShowDeleteModal(true),
-        iconName: 'trash',
+        iconName: "trash",
         visible: canDeleteMessage,
-        type: 'destructive',
+        type: "destructive",
       },
       report: {
-        label: 'Report',
-        id: 'report',
+        label: "Report",
+        id: "report",
         onClick: () => handlerReportMessage(message),
-        iconName: 'report',
+        iconName: "report",
         visible: isAllowedToReport,
-        type: 'destructive',
+        type: "destructive",
       },
     }),
     [
@@ -210,8 +237,12 @@ export const MessageToolbox = ({
       handleEditMessage,
       handlerReportMessage,
       handleCopyMessage,
+      handleCopyMessageLink,
       isAllowedToPin,
-    ]
+      isAllowedToReport,
+      isAllowedToEditMessage,
+      canDeleteMessage,
+    ],
   );
 
   const menuOptions = menuItems
@@ -248,7 +279,7 @@ export const MessageToolbox = ({
       <Box css={variantStyles.toolboxContainer || styles.toolboxContainer}>
         <Box
           css={styles.toolbox}
-          className={appendClassNames('ec-message-toolbox', classNames)}
+          className={appendClassNames("ec-message-toolbox", classNames)}
           style={styleOverrides}
           {...props}
         >
@@ -259,9 +290,9 @@ export const MessageToolbox = ({
             <Menu
               size="small"
               options={menuOptions}
-              tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
+              tooltip={{ isToolTip: true, position: "top", text: "More" }}
               useWrapper={false}
-              style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
+              style={{ top: "auto", bottom: `calc(100% + 2px)` }}
             />
           )}
 
@@ -288,36 +319,36 @@ export const MessageToolbox = ({
               <Icon
                 name="trash"
                 size="1.25rem"
-                style={{ marginRight: '0.5rem' }}
-              />{' '}
+                style={{ marginRight: "0.5rem" }}
+              />{" "}
               Delete this message?
             </Modal.Title>
             <Modal.Close onClick={handleOnClose} />
           </Modal.Header>
           <Modal.Content
             style={{
-              overflow: 'scroll',
-              whiteSpace: 'wrap',
-              padding: '1rem',
-              maxHeight: '50vh',
+              overflow: "scroll",
+              whiteSpace: "wrap",
+              padding: "1rem",
+              maxHeight: "50vh",
             }}
           >
             {message.file ? (
-              message.file.type.startsWith('image/') ? (
+              message.file.type.startsWith("image/") ? (
                 <div>
                   <img
                     src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                     alt={message.file.name}
-                    style={{ maxWidth: '100px', maxHeight: '100px' }}
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
                   />
                   <div>{`${message.file.name} (${(
                     message.file.size / 1024
                   ).toFixed(2)} kB)`}</div>
                 </div>
-              ) : message.file.type.startsWith('video/') ? (
+              ) : message.file.type.startsWith("video/") ? (
                 <video
                   controls
-                  style={{ maxWidth: '100%', maxHeight: '200px' }}
+                  style={{ maxWidth: "100%", maxHeight: "200px" }}
                 >
                   <source
                     src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
@@ -325,8 +356,8 @@ export const MessageToolbox = ({
                   />
                   Your browser does not support the video tag.
                 </video>
-              ) : message.file.type.startsWith('audio/') ? (
-                <audio controls style={{ maxWidth: '100%' }}>
+              ) : message.file.type.startsWith("audio/") ? (
+                <audio controls style={{ maxWidth: "100%" }}>
                   <source
                     src={`${instanceHost}/file-upload/${message.file._id}/${message.file.name}`}
                     type={message.file.type}
@@ -342,7 +373,7 @@ export const MessageToolbox = ({
             {message.attachments &&
               message.attachments.length > 0 &&
               message.msg &&
-              message.msg[0] === '[' &&
+              message.msg[0] === "[" &&
               message.attachments.map((attachment, index) => (
                 <Attachment
                   key={index}
