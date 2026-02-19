@@ -1,32 +1,33 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { Box, Icon, Avatar } from '@embeddedchat/ui-elements';
-import RCContext from '../../context/RCInstance';
-import { RoomMemberItemStyles as styles } from './RoomMembers.styles';
+import { Box, Icon, Avatar, useTheme } from '@embeddedchat/ui-elements';
+import { RoomMemberItemStyles } from './RoomMembers.styles';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { useUserStore } from '../../store';
 
-const RoomMemberItem = ({ user, host }) => {
-  const { RCInstance } = useContext(RCContext);
-  const [userStatus, setUserStatus] = useState('');
+const RoomMemberItem = ({ user, host, userStatus }) => {
   const avatarUrl = new URL(`avatar/${user.username}`, host).toString();
+  const { theme } = useTheme();
+  const { mode } = useTheme();
+  const styles = RoomMemberItemStyles(theme, mode);
 
-  useEffect(() => {
-    const getStatus = async () => {
-      try {
-        const res = await RCInstance.getUserStatus(user._id);
-        if (res.success) {
-          setUserStatus(res.status);
-        }
-      } catch (err) {
-        console.error('Error fetching user status', err);
-      }
-    };
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
 
-    getStatus();
-  }, [RCInstance]);
-
+  const handleShowUserInfo = () => {
+    setExclusiveState(setShowCurrentUserInfo);
+    setCurrentUser(user);
+  };
   return (
-    <Box css={styles.container}>
+    <Box
+      css={styles.container}
+      style={{ cursor: 'pointer' }}
+      onClick={handleShowUserInfo}
+    >
       <Avatar
         url={avatarUrl}
         alt="avatar"
@@ -46,7 +47,9 @@ const RoomMemberItem = ({ user, host }) => {
         {userStatus && (
           <Icon name={userStatus} size="1.25rem" css={styles.icon} />
         )}
-        <Box is="span">{user.username}</Box>
+        <Box is="span">
+          {user.name} ({user.username})
+        </Box>
       </Box>
     </Box>
   );

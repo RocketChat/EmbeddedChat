@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Input } from '@embeddedchat/ui-elements';
+import { Box, Input, useTheme } from '@embeddedchat/ui-elements';
+import { css } from '@emotion/react';
 import ReportWindowButtons from './ReportWindowButtons';
-import { useMessageStore } from '../../store';
 import styles from './ReportMessage.styles';
 
-const MessageReportWindow = ({ messageId }) => {
-  const [reportDescription, setDescription] = useState('');
-  const messages = useMessageStore((state) => state.messages);
-  const messageText = messages.filter((message) => message._id === messageId)[0]
-    ?.msg;
+const MessageReportWindow = ({ messageId, message }) => {
+  const [reportDescription, setDescription] = useState(' ');
   return (
     <ReportWindowButtons
       variant="danger"
@@ -18,8 +15,8 @@ const MessageReportWindow = ({ messageId }) => {
       cancelText="Cancel"
       reportDescription={reportDescription}
       messageId={messageId}
+      message={message}
     >
-      <Box>{JSON.stringify(messageText)}</Box>
       <Box css={styles.conatiner}>
         <Input
           textArea
@@ -28,6 +25,17 @@ const MessageReportWindow = ({ messageId }) => {
             setDescription(e.target.value);
           }}
         />
+        {reportDescription === '' ? (
+          <Box
+            css={css`
+              color: red;
+              margin-top: 0.5rem;
+              font-size: 0.7rem;
+            `}
+          >
+            You need to write something!
+          </Box>
+        ) : null}
       </Box>
     </ReportWindowButtons>
   );

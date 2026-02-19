@@ -89,7 +89,7 @@ A demonstration video is available here:
 
 <iframe width="100%" height="392" src="https://www.youtube.com/embed/bB2zzlHhIdY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-For further details on theming, you can visit the [documentation](https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/theming.md) or check out the [technical guide](https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/theming_technical.md) for insights on how theming is implemented in the repository.
+For further details on theming, you can visit the [documentation](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/theming) or check out the [technical guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Development/theming_technical) for insights on how theming is implemented in the repository.
 
 ### Enhanced Authentication with HTTP-Only Cookies
 
@@ -99,7 +99,7 @@ A video demonstration is available here:
 
 <iframe width="100%" height="392" src="https://www.youtube.com/embed/k1-X-9l67H4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-For more information on authentication, refer to the [authentication guide](https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/authentication.md).
+For more information on authentication, refer to the [authentication guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/authentication).
 
 ### UI-Kit Improvement
 
@@ -134,7 +134,7 @@ The following videos demonstrate its usage:
 
 <iframe width="100%" height="392" src="https://www.youtube.com/embed/rkuSF9qOG2U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-To set up the EmbeddedChat RC App, follow this guide: [EmbeddedChat RC App Setup](https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/ec_rc_setup.md).
+To set up the EmbeddedChat RC App, follow this guide: [EmbeddedChat RC App Setup](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/ec_rc_setup).
 
 ### Layout Editor
 
@@ -144,7 +144,7 @@ A video demonstration showcases the features:
 
 <iframe width="100%" height="392" src="https://www.youtube.com/embed/vhxsGopMGA8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-To learn more about the layout editor, visit the guide: [Layout Editor Guide](https://github.com/RocketChat/EmbeddedChat/blob/develop/packages/docs/layout_editor.md).
+To learn more about the layout editor, visit the guide: [Layout Editor Guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/layout_editor).
 
 ## 🚀 Contributions
 

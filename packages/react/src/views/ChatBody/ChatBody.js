@@ -1,11 +1,20 @@
 /* eslint-disable no-shadow */
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import {
   Box,
   Throbber,
   useComponentOverrides,
+  Modal,
+  useTheme,
+  Button,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import {
@@ -31,24 +40,34 @@ const ChatBody = ({
   showRoles,
   messageListRef,
   scrollToBottom,
+  clearUnreadDividerRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
-
-  const styles = getChatbodyStyles();
+  const { theme, mode } = useTheme();
+  const styles = getChatbodyStyles(theme, mode);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
   const [, setIsUserScrolledUp] = useState(false);
   const [otherUserMessage, setOtherUserMessage] = useState(false);
-
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [firstUnreadMessageId, setFirstUnreadMessageId] = useState(null);
+  const pendingFirstUnreadRef = useRef(null);
   const { RCInstance, ECOptions } = useContext(RCContext);
+  const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
+  const offset = useMessageStore((state) => state.messagesOffset);
+  const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const threadMessages = useMessageStore((state) => state.threadMessages);
-
+  const [isModalOpen, setModalOpen] = useState(false);
   const setThreadMessages = useMessageStore((state) => state.setThreadMessages);
   const upsertMessage = useMessageStore((state) => state.upsertMessage);
+  const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const setMessages = useMessageStore((state) => state.setMessages);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [
     state.isThreadOpen,
@@ -69,7 +88,8 @@ const ChatBody = ({
 
   const username = useUserStore((state) => state.username);
 
-  const getMessagesAndRoles = useFetchChatData(showRoles);
+  const { getMessagesAndRoles, fetchAndSetPermissions, permissionsRef } =
+    useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -81,7 +101,7 @@ const ChatBody = ({
           threadMainMessage._id,
           isChannelPrivate
         );
-        setThreadMessages(messages);
+        setThreadMessages(messages.reverse());
       } catch (e) {
         console.error(e);
       }
@@ -107,6 +127,10 @@ const ChatBody = ({
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
           setOtherUserMessage(true);
+          // Track the first unread message (only set if not already tracking)
+          if (!pendingFirstUnreadRef.current) {
+            pendingFirstUnreadRef.current = message._id;
+          }
         }
       }
       upsertMessage(message, ECOptions?.enableThreads);
@@ -143,26 +167,96 @@ const ChatBody = ({
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         getMessagesAndRoles();
+        setHasMoreMessages(true);
       } else {
         getMessagesAndRoles(anonymousMode);
       }
     });
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
+  useEffect(() => {
+    RCInstance.auth.onAuthChange((user) => {
+      if (user) {
+        fetchAndSetPermissions();
+      } else {
+        permissionsRef.current = null;
+      }
+    });
+  }, []);
+
+  // Expose clearUnreadDivider function via ref for ChatInput to call
+  useEffect(() => {
+    if (clearUnreadDividerRef) {
+      clearUnreadDividerRef.current = () => {
+        setFirstUnreadMessageId(null);
+        pendingFirstUnreadRef.current = null;
+      };
+    }
+  }, [clearUnreadDividerRef]);
+
   const handlePopupClick = () => {
+    // Set the unread divider to show above the first unread message
+    if (pendingFirstUnreadRef.current) {
+      setFirstUnreadMessageId(pendingFirstUnreadRef.current);
+      pendingFirstUnreadRef.current = null;
+    }
     scrollToBottom();
     setIsUserScrolledUp(false);
     setOtherUserMessage(false);
     setPopupVisible(false);
   };
 
-  const handleScroll = useCallback(() => {
+  const handleScroll = useCallback(async () => {
     if (messageListRef && messageListRef.current) {
       setScrollPosition(messageListRef.current.scrollTop);
       setIsUserScrolledUp(
         messageListRef.current.scrollTop + messageListRef.current.clientHeight <
           messageListRef.current.scrollHeight
       );
+
+      if (
+        messageListRef.current.scrollTop === 0 &&
+        !loadingOlderMessages &&
+        hasMoreMessages
+      ) {
+        setLoadingOlderMessages(true);
+
+        try {
+          const olderMessages = await RCInstance.getOlderMessages(
+            anonymousMode,
+            ECOptions?.enableThreads
+              ? {
+                  query: {
+                    tmid: {
+                      $exists: false,
+                    },
+                  },
+                  offset,
+                }
+              : undefined,
+            anonymousMode ? false : isChannelPrivate
+          );
+          const messageList = messageListRef.current;
+          if (olderMessages?.messages?.length) {
+            const previousScrollHeight = messageList.scrollHeight;
+
+            setMessages(olderMessages.messages, true);
+            setMessagesOffset(offset + olderMessages.messages.length);
+
+            requestAnimationFrame(() => {
+              const newScrollHeight = messageList.scrollHeight;
+              messageList.scrollTop = newScrollHeight - previousScrollHeight;
+            });
+          } else {
+            setHasMoreMessages(false);
+          }
+        } catch (error) {
+          console.error('Error fetching older messages:', error);
+          setHasMoreMessages(false);
+        } finally {
+          setLoadingOlderMessages(false);
+        }
+      }
     }
 
     const isAtBottom = messageListRef?.current?.scrollTop === 0;
@@ -170,19 +264,58 @@ const ChatBody = ({
       setPopupVisible(false);
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
+      // Clear unread divider when scrolled to bottom
+      if (firstUnreadMessageId) {
+        setFirstUnreadMessageId(null);
+      }
+      // Also clear pending unread ref
+      pendingFirstUnreadRef.current = null;
     }
   }, [
     messageListRef,
+    offset,
+    setMessagesOffset,
+    setMessages,
+    anonymousMode,
+    hasMoreMessages,
+    RCInstance,
+    isChannelPrivate,
+    ECOptions?.enableThreads,
+    loadingOlderMessages,
     setScrollPosition,
     setIsUserScrolledUp,
     setPopupVisible,
     setOtherUserMessage,
+    firstUnreadMessageId,
   ]);
 
   const showNewMessagesPopup = () => {
     setPopupVisible(true);
   };
+  const announcementRef = useRef(null);
 
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
+
+  const checkOverflow = () => {
+    if (announcementRef.current) {
+      setIsOverflowing(
+        announcementRef.current.scrollWidth >
+          announcementRef.current.clientWidth
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    checkOverflow();
+  }, [channelInfo.announcement, showAnnouncement]);
   useEffect(() => {
     const currentRef = messageListRef.current;
     currentRef.addEventListener('scroll', handleScroll);
@@ -204,6 +337,62 @@ const ChatBody = ({
 
   return (
     <>
+      {channelInfo.announcement && showAnnouncement && (
+        <Box css={styles.announcementStyles}>
+          <Box
+            ref={announcementRef}
+            css={[
+              styles.announcementTextBox,
+              css`
+                &:hover {
+                  text-decoration: ${isOverflowing ? 'underline' : 'none'};
+                  cursor: ${isOverflowing ? 'pointer' : 'default'};
+                }
+              `,
+            ]}
+            onClick={isOverflowing ? toggleModal : undefined}
+          >
+            {channelInfo.announcement}
+          </Box>
+        </Box>
+      )}
+      {isModalOpen && (
+        <Modal onClose={toggleModal}>
+          <Modal.Header>
+            <Modal.Title
+              css={css`
+                padding: 15px;
+              `}
+            >
+              Announcement
+            </Modal.Title>
+            <Modal.Close onClick={toggleModal} />
+          </Modal.Header>
+          <Modal.Content
+            css={css`
+              height: 300px;
+              word-wrap: break-word;
+              overflow-wrap: anywhere;
+              white-space: normal;
+              padding: 20px;
+              overflow-y: auto;
+            `}
+          >
+            {channelInfo.announcement}
+          </Modal.Content>
+          <Modal.Footer>
+            <Button
+              type="secondary"
+              onClick={toggleModal}
+              css={css`
+                margin: 15px;
+              `}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
       <Box
         ref={messageListRef}
         css={styles.chatbodyContainer}
@@ -227,7 +416,13 @@ const ChatBody = ({
             threadMessages={threadMessages}
           />
         ) : (
-          <MessageList messages={messages} />
+          <MessageList
+            messages={messages}
+            loadingOlderMessages={loadingOlderMessages}
+            isUserAuthenticated={isUserAuthenticated}
+            hasMoreMessages={hasMoreMessages}
+            firstUnreadMessageId={firstUnreadMessageId}
+          />
         )}
 
         <TotpModal handleLogin={handleLogin} />

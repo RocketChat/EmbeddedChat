@@ -93,8 +93,13 @@ export const getBubbleStyles = (theme) => {
       border-radius: inherit;
       overflow: hidden;
     `,
+    fileAttachmentContainer: css`
+      border: 1px solid ${theme.colors.border};
+      border-radius: inherit;
+      overflow: hidden;
+    `,
     pinnedContainer: css`
-      max-width: 80%;
+      max-width: 100%;
     `,
 
     quoteContainer: css`
@@ -112,7 +117,7 @@ export const getBubbleStyles = (theme) => {
     `,
 
     attachmentMetaContainer: css`
-      padding: 2.5% 2.5% 0;
+      padding: 2.5% 0 0;
     `,
 
     emojiPickerStyles: css`
@@ -172,7 +177,7 @@ export const getBubbleStylesMe = (theme) => {
 
     pinnedContainerMe: css`
       border-inline-start: none;
-      border-inline-end: 3px solid ${theme.colors.border};
+      border-inline-end: none;
     `,
 
     textUserInfoMe: css`

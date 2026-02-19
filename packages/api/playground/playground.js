@@ -1,4 +1,5 @@
 import EmbeddedChatApi from '../src/EmbeddedChatApi';
+
 let messages = [];
 async function saveToken(token) {
 	localStorage.setItem("ec_token", token);
@@ -96,6 +97,7 @@ const callApi = async (e) => {
 	const result  = await api[fn].apply(api, params);
 	printResult(result);
 }
+
 window.addEventListener('DOMContentLoaded', () => {
 	console.log('Ready')
 	document.getElementById("loginWithPassword").addEventListener("click", loginWithPassword)
@@ -113,7 +115,24 @@ window.addEventListener('DOMContentLoaded', () => {
 	
 	document.getElementById("logoutBtn").addEventListener("click", () => api.auth.logout())
 	document.getElementById("call-api").addEventListener("click", callApi)
+	const passwordField = document.getElementById('password')
+	const togglePassword = document.getElementById('togglePassword')
+	togglePassword.addEventListener('click',() => toggle(passwordField, togglePassword))
 })
+
+let isPasswordVisible = false
+
+const toggle = (passwordField, togglePassword) => {
+	isPasswordVisible = !isPasswordVisible
+
+	if(isPasswordVisible){
+		passwordField.type = "text"
+		togglePassword.innerText = "Hide";
+	} else {
+		passwordField.type = "password";	
+		togglePassword.innerText = "Show";
+	}	
+}
 
 function escapeHTML(str) {
   return str.replace(

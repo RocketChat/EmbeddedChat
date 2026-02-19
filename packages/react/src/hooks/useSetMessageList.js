@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export const useSetMessageList = (messages, shouldRender) => {
   const [loading, setLoading] = useState(true);
-  const [messageList, setMessageList] = useState([]);
+
+  const messageList = useMemo(
+    () => messages.filter(shouldRender),
+    [messages, shouldRender]
+  );
 
   useEffect(() => {
-    setLoading(true);
-    const filteredMessages = messages.filter((message) =>
-      shouldRender(message)
-    );
-
-    setMessageList(filteredMessages);
     setLoading(false);
   }, [messages, shouldRender]);
 

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 const getMemberListStyles = (theme) => {
   const styles = {
     main: css`
-      margin: 0.2rem 2rem;
+      margin: 0.2rem 0rem;
       display: block;
       overflow: auto;
       max-height: 10rem;

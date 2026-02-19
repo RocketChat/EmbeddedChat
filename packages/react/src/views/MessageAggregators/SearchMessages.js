@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
@@ -15,14 +15,17 @@ const SearchMessages = () => {
     setText(e.target.value);
   };
 
-  const searchMessages = async () => {
+  const searchMessages = useCallback(async () => {
     const { messages } = await RCInstance.getSearchMessages(text);
     setMessageList(messages);
-  };
+  }, [text, RCInstance]);
 
-  const debouncedSearch = debounce(async () => {
-    await searchMessages();
-  }, 500);
+  const debouncedSearch = useCallback(
+    debounce(async () => {
+      await searchMessages();
+    }, 500),
+    [searchMessages]
+  );
 
   useEffect(() => {
     if (!text.trim()) {

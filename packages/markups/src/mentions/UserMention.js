@@ -7,7 +7,12 @@ import RCContext from '@embeddedchat/react/src/context/RCInstance';
 import { MarkupInteractionContext } from '../MarkupInteractionContext';
 import useMentionStyles from '../elements/elements.styles';
 
-const UserMentionWithContext = ({ contents, members, username, RCInstance }) => {
+const UserMentionWithContext = ({
+  contents,
+  members,
+  username,
+  RCInstance,
+}) => {
   const setExclusiveState = useSetExclusiveState();
   const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
     setShowCurrentUserInfo: state.setShowCurrentUserInfo,

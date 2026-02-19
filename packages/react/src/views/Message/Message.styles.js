@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
-import { lighten, darken } from '@embeddedchat/ui-elements';
 
-export const getMessageStyles = ({ theme, mode }) => {
+export const getMessageStyles = ({ theme }) => {
   const styles = {
     main: css`
       display: flex;
@@ -12,11 +11,8 @@ export const getMessageStyles = ({ theme, mode }) => {
       padding-left: 2.25rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
-
-      &:hover {
-        background-color: ${mode === 'light'
-          ? darken(theme.colors.background, 0.03)
-          : lighten(theme.colors.background, 1)};
+      @media (max-width: 768px) {
+        padding-left: 0.8rem;
       }
     `,
     messageEditing: css`
@@ -81,6 +77,9 @@ export const getMessageDividerStyles = (theme) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
     `,
 
     dividerContent: css`
@@ -109,6 +108,58 @@ export const getMessageDividerStyles = (theme) => {
   return styles;
 };
 
+export const getUnreadMessageDividerStyles = (theme, mode) => {
+  // Use destructive (red) for light themes, warningForeground (orange) for dark themes
+  const dividerColor =
+    mode === 'light'
+      ? theme.colors.destructive
+      : theme.colors.warningForeground;
+
+  const styles = {
+    divider: css`
+      letter-spacing: 0rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1rem;
+      position: relative;
+      display: flex;
+      z-index: 1000;
+      align-items: center;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+      @media (max-width: 780px) {
+        z-index: 1;
+      }
+    `,
+
+    dividerContent: css`
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      background-color: ${theme.colors.background};
+      color: ${dividerColor};
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: ${theme.radius};
+    `,
+
+    bar: css`
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-grow: 1;
+      height: 1px;
+      background-color: ${dividerColor};
+    `,
+  };
+
+  return styles;
+};
+
 export const getMessageHeaderStyles = (theme) => {
   const styles = {
     header: css`
@@ -128,10 +179,8 @@ export const getMessageHeaderStyles = (theme) => {
       font-size: 0.875rem;
       font-weight: 700;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userName: css`
@@ -140,10 +189,8 @@ export const getMessageHeaderStyles = (theme) => {
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
     `,
 
     userRole: css`
@@ -204,7 +251,20 @@ export const MessageMetricsStyles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: ${isFirstMessage ? '0.5rem' : '0.25rem'};
+    margin-left: ${isFirstMessage ? '0.5rem' : '0.3rem'};
+    margin-top: 1.2px;
+  `,
+
+  metricsAvatarItem: css`
+    letter-spacing: 0rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 2px;
   `,
 
   metricsItemLabel: css`
@@ -245,6 +305,22 @@ export const getMessageReactionsStyles = (theme) => {
 
     reactionMine: css`
       background: ${theme.colors.secondary};
+    `,
+    emojiTooltip: css`
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-40%);
+      background-color: ${theme.invertedColors.secondary};
+      color: ${theme.invertedColors.secondaryForeground};
+      z-index: ${theme.zIndex?.tooltip || 1400};
+      border-radius: ${theme.radius};
+      padding: 8px 10px;
+      width: 200px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      font-size: 0.85rem;
     `,
   };
 

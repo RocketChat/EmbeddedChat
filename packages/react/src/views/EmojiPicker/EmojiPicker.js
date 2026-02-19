@@ -17,11 +17,10 @@ const CustomEmojiPicker = ({
 }) => {
   const theme = useTheme();
   const styles = getEmojiPickerStyles(theme);
-
   const previewConfig = {
     defaultEmoji: '1f60d',
     defaultCaption: 'None',
-    showPreview: false,
+    showPreview: true,
   };
 
   return (
@@ -34,11 +33,11 @@ const CustomEmojiPicker = ({
     >
       <Box css={styles.emojiPicker}>
         <EmojiPicker
-          height={350}
-          width={300}
+          height={400}
+          width={350}
           onEmojiClick={handleEmojiClick}
           previewConfig={previewConfig}
-          searchDisabled
+          searchDisabled={false}
           emojiStyle="facebook"
           lazyLoadEmojis
         />

@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore } from '../store';
+import { useUserStore, useLoginStore, useMessageStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -44,6 +44,7 @@ const EmbeddedChat = (props) => {
     toastBarPosition = 'bottom right',
     showRoles = false,
     showAvatar = true,
+    showAnnouncement = true,
     showUsername = false,
     showName = true,
     enableThreads = false,
@@ -65,7 +66,6 @@ const EmbeddedChat = (props) => {
   const [isSynced, setIsSynced] = useState(!remoteOpt);
   const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
   const {
-    isUserAuthenticated,
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
     setUserAvatarUrl: setAuthenticatedAvatarUrl,
@@ -83,7 +83,6 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
-
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -195,6 +194,7 @@ const EmbeddedChat = (props) => {
       showName,
       showRoles,
       showAvatar,
+      showAnnouncement,
       showUsername,
       hideHeader,
       anonymousMode,
@@ -210,6 +210,7 @@ const EmbeddedChat = (props) => {
       showName,
       showRoles,
       showAvatar,
+      showAnnouncement,
       showUsername,
       hideHeader,
       anonymousMode,
@@ -272,6 +273,7 @@ EmbeddedChat.propTypes = {
   toastBarPosition: PropTypes.string,
   showRoles: PropTypes.bool,
   showAvatar: PropTypes.bool,
+  showAnnouncement: PropTypes.bool,
   enableThreads: PropTypes.bool,
   theme: PropTypes.object,
   auth: PropTypes.oneOfType([
