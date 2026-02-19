@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Icon,
@@ -32,6 +33,14 @@ const ChannelState = ({
       </Box>
     </Box>
   );
+};
+
+ChannelState.propTypes = {
+  className: PropTypes.string,
+  style: PropTypes.object,
+  status: PropTypes.string,
+  iconName: PropTypes.string,
+  instructions: PropTypes.string,
 };
 
 export default ChannelState;
