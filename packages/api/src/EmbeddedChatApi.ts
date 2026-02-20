@@ -7,8 +7,6 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
-// mutliple typing status can come at the same time they should be processed in order.
-let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -358,13 +356,6 @@ export default class EmbeddedChatApi {
     typingUser: string;
     isTyping: boolean;
   }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
-    typingHandlerLock = 1;
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
     if (idx !== -1) {
@@ -373,7 +364,6 @@ export default class EmbeddedChatApi {
     if (isTyping) {
       this.typingUsers.unshift(typingUser);
     }
-    typingHandlerLock = 0;
     const newTypingStatus = cloneArray(this.typingUsers);
     this.onTypingStatusCallbacks.forEach((callback) =>
       callback(newTypingStatus)
@@ -1243,7 +1233,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 
@@ -1260,7 +1250,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 
@@ -1277,7 +1267,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 }
