@@ -8,7 +8,7 @@ import {
 } from "@embeddedchat/auth";
 
 // mutliple typing status can come at the same time they should be processed in order.
-let typingHandlerLock = 0;
+
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -73,21 +73,21 @@ export default class EmbeddedChatApi {
 
     const payload = acsCode
       ? JSON.stringify({
-          serviceName: "google",
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-          totp: {
-            code: acsPayload,
-          },
-        })
+        serviceName: "google",
+        accessToken: tokens.access_token,
+        idToken: tokens.id_token,
+        expiresIn: 3600,
+        totp: {
+          code: acsPayload,
+        },
+      })
       : JSON.stringify({
-          serviceName: "google",
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          expiresIn: 3600,
-          scope: "profile",
-        });
+        serviceName: "google",
+        accessToken: tokens.access_token,
+        idToken: tokens.id_token,
+        expiresIn: 3600,
+        scope: "profile",
+      });
 
     try {
       const req = await fetch(`${this.host}/api/v1/login`, {
@@ -358,13 +358,6 @@ export default class EmbeddedChatApi {
     typingUser: string;
     isTyping: boolean;
   }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
-    typingHandlerLock = 1;
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
     if (idx !== -1) {
@@ -373,7 +366,6 @@ export default class EmbeddedChatApi {
     if (isTyping) {
       this.typingUsers.unshift(typingUser);
     }
-    typingHandlerLock = 0;
     const newTypingStatus = cloneArray(this.typingUsers);
     this.onTypingStatusCallbacks.forEach((callback) =>
       callback(newTypingStatus)
@@ -561,9 +553,9 @@ export default class EmbeddedChatApi {
       query?: object | undefined;
       field?: object | undefined;
     } = {
-      query: undefined,
-      field: undefined,
-    },
+        query: undefined,
+        field: undefined,
+      },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -600,10 +592,10 @@ export default class EmbeddedChatApi {
       field?: object | undefined;
       offset?: number;
     } = {
-      query: undefined,
-      field: undefined,
-      offset: 50,
-    },
+        query: undefined,
+        field: undefined,
+        offset: 50,
+      },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
@@ -751,13 +743,13 @@ export default class EmbeddedChatApi {
     const messageObj =
       typeof message === "string"
         ? {
-            rid: this.rid,
-            msg: message,
-          }
+          rid: this.rid,
+          msg: message,
+        }
         : {
-            ...message,
-            rid: this.rid,
-          };
+          ...message,
+          rid: this.rid,
+        };
     if (threadId) {
       messageObj.tmid = threadId;
     }
