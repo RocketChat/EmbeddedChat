@@ -150,6 +150,11 @@ const EmbeddedChat = (props) => {
           .catch(console.error);
       } else {
         setIsUserAuthenticated(false);
+        setAuthenticatedAvatarUrl('');
+        setAuthenticatedUsername('');
+        setAuthenticatedUserId('');
+        setAuthenticatedName('');
+        setAuthenticatedUserRoles([]);
       }
     });
 
