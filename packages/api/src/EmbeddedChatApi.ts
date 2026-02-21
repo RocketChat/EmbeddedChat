@@ -374,11 +374,13 @@ export default class EmbeddedChatApi {
       if (isTyping) {
         this.typingUsers.unshift(typingUser);
       }
-      
+
       const newTypingStatus = cloneArray(this.typingUsers);
       this.onTypingStatusCallbacks.forEach((callback) =>
         callback(newTypingStatus)
       );
+    } catch (error) {
+      console.error("Error in handleTypingEvent:", error);
     } finally {
       typingHandlerLock = 0;
     }
