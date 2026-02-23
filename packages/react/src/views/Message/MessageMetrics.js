@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { formatDistance } from 'date-fns';
 import {
   Box,
   Button,

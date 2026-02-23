@@ -52,7 +52,9 @@ function CommandsList({
       switch (event.key) {
         case 'Enter': {
           const selectedItem = filteredCommands[commandIndex];
-          handleCommandClick(selectedItem);
+          if (selectedItem) {
+            handleCommandClick(selectedItem);
+          }
           break;
         }
         case 'ArrowDown':

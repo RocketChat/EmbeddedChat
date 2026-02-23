@@ -85,10 +85,6 @@ export const MessageToolbox = ({
     isAllowedToPin,
     isAllowedToReport,
     isAllowedToEditMessage,
-    isAllowedToDeleteMessage,
-    isAllowedToDeleteOwnMessage,
-    isAllowedToForceDeleteMessage,
-    isVisibleForMessageType,
     canDeleteMessage,
   } = useMemo(() => {
     const isOwner = message.u._id === authenticatedUserId;
@@ -97,35 +93,26 @@ export const MessageToolbox = ({
     const allowedToEdit =
       userRoles.some((role) => editMessageRoles.has(role)) || isOwner;
     const allowedToDelete = userRoles.some((role) =>
-      deleteMessageRoles.has(role),
+      deleteMessageRoles.has(role)
     );
     const allowedToDeleteOwn = userRoles.some((role) =>
-      deleteOwnMessageRoles.has(role),
+      deleteOwnMessageRoles.has(role)
     );
     const allowedToForceDelete = userRoles.some((role) =>
-      forceDeleteMessageRoles.has(role),
+      forceDeleteMessageRoles.has(role)
     );
-
-    const visibleForMessageType =
-      message.files?.[0]?.type !== "audio/mpeg" &&
-      message.files?.[0]?.type !== "video/mp4";
 
     const canDelete = allowedToForceDelete
       ? true
       : allowedToDelete
-        ? true
-        : allowedToDeleteOwn
-          ? isOwner
-          : false;
-
+      ? true
+      : allowedToDeleteOwn
+      ? isOwner
+      : false;
     return {
       isAllowedToPin: allowedToPin,
       isAllowedToReport: allowedToReport,
       isAllowedToEditMessage: allowedToEdit,
-      isAllowedToDeleteMessage: allowedToDelete,
-      isAllowedToDeleteOwnMessage: allowedToDeleteOwn,
-      isAllowedToForceDeleteMessage: allowedToForceDelete,
-      isVisibleForMessageType: visibleForMessageType,
       canDeleteMessage: canDelete,
     };
   }, [
@@ -137,7 +124,6 @@ export const MessageToolbox = ({
     forceDeleteMessageRoles,
     editMessageRoles,
     message.u._id,
-    message.files,
   ]);
 
   const options = useMemo(

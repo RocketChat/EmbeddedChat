@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -51,7 +51,7 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-  const { showSidebar, setShowSidebar } = useSidebarStore();
+  const { setShowSidebar } = useSidebarStore();
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const userRoles = useUserStore((state) => state.roles);
@@ -59,7 +59,7 @@ const Message = ({
     (state) => state.userPinPermissions.roles
   );
   const editMessagePermissions = useMessageStore(
-    (state) => state.editMessagePermissions.roles
+    (state) => state.editMessagePermissions?.roles || []
   );
   const [setMessageToReport, toggleShowReportMessage] = useMessageStore(
     (state) => [state.setMessageToReport, state.toggleShowReportMessage]
@@ -101,11 +101,28 @@ const Message = ({
       };
 
   const bubbleStyles = useBubbleStyles(isMe);
-  const pinRoles = new Set(pinPermissions);
-  const editMessageRoles = new Set(editMessagePermissions);
-  const deleteMessageRoles = new Set(deleteMessagePermissions);
-  const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
-  const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
+  const {
+    pinRoles,
+    editMessageRoles,
+    deleteMessageRoles,
+    deleteOwnMessageRoles,
+    forceDeleteMessageRoles,
+  } = useMemo(
+    () => ({
+      pinRoles: new Set(pinPermissions),
+      editMessageRoles: new Set(editMessagePermissions),
+      deleteMessageRoles: new Set(deleteMessagePermissions),
+      deleteOwnMessageRoles: new Set(deleteOwnMessagePermissions),
+      forceDeleteMessageRoles: new Set(forceDeleteMessagePermissions),
+    }),
+    [
+      pinPermissions,
+      editMessagePermissions,
+      deleteMessagePermissions,
+      deleteOwnMessagePermissions,
+      forceDeleteMessagePermissions,
+    ]
+  );
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};

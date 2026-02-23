@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Input, useTheme } from '@embeddedchat/ui-elements';
+import { Box, Input } from '@embeddedchat/ui-elements';
 import { css } from '@emotion/react';
 import ReportWindowButtons from './ReportWindowButtons';
 import styles from './ReportMessage.styles';

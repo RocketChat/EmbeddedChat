@@ -11,7 +11,6 @@ const FileAttachment = ({
   attachment,
   host,
   type,
-  author,
   variantStyles = {},
   msg,
 }) => {
@@ -309,7 +308,6 @@ FileAttachment.propTypes = {
   attachment: PropTypes.object,
   host: PropTypes.string,
   type: PropTypes.string,
-  author: PropTypes.object,
   variantStyles: PropTypes.object,
   msg: PropTypes.object,
 };

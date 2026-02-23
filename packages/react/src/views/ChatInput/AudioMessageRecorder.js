@@ -16,8 +16,8 @@ const AudioMessageRecorder = (props) => {
   const videoRef = useRef(null);
   const { theme } = useTheme();
   const styles = getCommonRecorderStyles(theme);
-  const toogleRecordingMessage = useMessageStore(
-    (state) => state.toogleRecordingMessage
+  const toggleRecordingMessage = useMessageStore(
+    (state) => state.toggleRecordingMessage
   );
 
   const { toggle, setData } = useAttachmentWindowStore((state) => ({
@@ -58,7 +58,7 @@ const AudioMessageRecorder = (props) => {
     setRecordState('recording');
     try {
       start();
-      toogleRecordingMessage();
+      toggleRecordingMessage();
       const startTime = new Date();
       setRecordingInterval(
         setInterval(() => {
@@ -81,13 +81,13 @@ const AudioMessageRecorder = (props) => {
   };
 
   const handleCancelRecordButton = async () => {
-    toogleRecordingMessage();
+    toggleRecordingMessage();
     await stopRecording();
     setIsRecorded(false);
   };
 
   const handleStopRecordButton = async () => {
-    toogleRecordingMessage();
+    toggleRecordingMessage();
     setIsRecorded(true);
     await stopRecording();
   };
@@ -124,6 +124,15 @@ const AudioMessageRecorder = (props) => {
   useEffect(() => {
     handleMount();
   }, [handleMount]);
+
+  useEffect(
+    () => () => {
+      if (recordingInterval) {
+        clearInterval(recordingInterval);
+      }
+    },
+    [recordingInterval]
+  );
 
   useEffect(() => {
     if (isRecorded && file) {

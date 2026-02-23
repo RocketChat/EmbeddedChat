@@ -12,6 +12,7 @@ import { EmbeddedChatApi } from '@embeddedchat/api';
 import {
   Box,
   ToastBarProvider,
+  useToastBarDispatch,
   useComponentOverrides,
   ThemeProvider,
 } from '@embeddedchat/ui-elements';
@@ -52,13 +53,18 @@ const EmbeddedChat = (props) => {
     className = '',
     style = {},
     hideHeader = false,
-    auth = {
+    auth: authProp = {
       flow: 'PASSWORD',
     },
     secure = false,
     dark = false,
     remoteOpt = false,
   } = config;
+
+  const auth = useMemo(
+    () => authProp,
+    [JSON.stringify(authProp)] // Deep comparison via stringify to handle inline objects
+  );
 
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -83,6 +89,7 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const dispatchToastMessage = useToastBarDispatch();
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -125,13 +132,17 @@ const EmbeddedChat = (props) => {
       try {
         await RCInstance.autoLogin(auth);
       } catch (error) {
-        console.error(error);
+        console.error('Auto-login failed:', error);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Auto-login failed. Please sign in manually.',
+        });
       } finally {
         setIsLoginIn(false);
       }
     };
     autoLogin();
-  }, [RCInstance, auth, setIsLoginIn]);
+  }, [RCInstance, auth, setIsLoginIn, dispatchToastMessage]);
 
   useEffect(() => {
     const unsubscribe = RCInstance.auth.onAuthChange((user) => {

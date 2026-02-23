@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
 import {
@@ -41,13 +41,11 @@ const MessageAggregator = ({
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
-  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const threadMessages = useMessageStore((state) => state.threadMessages);
   const allMessages = useMemo(
-    () => [...messages, ...[...threadMessages].reverse()],
+    () => [...messages, ...[...(threadMessages || [])].reverse()],
     [messages, threadMessages]
   );
-
-  const [messageRendered, setMessageRendered] = useState(false);
   const { loading, messageList } = useSetMessageList(
     fetchedMessageList || searchFiltered || allMessages,
     shouldRender
@@ -128,18 +126,18 @@ const MessageAggregator = ({
     }
   };
 
-  useEffect(() => {
-    const hasRendered = messageList.some((msg) => shouldRender(msg));
-    setMessageRendered(hasRendered);
-  }, [messageList, shouldRender]);
-
   const isMessageNewDay = (current, previous) => {
     if (!previous || shouldRender(previous)) return true;
     return !isSameDay(new Date(current.ts), new Date(previous.ts));
   };
 
-  const noMessages = (messageList?.length === 0 || !messageRendered) && !fetching && !loading;
+  const noMessages = messageList?.length === 0 && !fetching && !loading;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  const uniqueMessageList = useMemo(
+    () => [...new Map(messageList.map((msg) => [msg._id, msg])).values()],
+    [messageList]
+  );
 
   return (
     <ViewComponent
@@ -172,7 +170,7 @@ const MessageAggregator = ({
             <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
           )}
 
-          {messageList.map((msg, index, arr) => {
+          {uniqueMessageList.map((msg, index, arr) => {
             const newDay = isMessageNewDay(msg, arr[index - 1]);
 
             return (
