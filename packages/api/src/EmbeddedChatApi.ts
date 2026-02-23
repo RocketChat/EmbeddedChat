@@ -138,11 +138,11 @@ export default class EmbeddedChatApi {
       }
       return { status: "success", me: data.me };
     } catch (error) {
-      if (error instanceof ApiError && error.response?.status === 401) {
-        const authErrorRes = await error.response.json();
+      if (error instanceof ApiError && (error as any).response?.status === 401) {
+        const authErrorRes = (await (error as any).response.json()) as { error?: string };
         return { error: authErrorRes?.error };
       }
-      console.error(error);
+      console.error(error as Error);
     }
   }
 
@@ -495,30 +495,21 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
+        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
           headers: {
             "Content-Type": "application/json",
             "X-Auth-Token": authToken,
             "X-User-Id": userId,
           },
-          method: "POST",
+          method: "GET",
         }
       );
 
       const result = await response.json();
 
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
+      if (result.success) {
+        return result.room;
       }
       return null;
     } catch (err) {
@@ -698,31 +689,19 @@ export default class EmbeddedChatApi {
   async getUserRoles() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/method.call/getUserRoles`,
-        {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "getUserRoles",
-              params: [],
-            }),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        }
-      );
+      const response = await fetch(`${this.host}/api/v1/users.getRoles`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "GET",
+      });
 
       const result = await response.json();
 
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
+      if (result.success) {
+        return result.roles;
       }
       return null;
     } catch (err) {
