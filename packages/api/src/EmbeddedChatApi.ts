@@ -7,6 +7,8 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
+import { IAiAdapter } from "./IAiAdapter";
+
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
@@ -20,6 +22,7 @@ export default class EmbeddedChatApi {
   onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
+  aiAdapter: IAiAdapter | null;
 
   constructor(
     host: string,
@@ -46,6 +49,7 @@ export default class EmbeddedChatApi {
       getToken,
       saveToken,
     });
+    this.aiAdapter = null;
   }
 
   setAuth(auth: RocketChatAuth) {
@@ -58,6 +62,14 @@ export default class EmbeddedChatApi {
 
   getHost() {
     return this.host;
+  }
+
+  setAiAdapter(adapter: IAiAdapter) {
+    this.aiAdapter = adapter;
+  }
+
+  getAiAdapter() {
+    return this.aiAdapter;
   }
 
   /**
@@ -139,10 +151,10 @@ export default class EmbeddedChatApi {
       return { status: "success", me: data.me };
     } catch (error) {
       if (error instanceof ApiError && error.response?.status === 401) {
-        const authErrorRes = await error.response.json();
+        const authErrorRes = (await error.response.json()) as { error?: string };
         return { error: authErrorRes?.error };
       }
-      console.error(error);
+      console.error(error as Error);
     }
   }
 
