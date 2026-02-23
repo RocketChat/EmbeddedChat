@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -134,7 +134,7 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -150,8 +150,17 @@ const EmbeddedChat = (props) => {
           .catch(console.error);
       } else {
         setIsUserAuthenticated(false);
+        setAuthenticatedAvatarUrl('');
+        setAuthenticatedUsername('');
+        setAuthenticatedUserId('');
+        setAuthenticatedName('');
+        setAuthenticatedUserRoles([]);
       }
     });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, [
     RCInstance,
     setAuthenticatedName,

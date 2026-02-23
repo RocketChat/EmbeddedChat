@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
@@ -21,7 +22,7 @@ import FileDisplay from '../../FileMessage/FileMessage';
 import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
 
-export const MessageAggregator = ({
+const MessageAggregator = ({
   title,
   iconName,
   noMessageInfo,
@@ -34,8 +35,7 @@ export const MessageAggregator = ({
   type = 'message',
   viewType = 'Sidebar',
 }) => {
-  const { theme } = useTheme();
-  const { mode } = useTheme();
+  const { theme, mode } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const { ECOptions } = useRCContext();
@@ -128,12 +128,17 @@ export const MessageAggregator = ({
     }
   };
 
-  const isMessageNewDay = (current, previous) =>
-    !previous ||
-    shouldRender(previous) ||
-    !isSameDay(new Date(current.ts), new Date(previous.ts));
+  useEffect(() => {
+    const hasRendered = messageList.some((msg) => shouldRender(msg));
+    setMessageRendered(hasRendered);
+  }, [messageList, shouldRender]);
 
-  const noMessages = messageList?.length === 0 || !messageRendered;
+  const isMessageNewDay = (current, previous) => {
+    if (!previous || shouldRender(previous)) return true;
+    return !isSameDay(new Date(current.ts), new Date(previous.ts));
+  };
+
+  const noMessages = (messageList?.length === 0 || !messageRendered) && !fetching && !loading;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
 
   return (
@@ -167,69 +172,80 @@ export const MessageAggregator = ({
             <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
           )}
 
-          {[...new Map(messageList.map((msg) => [msg._id, msg])).values()].map(
-            (msg, index, arr) => {
-              const newDay = isMessageNewDay(msg, arr[index - 1]);
-              if (!messageRendered && shouldRender(msg)) {
-                setMessageRendered(true);
-              }
+          {messageList.map((msg, index, arr) => {
+            const newDay = isMessageNewDay(msg, arr[index - 1]);
 
-              return (
-                <React.Fragment key={msg._id}>
-                  {type === 'message' && newDay && (
-                    <MessageDivider>
-                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                    </MessageDivider>
-                  )}
-                  {type === 'file' ? (
-                    <FileDisplay
+            return (
+              <React.Fragment key={msg._id}>
+                {type === 'message' && newDay && (
+                  <MessageDivider>
+                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                  </MessageDivider>
+                )}
+                {type === 'file' ? (
+                  <FileDisplay
+                    key={`${msg._id}-aggregated`}
+                    fileMessage={msg}
+                  />
+                ) : (
+                  <Box
+                    position="relative"
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <Message
                       key={`${msg._id}-aggregated`}
-                      fileMessage={msg}
-                    />
-                  ) : (
-                    <Box
-                      position="relative"
+                      message={msg}
+                      newDay={false}
+                      type="default"
+                      showAvatar
+                      showToolbox={false}
+                      showRoles={showRoles}
+                      isInSidebar
                       style={{
-                        display: 'flex',
+                        flex: 1,
+                        padding: 0,
+                        marginLeft: '15px',
+                        minWidth: 0,
+                      }}
+                    />
+
+                    <ActionButton
+                      square
+                      ghost
+                      onClick={() => setJumpToMessage(msg)}
+                      css={{
+                        position: 'relative',
+                        zIndex: 10,
+                        marginRight: '5px',
                       }}
                     >
-                      <Message
-                        key={`${msg._id}-aggregated`}
-                        message={msg}
-                        newDay={false}
-                        type="default"
-                        showAvatar
-                        showToolbox={false}
-                        showRoles={showRoles}
-                        isInSidebar
-                        style={{
-                          flex: 1,
-                          padding: 0,
-                          marginLeft: '15px',
-                          minWidth: 0,
-                        }}
-                      />
-
-                      <ActionButton
-                        square
-                        ghost
-                        onClick={() => setJumpToMessage(msg)}
-                        css={{
-                          position: 'relative',
-                          zIndex: 10,
-                          marginRight: '5px',
-                        }}
-                      >
-                        <Icon name="arrow-back" size="1.25rem" />
-                      </ActionButton>
-                    </Box>
-                  )}
-                </React.Fragment>
-              );
-            }
-          )}
+                      <Icon name="arrow-back" size="1.25rem" />
+                    </ActionButton>
+                  </Box>
+                )}
+              </React.Fragment>
+            );
+          })}
         </Box>
       )}
     </ViewComponent>
   );
 };
+
+MessageAggregator.propTypes = {
+  title: PropTypes.string.isRequired,
+  iconName: PropTypes.string,
+  noMessageInfo: PropTypes.string,
+  shouldRender: PropTypes.func.isRequired,
+  fetchedMessageList: PropTypes.array,
+  filterProps: PropTypes.object,
+  searchProps: PropTypes.object,
+  searchFiltered: PropTypes.array,
+  fetching: PropTypes.bool,
+  type: PropTypes.oneOf(['message', 'file']),
+  viewType: PropTypes.oneOf(['Sidebar', 'Popup']),
+};
+
+export default MessageAggregator;

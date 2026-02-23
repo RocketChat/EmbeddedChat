@@ -30,6 +30,7 @@ function CommandsList({
 
   const handleCommandClick = useCallback(
     async (command) => {
+      if (!command || !messageRef.current) return;
       const commandName = command.command;
       const currentMessage = messageRef.current.value;
       const tokens = (currentMessage || '').split(' ');
@@ -98,7 +99,7 @@ function CommandsList({
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {filteredCommands.map((command, index) => (
           <li
-            key={command.command}
+            key={command.command || index}
             role="presentation"
             css={styles.listItem}
             ref={(el) => setItemRef(el, index)}

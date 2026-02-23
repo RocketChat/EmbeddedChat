@@ -25,45 +25,67 @@ export const useRCAuth = () => {
   const handleLogin = async (userOrEmail, password, code) => {
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
+
+      // Handle specific error codes or generic Unauthorized
       if (res.error === 'Unauthorized' || res.error === 403) {
         dispatchToastMessage({
           type: 'error',
-          message:
-            'Invalid username or password. Please check your credentials and try again',
+          message: 'Invalid username or password. Please check your credentials.',
         });
-      } else {
-        if (res.error === 'totp-required') {
-          setPassword(password);
-          setEmailorUser(userOrEmail);
-          setIsLoginModalOpen(false);
-          setIsTotpModalOpen(true);
-          dispatchToastMessage({
-            type: 'info',
-            message: 'Please Open your authentication app and enter the code.',
-          });
-        } else if (res.error === 'totp-invalid') {
-          dispatchToastMessage({
-            type: 'error',
-            message: 'Invalid TOTP Time-based One-time Password.',
-          });
-        }
+        return { status: 'error', error: 'Unauthorized' };
+      }
 
-        if (res.status === 'success') {
-          setIsLoginModalOpen(false);
-          setUserAvatarUrl(res.me.avatarUrl);
-          setAuthenticatedUserUsername(res.me.username);
-          setIsUserAuthenticated(true);
-          setIsTotpModalOpen(false);
-          setEmailorUser(null);
-          setPassword(null);
-          dispatchToastMessage({
-            type: 'success',
-            message: 'Successfully logged in',
-          });
-        }
+      // Handle Two-Factor Authentication (TOTP)
+      if (res.error === 'totp-required') {
+        setPassword(password);
+        setEmailorUser(userOrEmail);
+        setIsLoginModalOpen(false);
+        setIsTotpModalOpen(true);
+        dispatchToastMessage({
+          type: 'info',
+          message: 'MFA Required: Please enter the code from your authenticator app.',
+        });
+        return { status: 'totp-required' };
+      }
+
+      if (res.error === 'totp-invalid') {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Invalid TOTP code. Please try again.',
+        });
+        return { status: 'error', error: 'totp-invalid' };
+      }
+
+      // Handle Successful Login
+      if (res.status === 'success' || (res.me && !res.error)) {
+        setIsLoginModalOpen(false);
+        setUserAvatarUrl(res.me.avatarUrl);
+        setAuthenticatedUserUsername(res.me.username);
+        setIsUserAuthenticated(true);
+        setIsTotpModalOpen(false);
+
+        // Clear sensitive temporary data
+        setEmailorUser(null);
+        setPassword(null);
+
+        dispatchToastMessage({
+          type: 'success',
+          message: `Welcome back, ${res.me.username}!`,
+        });
+        return { status: 'success', user: res.me };
+      }
+
+      // Catch-all for other response errors
+      if (res.error) {
+        throw new Error(res.reason || res.error);
       }
     } catch (e) {
-      console.error('An error occurred while setting up user', e);
+      console.error('An error occurred while setting up user (Login error):', e);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Authentication failed due to a network or server error.',
+      });
+      return { status: 'error', error: e.message };
     }
   };
 
