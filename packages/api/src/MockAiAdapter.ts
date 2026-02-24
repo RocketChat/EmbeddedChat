@@ -15,6 +15,11 @@ export class MockAiAdapter implements IAiAdapter {
     return "This is a mock summary of the conversation.";
   }
 
+  async translateMessage(text: string, targetLanguage: string): Promise<string> {
+    console.log("Mock AI: Translating text to", targetLanguage);
+    return `[Translated to ${targetLanguage}]: ${text}`;
+  }
+
   async onCommand(command: string, params: any): Promise<any> {
     console.log("Mock AI: Handling command", command, "with params", params);
     if (command === "help") {

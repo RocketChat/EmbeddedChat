@@ -5,15 +5,35 @@ import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
 import { Api, ApiError } from "./Api";
 import loginWithRocketChatOAuth from "./loginWithRocketChatOAuth";
 import handleSecureLogin from "./handleSecureLogin";
+export enum AuthState {
+  IDLE = "IDLE",
+  AUTHENTICATING = "AUTHENTICATING",
+  AUTHENTICATED = "AUTHENTICATED",
+  UNAUTHENTICATED = "UNAUTHENTICATED",
+  RECONNECTING = "RECONNECTING",
+  ERROR = "ERROR",
+}
+
 class RocketChatAuth {
   host: string;
   api: Api;
   currentUser: any;
   lastFetched: Date;
   authListeners: ((user: object | null) => void)[] = [];
+  stateListeners: ((state: AuthState) => void)[] = [];
+  private _state: AuthState = AuthState.IDLE;
   deleteToken: () => Promise<void>;
   saveToken: (token: string) => Promise<void>;
   getToken: () => Promise<string>;
+
+  get state() {
+    return this._state;
+  }
+
+  set state(newState: AuthState) {
+    this._state = newState;
+    this.notifyStateListeners();
+  }
   constructor({
     host,
     saveToken,
@@ -29,10 +49,6 @@ class RocketChatAuth {
     this.deleteToken = deleteToken;
   }
 
-  /**
-   * Add a callback that will be called when user login status changes
-   * @param callback
-   */
   async onAuthChange(callback: (user: object | null) => void) {
     this.authListeners.push(callback);
     const user = await this.getCurrentUser();
@@ -45,6 +61,19 @@ class RocketChatAuth {
 
   notifyAuthListeners() {
     this.authListeners.forEach((cb) => cb(this.currentUser));
+  }
+
+  onStateChange(callback: (state: AuthState) => void) {
+    this.stateListeners.push(callback);
+    callback(this.state);
+  }
+
+  removeStateListener(callback: (state: AuthState) => void) {
+    this.stateListeners = this.stateListeners.filter((cb) => cb !== callback);
+  }
+
+  notifyStateListeners() {
+    this.stateListeners.forEach((cb) => cb(this.state));
   }
 
   /**
@@ -61,18 +90,31 @@ class RocketChatAuth {
     password: string;
     code?: string | number;
   }) {
-    const response = await loginWithPassword(
-      {
-        api: this.api,
-      },
-      {
-        user,
-        password,
-        code,
+    this.state = AuthState.AUTHENTICATING;
+    try {
+      const response = await loginWithPassword(
+        {
+          api: this.api,
+        },
+        {
+          user,
+          password,
+          code,
+        }
+      );
+      this.setUser(response.data);
+      this.state = AuthState.AUTHENTICATED;
+      return this.currentUser;
+    } catch (error) {
+      if (
+        !(error instanceof ApiError && (error as any).response?.status === 401)
+      ) {
+        this.state = AuthState.ERROR;
+      } else {
+        this.state = AuthState.UNAUTHENTICATED;
       }
-    );
-    this.setUser(response.data);
-    return this.currentUser;
+      throw error;
+    }
   }
 
   /**
@@ -85,14 +127,21 @@ class RocketChatAuth {
     service: string;
     access_token: string;
   }) {
-    const response = await loginWithOAuthServiceToken(
-      {
-        api: this.api,
-      },
-      credentials
-    );
-    this.setUser(response.data);
-    return this.currentUser;
+    this.state = AuthState.AUTHENTICATING;
+    try {
+      const response = await loginWithOAuthServiceToken(
+        {
+          api: this.api,
+        },
+        credentials
+      );
+      this.setUser(response.data);
+      this.state = AuthState.AUTHENTICATED;
+      return this.currentUser;
+    } catch (error) {
+      this.state = AuthState.ERROR;
+      throw error;
+    }
   }
 
   /**
@@ -100,14 +149,23 @@ class RocketChatAuth {
    * @returns
    */
   async loginWithRocketChatOAuth() {
-    if (typeof window === "undefined") {
-      throw new Error("loginWithRocketChatOAuth can only be called in browser");
+    this.state = AuthState.AUTHENTICATING;
+    try {
+      if (typeof window === "undefined") {
+        throw new Error(
+          "loginWithRocketChatOAuth can only be called in browser"
+        );
+      }
+      const response = await loginWithRocketChatOAuth({
+        api: this.api,
+      });
+      this.setUser(response.data);
+      this.state = AuthState.AUTHENTICATED;
+      return this.currentUser;
+    } catch (error) {
+      this.state = AuthState.ERROR;
+      throw error;
     }
-    const response = await loginWithRocketChatOAuth({
-      api: this.api,
-    });
-    this.setUser(response.data);
-    return this.currentUser;
   }
 
   /**
@@ -116,16 +174,23 @@ class RocketChatAuth {
    * @returns
    */
   async loginWithResumeToken(resume: string) {
-    const response = await loginWithResumeToken(
-      {
-        api: this.api,
-      },
-      {
-        resume,
-      }
-    );
-    this.setUser(response.data);
-    return this.currentUser;
+    this.state = AuthState.RECONNECTING;
+    try {
+      const response = await loginWithResumeToken(
+        {
+          api: this.api,
+        },
+        {
+          resume,
+        }
+      );
+      this.setUser(response.data);
+      this.state = AuthState.AUTHENTICATED;
+      return this.currentUser;
+    } catch (error) {
+      this.state = AuthState.UNAUTHENTICATED;
+      throw error;
+    }
   }
 
   /**
@@ -190,14 +255,21 @@ class RocketChatAuth {
     try {
       const token = await this.getToken();
       if (token) {
-        const user = await this.loginWithResumeToken(token); // will notifyAuthListeners on successful login
+        this.state = AuthState.RECONNECTING;
+        const user = await this.loginWithResumeToken(token);
         if (user) {
           this.lastFetched = new Date();
-          await this.getCurrentUser(); // refresh the token if needed
+          await this.getCurrentUser();
+          this.state = AuthState.AUTHENTICATED;
+        } else {
+          this.state = AuthState.UNAUTHENTICATED;
         }
+      } else {
+        this.state = AuthState.UNAUTHENTICATED;
       }
     } catch (e) {
       console.log("Failed to login user on initial load. Sign in.");
+      this.state = AuthState.UNAUTHENTICATED;
       this.notifyAuthListeners();
     }
   }
@@ -220,6 +292,7 @@ class RocketChatAuth {
     }
     this.lastFetched = new Date(0);
     this.currentUser = null;
+    this.state = AuthState.UNAUTHENTICATED;
     this.notifyAuthListeners();
   }
 }

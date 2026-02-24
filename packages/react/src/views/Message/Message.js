@@ -130,17 +130,33 @@ const Message = ({
   const handleStarMessage = async (msg) => {
     const isStarred =
       msg.starred && msg.starred.find((u) => u._id === authenticatedUserId);
-    if (!isStarred) {
-      await RCInstance.starMessage(msg._id);
+    const newStarred = isStarred
+      ? msg.starred.filter((u) => u._id !== authenticatedUserId)
+      : [...(msg.starred || []), { _id: authenticatedUserId }];
+
+    // Optimistic Update
+    upsertMessage({ ...msg, starred: newStarred });
+
+    try {
+      if (!isStarred) {
+        await RCInstance.starMessage(msg._id);
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message starred',
+        });
+      } else {
+        await RCInstance.unstarMessage(msg._id);
+        dispatchToastMessage({
+          type: 'success',
+          message: 'Message unstarred',
+        });
+      }
+    } catch (e) {
+      // Revert on error
+      upsertMessage(msg);
       dispatchToastMessage({
-        type: 'success',
-        message: 'Message starred',
-      });
-    } else {
-      await RCInstance.unstarMessage(msg._id);
-      dispatchToastMessage({
-        type: 'success',
-        message: 'Message unstarred',
+        type: 'error',
+        message: 'Error updating star status',
       });
     }
     getStarredMessages();
@@ -148,20 +164,27 @@ const Message = ({
 
   const handlePinMessage = async (msg) => {
     const isPinned = msg.pinned;
-    msg.pinned = !isPinned;
-    const pinOrUnpin = isPinned
-      ? await RCInstance.unpinMessage(msg._id)
-      : await RCInstance.pinMessage(msg._id);
-    if (pinOrUnpin.error) {
-      msg.pinned = isPinned;
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Error pinning message',
-      });
-    } else {
+    // Optimistic Update
+    upsertMessage({ ...msg, pinned: !isPinned });
+
+    try {
+      const pinOrUnpin = isPinned
+        ? await RCInstance.unpinMessage(msg._id)
+        : await RCInstance.pinMessage(msg._id);
+
+      if (pinOrUnpin.error) {
+        throw new Error(pinOrUnpin.error);
+      }
       dispatchToastMessage({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
+      });
+    } catch (e) {
+      // Revert on error
+      upsertMessage(msg);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error updating pin status',
       });
     }
   };
@@ -229,6 +252,22 @@ const Message = ({
   const handleEmojiClick = async (e, msg, canReact) => {
     const emoji = (e.names?.[0] || e.name).replace(/\s/g, '_');
     await RCInstance.reactToMessage(emoji, msg._id, canReact);
+  };
+
+  const handleTranslateMessage = async (msg) => {
+    try {
+      const translated = await RCInstance.translateMessage(msg.msg, 'en');
+      dispatchToastMessage({
+        type: 'info',
+        message: translated,
+        stay: true,
+      });
+    } catch (e) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error translating message',
+      });
+    }
   };
 
   const handleOpenThread = (msg) => async () => {
@@ -343,6 +382,7 @@ const Message = ({
                       setMessageToReport(message._id);
                       toggleShowReportMessage();
                     }}
+                    handleTranslateMessage={handleTranslateMessage}
                     isThreadMessage={type === 'thread'}
                     variantStyles={variantStyles}
                   />

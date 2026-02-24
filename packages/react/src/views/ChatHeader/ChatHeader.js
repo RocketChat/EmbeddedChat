@@ -453,6 +453,25 @@ const ChatHeader = ({
           title={threadMainMessage}
           handleClose={closeThread}
           iconName="arrow-back"
+          actions={
+            RCInstance.getAiAdapter()?.enabled && (
+              <ActionButton
+                ghost
+                size="small"
+                onClick={async () => {
+                  const summary = await RCInstance.getSummary();
+                  dispatchToastMessage({
+                    type: 'info',
+                    message: summary,
+                    stay: true,
+                  });
+                }}
+                title="Summarize thread"
+              >
+                <Icon name="attachment" size="1.25rem" />
+              </ActionButton>
+            )
+          }
         />
       )}
 

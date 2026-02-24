@@ -39,6 +39,7 @@ export const MessageToolbox = ({
   handleCopyMessageLink,
   handleEditMessage,
   handleQuoteMessage,
+  handleTranslateMessage,
   isEditing = false,
   optionConfig = {
     surfaceItems: [
@@ -52,6 +53,7 @@ export const MessageToolbox = ({
       "edit",
       "delete",
       "report",
+      "translate",
     ],
 
     menuItems: [],
@@ -210,6 +212,13 @@ export const MessageToolbox = ({
         visible: isAllowedToReport,
         type: "destructive",
       },
+      translate: {
+        label: "Translate",
+        id: "translate",
+        onClick: () => handleTranslateMessage(message),
+        iconName: "language",
+        visible: RCInstance.getAiAdapter()?.enabled,
+      },
     }),
     [
       handleOpenThread,
@@ -224,6 +233,7 @@ export const MessageToolbox = ({
       handlerReportMessage,
       handleCopyMessage,
       handleCopyMessageLink,
+      handleTranslateMessage,
       isAllowedToPin,
       isAllowedToReport,
       isAllowedToEditMessage,

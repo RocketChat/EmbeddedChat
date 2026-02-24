@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
 import { useUserStore, totpModalStore, useLoginStore } from '../store';
@@ -20,7 +20,17 @@ export const useRCAuth = () => {
   );
   const setPassword = useUserStore((state) => state.setPassword);
   const setEmailorUser = useUserStore((state) => state.setEmailorUser);
+  const setAuthState = useUserStore((state) => state.setAuthState);
   const dispatchToastMessage = useToastBarDispatch();
+
+  useEffect(() => {
+    const handleStateChange = (state) => {
+      setAuthState(state);
+    };
+
+    RCInstance.auth.onStateChange(handleStateChange);
+    return () => RCInstance.auth.removeStateListener(handleStateChange);
+  }, [RCInstance, setAuthState]);
 
   const handleLogin = async (userOrEmail, password, code) => {
     try {

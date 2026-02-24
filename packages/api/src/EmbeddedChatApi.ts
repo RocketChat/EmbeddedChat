@@ -72,6 +72,40 @@ export default class EmbeddedChatApi {
     return this.aiAdapter;
   }
 
+  async getSmartReplies() {
+    if (this.aiAdapter && this.aiAdapter.enabled) {
+      const { messages } = await this.getMessages(false, {
+        query: { tmid: { $exists: false } },
+      });
+      return this.aiAdapter.getSmartReplies(messages.slice(0, 10)); // Context of last 10 messages
+    }
+    return [];
+  }
+
+  async getSummary() {
+    if (this.aiAdapter && this.aiAdapter.enabled) {
+      const { messages } = await this.getMessages(false, {
+        query: { tmid: { $exists: false } },
+      });
+      return this.aiAdapter.getSummary(messages.slice(0, 50)); // Last 50 messages for summary
+    }
+    return "AI Adapter is not enabled or available.";
+  }
+
+  async translateMessage(text: string, targetLanguage: string) {
+    if (this.aiAdapter && this.aiAdapter.enabled) {
+      return this.aiAdapter.translateMessage(text, targetLanguage);
+    }
+    return text;
+  }
+
+  async handleAiCommand(command: string, params: any) {
+    if (this.aiAdapter && this.aiAdapter.enabled) {
+      return this.aiAdapter.onCommand(command, params);
+    }
+    return null;
+  }
+
   /**
    * Todo refactor
    */

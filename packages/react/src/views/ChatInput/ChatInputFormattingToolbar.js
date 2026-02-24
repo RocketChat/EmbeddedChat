@@ -56,6 +56,7 @@ const ChatInputFormattingToolbar = ({
   };
   const handleFormatterClick = (item) => {
     formatSelection(messageRef, item.pattern);
+    triggerButton?.(null, messageRef.current.value);
     setPopoverOpen(false);
   };
   const handleEmojiClick = (emojiEvent) => {
@@ -238,6 +239,7 @@ const ChatInputFormattingToolbar = ({
               onClick={() => {
                 if (isRecordingMessage) return;
                 formatSelection(messageRef, item.pattern);
+                triggerButton?.(null, messageRef.current.value);
               }}
             >
               <Icon
@@ -315,9 +317,10 @@ const ChatInputFormattingToolbar = ({
                   square
                   disabled={isRecordingMessage}
                   ghost
-                  onClick={() =>
-                    formatSelection(messageRef, itemInFormatter.pattern)
-                  }
+                  onClick={() => {
+                    formatSelection(messageRef, itemInFormatter.pattern);
+                    triggerButton?.(null, messageRef.current.value);
+                  }}
                 >
                   <Icon
                     disabled={isRecordingMessage}

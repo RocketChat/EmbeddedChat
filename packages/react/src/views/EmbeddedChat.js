@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { EmbeddedChatApi } from '@embeddedchat/api';
+import { EmbeddedChatApi, MockAiAdapter } from '@embeddedchat/api';
 import {
   Box,
   ToastBarProvider,
@@ -102,7 +102,8 @@ const EmbeddedChat = (props) => {
       deleteToken,
       saveToken,
     });
-
+    // Initialize AI Adapter (Mock for now, can be configured via props later)
+    newRCInstance.setAiAdapter(new MockAiAdapter());
     return newRCInstance;
   }, [host, roomId, getToken, deleteToken, saveToken]);
 

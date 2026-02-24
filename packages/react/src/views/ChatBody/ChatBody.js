@@ -82,11 +82,26 @@ const ChatBody = ({
   const { handleLogin } = useRCAuth();
   const { handleServerInteraction } = useUiKitActionManager();
 
-  const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
+  const { username, authState, isUserAuthenticated } = useUserStore(
+    (state) => ({
+      username: state.username,
+      authState: state.authState,
+      isUserAuthenticated: state.isUserAuthenticated,
+    })
   );
 
-  const username = useUserStore((state) => state.username);
+  const getAuthStateMessage = () => {
+    switch (authState) {
+      case 'AUTHENTICATING':
+        return 'Logging in...';
+      case 'RECONNECTING':
+        return 'Refreshing session...';
+      case 'IDLE':
+      case 'AUTHENTICATED':
+      default:
+        return 'Connecting...';
+    }
+  };
 
   const { getMessagesAndRoles, fetchAndSetPermissions, permissionsRef } =
     useFetchChatData(showRoles);
@@ -410,7 +425,9 @@ const ChatBody = ({
         }}
         className={`ec-chat-body ${classNames}`}
       >
-        {isLoginIn ? (
+        {((authState !== 'AUTHENTICATED' && authState !== 'UNAUTHENTICATED') ||
+          !useMessageStore.getState().isMessageLoaded) &&
+        !anonymousMode ? (
           <Box
             css={css`
               margin: auto;
@@ -418,6 +435,15 @@ const ChatBody = ({
             `}
           >
             <Throbber />
+            <Box
+              css={css`
+                margin-top: 10px;
+                color: ${theme.colors.foreground};
+                font-size: 0.9rem;
+              `}
+            >
+              {getAuthStateMessage()}
+            </Box>
           </Box>
         ) : isThreadOpen ? (
           <ThreadMessageList
