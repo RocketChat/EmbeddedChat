@@ -24,6 +24,7 @@ import {
   useStarredMessageStore,
   useFileStore,
   useSidebarStore,
+  useAiStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -460,11 +461,8 @@ const ChatHeader = ({
                 size="small"
                 onClick={async () => {
                   const summary = await RCInstance.getSummary();
-                  dispatchToastMessage({
-                    type: 'info',
-                    message: summary,
-                    stay: true,
-                  });
+                  useAiStore.getState().setSummaryContent(summary);
+                  useAiStore.getState().setSummaryModalOpen(true);
                 }}
                 title="Summarize thread"
               >

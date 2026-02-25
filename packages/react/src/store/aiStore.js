@@ -7,6 +7,10 @@ const useAiStore = create((set) => ({
   setIsAiEnabled: (enabled) => set({ isAiEnabled: enabled }),
   aiLoading: false,
   setAiLoading: (loading) => set({ aiLoading: loading }),
+  isSummaryModalOpen: false,
+  setSummaryModalOpen: (open) => set({ isSummaryModalOpen: open }),
+  summaryContent: '',
+  setSummaryContent: (content) => set({ summaryContent: content }),
 }));
 
 export default useAiStore;

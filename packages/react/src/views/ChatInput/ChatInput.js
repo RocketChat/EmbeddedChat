@@ -198,6 +198,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (typingRef.current) {
+        RCInstance.sendTypingStatus(username, false).catch(console.error);
+      }
     };
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
@@ -666,6 +669,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           <Input
             textArea
             rows={1}
+            aria-label={
+              isUserAuthenticated
+                ? `Message #${channelInfo.name}`
+                : 'Sign in to chat'
+            }
+            aria-multiline="true"
+            aria-disabled={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+            }
             disabled={
               !isUserAuthenticated ||
               !canSendMsg ||

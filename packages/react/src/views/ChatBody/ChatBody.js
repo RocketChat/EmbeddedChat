@@ -32,6 +32,7 @@ import RecentMessageButton from './RecentMessageButton';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import { getChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
+import AiSummaryModal from './AiSummaryModal';
 import useUiKitStore from '../../store/uiKitStore';
 import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
 
@@ -466,6 +467,7 @@ const ChatBody = ({
         {uiKitModalOpen && (
           <UiKitModal key={uiKitModalData?.viewId || 'uikit-modal'} initialView={uiKitModalData} />
         )}
+        <AiSummaryModal />
       </Box>
 
       {popupVisible && otherUserMessage && (
