@@ -10,6 +10,7 @@ import {
   useStarredMessageStore,
   useFileStore,
   useSidebarStore,
+  useKeyboardShortcutStore,
 } from '../store';
 
 const useSetExclusiveState = () => {
@@ -31,6 +32,9 @@ const useSetExclusiveState = () => {
   const setShowChannelinfo = useChannelStore(
     (state) => state.setShowChannelinfo
   );
+  const setShowKeyboardShortcuts = useKeyboardShortcutStore(
+    (state) => state.setShowKeyboardShortcuts
+  );
   const stateSetters = useMemo(
     () => [
       setShowStarred,
@@ -42,12 +46,14 @@ const useSetExclusiveState = () => {
       setShowAllFiles,
       setShowMentions,
       setShowCurrentUserInfo,
+      setShowKeyboardShortcuts,
     ],
     [
       setShowAllFiles,
       setShowAllThreads,
       setShowChannelinfo,
       setShowCurrentUserInfo,
+      setShowKeyboardShortcuts,
       setShowMembers,
       setShowMentions,
       setShowPinned,

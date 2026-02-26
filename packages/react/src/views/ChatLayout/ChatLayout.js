@@ -12,6 +12,7 @@ import {
   useThreadsMessageStore,
   useMemberStore,
   useSidebarStore,
+  useKeyboardShortcutStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -22,6 +23,7 @@ import PinnedMessages from '../MessageAggregators/PinnedMessages';
 import SearchMessages from '../MessageAggregators/SearchMessages';
 import FileGallery from '../MessageAggregators/FileGallery';
 import Roominfo from '../RoomInformation/RoomInformation';
+import KeyboardShortcuts from '../KeyboardShortcuts/KeyboardShortcuts';
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
@@ -60,6 +62,9 @@ const ChatLayout = () => {
   const members = useMemberStore((state) => state.members);
   const showCurrentUserInfo = useUserStore(
     (state) => state.showCurrentUserInfo
+  );
+  const showKeyboardShortcuts = useKeyboardShortcutStore(
+    (state) => state.showKeyboardShortcuts
   );
   const attachmentWindowOpen = useAttachmentWindowStore(
     (state) => state.attachmentWindowOpen
@@ -134,6 +139,7 @@ const ChatLayout = () => {
           {showPinned && <PinnedMessages />}
           {showStarred && <StarredMessages />}
           {showCurrentUserInfo && <UserInformation />}
+          {showKeyboardShortcuts && <KeyboardShortcuts />}
           {uiKitContextualBarOpen && (
             <UiKitContextualBar
               key={Math.random()}

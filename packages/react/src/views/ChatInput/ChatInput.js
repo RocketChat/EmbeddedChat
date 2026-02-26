@@ -19,7 +19,9 @@ import {
   useLoginStore,
   useChannelStore,
   useMemberStore,
+  useSearchMessageStore,
 } from '../../store';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
@@ -126,6 +128,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }));
 
   const userInfo = { _id: userId, username, name };
+
+  const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
+  const setExclusiveState = useSetExclusiveState();
 
   const dispatchToastMessage = useToastBarDispatch();
   const showCommands = useShowCommands(
@@ -447,6 +452,26 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
         formatSelection(messageRef, '*{{text}}*');
+        break;
+      }
+      case (e.ctrlKey || e.metaKey) && (e.code === 'KeyK' || e.code === 'KeyP'):
+        e.preventDefault();
+        setExclusiveState(setShowSearch);
+        break;
+      case e.code === 'ArrowUp' &&
+        !e.shiftKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey: {
+        const { value } = messageRef.current;
+        if (!value || value.trim() === '') {
+          const { messages } = useMessageStore.getState();
+          const lastOwnMsg = messages.find((m) => m.u?.username === username);
+          if (lastOwnMsg) {
+            e.preventDefault();
+            setEditMessage(lastOwnMsg);
+          }
+        }
         break;
       }
       case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
