@@ -406,7 +406,10 @@ export default class EmbeddedChatApi {
 
       if (suggestedUsername.success) {
         const response2 = await fetch(`${this.host}/api/v1/users.update`, {
-          body: `{"userId": "${userid}", "data": { "username": "${suggestedUsername.result}" }}`,
+          body: JSON.stringify({
+            userId: userid,
+            data: { username: suggestedUsername.result },
+          }),
           headers: {
             "Content-Type": "application/json",
             "X-Auth-Token": authToken,
@@ -432,7 +435,10 @@ export default class EmbeddedChatApi {
         const { userId = "", authToken = "" } =
           (await this.auth.getCurrentUser()) || {};
         const response = await fetch(`${this.host}/api/v1/users.update`, {
-          body: `{"userId": "${userid}", "data": { "username": "${newUserName}" }}`,
+          body: JSON.stringify({
+            userId: userid,
+            data: { username: newUserName },
+          }),
           headers: {
             "Content-Type": "application/json",
             "X-Auth-Token": authToken,
@@ -986,7 +992,11 @@ export default class EmbeddedChatApi {
       const { userId = "", authToken = "" } =
         (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.react`, {
-        body: JSON.stringify({ messageId, emoji, shouldReact }),
+        body: JSON.stringify({
+          messageId,
+          emoji,
+          shouldReact,
+        }),
         headers: {
           "Content-Type": "application/json",
           "X-Auth-Token": authToken,

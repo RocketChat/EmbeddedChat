@@ -119,7 +119,7 @@ const AudioMessageRecorder = (props) => {
     } catch (error) {
       console.warn(error);
     }
-  });
+  }, []);
 
   useEffect(() => {
     handleMount();
