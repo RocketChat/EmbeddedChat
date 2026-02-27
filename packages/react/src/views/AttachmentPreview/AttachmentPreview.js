@@ -64,8 +64,7 @@ const AttachmentPreview = () => {
     if (messageRef.current && typeof messageRef.current.value !== 'undefined') {
       try {
         messageRef.current.value = raw;
-      } catch (err) {
-      }
+      } catch (err) {}
     }
 
     searchMentionUser(raw);
