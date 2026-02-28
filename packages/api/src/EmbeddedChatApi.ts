@@ -175,6 +175,7 @@ export default class EmbeddedChatApi {
 
   async logout() {
     try {
+      await this.close();
       await this.auth.logout();
     } catch (err) {
       console.error(err);
