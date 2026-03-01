@@ -224,18 +224,15 @@ const ChatBody = ({
         try {
           const olderMessages = await RCInstance.getOlderMessages(
             anonymousMode,
-            ECOptions?.enableThreads
-              ? {
-                  query: {
-                    tmid: {
-                      $exists: false,
-                    },
-                  },
-                  offset,
-                }
-              : undefined,
+            { offset },
             anonymousMode ? false : isChannelPrivate
           );
+
+          if (ECOptions?.enableThreads && olderMessages?.messages) {
+            olderMessages.messages = olderMessages.messages.filter(
+              (msg) => !msg.tmid
+            );
+          }
           const messageList = messageListRef.current;
           if (olderMessages?.messages?.length) {
             const previousScrollHeight = messageList.scrollHeight;

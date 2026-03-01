@@ -550,34 +550,16 @@ export default class EmbeddedChatApi {
 
   /**
    * @param {boolean} anonymousMode
-   * @param {Object} options This object should include query or fields.
-   * query - json object which accepts MongoDB query operators.
-   * fields - json object with properties that have either 1 or 0 to include them or exclude them
+   * @param {boolean} isChannelPrivate
    * @returns messages
    */
-  async getMessages(
-    anonymousMode = false,
-    options: {
-      query?: object | undefined;
-      field?: object | undefined;
-    } = {
-      query: undefined,
-      field: undefined,
-    },
-    isChannelPrivate = false
-  ) {
+  async getMessages(anonymousMode = false, isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
-    const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
-      : "";
-    const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
-      : "";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -589,36 +571,26 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
   async getOlderMessages(
     anonymousMode = false,
     options: {
-      query?: object | undefined;
-      field?: object | undefined;
       offset?: number;
     } = {
-      query: undefined,
-      field: undefined,
       offset: 50,
     },
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
-    const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
-      : "";
-    const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
-      : "";
     const offset = options?.offset ? options.offset : 0;
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}&offset=${offset}`,
         {
           headers: {
             "Content-Type": "application/json",

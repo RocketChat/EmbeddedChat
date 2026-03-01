@@ -123,19 +123,17 @@ const useFetchChatData = (showRoles) => {
           return;
         }
 
-        const { messages, count } = await RCInstance.getMessages(
+        const result = await RCInstance.getMessages(
           anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-                query: {
-                  tmid: {
-                    $exists: false,
-                  },
-                },
-              }
-            : undefined,
           anonymousMode ? false : isChannelPrivate
         );
+
+        let { messages } = result || {};
+        const { count } = result || {};
+
+        if (messages && ECOptions?.enableThreads) {
+          messages = messages.filter((msg) => !msg.tmid);
+        }
 
         if (messages) {
           setMessages(messages.filter((message) => message._hidden !== true));
