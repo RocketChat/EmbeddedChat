@@ -1056,26 +1056,53 @@ export default class EmbeddedChatApi {
   ) {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const headers = {
+        "X-Auth-Token": authToken,
+        "X-User-Id": userId,
+      };
+
       const form = new FormData();
-      if (threadId) {
-        form.append("tmid", threadId);
-      }
       form.append("file", file, fileName);
-      form.append(
-        "description",
-        fileDescription.length !== 0 ? fileDescription : ""
+      if (fileDescription.length !== 0) {
+        form.append("description", fileDescription);
+      }
+
+      const uploadResponse = await fetch(
+        `${this.host}/api/v1/rooms.media/${this.rid}`,
+        {
+          method: "POST",
+          body: form,
+          headers,
+        }
       );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
-        method: "POST",
-        body: form,
-        headers: {
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }).then((r) => r.json());
-      return response;
+      const uploadResult = await uploadResponse.json();
+
+      if (!uploadResult.success || !uploadResult.file?._id) {
+        throw new Error(uploadResult.error || "File upload failed");
+      }
+
+      const confirmBody: Record<string, any> = {};
+      if (fileDescription.length !== 0) {
+        confirmBody.description = fileDescription;
+      }
+      if (threadId) {
+        confirmBody.tmid = threadId;
+      }
+
+      const confirmResponse = await fetch(
+        `${this.host}/api/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
+        {
+          method: "POST",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(confirmBody),
+        }
+      );
+      return await confirmResponse.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
