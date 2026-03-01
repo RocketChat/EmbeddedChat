@@ -198,8 +198,7 @@ const ChatHeader = ({
       ) {
         setIsChannelArchived(true);
         const roomInfo = await RCInstance.getRoomInfo();
-        const roomData = roomInfo.result[roomInfo.result.length - 1];
-        setChannelInfo(roomData);
+        setChannelInfo(roomInfo?.room);
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
         dispatchToastMessage({
           type: 'error',
