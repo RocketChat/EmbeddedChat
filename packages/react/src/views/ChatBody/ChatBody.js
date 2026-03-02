@@ -52,6 +52,9 @@ const ChatBody = ({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [firstUnreadMessageId, setFirstUnreadMessageId] = useState(null);
   const pendingFirstUnreadRef = useRef(null);
+  const previousThreadOpenRef = useRef(false);
+  const mainChatScrollSnapshotRef = useRef(null);
+  const isRestoringFromThreadRef = useRef(false);
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
@@ -120,6 +123,41 @@ const ChatBody = ({
       getThreadMessages();
     }
   }, [getThreadMessages, isThreadOpen, ECOptions?.enableThreads]);
+
+  useEffect(() => {
+    const messageList = messageListRef?.current;
+    if (!messageList) {
+      previousThreadOpenRef.current = isThreadOpen;
+      return;
+    }
+
+    if (!previousThreadOpenRef.current && isThreadOpen) {
+      mainChatScrollSnapshotRef.current = messageList.scrollTop;
+    }
+
+    if (previousThreadOpenRef.current && !isThreadOpen) {
+      const snapshot = mainChatScrollSnapshotRef.current;
+      if (typeof snapshot === 'number') {
+        isRestoringFromThreadRef.current = true;
+        requestAnimationFrame(() => {
+          const currentMessageList = messageListRef?.current;
+          if (currentMessageList) {
+            const maxScrollTop = Math.max(
+              0,
+              currentMessageList.scrollHeight - currentMessageList.clientHeight
+            );
+            currentMessageList.scrollTop = Math.min(snapshot, maxScrollTop);
+          }
+
+          requestAnimationFrame(() => {
+            isRestoringFromThreadRef.current = false;
+          });
+        });
+      }
+    }
+
+    previousThreadOpenRef.current = isThreadOpen;
+  }, [isThreadOpen, messageListRef]);
 
   const addMessage = useCallback(
     (message) => {
@@ -217,7 +255,8 @@ const ChatBody = ({
       if (
         messageListRef.current.scrollTop === 0 &&
         !loadingOlderMessages &&
-        hasMoreMessages
+        hasMoreMessages &&
+        !isRestoringFromThreadRef.current
       ) {
         setLoadingOlderMessages(true);
 
@@ -308,10 +347,10 @@ const ChatBody = ({
   };
 
   useEffect(() => {
-    if (messageListRef.current) {
+    if (messageListRef.current && !isThreadOpen) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isThreadOpen, messageListRef]);
 
   useEffect(() => {
     checkOverflow();
