@@ -165,7 +165,11 @@ const RoomMembers = ({ members }) => {
               <Box>
                 Showing {displayedMembers} of {displayedMembers}
               </Box>
-              <Box css={styles.memberList}>
+              <Box
+                css={styles.memberList}
+                role="list"
+                aria-label="Room members"
+              >
                 {filteredMembers.length > 0 ? (
                   filteredMembers.map((member) => (
                     <RoomMemberItem

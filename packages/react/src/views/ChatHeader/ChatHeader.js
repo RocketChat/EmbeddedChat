@@ -497,6 +497,15 @@ const ChatHeader = ({
                     <Box
                       css={styles.channelName}
                       onClick={() => setExclusiveState(setShowChannelinfo)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setExclusiveState(setShowChannelinfo);
+                        }
+                      }}
+                      aria-label="View room information"
                     >
                       {isFederated ? (
                         <GlobeIcon size={fullScreen ? '1.25rem' : '1rem'} />
