@@ -62,7 +62,13 @@ const ToastBar = ({ toast, onClose }) => {
     >
       <Icon size="1em" name={iconName} />
       {message}
-      <ActionButton icon="cross" size="small" onClick={onClose} ghost />
+      <ActionButton
+        icon="cross"
+        size="small"
+        onClick={onClose}
+        ghost
+        aria-label="Dismiss"
+      />
     </Box>
   );
 };

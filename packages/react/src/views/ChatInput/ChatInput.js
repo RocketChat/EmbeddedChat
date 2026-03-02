@@ -846,6 +846,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                   type="primary"
                   disabled={disableButton || isRecordingMessage}
                   icon="send"
+                  aria-label="Send message"
                 />
               ) : null
             ) : (
