@@ -79,7 +79,7 @@ export const getBubbleStyles = (theme) => {
         display: flex;
         position: absolute;
         bottom: calc(100% - 20px);
-        left: calc(100% - 20px);
+        left: calc(100% - 10px);
         z-index: 1101;
       }
     `,
@@ -171,7 +171,7 @@ export const getBubbleStylesMe = (theme) => {
     toolboxContainerMe: css`
       .ec-message-body:hover & {
         left: auto;
-        right: calc(100% - 20px);
+        right: calc(100% - 10px);
       }
     `,
 
