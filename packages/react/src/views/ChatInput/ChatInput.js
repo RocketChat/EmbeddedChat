@@ -454,7 +454,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         formatSelection(messageRef, '*{{text}}*');
         break;
       }
-      case (e.ctrlKey || e.metaKey) && (e.code === 'KeyK' || e.code === 'KeyP'):
+      case (e.ctrlKey || e.metaKey) && e.code === 'KeyK':
         e.preventDefault();
         setExclusiveState(setShowSearch);
         break;

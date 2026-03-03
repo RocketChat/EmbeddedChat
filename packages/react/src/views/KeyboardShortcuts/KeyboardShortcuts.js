@@ -4,7 +4,8 @@ import { Box, Sidebar, useTheme } from '@embeddedchat/ui-elements';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const isMac =
-  typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
+  typeof navigator !== 'undefined' &&
+  /Mac/.test(navigator.userAgentData?.platform || navigator.platform);
 const mod = isMac ? '⌘' : 'Ctrl';
 const alt = isMac ? '⌥' : 'Alt';
 
@@ -16,6 +17,14 @@ const shortcuts = [
   {
     action: 'Edit previous message',
     keys: '↑ (Up Arrow)',
+  },
+  {
+    action: 'Bold message',
+    keys: `${mod} + B`,
+  },
+  {
+    action: 'Italic message',
+    keys: `${mod} + I`,
   },
   {
     action: 'Move to the beginning of the message',
