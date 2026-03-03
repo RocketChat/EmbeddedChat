@@ -350,6 +350,15 @@ export const getMessageToolboxStyles = (theme) => {
       gap: 0.25rem;
       padding: 0.25rem;
       border-radius: ${theme.radius};
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: transparent;
+      }
     `,
 
     emojiPickerStyles: css`
