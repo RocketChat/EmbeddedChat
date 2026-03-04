@@ -60,6 +60,29 @@ export default class EmbeddedChatApi {
     return this.host;
   }
 
+  private async getAuthHeaders(): Promise<Record<string, string>> {
+    const user = await this.auth.getCurrentUser();
+    if (!user?.authToken || !user?.userId) {
+      throw new Error("Not authenticated");
+    }
+    return {
+      "Content-Type": "application/json",
+      "X-Auth-Token": user.authToken,
+      "X-User-Id": user.userId,
+    };
+  }
+
+  private async getAuthTokenHeaders(): Promise<Record<string, string>> {
+    const user = await this.auth.getCurrentUser();
+    if (!user?.authToken || !user?.userId) {
+      throw new Error("Not authenticated");
+    }
+    return {
+      "X-Auth-Token": user.authToken,
+      "X-User-Id": user.userId,
+    };
+  }
+
   /**
    * Todo refactor
    */
@@ -397,15 +420,11 @@ export default class EmbeddedChatApi {
 
   async updateUserNameThroughSuggestion(userid: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const headers = await this.getAuthHeaders();
       const response = await fetch(
         `${this.host}/api/v1/users.getUsernameSuggestion`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers,
           method: "GET",
         }
       );
@@ -418,11 +437,7 @@ export default class EmbeddedChatApi {
             userId: userid,
             data: { username: suggestedUsername.result },
           }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers,
           method: "POST",
         });
 
@@ -440,17 +455,13 @@ export default class EmbeddedChatApi {
 
     if (usernameRegExp.test(newUserName)) {
       try {
-        const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+        const headers = await this.getAuthHeaders();
         const response = await fetch(`${this.host}/api/v1/users.update`, {
           body: JSON.stringify({
             userId: userid,
             data: { username: newUserName },
           }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers,
           method: "POST",
         });
 
@@ -473,15 +484,10 @@ export default class EmbeddedChatApi {
 
   async channelInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -493,7 +499,6 @@ export default class EmbeddedChatApi {
 
   async getRoomInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/method.call/rooms%3Aget`,
         {
@@ -505,11 +510,7 @@ export default class EmbeddedChatApi {
               params: [],
             }),
           }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "POST",
         }
       );
@@ -528,13 +529,8 @@ export default class EmbeddedChatApi {
 
   async permissionInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/permissions.listAll`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "GET",
       });
       return await response.json();
@@ -575,15 +571,13 @@ export default class EmbeddedChatApi {
       ? `&field=${JSON.stringify(options.field)}`
       : "";
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const headers = anonymousMode
+        ? { 'Content-Type': 'application/json' }
+        : await this.getAuthHeaders();
       const messages = await fetch(
         `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers,
           method: "GET",
         }
       );
@@ -616,15 +610,13 @@ export default class EmbeddedChatApi {
       : "";
     const offset = options?.offset ? options.offset : 0;
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const headers = anonymousMode
+        ? { 'Content-Type': 'application/json' }
+        : await this.getAuthHeaders();
       const messages = await fetch(
         `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers,
           method: "GET",
         }
       );
@@ -636,15 +628,10 @@ export default class EmbeddedChatApi {
 
   async getThreadMessages(tmid: string, isChannelPrivate = false) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
         `${this.host}/api/v1/chat.getThreadMessages?tmid=${tmid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -657,15 +644,10 @@ export default class EmbeddedChatApi {
   async getChannelRoles(isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const roles = await fetch(
         `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -677,15 +659,10 @@ export default class EmbeddedChatApi {
 
   async getUsersInRole(role: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const roles = await fetch(
         `${this.host}/api/v1/roles.getUsersInRole?role=${role}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -697,7 +674,6 @@ export default class EmbeddedChatApi {
 
   async getUserRoles() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/method.call/getUserRoles`,
         {
@@ -709,11 +685,7 @@ export default class EmbeddedChatApi {
               params: [],
             }),
           }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "POST",
         }
       );
@@ -762,14 +734,9 @@ export default class EmbeddedChatApi {
       messageObj.tmid = threadId;
     }
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
         body: JSON.stringify({ message: messageObj }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -780,14 +747,9 @@ export default class EmbeddedChatApi {
 
   async deleteMessage(msgId: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.delete`, {
         body: JSON.stringify({ roomId: this.rid, msgId }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -798,14 +760,9 @@ export default class EmbeddedChatApi {
 
   async updateMessage(msgId: string, text: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.update`, {
         body: JSON.stringify({ roomId: this.rid, msgId, text }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -817,17 +774,12 @@ export default class EmbeddedChatApi {
   async getAllFiles(isChannelPrivate = false, typeGroup: string) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const url =
         typeGroup === ""
           ? `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`
           : `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
       const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "GET",
       });
       return await response.json();
@@ -838,15 +790,10 @@ export default class EmbeddedChatApi {
 
   async getAllImages() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/rooms.images?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -858,14 +805,9 @@ export default class EmbeddedChatApi {
 
   async starMessage(mid: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.starMessage`, {
         body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -876,14 +818,9 @@ export default class EmbeddedChatApi {
 
   async unstarMessage(mid: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.unStarMessage`, {
         body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -894,15 +831,10 @@ export default class EmbeddedChatApi {
 
   async getStarredMessages() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/chat.getStarredMessages?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -914,15 +846,10 @@ export default class EmbeddedChatApi {
 
   async getPinnedMessages() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/chat.getPinnedMessages?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -934,15 +861,10 @@ export default class EmbeddedChatApi {
 
   async getMentionedMessages() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/chat.getMentionedMessages?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -954,14 +876,9 @@ export default class EmbeddedChatApi {
 
   async pinMessage(mid: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.pinMessage`, {
         body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -974,14 +891,9 @@ export default class EmbeddedChatApi {
 
   async unpinMessage(mid: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.unPinMessage`, {
         body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -992,18 +904,13 @@ export default class EmbeddedChatApi {
 
   async reactToMessage(emoji: string, messageId: string, shouldReact: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.react`, {
         body: JSON.stringify({
           messageId,
           emoji,
           shouldReact,
         }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -1014,14 +921,9 @@ export default class EmbeddedChatApi {
 
   async reportMessage(messageId: string, description: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/chat.reportMessage`, {
         body: JSON.stringify({ messageId, description }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "POST",
       });
       return await response.json();
@@ -1032,15 +934,10 @@ export default class EmbeddedChatApi {
 
   async findOrCreateInvite() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/findOrCreateInvite`, {
         method: "POST",
         body: JSON.stringify({ rid: this.rid, days: 1, maxUses: 10 }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
       });
       return await response.json();
     } catch (err) {
@@ -1055,7 +952,6 @@ export default class EmbeddedChatApi {
     threadId = undefined
   ) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const form = new FormData();
       if (threadId) {
         form.append("tmid", threadId);
@@ -1068,10 +964,7 @@ export default class EmbeddedChatApi {
       const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: "POST",
         body: form,
-        headers: {
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthTokenHeaders(),
       }).then((r) => r.json());
       return response;
     } catch (err) {
@@ -1081,13 +974,8 @@ export default class EmbeddedChatApi {
 
   async me() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(`${this.host}/api/v1/me`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
         method: "GET",
       });
       return await response.json();
@@ -1099,15 +987,10 @@ export default class EmbeddedChatApi {
   async getChannelMembers(isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -1119,15 +1002,10 @@ export default class EmbeddedChatApi {
 
   async getSearchMessages(text: string) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -1139,15 +1017,10 @@ export default class EmbeddedChatApi {
 
   async getMessageLimit() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
         `${this.host}/api/v1/settings/Message_MaxAllowedSize`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "GET",
         }
       );
@@ -1159,18 +1032,12 @@ export default class EmbeddedChatApi {
 
   async handleUiKitInteraction(appId: string, userInteraction: any) {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-
       const triggerId = Math.random().toString(32).slice(2, 16);
 
       const response = await fetch(
         `${this.host}/api/apps/ui.interaction/${appId}`,
         {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
+          headers: await this.getAuthHeaders(),
           method: "POST",
           body: JSON.stringify({
             triggerId,
@@ -1188,13 +1055,8 @@ export default class EmbeddedChatApi {
   }
 
   async getCommandsList() {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(`${this.host}/api/v1/commands.list`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
+      headers: await this.getAuthHeaders(),
       method: "GET",
     });
     const data = await response.json();
@@ -1210,13 +1072,8 @@ export default class EmbeddedChatApi {
     params: string;
     tmid?: string;
   }) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(`${this.host}/api/v1/commands.run`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
+      headers: await this.getAuthHeaders(),
       method: "POST",
       body: JSON.stringify({
         command,
@@ -1231,16 +1088,11 @@ export default class EmbeddedChatApi {
   }
 
   async getUserStatus(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
       `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
       }
     );
     const data = response.json();
@@ -1248,16 +1100,11 @@ export default class EmbeddedChatApi {
   }
 
   async userInfo(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
       `${this.host}/api/v1/users.info?userId=${reqUserId}`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
       }
     );
     const data = response.json();
@@ -1265,16 +1112,11 @@ export default class EmbeddedChatApi {
   }
 
   async userData(username: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
       `${this.host}/api/v1/users.info?username=${username}`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
+        headers: await this.getAuthHeaders(),
       }
     );
     const data = response.json();
