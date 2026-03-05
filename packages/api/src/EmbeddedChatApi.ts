@@ -589,7 +589,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -630,7 +630,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -650,7 +650,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -671,7 +671,7 @@ export default class EmbeddedChatApi {
       );
       return await roles.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -691,7 +691,7 @@ export default class EmbeddedChatApi {
       );
       return await roles.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -1044,7 +1044,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -1075,7 +1075,7 @@ export default class EmbeddedChatApi {
       }).then((r) => r.json());
       return response;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 

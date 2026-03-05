@@ -75,7 +75,7 @@ const AudioMessageRecorder = (props) => {
         }, 1000)
       );
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setRecordState('idle');
     }
   };
