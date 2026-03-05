@@ -1243,7 +1243,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 
@@ -1260,7 +1260,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 
@@ -1277,7 +1277,7 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    const data = await response.json();
     return data;
   }
 }
