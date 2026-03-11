@@ -85,49 +85,23 @@ const AttachmentMetadata = ({
           flex-direction: row;
           align-items: center;
           gap: 8px;
-          @media (max-width: 420px) {
-            flex-direction: column;
-            align-items: flex-start;
-          }
+          flex-wrap: wrap;
         `}
       >
-        <Box
-          css={css`
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 4px;
-            @media (max-width: 420px) {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-          `}
-        >
-          <Tooltip text={attachment?.title} position="down">
-            <p
-              css={css`
-                margin: 0;
-                font-size: 12px;
-                opacity: 0.7;
-              `}
-            >
-              {attachment?.title?.length > 22
-                ? `${attachment.title.substring(0, 22)}...`
-                : attachment?.title}
-            </p>
-          </Tooltip>
-          <Box
+        <Tooltip text={attachment?.title} position="down">
+          <p
             css={css`
+              margin: 0;
               font-size: 12px;
               opacity: 0.7;
-              @media (max-width: 420px) {
-                margin-left: 0;
-              }
             `}
           >
+            {attachment?.title?.length > 20
+              ? `${attachment.title.substring(0, 20)}...`
+              : attachment?.title}{' '}
             ({getFormattedFileSize()})
-          </Box>
-        </Box>
+          </p>
+        </Tooltip>
 
         <Box
           css={css`
