@@ -34,7 +34,7 @@ const EmbeddedChat = (props) => {
 
   const {
     isClosable = false,
-    setClosableState = () => {},
+    setClosableState = () => { },
     width = '100%',
     height = '95vh',
     host = 'http://localhost:3000',
@@ -134,7 +134,7 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const onAuthChange = (user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -151,7 +151,12 @@ const EmbeddedChat = (props) => {
       } else {
         setIsUserAuthenticated(false);
       }
-    });
+    };
+    RCInstance.auth.onAuthChange(onAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(onAuthChange);
+    };
   }, [
     RCInstance,
     setAuthenticatedName,
