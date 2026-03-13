@@ -495,34 +495,26 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
+        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
         {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
           headers: {
             "Content-Type": "application/json",
             "X-Auth-Token": authToken,
             "X-User-Id": userId,
           },
-          method: "POST",
+          method: "GET",
         }
       );
 
       const result = await response.json();
 
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
+      if (result.success && result.room) {
+        return { result: [result.room] };
       }
-      return null;
+      return { result: [] };
     } catch (err) {
       console.error(err);
+      return { result: [] };
     }
   }
 
