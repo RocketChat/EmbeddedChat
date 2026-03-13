@@ -7,8 +7,6 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
-// mutliple typing status can come at the same time they should be processed in order.
-let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -58,6 +56,13 @@ export default class EmbeddedChatApi {
 
   getHost() {
     return this.host;
+  }
+
+  private throwApiError(error: unknown): never {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(String(error));
   }
 
   /**
@@ -113,7 +118,7 @@ export default class EmbeddedChatApi {
         return response;
       }
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -142,7 +147,7 @@ export default class EmbeddedChatApi {
         const authErrorRes = await error.response.json();
         return { error: authErrorRes?.error };
       }
-      console.error(error);
+      this.throwApiError(error);
     }
   }
 
@@ -169,7 +174,7 @@ export default class EmbeddedChatApi {
           break;
       }
     } catch (error) {
-      console.error("Auto-login failed:", error);
+      this.throwApiError(error);
     }
   }
 
@@ -177,7 +182,7 @@ export default class EmbeddedChatApi {
     try {
       await this.auth.logout();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -196,9 +201,8 @@ export default class EmbeddedChatApi {
         if (!data) {
           return;
         }
-        const message = JSON.parse(JSON.stringify(data));
+        const message = { ...data };
         if (message.ts?.$date) {
-          console.log(message.ts?.$date);
           message.ts = message.ts.$date;
         }
         if (!message.ts) {
@@ -253,7 +257,7 @@ export default class EmbeddedChatApi {
             if (!data || data?.rid !== this.rid) {
               return;
             }
-            const message = JSON.parse(JSON.stringify(data));
+            const message = { ...data };
             if (message.ts?.$date) {
               message.ts = message.ts.$date;
             }
@@ -270,7 +274,12 @@ export default class EmbeddedChatApi {
         }
       );
     } catch (err) {
-      await this.close();
+      try {
+        await this.close();
+      } catch {
+        // Preserve the original error from connect flow.
+      }
+      this.throwApiError(err);
     }
   }
 
@@ -358,13 +367,6 @@ export default class EmbeddedChatApi {
     typingUser: string;
     isTyping: boolean;
   }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
-    typingHandlerLock = 1;
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
     if (idx !== -1) {
@@ -373,7 +375,6 @@ export default class EmbeddedChatApi {
     if (isTyping) {
       this.typingUsers.unshift(typingUser);
     }
-    typingHandlerLock = 0;
     const newTypingStatus = cloneArray(this.typingUsers);
     this.onTypingStatusCallbacks.forEach((callback) =>
       callback(newTypingStatus)
@@ -391,7 +392,7 @@ export default class EmbeddedChatApi {
       }
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -429,7 +430,7 @@ export default class EmbeddedChatApi {
         return await response2.json();
       }
     } catch (error) {
-      console.error(error);
+      this.throwApiError(error);
     }
   }
 
@@ -464,7 +465,7 @@ export default class EmbeddedChatApi {
         }
         return result;
       } catch (err) {
-        console.error(err);
+        this.throwApiError(err);
       }
     } else {
       return this.updateUserNameThroughSuggestion(userid);
@@ -487,7 +488,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -522,7 +523,7 @@ export default class EmbeddedChatApi {
       }
       return null;
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -539,7 +540,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -589,7 +590,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -630,7 +631,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -650,7 +651,7 @@ export default class EmbeddedChatApi {
       );
       return await messages.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -671,7 +672,7 @@ export default class EmbeddedChatApi {
       );
       return await roles.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -691,7 +692,7 @@ export default class EmbeddedChatApi {
       );
       return await roles.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -726,7 +727,7 @@ export default class EmbeddedChatApi {
       }
       return null;
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -739,7 +740,7 @@ export default class EmbeddedChatApi {
         typing ? ["user-typing"] : []
       );
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -774,7 +775,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -792,7 +793,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -810,7 +811,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -832,7 +833,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -852,7 +853,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -870,7 +871,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -888,7 +889,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -908,7 +909,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -928,7 +929,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -948,7 +949,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -986,7 +987,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1008,7 +1009,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1026,7 +1027,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1044,7 +1045,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1075,7 +1076,7 @@ export default class EmbeddedChatApi {
       }).then((r) => r.json());
       return response;
     } catch (err) {
-      console.log(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1092,7 +1093,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1113,15 +1114,19 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
   async getSearchMessages(text: string) {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const queryParams = new URLSearchParams({
+        roomId: this.rid,
+        searchText: text,
+      });
       const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
+        `${this.host}/api/v1/chat.search?${queryParams.toString()}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1133,7 +1138,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1153,7 +1158,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      this.throwApiError(err);
     }
   }
 
@@ -1183,7 +1188,7 @@ export default class EmbeddedChatApi {
       this.onActionTriggeredCallbacks.forEach((cb) => cb(interaction));
       return interaction;
     } catch (e) {
-      console.error(e);
+      this.throwApiError(e);
     }
   }
 
