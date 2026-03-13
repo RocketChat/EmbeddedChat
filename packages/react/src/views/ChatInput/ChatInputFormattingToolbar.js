@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -87,7 +87,7 @@ const ChatInputFormattingToolbar = ({
     emoji:
       isPopoverOpen && popOverItems.includes('emoji') ? (
         <Box
-          key="emoji"
+          key="emoji-popover"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
@@ -116,6 +116,7 @@ const ChatInputFormattingToolbar = ({
 
     audio: (
       <AudioMessageRecorder
+        key="audio-recorder"
         displayName={
           isPopoverOpen && popOverItems.includes('audio') ? 'audio' : null
         }
@@ -125,6 +126,7 @@ const ChatInputFormattingToolbar = ({
     ),
     video: (
       <VideoMessageRecorder
+        key="video-recorder"
         displayName={
           isPopoverOpen && popOverItems.includes('video') ? 'video' : null
         }
@@ -135,7 +137,7 @@ const ChatInputFormattingToolbar = ({
     file:
       isPopoverOpen && popOverItems.includes('file') ? (
         <Box
-          key="file"
+          key="file-popover"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
@@ -147,7 +149,7 @@ const ChatInputFormattingToolbar = ({
           <span>file</span>
         </Box>
       ) : (
-        <Tooltip text="Upload File" position="top" key="file">
+        <Tooltip text="Upload File" position="top" key="file-btn">
           <ActionButton
             square
             ghost
@@ -164,7 +166,7 @@ const ChatInputFormattingToolbar = ({
     link:
       isPopoverOpen && popOverItems.includes('link') ? (
         <Box
-          key="link"
+          key="link-popover"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
           onClick={() => {
@@ -176,7 +178,7 @@ const ChatInputFormattingToolbar = ({
           <span>link</span>
         </Box>
       ) : (
-        <Tooltip text="Link" position="top" key="link">
+        <Tooltip text="Link" position="top" key="link-btn">
           <ActionButton
             square
             ghost
@@ -194,29 +196,27 @@ const ChatInputFormattingToolbar = ({
       .map((name) => formatter.find((item) => item.name === name))
       .map((item) =>
         isPopoverOpen && popOverItems.includes('formatter') ? (
-          <>
-            <Box
-              key={item.name}
+          <Box
+            key={`popover-${item.name}`}
+            disabled={isRecordingMessage}
+            onClick={() => {
+              if (isRecordingMessage) return;
+              handleFormatterClick(item);
+            }}
+            css={styles.popOverItemStyles}
+          >
+            <Icon
               disabled={isRecordingMessage}
-              onClick={() => {
-                if (isRecordingMessage) return;
-                handleFormatterClick(item);
-              }}
-              css={styles.popOverItemStyles}
-            >
-              <Icon
-                disabled={isRecordingMessage}
-                name={item.name}
-                size="1rem"
-              />
-              <span>{item.name}</span>
-            </Box>
-          </>
+              name={item.name}
+              size="1rem"
+            />
+            <span>{item.name}</span>
+          </Box>
         ) : (
           <Tooltip
             text={item.name}
             position="top"
-            key={`formatter-${item.name}`}
+            key={`surface-formatter-${item.name}`}
           >
             <ActionButton
               square
@@ -263,7 +263,7 @@ const ChatInputFormattingToolbar = ({
             if (itemInFormatter) {
               return (
                 <Box
-                  key={itemInFormatter.name}
+                  key={`popover-item-${itemInFormatter.name}`}
                   disabled={isRecordingMessage}
                   onClick={() => handleFormatterClick(itemInFormatter)}
                   css={styles.popOverItemStyles}
@@ -296,7 +296,7 @@ const ChatInputFormattingToolbar = ({
               <Tooltip
                 text={itemInFormatter.name}
                 position="top"
-                key={`formatter-${itemInFormatter.name}`}
+                key={`small-formatter-${itemInFormatter.name}`}
               >
                 <ActionButton
                   square
@@ -351,6 +351,7 @@ const ChatInputFormattingToolbar = ({
 
       {isInsertLinkOpen && (
         <InsertLinkToolBox
+          key="link-toolbox"
           selectedText={window.getSelection().toString()}
           handleAddLink={handleAddLink}
           onClose={() => setInsertLinkOpen(false)}
