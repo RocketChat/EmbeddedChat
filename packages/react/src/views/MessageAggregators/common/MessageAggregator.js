@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { isSameDay, format } from 'date-fns';
+import { format } from 'date-fns';
 import {
   Box,
   Sidebar,
@@ -34,16 +34,15 @@ export const MessageAggregator = ({
   type = 'message',
   viewType = 'Sidebar',
 }) => {
-  const { theme } = useTheme();
-  const { mode } = useTheme();
+  const { theme, mode } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
   const setExclusiveState = useSetExclusiveState();
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
-  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const threadMessages = useMessageStore((state) => state.threadMessages);
   const allMessages = useMemo(
-    () => [...messages, ...[...threadMessages].reverse()],
+    () => [...messages, ...[...(threadMessages || [])].reverse()],
     [messages, threadMessages]
   );
 
@@ -128,13 +127,20 @@ export const MessageAggregator = ({
     }
   };
 
-  const isMessageNewDay = (current, previous) =>
-    !previous ||
-    shouldRender(previous) ||
-    !isSameDay(new Date(current.ts), new Date(previous.ts));
+  const isMessageNewDay = (current, previous) => {
+    if (!previous || shouldRender(previous)) return true;
+    const currentDay = new Date(current.ts).setHours(0, 0, 0, 0);
+    const previousDay = new Date(previous.ts).setHours(0, 0, 0, 0);
+    return currentDay !== previousDay;
+  };
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
+
+  const uniqueMessageList = useMemo(
+    () => [...new Map(messageList.map((msg) => [msg._id, msg])).values()],
+    [messageList]
+  );
 
   return (
     <ViewComponent
@@ -167,67 +173,65 @@ export const MessageAggregator = ({
             <NoMessagesIndicator iconName={iconName} message={noMessageInfo} />
           )}
 
-          {[...new Map(messageList.map((msg) => [msg._id, msg])).values()].map(
-            (msg, index, arr) => {
-              const newDay = isMessageNewDay(msg, arr[index - 1]);
-              if (!messageRendered && shouldRender(msg)) {
-                setMessageRendered(true);
-              }
+          {uniqueMessageList.map((msg, index, arr) => {
+            const newDay = isMessageNewDay(msg, arr[index - 1]);
+            if (!messageRendered && shouldRender(msg)) {
+              setMessageRendered(true);
+            }
 
-              return (
-                <React.Fragment key={msg._id}>
-                  {type === 'message' && newDay && (
-                    <MessageDivider>
-                      {format(new Date(msg.ts), 'MMMM d, yyyy')}
-                    </MessageDivider>
-                  )}
-                  {type === 'file' ? (
-                    <FileDisplay
+            return (
+              <React.Fragment key={msg._id}>
+                {type === 'message' && newDay && (
+                  <MessageDivider>
+                    {format(new Date(msg.ts), 'MMMM d, yyyy')}
+                  </MessageDivider>
+                )}
+                {type === 'file' ? (
+                  <FileDisplay
+                    key={`${msg._id}-aggregated`}
+                    fileMessage={msg}
+                  />
+                ) : (
+                  <Box
+                    position="relative"
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <Message
                       key={`${msg._id}-aggregated`}
-                      fileMessage={msg}
-                    />
-                  ) : (
-                    <Box
-                      position="relative"
+                      message={msg}
+                      newDay={false}
+                      type="default"
+                      showAvatar
+                      showToolbox={false}
+                      showRoles={showRoles}
+                      isInSidebar
                       style={{
-                        display: 'flex',
+                        flex: 1,
+                        padding: 0,
+                        marginLeft: '15px',
+                        minWidth: 0,
+                      }}
+                    />
+
+                    <ActionButton
+                      square
+                      ghost
+                      onClick={() => setJumpToMessage(msg)}
+                      css={{
+                        position: 'relative',
+                        zIndex: 10,
+                        marginRight: '5px',
                       }}
                     >
-                      <Message
-                        key={`${msg._id}-aggregated`}
-                        message={msg}
-                        newDay={false}
-                        type="default"
-                        showAvatar
-                        showToolbox={false}
-                        showRoles={showRoles}
-                        isInSidebar
-                        style={{
-                          flex: 1,
-                          padding: 0,
-                          marginLeft: '15px',
-                          minWidth: 0,
-                        }}
-                      />
-
-                      <ActionButton
-                        square
-                        ghost
-                        onClick={() => setJumpToMessage(msg)}
-                        css={{
-                          position: 'relative',
-                          zIndex: 10,
-                          marginRight: '5px',
-                        }}
-                      >
-                        <Icon name="arrow-back" size="1.25rem" />
-                      </ActionButton>
-                    </Box>
-                  )}
-                </React.Fragment>
-              );
-            }
-          )}
+                      <Icon name="arrow-back" size="1.25rem" />
+                    </ActionButton>
+                  </Box>
+                )}
+              </React.Fragment>
+            );
+          })}
         </Box>
       )}
     </ViewComponent>

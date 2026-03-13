@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { isSameDay } from 'date-fns';
-import { Box, Icon, Throbber, useTheme } from '@embeddedchat/ui-elements';
+import { Box, Icon, Throbber } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
@@ -21,14 +20,26 @@ const MessageList = ({
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
-  const { theme } = useTheme();
 
-  const isMessageNewDay = (current, previous) =>
-    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
+  const filteredMessages = useMemo(
+    () => messages.filter((msg) => !msg.tmid).reverse(),
+    [messages]
+  );
 
-  const filteredMessages = messages.filter((msg) => !msg.tmid);
+  const reportedMessage = useMemo(
+    () =>
+      messageToReport
+        ? messages.find((msg) => msg._id === messageToReport)
+        : null,
+    [messages, messageToReport]
+  );
 
-  const reportedMessage = messages.find((msg) => msg._id === messageToReport);
+  const isMessageNewDay = (current, previous) => {
+    if (!previous) return true;
+    const currentDay = new Date(current.ts).setHours(0, 0, 0, 0);
+    const previousDay = new Date(previous.ts).setHours(0, 0, 0, 0);
+    return currentDay !== previousDay;
+  };
 
   return (
     <>
@@ -76,37 +87,34 @@ const MessageList = ({
               <Throbber />
             </Box>
           )}
-          {filteredMessages
-            .slice()
-            .reverse()
-            .map((msg, index, arr) => {
-              const prev = arr[index - 1];
-              const next = arr[index + 1];
+          {filteredMessages.map((msg, index, arr) => {
+            const prev = arr[index - 1];
+            const next = arr[index + 1];
 
-              if (!msg) return null;
-              const newDay = isMessageNewDay(msg, prev);
-              const sequential = isMessageSequential(msg, prev, 300);
-              const lastSequential =
-                sequential && isMessageLastSequential(msg, next);
-              const showUnreadDivider =
-                firstUnreadMessageId && msg._id === firstUnreadMessageId;
+            if (!msg) return null;
+            const newDay = isMessageNewDay(msg, prev);
+            const sequential = isMessageSequential(msg, prev, 300);
+            const lastSequential =
+              sequential && isMessageLastSequential(msg, next);
+            const showUnreadDivider =
+              firstUnreadMessageId && msg._id === firstUnreadMessageId;
 
-              return (
-                <React.Fragment key={msg._id}>
-                  {showUnreadDivider && (
-                    <MessageDivider unread>Unread Messages</MessageDivider>
-                  )}
-                  <Message
-                    message={msg}
-                    newDay={newDay}
-                    sequential={sequential}
-                    lastSequential={lastSequential}
-                    type="default"
-                    showAvatar
-                  />
-                </React.Fragment>
-              );
-            })}
+            return (
+              <React.Fragment key={msg._id}>
+                {showUnreadDivider && (
+                  <MessageDivider unread>Unread Messages</MessageDivider>
+                )}
+                <Message
+                  message={msg}
+                  newDay={newDay}
+                  sequential={sequential}
+                  lastSequential={lastSequential}
+                  type="default"
+                  showAvatar
+                />
+              </React.Fragment>
+            );
+          })}
           {showReportMessage && (
             <MessageReportWindow
               messageId={messageToReport}
@@ -120,7 +128,11 @@ const MessageList = ({
 };
 
 MessageList.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.shape),
+  messages: PropTypes.arrayOf(PropTypes.object),
+  loadingOlderMessages: PropTypes.bool,
+  isUserAuthenticated: PropTypes.bool,
+  hasMoreMessages: PropTypes.bool,
+  firstUnreadMessageId: PropTypes.string,
 };
 
 export default MessageList;

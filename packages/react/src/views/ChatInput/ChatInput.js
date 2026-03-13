@@ -28,12 +28,12 @@ import createPendingMessage from '../../lib/createPendingMessage';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
-import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
-import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import { useChatInputState } from '../../hooks/useChatInputState';
+import QuoteChip from './QuoteChip';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -94,24 +94,16 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
 
   const {
-    editMessage,
-    setEditMessage,
-    quoteMessage,
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
-    clearQuoteMessages,
     threadId,
     deletedMessage,
   } = useMessageStore((state) => ({
-    editMessage: state.editMessage,
-    setEditMessage: state.setEditMessage,
-    quoteMessage: state.quoteMessage,
     isRecordingMessage: state.isRecordingMessage,
     upsertMessage: state.upsertMessage,
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
-    clearQuoteMessages: state.clearQuoteMessages,
     deletedMessage: state.deletedMessage,
   }));
 
@@ -143,6 +135,19 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     setShowMembersList
   );
 
+  const {
+    text,
+    setText,
+    insertText,
+    quotes,
+    removeQuote,
+    clearQuotes,
+    getFinalMarkdown,
+    formatSelection,
+    editMessage,
+    setEditMessage,
+  } = useChatInputState(messageRef, RCInstance);
+
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
@@ -160,15 +165,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
-    if (editMessage.attachments) {
-      messageRef.current.value =
-        editMessage.attachments[0]?.description || editMessage.msg;
+    if (editMessage.attachments || editMessage.msg) {
       messageRef.current.focus();
-    } else if (editMessage.msg) {
-      messageRef.current.value = editMessage.msg;
-      messageRef.current.focus();
-    } else {
-      messageRef.current.value = '';
     }
   }, [editMessage]);
 
@@ -178,11 +176,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       editMessage._id &&
       deletedMessage._id === editMessage._id
     ) {
-      messageRef.current.value = '';
+      setText('');
       setDisableButton(true);
       setEditMessage({});
     }
-  }, [deletedMessage]);
+  }, [deletedMessage, editMessage, setEditMessage, setText]);
 
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
@@ -192,13 +190,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const handleNewLine = (e, addLine = true) => {
     if (addLine) {
-      const { selectionStart, selectionEnd, value } = messageRef.current;
-      messageRef.current.value = `${value.substring(
-        0,
-        selectionStart
-      )}\n${value.substring(selectionEnd)}`;
-      messageRef.current.selectionStart = messageRef.current.selectionEnd;
-      messageRef.current.selectionEnd = selectionStart + 1;
+      insertText('\n');
     }
 
     e.target.style.height = 'auto';
@@ -211,8 +203,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   };
 
   const textToAttach = () => {
-    const message = messageRef.current.value.trim();
-    messageRef.current.value = '';
+    const message = text.trim();
+    setText('');
     setEditMessage({});
     setIsMsgLong(false);
     const messageBlob = new Blob([message], { type: 'text/plain' });
@@ -261,7 +253,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         typingRef.current = true;
         timerRef.current = setTimeout(() => {
           typingRef.current = false;
-        }, [15000]);
+        }, 10000);
         await RCInstance.sendTypingStatus(username, true);
       } else {
         clearTimeout(timerRef.current);
@@ -282,40 +274,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
-  const handleSendNewMessage = async (message) => {
-    messageRef.current.value = '';
+  const handleSendNewMessage = async () => {
+    setText('');
     setDisableButton(true);
 
     let pendingMessage = '';
     let quotedMessages = '';
 
-    if (quoteMessage.length > 0) {
-      // for (const quote of quoteMessage) {
-      //   const { msg, attachments, _id } = quote;
-      //   if (msg || attachments) {
-      //     const msgLink = await getMessageLink(_id);
-      //     quotedMessages += `[ ](${msgLink})`;
-      //   }
-      // }
-
-      const quoteArray = await Promise.all(
-        quoteMessage.map(async (quote) => {
-          const { msg, attachments, _id } = quote;
-          if (msg || attachments) {
-            const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
-          }
-          return quotedMessages;
-        })
-      );
-      quotedMessages = quoteArray.join('');
-      pendingMessage = createPendingMessage(
-        `${quotedMessages}\n${message}`,
-        userInfo
-      );
-    } else {
-      pendingMessage = createPendingMessage(message, userInfo);
-    }
+    const finalMessage = await getFinalMarkdown();
+    pendingMessage = createPendingMessage(finalMessage, userInfo);
 
     if (ECOptions.enableThreads && threadId) {
       pendingMessage.tmid = threadId;
@@ -332,13 +299,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     );
 
     if (res.success) {
-      clearQuoteMessages();
+      clearQuotes();
       replaceMessage(pendingMessage, res.message);
     }
   };
 
   const handleEditMessage = async (message) => {
-    messageRef.current.value = '';
+    setText('');
     setDisableButton(true);
     const editMessageId = editMessage._id;
     setEditMessage({});
@@ -362,7 +329,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     const params = paramsArray.join(' ');
 
     if (commands.find((c) => c.command === command.replace('/', ''))) {
-      messageRef.current.value = '';
+      setText('');
       setDisableButton(true);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
@@ -372,31 +339,31 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
-    const message = messageRef.current.value.trim();
+    const currentMessage = text.trim();
 
-    if (!message.length || !isUserAuthenticated) {
-      messageRef.current.value = '';
+    if (!currentMessage.length || !isUserAuthenticated) {
+      setText('');
       if (editMessage.msg || editMessage.attachments) {
         setEditMessage({});
       }
       return;
     }
 
-    if (message.length > msgMaxLength) {
+    if (currentMessage.length > msgMaxLength) {
       setIsMsgLong(true);
       return;
     }
 
     if (editMessage.msg || editMessage.attachments) {
-      handleEditMessage(message);
+      handleEditMessage(currentMessage);
       return;
     }
-    if (message.startsWith('/')) {
-      handleCommandExecution(message);
+    if (currentMessage.startsWith('/')) {
+      handleCommandExecution(currentMessage);
       return;
     }
 
-    handleSendNewMessage(message);
+    handleSendNewMessage(currentMessage);
     scrollToBottom();
     // Clear unread divider when user sends a message
     if (clearUnreadDividerRef?.current) {
@@ -416,8 +383,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    messageRef.current.value = parseEmoji(message);
-    setDisableButton(!messageRef.current.value.length);
+    const emojiParsedMessage = parseEmoji(message);
+    setText(emojiParsedMessage);
+    setDisableButton(!emojiParsedMessage.length);
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
@@ -441,12 +409,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
-        formatSelection(messageRef, '_{{text}}_');
+        formatSelection('_{{text}}_');
         break;
       }
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
-        formatSelection(messageRef, '*{{text}}*');
+        formatSelection('*{{text}}*');
         break;
       }
       case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
@@ -456,7 +424,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       case e.code === 'Escape':
         if (editMessage.msg || editMessage.attachments) {
           e.preventDefault();
-          messageRef.current.value = '';
+          setText('');
           setDisableButton(true);
           setEditMessage({});
         }
@@ -532,13 +500,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box css={styles.quoteContainer}>
-        <div>
-          {quoteMessage &&
-            quoteMessage.length > 0 &&
-            quoteMessage.map((message, index) => (
-              <QuoteMessage message={message} key={index} />
+        <Box css={styles.quoteList}>
+          {quotes &&
+            quotes.length > 0 &&
+            quotes.map((message, index) => (
+              <QuoteChip 
+                message={message} 
+                key={index} 
+                onRemove={removeQuote}
+              />
             ))}
-        </div>
+        </Box>
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
           <ChannelState
             status={
@@ -660,6 +632,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             messageRef={messageRef}
             inputRef={inputRef}
             triggerButton={onTextChange}
+            formatSelection={formatSelection}
+            insertText={insertText}
           />
         )}
       </Box>

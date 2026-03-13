@@ -43,9 +43,6 @@ const ChatLayout = () => {
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );
-  const starredMessages = useStarredMessageStore(
-    (state) => state.starredMessages
-  );
   const showSidebar = useSidebarStore((state) => state.showSidebar);
   const showMentions = useMentionsStore((state) => state.showMentions);
   const showAllFiles = useFileStore((state) => state.showAllFiles);

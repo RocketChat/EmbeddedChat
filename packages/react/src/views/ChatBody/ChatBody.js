@@ -309,9 +309,15 @@ const ChatBody = ({
 
   useEffect(() => {
     if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
+      const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+      const isInitialLoad = messages.length > 0 && scrollTop === 0;
+
+      if (isAtBottom || isInitialLoad) {
+        messageListRef.current.scrollTop = scrollHeight;
+      }
     }
-  }, [messages]);
+  }, [messages, messageListRef]);
 
   useEffect(() => {
     checkOverflow();

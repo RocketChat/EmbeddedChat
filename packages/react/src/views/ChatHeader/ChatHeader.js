@@ -31,6 +31,7 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { getTokenStorage } from '../../lib/auth';
 
 const ChatHeader = ({
   isClosable,
@@ -133,20 +134,22 @@ const ChatHeader = ({
   };
   const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const { deleteToken } = getTokenStorage(ECOptions?.secure);
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      await deleteToken();
       setMessages([]);
       setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
-    } catch (e) {
-      console.error(e);
-    } finally {
       setIsUserAuthenticated(false);
     }
-  }, [RCInstance, setIsUserAuthenticated]);
+  }, [RCInstance, setIsUserAuthenticated, deleteToken]);
 
   useEffect(() => {
     const getMessageLimit = async () => {

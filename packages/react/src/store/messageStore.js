@@ -108,7 +108,7 @@ const useMessageStore = create((set, get) => ({
   toggleShowReportMessage: () => {
     set((state) => ({ showReportMessage: !state.showReportMessage }));
   },
-  toogleRecordingMessage: () => {
+  toggleRecordingMessage: () => {
     set((state) => ({
       isRecordingMessage: !state.isRecordingMessage,
     }));

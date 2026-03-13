@@ -81,37 +81,51 @@ export const MessageToolbox = ({
     setShowDeleteModal(false);
   };
 
-  const isAllowedToPin = userRoles.some((role) => pinRoles.has(role));
+  const {
+    isAllowedToPin,
+    isAllowedToReport,
+    isAllowedToEditMessage,
+    canDeleteMessage,
+  } = useMemo(() => {
+    const isOwner = message.u._id === authenticatedUserId;
+    const allowedToPin = userRoles.some((role) => pinRoles.has(role));
+    const allowedToReport = !isOwner;
+    const allowedToEdit =
+      userRoles.some((role) => editMessageRoles.has(role)) || isOwner;
+    const allowedToDelete = userRoles.some((role) =>
+      deleteMessageRoles.has(role)
+    );
+    const allowedToDeleteOwn = userRoles.some((role) =>
+      deleteOwnMessageRoles.has(role)
+    );
+    const allowedToForceDelete = userRoles.some((role) =>
+      forceDeleteMessageRoles.has(role)
+    );
 
-  const isAllowedToReport = message.u._id !== authenticatedUserId;
+    const canDelete = allowedToForceDelete
+      ? true
+      : allowedToDelete
+      ? true
+      : allowedToDeleteOwn
+      ? isOwner
+      : false;
 
-  const isAllowedToEditMessage = userRoles.some((role) =>
-    editMessageRoles.has(role)
-  )
-    ? true
-    : message.u._id === authenticatedUserId;
-
-  const isAllowedToDeleteMessage = userRoles.some((role) =>
-    deleteMessageRoles.has(role)
-  );
-  const isAllowedToDeleteOwnMessage = userRoles.some((role) =>
-    deleteOwnMessageRoles.has(role)
-  );
-  const isAllowedToForceDeleteMessage = userRoles.some((role) =>
-    forceDeleteMessageRoles.has(role)
-  );
-
-  const isVisibleForMessageType =
-    message.files?.[0].type !== 'audio/mpeg' &&
-    message.files?.[0].type !== 'video/mp4';
-
-  const canDeleteMessage = isAllowedToForceDeleteMessage
-    ? true
-    : isAllowedToDeleteMessage
-    ? true
-    : isAllowedToDeleteOwnMessage
-    ? message.u._id === authenticatedUserId
-    : false;
+    return {
+      isAllowedToPin: allowedToPin,
+      isAllowedToReport: allowedToReport,
+      isAllowedToEditMessage: allowedToEdit,
+      canDeleteMessage: canDelete,
+    };
+  }, [
+    authenticatedUserId,
+    userRoles,
+    pinRoles,
+    deleteMessageRoles,
+    deleteOwnMessageRoles,
+    forceDeleteMessageRoles,
+    editMessageRoles,
+    message.u._id,
+  ]);
 
   const options = useMemo(
     () => ({
@@ -210,7 +224,11 @@ export const MessageToolbox = ({
       handleEditMessage,
       handlerReportMessage,
       handleCopyMessage,
+      handleCopyMessageLink,
       isAllowedToPin,
+      isAllowedToEditMessage,
+      isAllowedToReport,
+      canDeleteMessage,
     ]
   );
 
