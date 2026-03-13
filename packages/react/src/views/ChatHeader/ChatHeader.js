@@ -154,7 +154,6 @@ const ChatHeader = ({
         const messageLimitObj = await RCInstance.getMessageLimit();
         setMessageLimit(messageLimitObj?.value);
       } catch (e) {
-        // In case the server call fails, settingsStore keeps using its fallback (5000)
         console.error('Failed to fetch message limit', e);
         setMessageLimit(undefined);
       }
