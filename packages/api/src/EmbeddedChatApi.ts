@@ -7,8 +7,8 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
-// mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
+
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -20,6 +20,120 @@ export default class EmbeddedChatApi {
   onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
+
+  private async getAuthHeaders(): Promise<Record<string, string>> {
+    const user = await this.auth.getCurrentUser();
+
+    if (!user?.authToken || !user?.userId) {
+      throw new Error("Not authenticated");
+    }
+
+    return {
+      "Content-Type": "application/json",
+      "X-Auth-Token": user.authToken,
+      "X-User-Id": user.userId,
+    };
+  }
+
+  private async getAuthTokenHeaders(): Promise<Record<string, string>> {
+    const user = await this.auth.getCurrentUser();
+
+    if (!user?.authToken || !user?.userId) {
+      throw new Error("Not authenticated");
+    }
+
+    return {
+      "X-Auth-Token": user.authToken,
+      "X-User-Id": user.userId,
+    };
+  }
+
+  private async _request(
+    endpoint: string,
+    method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+    body?: any,
+    isAbsolute = false,
+    authenticated = true
+  ) {
+    try {
+      const url = isAbsolute ? endpoint : `${this.host}${endpoint}`;
+      let headers: Record<string, string> = {};
+
+      if (authenticated) {
+        if (body instanceof FormData) {
+          headers = await this.getAuthTokenHeaders();
+        } else {
+          headers = await this.getAuthHeaders();
+        }
+      } else {
+        const user = await this.auth.getCurrentUser();
+        if (user?.userId) {
+          headers["X-User-Id"] = user.userId;
+        }
+        if (user?.authToken) {
+          headers["X-Auth-Token"] = user.authToken;
+        }
+        if (!(body instanceof FormData)) {
+          headers["Content-Type"] = "application/json";
+        }
+      }
+
+      let requestBody: any = body;
+      if (body && !(body instanceof FormData)) {
+        requestBody = JSON.stringify(body);
+      }
+
+      const options: RequestInit = {
+        method,
+        headers,
+        body: requestBody,
+      };
+
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new ApiError(
+          response,
+          `API request failed with status ${response.status}`
+        );
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error in ${method} ${endpoint}:`, error);
+      throw error;
+    }
+  }
+
+  handleTypingEvent({
+    typingUser,
+    isTyping,
+  }: {
+    typingUser: string;
+    isTyping: boolean;
+  }) {
+    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
+    setTimeout(() => {
+      typingHandlerLock = 0;
+    }, 2000);
+    // eslint-disable-next-line no-empty
+    while (typingHandlerLock) {}
+    typingHandlerLock = 1;
+
+    // move user to front if typing else remove it.
+    const idx = this.typingUsers.indexOf(typingUser);
+    if (idx !== -1) {
+      this.typingUsers.splice(idx, 1);
+    }
+    if (isTyping) {
+      this.typingUsers.unshift(typingUser);
+    }
+
+    typingHandlerLock = 0;
+
+    const newTypingStatus = cloneArray(this.typingUsers);
+    this.onTypingStatusCallbacks.forEach((callback) =>
+      callback(newTypingStatus)
+    );
+  }
 
   constructor(
     host: string,
@@ -72,7 +186,7 @@ export default class EmbeddedChatApi {
     }
 
     const payload = acsCode
-      ? JSON.stringify({
+      ? {
           serviceName: "google",
           accessToken: tokens.access_token,
           idToken: tokens.id_token,
@@ -80,47 +194,36 @@ export default class EmbeddedChatApi {
           totp: {
             code: acsPayload,
           },
-        })
-      : JSON.stringify({
+        }
+      : {
           serviceName: "google",
           accessToken: tokens.access_token,
           idToken: tokens.id_token,
           expiresIn: 3600,
           scope: "profile",
-        });
+        };
 
-    try {
-      const req = await fetch(`${this.host}/api/v1/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: payload,
-      });
-      const response = await req.json();
+    const response = await this._request("/api/v1/login", "POST", payload, false, false);
 
-      if (response.status === "success") {
-        if (!response.data.me.username) {
-          await this.updateUserUsername(
-            response.data.userId,
-            response.data.me.name
-          );
-        }
-        return { status: response.status, me: response.data.me };
+    if (response.status === "success") {
+      if (!response.data.me.username) {
+        await this.updateUserUsername(
+          response.data.userId,
+          response.data.me.name
+        );
       }
+      return { status: response.status, me: response.data.me };
+    }
 
-      if (response.error === "totp-required") {
-        return response;
-      }
-    } catch (err) {
-      console.error(err);
+    if (response.error === "totp-required") {
+      return response;
     }
   }
 
   async login(userOrEmail: string, password: string, code: string) {
     let credentials;
     if (!code) {
-      credentials = credentials = {
+      credentials = {
         user: userOrEmail.trim(),
         password,
       };
@@ -351,85 +454,21 @@ export default class EmbeddedChatApi {
     );
   }
 
-  handleTypingEvent({
-    typingUser,
-    isTyping,
-  }: {
-    typingUser: string;
-    isTyping: boolean;
-  }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
-    typingHandlerLock = 1;
-    // move user to front if typing else remove it.
-    const idx = this.typingUsers.indexOf(typingUser);
-    if (idx !== -1) {
-      this.typingUsers.splice(idx, 1);
-    }
-    if (isTyping) {
-      this.typingUsers.unshift(typingUser);
-    }
-    typingHandlerLock = 0;
-    const newTypingStatus = cloneArray(this.typingUsers);
-    this.onTypingStatusCallbacks.forEach((callback) =>
-      callback(newTypingStatus)
-    );
-  }
 
   async getRCAppInfo() {
-    try {
-      const response = await fetch(
-        `${this.host}/api/apps/public/${ROCKETCHAT_APP_ID}/info`
-      );
-
-      if (!response.ok) {
-        return null;
-      }
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/apps/public/${ROCKETCHAT_APP_ID}/info`, "GET", undefined, false, false);
   }
 
   async updateUserNameThroughSuggestion(userid: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/users.getUsernameSuggestion`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
+    const suggestedUsername = await this._request(
+      "/api/v1/users.getUsernameSuggestion"
+    );
 
-      const suggestedUsername = await response.json();
-
-      if (suggestedUsername.success) {
-        const response2 = await fetch(`${this.host}/api/v1/users.update`, {
-          body: JSON.stringify({
-            userId: userid,
-            data: { username: suggestedUsername.result },
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        });
-
-        return await response2.json();
-      }
-    } catch (error) {
-      console.error(error);
+    if (suggestedUsername.success) {
+      return this._request("/api/v1/users.update", "POST", {
+        userId: userid,
+        data: { username: suggestedUsername.result },
+      });
     }
   }
 
@@ -439,108 +478,46 @@ export default class EmbeddedChatApi {
     const usernameRegExp = /[0-9a-zA-Z-_.]+/;
 
     if (usernameRegExp.test(newUserName)) {
-      try {
-        const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-        const response = await fetch(`${this.host}/api/v1/users.update`, {
-          body: JSON.stringify({
-            userId: userid,
-            data: { username: newUserName },
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        });
+      const result = await this._request("/api/v1/users.update", "POST", {
+        userId: userid,
+        data: { username: newUserName },
+      });
 
-        const result = await response.json();
-
-        if (
-          !result.success &&
-          result.errorType === "error-could-not-save-identity"
-        ) {
-          return await this.updateUserNameThroughSuggestion(userid);
-        }
-        return result;
-      } catch (err) {
-        console.error(err);
+      if (
+        !result.success &&
+        result.errorType === "error-could-not-save-identity"
+      ) {
+        return await this.updateUserNameThroughSuggestion(userid);
       }
+      return result;
     } else {
       return this.updateUserNameThroughSuggestion(userid);
     }
   }
 
   async channelInfo() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/v1/rooms.info?roomId=${this.rid}`);
   }
 
   async getRoomInfo() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
-        {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        }
-      );
+    const result = await this._request("/api/v1/method.call/rooms%3Aget", "POST", {
+      message: JSON.stringify({
+        msg: "method",
+        id: null,
+        method: "rooms/get",
+        params: [],
+      }),
+    });
 
-      const result = await response.json();
-
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
-      }
-      return null;
-    } catch (err) {
-      console.error(err);
+    if (result.success && result.message) {
+      const parsedMessage = JSON.parse(result.message);
+      return parsedMessage;
     }
+    return null;
   }
 
   async permissionInfo() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/permissions.listAll`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "GET",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/permissions.listAll");
   }
 
   async close() {
@@ -574,23 +551,13 @@ export default class EmbeddedChatApi {
     const field = options?.field
       ? `&field=${JSON.stringify(options.field)}`
       : "";
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await messages.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request(
+      `/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
+      "GET",
+      undefined,
+      false,
+      !anonymousMode
+    );
   }
 
   async getOlderMessages(
@@ -615,84 +582,26 @@ export default class EmbeddedChatApi {
       ? `&field=${JSON.stringify(options.field)}`
       : "";
     const offset = options?.offset ? options.offset : 0;
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await messages.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request(
+      `/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
+      "GET",
+      undefined,
+      false,
+      !anonymousMode
+    );
   }
 
   async getThreadMessages(tmid: string, isChannelPrivate = false) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const messages = await fetch(
-        `${this.host}/api/v1/chat.getThreadMessages?tmid=${tmid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await messages.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request(`/api/v1/chat.getThreadMessages?tmid=${tmid}`);
   }
 
   async getChannelRoles(isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const roles = await fetch(
-        `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await roles.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request(`/api/v1/${roomType}.roles?roomId=${this.rid}`);
   }
 
   async getUsersInRole(role: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const roles = await fetch(
-        `${this.host}/api/v1/roles.getUsersInRole?role=${role}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await roles.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request(`/api/v1/roles.getUsersInRole?role=${role}`);
   }
 
   async getUserRoles() {
@@ -779,273 +688,92 @@ export default class EmbeddedChatApi {
   }
 
   async deleteMessage(msgId: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.delete`, {
-        body: JSON.stringify({ roomId: this.rid, msgId }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.delete", "POST", {
+      roomId: this.rid,
+      msgId,
+    });
   }
 
   async updateMessage(msgId: string, text: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.update`, {
-        body: JSON.stringify({ roomId: this.rid, msgId, text }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.update", "POST", {
+      roomId: this.rid,
+      msgId,
+      text,
+    });
   }
 
   async getAllFiles(isChannelPrivate = false, typeGroup: string) {
     const roomType = isChannelPrivate ? "groups" : "channels";
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const url =
-        typeGroup === ""
-          ? `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`
-          : `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
-      const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "GET",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    const url =
+      typeGroup === ""
+        ? `/api/v1/${roomType}.files?roomId=${this.rid}`
+        : `/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
+    return this._request(url);
   }
 
   async getAllImages() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/rooms.images?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/v1/rooms.images?roomId=${this.rid}`);
   }
 
   async starMessage(mid: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.starMessage`, {
-        body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.starMessage", "POST", {
+      messageId: mid,
+    });
   }
 
   async unstarMessage(mid: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.unStarMessage`, {
-        body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.unStarMessage", "POST", {
+      messageId: mid,
+    });
   }
 
   async getStarredMessages() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/chat.getStarredMessages?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/v1/chat.getStarredMessages?roomId=${this.rid}`);
   }
 
   async getPinnedMessages() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/chat.getPinnedMessages?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/v1/chat.getPinnedMessages?roomId=${this.rid}`);
   }
 
   async getMentionedMessages() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/chat.getMentionedMessages?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(
+      `/api/v1/chat.getMentionedMessages?roomId=${this.rid}`
+    );
   }
 
   async pinMessage(mid: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.pinMessage`, {
-        body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      return {
-        error: err,
-      };
-    }
+    return this._request("/api/v1/chat.pinMessage", "POST", {
+      messageId: mid,
+    });
   }
 
   async unpinMessage(mid: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.unPinMessage`, {
-        body: JSON.stringify({ messageId: mid }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.unPinMessage", "POST", {
+      messageId: mid,
+    });
   }
 
   async reactToMessage(emoji: string, messageId: string, shouldReact: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.react`, {
-        body: JSON.stringify({
-          messageId,
-          emoji,
-          shouldReact,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.react", "POST", {
+      messageId,
+      emoji,
+      shouldReact,
+    });
   }
 
   async reportMessage(messageId: string, description: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.reportMessage`, {
-        body: JSON.stringify({ messageId, description }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/chat.reportMessage", "POST", {
+      messageId,
+      description,
+    });
   }
 
   async findOrCreateInvite() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/findOrCreateInvite`, {
-        method: "POST",
-        body: JSON.stringify({ rid: this.rid, days: 1, maxUses: 10 }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      });
-      return await response.json();
-    } catch (err) {
-      console.log(err);
-    }
+    return this._request("/api/v1/findOrCreateInvite", "POST", {
+      rid: this.rid,
+      days: 1,
+      maxUses: 10,
+    });
   }
 
   async sendAttachment(
@@ -1054,151 +782,55 @@ export default class EmbeddedChatApi {
     fileDescription = "",
     threadId = undefined
   ) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const form = new FormData();
-      if (threadId) {
-        form.append("tmid", threadId);
-      }
-      form.append("file", file, fileName);
-      form.append(
-        "description",
-        fileDescription.length !== 0 ? fileDescription : ""
-      );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
-        method: "POST",
-        body: form,
-        headers: {
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }).then((r) => r.json());
-      return response;
-    } catch (err) {
-      console.log(err);
+    const form = new FormData();
+    if (threadId) {
+      form.append("tmid", threadId);
     }
+    form.append("file", file, fileName);
+    form.append(
+      "description",
+      fileDescription.length !== 0 ? fileDescription : ""
+    );
+    return this._request(`/api/v1/rooms.upload/${this.rid}`, "POST", form);
   }
 
   async me() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/me`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "GET",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/me");
   }
 
   async getChannelMembers(isChannelPrivate = false) {
     const roomType = isChannelPrivate ? "groups" : "channels";
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(`/api/v1/${roomType}.members?roomId=${this.rid}`);
   }
 
   async getSearchMessages(text: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request(
+      `/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`
+    );
   }
 
   async getMessageLimit() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/settings/Message_MaxAllowedSize`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this._request("/api/v1/settings/Message_MaxAllowedSize");
   }
 
   async handleUiKitInteraction(appId: string, userInteraction: any) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const triggerId = Math.random().toString(32).slice(2, 16);
 
-      const triggerId = Math.random().toString(32).slice(2, 16);
+    const interaction = await this._request(
+      `/api/apps/ui.interaction/${appId}`,
+      "POST",
+      {
+        triggerId,
+        ...userInteraction,
+      }
+    );
 
-      const response = await fetch(
-        `${this.host}/api/apps/ui.interaction/${appId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-          body: JSON.stringify({
-            triggerId,
-            ...userInteraction,
-          }),
-        }
-      );
-
-      const interaction = await response.json();
-      this.onActionTriggeredCallbacks.forEach((cb) => cb(interaction));
-      return interaction;
-    } catch (e) {
-      console.error(e);
-    }
+    this.onActionTriggeredCallbacks.forEach((cb) => cb(interaction));
+    return interaction;
   }
 
   async getCommandsList() {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.list`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "GET",
-    });
-    const data = await response.json();
-    return data;
+    return this._request("/api/v1/commands.list");
   }
 
   async execCommand({
@@ -1210,74 +842,24 @@ export default class EmbeddedChatApi {
     params: string;
     tmid?: string;
   }) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.run`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "POST",
-      body: JSON.stringify({
-        command,
-        params,
-        tmid,
-        roomId: this.rid,
-        triggerId: Math.random().toString(32).slice(2, 20),
-      }),
+    return this._request("/api/v1/commands.run", "POST", {
+      command,
+      params,
+      tmid,
+      roomId: this.rid,
+      triggerId: Math.random().toString(32).slice(2, 20),
     });
-    const data = await response.json();
-    return data;
   }
 
   async getUserStatus(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    return this._request(`/api/v1/users.getStatus?userId=${reqUserId}`);
   }
 
   async userInfo(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.info?userId=${reqUserId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    return this._request(`/api/v1/users.info?userId=${reqUserId}`);
   }
 
   async userData(username: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.info?username=${username}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    return this._request(`/api/v1/users.info?username=${username}`);
   }
 }
