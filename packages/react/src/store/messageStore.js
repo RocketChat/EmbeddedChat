@@ -103,6 +103,7 @@ const useMessageStore = create((set, get) => ({
     })),
 
   clearQuoteMessages: () => set({ quoteMessage: [] }),
+  setQuoteMessages: (quoteMessages) => set({ quoteMessage: quoteMessages }),
   setMessageToReport: (messageId) =>
     set(() => ({ messageToReport: messageId })),
   toggleShowReportMessage: () => {

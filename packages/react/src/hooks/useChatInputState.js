@@ -1,6 +1,7 @@
 import { useReducer, useCallback, useEffect } from 'react';
 import useMessageStore from '../store/messageStore';
 import { chatInputReducer, ACTION_TYPES } from './ChatInputReducer';
+import useDraftMessage from './useDraftMessage';
 
 const initialState = {
   text: '',
@@ -22,18 +23,25 @@ export const useChatInputState = (messageRef, RCInstance) => {
     removeQuoteMessage,
     editMessage: storeEditMessage,
     setEditMessage: setStoreEditMessage,
+    setQuoteMessages,
   } = useMessageStore((s) => ({
     quoteMessage: s.quoteMessage,
     clearQuoteMessages: s.clearQuoteMessages,
     removeQuoteMessage: s.removeQuoteMessage,
     editMessage: s.editMessage,
     setEditMessage: s.setEditMessage,
+    setQuoteMessages: s.setQuoteMessages,
   }));
 
-  // Sync with store's editMessage
   useEffect(() => {
     dispatch({ type: ACTION_TYPES.SET_EDIT_MESSAGE, payload: storeEditMessage });
   }, [storeEditMessage]);
+
+  // Persist draft messages to localStorage for refresh/crash resilience
+  useDraftMessage(RCInstance.rid, text, quoteMessage, {
+    setText,
+    setQuoteMessages,
+  });
 
   const setText = useCallback(
     (newText, cursorPosition) => {
