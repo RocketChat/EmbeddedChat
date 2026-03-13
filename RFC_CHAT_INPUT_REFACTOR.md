@@ -147,7 +147,14 @@ This means if the send fails, the quotes are **preserved** — a bug that existe
 ## 🚀 Proposed Next Steps (GSoC Project Scope)
 
 1.  **Attachment State Unification** — Bring file/media attachment state into the reducer so the "Send" flow is fully unified across text, quotes, and files.
-2.  **Slash Command Suggestions UI** — The `CommandsList` component can be enhanced with keyboard-first navigation as part of the state machine.
+2.  ✅ **Slash Command Suggestions UI** — `CommandsList` enhanced with keyboard-first navigation:
+    - Listener moved from `document` → `messageRef` textarea (no global pollution)
+    - `Tab` key confirms selection (terminal-style UX)
+    - `Escape` dismisses the list
+    - Trailing space auto-inserted after command (ready for params)
+    - Mouse hover syncs the arrow-key selection index
+    - ARIA `role="listbox"` / `role="option"` / `aria-selected` for accessibility
+    - CSS-class-based active state with left-border indicator (no more inline styles)
 3.  **`useDraftMessage`** — Persist the current draft (text + quotes) to `localStorage` so users don't lose their message on accidental close/refresh.
 
 ---
