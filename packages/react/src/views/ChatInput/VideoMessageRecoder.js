@@ -17,11 +17,13 @@ import { getCommonRecorderStyles } from './ChatInput.styles';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 
 const VideoMessageRecorder = (props) => {
+  const toggleRecordingMessage = useMessageStore(
+    (state) => state.toggleRecordingMessage
+  );
   const videoRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const { disabled, displayName, popOverItemStyles } = props;
-  const { theme } = useTheme();
-  const { mode } = useTheme();
+  const { theme, mode } = useTheme();
   const styles = getCommonRecorderStyles(theme);
 
   const [state, setRecordState] = useState('idle'); // 1. idle, 2. preview.
@@ -92,6 +94,15 @@ const VideoMessageRecorder = (props) => {
     handleMount();
   }, [handleMount]);
 
+  useEffect(
+    () => () => {
+      if (recordingInterval) {
+        clearInterval(recordingInterval);
+      }
+    },
+    [recordingInterval]
+  );
+
   const startRecordingInterval = () => {
     const startTime = new Date();
     setRecordingInterval(
@@ -130,6 +141,7 @@ const VideoMessageRecorder = (props) => {
   const handleStartRecording = () => {
     deleteRecordingInterval();
     setIsRecording(true);
+    toggleRecordingMessage();
     startRecording();
     startRecordingInterval();
     setIsSendDisabled(true);
@@ -153,9 +165,13 @@ const VideoMessageRecorder = (props) => {
     stopCameraAndMic();
     setRecordState('idle');
     setIsSendDisabled(true);
+    toggleRecordingMessage();
   };
 
   const closeWindowStopRecord = () => {
+    if (isRecording || file) {
+      toggleRecordingMessage();
+    }
     stopRecording();
     deleteRecordingInterval();
     deleteRecording();

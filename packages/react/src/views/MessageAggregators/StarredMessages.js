@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useStarredMessageStore, useUserStore } from '../../store';
 import { MessageAggregator } from './common/MessageAggregator';

@@ -63,7 +63,11 @@ export const useRCAuth = () => {
         }
       }
     } catch (e) {
-      console.error('A error occurred while setting up user', e);
+      console.error('An error occurred while setting up user', e);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'A network error occurred. Please try again.',
+      });
     }
   };
 

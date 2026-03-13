@@ -24,16 +24,18 @@ import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
 import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
-import createPendingMessage from '../../lib/createPendingMessage';
+// createPendingMessage is now used internally by useSendMessage
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
-import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
-import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import { useChatInputState } from '../../hooks/useChatInputState';
+import { useSendMessage } from '../../hooks/useSendMessage';
+import QuoteChip from './QuoteChip';
+import AttachmentChip from './AttachmentChip';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -57,6 +59,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [msgLongText, setMsgLongText] = useState('');
 
   const {
     isUserAuthenticated,
@@ -93,39 +96,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const msgMaxLength = useSettingsStore((state) => state.messageLimit);
 
-  const {
-    editMessage,
-    setEditMessage,
-    quoteMessage,
-    isRecordingMessage,
-    upsertMessage,
-    replaceMessage,
-    clearQuoteMessages,
-    threadId,
-    deletedMessage,
-  } = useMessageStore((state) => ({
-    editMessage: state.editMessage,
-    setEditMessage: state.setEditMessage,
-    quoteMessage: state.quoteMessage,
-    isRecordingMessage: state.isRecordingMessage,
-    upsertMessage: state.upsertMessage,
-    replaceMessage: state.replaceMessage,
-    threadId: state.threadMainMessage?._id,
-    clearQuoteMessages: state.clearQuoteMessages,
-    deletedMessage: state.deletedMessage,
-  }));
+  const { isRecordingMessage, threadId, deletedMessage } = useMessageStore(
+    (state) => ({
+      isRecordingMessage: state.isRecordingMessage,
+      threadId: state.threadMainMessage?._id,
+      deletedMessage: state.deletedMessage,
+    })
+  );
 
   const setIsLoginModalOpen = useLoginStore(
     (state) => state.setIsLoginModalOpen
   );
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
-
-  const { toggle, setData } = useAttachmentWindowStore((state) => ({
-    toggle: state.toggle,
-    setData: state.setData,
-  }));
-
-  const userInfo = { _id: userId, username, name };
 
   const dispatchToastMessage = useToastBarDispatch();
   const showCommands = useShowCommands(
@@ -142,6 +124,46 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     setMentionIndex,
     setShowMembersList
   );
+
+  const {
+    text,
+    setText,
+    insertText,
+    quotes,
+    removeQuote,
+    clearQuotes,
+    getFinalMarkdown,
+    formatSelection,
+    editMessage,
+    setEditMessage,
+    attachments,
+    setAttachments,
+    removeAttachment,
+    clearAttachments,
+  } = useChatInputState(messageRef, RCInstance);
+
+  const userInfo = { _id: userId, username, name };
+
+  const {
+    sendNewMessage,
+    sendEditedMessage,
+    sendCommand,
+    sendAsAttachment,
+    sendFileAttachment,
+  } = useSendMessage({
+      RCInstance,
+      ECOptions,
+      username,
+      commands,
+      threadId,
+      getFinalMarkdown,
+      setText,
+      clearQuotes,
+      setEditMessage,
+      setDisableButton,
+      setFilteredCommands,
+      clearAttachments,
+    });
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
@@ -160,15 +182,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
-    if (editMessage.attachments) {
-      messageRef.current.value =
-        editMessage.attachments[0]?.description || editMessage.msg;
+    if (editMessage.attachments || editMessage.msg) {
       messageRef.current.focus();
-    } else if (editMessage.msg) {
-      messageRef.current.value = editMessage.msg;
-      messageRef.current.focus();
-    } else {
-      messageRef.current.value = '';
     }
   }, [editMessage]);
 
@@ -178,27 +193,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       editMessage._id &&
       deletedMessage._id === editMessage._id
     ) {
-      messageRef.current.value = '';
+      setText('');
       setDisableButton(true);
       setEditMessage({});
     }
-  }, [deletedMessage]);
-
-  const getMessageLink = async (id) => {
-    const host = RCInstance.getHost();
-    const res = await RCInstance.channelInfo();
-    return `${host}/channel/${res.room?.name}/?msg=${id}`;
-  };
+  }, [deletedMessage, editMessage, setEditMessage, setText]);
 
   const handleNewLine = (e, addLine = true) => {
     if (addLine) {
-      const { selectionStart, selectionEnd, value } = messageRef.current;
-      messageRef.current.value = `${value.substring(
-        0,
-        selectionStart
-      )}\n${value.substring(selectionEnd)}`;
-      messageRef.current.selectionStart = messageRef.current.selectionEnd;
-      messageRef.current.selectionEnd = selectionStart + 1;
+      insertText('\n');
     }
 
     e.target.style.height = 'auto';
@@ -211,27 +214,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   };
 
   const textToAttach = () => {
-    const message = messageRef.current.value.trim();
-    messageRef.current.value = '';
-    setEditMessage({});
     setIsMsgLong(false);
-    const messageBlob = new Blob([message], { type: 'text/plain' });
-    const file = new File([messageBlob], 'message.txt', {
-      type: 'text/plain',
-      lastModified: Date.now(),
-    });
-
-    toggle();
-    setData(file);
-  };
-
-  const handleSendError = async (errorMessage) => {
-    await RCInstance.logout();
-    setIsUserAuthenticated(false);
-    dispatchToastMessage({
-      type: 'error',
-      message: errorMessage,
-    });
+    sendAsAttachment(msgLongText);
   };
 
   const onJoin = async () => {
@@ -261,7 +245,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         typingRef.current = true;
         timerRef.current = setTimeout(() => {
           typingRef.current = false;
-        }, [15000]);
+        }, 10000);
         await RCInstance.sendTypingStatus(username, true);
       } else {
         clearTimeout(timerRef.current);
@@ -275,6 +259,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const sendTypingStop = async () => {
     try {
+      if (timerRef.current) clearTimeout(timerRef.current);
       typingRef.current = false;
       await RCInstance.sendTypingStatus(username, false);
     } catch (e) {
@@ -282,121 +267,36 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
-  const handleSendNewMessage = async (message) => {
-    messageRef.current.value = '';
-    setDisableButton(true);
-
-    let pendingMessage = '';
-    let quotedMessages = '';
-
-    if (quoteMessage.length > 0) {
-      // for (const quote of quoteMessage) {
-      //   const { msg, attachments, _id } = quote;
-      //   if (msg || attachments) {
-      //     const msgLink = await getMessageLink(_id);
-      //     quotedMessages += `[ ](${msgLink})`;
-      //   }
-      // }
-
-      const quoteArray = await Promise.all(
-        quoteMessage.map(async (quote) => {
-          const { msg, attachments, _id } = quote;
-          if (msg || attachments) {
-            const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
-          }
-          return quotedMessages;
-        })
-      );
-      quotedMessages = quoteArray.join('');
-      pendingMessage = createPendingMessage(
-        `${quotedMessages}\n${message}`,
-        userInfo
-      );
-    } else {
-      pendingMessage = createPendingMessage(message, userInfo);
-    }
-
-    if (ECOptions.enableThreads && threadId) {
-      pendingMessage.tmid = threadId;
-    }
-
-    upsertMessage(pendingMessage, ECOptions.enableThreads);
-
-    const res = await RCInstance.sendMessage(
-      {
-        msg: pendingMessage.msg,
-        _id: pendingMessage._id,
-      },
-      ECOptions.enableThreads ? threadId : undefined
-    );
-
-    if (res.success) {
-      clearQuoteMessages();
-      replaceMessage(pendingMessage, res.message);
-    }
-  };
-
-  const handleEditMessage = async (message) => {
-    messageRef.current.value = '';
-    setDisableButton(true);
-    const editMessageId = editMessage._id;
-    setEditMessage({});
-
-    const res = await RCInstance.updateMessage(
-      editMessageId,
-      message.replace(/\n/g, '\\n')
-    );
-    if (!res.success) {
-      handleSendError('Error editing message, login again');
-    }
-  };
-
-  const handleCommandExecution = async (message) => {
-    const execCommand = async (command, params) => {
-      await RCInstance.execCommand({ command, params, tmid: threadId });
-      setFilteredCommands([]);
-    };
-
-    const [command, ...paramsArray] = message.split(' ');
-    const params = paramsArray.join(' ');
-
-    if (commands.find((c) => c.command === command.replace('/', ''))) {
-      messageRef.current.value = '';
-      setDisableButton(true);
-      setEditMessage({});
-      await execCommand(command.replace('/', ''), params);
-    }
-  };
-
   const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
-    const message = messageRef.current.value.trim();
+    const currentMessage = text.trim();
 
-    if (!message.length || !isUserAuthenticated) {
-      messageRef.current.value = '';
+    if (!currentMessage.length || !isUserAuthenticated) {
+      setText('');
       if (editMessage.msg || editMessage.attachments) {
         setEditMessage({});
       }
       return;
     }
 
-    if (message.length > msgMaxLength) {
+    if (currentMessage.length > msgMaxLength) {
+      setMsgLongText(currentMessage);
       setIsMsgLong(true);
       return;
     }
 
     if (editMessage.msg || editMessage.attachments) {
-      handleEditMessage(message);
-      return;
-    }
-    if (message.startsWith('/')) {
-      handleCommandExecution(message);
+      await sendEditedMessage(editMessage._id, currentMessage);
       return;
     }
 
-    handleSendNewMessage(message);
+    if (currentMessage.startsWith('/')) {
+      await sendCommand(currentMessage);
+      return;
+    }
+
+    await sendNewMessage(userInfo);
     scrollToBottom();
     // Clear unread divider when user sends a message
     if (clearUnreadDividerRef?.current) {
@@ -404,20 +304,28 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
+  const { toggle: toggleAttachmentWindow, setData: setAttachmentData } =
+    useAttachmentWindowStore((state) => ({
+      toggle: state.toggle,
+      setData: state.setData,
+    }));
+
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
     if (!fileObj) {
       return;
     }
-    toggle();
-    setData(event.target.files[0]);
+    setAttachments([fileObj]); // Currently supporting single attachment for simplicity
+    toggleAttachmentWindow();
+    setAttachmentData(fileObj);
   };
 
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    messageRef.current.value = parseEmoji(message);
-    setDisableButton(!messageRef.current.value.length);
+    const emojiParsedMessage = parseEmoji(message);
+    setText(emojiParsedMessage);
+    setDisableButton(!emojiParsedMessage.length);
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
@@ -441,12 +349,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     switch (true) {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
-        formatSelection(messageRef, '_{{text}}_');
+        formatSelection('_{{text}}_');
         break;
       }
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
-        formatSelection(messageRef, '*{{text}}*');
+        formatSelection('*{{text}}*');
         break;
       }
       case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
@@ -456,7 +364,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       case e.code === 'Escape':
         if (editMessage.msg || editMessage.attachments) {
           e.preventDefault();
-          messageRef.current.value = '';
+          setText('');
           setDisableButton(true);
           setEditMessage({});
         }
@@ -532,13 +440,26 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box css={styles.quoteContainer}>
-        <div>
-          {quoteMessage &&
-            quoteMessage.length > 0 &&
-            quoteMessage.map((message, index) => (
-              <QuoteMessage message={message} key={index} />
+        <Box css={styles.quoteList}>
+          {quotes &&
+            quotes.length > 0 &&
+            quotes.map((message, index) => (
+              <QuoteChip 
+                message={message} 
+                key={index} 
+                onRemove={removeQuote}
+              />
             ))}
-        </div>
+          {attachments &&
+            attachments.length > 0 &&
+            attachments.map((file, index) => (
+              <AttachmentChip
+                file={file}
+                key={`file-${index}`}
+                onRemove={removeAttachment}
+              />
+            ))}
+        </Box>
         {editMessage.msg || editMessage.attachments || isChannelReadOnly ? (
           <ChannelState
             status={
@@ -660,6 +581,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             messageRef={messageRef}
             inputRef={inputRef}
             triggerButton={onTextChange}
+            formatSelection={formatSelection}
+            insertText={insertText}
           />
         )}
       </Box>

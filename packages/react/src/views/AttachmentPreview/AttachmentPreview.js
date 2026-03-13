@@ -10,6 +10,7 @@ import { parseEmoji } from '../../lib/emoji';
 import MembersList from '../Mentions/MembersList';
 import TypingUsers from '../TypingUsers/TypingUsers';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
+import { useSendMessage } from '../../hooks/useSendMessage';
 
 const AttachmentPreview = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -51,14 +52,18 @@ const AttachmentPreview = () => {
     messageRef.current.value = parseEmoji(description);
     searchMentionUser(description);
   };
+  
+  const { sendFileAttachment } = useSendMessage({
+    RCInstance,
+    ECOptions,
+  });
 
   const submit = async () => {
     setIsPending(true);
-    await RCInstance.sendAttachment(
+    await sendFileAttachment(
       data,
       fileName,
-      messageRef.current.value,
-      ECOptions?.enableThreads ? threadId : undefined
+      messageRef.current.value
     );
     toggle();
     setData(null);

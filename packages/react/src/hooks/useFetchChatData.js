@@ -104,6 +104,7 @@ const useFetchChatData = (showRoles) => {
 
         permissionsRef.current = {
           map: permissionsMap,
+          raw: permissions,
         };
 
         applyPermissions(permissionsMap);
@@ -151,15 +152,16 @@ const useFetchChatData = (showRoles) => {
           const fetchedRoles = await RCInstance.getUserRoles();
           const fetchedAdmins = fetchedRoles?.result;
 
-          const adminUsernames = fetchedAdmins?.map((user) => user.username);
+          const adminUsernames =
+            fetchedAdmins?.map((user) => user.username) || [];
           setAdmins(adminUsernames);
 
           const rolesObj =
             roles?.length > 0
-              ? roles.reduce(
-                  (obj, item) => ({ ...obj, [item.u.username]: item }),
-                  {}
-                )
+              ? roles.reduce((obj, item) => {
+                  obj[item.u.username] = item;
+                  return obj;
+                }, {})
               : {};
 
           setMemberRoles(rolesObj);
