@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useContext } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { isSameDay, format } from 'date-fns';
 import {
   Box,
@@ -43,9 +43,9 @@ export const MessageAggregator = ({
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
-  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const threadMessages = useMessageStore((state) => state.threadMessages);
   const allMessages = useMemo(
-    () => [...messages, ...[...threadMessages].reverse()],
+    () => [...messages, ...[...(threadMessages || [])].reverse()],
     [messages, threadMessages]
   );
 
@@ -62,76 +62,76 @@ export const MessageAggregator = ({
 
   const { jumpToMessage } = useContext(MessageNavigationContext);
 
-  const setJumpToMessage = (msg) => {
-    console.log('Jumping to message:', msg);
-    if (!msg || !msg._id) {
-      console.error('Invalid message object:', msg);
+  const highlightMessage = (element) => {
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    });
+
+    element.style.backgroundColor =
+      mode === 'light'
+        ? lighten(theme.colors.warning, 0.85)
+        : darken(theme.colors.warningForeground, 0.75);
+
+    setTimeout(() => {
+      element.style.backgroundColor = '';
+    }, 2000);
+  };
+
+  const waitForMessageElement = (messageId, attempts = 20) =>
+    new Promise((resolve) => {
+      const findElement = (remainingAttempts) => {
+        const childElement = document.getElementById(
+          `ec-message-body-${messageId}`
+        );
+        const element = childElement?.closest('.ec-message') || childElement;
+
+        if (element || remainingAttempts <= 0) {
+          resolve(element || null);
+          return;
+        }
+
+        setTimeout(() => {
+          findElement(remainingAttempts - 1);
+        }, 150);
+      };
+
+      findElement(attempts);
+    });
+
+  const setJumpToMessage = async (msg) => {
+    if (!msg?._id) {
       return;
     }
 
     const { _id: msgId, tmid: threadId } = msg;
 
-    if (msgId) {
-      let element;
-      if (threadId) {
-        const parentMessage = messages.find((m) => m._id === threadId);
-
-        if (parentMessage) {
-          closeThread();
-
-          setTimeout(() => {
-            openThread(parentMessage);
-            setShowSidebar(false);
-
-            setTimeout(() => {
-              const childElement = document.getElementById(
-                `ec-message-body-${msgId}`
-              );
-              element = childElement.closest('.ec-message');
-
-              if (element) {
-                element.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'nearest',
-                });
-
-                element.style.backgroundColor =
-                  mode === 'light'
-                    ? lighten(theme.colors.warning, 0.85)
-                    : darken(theme.colors.warningForeground, 0.75);
-
-                setTimeout(() => {
-                  element.style.backgroundColor = '';
-                }, 2000);
-              }
-            }, 300);
-          }, 300);
-        }
-      } else {
-        closeThread();
-
-        setTimeout(() => {
-          const childElement = document.getElementById(
-            `ec-message-body-${msgId}`
-          );
-          element = childElement.closest('.ec-message');
-
-          if (element) {
-            setShowSidebar(false);
-            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            element.style.backgroundColor =
-              mode === 'light'
-                ? lighten(theme.colors.warning, 0.85)
-                : darken(theme.colors.warningForeground, 0.75);
-
-            setTimeout(() => {
-              element.style.backgroundColor = '';
-            }, 2000);
-          }
-        }, 300);
-      }
+    if (!threadId) {
+      closeThread();
+      await jumpToMessage?.(msgId);
+      const element = await waitForMessageElement(msgId, 10);
+      highlightMessage(element);
+      return;
     }
+
+    closeThread();
+    await jumpToMessage?.(threadId);
+
+    const parentMessage = useMessageStore
+      .getState()
+      .messages.find((message) => message._id === threadId);
+
+    if (!parentMessage) {
+      return;
+    }
+
+    openThread(parentMessage);
+    setShowSidebar(false);
+
+    const element = await waitForMessageElement(msgId);
+    highlightMessage(element);
   };
 
   const isMessageNewDay = (current, previous) =>
@@ -146,7 +146,7 @@ export const MessageAggregator = ({
     if (!msg?._id) return;
     setLoadingMessageId(msg._id);
     try {
-      await jumpToMessage(msg._id);
+      await setJumpToMessage(msg);
     } finally {
       setLoadingMessageId(null);
     }
