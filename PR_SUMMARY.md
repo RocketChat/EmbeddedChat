@@ -27,7 +27,7 @@ The search API request did not URL-encode user-provided `searchText` before appe
 
 ### ChatInput State Machine Migration
 
-**Status:** 🛠️ In Progress / Prototyped
+**Status:** ✅ Implemented
 
 **Problem:**
 The message composition logic relied on fragmented `useState` calls and manual string splicing, making features like multiple quotes and complex formatting fragile and hard to maintain.
@@ -38,8 +38,28 @@ The message composition logic relied on fragmented `useState` calls and manual s
 - Improved cursor management after state updates using specialized action types.
 
 **Files Changed:**
-- `packages/react/src/hooks/ChatInputReducer.js` (New)
+- `packages/react/src/hooks/ChatInputReducer.js`
 - `packages/react/src/hooks/useChatInputState.js`
+- `packages/react/src/hooks/useSendMessage.js`
+- `packages/react/src/views/ChatInput/ChatInput.js`
+
+### Attachment State Unification
+
+**Status:** ✨ Implemented
+
+**Major Enhancements:**
+- **Unified State Machine:** Moved file/media attachment state into the `ChatInput` reducer.
+- **Visual Feedback:** Introduced `AttachmentChip` components to show pending file uploads above the input box (similar to quotes).
+- **Centralized Logic:** Consolidated attachment sending logic into the `useSendMessage` hook for better testability and reuse.
+- **Improved Reliability:** File state is now managed deterministically alongside text and quotes, preventing stale state during failed sends.
+
+**Files Changed:**
+- `packages/react/src/views/ChatInput/AttachmentChip.js` (New)
+- `packages/react/src/hooks/ChatInputReducer.js`
+- `packages/react/src/hooks/useChatInputState.js`
+- `packages/react/src/hooks/useSendMessage.js`
+- `packages/react/src/views/ChatInput/ChatInput.js`
+- `packages/react/src/views/AttachmentPreview/AttachmentPreview.js`
 
 ---
 

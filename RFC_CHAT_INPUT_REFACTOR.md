@@ -146,7 +146,7 @@ This means if the send fails, the quotes are **preserved** — a bug that existe
 
 ## 🚀 Proposed Next Steps (GSoC Project Scope)
 
-1.  **Attachment State Unification** — Bring file/media attachment state into the reducer so the "Send" flow is fully unified across text, quotes, and files.
+1.  ✅ **Attachment State Unification** — Bring file/media attachment state into the reducer so the "Send" flow is fully unified across text, quotes, and files.
 2.  ✅ **Slash Command Suggestions UI** — `CommandsList` enhanced with keyboard-first navigation:
     - Listener moved from `document` → `messageRef` textarea (no global pollution)
     - `Tab` key confirms selection (terminal-style UX)
