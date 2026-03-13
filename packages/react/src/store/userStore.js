@@ -40,6 +40,8 @@ const useUserStore = create((set) => ({
     set(() => ({ showCurrentUserInfo })),
   currentUser: {},
   setCurrentUser: (currentUser) => set({ currentUser }),
+  authState: 'IDLE',
+  setAuthState: (authState) => set({ authState }),
 }));
 
 export default useUserStore;

@@ -24,6 +24,7 @@ import {
   useStarredMessageStore,
   useFileStore,
   useSidebarStore,
+  useAiStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -31,6 +32,7 @@ import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import { getTokenStorage } from '../../lib/auth';
 
 const ChatHeader = ({
   isClosable,
@@ -133,20 +135,22 @@ const ChatHeader = ({
   };
   const setCanSendMsg = useUserStore((state) => state.setCanSendMsg);
   const authenticatedUserId = useUserStore((state) => state.userId);
+  const { deleteToken } = getTokenStorage(ECOptions?.secure);
   const handleLogout = useCallback(async () => {
     try {
       await RCInstance.logout();
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      await deleteToken();
       setMessages([]);
       setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
-    } catch (e) {
-      console.error(e);
-    } finally {
       setIsUserAuthenticated(false);
     }
-  }, [RCInstance, setIsUserAuthenticated]);
+  }, [RCInstance, setIsUserAuthenticated, deleteToken]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -431,7 +435,12 @@ const ChatHeader = ({
         </Box>
         <Box css={styles.chatHeaderIconRow}>
           {avatarUrl && (
-            <img width="20px" height="20px" src={avatarUrl} alt="avatar" />
+            <Avatar
+              size="20px"
+              url={avatarUrl}
+              alt="user avatar"
+              style={{ marginRight: '4px' }}
+            />
           )}
 
           {surfaceOptions.length > 0 && (
@@ -445,6 +454,22 @@ const ChatHeader = ({
           title={threadMainMessage}
           handleClose={closeThread}
           iconName="arrow-back"
+          actions={
+            RCInstance.getAiAdapter()?.enabled && (
+              <ActionButton
+                ghost
+                size="small"
+                onClick={async () => {
+                  const summary = await RCInstance.getSummary();
+                  useAiStore.getState().setSummaryContent(summary);
+                  useAiStore.getState().setSummaryModalOpen(true);
+                }}
+                title="Summarize thread"
+              >
+                <Icon name="attachment" size="1.25rem" />
+              </ActionButton>
+            )
+          }
         />
       )}
 

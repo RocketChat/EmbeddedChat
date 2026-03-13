@@ -27,6 +27,8 @@ import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { CommandsList } from '../CommandList';
 import useSettingsStore from '../../store/settingsStore';
+import useAiStore from '../../store/aiStore';
+import SmartReplies from './SmartReplies';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
@@ -57,6 +59,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isMsgLong, setIsMsgLong] = useState(false);
+
+  const InputState = {
+    IDLE: 'IDLE',
+    DRAFTING: 'DRAFTING',
+    SENDING: 'SENDING',
+    ERROR: 'ERROR',
+  };
+
+  const [inputState, setInputState] = useState(InputState.IDLE);
 
   const {
     isUserAuthenticated,
@@ -143,8 +154,34 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     setShowMembersList
   );
 
+  const setSmartReplies = useAiStore((state) => state.setSmartReplies);
+
+  const fetchSmartReplies = useCallback(async () => {
+    if (RCInstance.getAiAdapter()?.enabled) {
+      const replies = await RCInstance.getSmartReplies();
+      setSmartReplies(replies);
+    }
+  }, [RCInstance, setSmartReplies]);
+
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleMessage = (message) => {
+      // Only fetch if it's not our own message
+      if (message.u.username !== userInfo.username) {
+        fetchSmartReplies();
+      }
+    };
+    RCInstance.addMessageListener(handleMessage);
+    return () => RCInstance.removeMessageListener(handleMessage);
+  }, [RCInstance, userInfo.username, fetchSmartReplies]);
+
+  const handleSmartReplyClick = (reply) => {
+    setInputState(InputState.DRAFTING);
+    messageRef.current.value = reply;
+    messageRef.current.focus();
+  };
+
+  useEffect(() => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((data) => setCommands(data.commands || []))
@@ -157,6 +194,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           .catch(console.error);
       }
     });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (typingRef.current) {
+        RCInstance.sendTypingStatus(username, false).catch(console.error);
+      }
+    };
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
@@ -258,13 +303,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         return;
       }
       if (messageRef.current.value?.length) {
+        if (timerRef.current) clearTimeout(timerRef.current);
         typingRef.current = true;
         timerRef.current = setTimeout(() => {
           typingRef.current = false;
-        }, [15000]);
+        }, 10000);
         await RCInstance.sendTypingStatus(username, true);
       } else {
-        clearTimeout(timerRef.current);
+        if (timerRef.current) clearTimeout(timerRef.current);
         typingRef.current = false;
         await RCInstance.sendTypingStatus(username, false);
       }
@@ -275,6 +321,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const sendTypingStop = async () => {
     try {
+      if (timerRef.current) clearTimeout(timerRef.current);
       typingRef.current = false;
       await RCInstance.sendTypingStatus(username, false);
     } catch (e) {
@@ -283,6 +330,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   };
 
   const handleSendNewMessage = async (message) => {
+    setInputState(InputState.SENDING);
     messageRef.current.value = '';
     setDisableButton(true);
 
@@ -290,25 +338,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     let quotedMessages = '';
 
     if (quoteMessage.length > 0) {
-      // for (const quote of quoteMessage) {
-      //   const { msg, attachments, _id } = quote;
-      //   if (msg || attachments) {
-      //     const msgLink = await getMessageLink(_id);
-      //     quotedMessages += `[ ](${msgLink})`;
-      //   }
-      // }
-
-      const quoteArray = await Promise.all(
+      const quoteLinks = await Promise.all(
         quoteMessage.map(async (quote) => {
           const { msg, attachments, _id } = quote;
           if (msg || attachments) {
             const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
+            return `[ ](${msgLink})`;
           }
-          return quotedMessages;
+          return '';
         })
       );
-      quotedMessages = quoteArray.join('');
+      quotedMessages = quoteLinks.join('');
       pendingMessage = createPendingMessage(
         `${quotedMessages}\n${message}`,
         userInfo
@@ -323,17 +363,27 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
-    const res = await RCInstance.sendMessage(
-      {
-        msg: pendingMessage.msg,
-        _id: pendingMessage._id,
-      },
-      ECOptions.enableThreads ? threadId : undefined
-    );
+    try {
+      const res = await RCInstance.sendMessage(
+        {
+          msg: pendingMessage.msg,
+          _id: pendingMessage._id,
+        },
+        ECOptions.enableThreads ? threadId : undefined
+      );
 
-    if (res.success) {
-      clearQuoteMessages();
-      replaceMessage(pendingMessage, res.message);
+      if (res.success) {
+        clearQuoteMessages();
+        replaceMessage(pendingMessage, res.message);
+        setInputState(InputState.IDLE);
+      } else {
+        setInputState(InputState.ERROR);
+        setTimeout(() => setInputState(InputState.IDLE), 3000);
+      }
+    } catch (e) {
+      console.error(e);
+      setInputState(InputState.ERROR);
+      setTimeout(() => setInputState(InputState.IDLE), 3000);
     }
   };
 
@@ -374,11 +424,16 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     messageRef.current.style.height = '44px';
     const message = messageRef.current.value.trim();
 
-    if (!message.length || !isUserAuthenticated) {
+    if (!isUserAuthenticated) {
+      return;
+    }
+
+    if (!message.length && quoteMessage.length === 0) {
       messageRef.current.value = '';
       if (editMessage.msg || editMessage.attachments) {
         setEditMessage({});
       }
+      setDisableButton(true);
       return;
     }
 
@@ -417,13 +472,24 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     sendTypingStart();
     const message = val || e.target.value;
     messageRef.current.value = parseEmoji(message);
-    setDisableButton(!messageRef.current.value.length);
+    setDisableButton(!message.trim().length && !quoteMessage.length);
+    if (message.trim().length > 0) {
+      setInputState(InputState.DRAFTING);
+    } else {
+      setInputState(InputState.IDLE);
+    }
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
       showCommands(e);
     }
   };
+
+  useEffect(() => {
+    setDisableButton(
+      !messageRef.current?.value?.trim().length && !quoteMessage.length
+    );
+  }, [quoteMessage, editMessage]);
 
   const handleFocus = () => {
     if (chatInputContainer.current) {
@@ -442,11 +508,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       case e.ctrlKey && e.code === 'KeyI': {
         e.preventDefault();
         formatSelection(messageRef, '_{{text}}_');
+        onTextChange(null, messageRef.current.value);
         break;
       }
       case e.ctrlKey && e.code === 'KeyB': {
         e.preventDefault();
         formatSelection(messageRef, '*{{text}}*');
+        onTextChange(null, messageRef.current.value);
         break;
       }
       case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
@@ -588,6 +656,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         )}
 
         <TypingUsers />
+        <SmartReplies onReplyClick={handleSmartReplyClick} />
       </Box>
       <Box
         ref={chatInputContainer}
@@ -600,6 +669,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           <Input
             textArea
             rows={1}
+            aria-label={
+              isUserAuthenticated
+                ? `Message #${channelInfo.name}`
+                : 'Sign in to chat'
+            }
+            aria-multiline="true"
+            aria-disabled={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+            }
             disabled={
               !isUserAuthenticated ||
               !canSendMsg ||
@@ -644,9 +725,21 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                   size="large"
                   onClick={() => sendMessage()}
                   type="primary"
-                  disabled={disableButton || isRecordingMessage}
-                  icon="send"
-                />
+                  disabled={
+                    disableButton ||
+                    isRecordingMessage ||
+                    inputState === InputState.SENDING
+                  }
+                  icon={
+                    inputState === InputState.SENDING
+                      ? ''
+                      : inputState === InputState.ERROR
+                      ? 'cross'
+                      : 'send'
+                  }
+                >
+                  {inputState === InputState.SENDING && <Throbber />}
+                </ActionButton>
               ) : null
             ) : (
               <Button onClick={onJoin} type="primary" disabled={isLoginIn}>

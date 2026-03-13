@@ -40,10 +40,18 @@ export function useMediaRecorder({ constraints, onStop, videoRef }) {
 
   async function stop() {
     if (recorder) {
-      recorder.stop();
+      if (recorder.state === 'recording') {
+        recorder.stop();
+      }
       (await getStream()).getTracks().forEach((track) => track.stop());
     }
   }
+
+  useEffect(() => () => {
+    if (recorder && recorder.state === 'recording') {
+      recorder.stop();
+    }
+  }, [recorder]);
 
   return [start, stop];
 }

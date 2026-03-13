@@ -11,6 +11,7 @@ const DynamicHeader = ({
   handleClose = () => {},
   iconName,
   headerIconName,
+  actions = null,
 }) => {
   const messageDescription = (msg) => {
     if (msg.file) {
@@ -54,6 +55,7 @@ const DynamicHeader = ({
         </Heading>
         {isHeaderIcon && <Icon name={headerIconName} size="1.25rem" />}
       </Box>
+      <Box>{actions}</Box>
     </Box>
   );
 };

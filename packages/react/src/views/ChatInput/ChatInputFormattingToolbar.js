@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -56,15 +56,29 @@ const ChatInputFormattingToolbar = ({
   };
   const handleFormatterClick = (item) => {
     formatSelection(messageRef, item.pattern);
+    triggerButton?.(null, messageRef.current.value);
     setPopoverOpen(false);
   };
   const handleEmojiClick = (emojiEvent) => {
-    const [emoji] = emojiEvent.names;
-    const message = `${messageRef.current.value} :${emoji.replace(
-      /[\s-]+/g,
-      '_'
-    )}: `;
-    triggerButton?.(null, message);
+    const [emojiName] = emojiEvent.names;
+    const emoji = ` :${emojiName.replace(/[\s-]+/g, '_')}: `;
+    const { selectionStart, selectionEnd, value } = messageRef.current;
+
+    const newMessage =
+      value.substring(0, selectionStart) +
+      emoji +
+      value.substring(selectionEnd);
+
+    triggerButton?.(null, newMessage);
+
+    // Re-focus and set cursor position after the emoji
+    setTimeout(() => {
+      if (messageRef.current) {
+        const newCursorPos = selectionStart + emoji.length;
+        messageRef.current.focus();
+        messageRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }, 0);
   };
 
   const handleAddLink = (linkText, linkUrl) => {
@@ -225,6 +239,7 @@ const ChatInputFormattingToolbar = ({
               onClick={() => {
                 if (isRecordingMessage) return;
                 formatSelection(messageRef, item.pattern);
+                triggerButton?.(null, messageRef.current.value);
               }}
             >
               <Icon
@@ -302,9 +317,10 @@ const ChatInputFormattingToolbar = ({
                   square
                   disabled={isRecordingMessage}
                   ghost
-                  onClick={() =>
-                    formatSelection(messageRef, itemInFormatter.pattern)
-                  }
+                  onClick={() => {
+                    formatSelection(messageRef, itemInFormatter.pattern);
+                    triggerButton?.(null, messageRef.current.value);
+                  }}
                 >
                   <Icon
                     disabled={isRecordingMessage}

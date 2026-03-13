@@ -8,17 +8,18 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { EmbeddedChatApi } from '@embeddedchat/api';
+import { EmbeddedChatApi, MockAiAdapter } from '@embeddedchat/api';
 import {
   Box,
   ToastBarProvider,
+  useToastBarDispatch,
   useComponentOverrides,
   ThemeProvider,
 } from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import { useUserStore, useLoginStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -52,13 +53,18 @@ const EmbeddedChat = (props) => {
     className = '',
     style = {},
     hideHeader = false,
-    auth = {
+    auth: authProp = {
       flow: 'PASSWORD',
     },
     secure = false,
     dark = false,
     remoteOpt = false,
   } = config;
+
+  const auth = useMemo(
+    () => authProp,
+    [JSON.stringify(authProp)] // Deep comparison via stringify to handle inline objects
+  );
 
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -83,6 +89,7 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const dispatchToastMessage = useToastBarDispatch();
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -95,7 +102,8 @@ const EmbeddedChat = (props) => {
       deleteToken,
       saveToken,
     });
-
+    // Initialize AI Adapter (Mock for now, can be configured via props later)
+    newRCInstance.setAiAdapter(new MockAiAdapter());
     return newRCInstance;
   }, [host, roomId, getToken, deleteToken, saveToken]);
 
@@ -125,16 +133,20 @@ const EmbeddedChat = (props) => {
       try {
         await RCInstance.autoLogin(auth);
       } catch (error) {
-        console.error(error);
+        console.error('Auto-login failed:', error);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Auto-login failed. Please sign in manually.',
+        });
       } finally {
         setIsLoginIn(false);
       }
     };
     autoLogin();
-  }, [RCInstance, auth, setIsLoginIn]);
+  }, [RCInstance, auth, setIsLoginIn, dispatchToastMessage]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -150,8 +162,17 @@ const EmbeddedChat = (props) => {
           .catch(console.error);
       } else {
         setIsUserAuthenticated(false);
+        setAuthenticatedAvatarUrl('');
+        setAuthenticatedUsername('');
+        setAuthenticatedUserId('');
+        setAuthenticatedName('');
+        setAuthenticatedUserRoles([]);
       }
     });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, [
     RCInstance,
     setAuthenticatedName,
