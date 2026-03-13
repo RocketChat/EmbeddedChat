@@ -92,13 +92,13 @@ const Message = ({
   const hoverStyle = hasType
     ? {}
     : {
-      '&:hover': {
-        backgroundColor:
-          mode === 'light'
-            ? darken(theme.theme.colors.background, 0.03)
-            : lighten(theme.theme.colors.background, 1),
-      },
-    };
+        '&:hover': {
+          backgroundColor:
+            mode === 'light'
+              ? darken(theme.theme.colors.background, 0.03)
+              : lighten(theme.theme.colors.background, 1),
+        },
+      };
 
   const bubbleStyles = useBubbleStyles(isMe);
   const pinRoles = new Set(pinPermissions);

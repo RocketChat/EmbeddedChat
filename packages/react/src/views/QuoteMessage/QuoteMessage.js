@@ -113,7 +113,8 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
               {message.msg ? (
                 <Markdown body={message} md={message.md} isReaction={false} />
               ) : (
-                `${message.file?.name} (${message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
+                `${message.file?.name} (${
+                  message.file?.size ? (message.file.size / 1024).toFixed(2) : 0
                 } kB)`
               )}
             </Box>
