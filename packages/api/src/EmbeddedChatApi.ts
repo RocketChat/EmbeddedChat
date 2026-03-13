@@ -1083,7 +1083,6 @@ export default class EmbeddedChatApi {
         return uploadResult;
       }
 
-      // Step 2: Confirm the upload with message details
       const confirmResponse = await fetch(
         `${this.host}/api/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
         {
