@@ -1061,7 +1061,6 @@ export default class EmbeddedChatApi {
         return;
       }
 
-      // Step 1: Upload file to rooms.media endpoint (RC 8.x)
       const form = new FormData();
       form.append("file", file, fileName);
 
