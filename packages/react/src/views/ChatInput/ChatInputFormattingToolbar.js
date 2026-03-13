@@ -14,13 +14,14 @@ import { formatter } from '../../lib/textFormat';
 import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
-import formatSelection from '../../lib/formatSelection';
 import InsertLinkToolBox from './InsertLinkToolBox';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
   inputRef,
   triggerButton,
+  formatSelection,
+  insertText,
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
     formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
@@ -55,29 +56,13 @@ const ChatInputFormattingToolbar = ({
     inputRef.current.click();
   };
   const handleFormatterClick = (item) => {
-    formatSelection(messageRef, item.pattern);
+    formatSelection(item.pattern);
     setPopoverOpen(false);
   };
   const handleEmojiClick = (emojiEvent) => {
     const [emojiName] = emojiEvent.names;
     const emoji = ` :${emojiName.replace(/[\s-]+/g, '_')}: `;
-    const { selectionStart, selectionEnd, value } = messageRef.current;
-
-    const newMessage =
-      value.substring(0, selectionStart) +
-      emoji +
-      value.substring(selectionEnd);
-
-    triggerButton?.(null, newMessage);
-
-    // Re-focus and set cursor position after the emoji
-    setTimeout(() => {
-      if (messageRef.current) {
-        const newCursorPos = selectionStart + emoji.length;
-        messageRef.current.focus();
-        messageRef.current.setSelectionRange(newCursorPos, newCursorPos);
-      }
-    }, 0);
+    insertText(emoji);
   };
 
   const handleAddLink = (linkText, linkUrl) => {
@@ -86,13 +71,8 @@ const ChatInputFormattingToolbar = ({
       return;
     }
 
-    const start = messageRef.current.selectionStart;
-    const end = messageRef.current.selectionEnd;
-    const msg = messageRef.current.value;
     const hyperlink = `[${linkText}](${linkUrl})`;
-    const message = msg.slice(0, start) + hyperlink + msg.slice(end);
-
-    triggerButton?.(null, message);
+    insertText(hyperlink);
     setInsertLinkOpen(false);
   };
 
@@ -237,7 +217,7 @@ const ChatInputFormattingToolbar = ({
               ghost
               onClick={() => {
                 if (isRecordingMessage) return;
-                formatSelection(messageRef, item.pattern);
+                formatSelection(item.pattern);
               }}
             >
               <Icon
@@ -316,7 +296,7 @@ const ChatInputFormattingToolbar = ({
                   disabled={isRecordingMessage}
                   ghost
                   onClick={() =>
-                    formatSelection(messageRef, itemInFormatter.pattern)
+                    formatSelection(itemInFormatter.pattern)
                   }
                 >
                   <Icon

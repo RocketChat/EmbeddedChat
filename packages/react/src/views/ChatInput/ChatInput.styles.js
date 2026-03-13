@@ -7,12 +7,21 @@ export const getChatInputStyles = (theme) => {
       border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
       margin: 0.5rem 2rem 1rem 2rem;
+      background: ${theme.colors.background};
+      transition: all 0.2s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
       &.focused {
-        border: ${`1.5px solid ${theme.colors.ring}`};
+        border: 1.5px solid ${theme.colors.ring};
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 0 0 4px ${theme.colors.ring}1a;
+        transform: translateY(-1px);
       }
+
       @media (max-width: 500px) {
         margin: 0;
         width: 100%;
+        border-radius: 0;
+        box-shadow: none;
       }
     `,
 
@@ -63,8 +72,14 @@ export const getChatInputStyles = (theme) => {
       }
     `,
     quoteContainer: css`
-      max-height: 300px;
-      overflow: scroll;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 0.25rem;
+    `,
+    quoteList: css`
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 2rem;
     `,
   };
 

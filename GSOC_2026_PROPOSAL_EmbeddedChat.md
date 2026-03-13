@@ -8,17 +8,18 @@ I am proposing a targeted set of improvements for the **Rocket.Chat EmbeddedChat
 
 ## 2. The Problem
 
-### 2.1 The "Drop-in" Promise vs. Current Reality
+### 2.1 Technical Debt & Compatibility Gaps
 
-EmbeddedChat relies on the legacy `Rocket.Chat.js.SDK` (driver) and a React structure that has accumulated technical debt. My audit of the current `packages/react` codebase reveals critical friction points:
+EmbeddedChat relies on the legacy `Rocket.Chat.js.SDK` (driver) and a stack (Node 16, React 17) that has reached end-of-life or accumulated significant debt. This creates a "compatibility bottleneck":
 
-1.  **Input State Fragility:** The current `ChatInput.js` relies on string append operations for quotes/edits. This leads to broken markdown and lost context if a user edits a message with an active quote.
-2.  **Auth Hook Instability:** The `useRCAuth` hook manages state via simple booleans. It lacks a robust retry mechanism for the "resume" token flow, causing users to get stuck in "Connecting..." states after network interruptions.
-3.  **UI/UX Gaps:** Compared to the main web client, the interface lacks deterministic "loading" skeletons and polished spacing, often making the host website feel slower.
+1.  **Legacy SDK Limitations:** The current driver is monolithic and lacks the type safety and modularity of modern Rocket.Chat libraries (@rocket.chat/rest-client).
+2.  **Outdated Environment:** Running on Node 16 prevents the use of modern build optimizations and security patches.
+3.  **Input State Fragility:** The current `ChatInput.js` relies on string append operations, leading to broken markdown.
+4.  **Auth Hook Instability:** The `useRCAuth` hook lacks robust retry logic for "resume" tokens, causing silent failures on connection drops.
 
 ### 2.2 Why This Matters
 
-For an "Embedded" product, trust is everything. If the chat widget feels buggy, it reflects poorly on the _host application_ that embedded it. Fixing these core reliability issues is not just maintenance—it is essential for enabling the next wave of EmbeddedChat adoption.
+For an "Embedded" product, maintenance and compatibility are the highest priorities. If EmbeddedChat doesn't align with modern Rocket.Chat server releases (7.0+), it becomes unusable for the majority of the community. Fixing these foundation issues is critical for long-term stability.
 
 ---
 
@@ -26,18 +27,21 @@ For an "Embedded" product, trust is everything. If the chat widget feels buggy, 
 
 ### 3.1 Core Objectives
 
-I will focus on three key pillars:
+I will focus on five key pillars:
 
-1.  **Robust Input Engine:** Refactoring `ChatInput.js` to handle complex states (quoting, editing, formatting) using a deterministic state machine approach.
-2.  **Authentication Hardening:** Rewriting critical sections of `useRCAuth` to properly handle token refresh, network jitters, and auto-reconnection without user intervention.
-3.  **Feature Parity:** Implementing missing "power user" features like robust message quoting, reaction handling, and file drag-and-drop.
+1.  **Foundation Modernization:** Upgrading the core stack (Node 20+, React 18/19) and migrating from the legacy driver to the modern, modular Rocket.Chat SDKs (@rocket.chat/rest-client).
+2.  **Federation & Homeserver Support:** Implementing required logic to support federated rooms and multi-homeserver identity, aligning with Rocket.Chat's 2026 roadmap.
+3.  **Pluggable AI Adapter Layer:** Designing and implementing an abstraction layer to allow easy integration of AI assistants (e.g., Rocket.Chat AI, OpenAI) directly into the EmbeddedChat widget.
+4.  **Robust Input Engine:** Refactoring `ChatInput.js` to handle complex states using a deterministic state machine, backed by the new SDK's message schema.
+5.  **Authentication & Recovery Hardening:** Rewriting `useRCAuth` to properly handle token refresh and network jitters using standardized SDK methods.
 
 ### 3.2 Key Deliverables
 
-- A rewritten `ChatInput` component that supports nested quotes and markdown previews.
-- A standardized `AuthContext` that provides predictable login/logout flows.
-- 90% unit test coverage for all new utility functions.
-- A "Playground" demo site showcasing the new features.
+- **Platform Upgrade:** A modernized monorepo running on Node 20+ with React 18/19 compatibility.
+- **SDK Migration:** Replacement of legacy `Rocket.Chat.js.SDK` with modular REST and DDP clients.
+- **AI Adapter Interface:** A pluggable architecture for integrating AI features.
+- **Federation Support:** Core logic for interacting with federated Rocket.Chat instances.
+- **Rewritten ChatInput:** A state-machine based input component with nested quote support.
 
 ---
 
@@ -137,25 +141,24 @@ const useRobustAuth = () => {
 
 ### Community Bonding (May 1 - 26)
 
-- **Goal:** Deep dive into the `Rocket.Chat.js.SDK` (driver) to understand exactly how the DDP connection is managed.
-- **Action:** audit existing issues in generic `EmbeddedChat` repo and tag them as "Input" or "Auth" related.
+- **Goal:** Comprehensive Audit & Modernization Roadmap.
+- **Action:** Map all legacy SDK dependencies. Research Federation API specs and design the AI Adapter Interface. Setup the dev environment for Node 20.
 
-### Phase 1: The Input Engine (May 27 - June 30)
+### Phase 1: Foundation & Federation (May 27 - June 30)
 
-- **Week 1-2:** Refactor `ChatInput.js` to separate UI from Logic. Create `useChatInput` hook.
-- **Week 3-4:** Implement the "Rich Quoting" feature. Ensure quotes look like quotes in the preview, not just markdown text.
-- **Week 5:** Unit testing for edge cases (e.g., quoting a message that contains a quote).
+- **Week 1-2:** Monorepo maintenance—Upgrading Node, React, and build tools. Resolve breaking changes in the component library.
+- **Week 3-4:** SDK Migration—Replacing the legacy `EmbeddedChatApi.ts` logic with modern modular clients.
+- **Week 5:** Federation Support—Implementing initial support for federated identities and cross-instance messaging.
 
-### Phase 2: Authentication & Stability (July 1 - July 28)
+### Phase 2: AI Layer & Input Engine (July 1 - July 28)
 
-- **Week 6-7:** Audit `useRCAuth`. specific focus on the "resume" token flow.
-- **Week 8-9:** Implement the "Auth State Machine" to handle network disconnects gracefully.
-- **Week 10:** Update the UI to show non-intrusive "Connecting..." states instead of failing silently.
+- **Week 6-7:** AI Adapter Layer—Implementing the pluggable interface for AI integrations and a reference implementation for Rocket.Chat AI.
+- **Week 8-10:** Input Engine & Auth—Refactoring `ChatInput.js` and `useRCAuth`. Implement the state-machine for quoting and connection recovery.
 
-### Phase 3: Polish & Documentation (July 29 - August 25)
+### Phase 3: Accessibility & Polish (July 29 - August 25)
 
-- **Week 11:** Accessibility (A11y) audit. Ensure the new input and auth warnings are screen-reader friendly.
-- **Week 12:** Documentation. Write a "Migration Guide" for developers using the old SDK. Create a video demo of the new reliable flow.
+- **Week 11:** Accessibility (A11y)—Perform full WCAG 2.1 audit. Ensure screen reader support for the new input and AI features.
+- **Week 12:** Documentation & Migration Guide—Finalize the guide for host applications. Create a demo video showcasing AI and Federation features.
 
 ---
 

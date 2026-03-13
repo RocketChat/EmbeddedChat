@@ -23,6 +23,43 @@ The search API request did not URL-encode user-provided `searchText` before appe
 
 ---
 
+## 🏗️ Architectural Refactor
+
+### ChatInput State Machine Migration
+
+**Status:** 🛠️ In Progress / Prototyped
+
+**Problem:**
+The message composition logic relied on fragmented `useState` calls and manual string splicing, making features like multiple quotes and complex formatting fragile and hard to maintain.
+
+**Solution:**
+- Migrated `ChatInput` to a **Finite State Machine** pattern using `useReducer`.
+- Created `ChatInputReducer.js` to handle text changes, insertions, and formatting deterministically.
+- Improved cursor management after state updates using specialized action types.
+
+**Files Changed:**
+- `packages/react/src/hooks/ChatInputReducer.js` (New)
+- `packages/react/src/hooks/useChatInputState.js`
+
+---
+
+## 🎨 UI/UX Enhancements
+
+### Compact Quote Chips
+
+**Status:** ✨ Implemented
+
+**Change:**
+- Introduced `QuoteChip` component for compact, space-efficient previews of quoted messages.
+- Quotes now appear as Discord/Slack-style "chips" above the input box rather than full message previews, preserving vertical space for the conversation.
+
+**Files Changed:**
+- `packages/react/src/views/ChatInput/QuoteChip.js` (New)
+- `packages/react/src/views/ChatInput/ChatInput.js`
+- `packages/react/src/views/ChatInput/ChatInput.styles.js`
+
+---
+
 ## ⚡ Performance Improvement
 
 ### Typing Indicator Timeout Optimization
