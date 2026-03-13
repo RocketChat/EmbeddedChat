@@ -4,6 +4,9 @@ export const ACTION_TYPES = {
   FORMAT_SELECTION: 'FORMAT_SELECTION',
   SET_EDIT_MESSAGE: 'SET_EDIT_MESSAGE',
   CLEAR_INPUT: 'CLEAR_INPUT',
+  SET_ATTACHMENTS: 'SET_ATTACHMENTS',
+  REMOVE_ATTACHMENT: 'REMOVE_ATTACHMENT',
+  CLEAR_ATTACHMENTS: 'CLEAR_ATTACHMENTS',
 };
 
 export const chatInputReducer = (state, action) => {
@@ -76,6 +79,25 @@ export const chatInputReducer = (state, action) => {
         ...state,
         text: '',
         editMessage: {},
+        attachments: [],
+      };
+
+    case ACTION_TYPES.SET_ATTACHMENTS:
+      return {
+        ...state,
+        attachments: action.payload,
+      };
+
+    case ACTION_TYPES.REMOVE_ATTACHMENT:
+      return {
+        ...state,
+        attachments: state.attachments.filter((a) => a !== action.payload),
+      };
+
+    case ACTION_TYPES.CLEAR_ATTACHMENTS:
+      return {
+        ...state,
+        attachments: [],
       };
 
     default:

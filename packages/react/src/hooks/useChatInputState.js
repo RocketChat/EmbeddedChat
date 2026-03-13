@@ -5,6 +5,7 @@ import { chatInputReducer, ACTION_TYPES } from './ChatInputReducer';
 const initialState = {
   text: '',
   editMessage: {},
+  attachments: [],
 };
 
 /**
@@ -13,7 +14,7 @@ const initialState = {
  */
 export const useChatInputState = (messageRef, RCInstance) => {
   const [state, dispatch] = useReducer(chatInputReducer, initialState);
-  const { text } = state;
+  const { text, attachments } = state;
 
   const {
     quoteMessage,
@@ -123,6 +124,12 @@ export const useChatInputState = (messageRef, RCInstance) => {
     getFinalMarkdown,
     editMessage: storeEditMessage,
     setEditMessage: setStoreEditMessage,
+    attachments,
+    setAttachments: (files) =>
+      dispatch({ type: ACTION_TYPES.SET_ATTACHMENTS, payload: files }),
+    removeAttachment: (file) =>
+      dispatch({ type: ACTION_TYPES.REMOVE_ATTACHMENT, payload: file }),
+    clearAttachments: () => dispatch({ type: ACTION_TYPES.CLEAR_ATTACHMENTS }),
   };
 };
 

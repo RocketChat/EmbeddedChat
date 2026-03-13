@@ -35,6 +35,7 @@ import { parseEmoji } from '../../lib/emoji';
 import { useChatInputState } from '../../hooks/useChatInputState';
 import { useSendMessage } from '../../hooks/useSendMessage';
 import QuoteChip from './QuoteChip';
+import AttachmentChip from './AttachmentChip';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -135,12 +136,21 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     formatSelection,
     editMessage,
     setEditMessage,
+    attachments,
+    setAttachments,
+    removeAttachment,
+    clearAttachments,
   } = useChatInputState(messageRef, RCInstance);
 
   const userInfo = { _id: userId, username, name };
 
-  const { sendNewMessage, sendEditedMessage, sendCommand, sendAsAttachment } =
-    useSendMessage({
+  const {
+    sendNewMessage,
+    sendEditedMessage,
+    sendCommand,
+    sendAsAttachment,
+    sendFileAttachment,
+  } = useSendMessage({
       RCInstance,
       ECOptions,
       username,
@@ -152,6 +162,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       setEditMessage,
       setDisableButton,
       setFilteredCommands,
+      clearAttachments,
     });
 
   useEffect(() => {
@@ -304,8 +315,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (!fileObj) {
       return;
     }
+    setAttachments([fileObj]); // Currently supporting single attachment for simplicity
     toggleAttachmentWindow();
-    setAttachmentData(event.target.files[0]);
+    setAttachmentData(fileObj);
   };
 
   const onTextChange = (e, val) => {
@@ -436,6 +448,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 message={message} 
                 key={index} 
                 onRemove={removeQuote}
+              />
+            ))}
+          {attachments &&
+            attachments.length > 0 &&
+            attachments.map((file, index) => (
+              <AttachmentChip
+                file={file}
+                key={`file-${index}`}
+                onRemove={removeAttachment}
               />
             ))}
         </Box>

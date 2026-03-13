@@ -58,6 +58,22 @@ The message composition logic relied on fragmented `useState` calls and manual s
 - `packages/react/src/views/ChatInput/ChatInput.js`
 - `packages/react/src/views/ChatInput/ChatInput.styles.js`
 
+### Slash Command Suggestions UI
+
+**Status:** ✨ Implemented
+
+**Major Enhancements:**
+- **Keyboard-First Navigation:** Added full support for `ArrowUp`, `ArrowDown`, `Enter`, and `Tab` (terminal-style) to navigate and select commands.
+- **Escape to Dismiss:** Users can now dismiss the command list instantly using the `Esc` key.
+- **Improved UX:** Trailing space is now auto-inserted after selecting a command, making it ready for immediate parameter input.
+- **Accessibility:** Added ARIA roles (`listbox`, `option`) and `aria-selected` state for screen reader support.
+- **Optimized Event Handling:** Moved keydown listeners from the global `document` directly to the `messageRef` textarea to prevent event pollution.
+
+**Files Changed:**
+- `packages/react/src/views/CommandList/CommandsList.js`
+- `packages/react/src/views/CommandList/CommandList.style.js`
+- `packages/react/src/hooks/useShowCommands.js`
+
 ---
 
 ## ⚡ Performance Improvement

@@ -26,6 +26,7 @@ export const useSendMessage = ({
   setEditMessage,
   setDisableButton,
   setFilteredCommands,
+  clearAttachments,
 }) => {
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -168,11 +169,43 @@ export const useSendMessage = ({
     ]
   );
 
+  /**
+   * Handles sending a file attachment.
+   * Centralizes the attachment logic so it can be triggered from anywhere.
+   */
+  const sendFileAttachment = useCallback(
+    async (file, fileName, description) => {
+      setDisableButton(true);
+
+      const res = await RCInstance.sendAttachment(
+        file,
+        fileName,
+        description,
+        ECOptions?.enableThreads ? threadId : undefined
+      );
+
+      if (res.success) {
+        if (clearAttachments) clearAttachments();
+      } else {
+        await handleSendError('Failed to send attachment, please try again.');
+      }
+    },
+    [
+      RCInstance,
+      ECOptions,
+      threadId,
+      setDisableButton,
+      clearAttachments,
+      handleSendError,
+    ]
+  );
+
   return {
     sendNewMessage,
     sendEditedMessage,
     sendCommand,
     sendAsAttachment,
+    sendFileAttachment,
     handleSendError,
   };
 };
