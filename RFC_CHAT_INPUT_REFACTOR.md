@@ -155,7 +155,7 @@ This means if the send fails, the quotes are **preserved** — a bug that existe
     - Mouse hover syncs the arrow-key selection index
     - ARIA `role="listbox"` / `role="option"` / `aria-selected` for accessibility
     - CSS-class-based active state with left-border indicator (no more inline styles)
-3.  **`useDraftMessage`** — Persist the current draft (text + quotes) to `localStorage` so users don't lose their message on accidental close/refresh.
+3.  ✅ **`useDraftMessage`** — Persist the current draft (text + quotes) to `localStorage` so users don't lose their message on accidental close/refresh.
 
 ---
 

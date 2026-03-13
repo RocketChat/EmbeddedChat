@@ -61,6 +61,20 @@ The message composition logic relied on fragmented `useState` calls and manual s
 - `packages/react/src/views/ChatInput/ChatInput.js`
 - `packages/react/src/views/AttachmentPreview/AttachmentPreview.js`
 
+### Persistence & Resiliency
+
+**Status:** ✨ Implemented
+
+**Major Enhancements:**
+- **Automatic Draft Recovery:** Unsent messages and quotes are now persisted to `localStorage` on a per-room basis.
+- **Refresh Resilience:** If the page is refreshed or crashes, the user's content is automatically restored when they return to the room.
+- **Clean State Management:** Drafts are automatically cleared upon successful message delivery, ensuring no stale content remains.
+
+**Files Changed:**
+- `packages/react/src/hooks/useDraftMessage.js` (New)
+- `packages/react/src/hooks/useChatInputState.js`
+- `packages/react/src/store/messageStore.js`
+
 ---
 
 ## 🎨 UI/UX Enhancements
