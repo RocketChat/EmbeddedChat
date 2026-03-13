@@ -43,6 +43,9 @@ export default function LoginForm() {
   const handleSubmit = () => {
     if (!userOrEmail) setUserOrEmail('');
     if (!password) setPassword('');
+    if (!userOrEmail || !password || userOrEmail.trim() === '' || password.trim() === '') {
+      return;
+    }
     handleLogin(userOrEmail, password);
   };
   const handleClose = () => {

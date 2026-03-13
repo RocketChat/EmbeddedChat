@@ -120,7 +120,7 @@ const ReportWindowButtons = ({
           <Button
             onClick={handleReportMessage}
             type="destructive"
-            disabled={reportDescription === ''}
+            disabled={reportDescription.trim() === ''}
           >
             {confirmText}
           </Button>

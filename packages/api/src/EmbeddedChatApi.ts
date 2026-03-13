@@ -1065,15 +1065,15 @@ export default class EmbeddedChatApi {
         "description",
         fileDescription.length !== 0 ? fileDescription : ""
       );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
+      const response = await fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: "POST",
         body: form,
         headers: {
           "X-Auth-Token": authToken,
           "X-User-Id": userId,
         },
-      }).then((r) => r.json());
-      return response;
+      });
+      return await response.json();
     } catch (err) {
       console.log(err);
     }
@@ -1121,7 +1121,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
+        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${encodeURIComponent(text)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1188,17 +1188,20 @@ export default class EmbeddedChatApi {
   }
 
   async getCommandsList() {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.list`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "GET",
-    });
-    const data = await response.json();
-    return data;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(`${this.host}/api/v1/commands.list`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "GET",
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async execCommand({
@@ -1210,74 +1213,86 @@ export default class EmbeddedChatApi {
     params: string;
     tmid?: string;
   }) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.run`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "POST",
-      body: JSON.stringify({
-        command,
-        params,
-        tmid,
-        roomId: this.rid,
-        triggerId: Math.random().toString(32).slice(2, 20),
-      }),
-    });
-    const data = await response.json();
-    return data;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(`${this.host}/api/v1/commands.run`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Token": authToken,
+          "X-User-Id": userId,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          command,
+          params,
+          tmid,
+          roomId: this.rid,
+          triggerId: Math.random().toString(32).slice(2, 20),
+        }),
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async getUserStatus(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(
+        `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async userInfo(reqUserId: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.info?userId=${reqUserId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(
+        `${this.host}/api/v1/users.info?userId=${reqUserId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async userData(username: string) {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(
-      `${this.host}/api/v1/users.info?username=${username}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }
-    );
-    const data = response.json();
-    return data;
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const response = await fetch(
+        `${this.host}/api/v1/users.info?username=${encodeURIComponent(username)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+        }
+      );
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

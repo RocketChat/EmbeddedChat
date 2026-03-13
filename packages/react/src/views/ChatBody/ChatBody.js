@@ -146,7 +146,7 @@ const ChatBody = ({
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.addMessageListener(addMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
@@ -160,11 +160,12 @@ const ChatBody = ({
       RCInstance.removeMessageDeleteListener(removeMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
+      unsubscribe();
     };
   }, [RCInstance, addMessage, removeMessage, onActionTriggerResponse]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         getMessagesAndRoles();
         setHasMoreMessages(true);
@@ -172,17 +173,19 @@ const ChatBody = ({
         getMessagesAndRoles(anonymousMode);
       }
     });
+    return () => unsubscribe();
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         fetchAndSetPermissions();
       } else {
         permissionsRef.current = null;
       }
     });
-  }, []);
+    return () => unsubscribe();
+  }, [RCInstance, fetchAndSetPermissions]);
 
   // Expose clearUnreadDivider function via ref for ChatInput to call
   useEffect(() => {

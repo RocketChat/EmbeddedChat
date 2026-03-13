@@ -134,7 +134,7 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -152,6 +152,7 @@ const EmbeddedChat = (props) => {
         setIsUserAuthenticated(false);
       }
     });
+    return () => unsubscribe();
   }, [
     RCInstance,
     setAuthenticatedName,

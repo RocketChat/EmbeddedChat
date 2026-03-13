@@ -43,11 +43,12 @@ const LoginView = () => {
 	};
 
 	useEffect(() => {
-		RCInstance.auth.onAuthChange((user) => {
+		const unsubscribe = RCInstance.auth.onAuthChange((user) => {
 			if (user) {
 				navigate('chat-room');
 			}
-		})
+		});
+		return () => unsubscribe();
 	}, [RCInstance])
 
 	return (

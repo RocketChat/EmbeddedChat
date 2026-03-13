@@ -144,7 +144,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((data) => setCommands(data.commands || []))
@@ -155,8 +155,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             setMembersHandler(channelMembers.members || [])
           )
           .catch(console.error);
+      } else {
+        setCommands([]);
       }
     });
+
+    return () => unsubscribe();
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
