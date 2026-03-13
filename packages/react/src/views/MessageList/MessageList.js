@@ -33,16 +33,15 @@ const MessageList = ({
     [reversedMessages]
   );
 
-  const { messages, threadMessages } = useMessageStore((state) => ({
-    messages: state.messages,
-    threadMessages: state.threadMessages,
-  }));
+  const messages = useMessageStore((state) => state.messages);
 
   const rowVirtualizer = useVirtualizer({
     count: orderedMessages.length,
     getScrollElement: () => messageContainerRef.current,
+    getItemKey: (index) => orderedMessages[index]?._id ?? index,
     overscan: 10,
     estimateSize: () => 50,
+    measureElement: (element) => element.offsetHeight,
     // onScroll: ({ scrollOffset }) => {
     //   onRegisterJump(scrollOffset);
     // },
@@ -143,7 +142,7 @@ const MessageList = ({
               }}
             >
               {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                const index = virtualRow.index;
+                const { index } = virtualRow;
                 const msg = orderedMessages[index];
                 if (!msg) return null;
 
