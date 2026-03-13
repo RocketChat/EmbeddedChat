@@ -35,7 +35,7 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 
-const ChatInput = ({ scrollToBottom }) => {
+const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const { theme } = useTheme();
@@ -354,7 +354,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const handleCommandExecution = async (message) => {
     const execCommand = async (command, params) => {
-      await RCInstance.execCommand({ command, params });
+      await RCInstance.execCommand({ command, params, tmid: threadId });
       setFilteredCommands([]);
     };
 
@@ -398,6 +398,10 @@ const ChatInput = ({ scrollToBottom }) => {
 
     handleSendNewMessage(message);
     scrollToBottom();
+    // Clear unread divider when user sends a message
+    if (clearUnreadDividerRef?.current) {
+      clearUnreadDividerRef.current();
+    }
   };
 
   const sendAttachment = (event) => {

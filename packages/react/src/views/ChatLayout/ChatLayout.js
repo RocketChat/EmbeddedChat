@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
@@ -37,6 +37,7 @@ import { MessageNavigationProvider } from '../../context/MessageNavigationContex
 const ChatLayout = () => {
   const messageListRef = useRef(null);
   const jumpToMessageRef = useRef(null);
+  const clearUnreadDividerRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
@@ -133,6 +134,38 @@ const ChatLayout = () => {
           />
           <ChatInput scrollToBottom={scrollToBottom} />
           <div id="emoji-popup" />
+      <Box css={styles.chatMain}>
+        <ChatBody
+          anonymousMode={anonymousMode}
+          showRoles={showRoles}
+          messageListRef={messageListRef}
+          scrollToBottom={scrollToBottom}
+          clearUnreadDividerRef={clearUnreadDividerRef}
+        />
+        <ChatInput
+          scrollToBottom={scrollToBottom}
+          clearUnreadDividerRef={clearUnreadDividerRef}
+        />
+        <div id="emoji-popup" />
+      </Box>
+
+      {showSidebar && (
+        <Box className="ec-sidebar-view">
+          {showMembers && <RoomMembers members={members} />}
+          {showSearch && <SearchMessages />}
+          {showChannelinfo && <Roominfo />}
+          {showAllThreads && <ThreadedMessages />}
+          {showAllFiles && <FileGallery />}
+          {showMentions && <MentionedMessages />}
+          {showPinned && <PinnedMessages />}
+          {showStarred && <StarredMessages />}
+          {showCurrentUserInfo && <UserInformation />}
+          {uiKitContextualBarOpen && (
+            <UiKitContextualBar
+              key={Math.random()}
+              initialView={uiKitContextualBarData}
+            />
+          )}
         </Box>
 
         {showSidebar && (

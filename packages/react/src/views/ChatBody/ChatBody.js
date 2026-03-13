@@ -41,6 +41,7 @@ const ChatBody = ({
   messageListRef,
   scrollToBottom,
   onRegisterJump,
+  clearUnreadDividerRef,
 }) => {
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { theme, mode } = useTheme();
@@ -50,6 +51,8 @@ const ChatBody = ({
   const [, setIsUserScrolledUp] = useState(false);
   const [otherUserMessage, setOtherUserMessage] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [firstUnreadMessageId, setFirstUnreadMessageId] = useState(null);
+  const pendingFirstUnreadRef = useRef(null);
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
@@ -129,6 +132,10 @@ const ChatBody = ({
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
         if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
           setOtherUserMessage(true);
+          // Track the first unread message (only set if not already tracking)
+          if (!pendingFirstUnreadRef.current) {
+            pendingFirstUnreadRef.current = message._id;
+          }
         }
       }
       upsertMessage(message, ECOptions?.enableThreads);
@@ -194,7 +201,22 @@ const ChatBody = ({
     });
   }, []);
 
+  // Expose clearUnreadDivider function via ref for ChatInput to call
+  useEffect(() => {
+    if (clearUnreadDividerRef) {
+      clearUnreadDividerRef.current = () => {
+        setFirstUnreadMessageId(null);
+        pendingFirstUnreadRef.current = null;
+      };
+    }
+  }, [clearUnreadDividerRef]);
+
   const handlePopupClick = () => {
+    // Set the unread divider to show above the first unread message
+    if (pendingFirstUnreadRef.current) {
+      setFirstUnreadMessageId(pendingFirstUnreadRef.current);
+      pendingFirstUnreadRef.current = null;
+    }
     scrollToBottom();
     setIsUserScrolledUp(false);
     setOtherUserMessage(false);
@@ -259,6 +281,12 @@ const ChatBody = ({
       setPopupVisible(false);
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
+      // Clear unread divider when scrolled to bottom
+      if (firstUnreadMessageId) {
+        setFirstUnreadMessageId(null);
+      }
+      // Also clear pending unread ref
+      pendingFirstUnreadRef.current = null;
     }
   }, [
     messageListRef,
@@ -275,6 +303,7 @@ const ChatBody = ({
     setIsUserScrolledUp,
     setPopupVisible,
     setOtherUserMessage,
+    firstUnreadMessageId,
   ]);
 
   const loadOlderMessagesUntil = useCallback(
@@ -494,6 +523,7 @@ const ChatBody = ({
             hasMoreMessages={hasMoreMessages}
             messageContainerRef={messageListRef}
             onRegisterJump={handleRegisterJump}
+            firstUnreadMessageId={firstUnreadMessageId}
           />
         )}
 
