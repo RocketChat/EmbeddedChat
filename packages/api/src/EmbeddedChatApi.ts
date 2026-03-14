@@ -436,7 +436,7 @@ export default class EmbeddedChatApi {
   async updateUserUsername(userid: string, username: string) {
     const newUserName = username.replace(/\s/g, ".").toLowerCase();
 
-    const usernameRegExp = /[0-9a-zA-Z-_.]+/;
+    const usernameRegExp = /^[0-9a-zA-Z-_.]+$/;
 
     if (usernameRegExp.test(newUserName)) {
       try {
