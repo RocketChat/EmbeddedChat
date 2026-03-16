@@ -33,6 +33,7 @@ export const MessageAggregator = ({
   fetching,
   type = 'message',
   viewType = 'Sidebar',
+  onDeleteFile,
 }) => {
   const { theme } = useTheme();
   const { mode } = useTheme();
@@ -185,6 +186,7 @@ export const MessageAggregator = ({
                     <FileDisplay
                       key={`${msg._id}-aggregated`}
                       fileMessage={msg}
+                      onDeleteFile={onDeleteFile}
                     />
                   ) : (
                     <Box

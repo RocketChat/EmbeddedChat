@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import { useChannelStore, useMessageStore } from '../../store';
 import { useRCContext } from '../../context/RCInstance';
@@ -68,6 +68,10 @@ const FileGallery = () => {
     }
   };
 
+  const handleFileDelete = useCallback((fileId) => {
+    setFiles((prevFiles) => prevFiles.filter((file) => file._id !== fileId));
+  }, []);
+
   return (
     <MessageAggregator
       title="Files"
@@ -89,6 +93,7 @@ const FileGallery = () => {
       type="file"
       searchFiltered={filteredFiles}
       viewType={viewType}
+      onDeleteFile={handleFileDelete}
     />
   );
 };
