@@ -2,8 +2,6 @@ import React, {
   useState,
   useCallback,
   memo,
-  useContext,
-  useEffect,
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -26,7 +24,7 @@ import FilePreviewHeader from './FilePreviewHeader';
 import { MessageBody as FileBody } from '../Message/MessageBody';
 import { FileMetrics } from './FileMetrics';
 import { useRCContext } from '../../context/RCInstance';
-import { useChannelStore, useMessageStore } from '../../store';
+import { useMessageStore } from '../../store';
 import { fileDisplayStyles as styles } from './Files.styles';
 
 const FileMessage = ({ fileMessage, onDeleteFile }) => {
@@ -34,10 +32,8 @@ const FileMessage = ({ fileMessage, onDeleteFile }) => {
   const dispatchToastMessage = useToastBarDispatch();
   const { RCInstance } = useRCContext();
   const messages = useMessageStore((state) => state.messages);
-  const [files, setFiles] = useState([]);
+  const removeMessage = useMessageStore((state) => state.removeMessage);
   const theme = useTheme();
-  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
-  const [isFetching, setIsFetching] = useState(true);
   const { mode } = theme;
   const messageStyles = styles.message;
 
@@ -63,39 +59,44 @@ const FileMessage = ({ fileMessage, onDeleteFile }) => {
 
   const deleteFile = useCallback(
     async (file) => {
-      messages.forEach(async (message) => {
-        if (message.file?._id === file._id) {
-          const res = await RCInstance.deleteMessage(message._id);
-          setFileToDelete({});
-          if (res.success) {
-            dispatchToastMessage({
-              type: 'success',
-              message: 'File deleted',
-            });
-          } else {
-            dispatchToastMessage({
-              type: 'error',
-              message: 'Error in deleting file',
-            });
-          }
-        }
-      });
-    },
-    [messages, RCInstance, dispatchToastMessage]
-  );
-  useEffect(() => {
-    const fetchAllFiles = async () => {
-      const res = await RCInstance.getAllFiles(isChannelPrivate, '');
-      if (res?.files) {
-        const sortedFiles = res.files.sort(
-          (a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)
-        );
-        setFiles(sortedFiles);
-        setIsFetching(false);
+      const messageToDelete = messages.find(
+        (message) => message.file?._id === file._id
+      );
+
+      if (!messageToDelete) {
+        setFileToDelete({});
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Unable to find the file message to delete',
+        });
+        return;
       }
-    };
-    fetchAllFiles();
-  }, [RCInstance, isChannelPrivate, messages, fileToDelete]);
+
+      const res = await RCInstance.deleteMessage(messageToDelete._id);
+      setFileToDelete({});
+
+      if (res?.success) {
+        removeMessage(messageToDelete._id);
+        onDeleteFile?.(file._id);
+        dispatchToastMessage({
+          type: 'success',
+          message: 'File deleted',
+        });
+      } else {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Error in deleting file',
+        });
+      }
+    },
+    [
+      messages,
+      RCInstance,
+      dispatchToastMessage,
+      removeMessage,
+      onDeleteFile,
+    ]
+  );
 
   const handleOnClose = () => {
     setFileToDelete({});
