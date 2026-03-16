@@ -42,6 +42,12 @@ const ChatBody = ({
   scrollToBottom,
   clearUnreadDividerRef,
 }) => {
+  const getMaxScrollTop = (messageList) =>
+    Math.max(0, messageList.scrollHeight - messageList.clientHeight);
+
+  const isAtBottom = (messageList) =>
+    getMaxScrollTop(messageList) - messageList.scrollTop <= 1;
+
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { theme, mode } = useTheme();
   const styles = getChatbodyStyles(theme, mode);
@@ -54,6 +60,8 @@ const ChatBody = ({
   const pendingFirstUnreadRef = useRef(null);
   const previousThreadOpenRef = useRef(false);
   const mainChatScrollSnapshotRef = useRef(null);
+  const lastMainChatScrollTopRef = useRef(0);
+  const wasAtBottomRef = useRef(true);
   const isRestoringFromThreadRef = useRef(false);
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
@@ -132,7 +140,7 @@ const ChatBody = ({
     }
 
     if (!previousThreadOpenRef.current && isThreadOpen) {
-      mainChatScrollSnapshotRef.current = messageList.scrollTop;
+      mainChatScrollSnapshotRef.current = lastMainChatScrollTopRef.current;
     }
 
     if (previousThreadOpenRef.current && !isThreadOpen) {
@@ -142,11 +150,12 @@ const ChatBody = ({
         requestAnimationFrame(() => {
           const currentMessageList = messageListRef?.current;
           if (currentMessageList) {
-            const maxScrollTop = Math.max(
-              0,
-              currentMessageList.scrollHeight - currentMessageList.clientHeight
+            currentMessageList.scrollTop = Math.min(
+              snapshot,
+              getMaxScrollTop(currentMessageList)
             );
-            currentMessageList.scrollTop = Math.min(snapshot, maxScrollTop);
+            lastMainChatScrollTopRef.current = currentMessageList.scrollTop;
+            wasAtBottomRef.current = isAtBottom(currentMessageList);
           }
 
           requestAnimationFrame(() => {
@@ -159,10 +168,21 @@ const ChatBody = ({
     previousThreadOpenRef.current = isThreadOpen;
   }, [isThreadOpen, messageListRef]);
 
+  useEffect(() => {
+    const messageList = messageListRef?.current;
+    if (!messageList || isThreadOpen) {
+      return;
+    }
+
+    lastMainChatScrollTopRef.current = messageList.scrollTop;
+    wasAtBottomRef.current = isAtBottom(messageList);
+  }, [isThreadOpen, messages, messageListRef]);
+
   const addMessage = useCallback(
     (message) => {
       if (message.u.username !== username) {
-        const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
+        const isScrolledUp =
+          messageListRef?.current && !isAtBottom(messageListRef.current);
         if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
           setOtherUserMessage(true);
           // Track the first unread message (only set if not already tracking)
@@ -239,6 +259,7 @@ const ChatBody = ({
       pendingFirstUnreadRef.current = null;
     }
     scrollToBottom();
+    wasAtBottomRef.current = true;
     setIsUserScrolledUp(false);
     setOtherUserMessage(false);
     setPopupVisible(false);
@@ -246,14 +267,21 @@ const ChatBody = ({
 
   const handleScroll = useCallback(async () => {
     if (messageListRef && messageListRef.current) {
-      setScrollPosition(messageListRef.current.scrollTop);
+      const messageList = messageListRef.current;
+      const atBottom = isAtBottom(messageList);
+
+      setScrollPosition(messageList.scrollTop);
       setIsUserScrolledUp(
-        messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight
+        !atBottom
       );
 
+      if (!isThreadOpen) {
+        lastMainChatScrollTopRef.current = messageList.scrollTop;
+        wasAtBottomRef.current = atBottom;
+      }
+
       if (
-        messageListRef.current.scrollTop === 0 &&
+        messageList.scrollTop === 0 &&
         !loadingOlderMessages &&
         hasMoreMessages &&
         !isRestoringFromThreadRef.current
@@ -275,7 +303,6 @@ const ChatBody = ({
               : undefined,
             anonymousMode ? false : isChannelPrivate
           );
-          const messageList = messageListRef.current;
           if (olderMessages?.messages?.length) {
             const previousScrollHeight = messageList.scrollHeight;
 
@@ -285,6 +312,10 @@ const ChatBody = ({
             requestAnimationFrame(() => {
               const newScrollHeight = messageList.scrollHeight;
               messageList.scrollTop = newScrollHeight - previousScrollHeight;
+              if (!isThreadOpen) {
+                lastMainChatScrollTopRef.current = messageList.scrollTop;
+                wasAtBottomRef.current = isAtBottom(messageList);
+              }
             });
           } else {
             setHasMoreMessages(false);
@@ -298,8 +329,7 @@ const ChatBody = ({
       }
     }
 
-    const isAtBottom = messageListRef?.current?.scrollTop === 0;
-    if (isAtBottom) {
+    if (messageListRef?.current && isAtBottom(messageListRef.current)) {
       setPopupVisible(false);
       setIsUserScrolledUp(false);
       setOtherUserMessage(false);
@@ -312,6 +342,7 @@ const ChatBody = ({
     }
   }, [
     messageListRef,
+    isThreadOpen,
     offset,
     setMessagesOffset,
     setMessages,
@@ -348,7 +379,12 @@ const ChatBody = ({
 
   useEffect(() => {
     if (messageListRef.current && !isThreadOpen) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      if (wasAtBottomRef.current && !isRestoringFromThreadRef.current) {
+        messageListRef.current.scrollTop = getMaxScrollTop(messageListRef.current);
+      }
+
+      lastMainChatScrollTopRef.current = messageListRef.current.scrollTop;
+      wasAtBottomRef.current = isAtBottom(messageListRef.current);
     }
   }, [messages, isThreadOpen, messageListRef]);
 
@@ -357,6 +393,10 @@ const ChatBody = ({
   }, [channelInfo.announcement, showAnnouncement]);
   useEffect(() => {
     const currentRef = messageListRef.current;
+    if (!currentRef) {
+      return undefined;
+    }
+
     currentRef.addEventListener('scroll', handleScroll);
 
     return () => {
@@ -365,6 +405,10 @@ const ChatBody = ({
   }, [handleScroll, messageListRef]);
 
   useEffect(() => {
+    if (!messageListRef.current) {
+      return;
+    }
+
     const isScrolledUp =
       scrollPosition + messageListRef.current.clientHeight <
       messageListRef.current.scrollHeight;
