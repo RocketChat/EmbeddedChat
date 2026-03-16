@@ -72,7 +72,7 @@ export class MessageService extends BaseService {
     }
   }
 
-  async getThreadMessages(tmid: string) {
+  async getThreadMessages(tmid: string, _isChannelPrivate = false) {
     try {
       const headers = await this.getAuthHeaders();
       const messages = await fetch(
@@ -310,6 +310,78 @@ export class MessageService extends BaseService {
       return await response.json();
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  async getCommandsList() {
+    try {
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(`${this.host}/api/v1/commands.list`, {
+        headers,
+        method: "GET",
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async execCommand({
+    command,
+    params,
+    tmid,
+  }: {
+    command: string;
+    params: string;
+    tmid?: string;
+  }) {
+    try {
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(`${this.host}/api/v1/commands.run`, {
+        headers,
+        method: "POST",
+        body: JSON.stringify({
+          command,
+          params,
+          tmid,
+          roomId: this.rid,
+          triggerId: Math.random().toString(32).slice(2, 20),
+        }),
+      });
+      return await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async sendAttachment(
+    file: File,
+    fileName: string,
+    fileDescription = "",
+    threadId = undefined
+  ) {
+    try {
+      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+      const form = new FormData();
+      if (threadId) {
+        form.append("tmid", threadId);
+      }
+      form.append("file", file, fileName);
+      form.append(
+        "description",
+        fileDescription.length !== 0 ? fileDescription : ""
+      );
+      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
+        method: "POST",
+        body: form,
+        headers: {
+          "X-Auth-Token": authToken || "",
+          "X-User-Id": userId || "",
+        },
+      }).then((r) => r.json());
+      return response;
+    } catch (err) {
+      console.log(err);
     }
   }
 }
