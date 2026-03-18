@@ -11,6 +11,41 @@ import { getMenuStyles } from './Menu.styles';
 
 const MOBILE_BREAKPOINT = 768;
 
+const DEFAULT_SECTION_ID = '__default';
+
+const getOptionSection = (option) => {
+  if (!option?.section) {
+    return { id: DEFAULT_SECTION_ID, title: '' };
+  }
+
+  if (typeof option.section === 'string') {
+    return { id: option.section, title: '' };
+  }
+
+  return {
+    id: option.section.id || DEFAULT_SECTION_ID,
+    title: option.section.title || '',
+  };
+};
+
+const groupOptions = (options) =>
+  options.reduce((sections, option) => {
+    const section = getOptionSection(option);
+    const existingSection = sections.find(({ id }) => id === section.id);
+
+    if (existingSection) {
+      existingSection.items.push(option);
+      return sections;
+    }
+
+    sections.push({
+      ...section,
+      items: [option],
+    });
+
+    return sections;
+  }, []);
+
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(
     () => window.innerWidth < MOBILE_BREAKPOINT
@@ -35,8 +70,8 @@ const Menu = ({
   size = 'medium',
   useWrapper = true,
 }) => {
-  const { theme } = useTheme();
-  const styles = getMenuStyles(theme);
+  const { theme, mode } = useTheme();
+  const styles = getMenuStyles({ theme, mode });
   const isMobile = useIsMobile();
 
   const { classNames, styleOverrides } = useComponentOverrides(
@@ -63,6 +98,7 @@ const Menu = ({
     useComponentOverrides('MenuWrapper');
 
   const [isOpen, setOpen] = useState(false);
+  const groupedOptions = useMemo(() => groupOptions(options), [options]);
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -130,11 +166,7 @@ const Menu = ({
         {isOpen && (
           <>
             {/* Backdrop */}
-            <Box
-              css={styles.backdrop}
-              onClick={close}
-              aria-hidden="true"
-            />
+            <Box css={styles.backdrop} onClick={close} aria-hidden="true" />
 
             {/* Sheet */}
             <Box
@@ -144,18 +176,20 @@ const Menu = ({
               aria-modal="true"
               aria-label="Options"
             >
-              {/* Drag handle */}
-              <Box css={styles.sheetHandle}>
-                <Box css={styles.sheetHandleBar} />
-              </Box>
-
-              {options.map((option, idx) => (
-                <MenuItem
-                  {...option}
-                  key={option.id || idx}
-                  action={onClick(option.action, option.disabled)}
-                  isMobile
-                />
+              {groupedOptions.map((section, sectionIndex) => (
+                <Box css={styles.section} key={section.id || sectionIndex}>
+                  {section.title ? (
+                    <Box css={styles.sectionTitle}>{section.title}</Box>
+                  ) : null}
+                  {section.items.map((option, idx) => (
+                    <MenuItem
+                      {...option}
+                      key={option.id || `${section.id}-${idx}`}
+                      action={onClick(option.action, option.disabled)}
+                      isMobile
+                    />
+                  ))}
+                </Box>
               ))}
             </Box>
           </>
@@ -179,12 +213,19 @@ const Menu = ({
           className={appendClassNames('ec-menu', classNames)}
           style={finalStyle}
         >
-          {options.map((option, idx) => (
-            <MenuItem
-              {...option}
-              key={option.id || idx}
-              action={onClick(option.action, option.disabled)}
-            />
+          {groupedOptions.map((section, sectionIndex) => (
+            <Box css={styles.section} key={section.id || sectionIndex}>
+              {section.title ? (
+                <Box css={styles.sectionTitle}>{section.title}</Box>
+              ) : null}
+              {section.items.map((option, idx) => (
+                <MenuItem
+                  {...option}
+                  key={option.id || `${section.id}-${idx}`}
+                  action={onClick(option.action, option.disabled)}
+                />
+              ))}
+            </Box>
           ))}
         </Box>
       ) : null}

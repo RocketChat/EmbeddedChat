@@ -249,6 +249,7 @@ const ChatHeader = ({
         id: 'thread',
         onClick: () => setExclusiveState(setShowAllThreads),
         iconName: 'thread',
+        section: 'activity',
         visible: true,
       },
       mentions: {
@@ -256,6 +257,7 @@ const ChatHeader = ({
         id: 'mention',
         onClick: () => setExclusiveState(setShowMentions),
         iconName: 'at',
+        section: 'activity',
         visible: true,
       },
       starred: {
@@ -263,6 +265,7 @@ const ChatHeader = ({
         id: 'starred',
         onClick: () => setExclusiveState(setShowStarred),
         iconName: 'star',
+        section: 'content',
         visible: true,
       },
       pinned: {
@@ -270,6 +273,7 @@ const ChatHeader = ({
         id: 'pinned',
         onClick: () => setExclusiveState(setShowPinned),
         iconName: 'pin',
+        section: 'content',
         visible: true,
       },
       members: {
@@ -277,6 +281,7 @@ const ChatHeader = ({
         id: 'members',
         onClick: () => setExclusiveState(setShowMembers),
         iconName: 'members',
+        section: 'activity',
         visible: isUserAuthenticated,
       },
       files: {
@@ -284,6 +289,7 @@ const ChatHeader = ({
         id: 'files',
         onClick: () => setExclusiveState(setShowAllFiles),
         iconName: 'clip',
+        section: 'content',
         visible: isUserAuthenticated,
       },
       search: {
@@ -291,6 +297,7 @@ const ChatHeader = ({
         id: 'search',
         onClick: () => setExclusiveState(setShowSearch),
         iconName: 'magnifier',
+        section: 'discovery',
         visible: isUserAuthenticated,
       },
       rInfo: {
@@ -298,6 +305,7 @@ const ChatHeader = ({
         id: 'rInfo',
         onClick: () => setExclusiveState(setShowChannelinfo),
         iconName: 'info',
+        section: 'discovery',
         visible: isUserAuthenticated,
       },
       logout: {
@@ -305,6 +313,8 @@ const ChatHeader = ({
         id: 'logout',
         onClick: handleLogout,
         iconName: 'reply-directly',
+        color: 'destructive',
+        section: 'session',
         visible: isUserAuthenticated,
       },
     }),
@@ -335,6 +345,8 @@ const ChatHeader = ({
           action: options[item].onClick,
           label: options[item].label,
           icon: options[item].iconName,
+          color: options[item].color,
+          section: options[item].section,
         };
       }
       return null;
