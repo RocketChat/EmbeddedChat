@@ -7,7 +7,7 @@ import { appendClassNames } from '../../lib/appendClassNames';
 import { getMenuItemStyles } from './Menu.styles';
 import { useTheme } from '../../hooks';
 
-const MenuItem = ({ icon, label, action, disabled }) => {
+const MenuItem = ({ icon, label, action, disabled, isMobile = false }) => {
   const { classNames, styleOverrides } = useComponentOverrides(
     'MenuItem',
     disabled && 'disabled'
@@ -17,12 +17,15 @@ const MenuItem = ({ icon, label, action, disabled }) => {
 
   return (
     <Box
-      css={[styles.item, disabled && styles.disabled]}
+      css={[
+        isMobile ? styles.itemMobile : styles.item,
+        disabled && styles.disabled,
+      ]}
       className={appendClassNames('ec-menu-item', classNames)}
       style={styleOverrides}
       onClick={!disabled && action}
     >
-      <Icon name={icon} size="1em" />
+      <Icon name={icon} size={isMobile ? '1.25em' : '1em'} />
       {label}
     </Box>
   );
