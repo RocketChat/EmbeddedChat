@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import useTheme from '../../hooks/useTheme';
 import { Box } from '../Box';
@@ -8,6 +8,11 @@ import useComponentOverrides from '../../hooks/useComponentOverrides';
 import { appendClassNames } from '../../lib/appendClassNames';
 import { Tooltip } from '../Tooltip';
 import { getMenuStyles } from './Menu.styles';
+
+const MOBILE_BREAKPOINT = 499;
+
+const getIsMobileViewport = () =>
+  typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
 
 const Menu = ({
   options = [],
@@ -43,17 +48,39 @@ const Menu = ({
     useComponentOverrides('MenuWrapper');
 
   const [isOpen, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(getIsMobileViewport);
+  const wrapperRef = useRef(null);
 
   const onClick = (action, disabled) => () => {
     if (!disabled) {
       action();
-      setOpen(!isOpen);
+      setOpen(false);
     }
   };
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const onResize = () => {
+      setIsMobile(getIsMobileViewport());
+    };
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const onBodyClick = (e) => {
-      if (isOpen && !e.target.classList.contains('ec-menu-wrapper')) {
+      if (
+        isOpen &&
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target)
+      ) {
         setOpen(false);
       }
     };
@@ -65,32 +92,61 @@ const Menu = ({
     };
   }, [isOpen]);
 
+  const menuItems = options.map((option, idx) => (
+    <MenuItem
+      {...option}
+      key={option.id || idx}
+      action={onClick(option.action, option.disabled)}
+      isMobile={isMobile}
+    />
+  ));
+
+  const triggerButton = tooltip.isToolTip ? (
+    <Tooltip text={tooltip.text} position={tooltip.position}>
+      <ActionButton
+        ghost
+        icon="kebab"
+        size={size}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((prev) => !prev);
+        }}
+      />
+    </Tooltip>
+  ) : (
+    <ActionButton
+      ghost
+      icon="kebab"
+      size={size}
+      onClick={(e) => {
+        e.stopPropagation();
+        setOpen((prev) => !prev);
+      }}
+    />
+  );
+
   const optionJsx = (
     <>
-      {tooltip.isToolTip ? (
-        <Tooltip text={tooltip.text} position={tooltip.position}>
-          <ActionButton
-            ghost
-            icon="kebab"
-            size={size}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen((prev) => !prev);
-            }}
-          />
-        </Tooltip>
-      ) : (
-        <ActionButton
-          ghost
-          icon="kebab"
-          size={size}
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen((prev) => !prev);
-          }}
-        />
-      )}
-      {isOpen ? (
+      {triggerButton}
+      {isOpen && isMobile ? (
+        <>
+          <Box css={styles.backdrop} onClick={() => setOpen(false)} />
+          <Box
+            css={[
+              styles.sheet,
+              css`
+                box-shadow: ${theme.shadows[2]};
+              `,
+            ]}
+            className={appendClassNames('ec-menu ec-menu-mobile', classNames)}
+            style={styleOverrides}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {menuItems}
+          </Box>
+        </>
+      ) : null}
+      {isOpen && !isMobile ? (
         <Box
           css={[
             styles.container,
@@ -101,19 +157,14 @@ const Menu = ({
           className={appendClassNames('ec-menu', classNames)}
           style={finalStyle}
         >
-          {options.map((option, idx) => (
-            <MenuItem
-              {...option}
-              key={option.id || idx}
-              action={onClick(option.action, option.disabled)}
-            />
-          ))}
+          {menuItems}
         </Box>
       ) : null}
     </>
   );
   return useWrapper ? (
     <Box
+      ref={wrapperRef}
       css={styles.wrapper}
       className={appendClassNames('ec-menu-wrapper', wrapperClasses)}
       style={wrapperStyles}
@@ -121,7 +172,7 @@ const Menu = ({
       {optionJsx}
     </Box>
   ) : (
-    optionJsx
+    <Box ref={wrapperRef}>{optionJsx}</Box>
   );
 };
 
