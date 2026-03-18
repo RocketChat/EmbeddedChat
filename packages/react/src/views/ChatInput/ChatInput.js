@@ -32,6 +32,7 @@ import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
+import useChatInputState from '../../hooks/useChatInputState';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 
@@ -127,6 +128,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const userInfo = { _id: userId, username, name };
 
+  const { setText, setCursorPosition, clearInput, getFinalMarkdown } =
+    useChatInputState();
+
   const dispatchToastMessage = useToastBarDispatch();
   const showCommands = useShowCommands(
     commands,
@@ -161,14 +165,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   useEffect(() => {
     if (editMessage.attachments) {
-      messageRef.current.value =
+      const editText =
         editMessage.attachments[0]?.description || editMessage.msg;
+      messageRef.current.value = editText;
+      setText(editText);
       messageRef.current.focus();
     } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
+      setText(editMessage.msg);
       messageRef.current.focus();
     } else {
       messageRef.current.value = '';
+      clearInput();
     }
   }, [editMessage]);
 
@@ -179,6 +187,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       deletedMessage._id === editMessage._id
     ) {
       messageRef.current.value = '';
+      clearInput();
       setDisableButton(true);
       setEditMessage({});
     }
@@ -213,6 +222,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const textToAttach = () => {
     const message = messageRef.current.value.trim();
     messageRef.current.value = '';
+    clearInput();
     setEditMessage({});
     setIsMsgLong(false);
     const messageBlob = new Blob([message], { type: 'text/plain' });
@@ -285,37 +295,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
     setDisableButton(true);
+    clearInput();
 
-    let pendingMessage = '';
-    let quotedMessages = '';
-
-    if (quoteMessage.length > 0) {
-      // for (const quote of quoteMessage) {
-      //   const { msg, attachments, _id } = quote;
-      //   if (msg || attachments) {
-      //     const msgLink = await getMessageLink(_id);
-      //     quotedMessages += `[ ](${msgLink})`;
-      //   }
-      // }
-
-      const quoteArray = await Promise.all(
-        quoteMessage.map(async (quote) => {
-          const { msg, attachments, _id } = quote;
-          if (msg || attachments) {
-            const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
-          }
-          return quotedMessages;
-        })
-      );
-      quotedMessages = quoteArray.join('');
-      pendingMessage = createPendingMessage(
-        `${quotedMessages}\n${message}`,
-        userInfo
-      );
-    } else {
-      pendingMessage = createPendingMessage(message, userInfo);
-    }
+    // getFinalMarkdown resolves quote links at send-time only, keeping the
+    // textarea text clean and avoiding the previous accumulation bug where
+    // mutating quotedMessages inside .map() produced duplicate link prefixes.
+    const finalMsg = await getFinalMarkdown(
+      message,
+      quoteMessage,
+      getMessageLink
+    );
+    const pendingMessage = createPendingMessage(finalMsg, userInfo);
 
     if (ECOptions.enableThreads && threadId) {
       pendingMessage.tmid = threadId;
@@ -339,6 +329,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const handleEditMessage = async (message) => {
     messageRef.current.value = '';
+    clearInput();
     setDisableButton(true);
     const editMessageId = editMessage._id;
     setEditMessage({});
@@ -363,6 +354,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     if (commands.find((c) => c.command === command.replace('/', ''))) {
       messageRef.current.value = '';
+      clearInput();
       setDisableButton(true);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
@@ -416,7 +408,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    messageRef.current.value = parseEmoji(message);
+    const parsed = parseEmoji(message);
+    messageRef.current.value = parsed;
+    setText(parsed);
+    if (e?.target) setCursorPosition(e.target.selectionStart ?? 0);
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
