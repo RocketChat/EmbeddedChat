@@ -7,8 +7,6 @@ import {
   ApiError,
 } from "@embeddedchat/auth";
 
-// mutliple typing status can come at the same time they should be processed in order.
-let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -358,13 +356,7 @@ export default class EmbeddedChatApi {
     typingUser: string;
     isTyping: boolean;
   }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
-    typingHandlerLock = 1;
+    // No lock needed — JS is single-threaded, so array operations are already atomic.
     // move user to front if typing else remove it.
     const idx = this.typingUsers.indexOf(typingUser);
     if (idx !== -1) {
@@ -373,7 +365,6 @@ export default class EmbeddedChatApi {
     if (isTyping) {
       this.typingUsers.unshift(typingUser);
     }
-    typingHandlerLock = 0;
     const newTypingStatus = cloneArray(this.typingUsers);
     this.onTypingStatusCallbacks.forEach((callback) =>
       callback(newTypingStatus)
@@ -1065,17 +1056,21 @@ export default class EmbeddedChatApi {
         "description",
         fileDescription.length !== 0 ? fileDescription : ""
       );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
+      const response = await fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
         method: "POST",
         body: form,
         headers: {
           "X-Auth-Token": authToken,
           "X-User-Id": userId,
         },
-      }).then((r) => r.json());
-      return response;
+      });
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+      }
+      return await response.json();
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      throw err;
     }
   }
 
@@ -1243,7 +1238,10 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    if (!response.ok) {
+      throw new Error(`getUserStatus failed: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
     return data;
   }
 
@@ -1260,7 +1258,10 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    if (!response.ok) {
+      throw new Error(`userInfo failed: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
     return data;
   }
 
@@ -1277,7 +1278,10 @@ export default class EmbeddedChatApi {
         },
       }
     );
-    const data = response.json();
+    if (!response.ok) {
+      throw new Error(`userData failed: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
     return data;
   }
 }

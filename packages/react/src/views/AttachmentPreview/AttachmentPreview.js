@@ -54,15 +54,18 @@ const AttachmentPreview = () => {
 
   const submit = async () => {
     setIsPending(true);
-    await RCInstance.sendAttachment(
-      data,
-      fileName,
-      messageRef.current.value,
-      ECOptions?.enableThreads ? threadId : undefined
-    );
-    toggle();
-    setData(null);
-    if (isPending) {
+    try {
+      await RCInstance.sendAttachment(
+        data,
+        fileName,
+        messageRef.current.value,
+        ECOptions?.enableThreads ? threadId : undefined
+      );
+      toggle();
+      setData(null);
+    } catch (err) {
+      console.error('Attachment upload failed:', err);
+    } finally {
       setIsPending(false);
     }
   };
