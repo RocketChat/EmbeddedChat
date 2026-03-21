@@ -11,10 +11,11 @@ export default function TypingUsers() {
   const { theme } = useTheme();
 
   useEffect(() => {
-    RCInstance.addTypingStatusListener((t) => {
+    const handleTypingStatus = (t) => {
       setTypingUsers((t || []).filter((u) => u !== currentUserName));
-    });
-    return () => RCInstance.removeTypingStatusListener(setTypingUsers);
+    };
+    RCInstance.addTypingStatusListener(handleTypingStatus);
+    return () => RCInstance.removeTypingStatusListener(handleTypingStatus);
   }, [RCInstance, setTypingUsers, currentUserName]);
 
   const typingStatusMessage = useMemo(() => {

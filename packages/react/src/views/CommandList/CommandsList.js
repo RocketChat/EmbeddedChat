@@ -30,6 +30,7 @@ function CommandsList({
 
   const handleCommandClick = useCallback(
     async (command) => {
+      if (!command) return;
       const commandName = command.command;
       const currentMessage = messageRef.current.value;
       const tokens = (currentMessage || '').split(' ');

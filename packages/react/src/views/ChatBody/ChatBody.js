@@ -146,43 +146,46 @@ const ChatBody = ({
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
-      if (user) {
-        RCInstance.addMessageListener(addMessage);
-        RCInstance.addMessageDeleteListener(removeMessage);
-        RCInstance.addActionTriggeredListener(onActionTriggerResponse);
-        RCInstance.addUiInteractionListener(onActionTriggerResponse);
-      }
-    });
-
-    return () => {
+    const removeAllListeners = () => {
       RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
-  }, [RCInstance, addMessage, removeMessage, onActionTriggerResponse]);
 
-  useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const unsubscribe = RCInstance.auth.onAuthChange((user) => {
       if (user) {
+        // Clear old listeners before adding new ones to avoid duplicates
+        removeAllListeners();
+        RCInstance.addMessageListener(addMessage);
+        RCInstance.addMessageDeleteListener(removeMessage);
+        RCInstance.addActionTriggeredListener(onActionTriggerResponse);
+        RCInstance.addUiInteractionListener(onActionTriggerResponse);
+
         getMessagesAndRoles();
         setHasMoreMessages(true);
-      } else {
-        getMessagesAndRoles(anonymousMode);
-      }
-    });
-  }, [RCInstance, anonymousMode, getMessagesAndRoles]);
-
-  useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
-      if (user) {
         fetchAndSetPermissions();
       } else {
+        removeAllListeners();
+        getMessagesAndRoles(anonymousMode);
         permissionsRef.current = null;
       }
     });
-  }, []);
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+      removeAllListeners();
+    };
+  }, [
+    RCInstance,
+    addMessage,
+    removeMessage,
+    onActionTriggerResponse,
+    anonymousMode,
+    getMessagesAndRoles,
+    fetchAndSetPermissions,
+    permissionsRef,
+  ]);
 
   // Expose clearUnreadDivider function via ref for ChatInput to call
   useEffect(() => {
@@ -309,9 +312,15 @@ const ChatBody = ({
 
   useEffect(() => {
     if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+      const { scrollTop, scrollHeight, clientHeight } = messageListRef.current;
+      const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+      const isInitialLoad = messages.length > 0 && scrollTop === 0;
+
+      if (isAtBottom || isInitialLoad) {
+        messageListRef.current.scrollTop = scrollHeight;
+      }
     }
-  }, [messages]);
+  }, [messages, messageListRef]);
 
   useEffect(() => {
     checkOverflow();
@@ -429,7 +438,7 @@ const ChatBody = ({
         <LoginForm />
 
         {uiKitModalOpen && (
-          <UiKitModal key={Math.random()} initialView={uiKitModalData} />
+          <UiKitModal key={uiKitModalData?.viewId || 'uikit-modal'} initialView={uiKitModalData} />
         )}
       </Box>
 
@@ -449,4 +458,10 @@ export default ChatBody;
 ChatBody.propTypes = {
   anonymousMode: PropTypes.bool,
   showRoles: PropTypes.bool,
+  messageListRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
+  scrollToBottom: PropTypes.func,
+  clearUnreadDividerRef: PropTypes.shape({ current: PropTypes.func }),
 };
