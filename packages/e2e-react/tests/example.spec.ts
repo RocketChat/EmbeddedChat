@@ -21,7 +21,7 @@ test("opens login modal from join button", async ({ page }) => {
 
 test("shows required field validation for empty login submit", async ({ page }) => {
   await page.getByRole("button", { name: "JOIN" }).click();
-  await page.getByRole("button", { name: "Login" }).last().click();
+  await page.getByRole("dialog").getByRole("button", { name: "Login" }).click();
 
   await expect(page.getByText("This field is required")).toHaveCount(2);
 });
