@@ -22,68 +22,80 @@ jobs:
             const issueNumber = context.issue.number;
             const repo        = context.repo;
 
-            // Resolve the PR author so we can exclude them from the count
             const { data: pr } = await github.rest.pulls.get({
               ...repo,
               pull_number: issueNumber,
             });
             const prAuthor = pr.user.login;
 
-            // Skip closed/merged PRs — no point labeling a finished PR
             if (pr.state !== "open") {
               core.info("PR is not open. Skipping.");
               return;
             }
 
-            // Paginate through every conversation comment on this PR
-            const allComments = await github.paginate(
-              github.rest.issues.listComments,
-              { ...repo, issue_number: issueNumber, per_page: 100 }
-            );
-
-            // Constants — declared early so the summary and label steps share them
-            const LABEL_NAME = "community-tested";
-            const THRESHOLD  = 2;
-
-            // Build a deduplicated set of qualifying testers:
-            //   - trimmed body must be exactly "/tested"
-            //   - must not be the PR author
-            //   - must not be a bot account
-            const testers = new Set();
-            for (const c of allComments) {
-              const login = c.user.login;
-              const body  = (c.body ?? "").trim().toLowerCase();
-              if (
-                body === "/tested" &&
-                login !== prAuthor &&
-                !login.endsWith("[bot]")
-              ) {
-                testers.add(login);
-              }
-            }
-
-            core.info(
-              `Unique testers so far: ${testers.size} — [${[...testers].join(", ")}]`
-            );
-
-            // ── Ephemeral feedback via reaction on the triggering comment ────
-            // Reactions appear on the comment itself — no new thread noise.
-            //   👍 (+1)  — comment was valid and counted
-            //   👀 (eyes) — comment was ignored (author self-test, or not exact match)
             const triggerCommentId = context.payload.comment.id;
             const commenter        = context.actor;
-            const isValid =
-              commenter !== prAuthor &&
-              !commenter.endsWith("[bot]") &&
+
+            // Eligibility: not the PR author, not a bot, has ≥1 merged PR in this repo
+            const isAuthor = commenter === prAuthor;
+            const isBot    = commenter.endsWith("[bot]");
+
+            let hasMergedPR = false;
+            if (!isAuthor && !isBot) {
+              const { data: searchResult } = await github.rest.search.issuesAndPullRequests({
+                q: `repo:${repo.owner}/${repo.repo} is:pr is:merged author:${commenter}`,
+              });
+              hasMergedPR = searchResult.total_count > 0;
+            }
+
+            const isEligible =
+              !isAuthor &&
+              !isBot &&
+              hasMergedPR &&
               (context.payload.comment.body ?? "").trim().toLowerCase() === "/tested";
 
             await github.rest.reactions.createForIssueComment({
               ...repo,
               comment_id: triggerCommentId,
-              content: isValid ? "+1" : "eyes",
+              content: isEligible ? "+1" : "eyes",
             });
 
-            // ── Step summary (visible in Actions UI, not in the PR thread) ───
+            if (!isEligible) {
+              let reason;
+              if (isAuthor)        reason = "you are the author of this PR";
+              else if (isBot)      reason = "bot accounts cannot run this command";
+              else if (!hasMergedPR) reason = "only contributors with at least one merged PR in this repository can run `/tested`";
+              else                 reason = "the comment must be exactly `/tested`";
+
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body: `@${commenter} Your \`/tested\` was not counted — ${reason}.`,
+              });
+              core.info(`${commenter} not eligible: ${reason}`);
+              return;
+            }
+
+            const allComments = await github.paginate(
+              github.rest.issues.listComments,
+              { ...repo, issue_number: issueNumber, per_page: 100 }
+            );
+
+            const LABEL_NAME = "community-tested";
+            const THRESHOLD  = 2;
+
+
+            const testers = new Set();
+            for (const c of allComments) {
+              const login = c.user.login;
+              const body  = (c.body ?? "").trim().toLowerCase();
+              if (body === "/tested" && login !== prAuthor && !login.endsWith("[bot]")) {
+                testers.add(login);
+              }
+            }
+
+            core.info(`Unique testers: ${testers.size} — [${[...testers].join(", ")}]`);
+
             await core.summary
               .addHeading("Community Tested Progress", 3)
               .addTable([
@@ -100,9 +112,7 @@ jobs:
               ])
               .write();
 
-            // Apply the label once the threshold is reached
             if (testers.size >= THRESHOLD) {
-              // Auto-create the label if it doesn't exist yet — no manual repo setup needed
               try {
                 await github.rest.issues.getLabel({ ...repo, name: LABEL_NAME });
               } catch (err) {
@@ -111,21 +121,19 @@ jobs:
                     ...repo,
                     name: LABEL_NAME,
                     color: "0075ca",
-                    description: "Tested by at least 2 independent community contributors",
+                    description: "Tested by community contributors with ≥1 merged PR in this repo",
                   });
-                  core.info(`Label "${LABEL_NAME}" created in this repository.`);
                 } else {
                   throw err;
                 }
               }
 
-              // addLabels is idempotent — safe to call even if the label is already on the PR
               await github.rest.issues.addLabels({
                 ...repo,
                 issue_number: issueNumber,
                 labels: [LABEL_NAME],
               });
-              core.info(`Label "${LABEL_NAME}" applied — ${testers.size} unique testers.`);
+              core.info(`Label "${LABEL_NAME}" applied — ${testers.size} testers.`);
             } else {
               core.info(`${testers.size}/${THRESHOLD} testers. Label not applied yet.`);
             }
