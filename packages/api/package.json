@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "@embeddedchat/auth": "workspace:^",
-    "@rocket.chat/sdk": "^1.0.0-alpha.42"
+    "@rocket.chat/ddp-client": "0.3.45"
   }
 }
