@@ -96,6 +96,24 @@ jobs:
 
             // Apply the label once the threshold is reached
             if (testers.size >= THRESHOLD) {
+              // Auto-create the label if it doesn't exist yet — no manual repo setup needed
+              try {
+                await github.rest.issues.getLabel({ ...repo, name: LABEL_NAME });
+              } catch (err) {
+                if (err.status === 404) {
+                  await github.rest.issues.createLabel({
+                    ...repo,
+                    name: LABEL_NAME,
+                    color: "0075ca",
+                    description: "Tested by at least 2 independent community contributors",
+                  });
+                  core.info(`Label "${LABEL_NAME}" created in this repository.`);
+                } else {
+                  throw err;
+                }
+              }
+
+              // addLabels is idempotent — safe to call even if the label is already on the PR
               await github.rest.issues.addLabels({
                 ...repo,
                 issue_number: issueNumber,
