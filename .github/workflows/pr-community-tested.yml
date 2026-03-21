@@ -29,6 +29,12 @@ jobs:
             });
             const prAuthor = pr.user.login;
 
+            // Skip closed/merged PRs — no point labeling a finished PR
+            if (pr.state !== "open") {
+              core.info("PR is not open. Skipping.");
+              return;
+            }
+
             // Paginate through every conversation comment on this PR
             const allComments = await github.paginate(
               github.rest.issues.listComments,
