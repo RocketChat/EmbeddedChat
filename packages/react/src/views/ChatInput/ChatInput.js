@@ -284,7 +284,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         typingRef.current = true;
         timerRef.current = setTimeout(() => {
           typingRef.current = false;
-        }, [15000]);
+        }, 15000);
         await RCInstance.sendTypingStatus(username, true);
       } else {
         clearTimeout(timerRef.current);
