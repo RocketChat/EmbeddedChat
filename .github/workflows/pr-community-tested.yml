@@ -76,38 +76,34 @@ jobs:
               return;
             }
 
+            const SCORE_MARKER    = "<!-- community-tested-score -->";
+            const VERIFIED_MARKER = "<!-- verified-testers:";
+
             const allComments = await github.paginate(
               github.rest.issues.listComments,
               { ...repo, issue_number: issueNumber, per_page: 100 }
             );
 
-            const LABEL_NAME = "community-tested";
+            const scoreComment = allComments.find(
+              (c) => c.body?.includes(SCORE_MARKER) && c.user.type === "Bot"
+            );
 
-            // Deduplicated testers (author + bot filtered; merged-PR gate enforced live above)
+            // Parse the persisted verified-testers list, or start fresh
             const testers = new Set();
-            for (const c of allComments) {
-              const login = c.user.login;
-              const body  = (c.body ?? "").trim().toLowerCase();
-              if (body === "/tested" && login !== prAuthor && !login.endsWith("[bot]")) {
-                testers.add(login);
+            if (scoreComment) {
+              const match = scoreComment.body.match(/<!-- verified-testers:(.*?)-->/s);
+              if (match) {
+                match[1].split(",").map((s) => s.trim()).filter(Boolean).forEach((l) => testers.add(l));
               }
             }
 
-            core.info(`Unique testers: ${testers.size} -- [${[...testers].join(", ")}]`);
+            // Register the current commenter (Set deduplicates repeat /tested calls)
+            const isFirstTester = testers.size === 0;
+            testers.add(commenter);
 
-            await core.summary
-              .addHeading("Community Tested Progress", 3)
-              .addTable([
-                [
-                  { data: "Testers", header: true },
-                  { data: "Status", header: true },
-                ],
-                [
-                  `${[...testers].join(", ") || "-"}`,
-                  testers.size >= 1 ? "Label applied" : "Waiting for first tester",
-                ],
-              ])
-              .write();
+            core.info(`Verified testers: ${testers.size} -- [${[...testers].join(", ")}]`);
+
+            const LABEL_NAME = "community-tested";
 
             // Apply the label on the first eligible tester
             if (testers.size >= 1) {
@@ -132,8 +128,8 @@ jobs:
                 labels: [LABEL_NAME],
               });
 
-              // On the first tester, ask them to upload a demo video
-              if (testers.size === 1) {
+              // On the first verified tester, ask them to upload a demo video
+              if (isFirstTester) {
                 await github.rest.issues.createComment({
                   ...repo,
                   issue_number: issueNumber,
@@ -144,32 +140,34 @@ jobs:
               }
 
               core.info(`Label "${LABEL_NAME}" applied -- ${testers.size} tester(s).`);
-            } else {
-              core.info("No eligible testers yet. Label not applied.");
             }
 
-            // Confidence score: find-or-update a single bot comment tracking progress
-            const MARKER = "<!-- community-tested-score -->";
+            // Build and persist the score comment (embeds the verified list for future runs)
             const confidence =
-              testers.size >= 4 ? "High (4+ testers)"   :
-              testers.size >= 2 ? "Medium (2-3 testers)" :
-              testers.size >= 1 ? "Low (1 tester)"       : "None";
+              testers.size >= 4 ? "High (4+ testers)"    :
+              testers.size >= 2 ? "Medium (2-3 testers)"  :
+                                  "Low (1 tester)";
 
             const scoreBody =
-              `${MARKER}\n` +
+              `${SCORE_MARKER}\n` +
+              `${VERIFIED_MARKER} ${[...testers].join(", ")} -->\n` +
               `### Community Testing Confidence\n` +
               `| Testers | Confidence |\n` +
               `|---------|------------|\n` +
-              `| ${[...testers].join(", ") || "-"} | ${confidence} |`;
+              `| ${[...testers].join(", ")} | ${confidence} |`;
 
-            const existing = allComments.find(
-              (c) => c.body?.includes(MARKER) && c.user.type === "Bot"
-            );
+            await core.summary
+              .addHeading("Community Tested Progress", 3)
+              .addTable([
+                [{ data: "Testers", header: true }, { data: "Confidence", header: true }],
+                [[...testers].join(", "), confidence],
+              ])
+              .write();
 
-            if (existing) {
+            if (scoreComment) {
               await github.rest.issues.updateComment({
                 ...repo,
-                comment_id: existing.id,
+                comment_id: scoreComment.id,
                 body: scoreBody,
               });
               core.info("Confidence score comment updated.");
