@@ -66,7 +66,8 @@ export const useRCAuth = () => {
       console.error('An error occurred while setting up user', e);
       dispatchToastMessage({
         type: 'error',
-        message: 'Unable to connect to server. Please check your connection and try again.',
+        message:
+          'Unable to connect to server. Please check your connection and try again.',
       });
     }
   };
