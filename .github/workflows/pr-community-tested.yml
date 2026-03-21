@@ -52,7 +52,7 @@ jobs:
             const testers = new Set();
             for (const c of allComments) {
               const login = c.user.login;
-              const body  = (c.body ?? "").trim();
+              const body  = (c.body ?? "").trim().toLowerCase();
               if (
                 body === "/tested" &&
                 login !== prAuthor &&
@@ -75,7 +75,7 @@ jobs:
             const isValid =
               commenter !== prAuthor &&
               !commenter.endsWith("[bot]") &&
-              (context.payload.comment.body ?? "").trim() === "/tested";
+              (context.payload.comment.body ?? "").trim().toLowerCase() === "/tested";
 
             await github.rest.reactions.createForIssueComment({
               ...repo,
