@@ -146,16 +146,19 @@ const ChatBody = ({
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         RCInstance.addMessageListener(addMessage);
         RCInstance.addMessageDeleteListener(removeMessage);
         RCInstance.addActionTriggeredListener(onActionTriggerResponse);
         RCInstance.addUiInteractionListener(onActionTriggerResponse);
       }
-    });
+    };
+
+    RCInstance.auth.onAuthChange(handleAuthChange);
 
     return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
       RCInstance.removeMessageListener(addMessage);
       RCInstance.removeMessageDeleteListener(removeMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
@@ -164,24 +167,36 @@ const ChatBody = ({
   }, [RCInstance, addMessage, removeMessage, onActionTriggerResponse]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         getMessagesAndRoles();
         setHasMoreMessages(true);
       } else {
         getMessagesAndRoles(anonymousMode);
       }
-    });
+    };
+
+    RCInstance.auth.onAuthChange(handleAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
+    };
   }, [RCInstance, anonymousMode, getMessagesAndRoles]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         fetchAndSetPermissions();
       } else {
         permissionsRef.current = null;
       }
-    });
+    };
+
+    RCInstance.auth.onAuthChange(handleAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
+    };
   }, []);
 
   // Expose clearUnreadDivider function via ref for ChatInput to call

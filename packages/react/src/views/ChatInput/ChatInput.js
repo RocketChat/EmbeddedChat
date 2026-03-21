@@ -161,7 +161,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((response) => setCommands(response.commands || []))
@@ -173,7 +173,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           )
           .catch(console.error);
       }
-    });
+    };
+
+    RCInstance.auth.onAuthChange(handleAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
+    };
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
