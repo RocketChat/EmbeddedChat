@@ -9,12 +9,14 @@ import isMessageSequential from '../../lib/isMessageSequential';
 import { Message } from '../Message';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { MessageBody } from '../Message/MessageBody';
+import { MessageDivider } from '../Message/MessageDivider';
 
 const MessageList = ({
   messages,
   loadingOlderMessages,
   isUserAuthenticated,
   hasMoreMessages,
+  firstUnreadMessageId,
 }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
@@ -86,17 +88,23 @@ const MessageList = ({
               const sequential = isMessageSequential(msg, prev, 300);
               const lastSequential =
                 sequential && isMessageLastSequential(msg, next);
+              const showUnreadDivider =
+                firstUnreadMessageId && msg._id === firstUnreadMessageId;
 
               return (
-                <Message
-                  key={msg._id}
-                  message={msg}
-                  newDay={newDay}
-                  sequential={sequential}
-                  lastSequential={lastSequential}
-                  type="default"
-                  showAvatar
-                />
+                <React.Fragment key={msg._id}>
+                  {showUnreadDivider && (
+                    <MessageDivider unread>Unread Messages</MessageDivider>
+                  )}
+                  <Message
+                    message={msg}
+                    newDay={newDay}
+                    sequential={sequential}
+                    lastSequential={lastSequential}
+                    type="default"
+                    showAvatar
+                  />
+                </React.Fragment>
               );
             })}
           {showReportMessage && (

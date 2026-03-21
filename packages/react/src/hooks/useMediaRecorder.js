@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function useUserMedia(constraints, videoRef) {
   const [stream, setStream] = useState();
@@ -28,22 +28,115 @@ export function useMediaRecorder({ constraints, onStop, videoRef }) {
     const stream = await getStream(constraints, true);
     chunks.current = [];
     const _recorder = new MediaRecorder(stream);
+
+    const handleDataAvailable = (event) => {
+      chunks.current.push(event.data);
+    };
+
+    const handleStop = () => {
+      onStop && onStop(chunks.current);
+      _recorder.removeEventListener('dataavailable', handleDataAvailable);
+      _recorder.removeEventListener('stop', handleStop);
+    };
+
+    _recorder.addEventListener('dataavailable', handleDataAvailable);
+    _recorder.addEventListener('stop', handleStop);
+
     _recorder.start();
     setRecorder(_recorder);
-    _recorder.addEventListener('dataavailable', (event) => {
-      chunks.current.push(event.data);
-    });
-    _recorder.addEventListener('stop', () => {
-      onStop && onStop(chunks.current);
-    });
   }
 
   async function stop() {
     if (recorder) {
-      recorder.stop();
+      if (recorder.state !== 'inactive') {
+        recorder.stop();
+      }
       (await getStream()).getTracks().forEach((track) => track.stop());
     }
   }
 
   return [start, stop];
+}
+
+export function useNewMediaRecorder({ constraints, videoRef, onStop }) {
+  const [stream, setStream] = useState();
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [recorder, setRecorder] = useState();
+  const [recordingData, setRecordingData] = useState(null);
+  const chunks = useRef([]);
+
+  async function startCameraAndMic() {
+    if (isStreaming) return;
+    try {
+      const _stream = await navigator.mediaDevices.getUserMedia(constraints);
+      setStream(_stream);
+      setIsStreaming(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = _stream;
+      }
+    } catch (error) {
+      console.error('Error starting camera and mic:', error);
+    }
+  }
+
+  async function startRecording() {
+    if (!isStreaming) {
+      console.error('Camera and mic must be on to start recording.');
+      return;
+    }
+
+    chunks.current = [];
+    const _recorder = new MediaRecorder(stream);
+
+    const handleDataAvailable = (event) => {
+      chunks.current.push(event.data);
+    };
+
+    const handleStop = () => {
+      setRecordingData(new Blob(chunks.current, { type: 'video/mp4' }));
+      onStop && onStop(chunks.current);
+      _recorder.removeEventListener('dataavailable', handleDataAvailable);
+      _recorder.removeEventListener('stop', handleStop);
+    };
+
+    _recorder.addEventListener('dataavailable', handleDataAvailable);
+    _recorder.addEventListener('stop', handleStop);
+
+    _recorder.start();
+    setRecorder(_recorder);
+  }
+
+  async function stopRecording() {
+    if (recorder && recorder.state === 'recording') {
+      recorder.stop();
+    }
+  }
+
+  function getRecording() {
+    return recordingData;
+  }
+
+  function deleteRecording() {
+    setRecordingData(null);
+    chunks.current = [];
+  }
+
+  function stopCameraAndMic() {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+      setIsStreaming(false);
+    }
+  }
+
+  useEffect(() => () => stopCameraAndMic(), []);
+
+  return {
+    startCameraAndMic,
+    startRecording,
+    stopRecording,
+    getRecording,
+    deleteRecording,
+    stopCameraAndMic,
+  };
 }

@@ -26,17 +26,19 @@ import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { CommandsList } from '../CommandList';
+import { EmojiList } from '../EmojiList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
+import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
 
-const ChatInput = ({ scrollToBottom }) => {
+const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
   const { theme } = useTheme();
@@ -57,6 +59,10 @@ const ChatInput = ({ scrollToBottom }) => {
   const [showMembersList, setShowMembersList] = useState(false);
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
+  const [showEmojiList, setShowEmojiList] = useState(false);
+  const [filteredEmojis, setFilteredEmojis] = useState([]);
+  const [emojiIndex, setEmojiIndex] = useState(-1);
+  const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
 
   const {
@@ -103,6 +109,7 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage,
     clearQuoteMessages,
     threadId,
+    deletedMessage,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
@@ -112,6 +119,7 @@ const ChatInput = ({ scrollToBottom }) => {
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
     clearQuoteMessages: state.clearQuoteMessages,
+    deletedMessage: state.deletedMessage,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -119,9 +127,10 @@ const ChatInput = ({ scrollToBottom }) => {
   );
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
 
-  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+  const { toggle, setData, data } = useAttachmentWindowStore((state) => ({
     toggle: state.toggle,
     setData: state.setData,
+    data: state.data,
   }));
 
   const userInfo = { _id: userId, username, name };
@@ -143,12 +152,19 @@ const ChatInput = ({ scrollToBottom }) => {
   );
 
   const { handlePaste } = useDropBox();
+  const searchEmoji = useSearchEmoji(
+    startReadEmoji,
+    setStartReadEmoji,
+    setFilteredEmojis,
+    setEmojiIndex,
+    setShowEmojiList
+  );
 
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
-          .then((data) => setCommands(data.commands || []))
+          .then((response) => setCommands(response.commands || []))
           .catch(console.error);
 
         RCInstance.getChannelMembers(isChannelPrivate)
@@ -164,12 +180,32 @@ const ChatInput = ({ scrollToBottom }) => {
     if (editMessage.attachments) {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
+      messageRef.current.focus();
     } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
+      messageRef.current.focus();
     } else {
       messageRef.current.value = '';
     }
   }, [editMessage]);
+
+  useEffect(() => {
+    if (
+      deletedMessage._id &&
+      editMessage._id &&
+      deletedMessage._id === editMessage._id
+    ) {
+      messageRef.current.value = '';
+      setDisableButton(true);
+      setEditMessage({});
+    }
+  }, [deletedMessage]);
+
+  useEffect(() => {
+    if (data === null && inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }, [data]);
 
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
@@ -341,7 +377,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
   const handleCommandExecution = async (message) => {
     const execCommand = async (command, params) => {
-      await RCInstance.execCommand({ command, params });
+      await RCInstance.execCommand({ command, params, tmid: threadId });
       setFilteredCommands([]);
     };
 
@@ -385,6 +421,10 @@ const ChatInput = ({ scrollToBottom }) => {
 
     handleSendNewMessage(message);
     scrollToBottom();
+    // Clear unread divider when user sends a message
+    if (clearUnreadDividerRef?.current) {
+      clearUnreadDividerRef.current();
+    }
   };
 
   const sendAttachment = (event) => {
@@ -399,12 +439,17 @@ const ChatInput = ({ scrollToBottom }) => {
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    messageRef.current.value = parseEmoji(message);
+
+    // Don't parse emojis if user is currently typing emoji autocomplete
+    const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
+    messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
+
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
       showCommands(e);
+      searchEmoji(message);
     }
   };
 
@@ -481,7 +526,7 @@ const ChatInput = ({ scrollToBottom }) => {
 
       case e.code === 'Enter':
         e.preventDefault();
-        if (!showCommandList && !showMembersList) {
+        if (!showCommandList && !showMembersList && !showEmojiList) {
           sendTypingStop();
           sendMessage();
         }
@@ -601,6 +646,18 @@ const ChatInput = ({ scrollToBottom }) => {
             messageRef={messageRef}
             setFilteredCommands={setFilteredCommands}
             setShowCommandList={setShowCommandList}
+          />
+        )}
+
+        {showEmojiList && (
+          <EmojiList
+            emojiIndex={emojiIndex}
+            messageRef={messageRef}
+            filteredEmojis={filteredEmojis}
+            setFilteredEmojis={setFilteredEmojis}
+            setEmojiIndex={setEmojiIndex}
+            setStartReadEmoji={setStartReadEmoji}
+            setShowEmojiList={setShowEmojiList}
           />
         )}
 

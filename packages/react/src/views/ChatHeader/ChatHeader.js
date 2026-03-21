@@ -150,8 +150,13 @@ const ChatHeader = ({
 
   useEffect(() => {
     const getMessageLimit = async () => {
-      const messageLimitObj = await RCInstance.getMessageLimit();
-      setMessageLimit(messageLimitObj?.value);
+      try {
+        const messageLimitObj = await RCInstance.getMessageLimit();
+        setMessageLimit(messageLimitObj?.value);
+      } catch (e) {
+        console.error('Failed to fetch message limit', e);
+        setMessageLimit(undefined);
+      }
     };
 
     const setMessageAllowed = async () => {
@@ -399,6 +404,9 @@ const ChatHeader = ({
                       <div
                         css={css`
                           font-size: ${fullScreen ? '1.3rem' : '1.25rem'};
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
                         `}
                       >
                         {channelInfo.name || channelName || 'channelName'}
