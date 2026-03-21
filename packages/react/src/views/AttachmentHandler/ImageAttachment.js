@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
@@ -16,6 +16,23 @@ const ImageAttachment = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const [showGallery, setShowGallery] = useState(false);
+  const [authParams, setAuthParams] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+    RCInstance.auth.getCurrentUser().then((user) => {
+      if (!cancelled && user?.authToken && user?.userId) {
+        setAuthParams(`rc_token=${user.authToken}&rc_uid=${user.userId}`);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [RCInstance]);
+
+  const withAuth = (url) => {
+    if (!url || !authParams) return url;
+    const sep = url.includes('?') ? '&' : '?';
+    return `${url}${sep}${authParams}`;
+  };
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
     const URL = `${instanceHost}${icon}`;
@@ -96,7 +113,7 @@ const ImageAttachment = ({
         {isExpanded && (
           <Box onClick={() => setShowGallery(true)}>
             <img
-              src={host + attachment.image_url}
+              src={withAuth(host + attachment.image_url)}
               style={{
                 maxWidth: '100%',
                 objectFit: 'contain',
@@ -160,7 +177,7 @@ const ImageAttachment = ({
                   variantStyles={variantStyles}
                 />
                 <img
-                  src={host + nestedAttachment.image_url}
+                  src={withAuth(host + nestedAttachment.image_url)}
                   style={{
                     maxWidth: '100%',
                     objectFit: 'contain',
