@@ -97,7 +97,12 @@ jobs:
               }
             }
 
-            // Register the current commenter (Set deduplicates repeat /tested calls)
+            // Short-circuit if this person has already been counted
+            if (testers.has(commenter)) {
+              core.info(`${commenter} already verified. Skipping.`);
+              return;
+            }
+
             const isFirstTester = testers.size === 0;
             testers.add(commenter);
 
