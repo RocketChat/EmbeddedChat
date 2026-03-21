@@ -18,7 +18,7 @@ const SurfaceItem = ({
   onRemove,
   type,
   cursor = 'grab',
-  tooltipPosition = 'bottom',
+  tooltipPosition = 'top',
   size,
 }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =

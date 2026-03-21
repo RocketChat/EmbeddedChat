@@ -493,34 +493,7 @@ export default class EmbeddedChatApi {
 
   async getRoomInfo() {
     try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/method.call/rooms%3Aget`,
-        {
-          body: JSON.stringify({
-            message: JSON.stringify({
-              msg: "method",
-              id: null,
-              method: "rooms/get",
-              params: [],
-            }),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "POST",
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.success && result.message) {
-        const parsedMessage = JSON.parse(result.message);
-        return parsedMessage;
-      }
-      return null;
+      return await this.channelInfo();
     } catch (err) {
       console.error(err);
     }
@@ -1034,26 +1007,53 @@ export default class EmbeddedChatApi {
   ) {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const form = new FormData();
-      if (threadId) {
-        form.append("tmid", threadId);
+      if (!userId || !authToken) {
+        console.error("sendAttachment: User not authenticated");
+        return;
       }
+
+      const form = new FormData();
       form.append("file", file, fileName);
-      form.append(
-        "description",
-        fileDescription.length !== 0 ? fileDescription : ""
+
+      const uploadResponse = await fetch(
+        `${this.host}/api/v1/rooms.media/${this.rid}`,
+        {
+          method: "POST",
+          body: form,
+          headers: {
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+        }
       );
-      const response = fetch(`${this.host}/api/v1/rooms.upload/${this.rid}`, {
-        method: "POST",
-        body: form,
-        headers: {
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-      }).then((r) => r.json());
-      return response;
+
+      const uploadResult = await uploadResponse.json();
+
+      if (!uploadResult.success || !uploadResult.file?._id) {
+        console.error("sendAttachment: Upload failed", uploadResult);
+        return uploadResult;
+      }
+
+      const confirmResponse = await fetch(
+        `${this.host}/api/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Auth-Token": authToken,
+            "X-User-Id": userId,
+          },
+          body: JSON.stringify(
+            threadId
+              ? { msg: "", description: fileDescription || "", tmid: threadId }
+              : { msg: "", description: fileDescription || "" }
+          ),
+        }
+      );
+
+      return await confirmResponse.json();
     } catch (err) {
-      console.log(err);
+      console.error("sendAttachment error:", err);
     }
   }
 

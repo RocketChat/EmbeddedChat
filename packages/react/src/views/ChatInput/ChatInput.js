@@ -26,14 +26,17 @@ import MembersList from '../Mentions/MembersList';
 import { TypingUsers } from '../TypingUsers';
 import createPendingMessage from '../../lib/createPendingMessage';
 import { CommandsList } from '../CommandList';
+import { EmojiList } from '../EmojiList';
 import useSettingsStore from '../../store/settingsStore';
 import ChannelState from '../ChannelState/ChannelState';
 import QuoteMessage from '../QuoteMessage/QuoteMessage';
 import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
+import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import useDropBox from '../../hooks/useDropBox';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -56,6 +59,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [showMembersList, setShowMembersList] = useState(false);
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
+  const [showEmojiList, setShowEmojiList] = useState(false);
+  const [filteredEmojis, setFilteredEmojis] = useState([]);
+  const [emojiIndex, setEmojiIndex] = useState(-1);
+  const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
 
   const {
@@ -120,9 +127,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
 
-  const { toggle, setData } = useAttachmentWindowStore((state) => ({
+  const { toggle, setData, data } = useAttachmentWindowStore((state) => ({
     toggle: state.toggle,
     setData: state.setData,
+    data: state.data,
   }));
 
   const userInfo = { _id: userId, username, name };
@@ -143,11 +151,20 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     setShowMembersList
   );
 
+  const { handlePaste } = useDropBox();
+  const searchEmoji = useSearchEmoji(
+    startReadEmoji,
+    setStartReadEmoji,
+    setFilteredEmojis,
+    setEmojiIndex,
+    setShowEmojiList
+  );
+
   useEffect(() => {
     RCInstance.auth.onAuthChange((user) => {
       if (user) {
         RCInstance.getCommandsList()
-          .then((data) => setCommands(data.commands || []))
+          .then((response) => setCommands(response.commands || []))
           .catch(console.error);
 
         RCInstance.getChannelMembers(isChannelPrivate)
@@ -183,6 +200,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       setEditMessage({});
     }
   }, [deletedMessage]);
+
+  useEffect(() => {
+    if (data === null && inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }, [data]);
 
   const getMessageLink = async (id) => {
     const host = RCInstance.getHost();
@@ -416,12 +439,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const onTextChange = (e, val) => {
     sendTypingStart();
     const message = val || e.target.value;
-    messageRef.current.value = parseEmoji(message);
+
+    // Don't parse emojis if user is currently typing emoji autocomplete
+    const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
+    messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
+
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
       showCommands(e);
+      searchEmoji(message);
     }
   };
 
@@ -434,6 +462,40 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const handleBlur = () => {
     if (chatInputContainer.current) {
       chatInputContainer.current.classList.remove('focused');
+    }
+  };
+
+  const handlePasting = (event) => {
+    const { clipboardData } = event;
+
+    if (!clipboardData) {
+      return;
+    }
+
+    const items = Array.from(clipboardData.items);
+    if (
+      items.some(({ kind, type }) => kind === 'string' && type === 'text/plain')
+    ) {
+      return;
+    }
+
+    const files = items
+      .filter(
+        (item) => item.kind === 'file' && item.type.indexOf('image/') !== -1
+      )
+      .map((item) => {
+        const fileItem = item.getAsFile();
+
+        if (!fileItem) {
+          return;
+        }
+        return fileItem;
+      })
+      .filter((file) => !!file);
+
+    if (files.length) {
+      event.preventDefault();
+      handlePaste(files[0]);
     }
   };
 
@@ -464,7 +526,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
       case e.code === 'Enter':
         e.preventDefault();
-        if (!showCommandList && !showMembersList) {
+        if (!showCommandList && !showMembersList && !showEmojiList) {
           sendTypingStop();
           sendMessage();
         }
@@ -587,6 +649,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
 
+        {showEmojiList && (
+          <EmojiList
+            emojiIndex={emojiIndex}
+            messageRef={messageRef}
+            filteredEmojis={filteredEmojis}
+            setFilteredEmojis={setFilteredEmojis}
+            setEmojiIndex={setEmojiIndex}
+            setStartReadEmoji={setStartReadEmoji}
+            setShowEmojiList={setShowEmojiList}
+          />
+        )}
+
         <TypingUsers />
       </Box>
       <Box
@@ -628,6 +702,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             }}
             onFocus={handleFocus}
             onKeyDown={onKeyDown}
+            onPaste={handlePasting}
             ref={messageRef}
           />
 
