@@ -146,7 +146,14 @@ const ChatHeader = ({
     } finally {
       setIsUserAuthenticated(false);
     }
-  }, [RCInstance, setIsUserAuthenticated]);
+  }, [
+    RCInstance,
+    setChannelInfo,
+    setIsUserAuthenticated,
+    setMessages,
+    setShowSidebar,
+    setUserAvatarUrl,
+  ]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -182,10 +189,11 @@ const ChatHeader = ({
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.room);
-        if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room?.teamMain) setIsRoomTeam(true);
+        setIsChannelPrivate(res.room.t === 'p');
+        setIsRoomTeam(Boolean(res.room?.teamMain));
+        setIsChannelArchived(false);
+        setIsChannelReadOnly(Boolean(res.room.ro));
         if (res.room.ro) {
-          setIsChannelReadOnly(true);
           setMessageAllowed();
         }
       } else if (
@@ -205,6 +213,9 @@ const ChatHeader = ({
         const roomInfo = await RCInstance.getRoomInfo();
         const roomData = roomInfo.result[roomInfo.result.length - 1];
         setChannelInfo(roomData);
+        setIsChannelPrivate(roomData?.t === 'p');
+        setIsRoomTeam(Boolean(roomData?.teamMain));
+        setIsChannelReadOnly(Boolean(roomData?.ro));
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
         dispatchToastMessage({
           type: 'error',
@@ -230,7 +241,9 @@ const ChatHeader = ({
     authenticatedUserId,
     setMessageLimit,
     workspaceLevelRoles,
+    setIsChannelArchived,
     setIsChannelReadOnly,
+    setIsRoomTeam,
   ]);
 
   const options = useMemo(

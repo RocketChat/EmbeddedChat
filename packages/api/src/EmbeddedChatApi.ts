@@ -13,6 +13,7 @@ export default class EmbeddedChatApi {
   host: string;
   rid: string;
   rcClient: Rocketchat;
+  roomRoute: "channels" | "groups" | null;
   onMessageCallbacks: ((message: any) => void)[];
   onMessageDeleteCallbacks: ((messageId: string) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
@@ -34,6 +35,7 @@ export default class EmbeddedChatApi {
       useSsl: !/http:\/\//.test(host),
       reopen: 20000,
     });
+    this.roomRoute = null;
     this.onMessageCallbacks = [];
     this.onMessageDeleteCallbacks = [];
     this.onTypingStatusCallbacks = [];
@@ -485,7 +487,13 @@ export default class EmbeddedChatApi {
           method: "GET",
         }
       );
-      return await response.json();
+      const roomInfo = await response.json();
+
+      if (roomInfo?.success && roomInfo?.room?.t) {
+        this.roomRoute = this.getRoomRoute(roomInfo.room.t);
+      }
+
+      return roomInfo;
     } catch (err) {
       console.error(err);
     }
@@ -521,6 +529,28 @@ export default class EmbeddedChatApi {
     await this.rcClient.disconnect();
   }
 
+  getRoomRoute(roomType: string) {
+    return roomType === "p" ? "groups" : "channels";
+  }
+
+  async resolveRoomRoute(isChannelPrivate = false) {
+    if (this.roomRoute) {
+      return this.roomRoute;
+    }
+
+    try {
+      const roomInfo = await this.channelInfo();
+
+      if (roomInfo?.success && roomInfo?.room?.t) {
+        return this.getRoomRoute(roomInfo.room.t);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    return isChannelPrivate ? "groups" : "channels";
+  }
+
   /**
    * @param {boolean} anonymousMode
    * @param {Object} options This object should include query or fields.
@@ -539,7 +569,7 @@ export default class EmbeddedChatApi {
     },
     isChannelPrivate = false
   ) {
-    const roomType = isChannelPrivate ? "groups" : "channels";
+    const roomType = await this.resolveRoomRoute(isChannelPrivate);
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
       ? `&query=${JSON.stringify(options.query)}`
@@ -579,7 +609,7 @@ export default class EmbeddedChatApi {
     },
     isChannelPrivate = false
   ) {
-    const roomType = isChannelPrivate ? "groups" : "channels";
+    const roomType = await this.resolveRoomRoute(isChannelPrivate);
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
       ? `&query=${JSON.stringify(options.query)}`
@@ -628,7 +658,7 @@ export default class EmbeddedChatApi {
   }
 
   async getChannelRoles(isChannelPrivate = false) {
-    const roomType = isChannelPrivate ? "groups" : "channels";
+    const roomType = await this.resolveRoomRoute(isChannelPrivate);
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const roles = await fetch(
@@ -766,7 +796,7 @@ export default class EmbeddedChatApi {
   }
 
   async getAllFiles(isChannelPrivate = false, typeGroup: string) {
-    const roomType = isChannelPrivate ? "groups" : "channels";
+    const roomType = await this.resolveRoomRoute(isChannelPrivate);
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const url =
@@ -1075,7 +1105,7 @@ export default class EmbeddedChatApi {
   }
 
   async getChannelMembers(isChannelPrivate = false) {
-    const roomType = isChannelPrivate ? "groups" : "channels";
+    const roomType = await this.resolveRoomRoute(isChannelPrivate);
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
