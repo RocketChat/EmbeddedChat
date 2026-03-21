@@ -1,0 +1,22 @@
+{
+  "name": "@embeddedchat/ai-adapter",
+  "version": "0.1.0",
+  "description": "Provider-agnostic AI adapter for EmbeddedChat — plug in any AI backend with a single config value.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "format": "prettier --write 'src/'",
+    "format:check": "prettier --check 'src/'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^3.23.0",
+    "rollup-plugin-dts": "^6.0.1",
+    "rollup-plugin-esbuild": "^5.0.0"
+  }
+}

@@ -15,7 +15,8 @@
     "build:storybook": "lerna run build-storybook",
     "format": "lerna run format",
     "format:check": "lerna run format:check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "demo": "yarn workspace @embeddedchat/demo-ai dev"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
