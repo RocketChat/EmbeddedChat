@@ -35,6 +35,10 @@ jobs:
               { ...repo, issue_number: issueNumber, per_page: 100 }
             );
 
+            // Constants — declared early so the summary and label steps share them
+            const LABEL_NAME = "community-tested";
+            const THRESHOLD  = 2;
+
             // Build a deduplicated set of qualifying testers:
             //   - trimmed body must be exactly "/tested"
             //   - must not be the PR author
@@ -56,10 +60,41 @@ jobs:
               `Unique testers so far: ${testers.size} — [${[...testers].join(", ")}]`
             );
 
-            // Apply the label once the threshold is reached
-            const LABEL_NAME = "community-tested";
-            const THRESHOLD  = 2;
+            // ── Ephemeral feedback via reaction on the triggering comment ────
+            // Reactions appear on the comment itself — no new thread noise.
+            //   👍 (+1)  — comment was valid and counted
+            //   👀 (eyes) — comment was ignored (author self-test, or not exact match)
+            const triggerCommentId = context.payload.comment.id;
+            const commenter        = context.actor;
+            const isValid =
+              commenter !== prAuthor &&
+              !commenter.endsWith("[bot]") &&
+              (context.payload.comment.body ?? "").trim() === "/tested";
 
+            await github.rest.reactions.createForIssueComment({
+              ...repo,
+              comment_id: triggerCommentId,
+              content: isValid ? "+1" : "eyes",
+            });
+
+            // ── Step summary (visible in Actions UI, not in the PR thread) ───
+            await core.summary
+              .addHeading("Community Tested Progress", 3)
+              .addTable([
+                [
+                  { data: "Testers", header: true },
+                  { data: "Required", header: true },
+                  { data: "Status", header: true },
+                ],
+                [
+                  `${[...testers].join(", ") || "—"}`,
+                  `${THRESHOLD}`,
+                  testers.size >= THRESHOLD ? "✅ Label applied" : `⏳ ${testers.size}/${THRESHOLD} — waiting`,
+                ],
+              ])
+              .write();
+
+            // Apply the label once the threshold is reached
             if (testers.size >= THRESHOLD) {
               await github.rest.issues.addLabels({
                 ...repo,
