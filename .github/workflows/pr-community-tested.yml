@@ -36,7 +36,7 @@ jobs:
             const triggerCommentId = context.payload.comment.id;
             const commenter        = context.actor;
 
-            // Eligibility: not the PR author, not a bot, has ≥1 merged PR in this repo
+            // Eligibility: not the PR author, not a bot, has >=1 merged PR in this repo
             const isAuthor = commenter === prAuthor;
             const isBot    = commenter.endsWith("[bot]");
 
@@ -63,14 +63,14 @@ jobs:
             if (!isEligible) {
               let reason;
               if (isAuthor)          reason = "you are the author of this PR";
-              else if (isBot)      reason = "bot accounts cannot run this command";
+              else if (isBot)        reason = "bot accounts cannot run this command";
               else if (!hasMergedPR) reason = "only contributors with at least one merged PR in this repository can run `/tested`";
-              else                 reason = "the comment must be exactly `/tested`";
+              else                   reason = "the comment must be exactly `/tested`";
 
               await github.rest.issues.createComment({
                 ...repo,
                 issue_number: issueNumber,
-                body: `@${commenter} Your \`/tested\` was not counted — ${reason}.`,
+                body: `@${commenter} Your \`/tested\` was not counted -- ${reason}.`,
               });
               core.info(`${commenter} not eligible: ${reason}`);
               return;
@@ -83,7 +83,7 @@ jobs:
 
             const LABEL_NAME = "community-tested";
 
-
+            // Deduplicated testers (author + bot filtered; merged-PR gate enforced live above)
             const testers = new Set();
             for (const c of allComments) {
               const login = c.user.login;
@@ -93,7 +93,7 @@ jobs:
               }
             }
 
-            core.info(`Unique testers: ${testers.size} — [${[...testers].join(", ")}]`);
+            core.info(`Unique testers: ${testers.size} -- [${[...testers].join(", ")}]`);
 
             await core.summary
               .addHeading("Community Tested Progress", 3)
@@ -103,8 +103,8 @@ jobs:
                   { data: "Status", header: true },
                 ],
                 [
-                  `${[...testers].join(", ") || "—"}`,
-                  testers.size >= 1 ? "✅ Label applied" : "⏳ Waiting for first tester",
+                  `${[...testers].join(", ") || "-"}`,
+                  testers.size >= 1 ? "Label applied" : "Waiting for first tester",
                 ],
               ])
               .write();
@@ -119,7 +119,7 @@ jobs:
                     ...repo,
                     name: LABEL_NAME,
                     color: "0075ca",
-                    description: "Tested by community contributors with ≥1 merged PR in this repo",
+                    description: "Tested by community contributors with >=1 merged PR in this repo",
                   });
                 } else {
                   throw err;
@@ -143,7 +143,41 @@ jobs:
                 });
               }
 
-              core.info(`Label "${LABEL_NAME}" applied — ${testers.size} tester(s).`);
+              core.info(`Label "${LABEL_NAME}" applied -- ${testers.size} tester(s).`);
             } else {
               core.info("No eligible testers yet. Label not applied.");
+            }
+
+            // Confidence score: find-or-update a single bot comment tracking progress
+            const MARKER = "<!-- community-tested-score -->";
+            const confidence =
+              testers.size >= 4 ? "High (4+ testers)"   :
+              testers.size >= 2 ? "Medium (2-3 testers)" :
+              testers.size >= 1 ? "Low (1 tester)"       : "None";
+
+            const scoreBody =
+              `${MARKER}\n` +
+              `### Community Testing Confidence\n` +
+              `| Testers | Confidence |\n` +
+              `|---------|------------|\n` +
+              `| ${[...testers].join(", ") || "-"} | ${confidence} |`;
+
+            const existing = allComments.find(
+              (c) => c.body?.includes(MARKER) && c.user.type === "Bot"
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...repo,
+                comment_id: existing.id,
+                body: scoreBody,
+              });
+              core.info("Confidence score comment updated.");
+            } else {
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body: scoreBody,
+              });
+              core.info("Confidence score comment created.");
             }
