@@ -17,6 +17,13 @@ const FileGallery = () => {
   const [files, setFiles] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('all');
 
+  const [fileMessageIds, setFileMessageIds] = useState([]);
+  const threadMessages = useMessageStore((state) => state.threadMessages) || [];
+  const allMessages = useMemo(
+    () => [...messages, ...[...threadMessages].reverse()],
+    [messages, threadMessages]
+  );
+
   const options = [
     { value: 'all', label: 'All' },
     { value: 'application', label: 'Files' },
@@ -45,7 +52,12 @@ const FileGallery = () => {
         const sortedFiles = res.files.sort(
           (a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)
         );
+        const fileIdSet = new Set(res.files.map((file) => file._id));
+        const matchedMessages = allMessages
+          .filter((message) => fileIdSet.has(message.file?._id))
+          .map((message) => message._id);
         setFiles(sortedFiles);
+        setFileMessageIds(matchedMessages);
         setIsFetching(false);
       }
     };
@@ -86,6 +98,7 @@ const FileGallery = () => {
       }}
       fetching={isFetching}
       shouldRender={(file) => file.path}
+      fileMessageIds={fileMessageIds}
       type="file"
       searchFiltered={filteredFiles}
       viewType={viewType}

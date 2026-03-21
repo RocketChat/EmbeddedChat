@@ -32,9 +32,11 @@ import CheckPreviewType from '../AttachmentPreview/CheckPreviewType';
 import { useRCContext } from '../../context/RCInstance';
 import UiKitContextualBar from '../ContextualBarBlock/uiKit/UiKitContextualBar';
 import useUiKitStore from '../../store/uiKitStore';
+import { MessageNavigationProvider } from '../../context/MessageNavigationContext';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
+  const jumpToMessageRef = useRef(null);
   const clearUnreadDividerRef = useRef(null);
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { RCInstance, ECOptions } = useRCContext();
@@ -98,16 +100,40 @@ const ChatLayout = () => {
   useEffect(() => {
     getStarredMessages();
   }, [showSidebar]);
+  const registerJumpToMessage = useCallback((fn) => {
+    jumpToMessageRef.current = fn;
+  }, []);
+
   return (
-    <Box
-      css={styles.layout}
-      style={{
-        ...styleOverrides,
+    <MessageNavigationProvider
+      value={{
+        jumpToMessage: (messageOrId) => {
+          const messageId =
+            typeof messageOrId === 'string' ? messageOrId : messageOrId?._id;
+          if (!messageId) return;
+          return jumpToMessageRef.current?.(messageId);
+        },
       }}
-      className={`ec-chat-layout ${classNames}`}
-      onDragOver={(e) => handleDrag(e)}
-      onDrop={(e) => handleDragDrop(e)}
     >
+      <Box
+        css={styles.layout}
+        style={{
+          ...styleOverrides,
+        }}
+        className={`ec-chat-layout ${classNames}`}
+        onDragOver={(e) => handleDrag(e)}
+        onDrop={(e) => handleDragDrop(e)}
+      >
+        <Box css={styles.chatMain}>
+          <ChatBody
+            anonymousMode={anonymousMode}
+            showRoles={showRoles}
+            messageListRef={messageListRef}
+            scrollToBottom={scrollToBottom}
+            onRegisterJump={registerJumpToMessage}
+          />
+          <ChatInput scrollToBottom={scrollToBottom} />
+          <div id="emoji-popup" />
       <Box css={styles.chatMain}>
         <ChatBody
           anonymousMode={anonymousMode}
@@ -141,18 +167,38 @@ const ChatLayout = () => {
             />
           )}
         </Box>
-      )}
 
-      {attachmentWindowOpen ? (
-        data ? (
-          <>
-            <AttachmentPreview />
-          </>
-        ) : (
-          <CheckPreviewType data={data} />
-        )
-      ) : null}
-    </Box>
+        {showSidebar && (
+          <Box className="ec-sidebar-view">
+            {showMembers && <RoomMembers members={members} />}
+            {showSearch && <SearchMessages />}
+            {showChannelinfo && <Roominfo />}
+            {showAllThreads && <ThreadedMessages />}
+            {showAllFiles && <FileGallery />}
+            {showMentions && <MentionedMessages />}
+            {showPinned && <PinnedMessages />}
+            {showStarred && <StarredMessages />}
+            {showCurrentUserInfo && <UserInformation />}
+            {uiKitContextualBarOpen && (
+              <UiKitContextualBar
+                key={Math.random()}
+                initialView={uiKitContextualBarData}
+              />
+            )}
+          </Box>
+        )}
+
+        {attachmentWindowOpen ? (
+          data ? (
+            <>
+              <AttachmentPreview />
+            </>
+          ) : (
+            <CheckPreviewType data={data} />
+          )
+        ) : null}
+      </Box>
+    </MessageNavigationProvider>
   );
 };
 
