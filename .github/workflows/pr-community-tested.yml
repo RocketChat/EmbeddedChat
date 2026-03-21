@@ -1,0 +1,22 @@
+name: PR Community Tested
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  community-tested:
+    if: |
+      github.event.issue.pull_request != null &&
+      startsWith(github.event.comment.body, '/tested')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Process /tested command
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.info("Triggered by: " + context.actor);
