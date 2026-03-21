@@ -17,12 +17,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16.19.0
+          node-version: 22.22.1
 
       - name: Set up Yarn
         uses: actions/setup-node@v4
         with:
-          node-version: 16.19.0
+          node-version: 22.22.1
           cache: "yarn"
 
       - name: Cache dependencies
