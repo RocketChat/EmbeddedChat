@@ -11,6 +11,7 @@ import {
 import { useRCContext } from '../../context/RCInstance';
 import { Swiper, SwiperSlide } from './Swiper';
 import getImageGalleryStyles from './ImageGallery.styles';
+import AuthenticatedImage from '../AttachmentHandler/AuthenticatedImage';
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const { theme } = useTheme();
@@ -104,7 +105,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
               {files.map(({ _id, url }) => (
                 <SwiperSlide key={_id}>
                   <Box css={styles.imageContainer}>
-                    <img src={url} css={styles.image} />
+                    <AuthenticatedImage url={url} css={styles.image} />
                   </Box>
                 </SwiperSlide>
               ))}

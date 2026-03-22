@@ -5,6 +5,7 @@ import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import AttachmentMetadata from './AttachmentMetadata';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import RCContext from '../../context/RCInstance';
+import AuthenticatedImage from './AuthenticatedImage';
 
 const ImageAttachment = ({
   attachment,
@@ -16,37 +17,6 @@ const ImageAttachment = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const [showGallery, setShowGallery] = useState(false);
-  const [authParams, setAuthParams] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    RCInstance.auth.getCurrentUser().then((user) => {
-      if (!cancelled) {
-        setAuthParams(
-          user?.authToken && user?.userId
-            ? `rc_token=${user.authToken}&rc_uid=${user.userId}`
-            : ''
-        );
-      }
-    }).catch(() => {
-      if (!cancelled) setAuthParams('');
-    });
-    return () => { cancelled = true; };
-  }, [RCInstance]);
-
-  const withAuth = (url) => {
-    if (!url) return url;
-    // Only add auth to URLs served from our own RC host — never leak creds to 3rd parties
-    try {
-      const rcHostname = new URL(host).hostname;
-      if (new URL(url).hostname !== rcHostname) return url;
-    } catch {
-      return url; // malformed URL — skip auth
-    }
-    if (!authParams) return url;
-    const sep = url.includes('?') ? '&' : '?';
-    return `${url}${sep}${authParams}`;
-  };
 
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
@@ -127,8 +97,8 @@ const ImageAttachment = ({
         </Box>
         {isExpanded && (
           <Box onClick={() => setShowGallery(true)}>
-            <img
-              src={withAuth(host + attachment.image_url)}
+            <AuthenticatedImage
+              url={host + attachment.image_url}
               style={{
                 maxWidth: '100%',
                 objectFit: 'contain',
@@ -191,8 +161,8 @@ const ImageAttachment = ({
                   }
                   variantStyles={variantStyles}
                 />
-                <img
-                  src={withAuth(host + nestedAttachment.image_url)}
+                <AuthenticatedImage
+                  url={host + nestedAttachment.image_url}
                   style={{
                     maxWidth: '100%',
                     objectFit: 'contain',

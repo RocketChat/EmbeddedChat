@@ -180,6 +180,22 @@ class RocketChatAuth {
 
   async save() {
     await this.saveToken(this.currentUser.authToken);
+    try {
+      if (typeof window !== "undefined") {
+        const proxyUrl = "/api/proxy-auth";
+        await fetch(proxyUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            rc_token: this.currentUser.authToken,
+            rc_uid: this.currentUser.userId,
+            host: this.host,
+          }),
+        }).catch(() => null); // Fail silently if no proxy is configured
+      }
+    } catch (e) {
+      // Ignore proxy errors
+    }
     this.notifyAuthListeners();
   }
 
