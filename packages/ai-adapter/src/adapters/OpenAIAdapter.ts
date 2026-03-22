@@ -1,115 +1,44 @@
 import type {
   AIAdapter,
   ChatMessage,
-  ProcessedMessage,
   SmartReplyContext,
   SmartReplySuggestion,
 } from '../types';
 
 /**
- * OpenAI GPT-4o-mini adapter.
+ * OpenAIAdapter — connects EmbeddedChat to any OpenAI-compatible API.
  *
- * Requires OPENAI_API_KEY env var (or pass via constructor).
- * Falls back gracefully if the API call fails.
+ * Works with:
+ *   - OpenAI (api.openai.com)
+ *   - Azure OpenAI
+ *   - Ollama, LM Studio, or any server that exposes the /v1/chat/completions endpoint
+ *
+ * Usage:
+ *   const adapter = new OpenAIAdapter({ apiKey: 'sk-...' });
+ *   <EmbeddedChat host="..." roomId="..." aiAdapter={adapter} />
  */
 export class OpenAIAdapter implements AIAdapter {
-  readonly providerName = 'OpenAI GPT-4o-mini';
+  readonly providerName = 'OpenAI';
 
   private readonly apiKey: string;
-  private readonly model = 'gpt-4o-mini';
-  private readonly baseUrl = 'https://api.openai.com/v1';
+  private readonly model: string;
+  private readonly baseUrl: string;
 
-  constructor(apiKey?: string) {
-    const key =
-      apiKey ??
-      (typeof process !== 'undefined' && process.env
-        ? process.env['OPENAI_API_KEY']
-        : undefined);
-
-    if (!key) {
-      throw new Error(
-        '[OpenAIAdapter] No API key found. Pass it to the constructor or set OPENAI_API_KEY env var.'
-      );
-    }
-    this.apiKey = key;
+  constructor(options: {
+    apiKey: string;
+    model?: string;
+    /** Override for Azure OpenAI or local servers */
+    baseUrl?: string;
+  }) {
+    this.apiKey = options.apiKey;
+    this.model = options.model ?? 'gpt-4o-mini';
+    this.baseUrl = options.baseUrl ?? 'https://api.openai.com/v1';
   }
 
-  async getSmartReplies(context: SmartReplyContext): Promise<SmartReplySuggestion[]> {
-    const lastMessage = context.recentMessages[context.recentMessages.length - 1];
-    if (!lastMessage || lastMessage.u.username === context.currentUsername) {
-      return [];
-    }
+  // ─── private helper ────────────────────────────────────────────────────────
 
-    const history = context.recentMessages
-      .slice(-6)
-      .map((m) => `${m.u.username}: ${m.msg}`)
-      .join('\n');
-
-    const prompt =
-      `You are a chat assistant helping "${context.currentUsername}" reply to this conversation.\n\n` +
-      `Recent messages:\n${history}\n\n` +
-      `Generate exactly 3 short, natural reply suggestions (max 12 words each). ` +
-      `Return as a JSON array of strings. No explanation.`;
-
-    const raw = await this.chat(prompt);
-    let suggestions: string[] = [];
-
-    try {
-      suggestions = JSON.parse(raw) as string[];
-    } catch {
-      suggestions = raw
-        .split('\n')
-        .map((l) => l.replace(/^[\d.\-*•]+\s*/, '').trim())
-        .filter(Boolean)
-        .slice(0, 3);
-    }
-
-    return suggestions.map((text, i) => ({
-      id: `openai-${i}`,
-      text,
-      confidence: parseFloat((0.95 - i * 0.05).toFixed(2)),
-    }));
-  }
-
-  async summarizeThread(messages: ChatMessage[]): Promise<string> {
-    if (messages.length === 0) return 'No messages to summarize.';
-
-    const transcript = messages
-      .map((m) => `${m.u.username}: ${m.msg}`)
-      .join('\n');
-
-    const prompt =
-      `Summarize this chat thread in 2–3 sentences. Be concise and factual.\n\n${transcript}`;
-
-    return this.chat(prompt);
-  }
-
-  async processMessage(message: string): Promise<ProcessedMessage> {
-    const prompt =
-      `Analyze this chat message and respond with JSON only:\n` +
-      `{"category":"question|statement|request|greeting|other","sentiment":"positive|neutral|negative","enhanced":"<same or lightly improved text>"}\n\n` +
-      `Message: "${message}"`;
-
-    const raw = await this.chat(prompt);
-    try {
-      const parsed = JSON.parse(raw) as {
-        category: ProcessedMessage['category'];
-        sentiment: ProcessedMessage['sentiment'];
-        enhanced: string;
-      };
-      return { original: message, ...parsed };
-    } catch {
-      return {
-        original: message,
-        enhanced: message,
-        category: 'other',
-        sentiment: 'neutral',
-      };
-    }
-  }
-
-  private async chat(prompt: string): Promise<string> {
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+  private async chat(systemPrompt: string, userPrompt: string): Promise<string> {
+    const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,20 +46,54 @@ export class OpenAIAdapter implements AIAdapter {
       },
       body: JSON.stringify({
         model: this.model,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 200,
+        temperature: 0.4,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
       }),
     });
 
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(`[OpenAIAdapter] API error ${response.status}: ${err}`);
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`OpenAI request failed (${res.status}): ${err}`);
     }
 
-    const data = await response.json() as {
-      choices: Array<{ message: { content: string } }>;
-    };
-    return data.choices[0]?.message.content.trim() ?? '';
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content?.trim() ?? '';
+  }
+
+  // ─── AIAdapter interface ────────────────────────────────────────────────────
+
+  async getSmartReplies(ctx: SmartReplyContext): Promise<SmartReplySuggestion[]> {
+    const history = ctx.recentMessages
+      .map((m) => `${m.u.username}: ${m.msg}`)
+      .join('\n');
+
+    const raw = await this.chat(
+      'You are a chat assistant. Given a conversation history, suggest 3 short, natural reply options for the user. ' +
+        'Respond with exactly 3 lines — one reply per line — no numbering, no extra text.',
+      `Conversation:\n${history}\n\nUser: ${ctx.currentUsername}\nSuggest 3 replies:`
+    );
+
+    return raw
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(0, 3)
+      .map((text, i) => ({
+        id: `sr-${i}`,
+        text,
+        confidence: 1 - i * 0.1,
+      }));
+  }
+
+  async summarizeThread(messages: ChatMessage[]): Promise<string> {
+    const history = messages.map((m) => `${m.u.username}: ${m.msg}`).join('\n');
+
+    return this.chat(
+      'You are a chat assistant. Summarise the following thread in 2–3 sentences.',
+      history
+    );
   }
 }

@@ -17,6 +17,8 @@ export const RCInstanceProvider = RCContext.Provider;
  * @property {boolean} showAvatar
  * @property {boolean} hideHeader
  * @property {boolean} anonymousMode
+ * @property {import('@embeddedchat/ai-adapter').AIAdapter | null} aiAdapter
+ *   Optional AI adapter. When present, AI features (SmartReplies, etc.) are enabled.
  *
  * @typedef {Object} RCContext
  * @property {import('@embeddedchat/api').EmbeddedChatApi} RCInstance

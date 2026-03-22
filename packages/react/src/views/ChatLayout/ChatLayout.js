@@ -25,6 +25,7 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
+import SmartReplies from '../SmartReplies';
 import useDropBox from '../../hooks/useDropBox';
 import AttachmentPreview from '../AttachmentPreview/AttachmentPreview';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -40,6 +41,7 @@ const ChatLayout = () => {
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
   const showRoles = ECOptions?.showRoles;
+  const aiAdapter = ECOptions?.aiAdapter ?? null;
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
   );
@@ -82,6 +84,26 @@ const ChatLayout = () => {
       });
     }
   };
+
+  // Ref forwarded to ChatInput so SmartReplies can inject text
+  const chatInputRef = useRef(null);
+
+  const handleSmartReplySelect = useCallback((text) => {
+    // Inject the selected suggestion into ChatInput's textarea
+    if (chatInputRef.current) {
+      chatInputRef.current.value = text;
+      chatInputRef.current.focus();
+      // Trigger React synthetic change so ChatInput state updates
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLTextAreaElement.prototype,
+        'value'
+      )?.set;
+      if (nativeInputValueSetter) {
+        nativeInputValueSetter.call(chatInputRef.current, text);
+        chatInputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+  }, []);
   const getStarredMessages = useCallback(async () => {
     if (isUserAuthenticated) {
       try {
@@ -116,9 +138,13 @@ const ChatLayout = () => {
           scrollToBottom={scrollToBottom}
           clearUnreadDividerRef={clearUnreadDividerRef}
         />
+        {aiAdapter && (
+          <SmartReplies onSelect={handleSmartReplySelect} />
+        )}
         <ChatInput
           scrollToBottom={scrollToBottom}
           clearUnreadDividerRef={clearUnreadDividerRef}
+          inputRef={chatInputRef}
         />
         <div id="emoji-popup" />
       </Box>

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
-import { useAIAdapter } from '../../context/AIContext';
+import { useRCContext } from '../../context/RCInstance';
 import { useMessageStore, useUserStore } from '../../store';
 
 const getStyles = (theme) => ({
@@ -54,13 +54,21 @@ const getStyles = (theme) => ({
 /**
  * SmartReplies — renders AI-powered quick-reply chips above the chat input.
  *
- * Reads from AIContext — no provider-specific code here.
- * If no AIAdapter is mounted, this component renders nothing.
+ * Reads `aiAdapter` from ECOptions (via RCContext) — the same context that
+ * carries `host`, `roomId`, etc. No separate provider wrapper is needed.
+ *
+ * Activated automatically when the consumer passes `aiAdapter` to <EmbeddedChat>:
+ *
+ *   import { OpenAIAdapter } from '@embeddedchat/ai-adapter';
+ *   const adapter = new OpenAIAdapter({ apiKey: 'sk-...' });
+ *   <EmbeddedChat host="..." roomId="..." aiAdapter={adapter} />
  *
  * @param {{ onSelect: (text: string) => void }} props
  */
 const SmartReplies = ({ onSelect }) => {
-  const adapter = useAIAdapter();
+  const { ECOptions } = useRCContext();
+  const adapter = ECOptions?.aiAdapter ?? null;
+
   const { theme } = useTheme();
   const styles = getStyles(theme);
 
@@ -97,6 +105,7 @@ const SmartReplies = ({ onSelect }) => {
     fetchSuggestions();
   }, [fetchSuggestions]);
 
+  // Render nothing when no adapter is configured or no suggestions yet
   if (!adapter || (suggestions.length === 0 && !loading)) return null;
 
   return (
@@ -117,7 +126,7 @@ const SmartReplies = ({ onSelect }) => {
           </button>
         ))
       )}
-      {adapter && <span css={styles.badge}>{adapter.providerName}</span>}
+      <span css={styles.badge}>{adapter.providerName}</span>
     </Box>
   );
 };
