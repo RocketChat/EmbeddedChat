@@ -58,6 +58,7 @@ const EmbeddedChat = (props) => {
     secure = false,
     dark = false,
     remoteOpt = false,
+    aiAdapter = null,
   } = config;
 
   const hasMounted = useRef(false);
@@ -218,8 +219,8 @@ const EmbeddedChat = (props) => {
   );
 
   const RCContextValue = useMemo(
-    () => ({ RCInstance, ECOptions }),
-    [RCInstance, ECOptions]
+    () => ({ RCInstance, ECOptions, aiAdapter }),
+    [RCInstance, ECOptions, aiAdapter]
   );
 
   if (!isSynced) return null;
@@ -288,6 +289,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  aiAdapter: PropTypes.object,
 };
 
 export default memo(EmbeddedChat);

@@ -21,6 +21,7 @@ export const RCInstanceProvider = RCContext.Provider;
  * @typedef {Object} RCContext
  * @property {import('@embeddedchat/api').EmbeddedChatApi} RCInstance
  * @property {ECOptions} ECOptions
+ * @property {import('@embeddedchat/api').IAIAdapter | null} aiAdapter
  * @returns {RCContext}
  */
 export const useRCContext = () => useContext(RCContext);
