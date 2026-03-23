@@ -159,8 +159,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { isAIEnabled, suggestions, getSuggestions } = useAIAdapter();
 
   const handleAISuggest = async () => {
+    if (messages.length === 0) return;
     await getSuggestions(messages.slice(-5));
   };
+
+  useEffect(() => {
+    if (isAIEnabled && isInputFocused && messages.length > 0) {
+      getSuggestions(messages.slice(-5));
+    }
+  }, [messages, isAIEnabled, isInputFocused, getSuggestions]);
 
   const searchEmoji = useSearchEmoji(
     startReadEmoji,
@@ -674,11 +681,16 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         )}
 
         {isAIEnabled && isInputFocused && suggestions.length > 0 && (
-          <div style={{ display: 'flex', gap: '8px', padding: '4px 0' }}>
+          <Box css={css`
+            display: flex;
+            gap: 8px;
+            padding: 4px 0 0 2rem;
+          `}>
             {suggestions.map((s, i) => (
               <button
                 key={i}
                 type="button"
+                css={styles.suggestionChip(theme)}
                 onMouseDown={(event) => {
                   event.preventDefault();
                 }}
@@ -687,17 +699,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                   setDisableButton(false);
                   messageRef.current.focus();
                 }}
-                style={{
-                  fontSize: '12px',
-                  padding: '4px 8px',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                }}
               >
                 {s}
               </button>
             ))}
-          </div>
+          </Box>
         )}
 
         <TypingUsers />

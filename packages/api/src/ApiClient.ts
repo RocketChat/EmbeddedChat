@@ -10,29 +10,13 @@ export class RCApiError extends Error {
 export class ApiClient {
   private host: string;
   private auth: RocketChatAuth;
-  private refreshPromise: Promise<void> | null = null;
 
   constructor(host: string, auth: RocketChatAuth) {
     this.host = host;
     this.auth = auth;
   }
 
-  // Concurrency-safe token refresh (fixes Finding 5 from Phase 1)
-  private async ensureFreshToken(): Promise<void> {
-    if (this.refreshPromise) return this.refreshPromise;
-    this.refreshPromise = this.auth
-      .getCurrentUser()
-      .then(() => {
-        this.refreshPromise = null;
-      })
-      .catch(() => {
-        this.refreshPromise = null;
-      });
-    return this.refreshPromise;
-  }
-
   private async buildHeaders(): Promise<Record<string, string>> {
-    await this.ensureFreshToken();
     const user = await this.auth.getCurrentUser();
     return {
       "Content-Type": "application/json",
