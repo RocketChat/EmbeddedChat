@@ -1,3 +1,4 @@
+import { MockAIAdapter } from '@embeddedchat/api';
 import { EmbeddedChat } from '..';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -23,5 +24,6 @@ export const Secure_Auth = {
     },
     secure: true,
     dark: false,
+    aiAdapter: new MockAIAdapter(),
   },
 };

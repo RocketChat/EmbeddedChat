@@ -34,6 +34,7 @@ import { getChatInputStyles } from './ChatInput.styles';
 import useShowCommands from '../../hooks/useShowCommands';
 import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import useSearchEmoji from '../../hooks/useSearchEmoji';
+import { useAIAdapter } from '../../hooks/useAIAdapter';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
@@ -60,6 +61,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [showCommandList, setShowCommandList] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [showEmojiList, setShowEmojiList] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [filteredEmojis, setFilteredEmojis] = useState([]);
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
@@ -102,6 +104,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const {
     editMessage,
+    messages,
     setEditMessage,
     quoteMessage,
     isRecordingMessage,
@@ -112,6 +115,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     deletedMessage,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
+    messages: state.messages,
     setEditMessage: state.setEditMessage,
     quoteMessage: state.quoteMessage,
     isRecordingMessage: state.isRecordingMessage,
@@ -152,6 +156,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   const { handlePaste } = useDropBox();
+  const { isAIEnabled, suggestions, getSuggestions } = useAIAdapter();
+
+  const handleAISuggest = async () => {
+    await getSuggestions(messages.slice(-5));
+  };
+
   const searchEmoji = useSearchEmoji(
     startReadEmoji,
     setStartReadEmoji,
@@ -457,12 +467,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (chatInputContainer.current) {
       chatInputContainer.current.classList.add('focused');
     }
+    setIsInputFocused(true);
   };
 
   const handleBlur = () => {
     if (chatInputContainer.current) {
       chatInputContainer.current.classList.remove('focused');
     }
+    setIsInputFocused(false);
   };
 
   const handlePasting = (event) => {
@@ -661,6 +673,33 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
 
+        {isAIEnabled && isInputFocused && suggestions.length > 0 && (
+          <div style={{ display: 'flex', gap: '8px', padding: '4px 0' }}>
+            {suggestions.map((s, i) => (
+              <button
+                key={i}
+                type="button"
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                }}
+                onClick={() => {
+                  messageRef.current.value = s;
+                  setDisableButton(false);
+                  messageRef.current.focus();
+                }}
+                style={{
+                  fontSize: '12px',
+                  padding: '4px 8px',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
         <TypingUsers />
       </Box>
       <Box
@@ -700,7 +739,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
               sendTypingStop();
               handleBlur();
             }}
-            onFocus={handleFocus}
+            onFocus={() => {
+              handleFocus();
+              handleAISuggest();
+            }}
             onKeyDown={onKeyDown}
             onPaste={handlePasting}
             ref={messageRef}

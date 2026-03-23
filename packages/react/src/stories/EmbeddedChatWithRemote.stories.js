@@ -1,3 +1,4 @@
+import { MockAIAdapter } from '@embeddedchat/api';
 import { EmbeddedChat } from '..';
 
 export default {
@@ -24,5 +25,6 @@ export const With_Remote_Opt = {
       flow: 'PASSWORD',
     },
     dark: false,
+    aiAdapter: new MockAIAdapter(),
   },
 };
