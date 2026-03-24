@@ -1,6 +1,7 @@
 import { Rocketchat } from "@rocket.chat/sdk";
 import cloneArray from "./cloneArray";
 import { ROCKETCHAT_APP_ID } from "./utils/constants";
+import { ApiClient, RCApiError } from "./ApiClient";
 import {
   IRocketChatAuthOptions,
   RocketChatAuth,
@@ -20,6 +21,7 @@ export default class EmbeddedChatApi {
   onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
+  apiClient: ApiClient;
 
   constructor(
     host: string,
@@ -46,6 +48,7 @@ export default class EmbeddedChatApi {
       getToken,
       saveToken,
     });
+    this.apiClient = new ApiClient(this.host, this.auth);
   }
 
   setAuth(auth: RocketChatAuth) {
@@ -472,23 +475,7 @@ export default class EmbeddedChatApi {
   }
 
   async channelInfo() {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this.apiClient.get("rooms.info", { roomId: this.rid });
   }
 
   async getRoomInfo() {
@@ -712,39 +699,11 @@ export default class EmbeddedChatApi {
     if (threadId) {
       messageObj.tmid = threadId;
     }
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.sendMessage`, {
-        body: JSON.stringify({ message: messageObj }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this.apiClient.post("chat.sendMessage", { message: messageObj });
   }
 
   async deleteMessage(msgId: string) {
-    try {
-      const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(`${this.host}/api/v1/chat.delete`, {
-        body: JSON.stringify({ roomId: this.rid, msgId }),
-        headers: {
-          "Content-Type": "application/json",
-          "X-Auth-Token": authToken,
-          "X-User-Id": userId,
-        },
-        method: "POST",
-      });
-      return await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    return this.apiClient.post("chat.delete", { roomId: this.rid, msgId });
   }
 
   async updateMessage(msgId: string, text: string) {
@@ -1166,17 +1125,7 @@ export default class EmbeddedChatApi {
   }
 
   async getCommandsList() {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-    const response = await fetch(`${this.host}/api/v1/commands.list`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Token": authToken,
-        "X-User-Id": userId,
-      },
-      method: "GET",
-    });
-    const data = await response.json();
-    return data;
+    return this.apiClient.get("commands.list");
   }
 
   async execCommand({

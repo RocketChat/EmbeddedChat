@@ -35,6 +35,19 @@ export const getChatInputStyles = (theme) => {
       cursor: pointer;
     `,
 
+    suggestionChip: (theme) => css`
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      background: ${theme.colors?.surface?.default ?? '#f0f0f0'};
+      border: 1px solid ${theme.colors?.auxiliary ?? '#ddd'};
+      color: ${theme.colors?.font?.default ?? '#333'};
+      &:hover {
+        background: ${theme.colors?.surface?.hover ?? '#e0e0e0'};
+      }
+    `,
+
     textInput: css`
       flex: 1;
       word-wrap: break-word;
