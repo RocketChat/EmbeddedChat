@@ -726,6 +726,7 @@ export default class EmbeddedChatApi {
       return await response.json();
     } catch (err) {
       console.error(err);
+      return { success: false, error: err };
     }
   }
 

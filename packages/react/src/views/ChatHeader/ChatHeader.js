@@ -140,6 +140,7 @@ const ChatHeader = ({
       setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
+      useMessageStore.getState().clearOfflineMessages();
       useMessageStore.setState({ isMessageLoaded: false });
     } catch (e) {
       console.error(e);
