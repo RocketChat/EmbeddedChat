@@ -15,10 +15,16 @@ const useDropBox = () => {
     setData(e.dataTransfer.files[0]);
   };
 
+  const handlePaste = (file) => {
+    toggle();
+    setData(file);
+  };
+
   return {
     data,
     handleDrag,
     handleDragDrop,
+    handlePaste,
   };
 };
 

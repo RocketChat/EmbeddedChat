@@ -43,7 +43,9 @@ export const getToastBarContainerStyles = (theme) => {
       position: absolute;
       z-index: ${theme.zIndex?.toastbar || 1600};
       border-radius: ${theme.radius};
-      animation: ${animation} ${2000}ms ease-in-out forwards;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     `,
   };
   return styles;

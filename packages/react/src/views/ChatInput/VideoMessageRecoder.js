@@ -86,7 +86,7 @@ const VideoMessageRecorder = (props) => {
     } catch (error) {
       console.warn(error);
     }
-  });
+  }, []);
 
   useEffect(() => {
     handleMount();
