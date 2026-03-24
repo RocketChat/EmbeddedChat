@@ -45,9 +45,8 @@ const ChatBody = ({
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { theme, mode } = useTheme();
   const styles = getChatbodyStyles(theme, mode);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [, setIsUserScrolledUp] = useState(false);
+  const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
   const [otherUserMessage, setOtherUserMessage] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [firstUnreadMessageId, setFirstUnreadMessageId] = useState(null);
@@ -206,88 +205,66 @@ const ChatBody = ({
     setPopupVisible(false);
   };
 
-  const handleScroll = useCallback(async () => {
-    if (messageListRef && messageListRef.current) {
-      setScrollPosition(messageListRef.current.scrollTop);
-      setIsUserScrolledUp(
-        messageListRef.current.scrollTop + messageListRef.current.clientHeight <
-          messageListRef.current.scrollHeight
-      );
-
-      if (
-        messageListRef.current.scrollTop === 0 &&
-        !loadingOlderMessages &&
-        hasMoreMessages
-      ) {
-        setLoadingOlderMessages(true);
-
-        try {
-          const olderMessages = await RCInstance.getOlderMessages(
-            anonymousMode,
-            ECOptions?.enableThreads
-              ? {
-                  query: {
-                    tmid: {
-                      $exists: false,
-                    },
+  const loadMoreMessages = useCallback(async () => {
+    if (!loadingOlderMessages && hasMoreMessages) {
+      setLoadingOlderMessages(true);
+      try {
+        const olderMessages = await RCInstance.getOlderMessages(
+          anonymousMode,
+          ECOptions?.enableThreads
+            ? {
+                query: {
+                  tmid: {
+                    $exists: false,
                   },
-                  offset,
-                }
-              : undefined,
-            anonymousMode ? false : isChannelPrivate
-          );
-          const messageList = messageListRef.current;
-          if (olderMessages?.messages?.length) {
-            const previousScrollHeight = messageList.scrollHeight;
-
-            setMessages(olderMessages.messages, true);
-            setMessagesOffset(offset + olderMessages.messages.length);
-
-            requestAnimationFrame(() => {
-              const newScrollHeight = messageList.scrollHeight;
-              messageList.scrollTop = newScrollHeight - previousScrollHeight;
-            });
-          } else {
-            setHasMoreMessages(false);
-          }
-        } catch (error) {
-          console.error('Error fetching older messages:', error);
+                },
+                offset,
+              }
+            : undefined,
+          anonymousMode ? false : isChannelPrivate
+        );
+        if (olderMessages?.messages?.length) {
+          setMessages(olderMessages.messages, true);
+          setMessagesOffset(offset + olderMessages.messages.length);
+        } else {
           setHasMoreMessages(false);
-        } finally {
-          setLoadingOlderMessages(false);
         }
+      } catch (error) {
+        console.error('Error fetching older messages:', error);
+        setHasMoreMessages(false);
+      } finally {
+        setLoadingOlderMessages(false);
       }
-    }
-
-    const isAtBottom = messageListRef?.current?.scrollTop === 0;
-    if (isAtBottom) {
-      setPopupVisible(false);
-      setIsUserScrolledUp(false);
-      setOtherUserMessage(false);
-      // Clear unread divider when scrolled to bottom
-      if (firstUnreadMessageId) {
-        setFirstUnreadMessageId(null);
-      }
-      // Also clear pending unread ref
-      pendingFirstUnreadRef.current = null;
     }
   }, [
-    messageListRef,
-    offset,
-    setMessagesOffset,
-    setMessages,
-    anonymousMode,
+    loadingOlderMessages,
     hasMoreMessages,
     RCInstance,
-    isChannelPrivate,
+    anonymousMode,
     ECOptions?.enableThreads,
-    loadingOlderMessages,
-    setScrollPosition,
-    setIsUserScrolledUp,
-    setPopupVisible,
-    setOtherUserMessage,
-    firstUnreadMessageId,
+    offset,
+    isChannelPrivate,
+    setMessages,
+    setMessagesOffset,
   ]);
+
+  const handleAtBottom = useCallback(
+    (atBottom) => {
+      setIsUserScrolledUp(!atBottom);
+      if (atBottom) {
+        setPopupVisible(false);
+        setOtherUserMessage(false);
+        if (firstUnreadMessageId) setFirstUnreadMessageId(null);
+        pendingFirstUnreadRef.current = null;
+      }
+    },
+    [
+      setPopupVisible,
+      setOtherUserMessage,
+      firstUnreadMessageId,
+      setFirstUnreadMessageId,
+    ]
+  );
 
   const showNewMessagesPopup = () => {
     setPopupVisible(true);
@@ -308,32 +285,14 @@ const ChatBody = ({
   };
 
   useEffect(() => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  useEffect(() => {
     checkOverflow();
   }, [channelInfo.announcement, showAnnouncement]);
-  useEffect(() => {
-    const currentRef = messageListRef.current;
-    currentRef.addEventListener('scroll', handleScroll);
-
-    return () => {
-      currentRef.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll, messageListRef]);
 
   useEffect(() => {
-    const isScrolledUp =
-      scrollPosition + messageListRef.current.clientHeight <
-      messageListRef.current.scrollHeight;
-
-    if (isScrolledUp && otherUserMessage) {
+    if (isUserScrolledUp && otherUserMessage) {
       showNewMessagesPopup();
     }
-  }, [scrollPosition, otherUserMessage, messageListRef]);
+  }, [isUserScrolledUp, otherUserMessage]);
 
   return (
     <>
@@ -398,6 +357,7 @@ const ChatBody = ({
         css={styles.chatbodyContainer}
         style={{
           ...styleOverrides,
+          overflow: 'hidden',
         }}
         className={`ec-chat-body ${classNames}`}
       >
@@ -422,6 +382,11 @@ const ChatBody = ({
             isUserAuthenticated={isUserAuthenticated}
             hasMoreMessages={hasMoreMessages}
             firstUnreadMessageId={firstUnreadMessageId}
+            loadMoreMessages={loadMoreMessages}
+            scrollerRef={(ref) => {
+              if (messageListRef) messageListRef.current = ref;
+            }}
+            onAtBottomStateChange={handleAtBottom}
           />
         )}
 
