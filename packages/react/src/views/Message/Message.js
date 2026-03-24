@@ -403,7 +403,7 @@ const Message = ({
                   `}
                 >
                   <Icon
-                    name="offline"
+                    name="error-circle"
                     size="0.875em"
                     style={{
                       cursor: 'pointer',
