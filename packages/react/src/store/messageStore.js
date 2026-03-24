@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import cloneArray from '../lib/cloneArray';
 import { upsertMessage } from '../lib/messageListHelpers';
-
-const PERSISTENCE_KEY = 'ec_offline_messages';
+import { EC_OFFLINE_MESSAGES_KEY as PERSISTENCE_KEY } from '../lib/constants';
 
 const getPersistedMessages = (rid) => {
   try {

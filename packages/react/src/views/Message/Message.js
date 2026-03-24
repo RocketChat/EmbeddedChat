@@ -1,6 +1,6 @@
 import React, { memo, useContext, useState } from 'react';
 import { css } from '@emotion/react';
-import { RiWifiOffLine } from 'react-icons/ri';
+
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -402,9 +402,14 @@ const Message = ({
                     z-index: 10;
                   `}
                 >
-                  <RiWifiOffLine
-                    size="1.25rem"
-                    style={{ cursor: 'pointer', color: 'red' }}
+                  <Icon
+                    name="offline"
+                    size="0.875em"
+                    style={{
+                      cursor: 'pointer',
+                      color: theme.theme.colors.danger || '#e5424d',
+                      opacity: 0.7,
+                    }}
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsErrorMenuOpen(!isErrorMenuOpen);
