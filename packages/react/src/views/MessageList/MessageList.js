@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
@@ -26,9 +26,15 @@ const MessageList = ({
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
-  const filteredMessages = messages.filter((msg) => !msg.tmid);
+  const filteredMessages = useMemo(
+    () => messages.filter((msg) => !msg.tmid),
+    [messages]
+  );
 
-  const reportedMessage = messages.find((msg) => msg._id === messageToReport);
+  const reportedMessage = useMemo(
+    () => messages.find((msg) => msg._id === messageToReport),
+    [messages, messageToReport]
+  );
 
   return (
     <>
