@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -101,11 +101,23 @@ const Message = ({
       };
 
   const bubbleStyles = useBubbleStyles(isMe);
-  const pinRoles = new Set(pinPermissions);
-  const editMessageRoles = new Set(editMessagePermissions);
-  const deleteMessageRoles = new Set(deleteMessagePermissions);
-  const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
-  const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
+  const pinRoles = useMemo(() => new Set(pinPermissions), [pinPermissions]);
+  const editMessageRoles = useMemo(
+    () => new Set(editMessagePermissions),
+    [editMessagePermissions]
+  );
+  const deleteMessageRoles = useMemo(
+    () => new Set(deleteMessagePermissions),
+    [deleteMessagePermissions]
+  );
+  const deleteOwnMessageRoles = useMemo(
+    () => new Set(deleteOwnMessagePermissions),
+    [deleteOwnMessagePermissions]
+  );
+  const forceDeleteMessageRoles = useMemo(
+    () => new Set(forceDeleteMessagePermissions),
+    [forceDeleteMessagePermissions]
+  );
 
   const variantStyles =
     !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};

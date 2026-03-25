@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { isSameDay } from 'date-fns';
-import { Box, Icon, Throbber } from '@embeddedchat/ui-elements';
+import { Box, Icon, Throbber, useTheme } from '@embeddedchat/ui-elements';
 import { useMessageStore } from '../../store';
 import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
@@ -21,25 +21,14 @@ const MessageList = ({
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
   const isMessageLoaded = useMessageStore((state) => state.isMessageLoaded);
+  const { theme } = useTheme();
 
   const isMessageNewDay = (current, previous) =>
     !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
-  const filteredMessages = useMemo(
-    () => messages.filter((msg) => !msg.tmid),
-    [messages]
-  );
+  const filteredMessages = messages.filter((msg) => !msg.tmid);
 
-  // Preserve existing render order semantics (previously: filteredMessages.slice().reverse())
-  const renderedMessages = useMemo(
-    () => filteredMessages.slice().reverse(),
-    [filteredMessages]
-  );
-
-  const reportedMessage = useMemo(
-    () => messages.find((msg) => msg._id === messageToReport),
-    [messages, messageToReport]
-  );
+  const reportedMessage = messages.find((msg) => msg._id === messageToReport);
 
   return (
     <>
@@ -87,7 +76,8 @@ const MessageList = ({
               <Throbber />
             </Box>
           )}
-          {renderedMessages.map((msg, index, arr) => {
+          {filteredMessages
+            .map((msg, index, arr) => {
               const prev = arr[index - 1];
               const next = arr[index + 1];
 

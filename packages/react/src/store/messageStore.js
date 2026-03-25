@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import cloneArray from '../lib/cloneArray';
 import { upsertMessage } from '../lib/messageListHelpers';
 
+const sortByTsAscending = (a, b) => new Date(a.ts) - new Date(b.ts);
+
 const useMessageStore = create((set, get) => ({
   messages: [],
   isMessageLoaded: false,
@@ -30,7 +32,7 @@ const useMessageStore = create((set, get) => ({
         new Map(allMessages.map((msg) => [msg._id, msg])).values()
       );
       return {
-        messages: uniqueMessages,
+        messages: uniqueMessages.sort(sortByTsAscending),
         isMessageLoaded: true,
       };
     }),

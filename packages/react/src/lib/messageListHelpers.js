@@ -2,12 +2,13 @@ import cloneArray from './cloneArray';
 
 // Caution: Not a pure function
 export const insertMessage = (messages, message) => {
-  const idx = messages.findIndex((m) => new Date(m.ts) < new Date(message.ts));
+  // Keep the list in chronological order: oldest -> newest
+  const idx = messages.findIndex((m) => new Date(m.ts) > new Date(message.ts));
   if (idx === -1) {
-    // all the messages are newer than the current message, insert at last
+    // all the messages are older than the current message, insert at last
     messages.push(message);
   } else if (idx === 0) {
-    // the message is the latest one, insert at front
+    // the message is the oldest one, insert at front
     messages.unshift(message);
   } else {
     messages.splice(idx, 0, message);
