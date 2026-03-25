@@ -1,0 +1,46 @@
+.provider-switcher {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.provider-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.provider-btn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.provider-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.provider-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--provider-color);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--provider-color);
+  transition: box-shadow 0.2s;
+}
+
+.provider-btn.active .provider-dot {
+  box-shadow: 0 0 10px var(--provider-color);
+}

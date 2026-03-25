@@ -58,6 +58,7 @@ const EmbeddedChat = (props) => {
     secure = false,
     dark = false,
     remoteOpt = false,
+    aiAdapter = null,
   } = config;
 
   const hasMounted = useRef(false);
@@ -198,6 +199,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      aiAdapter,
     }),
     [
       enableThreads,
@@ -214,6 +216,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      aiAdapter,
     ]
   );
 
@@ -288,6 +291,11 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  /**
+   * Optional AI adapter instance (e.g. new OpenAIAdapter({ apiKey: '...' })).
+   * When provided, SmartReplies and other AI features are activated.
+   */
+  aiAdapter: PropTypes.object,
 };
 
 export default memo(EmbeddedChat);

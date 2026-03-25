@@ -1,0 +1,56 @@
+/* Design direction: "Developer Dashboard" — dark, precise, monospace-anchored */
+/* Differentiation anchor: dual-panel layout with live adapter wiring diagram */
+
+:root {
+  --bg: #0d0f14;
+  --bg-surface: #141720;
+  --bg-raised: #1c2030;
+  --border: #252a3a;
+  --border-active: #3d4a6b;
+
+  --text-primary: #e8eaf0;
+  --text-secondary: #8b93a8;
+  --text-muted: #4a5168;
+
+  --accent: #4fffb0;
+  --accent-dim: rgba(79, 255, 176, 0.12);
+  --accent-glow: rgba(79, 255, 176, 0.25);
+
+  --mock-color: #4fffb0;
+  --openai-color: #74b9ff;
+  --rocketchat-color: #fd79a8;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --radius: 8px;
+  --radius-sm: 4px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root { height: 100vh; }
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea {
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 2px; }
