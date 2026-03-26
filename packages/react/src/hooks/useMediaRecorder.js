@@ -24,10 +24,32 @@ export function useMediaRecorder({ constraints, onStop, videoRef }) {
   const { getStream } = useUserMedia(constraints, videoRef);
   const chunks = useRef([]);
 
+  function getPreferredAudioMimeType() {
+    if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) {
+      return '';
+    }
+
+    const candidates = [
+      'audio/mpeg',
+      'audio/webm;codecs=opus',
+      'audio/ogg;codecs=opus',
+      'audio/webm',
+      'audio/ogg',
+    ];
+
+    return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || '';
+  }
+
   async function start() {
     const stream = await getStream(constraints, true);
     chunks.current = [];
-    const _recorder = new MediaRecorder(stream);
+    const shouldUseAudioMimeType = constraints?.audio && !constraints?.video;
+    const preferredMimeType = shouldUseAudioMimeType
+      ? getPreferredAudioMimeType()
+      : '';
+    const _recorder = preferredMimeType
+      ? new MediaRecorder(stream, { mimeType: preferredMimeType })
+      : new MediaRecorder(stream);
 
     const handleDataAvailable = (event) => {
       chunks.current.push(event.data);
