@@ -68,9 +68,16 @@ const Message = ({
   const openThread = useMessageStore((state) => state.openThread);
   const { getStarredMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+  const {
+    editMessage,
+    setEditMessage,
+    setBulkSelectMode,
+    toggleSelectedMessageId,
+  } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
+    setBulkSelectMode: state.setBulkSelectMode,
+    toggleSelectedMessageId: state.toggleSelectedMessageId,
   }));
   const deleteMessagePermissions = useMessageStore(
     (state) => state.deleteMessageRoles.roles
@@ -325,6 +332,10 @@ const Message = ({
                       }
                     }}
                     handleQuoteMessage={() => addQuoteMessage(message)}
+                    handleSelectMessages={(msg) => {
+                      setBulkSelectMode(true);
+                      toggleSelectedMessageId(msg._id);
+                    }}
                     handleEmojiClick={handleEmojiClick}
                     handlerReportMessage={() => {
                       setMessageToReport(message._id);
