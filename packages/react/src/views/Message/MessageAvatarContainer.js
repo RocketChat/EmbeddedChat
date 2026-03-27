@@ -10,6 +10,9 @@ import RCContext from '../../context/RCInstance';
 import { getMessageAvatarContainerStyles } from './Message.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import { useUserStore } from '../../store';
+import { useFederation } from '../../context/FederationContext';
+import { isMatrixUser } from '../../lib/federationUtils';
+import MatrixAvatar from './MatrixAvatar';
 
 const MessageAvatarContainer = ({
   message,
@@ -20,6 +23,8 @@ const MessageAvatarContainer = ({
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const styles = getMessageAvatarContainerStyles(theme);
+  const { isFederated } = useFederation();
+
   const getUserAvatarUrl = (username) => {
     const host = RCInstance.getHost();
     const URL = `${host}/avatar/${username}`;
@@ -40,20 +45,32 @@ const MessageAvatarContainer = ({
   return (
     <Box css={styles.container}>
       {!sequential ? (
-        <Avatar
-          url={getUserAvatarUrl(message.u.username)}
-          alt="avatar"
-          size={
-            window.matchMedia('(max-width: 768px)').matches
-              ? message.t
-                ? '1.2em'
-                : '1.5em'
-              : message.t
-              ? '1.5em'
-              : '2.25em'
-          }
-          onClick={handleAvatarClick}
-        />
+        isFederated && isMatrixUser(message.u.username) ? (
+          <MatrixAvatar
+            matrixId={message.u.username}
+            size={
+              window.matchMedia('(max-width: 768px)').matches
+                ? message.t ? '1.2em' : '1.5em'
+                : message.t ? '1.5em' : '2.25em'
+            }
+            onClick={handleAvatarClick}
+          />
+        ) : (
+          <Avatar
+            url={getUserAvatarUrl(message.u.username)}
+            alt="avatar"
+            size={
+              window.matchMedia('(max-width: 768px)').matches
+                ? message.t
+                  ? '1.2em'
+                  : '1.5em'
+                : message.t
+                ? '1.5em'
+                : '2.25em'
+            }
+            onClick={handleAvatarClick}
+          />
+        )
       ) : null}
       {isStarred && sequential ? (
         <Tooltip text="Starred" position="top">

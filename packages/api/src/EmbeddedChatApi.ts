@@ -491,6 +491,29 @@ export default class EmbeddedChatApi {
     }
   }
 
+  /**
+   * Returns federation metadata for the current room.
+   * @returns {{ isFederated: boolean, homeserver: string | null }}
+   */
+  async isFederatedRoom(): Promise<{ isFederated: boolean; homeserver: string | null }> {
+    try {
+      const info = await this.channelInfo();
+      const room = info?.room;
+      if (!room) return { isFederated: false, homeserver: null };
+
+      const federated =
+        room.federated === true ||
+        room.federation != null;
+
+      const homeserver: string | null =
+        room.federation?.origin ?? null;
+
+      return { isFederated: federated, homeserver };
+    } catch {
+      return { isFederated: false, homeserver: null };
+    }
+  }
+
   async getRoomInfo() {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
