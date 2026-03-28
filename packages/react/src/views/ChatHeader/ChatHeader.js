@@ -360,6 +360,8 @@ const ChatHeader = ({
       css={styles.chatHeaderParent}
       className={`ec-chat-header ${classNames} ${className}`}
       style={{ ...styleOverrides, ...style }}
+      role="banner"
+      aria-label={`Chat header for ${channelInfo.name || channelName || 'channel'}`}
     >
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>

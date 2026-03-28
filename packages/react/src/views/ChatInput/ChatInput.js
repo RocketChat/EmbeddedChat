@@ -615,6 +615,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                   : 'This room is read only'
                 : 'Sign in to chat'
             }
+            aria-label={
+              isUserAuthenticated
+                ? `Message ${channelInfo.name || 'channel'}`
+                : 'Sign in to chat'
+            }
+            aria-multiline="true"
+            aria-disabled={
+              !isUserAuthenticated || !canSendMsg || isRecordingMessage || isChannelArchived
+            }
             css={css`
               ${styles.textInput}
               ${isChannelArchived &&
@@ -646,6 +655,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                   type="primary"
                   disabled={disableButton || isRecordingMessage}
                   icon="send"
+                  aria-label="Send message"
                 />
               ) : null
             ) : (

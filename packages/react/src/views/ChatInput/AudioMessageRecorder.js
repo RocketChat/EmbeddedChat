@@ -153,6 +153,7 @@ const AudioMessageRecorder = (props) => {
           ghost
           square
           disabled={disabled}
+          aria-label="Record audio message"
           onClick={handleRecordButtonClick}
         >
           <Icon size="1.25rem" name="mic" />
@@ -166,18 +167,18 @@ const AudioMessageRecorder = (props) => {
       {state === 'recording' && (
         <>
           <Tooltip text="Cancel Recording" position="top">
-            <ActionButton ghost onClick={handleCancelRecordButton}>
+            <ActionButton ghost aria-label="Cancel audio recording" onClick={handleCancelRecordButton}>
               <Icon size="1.25rem" name="circle-cross" />
             </ActionButton>
           </Tooltip>
-          <Box css={styles.record}>
+          <Box css={styles.record} role="timer" aria-live="polite" aria-label={`Recording time: ${time}`}>
             <Box is="span" css={styles.dot} />
             <Box is="span" css={styles.timer}>
               {time}
             </Box>
           </Box>
           <Tooltip text="Finish Recording" position="top">
-            <ActionButton ghost onClick={handleStopRecordButton}>
+            <ActionButton ghost aria-label="Stop and send audio recording" onClick={handleStopRecordButton}>
               <Icon name="circle-check" size="1.25rem" />
             </ActionButton>
           </Tooltip>

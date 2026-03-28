@@ -250,6 +250,8 @@ export const MessageToolbox = ({
           css={styles.toolbox}
           className={appendClassNames('ec-message-toolbox', classNames)}
           style={styleOverrides}
+          role="toolbar"
+          aria-label="Message actions"
           {...props}
         >
           {surfaceOptions?.length > 0 && (

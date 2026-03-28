@@ -84,9 +84,19 @@ export const MessageReactions = ({
                   : [styles.reaction]
               }
               mine={isUserReaction}
+              role="button"
+              tabIndex={0}
+              aria-label={tooltipMap[reaction.name]}
+              aria-pressed={isUserReaction}
               onClick={() =>
                 handleEmojiClick(reaction, message, !isUserReaction)
               }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleEmojiClick(reaction, message, !isUserReaction);
+                }
+              }}
               onMouseEnter={() => setHoveredReaction(reaction.name)}
               onMouseLeave={() => setHoveredReaction(null)}
               style={{ position: 'relative' }}
