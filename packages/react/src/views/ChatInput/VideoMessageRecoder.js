@@ -183,6 +183,7 @@ const VideoMessageRecorder = (props) => {
               ghost
               square
               disabled={disabled}
+              aria-label="Record video message"
               onClick={openWindowToRecord}
             >
               <Icon size="1.25rem" name="video-recorder" />
@@ -219,6 +220,7 @@ const VideoMessageRecorder = (props) => {
                 >
                   <ActionButton
                     ghost
+                    aria-label={isRecording ? 'Stop recording' : 'Start recording'}
                     onClick={
                       isRecording ? handleStopRecording : handleStartRecording
                     }
@@ -232,7 +234,7 @@ const VideoMessageRecorder = (props) => {
                     />
                   </ActionButton>
                 </Tooltip>
-                <Box css={styles.record}>
+                <Box css={styles.record} role="timer" aria-live="polite" aria-label={`Recording time: ${time}`}>
                   <Box
                     is="span"
                     css={isRecording ? styles.dot : styles.oppositeDot}
@@ -244,7 +246,7 @@ const VideoMessageRecorder = (props) => {
               <Box css={styles.spacer} />
 
               <Box css={styles.rightSection}>
-                <Button onClick={closeWindowStopRecord}>Cancel</Button>
+                <Button aria-label="Cancel video recording" onClick={closeWindowStopRecord}>Cancel</Button>
                 <Button
                   onClick={handleSendRecording}
                   disabled={isSendDisabled}
