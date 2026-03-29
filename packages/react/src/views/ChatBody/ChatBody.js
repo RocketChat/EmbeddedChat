@@ -101,7 +101,7 @@ const ChatBody = ({
           threadMainMessage._id,
           isChannelPrivate
         );
-        setThreadMessages(messages.reverse());
+        setThreadMessages([...messages].reverse());
       } catch (e) {
         console.error(e);
       }

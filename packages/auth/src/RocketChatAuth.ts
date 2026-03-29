@@ -24,9 +24,9 @@ class RocketChatAuth {
     this.api = new Api(host);
     this.lastFetched = new Date(0);
     this.currentUser = null;
-    this.getToken = getToken;
-    this.saveToken = saveToken;
-    this.deleteToken = deleteToken;
+    this.getToken = getToken.bind(this);
+    this.saveToken = saveToken.bind(this);
+    this.deleteToken = deleteToken.bind(this);
   }
 
   /**
