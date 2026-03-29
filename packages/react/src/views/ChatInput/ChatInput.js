@@ -37,6 +37,7 @@ import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
+import { GeminiAiAdapter } from '../../lib/ai/GeminiAiAdapter';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -64,6 +65,24 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const handleAiAssist = async () => {
+    setIsAiLoading(true);
+    try {
+      const adapter = new GeminiAiAdapter('dummy-key');
+      const dummyContext = [{ msg: messageRef.current.value || 'Hello! What can I help you with today?' }];
+      const replies = await adapter.getSmartReplies(dummyContext);
+      if (replies && replies.length > 0) {
+        messageRef.current.value = (messageRef.current.value + ' ' + replies[0]).trim();
+        setDisableButton(false);
+      }
+    } catch (e) {
+      console.error(e);
+      dispatchToastMessage({ type: 'error', message: 'AI generation failed.' });
+    }
+    setIsAiLoading(false);
+  };
 
   const {
     isUserAuthenticated,
@@ -710,8 +729,21 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           <Box
             css={css`
               padding: 0.25rem;
+              display: flex;
+              gap: 0.5rem;
             `}
           >
+            {!isChannelArchived && (
+              <Button 
+                onClick={handleAiAssist} 
+                type="secondary" 
+                size="small" 
+                disabled={isAiLoading || disableButton === false && messageRef.current?.value?.length > 50}
+                css={css`border-radius: 4px; border: 1px solid #ddd; background: #f0f0f0;`}
+              >
+                {isAiLoading ? '...' : '✨ AI'}
+              </Button>
+            )}
             {isUserAuthenticated ? (
               !isChannelArchived ? (
                 <ActionButton
