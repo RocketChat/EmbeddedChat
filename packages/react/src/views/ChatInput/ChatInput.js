@@ -37,7 +37,9 @@ import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
-import { GeminiAiAdapter } from '../../lib/ai/GeminiAiAdapter';
+import useAiSupport from '../../hooks/useAiSupport';
+import useTypingStatus from '../../hooks/useTypingStatus';
+import useChatInputKeyEvents from '../../hooks/useChatInputKeyEvents';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -46,10 +48,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const styles = getChatInputStyles(theme);
 
   const inputRef = useRef(null);
-  const typingRef = useRef();
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
-  const timerRef = useRef();
 
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
@@ -65,24 +65,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
-  const handleAiAssist = async () => {
-    setIsAiLoading(true);
-    try {
-      const adapter = new GeminiAiAdapter('dummy-key');
-      const dummyContext = [{ msg: messageRef.current.value || 'Hello! What can I help you with today?' }];
-      const replies = await adapter.getSmartReplies(dummyContext);
-      if (replies && replies.length > 0) {
-        messageRef.current.value = (messageRef.current.value + ' ' + replies[0]).trim();
-        setDisableButton(false);
-      }
-    } catch (e) {
-      console.error(e);
-      dispatchToastMessage({ type: 'error', message: 'AI generation failed.' });
-    }
-    setIsAiLoading(false);
-  };
+
 
   const {
     isUserAuthenticated,
@@ -155,6 +139,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const userInfo = { _id: userId, username, name };
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const { handleAiAssist, isAiLoading } = useAiSupport(
+    messageRef,
+    setDisableButton,
+    ECOptions
+  );
+
   const showCommands = useShowCommands(
     commands,
     setFilteredCommands,
@@ -294,35 +285,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
-  const sendTypingStart = async () => {
-    try {
-      if (typingRef.current && messageRef.current.value?.length) {
-        return;
-      }
-      if (messageRef.current.value?.length) {
-        typingRef.current = true;
-        timerRef.current = setTimeout(() => {
-          typingRef.current = false;
-        }, [15000]);
-        await RCInstance.sendTypingStatus(username, true);
-      } else {
-        clearTimeout(timerRef.current);
-        typingRef.current = false;
-        await RCInstance.sendTypingStatus(username, false);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const sendTypingStop = async () => {
-    try {
-      typingRef.current = false;
-      await RCInstance.sendTypingStatus(username, false);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const { sendTypingStart, sendTypingStop } = useTypingStatus(
+    RCInstance,
+    username
+  );
 
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
@@ -456,13 +422,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   };
 
   const onTextChange = (e, val) => {
-    sendTypingStart();
     const message = val || e.target.value;
-
+    sendTypingStart(message);
     // Don't parse emojis if user is currently typing emoji autocomplete
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
     messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
-
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
