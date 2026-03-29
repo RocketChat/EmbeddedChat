@@ -14,6 +14,33 @@ _EmbeddedChat is a full-stack React component designed to integrate Rocket.Chat 
 </a>
 </div>
 
+## 🚀 GSoC 2026 Contributions - Vivek Yadav
+I am actively contributing to **EmbeddedChat** with a focus on **AI Adaptation, Architecture Modernization, Mobile UX, and Accessibility**.
+
+### 🌟 Key Proof-of-Concepts (PoCs) & Features
+
+#### 1. AI Adapter Layer (Gemini)
+Built a pluggable generic AI adapter (`AiAdapter.js`) in `packages/react` that seamlessly integrates AI features directly into the `ChatInput` component without cluttering the core store. It securely proxies API keys and manages loading states gracefully.
+
+#### 2. Matrix Federation Badge
+Integrated real-time detection of federated Matrix users (e.g., `@user:homeserver.org`). Safe parsing of usernames and dynamic rendering of UI badges next to user avatars in the message list context.
+
+#### 3. Stack Audit Tool
+Developed a standalone, runnable Node.js utility (`scripts/upgrade-audit.js`) to parse `package.json` dependencies across the monorepo, compare against the NPM registry, and generate detailed Markdown reports of outdated/vulnerable packages.
+
+#### 4. Mobile UX Suite
+Engineered a `useResponsive` custom React hook to solve complex CSS viewport issues (`dvh`) on mobile devices (especially Safari) and enforced absolute WCAG compliance by standardizing all touch targets to 44px minimum.
+
+#### 5. Accessibility Focus Traps
+To achieve strict WCAG 2.1 keyboard navigation compliance, developed a functional `FocusTrap` React component that intercepts and confines `Tab` cycles within active modal windows.
+
+### 🔗 Connect & Links
+- 👉 **My Pull Requests:** [View my PRs on EmbeddedChat](https://github.com/RocketChat/EmbeddedChat/pulls?q=author%3Avivekyadav-3)
+- 👉 **My Issues:** [View my Issues on EmbeddedChat](https://github.com/RocketChat/EmbeddedChat/issues?q=author%3Avivekyadav-3)
+- 📧 **Contact:** [vivekyadav.2026@gmail.com](mailto:vivekyadav.2026@gmail.com)
+
+---
+
 ## Try It Out 🚀
 
 Explore our project in action! It's live for a sneak peek and testing at: https://rocketchat.github.io/EmbeddedChat/
