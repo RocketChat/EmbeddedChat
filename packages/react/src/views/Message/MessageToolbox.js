@@ -13,6 +13,7 @@ import RCContext from '../../context/RCInstance';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
+import useKeyboardNav from '../../hooks/useKeyboardNav';
 import { Markdown } from '../Markdown';
 import Attachment from '../AttachmentHandler/Attachment';
 
@@ -74,8 +75,9 @@ export const MessageToolbox = ({
     configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleToolboxKeyDown = useKeyboardNav({ direction: 'horizontal' });
 
   const handleOnClose = () => {
     setShowDeleteModal(false);
@@ -252,6 +254,7 @@ export const MessageToolbox = ({
           style={styleOverrides}
           role="toolbar"
           aria-label="Message actions"
+          onKeyDown={handleToolboxKeyDown}
           {...props}
         >
           {surfaceOptions?.length > 0 && (

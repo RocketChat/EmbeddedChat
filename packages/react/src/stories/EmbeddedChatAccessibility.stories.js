@@ -12,31 +12,38 @@ export default {
           { id: 'button-name', enabled: true },
           { id: 'aria-required-attr', enabled: true },
           { id: 'aria-roles', enabled: true },
-          { id: 'keyboard', enabled: true },
         ],
-      },
-    },
-    docs: {
-      description: {
-        component: `
-WCAG 2.1 AA compliance demo for EmbeddedChat.
-
-**What's covered:**
-- All interactive elements have \`aria-label\` or associated \`<label>\`
-- Formatting toolbar has \`role="toolbar"\` with arrow-key navigation
-- Message actions toolbar has \`role="toolbar"\` with \`aria-label\`
-- Reaction buttons have \`role="button"\`, \`aria-pressed\`, and \`aria-label\`
-- Audio recorder timer has \`role="timer"\` and \`aria-live="polite"\`
-- Login form inputs have \`htmlFor\`/\`id\` associations, \`aria-required\`, \`aria-invalid\`
-- Login error messages use \`role="alert"\`
-- Password toggle button has dynamic \`aria-label\`
-- Chat header has \`role="banner"\`
-        `,
       },
     },
   },
 };
 
+/**
+ * Full WCAG 2.1 AA accessible EmbeddedChat.
+ *
+ * What's covered in this build:
+ *   - Skip-to-content link (visible on Tab key press)
+ *   - Chat textarea: aria-label, aria-multiline, aria-disabled
+ *   - Send button: aria-label="Send message"
+ *   - Formatting toolbar: role="toolbar", arrow-key navigation (useKeyboardNav)
+ *   - All toolbar buttons: aria-label (emoji, file, link, formatters, more)
+ *   - More button: aria-expanded, aria-haspopup
+ *   - Message toolbox: role="toolbar", arrow-key navigation
+ *   - AudioMessageRecorder: aria-label on record/stop/cancel, role="timer" + aria-live
+ *   - VideoMessageRecorder: aria-label on all controls, role="timer" + aria-live
+ *   - MessageReactions: role="button", aria-pressed, aria-label, keyboard Enter/Space
+ *   - EmojiPicker: role="dialog", aria-modal, aria-label
+ *   - ChatHeader: role="banner", aria-label
+ *   - LoginForm: htmlFor/id label pairing, aria-required, aria-invalid, aria-describedby
+ *   - Login error messages: role="alert"
+ *   - Password toggle: dynamic aria-label (Show/Hide password)
+ *
+ * Test keyboard navigation:
+ *   Tab          — move between interactive elements
+ *   Arrow keys   — navigate within toolbars
+ *   Enter/Space  — activate buttons and reactions
+ *   Escape       — close menus
+ */
 export const AccessibleChat = {
   args: {
     host: process.env.STORYBOOK_RC_HOST || 'http://localhost:3000',
@@ -56,5 +63,14 @@ export const AccessibleChatDark = {
   args: {
     ...AccessibleChat.args,
     dark: true,
+    channelName: 'general (dark)',
+  },
+};
+
+export const AccessibleChatAnonymous = {
+  args: {
+    ...AccessibleChat.args,
+    anonymousMode: true,
+    channelName: 'general (anonymous)',
   },
 };
