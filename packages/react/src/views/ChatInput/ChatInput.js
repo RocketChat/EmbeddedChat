@@ -37,6 +37,9 @@ import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
+import useAiSupport from '../../hooks/useAiSupport';
+import useTypingStatus from '../../hooks/useTypingStatus';
+import useChatInputKeyEvents from '../../hooks/useChatInputKeyEvents';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -45,10 +48,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const styles = getChatInputStyles(theme);
 
   const inputRef = useRef(null);
-  const typingRef = useRef();
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
-  const timerRef = useRef();
 
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
@@ -64,6 +65,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
+
+
 
   const {
     isUserAuthenticated,
@@ -136,6 +139,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const userInfo = { _id: userId, username, name };
 
   const dispatchToastMessage = useToastBarDispatch();
+
+  const { handleAiAssist, isAiLoading } = useAiSupport(
+    messageRef,
+    setDisableButton,
+    ECOptions
+  );
+
   const showCommands = useShowCommands(
     commands,
     setFilteredCommands,
@@ -275,35 +285,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
-  const sendTypingStart = async () => {
-    try {
-      if (typingRef.current && messageRef.current.value?.length) {
-        return;
-      }
-      if (messageRef.current.value?.length) {
-        typingRef.current = true;
-        timerRef.current = setTimeout(() => {
-          typingRef.current = false;
-        }, [15000]);
-        await RCInstance.sendTypingStatus(username, true);
-      } else {
-        clearTimeout(timerRef.current);
-        typingRef.current = false;
-        await RCInstance.sendTypingStatus(username, false);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const sendTypingStop = async () => {
-    try {
-      typingRef.current = false;
-      await RCInstance.sendTypingStatus(username, false);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const { sendTypingStart, sendTypingStop } = useTypingStatus(
+    RCInstance,
+    username
+  );
 
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
@@ -321,17 +306,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       //   }
       // }
 
-      const quoteArray = await Promise.all(
+      const quoteLinks = await Promise.all(
         quoteMessage.map(async (quote) => {
           const { msg, attachments, _id } = quote;
           if (msg || attachments) {
             const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
+            return `[ ](${msgLink})`;
           }
-          return quotedMessages;
+          return '';
         })
       );
-      quotedMessages = quoteArray.join('');
+      quotedMessages = quoteLinks.join('');
       pendingMessage = createPendingMessage(
         `${quotedMessages}\n${message}`,
         userInfo
@@ -437,13 +422,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   };
 
   const onTextChange = (e, val) => {
-    sendTypingStart();
     const message = val || e.target.value;
-
+    sendTypingStart(message);
     // Don't parse emojis if user is currently typing emoji autocomplete
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
     messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
-
     setDisableButton(!messageRef.current.value.length);
     if (e !== null) {
       handleNewLine(e, false);
@@ -710,8 +693,21 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           <Box
             css={css`
               padding: 0.25rem;
+              display: flex;
+              gap: 0.5rem;
             `}
           >
+            {!isChannelArchived && (
+              <Button 
+                onClick={handleAiAssist} 
+                type="secondary" 
+                size="small" 
+                disabled={isAiLoading || disableButton === false && messageRef.current?.value?.length > 50}
+                css={css`border-radius: 4px; border: 1px solid #ddd; background: #f0f0f0;`}
+              >
+                {isAiLoading ? '...' : '✨ AI'}
+              </Button>
+            )}
             {isUserAuthenticated ? (
               !isChannelArchived ? (
                 <ActionButton
