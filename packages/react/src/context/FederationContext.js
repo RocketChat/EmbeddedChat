@@ -12,12 +12,17 @@ const FederationContext = createContext({
   federationLoading: false,
 });
 
-export const FederationProvider = ({ children, RCInstance }) => {
-  const [isFederated, setIsFederated] = useState(false);
-  const [matrixHomeserver, setMatrixHomeserver] = useState(null);
-  const [federationLoading, setFederationLoading] = useState(true);
+export const FederationProvider = ({ children, RCInstance, forceEnabled = false }) => {
+  const [isFederated, setIsFederated] = useState(forceEnabled);
+  const [matrixHomeserver, setMatrixHomeserver] = useState(
+    forceEnabled ? 'matrix.org' : null
+  );
+  const [federationLoading, setFederationLoading] = useState(!forceEnabled);
 
   useEffect(() => {
+    // When force-enabled (demo/story mode), skip server detection
+    if (forceEnabled) return;
+
     if (!RCInstance) {
       setFederationLoading(false);
       return;
@@ -51,7 +56,7 @@ export const FederationProvider = ({ children, RCInstance }) => {
     return () => {
       cancelled = true;
     };
-  }, [RCInstance]);
+  }, [RCInstance, forceEnabled]);
 
   return (
     <FederationContext.Provider

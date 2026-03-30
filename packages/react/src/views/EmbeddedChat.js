@@ -230,7 +230,7 @@ const EmbeddedChat = (props) => {
   return (
     <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
-      <FederationProvider RCInstance={federation ? RCInstance : null}>
+      <FederationProvider RCInstance={federation ? RCInstance : null} forceEnabled={federation}>
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),
