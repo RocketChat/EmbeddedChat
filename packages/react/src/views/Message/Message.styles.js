@@ -165,6 +165,7 @@ export const getMessageHeaderStyles = (theme) => {
     header: css`
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       flex-grow: 0;
       flex-shrink: 1;
       min-width: 1px;
@@ -172,6 +173,10 @@ export const getMessageHeaderStyles = (theme) => {
       margin-bottom: 0.125rem;
       gap: 0.125rem;
       align-items: center;
+
+      @media (max-width: 480px) {
+        align-items: flex-start;
+      }
     `,
 
     name: css`
@@ -229,6 +234,11 @@ export const getMessageHeaderStyles = (theme) => {
       line-height: 1rem;
       flex-shrink: 0;
       margin-left: 0.25rem;
+
+      @media (max-width: 480px) {
+        flex-basis: 100%;
+        margin-left: 0;
+      }
     `,
     messageStatus: css`
       display: flex;

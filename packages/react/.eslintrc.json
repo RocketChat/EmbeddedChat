@@ -1,5 +1,11 @@
 {
   "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "configFile": "./babel.config.js"
+    }
+  },
   "env": {
     "browser": true,
     "es6": true
