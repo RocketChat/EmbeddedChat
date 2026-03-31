@@ -143,6 +143,7 @@ export default class EmbeddedChatApi {
         return { error: authErrorRes?.error };
       }
       console.error(error);
+      return { error: error instanceof Error ? error.message : 'unknown-error' };
     }
   }
 
