@@ -50,6 +50,24 @@ const ChatInputFormattingToolbar = ({
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
+  const emojiTimeoutRef = useRef(null);
+
+  const handleEmojiClose = () => {
+    if (emojiTimeoutRef.current) {
+      clearTimeout(emojiTimeoutRef.current);
+    }
+    emojiTimeoutRef.current = setTimeout(() => {
+      setEmojiOpen(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (emojiTimeoutRef.current) {
+        clearTimeout(emojiTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -296,9 +314,8 @@ const ChatInputFormattingToolbar = ({
           if (itemInFormatter) {
             return (
               <Tooltip
-                text={`${itemInFormatter.name} ${
-                  itemInFormatter.shortcut && `(${itemInFormatter.shortcut})`
-                }`}
+                text={`${itemInFormatter.name} ${itemInFormatter.shortcut && `(${itemInFormatter.shortcut})`
+                  }`}
                 position="top"
                 key={`formatter-${itemInFormatter.name}`}
               >
@@ -341,10 +358,10 @@ const ChatInputFormattingToolbar = ({
         <EmojiPicker
           key="emoji-picker"
           handleEmojiClick={(emoji) => {
-            setEmojiOpen(false);
             handleEmojiClick(emoji);
+            handleEmojiClose();
           }}
-          onClose={() => setEmojiOpen(false)}
+          onClose={handleEmojiClose}
           positionStyles={css`
             position: absolute;
             bottom: 7rem;

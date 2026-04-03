@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import EmojiPicker from 'emoji-picker-react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
@@ -10,11 +10,19 @@ const CustomEmojiPicker = ({
 }) => {
   const theme = useTheme();
   const styles = getEmojiPickerStyles(theme);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const internalHandleEmojiClick = (emojiData, event) => {
-    setTimeout(() => {
+    if (isMountedRef.current) {
       handleEmojiClick(emojiData, event);
-    }, 0);
+    }
   };
 
   const portalStyles = {

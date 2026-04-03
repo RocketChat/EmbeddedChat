@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import {
   Box,
   Modal,
@@ -76,6 +76,24 @@ export const MessageToolbox = ({
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const emojiTimeoutRef = useRef(null);
+
+  const handleEmojiClose = () => {
+    if (emojiTimeoutRef.current) {
+      clearTimeout(emojiTimeoutRef.current);
+    }
+    emojiTimeoutRef.current = setTimeout(() => {
+      setEmojiOpen(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (emojiTimeoutRef.current) {
+        clearTimeout(emojiTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleOnClose = () => {
     setShowDeleteModal(false);
@@ -108,10 +126,10 @@ export const MessageToolbox = ({
   const canDeleteMessage = isAllowedToForceDeleteMessage
     ? true
     : isAllowedToDeleteMessage
-    ? true
-    : isAllowedToDeleteOwnMessage
-    ? message.u._id === authenticatedUserId
-    : false;
+      ? true
+      : isAllowedToDeleteOwnMessage
+        ? message.u._id === authenticatedUserId
+        : false;
 
   const options = useMemo(
     () => ({
@@ -132,14 +150,14 @@ export const MessageToolbox = ({
       star: {
         label:
           message.starred &&
-          message.starred.find((u) => u._id === authenticatedUserId)
+            message.starred.find((u) => u._id === authenticatedUserId)
             ? 'Unstar'
             : 'Star',
         id: 'star',
         onClick: () => handleStarMessage(message),
         iconName:
           message.starred &&
-          message.starred.find((u) => u._id === authenticatedUserId)
+            message.starred.find((u) => u._id === authenticatedUserId)
             ? 'star-filled'
             : 'star',
         visible: true,
@@ -268,10 +286,10 @@ export const MessageToolbox = ({
           {isEmojiOpen && (
             <EmojiPicker
               handleEmojiClick={(emoji) => {
-                setEmojiOpen(false);
                 handleEmojiClick(emoji, message, true);
+                handleEmojiClose();
               }}
-              onClose={() => setEmojiOpen(false)}
+              onClose={handleEmojiClose}
               positionStyles={
                 variantStyles.emojiPickerStyles || styles.emojiPickerStyles
               }
