@@ -230,6 +230,12 @@ export const getMessageHeaderStyles = (theme) => {
       flex-shrink: 0;
       margin-left: 0.25rem;
     `,
+    messageStatus: css`
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      margin-left: 0.2rem;
+    `,
   };
 
   return styles;
