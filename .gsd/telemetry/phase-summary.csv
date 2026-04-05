@@ -1,0 +1,2 @@
+timestamp,phase_num,phase_name,total_plans,completed_plans,total_duration_min,total_tokens,avg_tokens_per_plan,estimated_cost_usd,success_rate,parallel_efficiency,optimization_version
+2026-04-02T16:46:31.7305665+05:30,1,authentication,3,3,2.25,37500,12500,0.56,100.00,65.0,baseline

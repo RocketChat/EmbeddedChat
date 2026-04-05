@@ -1,15 +1,24 @@
-# Brief Title
+## What
 
-## Acceptance Criteria fulfillment
+<!-- One sentence: what does this PR do? -->
 
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
+## Why
 
-Fixes # (issue)
+<!-- One sentence: why is this change needed? -->
 
-## Video/Screenshots
+## Testing
 
-## PR Test Details
+- [ ] Tested on macOS
+- [ ] Tested on Windows
+- [ ] Tested on Linux
 
-**Note**: The PR will be ready for live testing at https://rocketchat.github.io/EmbeddedChat/pulls/pr-<pr_number> after approval. Contributors are requested to replace `<pr_number>` with the actual PR number.
+## Checklist
+
+- [ ] Follows GSD style (no enterprise patterns, no filler)
+- [ ] Updates CHANGELOG.md for user-facing changes
+- [ ] No unnecessary dependencies added
+- [ ] Works on Windows (backslash paths tested)
+
+## Breaking Changes
+
+None

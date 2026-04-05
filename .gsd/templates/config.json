@@ -1,0 +1,63 @@
+{
+  "optimization_version": "v2-dynamic-models",
+  "mode": "interactive",
+  "depth": "standard",
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true
+  },
+  "planning": {
+    "commit_docs": true,
+    "search_gitignored": false,
+    "tasks_per_plan_min": 3,
+    "tasks_per_plan_max": 5,
+    "complexity_aware_batching": true
+  },
+  "parallelization": {
+    "enabled": true,
+    "plan_level": true,
+    "task_level": false,
+    "skip_checkpoints": "smart",
+    "max_concurrent_agents": 8,
+    "min_plans_for_parallel": 2
+  },
+  "checkpoint_rules": {
+    "always_checkpoint": ["auth", "security", "payment", "data-migration"],
+    "always_skip": ["docs", "tests", "ui-polish"],
+    "default": "ask"
+  },
+  "model_selection": {
+    "enabled": true,
+    "mode": "dynamic",
+    "default_profile": "balanced",
+    "override_critical": true,
+    "log_selections": true
+  },
+  "context_optimization": {
+    "enabled": true,
+    "compression_threshold_kb": 10,
+    "extract_sections_only": true
+  },
+  "caching": {
+    "enabled": true,
+    "cache_verification_results": true,
+    "cache_research_outputs": true,
+    "ttl_hours": 24,
+    "invalidate_on_code_change": true
+  },
+  "gates": {
+    "confirm_project": true,
+    "confirm_phases": true,
+    "confirm_roadmap": true,
+    "confirm_breakdown": true,
+    "confirm_plan": true,
+    "execute_next_plan": true,
+    "issues_review": true,
+    "confirm_transition": true
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
+  }
+}

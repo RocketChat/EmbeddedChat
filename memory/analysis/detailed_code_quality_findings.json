@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-04-01 23:19:17",
+  "code_quality": {
+    "console_statements": {
+      "security_risk": "HIGH - May leak tokens, user data, API responses",
+      "critical_files": [
+        "api/src/EmbeddedChatApi.ts (42 instances)",
+        "react/src/views/ (16 instances)",
+        "auth/src/ (3 instances)"
+      ],
+      "files": 32,
+      "total": 70
+    },
+    "todo_comments": {
+      "actionable": 5,
+      "files": [
+        "api/src/EmbeddedChatApi.ts (thread listeners)",
+        "react-native (slash commands, attachments, custom emoji)",
+        "react-native/src/lib/constants/colors.js (design team review)"
+      ],
+      "total": 6
+    },
+    "ts_ignore": {
+      "issue": "ref type error needs proper typing",
+      "total": 1,
+      "file": "react-native/src/components/TextInput/FormTextInput.js:107"
+    },
+    "eslint_disables": {
+      "critical_concerns": [
+        "Accessibility violations (a11y rules disabled)",
+        "Variable shadowing (no-shadow) - 5+ files",
+        "Busy-wait anti-pattern (no-empty) - EmbeddedChatApi.ts:365"
+      ],
+      "total_instances": 35,
+      "files": 21
+    },
+    "magic_numbers": {
+      "timeouts": 5,
+      "z_indexes": 15,
+      "total_critical": 23,
+      "file_limits": 3,
+      "action_required": "Extract to constants"
+    },
+    "deprecated_api": {
+      "issue": "clearDecorators deprecated in Storybook 7.0",
+      "total": 1,
+      "file": "react-native/.storybook/storybook.requires.js:32"
+    }
+  },
+  "testing_gaps": {
+    "critical_missing_tests": [
+      "Authentication flows",
+      "API methods",
+      "React hooks",
+      "State management",
+      "Error handling"
+    ],
+    "test_files": 3,
+    "unit_test_coverage": "0% (api, auth) | <5% (react)",
+    "e2e_coverage": "basic Playwright only"
+  },
+  "critical_bugs": {
+    "medium": [
+      "#1251 - Profile sidebar doesn't open from quotes",
+      "#1245 - Emoji picker inconsistent behavior",
+      "#1235 - UI Kit falsy values lost"
+    ],
+    "high": [
+      "#1257 - Timestamp overlap (mobile broken)",
+      "#1229 - Image 403 errors (media broken)",
+      "#1247 - Audio playback fails (media broken)",
+      "#1232 - Message history fails to load"
+    ],
+    "blocking": [
+      "#1225 - Secure auth crash (users cannot login)",
+      "#1224 - Message list mutation (UX breaking)"
+    ]
+  },
+  "error_handling": {
+    "recommendation": "Implement proper error handling patterns and logging framework",
+    "no_error_boundaries": true,
+    "unhandled_async_rejections": "multiple files",
+    "missing_error_recovery": "widespread",
+    "catch_blocks_with_only_console": 42
+  },
+  "immediate_actions": [
+    "1. Fix #1225 secure auth crash - CRITICAL",
+    "2. Fix #1224 message list mutation - CRITICAL",
+    "3. Remove/replace 70+ console statements - SECURITY",
+    "4. Fix busy-wait loop EmbeddedChatApi.ts:365 - PERFORMANCE",
+    "5. Implement proper logging framework",
+    "6. Extract magic numbers to constants",
+    "7. Add unit tests for auth and api packages",
+    "8. Fix #1257 timestamp overlap",
+    "9. Fix #1229 image 403 errors",
+    "10. Security audit for input sanitization"
+  ],
+  "security_concerns": {
+    "critical_auth_bug": "#1225 - secure auth flow crashes",
+    "recommendation": "Immediate security audit required",
+    "missing_input_sanitization": "needs audit",
+    "console_leakage": "70+ instances may leak sensitive data",
+    "cors_misconfiguration_risk": "documented as requirement"
+  },
+  "analysis_complete": true
+}

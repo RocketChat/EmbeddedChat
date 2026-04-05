@@ -1,0 +1,4 @@
+timestamp,phase_num,phase_name,plan_id,agent_type,duration_sec,tokens_used,model_used,success,error_msg,wave_num,concurrent_count
+2026-04-02T16:46:31.7305665+05:30,1,authentication,01-01,executor,45,12500,sonnet,true,,1,3
+2026-04-02T16:46:31.7305665+05:30,1,authentication,01-02,executor,52,15200,sonnet,true,,1,3
+2026-04-02T16:46:31.7305665+05:30,1,authentication,01-03,executor,38,9800,haiku,true,,2,2

@@ -1,0 +1,154 @@
+{
+  "ui_issues": {
+    "count": 13,
+    "samples": [
+      {
+        "title": "UI Kit falsy values are lost in initial/state resolution for block elements",
+        "number": 1235
+      },
+      {
+        "title": "Improve Playwright Test Coverage and Stability to Eliminate Manual UI Testing",
+        "number": 1227
+      },
+      {
+        "title": "File Gallery does not update after deleting a file — requires page reload",
+        "number": 1208
+      },
+      {
+        "title": "Bug : UIKit contextual bars not rendering in EmbeddedChat",
+        "number": 1161
+      },
+      {
+        "title": "Critical: handleTypingEvent busy-wait blocks main thread and freezes UI during typing updates",
+        "number": 1151
+      },
+      {
+        "title": "Windows builds fail intermittently due to Rollup Terser worker crashes and OOM",
+        "number": 1137
+      },
+      {
+        "title": "Feature Request: Offline Message Handling and Resend/Delete UI",
+        "number": 1091
+      },
+      {
+        "title": "Bug: Thread UI remains open after parent message is deleted (State Leak)",
+        "number": 1080
+      },
+      {
+        "title": "Header icon row overlaps channel name on mobile in design variants",
+        "number": 1065
+      },
+      {
+        "title": "feat: Thread Message Previews for required messages in main chat flow",
+        "number": 1053
+      }
+    ]
+  },
+  "features": {
+    "count": 9,
+    "samples": [
+      {
+        "title": "feat: add multi-message selection and bulk delete in chat",
+        "number": 1249
+      },
+      {
+        "title": "Add jest-axe baseline accessibility tests for core components",
+        "number": 1219
+      },
+      {
+        "title": "Feat: Add Keyboard Shortcuts modal to Embedded Chat options menu",
+        "number": 1169
+      },
+      {
+        "title": "Feat : Add list formatting with auto-continuation to message composer",
+        "number": 1159
+      },
+      {
+        "title": "Fearure: Add keyboard shortcut information to chat formatter tool tip in formatter toolbar",
+        "number": 1101
+      },
+      {
+        "title": "Feature Request: Offline Message Handling and Resend/Delete UI",
+        "number": 1091
+      },
+      {
+        "title": "Add dark/light theme support for chat input container in EmbeddedChat",
+        "number": 1068
+      },
+      {
+        "title": "Add unread messages divider",
+        "number": 1046
+      },
+      {
+        "title": "Add Character Limit Validation &amp; UI Feedback to File Description Input",
+        "number": 1036
+      }
+    ]
+  },
+  "tests": {
+    "count": 4,
+    "samples": [
+      {
+        "title": "Improve Playwright Test Coverage and Stability to Eliminate Manual UI Testing",
+        "number": 1227
+      },
+      {
+        "title": "Auto-Apply community-tested Label Based on /tested Comments from Multiple Users",
+        "number": 1226
+      },
+      {
+        "title": "Add jest-axe baseline accessibility tests for core components",
+        "number": 1219
+      },
+      {
+        "title": "fix(react): src/index.test.js fails on develop due to missing swiper/element/bundle module",
+        "number": 1191
+      }
+    ]
+  },
+  "bugs": {
+    "count": 42,
+    "samples": [
+      {
+        "title": "BUG: Message history fails to load",
+        "number": 1232
+      },
+      {
+        "title": "Bug: Image attachment previews return 403 Forbidden (uploaded images not visible in chat)",
+        "number": 1229
+      },
+      {
+        "title": "Bug: Secure token functions crash with TypeError — users on secure auth flow cannot log in or log out",
+        "number": 1225
+      },
+      {
+        "title": "Bug: Message list order flips on every re-render due to in-place array mutation",
+        "number": 1224
+      },
+      {
+        "title": "Bug: Uncaught TypeError in useRCAuth on Network Error during login",
+        "number": 1210
+      },
+      {
+        "title": "Bug: Incorrect setTimeout Delay Argument Using Array Instead of Number",
+        "number": 1204
+      },
+      {
+        "title": "Fix: Username validation regex missing anchors",
+        "number": 1201
+      },
+      {
+        "title": "fix: onAuthChange memory leak in React package",
+        "number": 1198
+      },
+      {
+        "title": "Fix: Memory leaks and race conditions in auth event listeners across React components",
+        "number": 1196
+      },
+      {
+        "title": "bug: attachment metadata text overlaps on mobile viewports",
+        "number": 1194
+      }
+    ]
+  }
+}

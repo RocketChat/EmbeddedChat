@@ -1,0 +1,29 @@
+{
+  "high_priority_bugs": 4,
+  "next_steps": [
+    "Fix critical authentication crash (#1225)",
+    "Fix message list mutation (#1224)",
+    "Add comprehensive unit tests",
+    "Remove console statements",
+    "Improve TypeScript type safety"
+  ],
+  "packages_analyzed": 12,
+  "code_quality_issues": {
+    "test_coverage": "minimal",
+    "test_files": 3,
+    "console_statements": 32,
+    "eslint_disables": 21,
+    "todo_comments": 12
+  },
+  "github_issues_analyzed": 100,
+  "analysis_completed": "2026-04-01 23:16:41",
+  "output_file": "D:\\EmbeddedChat\\ANALYZE.md",
+  "critical_bugs_found": 5,
+  "recommendations": {
+    "long_term": 4,
+    "medium_term": 5,
+    "immediate": 5,
+    "short_term": 5
+  },
+  "phase": "complete"
+}

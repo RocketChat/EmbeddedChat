@@ -1,0 +1,272 @@
+[
+  {
+    "number": 1257,
+    "updated_at": "2026-03-30T14:52:52Z",
+    "created_at": "2026-03-30T14:50:45Z",
+    "title": "Message timestamp overlaps on small screens",
+    "state": "OPEN",
+    "body_preview": "On smaller screen sizes or narrow browser windows, the message timestamp overlaps with the message text content. This occurs because the container does not allow the elements to wrap, leading to a UI ",
+    "labels": ""
+  },
+  {
+    "number": 1251,
+    "updated_at": "2026-03-27T10:35:52Z",
+    "created_at": "2026-03-27T10:35:52Z",
+    "title": "User profile sidebar doesn’t open from quoted message",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nQuoted messages show the author avatar/username, but clicking them doesn’t open the user profile sidebar. Normal message avatars work correctly.\n\n### Steps to reproduce:\n\n1. Quote a ",
+    "labels": ""
+  },
+  {
+    "number": 1249,
+    "updated_at": "2026-03-26T18:12:11Z",
+    "created_at": "2026-03-26T18:12:11Z",
+    "title": "feat: add multi-message selection and bulk delete in chat",
+    "state": "OPEN",
+    "body_preview": "As an EmbeddedChat developer\n\nI need to add multi-message selection and bulk delete controls in the message list.\n\nSo That moderators and users can manage multiple messages faster without repeating on",
+    "labels": ""
+  },
+  {
+    "number": 1247,
+    "updated_at": "2026-03-26T17:11:53Z",
+    "created_at": "2026-03-26T17:11:53Z",
+    "title": "Audio recording playback fails and renamed downloads use incorrect file format",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nWhen users record and send an audio message, audio behavior is inconsistent in Storybook/local integration:\n- Sent audio sometimes shows 0:00 / 0:00 and controls appear non-functiona",
+    "labels": ""
+  },
+  {
+    "number": 1245,
+    "updated_at": "2026-03-26T16:00:52Z",
+    "created_at": "2026-03-26T15:36:08Z",
+    "title": "Inconsistent emoji reaction behavior via picker",
+    "state": "OPEN",
+    "body_preview": "### Description:\nWhen a user clicks an emoji in the emoji picker that they have already reacted with, nothing happens. The reaction is not removed. However, clicking the same emoji directly on the mes",
+    "labels": ""
+  },
+  {
+    "number": 1240,
+    "updated_at": "2026-03-26T13:35:42Z",
+    "created_at": "2026-03-25T13:49:09Z",
+    "title": "Perf: Eliminate Per-Render Array Reversal and Memoize Permission Sets",
+    "state": "OPEN",
+    "body_preview": "## Problem 1: Expensive sorting/reversing in MessageList render\n`packages/react/src/views/MessageList/MessageList.js` currently does:\n- `messages.filter(...).slice().reverse().map(...)`\n\nThis clones +",
+    "labels": ""
+  },
+  {
+    "number": 1237,
+    "updated_at": "2026-03-24T15:04:53Z",
+    "created_at": "2026-03-24T14:56:29Z",
+    "title": "Refactor API: Remove &#39;any&#39; from EmbeddedChatApi and improve payload typing",
+    "state": "OPEN",
+    "body_preview": "## Summary\n`packages/api/src/EmbeddedChatApi.ts` currently relies on multiple explicit any types across callback signatures, stream payload handling, auth inputs, and message APIs. This reduces type s",
+    "labels": ""
+  },
+  {
+    "number": 1235,
+    "updated_at": "2026-03-23T14:25:55Z",
+    "created_at": "2026-03-23T14:25:55Z",
+    "title": "UI Kit falsy values are lost in initial/state resolution for block elements",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nUI Kit block state helpers treat valid falsy values such as `0` and `&#39;&#39;` as if they were missing. Because `getInitialValue` and `useUiKitState` rely on truthy checks / `||` f",
+    "labels": ""
+  },
+  {
+    "number": 1232,
+    "updated_at": "2026-03-24T16:18:17Z",
+    "created_at": "2026-03-21T13:26:26Z",
+    "title": "BUG: Message history fails to load",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nEmbeddedChat has stopped loading previous messages after the recent merges.\n\nThe client ends up calling the private room history endpoint for a public room. For example, for the publ",
+    "labels": ""
+  },
+  {
+    "number": 1229,
+    "updated_at": "2026-03-21T10:32:32Z",
+    "created_at": "2026-03-21T10:31:06Z",
+    "title": "Bug: Image attachment previews return 403 Forbidden (uploaded images not visible in chat)",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nAfter a file is successfully uploaded via EmbeddedChat, the image attachment preview in the chat message fails to load with a 403 Forbidden error. The file uploads correctly to the s",
+    "labels": ""
+  },
+  {
+    "number": 1227,
+    "updated_at": "2026-03-21T14:39:46Z",
+    "created_at": "2026-03-21T07:41:53Z",
+    "title": "Improve Playwright Test Coverage and Stability to Eliminate Manual UI Testing",
+    "state": "OPEN",
+    "body_preview": "As an EmbeddedChat developer\n\n**I need to**:\nStrengthen and expand Playwright test coverage for PR-related flows and UI interactions.\n\n**So That**:\nWe can rely on automated tests instead of manually t",
+    "labels": ""
+  },
+  {
+    "number": 1226,
+    "updated_at": "2026-03-21T13:38:53Z",
+    "created_at": "2026-03-21T07:40:06Z",
+    "title": "Auto-Apply community-tested Label Based on /tested Comments from Multiple Users",
+    "state": "OPEN",
+    "body_preview": "As an EmbeddedChat developer\n\n**I need to**:\nAllow community members to mark a PR as tested using a comment command (e.g. `/tested`), where the system automatically applies a `community-tested` label ",
+    "labels": ""
+  },
+  {
+    "number": 1225,
+    "updated_at": "2026-03-25T08:43:00Z",
+    "created_at": "2026-03-20T10:26:30Z",
+    "title": "Bug: Secure token functions crash with TypeError — users on secure auth flow cannot log in or log out",
+    "state": "OPEN",
+    "body_preview": "### Description\n\nIn `packages/react/src/lib/auth.js`, the secure token storage functions (`saveTokenSecure`, `getTokenSecure`, `deleteTokenSecure`) reference `this.handleSecureLogin(...)` — but they a",
+    "labels": ""
+  },
+  {
+    "number": 1224,
+    "updated_at": "2026-03-20T10:28:26Z",
+    "created_at": "2026-03-20T10:24:12Z",
+    "title": "Bug: Message list order flips on every re-render due to in-place array mutation",
+    "state": "OPEN",
+    "body_preview": "### Description\n\nIn `MessageList.js`, the `filteredMessages` array is reversed using `.reverse()` directly — which mutates the array in-place. Since the same array reference can be reused across rende",
+    "labels": ""
+  },
+  {
+    "number": 1222,
+    "updated_at": "2026-03-19T00:02:04Z",
+    "created_at": "2026-03-19T00:02:04Z",
+    "title": "Mobile emoji picker should open as a bottom sheet instead of the desktop floating popup",
+    "state": "OPEN",
+    "body_preview": "On mobile, the emoji picker currently uses the same floating popup behavior as desktop. This is not a good mobile experience.\n\nRocket.Chat’s updated mobile behavior is a better pattern:\n- tapping the ",
+    "labels": ""
+  },
+  {
+    "number": 1219,
+    "updated_at": "2026-03-18T17:42:33Z",
+    "created_at": "2026-03-18T17:37:51Z",
+    "title": "Add jest-axe baseline accessibility tests for core components",
+    "state": "OPEN",
+    "body_preview": "While going through the codebase I noticed packages/react already has Jest and @testing-library/react set up but there are no accessibility checks anywhere. Since EmbeddedChat gets embedded into third",
+    "labels": ""
+  },
+  {
+    "number": 1217,
+    "updated_at": "2026-03-18T17:33:00Z",
+    "created_at": "2026-03-18T17:10:17Z",
+    "title": "feat: Improve kebab menu for mobile devices",
+    "state": "OPEN",
+    "body_preview": "#### Description\nOn mobile viewports (375px and below), clicking the kebab menu (⋮) in the EmbeddedChat header opens a dropdown that is not optimized for mobile responsiveness.\nCurrently, it uses the ",
+    "labels": ""
+  },
+  {
+    "number": 1214,
+    "updated_at": "2026-03-18T14:04:04Z",
+    "created_at": "2026-03-18T14:04:04Z",
+    "title": "Chore: Migrate project environment from Node v16 to Node v22",
+    "state": "OPEN",
+    "body_preview": "## Description\nCurrently, the `EmbeddedChat` project is running on Node.js 16.19.0. Node 16 reached its End-of-Life (EOL) in September 2023. As a result, maintaining the project on this version poses ",
+    "labels": ""
+  },
+  {
+    "number": 1210,
+    "updated_at": "2026-03-16T20:26:10Z",
+    "created_at": "2026-03-16T20:14:07Z",
+    "title": "Bug: Uncaught TypeError in useRCAuth on Network Error during login",
+    "state": "OPEN",
+    "body_preview": "When a user attempts to log in but encounters a network error (e.g., `net::ERR_NETWORK_CHANGED` or a DNS failure), the `fetch` call in `EmbeddedChatApi.login` throws an error.\n\nThe `catch` block in `p",
+    "labels": ""
+  },
+  {
+    "number": 1208,
+    "updated_at": "2026-03-16T14:23:36Z",
+    "created_at": "2026-03-16T14:23:05Z",
+    "title": "File Gallery does not update after deleting a file — requires page reload",
+    "state": "OPEN",
+    "body_preview": "### Description:\nWhen a file is deleted from the File Gallery sidebar, the deletion succeeds on the server but the file remains visible in the list until the page is reloaded. The UI does not re-rende",
+    "labels": ""
+  },
+  {
+    "number": 1206,
+    "updated_at": "2026-03-16T10:15:41Z",
+    "created_at": "2026-03-16T10:15:41Z",
+    "title": "Feat: Refactor Monolithic EmbeddedChatApi",
+    "state": "OPEN",
+    "body_preview": "The `EmbeddedChatApi.ts` file has grown into a monolithic module (1200 lines), handling multiple responsibilities including authentication, message management, room operations, user settings, and real",
+    "labels": ""
+  },
+  {
+    "number": 1204,
+    "updated_at": "2026-03-15T05:02:33Z",
+    "created_at": "2026-03-15T05:02:33Z",
+    "title": "Bug: Incorrect setTimeout Delay Argument Using Array Instead of Number",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nWhile reviewing the code, I noticed that setTimeout is being called with an array as the delay value instead of a number.\n\n```\ntimerRef.current = setTimeout(() =&gt; {\n  typingRef.cu",
+    "labels": ""
+  },
+  {
+    "number": 1201,
+    "updated_at": "2026-03-14T09:38:38Z",
+    "created_at": "2026-03-14T09:38:38Z",
+    "title": "Fix: Username validation regex missing anchors",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nThe current username validation regex `/[0-9a-zA-Z-_.]+/` in `EmbeddedChatApi.ts` lacks start (`^`) and end (`$`) anchors. This causes the validation to pass for any string that cont",
+    "labels": ""
+  },
+  {
+    "number": 1198,
+    "updated_at": "2026-03-11T22:23:35Z",
+    "created_at": "2026-03-11T22:23:35Z",
+    "title": "fix: onAuthChange memory leak in React package",
+    "state": "OPEN",
+    "body_preview": "### Description\nThe `onAuthChange` listener in the React package is registered within `useEffect` hooks but never unsubscribed in the cleanup phase. This leads to a memory leak and potential duplicate",
+    "labels": ""
+  },
+  {
+    "number": 1196,
+    "updated_at": "2026-03-11T18:09:47Z",
+    "created_at": "2026-03-11T17:45:10Z",
+    "title": "Fix: Memory leaks and race conditions in auth event listeners across React components",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nSome of the core components — EmbeddedChat, ChatBody, and ChatInput — were subscribing to RCInstance.auth.onAuthChange() inside useEffect hooks, but they didn’t include a cleanup fun",
+    "labels": ""
+  },
+  {
+    "number": 1194,
+    "updated_at": "2026-03-30T13:41:51Z",
+    "created_at": "2026-03-11T09:07:11Z",
+    "title": "bug: attachment metadata text overlaps on mobile viewports",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nOn mobile viewports (tested with multiple devices via Chrome DevTools device toolbar), the attachment filename and file size text overlap each other, making both unreadable.\n\n### Ste",
+    "labels": ""
+  },
+  {
+    "number": 1192,
+    "updated_at": "2026-03-09T14:35:02Z",
+    "created_at": "2026-03-09T14:35:02Z",
+    "title": "Fix: Missing URI Encoding in EmbeddedChatApi.ts GET Requests",
+    "state": "OPEN",
+    "body_preview": "### Description:\n\nRight now,  `EmbeddedChatApi.ts` takes your input (like what you type in search) and puts it directly into the website address (URL) without &#34;encoding&#34; it first. When you use",
+    "labels": ""
+  },
+  {
+    "number": 1191,
+    "updated_at": "2026-03-18T14:31:49Z",
+    "created_at": "2026-03-09T10:27:48Z",
+    "title": "fix(react): src/index.test.js fails on develop due to missing swiper/element/bundle module",
+    "state": "OPEN",
+    "body_preview": "## Bug Report\n\n### Summary\n`src/index.test.js` fails to run on the `develop` branch and has been broken before any recent changes. This is a pre-existing issue unrelated to any feature work.\n\n### Step",
+    "labels": ""
+  },
+  {
+    "number": 1185,
+    "updated_at": "2026-03-05T04:00:05Z",
+    "created_at": "2026-03-04T21:14:45Z",
+    "title": "Refactor: Architectural cleanup of EmbeddedChatApi.ts",
+    "state": "OPEN",
+    "body_preview": "## Description\n\nThe EmbeddedChatApi.ts file currently contains significant code duplication. Almost every API method (30+) manually retrieves the user session, constructs headers, stringifies JSON, an",
+    "labels": ""
+  },
+  {
+    "number": 1183,
+    "updated_at": "2026-03-04T15:42:16Z",
+    "created_at": "2026-03-04T14:53:29Z",
+    "title": "Bug: All API Methods Silently Fail When Auth Is Null",
+    "state": "OPEN",
+    "body_preview": "### Description\n\nEvery authenticated API method in `packages/api/src/EmbeddedChatApi.ts` silently fails when `getCurrentUser()` returns `null` or `undefined`, sending HTTP requests with the literal st",
+    "labels": ""
+  }
+]

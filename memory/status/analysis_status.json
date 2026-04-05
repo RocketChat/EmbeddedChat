@@ -1,0 +1,21 @@
+
+{
+  "categories": {
+    "tests": 4,
+    "bugs": 42,
+    "ui_issues": 13,
+    "features": 9
+  },
+  "packages_analyzed": 12,
+  "analysis_start": "2026-04-01 23:13:40",
+  "github_issues_fetched": 100,
+  "open_issues": 75,
+  "code_quality_scan": {
+    "todo_comments": 12,
+    "test_files_found": "pending",
+    "eslint_disabled": 21,
+    "console_statements": 32
+  },
+  "phase": "code_analysis_in_progress",
+  "closed_issues": 25
+}
