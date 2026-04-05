@@ -5,12 +5,14 @@ import { IRocketChatAuthOptions } from "./IRocketChatAuthOptions";
 import { Api, ApiError } from "./Api";
 import loginWithRocketChatOAuth from "./loginWithRocketChatOAuth";
 import handleSecureLogin from "./handleSecureLogin";
+import { CurrentUser } from "./types";
+
 class RocketChatAuth {
   host: string;
   api: Api;
-  currentUser: any;
+  currentUser: CurrentUser | null;
   lastFetched: Date;
-  authListeners: ((user: object | null) => void)[] = [];
+  authListeners: ((user: CurrentUser | null) => void)[] = [];
   deleteToken: () => Promise<void>;
   saveToken: (token: string) => Promise<void>;
   getToken: () => Promise<string>;

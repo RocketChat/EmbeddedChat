@@ -6,6 +6,7 @@ import {
   RocketChatAuth,
   ApiError,
 } from "@embeddedchat/auth";
+import { Message, ActionData, UiInteractionData } from "./types";
 
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
@@ -13,11 +14,11 @@ export default class EmbeddedChatApi {
   host: string;
   rid: string;
   rcClient: Rocketchat;
-  onMessageCallbacks: ((message: any) => void)[];
+  onMessageCallbacks: ((message: Message) => void)[];
   onMessageDeleteCallbacks: ((messageId: string) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
-  onActionTriggeredCallbacks: ((data: any) => void)[];
-  onUiInteractionCallbacks: ((data: any) => void)[];
+  onActionTriggeredCallbacks: ((data: ActionData) => void)[];
+  onUiInteractionCallbacks: ((data: UiInteractionData) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
 

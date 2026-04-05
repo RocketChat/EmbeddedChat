@@ -7,15 +7,26 @@ interface ICredentials {
     serviceName: string;
 }
 
+interface CallbackConfig {
+    success: boolean;
+    error?: string;
+    origin?: string;
+    credentials?: {
+        accessToken: string;
+        expiresIn: number;
+        serviceName: string;
+    };
+}
+
 export const getCallbackContent = async (
     read: IRead,
     credentials: ICredentials | null,
     origin: string,
-    error
+    error?: string
 ) => {
     const { accessToken, expiresIn = 3600, serviceName } = credentials || {};
     const isAllowed = await isAllowedOrigin(read, origin);
-    let config: any = {};
+    let config: CallbackConfig;
     if (error) {
         config = {
             success: false,
@@ -31,9 +42,9 @@ export const getCallbackContent = async (
             success: true,
             origin,
             credentials: {
-                accessToken,
+                accessToken: accessToken!,
                 expiresIn,
-                serviceName,
+                serviceName: serviceName!,
             },
         };
     }
