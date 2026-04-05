@@ -8,32 +8,39 @@ import {
   Input,
   Button,
 } from '@embeddedchat/ui-elements';
-import { totpModalStore, useUserStore } from '../../store';
+import { totpModalStore, useUserStore, useTotpCredentialsStore } from '../../store';
 
+// SECURITY FIX (Issue #1263): TOTP modal now uses ephemeral credentials store
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
   const isTotpModalOpen = totpModalStore((state) => state.isTotpModalOpen);
   const setIsTotpModalOpen = totpModalStore(
     (state) => state.setIsTotpModalOpen
   );
-  const password = useUserStore((state) => state.password);
+  // SECURITY FIX (Issue #1263): Retrieve credentials from ephemeral TOTP store
+  const { tempEmailOrUser, tempPassword } = useTotpCredentialsStore();
+  const clearTotpCredentials = useTotpCredentialsStore((state) => state.clearTotpCredentials);
   const emailoruser = useUserStore((state) => state.emailoruser);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== null && emailoruser !== null) {
-      handleLogin(emailoruser, password, accessCode);
+    if (tempPassword && (tempEmailOrUser || emailoruser)) {
+      handleLogin(tempEmailOrUser || emailoruser, tempPassword, accessCode);
     }
     setAccessCode(undefined);
   };
+  
   const handleClose = () => {
+    // SECURITY FIX (Issue #1263): Clear ephemeral credentials when modal closes
+    clearTotpCredentials();
     setIsTotpModalOpen(false);
   };
 
   const handleEdit = (e) => {
     setAccessCode(e.target.value);
   };
+  
   return isTotpModalOpen ? (
     <>
       <GenericModal
