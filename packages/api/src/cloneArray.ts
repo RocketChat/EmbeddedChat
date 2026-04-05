@@ -1,11 +1,11 @@
 /**
- * Deep Cloning upto 2 levels
- * @param {*} array
- * @returns
+ * Deep Cloning up to 2 levels
+ * @param array - Array to clone
+ * @returns Cloned array
  */
-const cloneArray = (array: any[]) => {
+const cloneArray = <T extends Record<string, unknown>>(array: T[]): T[] => {
   const newArray = [...array].map((item) =>
-    typeof item === "object" ? { ...item } : item
+    typeof item === "object" && item !== null ? ({ ...item } as T) : item
   );
   return newArray;
 };

@@ -4,7 +4,7 @@ export class ApiError extends Error {
     response: Response,
     message?: string | undefined,
     options?: ErrorOptions | undefined,
-    ...other: any[]
+    ...other: unknown[]
   ) {
     super(message, options, ...(other as []));
     this.response = response;
@@ -30,7 +30,7 @@ export class Api {
   async request(
     method: string = "GET",
     endpoint: string,
-    data: any,
+    data: unknown,
     config: RequestInit
   ) {
     const url = new URL(endpoint, this.baseUrl).toString();
