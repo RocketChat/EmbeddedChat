@@ -7,6 +7,9 @@ import { parse } from '@rocket.chat/message-parser';
 import AttachmentMetadata from './AttachmentMetadata';
 import RCContext from '../../context/RCInstance';
 import { Markdown } from '../Markdown';
+import AudioAttachment from './AudioAttachment';
+import VideoAttachment from './VideoAttachment';
+import ImageAttachment from './ImageAttachment';
 
 const FileAttachment = ({
   attachment,
@@ -230,149 +233,247 @@ const FileAttachment = ({
         )}
         {attachment?.attachments &&
           Array.isArray(attachment.attachments) &&
-          attachment.attachments.map((nestedAttachment, index) => (
-            <Box
-              css={[
-                css`
-                  display: flex;
-                  flex-direction: column;
-                  letter-spacing: 0rem;
-                  font-size: 0.875rem;
-                  font-weight: 400;
-                  word-break: break-word;
-                  border-inline-start: 3px solid ${theme.colors.border};
-                  margin-top: 0.75rem;
-                  padding: 0.5rem;
-                `,
-                (nestedAttachment?.type ? variantStyles.pinnedContainer : '') ||
-                  css`
-                    ${!attachment?.type
-                      ? `border: 2px solid ${theme.colors.border};`
-                      : ''}
-                  `,
-                css`
-                  ${variantStyles.name !== undefined &&
-                  variantStyles.name.includes('bubble')
-                    ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
-                    : ''}
-                `,
-              ]}
-              key={index}
-            >
+          attachment.attachments.map((nestedAttachment, index) => {
+            if (nestedAttachment?.audio_url) {
+              return (
+                <AudioAttachment
+                  attachment={nestedAttachment}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+            if (nestedAttachment?.video_url) {
+              return (
+                <VideoAttachment
+                  attachment={nestedAttachment}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+            if (nestedAttachment?.image_url) {
+              return (
+                <ImageAttachment
+                  attachment={nestedAttachment}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment?.author_icon,
+                    authorName: nestedAttachment?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+            // Check for wrapped attachments (mirroring Attachment.js logic)
+            if (nestedAttachment?.attachments?.[0]?.audio_url) {
+              return (
+                <AudioAttachment
+                  attachment={nestedAttachment.attachments[0]}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+            if (nestedAttachment?.attachments?.[0]?.video_url) {
+              return (
+                <VideoAttachment
+                  attachment={nestedAttachment.attachments[0]}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+            if (nestedAttachment?.attachments?.[0]?.image_url) {
+              return (
+                <ImageAttachment
+                  attachment={nestedAttachment.attachments[0]}
+                  host={host}
+                  author={{
+                    authorIcon: nestedAttachment.attachments[0]?.author_icon,
+                    authorName: nestedAttachment.attachments[0]?.author_name,
+                  }}
+                  variantStyles={variantStyles}
+                  msg={msg}
+                  key={index}
+                />
+              );
+            }
+
+            return (
               <Box
                 css={[
                   css`
                     display: flex;
-                    gap: 0.3rem;
-                    align-items: center;
+                    flex-direction: column;
+                    letter-spacing: 0rem;
+                    font-size: 0.875rem;
+                    font-weight: 400;
+                    word-break: break-word;
+                    border-inline-start: 3px solid ${theme.colors.border};
+                    margin-top: 0.75rem;
+                    padding: 0.5rem;
                   `,
-                  variantStyles.textUserInfo,
+                  (nestedAttachment?.type
+                    ? variantStyles.pinnedContainer
+                    : '') ||
+                    css`
+                      ${!attachment?.type
+                        ? `border: 2px solid ${theme.colors.border};`
+                        : ''}
+                    `,
+                  css`
+                    ${variantStyles.name !== undefined &&
+                    variantStyles.name.includes('bubble')
+                      ? `border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem`
+                      : ''}
+                  `,
                 ]}
+                key={index}
               >
-                {nestedAttachment?.author_name && (
-                  <>
-                    <Avatar
-                      url={getUserAvatarUrl(nestedAttachment?.author_icon)}
-                      alt="avatar"
-                      size="1.2em"
-                    />
-                    <Box>@{nestedAttachment?.author_name}</Box>
-                    {getTimeString(nestedAttachment?.ts) && (
-                      <Box
-                        onClick={() => handleQuoteClick(nestedAttachment)}
-                        css={css`
-                          font-size: 0.75rem;
-                          color: ${theme.colors.mutedForeground};
-                          cursor: pointer;
-                          &:hover {
-                            text-decoration: underline;
-                          }
-                        `}
-                      >
-                        {getTimeString(nestedAttachment.ts)}
-                      </Box>
-                    )}
-                  </>
-                )}
-              </Box>
-
-              <AttachmentMetadata
-                attachment={nestedAttachment}
-                url={host + (nestedAttachment?.title_link || '')}
-                variantStyles={variantStyles}
-                onExpandCollapseClick={toggleExpanded}
-                isExpanded={isExpanded}
-              />
-
-              {isExpanded && (
                 <Box
-                  css={css`
-                    margin-top: 0.5rem;
-                    white-space: pre-line;
-                  `}
+                  css={[
+                    css`
+                      display: flex;
+                      gap: 0.3rem;
+                      align-items: center;
+                    `,
+                    variantStyles.textUserInfo,
+                  ]}
                 >
-                  {nestedAttachment?.text ? (
-                    nestedAttachment.text[0] === '[' ? (
-                      nestedAttachment.text.match(/\n(.*)/)?.[1] || ''
-                    ) : (
-                      <Markdown
-                        body={nestedAttachment.text}
-                        md={nestedAttachment.md}
-                        isReaction={false}
+                  {nestedAttachment?.author_name && (
+                    <>
+                      <Avatar
+                        url={getUserAvatarUrl(nestedAttachment?.author_icon)}
+                        alt="avatar"
+                        size="1.2em"
                       />
-                    )
-                  ) : (
-                    <Box
-                      css={css`
-                        display: flex;
-                        align-items: center;
-                        margin-top: 0.5rem;
-                        background: ${theme.colors.background};
-                        padding: 8px 12px;
-                        border-radius: 4px;
-                        gap: 8px;
-                        border: 1px solid ${theme.colors.border};
-                      `}
-                    >
-                      <Icon name="file" size="40px" />
-                      <Box
-                        css={css`
-                          display: flex;
-                          flex-direction: column;
-                          gap: 2px;
-                          line-height: normal;
-                        `}
-                      >
-                        <a
-                          href={host + (nestedAttachment?.title_link || ' ')}
-                          download={nestedAttachment?.title_link_download}
+                      <Box>@{nestedAttachment?.author_name}</Box>
+                      {getTimeString(nestedAttachment?.ts) && (
+                        <Box
+                          onClick={() => handleQuoteClick(nestedAttachment)}
                           css={css`
-                            text-decoration: none;
-                            font-size: 0.875rem;
+                            font-size: 0.75rem;
+                            color: ${theme.colors.mutedForeground};
+                            cursor: pointer;
                             &:hover {
                               text-decoration: underline;
                             }
                           `}
                         >
-                          {nestedAttachment?.title}
-                        </a>
-                        <Box
-                          css={css`
-                            font-size: 0.75rem;
-                          `}
-                        >
-                          {getFileSizeWithFormat(
-                            nestedAttachment?.size,
-                            nestedAttachment?.format
-                          )}
+                          {getTimeString(nestedAttachment.ts)}
                         </Box>
-                      </Box>
-                    </Box>
+                      )}
+                    </>
                   )}
                 </Box>
-              )}
-            </Box>
-          ))}
+
+                {!nestedAttachment?.text && !nestedAttachment?.attachments && (
+                  <AttachmentMetadata
+                    attachment={nestedAttachment}
+                    url={host + (nestedAttachment?.title_link || '')}
+                    variantStyles={variantStyles}
+                    onExpandCollapseClick={toggleExpanded}
+                    isExpanded={isExpanded}
+                  />
+                )}
+
+                {isExpanded && (
+                  <Box
+                    css={css`
+                      margin-top: 0.5rem;
+                      white-space: pre-line;
+                    `}
+                  >
+                    {nestedAttachment?.text ? (
+                      nestedAttachment.text[0] === '[' ? (
+                        nestedAttachment.text.match(/\n(.*)/)?.[1] || ''
+                      ) : (
+                        <Markdown
+                          body={nestedAttachment.text}
+                          md={nestedAttachment.md}
+                          isReaction={false}
+                        />
+                      )
+                    ) : (
+                      <Box
+                        css={css`
+                          display: flex;
+                          align-items: center;
+                          margin-top: 0.5rem;
+                          background: ${theme.colors.background};
+                          padding: 8px 12px;
+                          border-radius: 4px;
+                          gap: 8px;
+                          border: 1px solid ${theme.colors.border};
+                        `}
+                      >
+                        <Icon name="file" size="40px" />
+                        <Box
+                          css={css`
+                            display: flex;
+                            flex-direction: column;
+                            gap: 2px;
+                            line-height: normal;
+                          `}
+                        >
+                          <a
+                            href={host + (nestedAttachment?.title_link || ' ')}
+                            download={nestedAttachment?.title_link_download}
+                            css={css`
+                              text-decoration: none;
+                              font-size: 0.875rem;
+                              &:hover {
+                                text-decoration: underline;
+                              }
+                            `}
+                          >
+                            {nestedAttachment?.title}
+                          </a>
+                          <Box
+                            css={css`
+                              font-size: 0.75rem;
+                            `}
+                          >
+                            {getFileSizeWithFormat(
+                              nestedAttachment?.size,
+                              nestedAttachment?.format
+                            )}
+                          </Box>
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
+                )}
+              </Box>
+            );
+          })}
       </Box>
     </Box>
   );

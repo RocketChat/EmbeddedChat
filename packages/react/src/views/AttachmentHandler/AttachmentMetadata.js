@@ -41,12 +41,14 @@ const AttachmentMetadata = ({
     } else if (attachment?.size) {
       sizeInBytes = attachment.size;
     } else {
-      sizeInBytes = 0;
+      return null;
     }
 
     const sizeInKB = (sizeInBytes / 1024).toFixed(2);
     return `${sizeInKB} kB`;
   };
+
+  const fileSize = getFormattedFileSize();
 
   return (
     <Box
@@ -116,17 +118,19 @@ const AttachmentMetadata = ({
                 : attachment?.title}
             </p>
           </Tooltip>
-          <Box
-            css={css`
-              font-size: 12px;
-              opacity: 0.7;
-              @media (max-width: 420px) {
-                margin-left: 0;
-              }
-            `}
-          >
-            ({getFormattedFileSize()})
-          </Box>
+          {fileSize && (
+            <Box
+              css={css`
+                font-size: 12px;
+                opacity: 0.7;
+                @media (max-width: 420px) {
+                  margin-left: 0;
+                }
+              `}
+            >
+              ({fileSize})
+            </Box>
+          )}
         </Box>
 
         <Box

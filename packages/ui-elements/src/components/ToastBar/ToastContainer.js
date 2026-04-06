@@ -9,6 +9,7 @@ const ToastContainer = () => {
   const { theme } = useTheme();
   const styles = getToastBarContainerStyles(theme);
   const { position, toasts, setToasts } = useContext(ToastContext);
+
   const positionStyle = useMemo(() => {
     const positions = position.split(/\s+/);
     const styleAnchor = {};
@@ -17,21 +18,29 @@ const ToastContainer = () => {
     });
     return styleAnchor;
   }, [position]);
-  const currentToast = useMemo(() => {
-    const toast = toasts[toasts.length - 1];
-    return toast;
-  }, [toasts]);
 
-  const onClose = useCallback(() => {
-    setToasts(toasts.slice(0, toasts.length - 1));
-  }, [setToasts, toasts]);
-  if (!currentToast) {
+  const stackedToasts = useMemo(() => [...toasts].reverse(), [toasts]);
+
+  const handleClose = useCallback(
+    (id) => {
+      setToasts((prevItems) => prevItems.filter((toast) => toast.id !== id));
+    },
+    [setToasts]
+  );
+
+  if (!stackedToasts.length) {
     return null;
   }
 
   return (
     <Box css={styles.container} style={positionStyle}>
-      <ToastBar toast={currentToast} onClose={onClose} />
+      {stackedToasts.map((toast) => (
+        <ToastBar
+          key={toast.id}
+          toast={toast}
+          onClose={() => handleClose(toast.id)}
+        />
+      ))}
     </Box>
   );
 };
