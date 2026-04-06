@@ -150,8 +150,13 @@ const ChatHeader = ({
 
   useEffect(() => {
     const getMessageLimit = async () => {
-      const messageLimitObj = await RCInstance.getMessageLimit();
-      setMessageLimit(messageLimitObj?.value);
+      try {
+        const messageLimitObj = await RCInstance.getMessageLimit();
+        setMessageLimit(messageLimitObj?.value);
+      } catch (e) {
+        console.error('Failed to fetch message limit', e);
+        setMessageLimit(undefined);
+      }
     };
 
     const setMessageAllowed = async () => {
