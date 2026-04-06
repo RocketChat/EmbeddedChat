@@ -1121,7 +1121,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
+        `${this.host}/api/v1/chat.search?roomId=${encodeURIComponent(this.rid)}&searchText=${encodeURIComponent(text)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1233,7 +1233,7 @@ export default class EmbeddedChatApi {
   async getUserStatus(reqUserId: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
+      `${this.host}/api/v1/users.getStatus?userId=${encodeURIComponent(reqUserId)}`,
       {
         method: "GET",
         headers: {
@@ -1250,7 +1250,7 @@ export default class EmbeddedChatApi {
   async userInfo(reqUserId: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.info?userId=${reqUserId}`,
+      `${this.host}/api/v1/users.info?userId=${encodeURIComponent(reqUserId)}`,
       {
         method: "GET",
         headers: {
@@ -1267,7 +1267,7 @@ export default class EmbeddedChatApi {
   async userData(username: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.info?username=${username}`,
+      `${this.host}/api/v1/users.info?username=${encodeURIComponent(username)}`,
       {
         method: "GET",
         headers: {
