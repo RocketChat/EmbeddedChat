@@ -64,7 +64,20 @@ const EmbeddedChat = (props) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
+  const RCInstanceRef = useRef(null);
+
+  const handleSecureLogin = useCallback((action, token) => {
+    if (RCInstanceRef.current) {
+      return RCInstanceRef.current.auth.handleSecureLogin(action, token);
+    }
+    return null;
+  }, []);
+
+  const { getToken, saveToken, deleteToken } = useMemo(
+    () => getTokenStorage(secure, handleSecureLogin),
+    [secure, handleSecureLogin]
+  );
+
   const {
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
@@ -95,7 +108,7 @@ const EmbeddedChat = (props) => {
       deleteToken,
       saveToken,
     });
-
+    RCInstanceRef.current = newRCInstance;
     return newRCInstance;
   }, [host, roomId, getToken, deleteToken, saveToken]);
 

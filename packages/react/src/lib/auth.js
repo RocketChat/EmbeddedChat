@@ -1,16 +1,12 @@
-export function getTokenStorage(secure = false) {
+export function getTokenStorage(secure = false, handleSecureLogin) {
   if (secure) {
     return {
-      async saveToken(token) {
-        await this.handleSecureLogin('save', token);
-      },
-      async getToken() {
-        const response = await this.handleSecureLogin('get');
+      saveToken: async (token) => handleSecureLogin('save', token),
+      getToken: async () => {
+        const response = await handleSecureLogin('get');
         return response?.token !== undefined ? response.token : null;
       },
-      async deleteToken() {
-        await this.handleSecureLogin('delete');
-      },
+      deleteToken: async () => handleSecureLogin('delete'),
     };
   }
 
