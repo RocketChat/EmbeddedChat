@@ -17,7 +17,6 @@ import {
   useMessageStore,
   useMemberStore,
   useChannelStore,
-  useSearchMessageStore,
   useStarredMessageStore,
   useChatLayoutStore,
 } from '../../store';
@@ -62,9 +61,6 @@ const ChatHeader = ({
   const setExclusiveState = useSetExclusiveState();
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setIsChannelPrivate = useChannelStore(
     (state) => state.setIsChannelPrivate
