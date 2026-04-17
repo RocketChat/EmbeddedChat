@@ -21,7 +21,7 @@ import {
   useMessageStore,
   useUserStore,
   useChannelStore,
-  useLoginStore,
+  useAuthStore,
 } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
@@ -66,7 +66,7 @@ const ChatBody = ({
   const removeMessage = useMessageStore((state) => state.removeMessage);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
-  const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const isLoginIn = useAuthStore((state) => state.isLoginIn);
   const setMessages = useMessageStore((state) => state.setMessages);
 
   const [isThreadOpen, threadMainMessage] = useMessageStore((state) => [

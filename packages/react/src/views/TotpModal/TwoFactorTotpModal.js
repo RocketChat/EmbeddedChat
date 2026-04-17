@@ -8,12 +8,12 @@ import {
   Input,
   Button,
 } from '@embeddedchat/ui-elements';
-import { totpModalStore, useUserStore } from '../../store';
+import { useAuthStore, useUserStore } from '../../store';
 
 export default function TotpModal({ handleLogin }) {
   const [accessCode, setAccessCode] = useState(null);
-  const isTotpModalOpen = totpModalStore((state) => state.isTotpModalOpen);
-  const setIsTotpModalOpen = totpModalStore(
+  const isTotpModalOpen = useAuthStore((state) => state.isTotpModalOpen);
+  const setIsTotpModalOpen = useAuthStore(
     (state) => state.setIsTotpModalOpen
   );
   const password = useUserStore((state) => state.password);

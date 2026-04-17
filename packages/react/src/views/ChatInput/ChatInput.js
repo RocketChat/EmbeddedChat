@@ -16,9 +16,9 @@ import { useRCContext } from '../../context/RCInstance';
 import {
   useUserStore,
   useMessageStore,
-  useLoginStore,
   useChannelStore,
   useMemberStore,
+  useAuthStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -122,10 +122,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     deletedMessage: state.deletedMessage,
   }));
 
-  const setIsLoginModalOpen = useLoginStore(
-    (state) => state.setIsLoginModalOpen
-  );
-  const isLoginIn = useLoginStore((state) => state.isLoginIn);
+  const setIsLoginModalOpen = useAuthStore((state) => state.setIsLoginModalOpen);
+  const isLoginIn = useAuthStore((state) => state.isLoginIn);
 
   const { toggle, setData, data } = useAttachmentWindowStore((state) => ({
     toggle: state.toggle,
