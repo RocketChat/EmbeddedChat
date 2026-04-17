@@ -5,7 +5,7 @@ import {
   useChannelStore,
   useMemberStore,
   useMessageStore,
-  useStarredMessageStore,
+  useChatDataStore,
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
@@ -16,9 +16,7 @@ const useFetchChatData = (showRoles) => {
   const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const setAdmins = useMemberStore((state) => state.setAdmins);
   const permissionsRef = useRef(null);
-  const setStarredMessages = useStarredMessageStore(
-    (state) => state.setStarredMessages
-  );
+  const setStarredMessages = useChatDataStore((state) => state.setStarredMessages);
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
   );

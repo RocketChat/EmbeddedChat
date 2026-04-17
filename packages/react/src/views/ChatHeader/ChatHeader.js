@@ -17,7 +17,6 @@ import {
   useMessageStore,
   useMemberStore,
   useChannelStore,
-  useStarredMessageStore,
   useChatLayoutStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';

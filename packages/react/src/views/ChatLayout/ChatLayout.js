@@ -3,10 +3,10 @@ import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
   useChannelStore,
+  useChatDataStore,
   useChatLayoutStore,
   useUserStore,
   useMemberStore,
-  useStarredMessageStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -27,6 +27,7 @@ import CheckPreviewType from '../AttachmentPreview/CheckPreviewType';
 import { useRCContext } from '../../context/RCInstance';
 import UiKitContextualBar from '../ContextualBarBlock/uiKit/UiKitContextualBar';
 import useUiKitStore from '../../store/uiKitStore';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
@@ -35,12 +36,8 @@ const ChatLayout = () => {
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
   const showRoles = ECOptions?.showRoles;
-  const setStarredMessages = useStarredMessageStore(
-    (state) => state.setStarredMessages
-  );
-  const starredMessages = useStarredMessageStore(
-    (state) => state.starredMessages
-  );
+  const setStarredMessages = useChatDataStore((state) => state.setStarredMessages);
+  const { getStarredMessages } = useFetchChatData(showRoles);
   const showSidebar = useChatLayoutStore((state) => state.showSidebar);
   const showMentions = useChatLayoutStore((state) => state.showMentions);
   const showAllFiles = useChatLayoutStore((state) => state.showAllFiles);
@@ -75,22 +72,9 @@ const ChatLayout = () => {
       });
     }
   };
-  const getStarredMessages = useCallback(async () => {
-    if (isUserAuthenticated) {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { messages } = await RCInstance.getStarredMessages();
-        setStarredMessages(messages);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [isUserAuthenticated, anonymousMode, RCInstance]);
   useEffect(() => {
-    getStarredMessages();
-  }, [showSidebar]);
+    getStarredMessages(anonymousMode);
+  }, [showSidebar, anonymousMode, getStarredMessages]);
   return (
     <Box
       css={styles.layout}
