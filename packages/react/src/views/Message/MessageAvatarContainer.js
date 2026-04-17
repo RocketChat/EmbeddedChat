@@ -8,8 +8,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { getMessageAvatarContainerStyles } from './Message.styles';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import { useUserStore } from '../../store';
+import { useChatLayoutStore, useUserStore } from '../../store';
 
 const MessageAvatarContainer = ({
   message,
@@ -26,14 +25,13 @@ const MessageAvatarContainer = ({
     return URL;
   };
 
-  const setExclusiveState = useSetExclusiveState();
-  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
-    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
-    setCurrentUser: state.setCurrentUser,
-  }));
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   const handleAvatarClick = () => {
-    setExclusiveState(setShowCurrentUserInfo);
+    openExclusivePanel('showCurrentUserInfo');
     setCurrentUser(message?.u);
   };
 

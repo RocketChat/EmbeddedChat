@@ -10,9 +10,8 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { useChannelStore } from '../../store';
+import { useChannelStore, useChatLayoutStore } from '../../store';
 import getRoomInformationStyles from './RoomInformation.styles';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 
 const Roominfo = () => {
   const { RCInstance, ECOptions } = useContext(RCContext);
@@ -21,7 +20,9 @@ const Roominfo = () => {
   const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
@@ -35,7 +36,7 @@ const Roominfo = () => {
     <ViewComponent
       title={isRoomTeam ? 'Team Information' : 'Room Information'}
       iconName="info"
-      onClose={() => setExclusiveState(null)}
+      onClose={() => openExclusivePanel(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
       {...(viewType === 'Popup'
         ? {

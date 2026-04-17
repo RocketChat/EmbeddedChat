@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Tooltip } from '@embeddedchat/ui-elements';
-import { useUserStore } from '@embeddedchat/react/src/store';
-import useSetExclusiveState from '@embeddedchat/react/src/hooks/useSetExclusiveState';
+import { useChatLayoutStore, useUserStore } from '@embeddedchat/react/src/store';
 import RCContext from '@embeddedchat/react/src/context/RCInstance';
 import { MarkupInteractionContext } from '../MarkupInteractionContext';
 import useMentionStyles from '../elements/elements.styles';
@@ -10,7 +9,9 @@ import useMentionStyles from '../elements/elements.styles';
 const UserMention = ({ contents }) => {
   const { members, username } = useContext(MarkupInteractionContext);
   const { RCInstance } = useContext(RCContext);
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
   const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
     setShowCurrentUserInfo: state.setShowCurrentUserInfo,
     setCurrentUser: state.setCurrentUser,
@@ -23,7 +24,8 @@ const UserMention = ({ contents }) => {
       username: data.user.username,
       name: data.user.name,
     });
-    setExclusiveState(setShowCurrentUserInfo);
+    setShowCurrentUserInfo(true);
+    openExclusivePanel('showCurrentUserInfo');
   };
 
   const hasMember = (user) => {
