@@ -13,7 +13,7 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
+import { useChatLayoutStore, useMessageStore, useUserStore } from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -51,7 +51,8 @@ const Message = ({
 
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
-  const { showSidebar, setShowSidebar } = useSidebarStore();
+  const showSidebar = useChatLayoutStore((state) => state.showSidebar);
+  const setShowSidebar = useChatLayoutStore((state) => state.setShowSidebar);
   const authenticatedUserId = useUserStore((state) => state.userId);
   const authenticatedUserUsername = useUserStore((state) => state.username);
   const userRoles = useUserStore((state) => state.roles);

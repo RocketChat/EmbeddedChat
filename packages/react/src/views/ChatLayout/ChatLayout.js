@@ -3,15 +3,10 @@ import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
   useChannelStore,
+  useChatLayoutStore,
   useUserStore,
-  usePinnedMessageStore,
-  useStarredMessageStore,
-  useSearchMessageStore,
-  useFileStore,
-  useMentionsStore,
-  useThreadsMessageStore,
   useMemberStore,
-  useSidebarStore,
+  useStarredMessageStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -46,19 +41,17 @@ const ChatLayout = () => {
   const starredMessages = useStarredMessageStore(
     (state) => state.starredMessages
   );
-  const showSidebar = useSidebarStore((state) => state.showSidebar);
-  const showMentions = useMentionsStore((state) => state.showMentions);
-  const showAllFiles = useFileStore((state) => state.showAllFiles);
-  const showAllThreads = useThreadsMessageStore(
-    (state) => state.showAllThreads
-  );
-  const showPinned = usePinnedMessageStore((state) => state.showPinned);
-  const showStarred = useStarredMessageStore((state) => state.showStarred);
-  const showSearch = useSearchMessageStore((state) => state.showSearch);
-  const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
-  const showMembers = useMemberStore((state) => state.showMembers);
+  const showSidebar = useChatLayoutStore((state) => state.showSidebar);
+  const showMentions = useChatLayoutStore((state) => state.showMentions);
+  const showAllFiles = useChatLayoutStore((state) => state.showAllFiles);
+  const showAllThreads = useChatLayoutStore((state) => state.showAllThreads);
+  const showPinned = useChatLayoutStore((state) => state.showPinned);
+  const showStarred = useChatLayoutStore((state) => state.showStarred);
+  const showSearch = useChatLayoutStore((state) => state.showSearch);
+  const showChannelinfo = useChatLayoutStore((state) => state.showChannelinfo);
+  const showMembers = useChatLayoutStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
-  const showCurrentUserInfo = useUserStore(
+  const showCurrentUserInfo = useChatLayoutStore(
     (state) => state.showCurrentUserInfo
   );
   const attachmentWindowOpen = useAttachmentWindowStore(

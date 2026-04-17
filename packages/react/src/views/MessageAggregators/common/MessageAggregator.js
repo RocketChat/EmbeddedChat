@@ -13,7 +13,7 @@ import {
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore, useSidebarStore } from '../../../store';
+import { useChatLayoutStore, useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
@@ -53,7 +53,7 @@ export const MessageAggregator = ({
     shouldRender
   );
 
-  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const setShowSidebar = useChatLayoutStore((state) => state.setShowSidebar);
   const openThread = useMessageStore((state) => state.openThread);
   const closeThread = useMessageStore((state) => state.closeThread);
 
