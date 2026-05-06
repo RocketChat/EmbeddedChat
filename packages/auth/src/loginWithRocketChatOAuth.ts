@@ -45,6 +45,9 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
   return new Promise<any>((resolve) => {
     if (popup) {
       const onMessage = async (e: MessageEvent) => {
+        if (e.origin !== new URL(config.api.baseUrl).origin) {
+          return;
+        }
         if (e.data.type === "rc-oauth-callback") {
           const { accessToken, expiresIn, serviceName } = e.data.credentials;
           const response = await config.api.post("/api/v1/login", {

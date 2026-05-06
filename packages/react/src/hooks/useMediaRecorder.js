@@ -28,19 +28,29 @@ export function useMediaRecorder({ constraints, onStop, videoRef }) {
     const stream = await getStream(constraints, true);
     chunks.current = [];
     const _recorder = new MediaRecorder(stream);
+
+    const handleDataAvailable = (event) => {
+      chunks.current.push(event.data);
+    };
+
+    const handleStop = () => {
+      onStop && onStop(chunks.current);
+      _recorder.removeEventListener('dataavailable', handleDataAvailable);
+      _recorder.removeEventListener('stop', handleStop);
+    };
+
+    _recorder.addEventListener('dataavailable', handleDataAvailable);
+    _recorder.addEventListener('stop', handleStop);
+
     _recorder.start();
     setRecorder(_recorder);
-    _recorder.addEventListener('dataavailable', (event) => {
-      chunks.current.push(event.data);
-    });
-    _recorder.addEventListener('stop', () => {
-      onStop && onStop(chunks.current);
-    });
   }
 
   async function stop() {
     if (recorder) {
-      recorder.stop();
+      if (recorder.state !== 'inactive') {
+        recorder.stop();
+      }
       (await getStream()).getTracks().forEach((track) => track.stop());
     }
   }
@@ -77,17 +87,23 @@ export function useNewMediaRecorder({ constraints, videoRef, onStop }) {
 
     chunks.current = [];
     const _recorder = new MediaRecorder(stream);
-    _recorder.start();
-    setRecorder(_recorder);
 
-    _recorder.addEventListener('dataavailable', (event) => {
+    const handleDataAvailable = (event) => {
       chunks.current.push(event.data);
-    });
+    };
 
-    _recorder.addEventListener('stop', () => {
+    const handleStop = () => {
       setRecordingData(new Blob(chunks.current, { type: 'video/mp4' }));
       onStop && onStop(chunks.current);
-    });
+      _recorder.removeEventListener('dataavailable', handleDataAvailable);
+      _recorder.removeEventListener('stop', handleStop);
+    };
+
+    _recorder.addEventListener('dataavailable', handleDataAvailable);
+    _recorder.addEventListener('stop', handleStop);
+
+    _recorder.start();
+    setRecorder(_recorder);
   }
 
   async function stopRecording() {

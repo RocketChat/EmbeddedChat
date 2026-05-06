@@ -11,6 +11,7 @@ import useTheme from '../../hooks/useTheme';
 const ToastBar = ({ toast, onClose }) => {
   const { type, message, time = 2000 } = toast;
   const toastRef = useRef();
+  const latestOnClose = useRef(onClose);
   const { theme } = useTheme();
 
   const { classNames, styleOverrides } = useComponentOverrides('ToastBar');
@@ -42,8 +43,15 @@ const ToastBar = ({ toast, onClose }) => {
   }, [theme.colors, type]);
 
   useEffect(() => {
-    setTimeout(onClose, time);
-  }, [onClose, time]);
+    latestOnClose.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      latestOnClose.current?.();
+    }, time);
+    return () => clearTimeout(timer);
+  }, [time]);
 
   return (
     <Box

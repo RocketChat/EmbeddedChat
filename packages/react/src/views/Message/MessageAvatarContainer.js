@@ -60,6 +60,11 @@ const MessageAvatarContainer = ({
           <Icon style={{ opacity: 0.5 }} name="star-filled" size="1.2em" />
         </Tooltip>
       ) : null}
+      {message.editedAt && sequential ? (
+        <Tooltip text="Edited" position="top">
+          <Icon style={{ opacity: 0.5 }} name="edit" size="1.2em" />
+        </Tooltip>
+      ) : null}
       {isPinned && sequential ? (
         <Tooltip text="Pinned" position="top">
           <Icon style={{ opacity: 0.5 }} name="pin" size="1.2em" />

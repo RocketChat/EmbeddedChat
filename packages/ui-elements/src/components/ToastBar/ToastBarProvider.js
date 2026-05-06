@@ -6,7 +6,11 @@ const ToastBarProvider = ({ position = 'bottom right', children }) => {
   const [toasts, setToasts] = useState([]);
   const dispatchToast = useCallback(
     (toast) => {
-      setToasts((prevToasts) => [toast, ...prevToasts]);
+      const withId = {
+        id: toast.id || `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        ...toast,
+      };
+      setToasts((prevToasts) => [withId, ...prevToasts]);
     },
     [setToasts]
   );
