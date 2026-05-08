@@ -134,7 +134,7 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         RCInstance.connect()
           .then(() => {
@@ -151,7 +151,12 @@ const EmbeddedChat = (props) => {
       } else {
         setIsUserAuthenticated(false);
       }
-    });
+    };
+    RCInstance.auth.onAuthChange(handleAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
+    };
   }, [
     RCInstance,
     setAuthenticatedName,

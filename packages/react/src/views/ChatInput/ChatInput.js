@@ -107,6 +107,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     isRecordingMessage,
     upsertMessage,
     replaceMessage,
+    removeMessage,
     clearQuoteMessages,
     threadId,
     deletedMessage,
@@ -119,6 +120,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     replaceMessage: state.replaceMessage,
     threadId: state.threadMainMessage?._id,
     clearQuoteMessages: state.clearQuoteMessages,
+    removeMessage: state.removeMessage,
     deletedMessage: state.deletedMessage,
   }));
 
@@ -161,7 +163,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
         RCInstance.getCommandsList()
           .then((response) => setCommands(response.commands || []))
@@ -173,7 +175,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           )
           .catch(console.error);
       }
-    });
+    };
+    RCInstance.auth.onAuthChange(handleAuthChange);
+    return () => RCInstance.auth.removeAuthListener(handleAuthChange);
   }, [RCInstance, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
@@ -354,9 +358,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       ECOptions.enableThreads ? threadId : undefined
     );
 
-    if (res.success) {
+    if (res?.success) {
       clearQuoteMessages();
-      replaceMessage(pendingMessage, res.message);
+      replaceMessage(pendingMessage._id, res.message);
+    } else {
+      // If REST send failed, remove the pending message so it doesn't stay grey
+      removeMessage(pendingMessage._id);
     }
   };
 
@@ -448,7 +455,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(message);
-      showCommands(e);
+      showCommands(e.target.selectionStart, e.target.value);
       searchEmoji(message);
     }
   };
@@ -724,7 +731,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 />
               ) : null
             ) : (
-              <Button onClick={onJoin} type="primary" disabled={isLoginIn}>
+              <Button onClick={() => onJoin()} type="primary" disabled={isLoginIn}>
                 {isLoginIn ? <Throbber /> : 'JOIN'}
               </Button>
             )}

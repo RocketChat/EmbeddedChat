@@ -84,6 +84,7 @@ export default function LoginForm() {
       type: showPassword ? 'text' : 'password',
       onChange: handleEditPassword,
       error: passwordError,
+      autoComplete: 'new-password',
     },
   ];
 

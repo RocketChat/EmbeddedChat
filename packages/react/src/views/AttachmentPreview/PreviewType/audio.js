@@ -5,7 +5,7 @@ import { Box } from '@embeddedchat/ui-elements';
 function PreviewAudio({ previewURL }) {
   return (
     <Box>
-      <audio src={previewURL} width="100%" controls />
+      <audio src={previewURL || null} width="100%" controls />
     </Box>
   );
 }
