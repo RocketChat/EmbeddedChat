@@ -149,6 +149,8 @@ const EmbeddedChat = (props) => {
           })
           .catch(console.error);
       } else {
+        // Close the DDP connection on logout so the next login gets a fresh connection.
+        RCInstance.close().catch(console.error);
         setIsUserAuthenticated(false);
       }
     };

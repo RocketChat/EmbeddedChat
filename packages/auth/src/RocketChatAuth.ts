@@ -74,6 +74,7 @@ class RocketChatAuth {
       }
     );
     this.setUser(response.data);
+    this.notifyAuthListeners();
     return this.currentUser;
   }
 
@@ -94,6 +95,7 @@ class RocketChatAuth {
       credentials
     );
     this.setUser(response.data);
+    this.notifyAuthListeners();
     return this.currentUser;
   }
 
@@ -109,6 +111,7 @@ class RocketChatAuth {
       api: this.api,
     });
     this.setUser(response.data);
+    this.notifyAuthListeners();
     return this.currentUser;
   }
 
@@ -192,10 +195,10 @@ class RocketChatAuth {
     try {
       const token = await this.getToken();
       if (token) {
-        const user = await this.loginWithResumeToken(token); // will notifyAuthListeners on successful login
+        const user = await this.loginWithResumeToken(token);
         if (user) {
           this.lastFetched = new Date();
-          await this.getCurrentUser(); // refresh the token if needed
+          await this.getCurrentUser();
         }
       }
     } catch (e) {

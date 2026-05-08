@@ -20,6 +20,7 @@ export default class EmbeddedChatApi {
   onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
   auth: RocketChatAuth;
+  private _connectPromise: Promise<void> | null = null;
 
   constructor(
     host: string,
@@ -186,6 +187,17 @@ export default class EmbeddedChatApi {
    * TODO: Add logic to call thread message event listeners. To be done after thread implementation
    */
   async connect() {
+    // Guard against concurrent connect() calls (e.g. React StrictMode double-invoke)
+    if (this._connectPromise) {
+      return this._connectPromise;
+    }
+    this._connectPromise = this._doConnect().finally(() => {
+      this._connectPromise = null;
+    });
+    return this._connectPromise;
+  }
+
+  private async _doConnect() {
     try {
       await this.close(); // before connection, all previous subscriptions should be cancelled
       await this.rcClient.connect({});
@@ -198,7 +210,6 @@ export default class EmbeddedChatApi {
         }
         const message = JSON.parse(JSON.stringify(data));
         if (message.ts?.$date) {
-          console.log(message.ts?.$date);
           message.ts = message.ts.$date;
         }
         if (!message.ts) {
@@ -683,14 +694,14 @@ export default class EmbeddedChatApi {
 
   async sendTypingStatus(username: string, typing: boolean) {
     try {
-      this.rcClient.methodCall(
+      await this.rcClient.methodCall(
         "stream-notify-room",
         `${this.rid}/user-activity`,
         username,
         typing ? ["user-typing"] : []
       );
     } catch (err) {
-      console.error(err);
+      // DDP typing indicator fails when connection is temporarily down — expected, safe to ignore
     }
   }
 

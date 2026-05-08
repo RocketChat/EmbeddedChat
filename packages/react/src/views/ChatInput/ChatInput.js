@@ -163,22 +163,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   );
 
   useEffect(() => {
-    const handleAuthChange = (user) => {
-      if (user) {
-        RCInstance.getCommandsList()
-          .then((response) => setCommands(response.commands || []))
-          .catch(console.error);
+    if (!isUserAuthenticated) return;
+    RCInstance.getCommandsList()
+      .then((response) => setCommands(response.commands || []))
+      .catch(console.error);
 
-        RCInstance.getChannelMembers(isChannelPrivate)
-          .then((channelMembers) =>
-            setMembersHandler(channelMembers.members || [])
-          )
-          .catch(console.error);
-      }
-    };
-    RCInstance.auth.onAuthChange(handleAuthChange);
-    return () => RCInstance.auth.removeAuthListener(handleAuthChange);
-  }, [RCInstance, isChannelPrivate, setMembersHandler]);
+    RCInstance.getChannelMembers(isChannelPrivate)
+      .then((channelMembers) =>
+        setMembersHandler(channelMembers.members || [])
+      )
+      .catch(console.error);
+  }, [RCInstance, isUserAuthenticated, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
     if (editMessage.attachments) {
@@ -279,34 +274,26 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
-  const sendTypingStart = async () => {
-    try {
-      if (typingRef.current && messageRef.current.value?.length) {
-        return;
-      }
-      if (messageRef.current.value?.length) {
-        typingRef.current = true;
-        timerRef.current = setTimeout(() => {
-          typingRef.current = false;
-        }, [15000]);
-        await RCInstance.sendTypingStatus(username, true);
-      } else {
-        clearTimeout(timerRef.current);
+  const sendTypingStart = () => {
+    if (typingRef.current && messageRef.current.value?.length) {
+      return;
+    }
+    if (messageRef.current.value?.length) {
+      typingRef.current = true;
+      timerRef.current = setTimeout(() => {
         typingRef.current = false;
-        await RCInstance.sendTypingStatus(username, false);
-      }
-    } catch (e) {
-      console.error(e);
+      }, [15000]);
+      RCInstance.sendTypingStatus(username, true).catch(() => {});
+    } else {
+      clearTimeout(timerRef.current);
+      typingRef.current = false;
+      RCInstance.sendTypingStatus(username, false).catch(() => {});
     }
   };
 
-  const sendTypingStop = async () => {
-    try {
-      typingRef.current = false;
-      await RCInstance.sendTypingStatus(username, false);
-    } catch (e) {
-      console.error(e);
-    }
+  const sendTypingStop = () => {
+    typingRef.current = false;
+    RCInstance.sendTypingStatus(username, false).catch(() => {});
   };
 
   const handleSendNewMessage = async (message) => {
