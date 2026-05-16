@@ -25,6 +25,14 @@ export const useRCAuth = () => {
   const handleLogin = async (userOrEmail, password, code) => {
     try {
       const res = await RCInstance.login(userOrEmail, password, code);
+      if (!res) {
+        dispatchToastMessage({
+          type: 'error',
+          message:
+            'Unable to connect to server. Please check your connection and try again.',
+        });
+        return;
+      }
       if (res.error === 'Unauthorized' || res.error === 403) {
         dispatchToastMessage({
           type: 'error',
