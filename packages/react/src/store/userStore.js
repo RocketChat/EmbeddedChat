@@ -23,8 +23,9 @@ const useUserStore = create((set) => ({
   setIsUserAuthenticated: (isUserAuthenticated) =>
     set(() => ({ isUserAuthenticated })),
   setCanSendMsg: (canSendMsg) => set(() => ({ canSendMsg })),
-  password: null,
-  setPassword: (password) => set(() => ({ password })),
+  // SECURITY FIX (Issue #1263): Removed password storage from global state
+  // Passwords should never be stored in client-side state (CWE-312)
+  // TOTP flow now uses component-level state instead
   emailoruser: null,
   setEmailorUser: (emailoruser) => set(() => ({ emailoruser })),
   roles: [],

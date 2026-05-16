@@ -204,6 +204,8 @@ class RocketChatAuth {
     } catch (e) {
       console.log("Failed to login user on initial load. Sign in.");
       this.notifyAuthListeners();
+      // FIX #1264: Re-throw error so caller can handle it
+      throw e;
     }
   }
 

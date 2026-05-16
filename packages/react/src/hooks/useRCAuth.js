@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
-import { useUserStore, totpModalStore, useLoginStore } from '../store';
+import { useUserStore, totpModalStore, useLoginStore, useTotpCredentialsStore } from '../store';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);
@@ -18,7 +18,9 @@ export const useRCAuth = () => {
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-  const setPassword = useUserStore((state) => state.setPassword);
+  // SECURITY FIX (Issue #1263): Use ephemeral TOTP credentials store
+  const setTotpCredentials = useTotpCredentialsStore((state) => state.setTotpCredentials);
+  const clearTotpCredentials = useTotpCredentialsStore((state) => state.clearTotpCredentials);
   const setEmailorUser = useUserStore((state) => state.setEmailorUser);
   const dispatchToastMessage = useToastBarDispatch();
 
@@ -33,7 +35,9 @@ export const useRCAuth = () => {
         });
       } else {
         if (res.error === 'totp-required') {
-          setPassword(password);
+          // SECURITY FIX (Issue #1263): Store credentials temporarily in ephemeral TOTP store
+          // These are cleared immediately after TOTP completes
+          setTotpCredentials(userOrEmail, password);
           setEmailorUser(userOrEmail);
           setIsLoginModalOpen(false);
           setIsTotpModalOpen(true);
@@ -55,7 +59,8 @@ export const useRCAuth = () => {
           setIsUserAuthenticated(true);
           setIsTotpModalOpen(false);
           setEmailorUser(null);
-          setPassword(null);
+          // SECURITY FIX (Issue #1263): Clear ephemeral TOTP credentials after success
+          clearTotpCredentials();
           dispatchToastMessage({
             type: 'success',
             message: 'Successfully logged in',
@@ -64,6 +69,8 @@ export const useRCAuth = () => {
       }
     } catch (e) {
       console.error('An error occurred while setting up user', e);
+      // SECURITY FIX (Issue #1263): Clear ephemeral TOTP credentials on error
+      clearTotpCredentials();
       dispatchToastMessage({
         type: 'error',
         message:

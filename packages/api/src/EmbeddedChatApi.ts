@@ -113,8 +113,13 @@ export default class EmbeddedChatApi {
       if (response.error === "totp-required") {
         return response;
       }
+
+      // FIX #1264: Return error response instead of undefined
+      return { status: "error", error: response.error || "Login failed" };
     } catch (err) {
       console.error(err);
+      // FIX #1264: Return error object instead of undefined
+      return { status: "error", error: err.message || "Network error during login" };
     }
   }
 
@@ -144,6 +149,8 @@ export default class EmbeddedChatApi {
         return { error: authErrorRes?.error };
       }
       console.error(error);
+      // FIX #1264: Return error object instead of undefined
+      return { status: "error", error: error.message || "Login failed" };
     }
   }
 
