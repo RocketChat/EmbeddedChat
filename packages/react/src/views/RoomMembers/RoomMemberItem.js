@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Icon, Avatar, useTheme } from '@embeddedchat/ui-elements';
 import { RoomMemberItemStyles } from './RoomMembers.styles';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
-import { useUserStore } from '../../store';
+import { useChatLayoutStore, useUserStore } from '../../store';
 
 const RoomMemberItem = ({ user, host, userStatus }) => {
   const avatarUrl = new URL(`avatar/${user.username}`, host).toString();
@@ -12,14 +11,13 @@ const RoomMemberItem = ({ user, host, userStatus }) => {
   const { mode } = useTheme();
   const styles = RoomMemberItemStyles(theme, mode);
 
-  const setExclusiveState = useSetExclusiveState();
-  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
-    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
-    setCurrentUser: state.setCurrentUser,
-  }));
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
+  const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
   const handleShowUserInfo = () => {
-    setExclusiveState(setShowCurrentUserInfo);
+    openExclusivePanel('showCurrentUserInfo');
     setCurrentUser(user);
   };
   return (

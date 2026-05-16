@@ -13,18 +13,19 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
-import { useUserStore } from '../../store';
+import { useChatLayoutStore, useUserStore } from '../../store';
 import formatTimestamp from '../../lib/formatTimestamp';
 import formatTimestampGetDate from '../../lib/formatTimestampGetDate';
 import UserInfoField from './UserInfoField';
 import getUserInformationStyles from './UserInformation.styles';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import { Markdown } from '../Markdown';
 
 const UserInformation = () => {
   const { variantOverrides } = useComponentOverrides('UserInformation');
   const viewType = variantOverrides.viewType || 'Sidebar';
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const { mode } = useTheme();
@@ -68,7 +69,7 @@ const UserInformation = () => {
     <ViewComponent
       title="User Info"
       iconName="user"
-      onClose={() => setExclusiveState(null)}
+      onClose={() => openExclusivePanel(null)}
       style={{
         width: '400px',
         zIndex: window.innerWidth <= 780 ? 1 : null,

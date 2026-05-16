@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import { useAuthStore, useUserStore, useMessageStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -82,7 +82,7 @@ const EmbeddedChat = (props) => {
     setRoles: state.setRoles,
   }));
 
-  const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const setIsLoginIn = useAuthStore((state) => state.setIsLoginIn);
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'

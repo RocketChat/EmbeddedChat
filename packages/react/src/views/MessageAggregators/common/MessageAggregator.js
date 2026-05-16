@@ -13,12 +13,11 @@ import {
 import { MessageDivider } from '../../Message/MessageDivider';
 import Message from '../../Message/Message';
 import getMessageAggregatorStyles from './MessageAggregator.styles';
-import { useMessageStore, useSidebarStore } from '../../../store';
+import { useChatLayoutStore, useMessageStore } from '../../../store';
 import { useSetMessageList } from '../../../hooks/useSetMessageList';
 import LoadingIndicator from './LoadingIndicator';
 import NoMessagesIndicator from './NoMessageIndicator';
 import FileDisplay from '../../FileMessage/FileMessage';
-import useSetExclusiveState from '../../../hooks/useSetExclusiveState';
 import { useRCContext } from '../../../context/RCInstance';
 
 export const MessageAggregator = ({
@@ -37,7 +36,9 @@ export const MessageAggregator = ({
   const { theme } = useTheme();
   const { mode } = useTheme();
   const styles = getMessageAggregatorStyles(theme);
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
   const { ECOptions } = useRCContext();
   const showRoles = ECOptions?.showRoles;
   const messages = useMessageStore((state) => state.messages);
@@ -53,7 +54,7 @@ export const MessageAggregator = ({
     shouldRender
   );
 
-  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const setShowSidebar = useChatLayoutStore((state) => state.setShowSidebar);
   const openThread = useMessageStore((state) => state.openThread);
   const closeThread = useMessageStore((state) => state.closeThread);
 
@@ -142,7 +143,7 @@ export const MessageAggregator = ({
       iconName={iconName}
       filterProps={filterProps}
       searchProps={searchProps}
-      onClose={() => setExclusiveState(null)}
+      onClose={() => openExclusivePanel(null)}
       style={{
         width: '400px',
         padding: 0,

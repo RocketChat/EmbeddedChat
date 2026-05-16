@@ -8,7 +8,7 @@ import {
   Icon,
   useTheme,
 } from '@embeddedchat/ui-elements';
-import { useLoginStore } from '../../store';
+import { useAuthStore } from '../../store';
 import { useRCAuth } from '../../hooks/useRCAuth';
 import styles from './LoginForm.styles';
 
@@ -18,8 +18,8 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const isLoginModalOpen = useLoginStore((state) => state.isLoginModalOpen);
-  const setIsLoginModalOpen = useLoginStore(
+  const isLoginModalOpen = useAuthStore((state) => state.isLoginModalOpen);
+  const setIsLoginModalOpen = useAuthStore(
     (state) => state.setIsLoginModalOpen
   );
   const { handleLogin } = useRCAuth();

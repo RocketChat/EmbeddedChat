@@ -3,15 +3,10 @@ import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
 import styles from './ChatLayout.styles';
 import {
   useChannelStore,
+  useChatDataStore,
+  useChatLayoutStore,
   useUserStore,
-  usePinnedMessageStore,
-  useStarredMessageStore,
-  useSearchMessageStore,
-  useFileStore,
-  useMentionsStore,
-  useThreadsMessageStore,
   useMemberStore,
-  useSidebarStore,
 } from '../../store';
 
 import RoomMembers from '../RoomMembers/RoomMember';
@@ -32,6 +27,7 @@ import CheckPreviewType from '../AttachmentPreview/CheckPreviewType';
 import { useRCContext } from '../../context/RCInstance';
 import UiKitContextualBar from '../ContextualBarBlock/uiKit/UiKitContextualBar';
 import useUiKitStore from '../../store/uiKitStore';
+import useFetchChatData from '../../hooks/useFetchChatData';
 
 const ChatLayout = () => {
   const messageListRef = useRef(null);
@@ -40,25 +36,19 @@ const ChatLayout = () => {
   const { RCInstance, ECOptions } = useRCContext();
   const anonymousMode = ECOptions?.anonymousMode;
   const showRoles = ECOptions?.showRoles;
-  const setStarredMessages = useStarredMessageStore(
-    (state) => state.setStarredMessages
-  );
-  const starredMessages = useStarredMessageStore(
-    (state) => state.starredMessages
-  );
-  const showSidebar = useSidebarStore((state) => state.showSidebar);
-  const showMentions = useMentionsStore((state) => state.showMentions);
-  const showAllFiles = useFileStore((state) => state.showAllFiles);
-  const showAllThreads = useThreadsMessageStore(
-    (state) => state.showAllThreads
-  );
-  const showPinned = usePinnedMessageStore((state) => state.showPinned);
-  const showStarred = useStarredMessageStore((state) => state.showStarred);
-  const showSearch = useSearchMessageStore((state) => state.showSearch);
-  const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
-  const showMembers = useMemberStore((state) => state.showMembers);
+  const setStarredMessages = useChatDataStore((state) => state.setStarredMessages);
+  const { getStarredMessages } = useFetchChatData(showRoles);
+  const showSidebar = useChatLayoutStore((state) => state.showSidebar);
+  const showMentions = useChatLayoutStore((state) => state.showMentions);
+  const showAllFiles = useChatLayoutStore((state) => state.showAllFiles);
+  const showAllThreads = useChatLayoutStore((state) => state.showAllThreads);
+  const showPinned = useChatLayoutStore((state) => state.showPinned);
+  const showStarred = useChatLayoutStore((state) => state.showStarred);
+  const showSearch = useChatLayoutStore((state) => state.showSearch);
+  const showChannelinfo = useChatLayoutStore((state) => state.showChannelinfo);
+  const showMembers = useChatLayoutStore((state) => state.showMembers);
   const members = useMemberStore((state) => state.members);
-  const showCurrentUserInfo = useUserStore(
+  const showCurrentUserInfo = useChatLayoutStore(
     (state) => state.showCurrentUserInfo
   );
   const attachmentWindowOpen = useAttachmentWindowStore(
@@ -82,22 +72,9 @@ const ChatLayout = () => {
       });
     }
   };
-  const getStarredMessages = useCallback(async () => {
-    if (isUserAuthenticated) {
-      try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
-        const { messages } = await RCInstance.getStarredMessages();
-        setStarredMessages(messages);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [isUserAuthenticated, anonymousMode, RCInstance]);
   useEffect(() => {
-    getStarredMessages();
-  }, [showSidebar]);
+    getStarredMessages(anonymousMode);
+  }, [showSidebar, anonymousMode, getStarredMessages]);
   return (
     <Box
       css={styles.layout}

@@ -19,7 +19,7 @@ import useInviteStore from '../../store/inviteStore';
 import InviteMembers from './InviteMembers';
 import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { useChatLayoutStore } from '../../store';
 
 const RoomMembers = ({ members }) => {
   const { RCInstance } = useContext(RCContext);
@@ -35,7 +35,9 @@ const RoomMembers = ({ members }) => {
   const viewType = variantOverrides.viewType || 'Sidebar';
 
   const [userInfo, setUserInfo] = useState(null);
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredMembers, setFilteredMembers] = useState(members);
@@ -87,7 +89,7 @@ const RoomMembers = ({ members }) => {
     <ViewComponent
       title="Members"
       iconName="members"
-      onClose={() => setExclusiveState(null)}
+      onClose={() => openExclusivePanel(null)}
       style={{ width: '400px', zIndex: window.innerWidth <= 780 ? 1 : null }}
       {...(viewType === 'Popup'
         ? {

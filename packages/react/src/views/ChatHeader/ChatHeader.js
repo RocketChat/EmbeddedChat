@@ -16,20 +16,13 @@ import {
   useUserStore,
   useMessageStore,
   useMemberStore,
-  useSearchMessageStore,
   useChannelStore,
-  useThreadsMessageStore,
-  useMentionsStore,
-  usePinnedMessageStore,
-  useStarredMessageStore,
-  useFileStore,
-  useSidebarStore,
+  useChatLayoutStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
 import useSettingsStore from '../../store/settingsStore';
 import getChatHeaderStyles from './ChatHeader.styles';
-import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
 const ChatHeader = ({
@@ -63,12 +56,11 @@ const ChatHeader = ({
     configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
   const theme = useTheme();
   const styles = getChatHeaderStyles(theme);
-  const setExclusiveState = useSetExclusiveState();
+  const openExclusivePanel = useChatLayoutStore(
+    (state) => state.openExclusivePanel
+  );
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const setChannelInfo = useChannelStore((state) => state.setChannelInfo);
-  const setShowChannelinfo = useChannelStore(
-    (state) => state.setShowChannelinfo
-  );
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setIsChannelPrivate = useChannelStore(
     (state) => state.setIsChannelPrivate
@@ -92,7 +84,7 @@ const ChatHeader = ({
   const setIsUserAuthenticated = useUserStore(
     (state) => state.setIsUserAuthenticated
   );
-  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+  const setShowSidebar = useChatLayoutStore((state) => state.setShowSidebar);
   const dispatchToastMessage = useToastBarDispatch();
   const { getMessagesAndRoles } = useFetchChatData(showRoles);
   const setMessageLimit = useSettingsStore((state) => state.setMessageLimit);
@@ -108,17 +100,6 @@ const ChatHeader = ({
 
   const closeThread = useMessageStore((state) => state.closeThread);
 
-  const setShowMembers = useMemberStore((state) => state.setShowMembers);
-  const setShowSearch = useSearchMessageStore((state) => state.setShowSearch);
-  const setShowPinned = usePinnedMessageStore((state) => state.setShowPinned);
-  const setShowStarred = useStarredMessageStore(
-    (state) => state.setShowStarred
-  );
-  const setShowAllThreads = useThreadsMessageStore(
-    (state) => state.setShowAllThreads
-  );
-  const setShowAllFiles = useFileStore((state) => state.setShowAllFiles);
-  const setShowMentions = useMentionsStore((state) => state.setShowMentions);
   const getChannelAvatarURL = (channelname) => {
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
@@ -252,56 +233,56 @@ const ChatHeader = ({
       thread: {
         label: 'Threads',
         id: 'thread',
-        onClick: () => setExclusiveState(setShowAllThreads),
+        onClick: () => openExclusivePanel('showAllThreads'),
         iconName: 'thread',
         visible: true,
       },
       mentions: {
         label: 'Mentions',
         id: 'mention',
-        onClick: () => setExclusiveState(setShowMentions),
+        onClick: () => openExclusivePanel('showMentions'),
         iconName: 'at',
         visible: true,
       },
       starred: {
         label: 'Starred Messages',
         id: 'starred',
-        onClick: () => setExclusiveState(setShowStarred),
+        onClick: () => openExclusivePanel('showStarred'),
         iconName: 'star',
         visible: true,
       },
       pinned: {
         label: 'Pinned Messages',
         id: 'pinned',
-        onClick: () => setExclusiveState(setShowPinned),
+        onClick: () => openExclusivePanel('showPinned'),
         iconName: 'pin',
         visible: true,
       },
       members: {
         label: 'Members',
         id: 'members',
-        onClick: () => setExclusiveState(setShowMembers),
+        onClick: () => openExclusivePanel('showMembers'),
         iconName: 'members',
         visible: isUserAuthenticated,
       },
       files: {
         label: 'Files',
         id: 'files',
-        onClick: () => setExclusiveState(setShowAllFiles),
+        onClick: () => openExclusivePanel('showAllFiles'),
         iconName: 'clip',
         visible: isUserAuthenticated,
       },
       search: {
         label: 'Search Messages',
         id: 'search',
-        onClick: () => setExclusiveState(setShowSearch),
+        onClick: () => openExclusivePanel('showSearch'),
         iconName: 'magnifier',
         visible: isUserAuthenticated,
       },
       rInfo: {
         label: 'Room Information',
         id: 'rInfo',
-        onClick: () => setExclusiveState(setShowChannelinfo),
+        onClick: () => openExclusivePanel('showChannelinfo'),
         iconName: 'info',
         visible: isUserAuthenticated,
       },
@@ -320,15 +301,7 @@ const ChatHeader = ({
       handleLogout,
       setFullScreen,
       setClosableState,
-      setExclusiveState,
-      setShowAllThreads,
-      setShowMentions,
-      setShowStarred,
-      setShowPinned,
-      setShowMembers,
-      setShowAllFiles,
-      setShowSearch,
-      setShowChannelinfo,
+      openExclusivePanel,
     ]
   );
 
@@ -389,7 +362,7 @@ const ChatHeader = ({
                   <Box css={styles.channelInfoContainer}>
                     <Box
                       css={styles.channelName}
-                      onClick={() => setExclusiveState(setShowChannelinfo)}
+                      onClick={() => openExclusivePanel('showChannelinfo')}
                     >
                       <Icon
                         name={

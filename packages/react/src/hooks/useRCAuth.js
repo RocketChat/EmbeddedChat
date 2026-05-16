@@ -1,15 +1,13 @@
 import { useContext } from 'react';
 import { useToastBarDispatch } from '@embeddedchat/ui-elements';
 import RCContext from '../context/RCInstance';
-import { useUserStore, totpModalStore, useLoginStore } from '../store';
+import { useAuthStore, useUserStore } from '../store';
 
 export const useRCAuth = () => {
   const { RCInstance } = useContext(RCContext);
-  const setIsTotpModalOpen = totpModalStore(
-    (state) => state.setIsTotpModalOpen
-  );
+  const setIsTotpModalOpen = useAuthStore((state) => state.setIsTotpModalOpen);
   const setUserAvatarUrl = useUserStore((state) => state.setUserAvatarUrl);
-  const setIsLoginModalOpen = useLoginStore(
+  const setIsLoginModalOpen = useAuthStore(
     (state) => state.setIsLoginModalOpen
   );
   const setAuthenticatedUserUsername = useUserStore(
