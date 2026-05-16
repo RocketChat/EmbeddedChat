@@ -169,9 +169,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       .catch(console.error);
 
     RCInstance.getChannelMembers(isChannelPrivate)
-      .then((channelMembers) =>
-        setMembersHandler(channelMembers.members || [])
-      )
+      .then((channelMembers) => setMembersHandler(channelMembers.members || []))
       .catch(console.error);
   }, [RCInstance, isUserAuthenticated, isChannelPrivate, setMembersHandler]);
 
@@ -718,7 +716,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 />
               ) : null
             ) : (
-              <Button onClick={() => onJoin()} type="primary" disabled={isLoginIn}>
+              <Button
+                onClick={() => onJoin()}
+                type="primary"
+                disabled={isLoginIn}
+              >
                 {isLoginIn ? <Throbber /> : 'JOIN'}
               </Button>
             )}

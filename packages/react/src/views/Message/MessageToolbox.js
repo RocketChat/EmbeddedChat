@@ -306,7 +306,11 @@ export const MessageToolbox = ({
               message.file.type.startsWith('image/') ? (
                 <div>
                   <img
-                    src={message.file?._id ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}` : null}
+                    src={
+                      message.file?._id
+                        ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}`
+                        : null
+                    }
                     alt={message.file.name}
                     style={{ maxWidth: '100px', maxHeight: '100px' }}
                   />
@@ -320,7 +324,11 @@ export const MessageToolbox = ({
                   style={{ maxWidth: '100%', maxHeight: '200px' }}
                 >
                   <source
-                    src={message.file?._id ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}` : null}
+                    src={
+                      message.file?._id
+                        ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}`
+                        : null
+                    }
                     type={message.file.type}
                   />
                   Your browser does not support the video tag.
@@ -328,7 +336,11 @@ export const MessageToolbox = ({
               ) : message.file.type.startsWith('audio/') ? (
                 <audio controls style={{ maxWidth: '100%' }}>
                   <source
-                    src={message.file?._id ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}` : null}
+                    src={
+                      message.file?._id
+                        ? `${instanceHost}/file-upload/${message.file._id}/${message.file.name}`
+                        : null
+                    }
                     type={message.file.type}
                   />
                   Your browser does not support the audio element.

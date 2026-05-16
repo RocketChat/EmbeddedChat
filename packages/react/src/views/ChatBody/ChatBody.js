@@ -159,7 +159,13 @@ const ChatBody = ({
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
-  }, [RCInstance, isUserAuthenticated, addMessage, removeMessage, onActionTriggerResponse]);
+  }, [
+    RCInstance,
+    isUserAuthenticated,
+    addMessage,
+    removeMessage,
+    onActionTriggerResponse,
+  ]);
 
   useEffect(() => {
     if (isUserAuthenticated) {

@@ -436,7 +436,12 @@ const ChatHeader = ({
         </Box>
         <Box css={styles.chatHeaderIconRow}>
           {avatarUrl && (
-            <img width="20px" height="20px" src={avatarUrl || null} alt="avatar" />
+            <img
+              width="20px"
+              height="20px"
+              src={avatarUrl || null}
+              alt="avatar"
+            />
           )}
 
           {surfaceOptions.length > 0 && (
