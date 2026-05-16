@@ -22,6 +22,7 @@
     "esbuild": "^0.17.19",
     "husky": "^9.0.11",
     "lerna": "^6.6.2",
+    "semver": "^7.6.0",
     "typescript": "^5.1.3"
   },
   "dependencies": {
