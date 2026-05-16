@@ -28,18 +28,18 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    const u = userRef.current?.value || '';
-    const p = passRef.current?.value || '';
+    const userOrEmail = userRef.current?.value || '';
+    const password = passRef.current?.value || '';
 
     let hasError = false;
-    if (u.trim() === '') {
+    if (userOrEmail.trim() === '') {
       setUsernameError(true);
       hasError = true;
     } else {
       setUsernameError(false);
     }
 
-    if (p.trim() === '') {
+    if (password.trim() === '') {
       setPasswordError(true);
       hasError = true;
     } else {
@@ -47,7 +47,7 @@ export default function LoginForm() {
     }
 
     if (!hasError) {
-      handleLogin(u, p);
+      handleLogin(userOrEmail, password);
     }
   };
 
