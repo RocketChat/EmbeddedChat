@@ -37,7 +37,7 @@ Ensure that the "Enable CORS" option is turned on in your Rocket.Chat server. Yo
 
 #### Prerequisites
 
-- **Node.js**: Version 16.19.0 is required. Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
+- **Node.js**: Version 22 (LTS) is required. Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
 
   To install and use the correct Node.js version, execute the following commands with the specific version number:
 

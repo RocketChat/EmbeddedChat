@@ -38,7 +38,10 @@
       "last 5 safari version"
     ]
   },
+  "resolutions": {
+    "webpack": "5.96.1"
+  },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=22.0"
   }
 }
