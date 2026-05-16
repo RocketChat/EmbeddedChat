@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16.19.0"
+          node-version: "22"
 
       - name: Install Dependencies
         run: yarn install
@@ -38,7 +38,7 @@ jobs:
       - name: Setup Node.js for Docs
         uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "22"
 
       - name: "Install dependencies for docs"
         run: yarn install
