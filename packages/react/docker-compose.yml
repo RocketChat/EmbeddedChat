@@ -18,7 +18,7 @@ services:
       - "0.0.0.0:3000:3000"
 
   mongodb:
-    image: docker.io/bitnami/mongodb:4.4
+    image: docker.io/bitnami/mongodb:latest
     restart: on-failure
     volumes:
       - mongodb_data:/bitnami/mongodb
