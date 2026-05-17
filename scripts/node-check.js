@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const semver = require('semver');
 
+// Skip version check in automated dependency update environments
+if (process.env.DEPENDABOT || process.env.DEPENDABOT_HOME) process.exit(0);
+
 const nvmrcPath = path.join(__dirname, '../.nvmrc');
 const expectedVersion = fs.readFileSync(nvmrcPath).toString().trim();
 const expectedMajor = semver.major(expectedVersion);

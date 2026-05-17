@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "preinstall": "node scripts/node-check.js",
-    "postinstall": "yarn build",
+    "postinstall": "node -e \"if (!process.env.DEPENDABOT && !process.env.DEPENDABOT_HOME && !process.env.CI) require('child_process').execSync('yarn build', {stdio:'inherit'})\"",
     "build": "lerna run build",
     "lint": "lerna run lint",
     "build:storybook": "lerna run build-storybook",
