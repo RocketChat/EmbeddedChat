@@ -83,6 +83,8 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const setMessages = useMessageStore((state) => state.setMessages);
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -100,24 +102,52 @@ const EmbeddedChat = (props) => {
   }, [host, roomId, getToken, deleteToken, saveToken]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
+  const rcInstanceRef = useRef(RCInstance);
+  rcInstanceRef.current = RCInstance;
 
   useEffect(() => {
-    const reInstantiate = () => {
-      const newRCInstance = initializeRCInstance();
-      setRCInstance(newRCInstance);
-    };
-
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
     }
 
-    RCInstance.close().then(reInstantiate).catch(console.error);
+    const newRCInstance = initializeRCInstance();
+    const oldRCInstance = rcInstanceRef.current;
 
-    return () => {
-      RCInstance.close().catch(console.error);
-    };
-  }, [roomId, host, initializeRCInstance]);
+    // Clear global state so that the UI resets and waits for new host's auth and data
+    setIsUserAuthenticated(false);
+    setAuthenticatedUsername(null);
+    setAuthenticatedAvatarUrl(null);
+    setAuthenticatedUserId(null);
+    setAuthenticatedName(null);
+    setAuthenticatedUserRoles([]);
+    setMessages([]);
+
+    setRCInstance(newRCInstance);
+    oldRCInstance.close().catch((e) => console.error(e?.message || e));
+  }, [
+    roomId,
+    host,
+    initializeRCInstance,
+    setIsUserAuthenticated,
+    setAuthenticatedUsername,
+    setAuthenticatedAvatarUrl,
+    setAuthenticatedUserId,
+    setAuthenticatedName,
+    setAuthenticatedUserRoles,
+    setMessages,
+  ]);
+
+  useEffect(
+    () => () => {
+      if (hasMounted.current) {
+        rcInstanceRef.current
+          .close()
+          .catch((e) => console.error(e?.message || e));
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const autoLogin = async () => {
@@ -125,7 +155,7 @@ const EmbeddedChat = (props) => {
       try {
         await RCInstance.autoLogin(auth);
       } catch (error) {
-        console.error(error);
+        console.error(error?.message || error);
       } finally {
         setIsLoginIn(false);
       }
@@ -179,7 +209,7 @@ const EmbeddedChat = (props) => {
           setConfig((prevConfig) => overrideECProps(prevConfig, remoteConfig));
         }
       } catch (error) {
-        console.error('Error fetching remote config:', error);
+        console.error('Error fetching remote config:', error?.message || error);
       } finally {
         setIsSynced(true);
       }

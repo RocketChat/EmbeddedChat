@@ -114,7 +114,7 @@ export default class EmbeddedChatApi {
         return response;
       }
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -143,7 +143,7 @@ export default class EmbeddedChatApi {
         const authErrorRes = await error.response.json();
         return { error: authErrorRes?.error };
       }
-      console.error(error);
+      console.error(error instanceof Error ? error.message : error);
     }
   }
 
@@ -170,7 +170,10 @@ export default class EmbeddedChatApi {
           break;
       }
     } catch (error) {
-      console.error("Auto-login failed:", error);
+      console.error(
+        "Auto-login failed:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 
@@ -178,7 +181,7 @@ export default class EmbeddedChatApi {
     try {
       await this.auth.logout();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -402,7 +405,7 @@ export default class EmbeddedChatApi {
       }
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -440,7 +443,7 @@ export default class EmbeddedChatApi {
         return await response2.json();
       }
     } catch (error) {
-      console.error(error);
+      console.error(error instanceof Error ? error.message : error);
     }
   }
 
@@ -475,7 +478,7 @@ export default class EmbeddedChatApi {
         }
         return result;
       } catch (err) {
-        console.error(err);
+        console.error(err instanceof Error ? err.message : err);
       }
     } else {
       return this.updateUserNameThroughSuggestion(userid);
@@ -498,7 +501,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -506,7 +509,7 @@ export default class EmbeddedChatApi {
     try {
       return await this.channelInfo();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -523,7 +526,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -687,7 +690,7 @@ export default class EmbeddedChatApi {
       }
       return { result: [] };
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
       return { result: [] };
     }
   }
@@ -736,7 +739,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -754,7 +757,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -772,7 +775,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -794,7 +797,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -814,7 +817,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -832,7 +835,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -850,7 +853,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -870,7 +873,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -890,7 +893,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -910,7 +913,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -948,7 +951,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -970,7 +973,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -988,7 +991,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -1081,7 +1084,7 @@ export default class EmbeddedChatApi {
       });
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -1102,7 +1105,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -1122,7 +1125,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -1142,7 +1145,7 @@ export default class EmbeddedChatApi {
       );
       return await response.json();
     } catch (err) {
-      console.error(err);
+      console.error(err instanceof Error ? err.message : err);
     }
   }
 
