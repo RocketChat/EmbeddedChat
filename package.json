@@ -31,6 +31,7 @@
   },
   "resolutions": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "typia": "patch:typia@npm%3A9.7.2#./.yarn/patches/typia-npm-9.7.2-5c5d9c80b4.patch"
   }
 }

@@ -1,4 +1,4 @@
-import { Rocketchat } from "@rocket.chat/sdk";
+import { DDPSDK } from "@rocket.chat/ddp-client";
 import cloneArray from "./cloneArray";
 import { ROCKETCHAT_APP_ID } from "./utils/constants";
 import {
@@ -12,7 +12,7 @@ let typingHandlerLock = 0;
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
-  rcClient: Rocketchat;
+  sdk: DDPSDK;
   onMessageCallbacks: ((message: any) => void)[];
   onMessageDeleteCallbacks: ((messageId: string) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
@@ -21,6 +21,7 @@ export default class EmbeddedChatApi {
   typingUsers: string[];
   auth: RocketChatAuth;
   private _connectPromise: Promise<void> | null = null;
+  private _activeSubscriptions: { stop: () => void }[] = [];
 
   constructor(
     host: string,
@@ -29,11 +30,9 @@ export default class EmbeddedChatApi {
   ) {
     this.host = host;
     this.rid = rid;
-    this.rcClient = new Rocketchat({
-      protocol: "ddp",
-      host: this.host,
-      useSsl: !/http:\/\//.test(host),
-      reopen: 20000,
+    this.sdk = DDPSDK.create(this.host, {
+      retryCount: 10,
+      retryTime: 2000,
     });
     this.onMessageCallbacks = [];
     this.onMessageDeleteCallbacks = [];
@@ -200,91 +199,105 @@ export default class EmbeddedChatApi {
     return this._connectPromise;
   }
 
+  private _normalizeMessage(data: any) {
+    if (!data) return null;
+    const message = JSON.parse(JSON.stringify(data));
+    if (message.ts?.$date) {
+      message.ts = message.ts.$date;
+    }
+    if (!message.ts) {
+      message.ts = new Date().toISOString();
+    }
+    return message;
+  }
+
   private async _doConnect() {
     try {
-      await this.close(); // before connection, all previous subscriptions should be cancelled
-      await this.rcClient.connect({});
+      this.close(); // before connection, all previous subscriptions should be cancelled
+      await this.sdk.connection.connect();
       const token = (await this.auth.getCurrentUser())?.authToken;
-      await this.rcClient.resume({ token });
-      await this.rcClient.subscribeRoom(this.rid);
-      await this.rcClient.onMessage((data: any) => {
-        if (!data) {
-          return;
+      if (token) {
+        await this.sdk.account.loginWithToken(token);
+      }
+
+      // Subscribe to room messages
+      const roomMsgSub = this.sdk.stream(
+        "room-messages",
+        [this.rid, false],
+        (data: any) => {
+          const message = this._normalizeMessage(data);
+          if (message) {
+            this.onMessageCallbacks.forEach((callback) => callback(message));
+          }
         }
-        const message = JSON.parse(JSON.stringify(data));
-        if (message.ts?.$date) {
-          message.ts = message.ts.$date;
-        }
-        if (!message.ts) {
-          message.ts = new Date().toISOString();
-        }
-        this.onMessageCallbacks.map((callback) => callback(message));
-      });
-      await this.rcClient.subscribe(
-        "stream-notify-room",
-        `${this.rid}/user-activity`
       );
-      await this.rcClient.onStreamData(
-        "stream-notify-room",
-        (ddpMessage: any) => {
-          const [roomId, event] = ddpMessage.fields.eventName.split("/");
+      this._activeSubscriptions.push(roomMsgSub);
 
-          if (roomId !== this.rid) {
-            return;
-          }
-
-          if (event === "user-activity") {
-            const typingUser = ddpMessage.fields.args[0];
-            const isTyping = ddpMessage.fields.args[1]?.includes("user-typing");
+      // Subscribe to room notifications (typing, delete)
+      const notifyRoomSub = this.sdk.stream(
+        "notify-room",
+        [`${this.rid}/user-activity`, false],
+        (...args: any[]) => {
+          const typingUser = args[0];
+          const activities = args[1];
+          if (Array.isArray(activities)) {
+            const isTyping = activities.includes("user-typing");
             this.handleTypingEvent({ typingUser, isTyping });
+          } else {
+            // Legacy "typing" event: args[1] is a boolean
+            this.handleTypingEvent({ typingUser, isTyping: !!activities });
           }
+        }
+      );
+      this._activeSubscriptions.push(notifyRoomSub);
 
-          if (event === "typing") {
-            const typingUser = ddpMessage.fields.args[0];
-            const isTyping = ddpMessage.fields.args[1];
-            this.handleTypingEvent({ typingUser, isTyping });
-          }
-          if (event === "deleteMessage") {
-            const messageId = ddpMessage.fields.args[0]?._id;
-            this.onMessageDeleteCallbacks.map((callback) =>
+      // Subscribe to room delete events
+      const deleteRoomSub = this.sdk.stream(
+        "notify-room",
+        [`${this.rid}/deleteMessage`, false],
+        (...args: any[]) => {
+          const messageId = args[0]?._id;
+          if (messageId) {
+            this.onMessageDeleteCallbacks.forEach((callback) =>
               callback(messageId)
             );
           }
         }
       );
-      await this.rcClient.subscribeNotifyUser();
-      await this.rcClient.onStreamData(
-        "stream-notify-user",
-        (ddpMessage: any) => {
-          const [, event] = ddpMessage.fields.eventName.split("/");
-          const args: any[] = ddpMessage.fields.args
-            ? Array.isArray(ddpMessage.fields.args)
-              ? ddpMessage.fields.args
-              : [ddpMessage.fields.args]
-            : [];
-          if (event === "message") {
-            const data = args[0];
+      this._activeSubscriptions.push(deleteRoomSub);
+
+      // Subscribe to user notifications (action triggers, UI interactions)
+      const userId = this.sdk.account.uid;
+      if (userId) {
+        const notifyUserMsgSub = this.sdk.stream(
+          "notify-user",
+          [`${userId}/message`, false],
+          (data: any) => {
             if (!data || data?.rid !== this.rid) {
               return;
             }
-            const message = JSON.parse(JSON.stringify(data));
-            if (message.ts?.$date) {
-              message.ts = message.ts.$date;
+            const message = this._normalizeMessage(data);
+            if (message) {
+              message.renderType = "blocks";
+              this.onMessageCallbacks.forEach((callback) => callback(message));
             }
-            if (!message.ts) {
-              message.ts = new Date().toISOString();
-            }
-            message.renderType = "blocks";
-            this.onMessageCallbacks.map((callback) => callback(message));
-          } else if (event === "uiInteraction") {
+          }
+        );
+        this._activeSubscriptions.push(notifyUserMsgSub);
+
+        const notifyUserUiSub = this.sdk.stream(
+          "notify-user",
+          [`${userId}/uiInteraction`, false],
+          (data: any) => {
             this.onUiInteractionCallbacks.forEach((callback) =>
-              callback(args[0])
+              callback(data)
             );
           }
-        }
-      );
+        );
+        this._activeSubscriptions.push(notifyUserUiSub);
+      }
     } catch (err) {
-      await this.close();
+      this.close();
     }
   }
 
@@ -530,9 +543,10 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async close() {
-    await this.rcClient.unsubscribeAll();
-    await this.rcClient.disconnect();
+  close() {
+    this._activeSubscriptions.forEach((sub) => sub.stop());
+    this._activeSubscriptions = [];
+    this.sdk.connection.close();
   }
 
   /**
@@ -697,7 +711,7 @@ export default class EmbeddedChatApi {
 
   async sendTypingStatus(username: string, typing: boolean) {
     try {
-      await this.rcClient.methodCall(
+      await this.sdk.call(
         "stream-notify-room",
         `${this.rid}/user-activity`,
         username,
