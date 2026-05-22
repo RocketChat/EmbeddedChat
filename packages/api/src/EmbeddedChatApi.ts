@@ -1092,20 +1092,44 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
-      const response = await fetch(
-        `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Auth-Token": authToken,
-            "X-User-Id": userId,
-          },
-          method: "GET",
+      let allMembers: any[] = [];
+      let offset = 0;
+      const count = 100;
+      let hasMore = true;
+
+      while (hasMore) {
+        const response = await fetch(
+          `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}&offset=${offset}&count=${count}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-Auth-Token": authToken,
+              "X-User-Id": userId,
+            },
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+        if (data && data.success && Array.isArray(data.members)) {
+          allMembers = allMembers.concat(data.members);
+          offset += data.members.length;
+          if (offset >= data.total || data.members.length < count) {
+            hasMore = false;
+          }
+        } else {
+          hasMore = false;
         }
-      );
-      return await response.json();
+      }
+      return {
+        members: allMembers,
+        success: true,
+      };
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
+      return {
+        members: [],
+        success: false,
+      };
     }
   }
 
