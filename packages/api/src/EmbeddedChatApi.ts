@@ -684,11 +684,23 @@ export default class EmbeddedChatApi {
 
   async getUserRoles() {
     try {
-      const response = await this.getUsersInRole("admin");
-      if (response && response.success) {
-        return { result: response.users };
+      const roleNames = ["admin", "moderator", "owner"];
+      const results = await Promise.all(
+        roleNames.map((role) => this.getUsersInRole(role))
+      );
+      const seenIds = new Set<string>();
+      const allUsers: any[] = [];
+      for (const response of results) {
+        if (response && response.success && Array.isArray(response.users)) {
+          for (const user of response.users) {
+            if (!seenIds.has(user._id)) {
+              seenIds.add(user._id);
+              allUsers.push(user);
+            }
+          }
+        }
       }
-      return { result: [] };
+      return { result: allUsers };
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
       return { result: [] };
