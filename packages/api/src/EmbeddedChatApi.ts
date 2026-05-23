@@ -458,10 +458,10 @@ export default class EmbeddedChatApi {
   async updateUserNameThroughSuggestion(userid: string) {
     try {
       const suggestedUsername = await this._restRequest(
-        "/api/v1/users.getUsernameSuggestion"
+        "/v1/users.getUsernameSuggestion"
       );
       if (suggestedUsername.success) {
-        return await this._restRequest("/api/v1/users.update", "POST", {
+        return await this._restRequest("/v1/users.update", "POST", {
           userId: userid,
           data: { username: suggestedUsername.result },
         });
@@ -477,7 +477,7 @@ export default class EmbeddedChatApi {
 
     if (usernameRegExp.test(newUserName)) {
       try {
-        const result = await this._restRequest("/api/v1/users.update", "POST", {
+        const result = await this._restRequest("/v1/users.update", "POST", {
           userId: userid,
           data: { username: newUserName },
         });
@@ -498,7 +498,7 @@ export default class EmbeddedChatApi {
 
   async channelInfo() {
     try {
-      return await this._restRequest(`/api/v1/rooms.info?roomId=${this.rid}`);
+      return await this._restRequest(`/v1/rooms.info?roomId=${this.rid}`);
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
     }
@@ -514,7 +514,7 @@ export default class EmbeddedChatApi {
 
   async permissionInfo() {
     try {
-      return await this._restRequest("/api/v1/permissions.listAll");
+      return await this._restRequest("/v1/permissions.listAll");
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
     }
@@ -554,7 +554,7 @@ export default class EmbeddedChatApi {
       : "";
     try {
       return await this._restRequest(
-        `/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`
       );
     } catch (err) {
       console.log(err);
@@ -585,7 +585,7 @@ export default class EmbeddedChatApi {
     const offset = options?.offset ? options.offset : 0;
     try {
       return await this._restRequest(
-        `/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`
       );
     } catch (err) {
       console.log(err);
@@ -595,7 +595,7 @@ export default class EmbeddedChatApi {
   async getThreadMessages(tmid: string, isChannelPrivate = false) {
     try {
       return await this._restRequest(
-        `/api/v1/chat.getThreadMessages?tmid=${tmid}`
+        `/v1/chat.getThreadMessages?tmid=${tmid}`
       );
     } catch (err) {
       console.log(err);
@@ -606,7 +606,7 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       return await this._restRequest(
-        `/api/v1/${roomType}.roles?roomId=${this.rid}`
+        `/v1/${roomType}.roles?roomId=${this.rid}`
       );
     } catch (err) {
       console.log(err);
@@ -616,7 +616,7 @@ export default class EmbeddedChatApi {
   async getUsersInRole(role: string) {
     try {
       return await this._restRequest(
-        `/api/v1/roles.getUsersInRole?role=${role}`
+        `/v1/roles.getUsersInRole?role=${role}`
       );
     } catch (err) {
       console.log(err);
@@ -662,7 +662,7 @@ export default class EmbeddedChatApi {
       messageObj.tmid = threadId;
     }
     try {
-      return await this._restRequest("/api/v1/chat.sendMessage", "POST", {
+      return await this._restRequest("/v1/chat.sendMessage", "POST", {
         message: messageObj,
       });
     } catch (err) {
@@ -672,7 +672,7 @@ export default class EmbeddedChatApi {
 
   async deleteMessage(msgId: string) {
     try {
-      return await this._restRequest("/api/v1/chat.delete", "POST", {
+      return await this._restRequest("/v1/chat.delete", "POST", {
         roomId: this.rid,
         msgId,
       });
@@ -683,7 +683,7 @@ export default class EmbeddedChatApi {
 
   async updateMessage(msgId: string, text: string) {
     try {
-      return await this._restRequest("/api/v1/chat.update", "POST", {
+      return await this._restRequest("/v1/chat.update", "POST", {
         roomId: this.rid,
         msgId,
         text,
@@ -698,8 +698,8 @@ export default class EmbeddedChatApi {
     try {
       const endpoint =
         typeGroup === ""
-          ? `/api/v1/${roomType}.files?roomId=${this.rid}`
-          : `/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
+          ? `/v1/${roomType}.files?roomId=${this.rid}`
+          : `/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
       return await this._restRequest(endpoint);
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -709,7 +709,7 @@ export default class EmbeddedChatApi {
   async getAllImages() {
     try {
       return await this._restRequest(
-        `/api/v1/rooms.images?roomId=${this.rid}`
+        `/v1/rooms.images?roomId=${this.rid}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -718,7 +718,7 @@ export default class EmbeddedChatApi {
 
   async starMessage(mid: string) {
     try {
-      return await this._restRequest("/api/v1/chat.starMessage", "POST", {
+      return await this._restRequest("/v1/chat.starMessage", "POST", {
         messageId: mid,
       });
     } catch (err) {
@@ -728,7 +728,7 @@ export default class EmbeddedChatApi {
 
   async unstarMessage(mid: string) {
     try {
-      return await this._restRequest("/api/v1/chat.unStarMessage", "POST", {
+      return await this._restRequest("/v1/chat.unStarMessage", "POST", {
         messageId: mid,
       });
     } catch (err) {
@@ -739,7 +739,7 @@ export default class EmbeddedChatApi {
   async getStarredMessages() {
     try {
       return await this._restRequest(
-        `/api/v1/chat.getStarredMessages?roomId=${this.rid}`
+        `/v1/chat.getStarredMessages?roomId=${this.rid}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -749,7 +749,7 @@ export default class EmbeddedChatApi {
   async getPinnedMessages() {
     try {
       return await this._restRequest(
-        `/api/v1/chat.getPinnedMessages?roomId=${this.rid}`
+        `/v1/chat.getPinnedMessages?roomId=${this.rid}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -759,7 +759,7 @@ export default class EmbeddedChatApi {
   async getMentionedMessages() {
     try {
       return await this._restRequest(
-        `/api/v1/chat.getMentionedMessages?roomId=${this.rid}`
+        `/v1/chat.getMentionedMessages?roomId=${this.rid}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -768,7 +768,7 @@ export default class EmbeddedChatApi {
 
   async pinMessage(mid: string) {
     try {
-      return await this._restRequest("/api/v1/chat.pinMessage", "POST", {
+      return await this._restRequest("/v1/chat.pinMessage", "POST", {
         messageId: mid,
       });
     } catch (err) {
@@ -778,7 +778,7 @@ export default class EmbeddedChatApi {
 
   async unpinMessage(mid: string) {
     try {
-      return await this._restRequest("/api/v1/chat.unPinMessage", "POST", {
+      return await this._restRequest("/v1/chat.unPinMessage", "POST", {
         messageId: mid,
       });
     } catch (err) {
@@ -788,7 +788,7 @@ export default class EmbeddedChatApi {
 
   async reactToMessage(emoji: string, messageId: string, shouldReact: string) {
     try {
-      return await this._restRequest("/api/v1/chat.react", "POST", {
+      return await this._restRequest("/v1/chat.react", "POST", {
         messageId,
         emoji,
         shouldReact,
@@ -800,7 +800,7 @@ export default class EmbeddedChatApi {
 
   async reportMessage(messageId: string, description: string) {
     try {
-      return await this._restRequest("/api/v1/chat.reportMessage", "POST", {
+      return await this._restRequest("/v1/chat.reportMessage", "POST", {
         messageId,
         description,
       });
@@ -811,7 +811,7 @@ export default class EmbeddedChatApi {
 
   async findOrCreateInvite() {
     try {
-      return await this._restRequest("/api/v1/findOrCreateInvite", "POST", {
+      return await this._restRequest("/v1/findOrCreateInvite", "POST", {
         rid: this.rid,
         days: 1,
         maxUses: 10,
@@ -838,7 +838,7 @@ export default class EmbeddedChatApi {
       form.append("file", file, fileName);
 
       const uploadResult = await this._restUpload(
-        `/api/v1/rooms.media/${this.rid}`,
+        `/v1/rooms.media/${this.rid}`,
         form
       );
 
@@ -848,7 +848,7 @@ export default class EmbeddedChatApi {
       }
 
       return await this._restRequest(
-        `/api/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
+        `/v1/rooms.mediaConfirm/${this.rid}/${uploadResult.file._id}`,
         "POST",
         threadId
           ? { msg: "", description: fileDescription || "", tmid: threadId }
@@ -861,7 +861,7 @@ export default class EmbeddedChatApi {
 
   async me() {
     try {
-      return await this._restRequest("/api/v1/me");
+      return await this._restRequest("/v1/me");
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
     }
@@ -871,7 +871,7 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       return await this._restRequest(
-        `/api/v1/${roomType}.members?roomId=${this.rid}`
+        `/v1/${roomType}.members?roomId=${this.rid}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -881,7 +881,7 @@ export default class EmbeddedChatApi {
   async getSearchMessages(text: string) {
     try {
       return await this._restRequest(
-        `/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`
+        `/v1/chat.search?roomId=${this.rid}&searchText=${text}`
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -891,7 +891,7 @@ export default class EmbeddedChatApi {
   async getMessageLimit() {
     try {
       return await this._restRequest(
-        "/api/v1/settings/Message_MaxAllowedSize"
+        "/v1/settings/Message_MaxAllowedSize"
       );
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);
@@ -902,7 +902,7 @@ export default class EmbeddedChatApi {
     try {
       const triggerId = Math.random().toString(32).slice(2, 16);
       const interaction = await this._restRequest(
-        `/api/apps/ui.interaction/${appId}`,
+        `/apps/ui.interaction/${appId}`,
         "POST",
         { triggerId, ...userInteraction }
       );
@@ -914,7 +914,7 @@ export default class EmbeddedChatApi {
   }
 
   async getCommandsList() {
-    return await this._restRequest("/api/v1/commands.list");
+    return await this._restRequest("/v1/commands.list");
   }
 
   async execCommand({
@@ -926,7 +926,7 @@ export default class EmbeddedChatApi {
     params: string;
     tmid?: string;
   }) {
-    return await this._restRequest("/api/v1/commands.run", "POST", {
+    return await this._restRequest("/v1/commands.run", "POST", {
       command,
       params,
       tmid,
@@ -937,19 +937,19 @@ export default class EmbeddedChatApi {
 
   async getUserStatus(reqUserId: string) {
     return await this._restRequest(
-      `/api/v1/users.getStatus?userId=${reqUserId}`
+      `/v1/users.getStatus?userId=${reqUserId}`
     );
   }
 
   async userInfo(reqUserId: string) {
     return await this._restRequest(
-      `/api/v1/users.info?userId=${reqUserId}`
+      `/v1/users.info?userId=${reqUserId}`
     );
   }
 
   async userData(username: string) {
     return await this._restRequest(
-      `/api/v1/users.info?username=${username}`
+      `/v1/users.info?username=${username}`
     );
   }
 }
