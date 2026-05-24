@@ -50,9 +50,13 @@ export const useRCAuth = () => {
 
         if (res.status === 'success') {
           setIsLoginModalOpen(false);
-          setUserAvatarUrl(res.me.avatarUrl);
-          setAuthenticatedUserUsername(res.me.username);
-          setIsUserAuthenticated(true);
+          // Do NOT call setIsUserAuthenticated(true) here.
+          // EmbeddedChat.js's handleAuthChange listener fires once the auth
+          // token is persisted and calls RCInstance.connect(), which syncs
+          // REST credentials and re-establishes the DDP session before
+          // setting isUserAuthenticated=true. Calling it here races with
+          // connect() and causes all initial data fetches to fire with no
+          // auth headers, resulting in 401s.
           setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);

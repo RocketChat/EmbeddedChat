@@ -49,7 +49,9 @@ export default class EmbeddedChatApi {
   }
 
   private async _syncRestCredentials() {
-    const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
+    const user = (await this.auth.getCurrentUser()) || {};
+    const userId = user.userId || user.data?.userId;
+    const authToken = user.authToken || user.data?.authToken;
     if (userId && authToken) {
       this.sdk.rest.setCredentials({
         "X-User-Id": userId,
@@ -145,8 +147,9 @@ export default class EmbeddedChatApi {
       if (response.error === "totp-required") {
         return response;
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -212,8 +215,9 @@ export default class EmbeddedChatApi {
   async logout() {
     try {
       await this.auth.logout();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -248,7 +252,15 @@ export default class EmbeddedChatApi {
     try {
       this.close(); // before connection, all previous subscriptions should be cancelled
       await this.sdk.connection.connect();
-      const token = (await this.auth.getCurrentUser())?.authToken;
+
+      // Sync REST credentials first so HTTP headers are ready before any request fires
+      await this._syncRestCredentials();
+
+      // Extract token from either flat or nested currentUser shape:
+      // - auto-login (resume token): currentUser = { userId, authToken, me }
+      // - password login: currentUser = { status, data: { userId, authToken, me } }
+      const currentUser = (await this.auth.getCurrentUser()) as any;
+      const token = currentUser?.authToken || currentUser?.data?.authToken;
       if (token) {
         await this.sdk.account.loginWithToken(token);
       }
@@ -448,8 +460,9 @@ export default class EmbeddedChatApi {
         return null;
       }
       return await response.json();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -465,8 +478,9 @@ export default class EmbeddedChatApi {
           data: { username: suggestedUsername.result },
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error instanceof Error ? error.message : error);
+      return error;
     }
   }
 
@@ -497,24 +511,27 @@ export default class EmbeddedChatApi {
     try {
       await this._syncRestCredentials();
       return await this.sdk.rest.get("/v1/rooms.info", { roomId: this.rid });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
   async getRoomInfo(): Promise<any> {
     try {
       return await this.channelInfo();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
   async permissionInfo() {
     try {
       return await this._restRequest("/v1/permissions.listAll");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -554,8 +571,9 @@ export default class EmbeddedChatApi {
       return await this._restRequest(
         `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -585,8 +603,9 @@ export default class EmbeddedChatApi {
       return await this._restRequest(
         `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : String(err));
+      return err;
     }
   }
 
@@ -597,8 +616,9 @@ export default class EmbeddedChatApi {
     try {
       await this._syncRestCredentials();
       return await this.sdk.rest.get("/v1/chat.getThreadMessages", { tmid });
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : String(err));
+      return err;
     }
   }
 
@@ -608,16 +628,18 @@ export default class EmbeddedChatApi {
       return await this._restRequest(
         `/v1/${roomType}.roles?roomId=${this.rid}`
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : String(err));
+      return err;
     }
   }
 
   async getUsersInRole(role: string) {
     try {
       return await this._restRequest(`/v1/roles.getUsersInRole?role=${role}`);
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : String(err));
+      return err;
     }
   }
 
@@ -664,8 +686,9 @@ export default class EmbeddedChatApi {
       return await this.sdk.rest.post("/v1/chat.sendMessage", {
         message: messageObj,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -676,8 +699,9 @@ export default class EmbeddedChatApi {
         roomId: this.rid,
         msgId,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -689,8 +713,9 @@ export default class EmbeddedChatApi {
         msgId,
         text,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -702,8 +727,9 @@ export default class EmbeddedChatApi {
           ? `/v1/${roomType}.files?roomId=${this.rid}`
           : `/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
       return await this._restRequest(endpoint);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -711,8 +737,9 @@ export default class EmbeddedChatApi {
     try {
       await this._syncRestCredentials();
       return await this.sdk.rest.get("/v1/rooms.images", { roomId: this.rid });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -721,8 +748,9 @@ export default class EmbeddedChatApi {
       return await this._restRequest("/v1/chat.starMessage", "POST", {
         messageId: mid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -731,8 +759,9 @@ export default class EmbeddedChatApi {
       return await this._restRequest("/v1/chat.unStarMessage", "POST", {
         messageId: mid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -742,8 +771,9 @@ export default class EmbeddedChatApi {
       return await this.sdk.rest.get("/v1/chat.getStarredMessages", {
         roomId: this.rid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -753,8 +783,9 @@ export default class EmbeddedChatApi {
       return await this.sdk.rest.get("/v1/chat.getPinnedMessages", {
         roomId: this.rid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -764,8 +795,9 @@ export default class EmbeddedChatApi {
       return await this.sdk.rest.get("/v1/chat.getMentionedMessages", {
         roomId: this.rid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -784,25 +816,30 @@ export default class EmbeddedChatApi {
       return await this._restRequest("/v1/chat.unPinMessage", "POST", {
         messageId: mid,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
   async reactToMessage(
     emoji: string,
     messageId: string,
-    shouldReact: string
+    shouldReact: boolean | string
   ): Promise<any> {
     try {
       await this._syncRestCredentials();
       return await this.sdk.rest.post("/v1/chat.react", {
         messageId,
         emoji,
-        shouldReact: shouldReact === "true",
+        shouldReact:
+          typeof shouldReact === "string"
+            ? shouldReact === "true"
+            : shouldReact,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -813,8 +850,9 @@ export default class EmbeddedChatApi {
         messageId,
         description,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -826,8 +864,9 @@ export default class EmbeddedChatApi {
         days: 1,
         maxUses: 10,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.error(err instanceof Error ? err.message : String(err));
+      return err;
     }
   }
 
@@ -873,8 +912,9 @@ export default class EmbeddedChatApi {
     try {
       await this._syncRestCredentials();
       return await this.sdk.rest.get("/v1/me");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -884,8 +924,9 @@ export default class EmbeddedChatApi {
       return await this._restRequest(
         `/v1/${roomType}.members?roomId=${this.rid}`
       );
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
@@ -896,16 +937,18 @@ export default class EmbeddedChatApi {
         roomId: this.rid,
         searchText: text,
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 
   async getMessageLimit() {
     try {
       return await this._restRequest("/v1/settings/Message_MaxAllowedSize");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
+      return err;
     }
   }
 

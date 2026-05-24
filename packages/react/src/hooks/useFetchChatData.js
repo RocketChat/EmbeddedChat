@@ -6,6 +6,7 @@ import {
   useMemberStore,
   useMessageStore,
   useStarredMessageStore,
+  usePinnedMessageStore,
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
@@ -18,6 +19,9 @@ const useFetchChatData = (showRoles) => {
   const permissionsRef = useRef(null);
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
+  );
+  const setPinnedMessages = usePinnedMessageStore(
+    (state) => state.setPinnedMessages
   );
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -197,9 +201,27 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
+  const getPinnedMessages = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const { messages } = await RCInstance.getPinnedMessages();
+          setPinnedMessages(messages);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setPinnedMessages]
+  );
+
   return {
     getMessagesAndRoles,
     getStarredMessages,
+    getPinnedMessages,
     fetchAndSetPermissions,
     permissionsRef,
   };

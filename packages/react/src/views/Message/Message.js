@@ -66,7 +66,7 @@ const Message = ({
   );
   const addQuoteMessage = useMessageStore((state) => state.addQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
-  const { getStarredMessages } = useFetchChatData();
+  const { getStarredMessages, getPinnedMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -146,6 +146,7 @@ const Message = ({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
       });
+      getPinnedMessages();
     }
   };
 

@@ -53,6 +53,9 @@ const ChatLayout = () => {
     (state) => state.showAllThreads
   );
   const showPinned = usePinnedMessageStore((state) => state.showPinned);
+  const setPinnedMessages = usePinnedMessageStore(
+    (state) => state.setPinnedMessages
+  );
   const showStarred = useStarredMessageStore((state) => state.showStarred);
   const showSearch = useSearchMessageStore((state) => state.showSearch);
   const showChannelinfo = useChannelStore((state) => state.showChannelinfo);
@@ -83,7 +86,7 @@ const ChatLayout = () => {
     }
   };
   const getStarredMessages = useCallback(async () => {
-    if (isUserAuthenticated) {
+    if (isUserAuthenticated && showStarred) {
       try {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
@@ -94,10 +97,41 @@ const ChatLayout = () => {
         console.error(e);
       }
     }
-  }, [isUserAuthenticated, anonymousMode, RCInstance]);
+  }, [
+    isUserAuthenticated,
+    anonymousMode,
+    RCInstance,
+    showStarred,
+    setStarredMessages,
+  ]);
+
+  const getPinnedMessages = useCallback(async () => {
+    if (isUserAuthenticated && showPinned) {
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
+        }
+        const { messages } = await RCInstance.getPinnedMessages();
+        setPinnedMessages(messages);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [
+    isUserAuthenticated,
+    anonymousMode,
+    RCInstance,
+    showPinned,
+    setPinnedMessages,
+  ]);
+
   useEffect(() => {
     getStarredMessages();
-  }, [showSidebar]);
+  }, [getStarredMessages, showSidebar, showStarred]);
+
+  useEffect(() => {
+    getPinnedMessages();
+  }, [getPinnedMessages, showSidebar, showPinned]);
   return (
     <Box
       css={styles.layout}
