@@ -14,10 +14,20 @@ const CustomEmojiPicker = ({
 
   useEffect(() => {
     isMountedRef.current = true;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       isMountedRef.current = false;
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   const internalHandleEmojiClick = (emojiData, event) => {
     if (isMountedRef.current) {
