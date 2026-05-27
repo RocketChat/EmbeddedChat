@@ -41,18 +41,24 @@ const useSearchMentionUser = (
           const query = message
             .substring(message.lastIndexOf('@') + 1)
             .toLowerCase();
-          const filteredMentionMembers = members.filter(
-            (member) =>
-              member.name.toLowerCase().includes(query) ||
-              member.username.toLowerCase().includes(query)
-          );
 
-          setFilteredMembers(filteredMentionMembers);
+          if (query.includes('.')) {
+            setShowMembersList(false);
+            setMentionIndex(-1);
+          } else {
+            const filteredMentionMembers = members.filter(
+              (member) =>
+                member.name.toLowerCase().includes(query) ||
+                member.username.toLowerCase().includes(query)
+            );
 
-          const isValidUsername = filteredMentionMembers.length > 0;
+            setFilteredMembers(filteredMentionMembers);
 
-          setShowMembersList(isValidUsername);
-          setMentionIndex(isValidUsername ? 0 : -1);
+            const isValidUsername = filteredMentionMembers.length > 0;
+
+            setShowMembersList(isValidUsername);
+            setMentionIndex(isValidUsername ? 0 : -1);
+          }
         }
       }
     },

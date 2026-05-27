@@ -16,6 +16,7 @@ import { css } from '@emotion/react';
 import RoomMemberItem from './RoomMemberItem';
 import RCContext, { useRCContext } from '../../context/RCInstance';
 import useInviteStore from '../../store/inviteStore';
+import useChannelStore from '../../store/channelStore';
 import InviteMembers from './InviteMembers';
 import { getRoomMemberStyles } from './RoomMembers.styles';
 import LoadingIndicator from '../MessageAggregators/common/LoadingIndicator';
@@ -30,6 +31,7 @@ const RoomMembers = ({ members }) => {
 
   const toggleInviteView = useInviteStore((state) => state.toggleInviteView);
   const showInvite = useInviteStore((state) => state.showInvite);
+  const channelInfo = useChannelStore((state) => state.channelInfo);
   const [isLoading, setIsLoading] = useState(true);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
@@ -163,7 +165,7 @@ const RoomMembers = ({ members }) => {
                 <Divider />
               </Box>
               <Box>
-                Showing {displayedMembers} of {displayedMembers}
+                Showing {displayedMembers} of {channelInfo.usersCount || displayedMembers}
               </Box>
               <Box css={styles.memberList}>
                 {filteredMembers.length > 0 ? (
