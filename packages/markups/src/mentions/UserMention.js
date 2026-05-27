@@ -7,9 +7,12 @@ import RCContext from '@embeddedchat/react/src/context/RCInstance';
 import { MarkupInteractionContext } from '../MarkupInteractionContext';
 import useMentionStyles from '../elements/elements.styles';
 
-const UserMention = ({ contents }) => {
-  const { members, username } = useContext(MarkupInteractionContext);
-  const { RCInstance } = useContext(RCContext);
+const UserMentionWithContext = ({
+  contents,
+  members,
+  username,
+  RCInstance,
+}) => {
   const setExclusiveState = useSetExclusiveState();
   const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
     setShowCurrentUserInfo: state.setShowCurrentUserInfo,
@@ -29,6 +32,9 @@ const UserMention = ({ contents }) => {
   const hasMember = (user) => {
     if (user === 'all' || user === 'here') {
       return true;
+    }
+    if (!members) {
+      return false;
     }
     let found = false;
     Object.keys(members).forEach((ele) => {
@@ -66,6 +72,24 @@ const UserMention = ({ contents }) => {
         `@${contents.value}`
       )}
     </>
+  );
+};
+
+const UserMention = ({ contents }) => {
+  const markupContext = useContext(MarkupInteractionContext);
+  const rcContext = useContext(RCContext);
+
+  if (!markupContext || !rcContext) {
+    return <>{`@${contents.value}`}</>;
+  }
+
+  return (
+    <UserMentionWithContext
+      contents={contents}
+      members={markupContext.members}
+      username={markupContext.username}
+      RCInstance={rcContext.RCInstance}
+    />
   );
 };
 
