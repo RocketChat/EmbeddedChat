@@ -489,7 +489,7 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/rooms.info?roomId=${this.rid}`,
+        `${this.host}/api/v1/rooms.info?roomId=${encodeURIComponent(this.rid)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -556,15 +556,17 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
+      ? `&query=${encodeURIComponent(JSON.stringify(options.query))}`
       : "";
     const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
+      ? `&field=${encodeURIComponent(JSON.stringify(options.field))}`
       : "";
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${encodeURIComponent(
+          this.rid
+        )}${query}${field}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -596,16 +598,18 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
     const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
+      ? `&query=${encodeURIComponent(JSON.stringify(options.query))}`
       : "";
     const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
+      ? `&field=${encodeURIComponent(JSON.stringify(options.field))}`
       : "";
     const offset = options?.offset ? options.offset : 0;
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`,
+        `${this.host}/api/v1/${roomType}.${endp}?roomId=${encodeURIComponent(
+          this.rid
+        )}${query}${field}&offset=${offset}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -625,7 +629,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const messages = await fetch(
-        `${this.host}/api/v1/chat.getThreadMessages?tmid=${tmid}`,
+        `${this.host}/api/v1/chat.getThreadMessages?tmid=${encodeURIComponent(
+          tmid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -646,7 +652,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const roles = await fetch(
-        `${this.host}/api/v1/${roomType}.roles?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.roles?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -666,7 +674,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const roles = await fetch(
-        `${this.host}/api/v1/roles.getUsersInRole?role=${role}`,
+        `${this.host}/api/v1/roles.getUsersInRole?role=${encodeURIComponent(
+          role
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -785,8 +795,12 @@ export default class EmbeddedChatApi {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const url =
         typeGroup === ""
-          ? `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}`
-          : `${this.host}/api/v1/${roomType}.files?roomId=${this.rid}&typeGroup=${typeGroup}`;
+          ? `${this.host}/api/v1/${roomType}.files?roomId=${encodeURIComponent(
+              this.rid
+            )}`
+          : `${this.host}/api/v1/${roomType}.files?roomId=${encodeURIComponent(
+              this.rid
+            )}&typeGroup=${encodeURIComponent(typeGroup)}`;
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
@@ -805,7 +819,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/rooms.images?roomId=${this.rid}`,
+        `${this.host}/api/v1/rooms.images?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -861,7 +877,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.getStarredMessages?roomId=${this.rid}`,
+        `${this.host}/api/v1/chat.getStarredMessages?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -881,7 +899,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.getPinnedMessages?roomId=${this.rid}`,
+        `${this.host}/api/v1/chat.getPinnedMessages?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -901,7 +921,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.getMentionedMessages?roomId=${this.rid}`,
+        `${this.host}/api/v1/chat.getMentionedMessages?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1093,7 +1115,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/${roomType}.members?roomId=${this.rid}`,
+        `${this.host}/api/v1/${roomType}.members?roomId=${encodeURIComponent(
+          this.rid
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1113,7 +1137,9 @@ export default class EmbeddedChatApi {
     try {
       const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
       const response = await fetch(
-        `${this.host}/api/v1/chat.search?roomId=${this.rid}&searchText=${text}`,
+        `${this.host}/api/v1/chat.search?roomId=${encodeURIComponent(
+          this.rid
+        )}&searchText=${encodeURIComponent(text)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -1225,7 +1251,9 @@ export default class EmbeddedChatApi {
   async getUserStatus(reqUserId: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.getStatus?userId=${reqUserId}`,
+      `${this.host}/api/v1/users.getStatus?userId=${encodeURIComponent(
+        reqUserId
+      )}`,
       {
         method: "GET",
         headers: {
@@ -1242,7 +1270,7 @@ export default class EmbeddedChatApi {
   async userInfo(reqUserId: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.info?userId=${reqUserId}`,
+      `${this.host}/api/v1/users.info?userId=${encodeURIComponent(reqUserId)}`,
       {
         method: "GET",
         headers: {
@@ -1259,7 +1287,7 @@ export default class EmbeddedChatApi {
   async userData(username: string) {
     const { userId, authToken } = (await this.auth.getCurrentUser()) || {};
     const response = await fetch(
-      `${this.host}/api/v1/users.info?username=${username}`,
+      `${this.host}/api/v1/users.info?username=${encodeURIComponent(username)}`,
       {
         method: "GET",
         headers: {
