@@ -18,6 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
+import { FederationProvider } from '../context/FederationContext';
 import { useUserStore, useLoginStore, useMessageStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
@@ -58,6 +59,8 @@ const EmbeddedChat = (props) => {
     secure = false,
     dark = false,
     remoteOpt = false,
+    /** Enable Matrix federation support — detects federated rooms and renders Matrix user identities correctly */
+    federation = false,
   } = config;
 
   const hasMounted = useRef(false);
@@ -264,6 +267,7 @@ const EmbeddedChat = (props) => {
   return (
     <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
+      <FederationProvider RCInstance={federation ? RCInstance : null} forceEnabled={federation}>
         <Box
           css={[
             styles.embeddedchat(theme || DefaultTheme, dark),
@@ -293,6 +297,7 @@ const EmbeddedChat = (props) => {
             <div id="overlay-items" />
           </ToastBarProvider>
         </Box>
+      </FederationProvider>
       </RCInstanceProvider>
     </ThemeProvider>
   );
@@ -325,6 +330,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  federation: PropTypes.bool,
 };
 
 export default memo(EmbeddedChat);

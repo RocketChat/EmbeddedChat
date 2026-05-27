@@ -25,6 +25,7 @@ import Roominfo from '../RoomInformation/RoomInformation';
 import UserInformation from '../UserInformation/UserInformation';
 import ChatBody from '../ChatBody/ChatBody';
 import ChatInput from '../ChatInput/ChatInput';
+import FederationBanner from '../FederationBanner/FederationBanner';
 import useDropBox from '../../hooks/useDropBox';
 import AttachmentPreview from '../AttachmentPreview/AttachmentPreview';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -109,6 +110,7 @@ const ChatLayout = () => {
       onDrop={(e) => handleDragDrop(e)}
     >
       <Box css={styles.chatMain}>
+        <FederationBanner />
         <ChatBody
           anonymousMode={anonymousMode}
           showRoles={showRoles}

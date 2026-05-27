@@ -13,6 +13,8 @@ import { useMemberStore, useUserStore } from '../../store';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
+import { useFederation } from '../../context/FederationContext';
+import { isMatrixUser, parseMatrixUserId } from '../../lib/federationUtils';
 
 const MessageHeader = ({
   message,
@@ -33,6 +35,12 @@ const MessageHeader = ({
   const showName = ECOptions?.showName;
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
+  const { isFederated } = useFederation();
+
+  const matrixUser =
+    isFederated && isMatrixUser(message.u?.username)
+      ? parseMatrixUserId(message.u.username)
+      : null;
 
   const isPinned = message.pinned;
   const isStarred =
@@ -116,7 +124,9 @@ const MessageHeader = ({
               : null
           }
         >
-          {message.u?._id === 'rocket.cat'
+          {matrixUser
+            ? matrixUser.localpart
+            : message.u?._id === 'rocket.cat'
             ? message.u.username
             : message.u.name}
         </Box>
@@ -132,7 +142,27 @@ const MessageHeader = ({
               : null
           }
         >
-          @{message.u.username}
+          {matrixUser
+            ? `@${matrixUser.localpart}:${matrixUser.homeserver}`
+            : `@${message.u.username}`}
+        </Box>
+      )}
+      {matrixUser && (
+        <Box
+          as="span"
+          css={styles.userRole}
+          className={appendClassNames('ec-message-matrix-badge')}
+          title={`Matrix user from ${matrixUser.homeserver}`}
+          style={{
+            backgroundColor: '#0DBD8B',
+            color: '#fff',
+            fontSize: '0.65rem',
+            padding: '0 0.3rem',
+            borderRadius: '3px',
+            letterSpacing: '0.02em',
+          }}
+        >
+          Matrix
         </Box>
       )}
       {!message.t && ECOptions?.showRoles && isRoles && (
