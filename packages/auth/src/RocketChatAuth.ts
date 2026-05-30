@@ -74,10 +74,6 @@ class RocketChatAuth {
       }
     );
     this.setUser(response.data);
-    // Note: setUser → save() already calls notifyAuthListeners().
-    // Do NOT call it again here — a second notification would trigger
-    // a second connect() after the first resolves, causing close() to
-    // kill the active DDP session and all subscriptions.
     return this.currentUser;
   }
 
@@ -98,7 +94,6 @@ class RocketChatAuth {
       credentials
     );
     this.setUser(response.data);
-    // setUser → save() already calls notifyAuthListeners().
     return this.currentUser;
   }
 

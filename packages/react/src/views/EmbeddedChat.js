@@ -169,9 +169,6 @@ const EmbeddedChat = (props) => {
         RCInstance.connect()
           .then(() => {
             console.log(`Connected to RocketChat ${RCInstance.host}`);
-            // currentUser shape differs by login method:
-            // - resume/OAuth: { userId, authToken, me: {...} }
-            // - password:     { status, data: { userId, authToken, me: {...} } }
             const me = user.me || user.data?.me;
             if (me) {
               setAuthenticatedAvatarUrl(me.avatarUrl);
