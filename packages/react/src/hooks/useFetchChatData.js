@@ -107,6 +107,7 @@ const useFetchChatData = (showRoles) => {
         const permissionsMap = createPermissionsMap(permissions);
 
         permissionsRef.current = {
+          raw: permissions,
           map: permissionsMap,
         };
 
