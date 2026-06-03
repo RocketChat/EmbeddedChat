@@ -26,11 +26,13 @@ import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
 
 const EmbeddedChat = (props) => {
-  const [config, setConfig] = useState(() => props);
+  const [remoteOverrides, setRemoteOverrides] = useState({});
 
-  useEffect(() => {
-    setConfig(props);
-  }, [props]);
+  const config = useMemo(
+    () => ({ ...props, ...remoteOverrides }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props, remoteOverrides]
+  );
 
   const {
     isClosable = false,
@@ -52,13 +54,17 @@ const EmbeddedChat = (props) => {
     className = '',
     style = {},
     hideHeader = false,
-    auth = {
-      flow: 'PASSWORD',
-    },
+    auth: authProp = null,
     secure = false,
     dark = false,
     remoteOpt = false,
   } = config;
+
+  const auth = useMemo(
+    () => authProp ?? { flow: 'PASSWORD' },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [authProp?.flow, authProp?.credentials]
+  );
 
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -208,7 +214,7 @@ const EmbeddedChat = (props) => {
 
         if (appInfo) {
           const remoteConfig = appInfo.propConfig;
-          setConfig((prevConfig) => overrideECProps(prevConfig, remoteConfig));
+          setRemoteOverrides((prev) => overrideECProps(prev, remoteConfig));
         }
       } catch (error) {
         console.error('Error fetching remote config:', error?.message || error);
@@ -219,7 +225,7 @@ const EmbeddedChat = (props) => {
     if (remoteOpt) {
       getConfig();
     }
-  }, [RCInstance, remoteOpt, setConfig, setIsSynced]);
+  }, [RCInstance, remoteOpt, setIsSynced]);
 
   const ECOptions = useMemo(
     () => ({

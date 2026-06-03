@@ -86,6 +86,11 @@ const ChatBody = ({
     (state) => state.isUserAuthenticated
   );
 
+  const isUserAuthenticatedRef = useRef(isUserAuthenticated);
+  useEffect(() => {
+    isUserAuthenticatedRef.current = isUserAuthenticated;
+  }, [isUserAuthenticated]);
+
   const username = useUserStore((state) => state.username);
 
   const { getMessagesAndRoles, fetchAndSetPermissions, permissionsRef } =
@@ -217,7 +222,8 @@ const ChatBody = ({
       if (
         messageListRef.current.scrollTop === 0 &&
         !loadingOlderMessages &&
-        hasMoreMessages
+        hasMoreMessages &&
+        (isUserAuthenticatedRef.current || anonymousMode)
       ) {
         setLoadingOlderMessages(true);
 

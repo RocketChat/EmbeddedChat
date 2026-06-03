@@ -72,4 +72,4 @@ export const Modal = forwardRef(
   }
 );
 
-Modal.displayName = Modal;
+Modal.displayName = 'Modal';
