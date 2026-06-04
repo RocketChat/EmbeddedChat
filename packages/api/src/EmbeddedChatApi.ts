@@ -544,35 +544,23 @@ export default class EmbeddedChatApi {
     this.sdk.connection.close();
   }
 
-  /**
-   * @param {boolean} anonymousMode
-   * @param {Object} options This object should include query or fields.
-   * query - json object which accepts MongoDB query operators.
-   * fields - json object with properties that have either 1 or 0 to include them or exclude them
-   * @returns messages
-   */
   async getMessages(
     anonymousMode = false,
     options: {
-      query?: object | undefined;
-      field?: object | undefined;
-    } = {
-      query: undefined,
-      field: undefined,
-    },
+      oldest?: string;
+      latest?: string;
+      count?: number;
+    } = {},
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
-    const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
-      : "";
-    const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
-      : "";
+    const oldest = options?.oldest ? `&oldest=${options.oldest}` : "";
+    const latest = options?.latest ? `&latest=${options.latest}` : "";
+    const count = options?.count != null ? `&count=${options.count}` : "";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}`
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -583,28 +571,22 @@ export default class EmbeddedChatApi {
   async getOlderMessages(
     anonymousMode = false,
     options: {
-      query?: object | undefined;
-      field?: object | undefined;
+      oldest?: string;
+      latest?: string;
+      count?: number;
       offset?: number;
-    } = {
-      query: undefined,
-      field: undefined,
-      offset: 50,
-    },
+    } = {},
     isChannelPrivate = false
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
-    const query = options?.query
-      ? `&query=${JSON.stringify(options.query)}`
-      : "";
-    const field = options?.field
-      ? `&field=${JSON.stringify(options.field)}`
-      : "";
-    const offset = options?.offset ? options.offset : 0;
+    const oldest = options?.oldest ? `&oldest=${options.oldest}` : "";
+    const latest = options?.latest ? `&latest=${options.latest}` : "";
+    const count = options?.count != null ? `&count=${options.count}` : "";
+    const offset = options?.offset ? `&offset=${options.offset}` : "&offset=0";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.${endp}?roomId=${this.rid}${query}${field}&offset=${offset}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}${offset}`
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : String(err));

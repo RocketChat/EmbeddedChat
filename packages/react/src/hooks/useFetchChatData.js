@@ -10,7 +10,7 @@ import {
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
-  const { RCInstance, ECOptions } = useContext(RCContext);
+  const { RCInstance } = useContext(RCContext);
   const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const setMessages = useMessageStore((state) => state.setMessages);
@@ -129,15 +129,7 @@ const useFetchChatData = (showRoles) => {
 
         const { messages, count } = await RCInstance.getMessages(
           anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-                query: {
-                  tmid: {
-                    $exists: false,
-                  },
-                },
-              }
-            : undefined,
+          undefined,
           anonymousMode ? false : isChannelPrivate
         );
 
@@ -175,7 +167,6 @@ const useFetchChatData = (showRoles) => {
     [
       isUserAuthenticated,
       RCInstance,
-      ECOptions?.enableThreads,
       isChannelPrivate,
       showRoles,
       setMessages,
