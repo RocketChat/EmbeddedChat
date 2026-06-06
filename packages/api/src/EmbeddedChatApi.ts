@@ -618,27 +618,6 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async getUsersInRole(role: string) {
-    try {
-      return await this._restRequest(`/v1/roles.getUsersInRole?role=${role}`);
-    } catch (err: any) {
-      console.error(err instanceof Error ? err.message : String(err));
-      return err;
-    }
-  }
-
-  async getUserRoles() {
-    try {
-      const response = await this.getUsersInRole("admin");
-      if (response && response.success) {
-        return { result: response.users };
-      }
-      return { result: [] };
-    } catch (err) {
-      console.error(err instanceof Error ? err.message : err);
-      return { result: [] };
-    }
-  }
 
   async sendTypingStatus(username: string, typing: boolean) {
     try {
