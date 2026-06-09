@@ -178,6 +178,7 @@ const useFetchChatData = (showRoles) => {
       RCInstance,
       showRoles,
       setMessages,
+      setMessagesOffset,
       setMemberRoles,
     ]
   );

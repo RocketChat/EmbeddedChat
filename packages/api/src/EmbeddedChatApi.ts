@@ -618,7 +618,6 @@ export default class EmbeddedChatApi {
     }
   }
 
-
   async sendTypingStatus(username: string, typing: boolean) {
     try {
       await this.sdk.call(
@@ -897,7 +896,18 @@ export default class EmbeddedChatApi {
 
   async getMessageLimit() {
     try {
-      return await this._restRequest("/v1/settings/Message_MaxAllowedSize");
+      const response = await this._restRequest(
+        "/v1/settings.public?_id=Message_MaxAllowedSize"
+      );
+      if (
+        response &&
+        response.success &&
+        response.settings &&
+        response.settings.length > 0
+      ) {
+        return response.settings[0];
+      }
+      return null;
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
       return err;
