@@ -18,7 +18,7 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import { useUserStore, useLoginStore, useMessageStore, useChannelStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
@@ -172,7 +172,8 @@ const EmbeddedChat = (props) => {
   useEffect(() => {
     const handleAuthChange = (user) => {
       if (user) {
-        RCInstance.connect()
+        const { isChannelPrivate } = useChannelStore.getState();
+        RCInstance.connect(isChannelPrivate)
           .then(() => {
             console.log(`Connected to RocketChat ${RCInstance.host}`);
             const me = user.me || user.data?.me;
