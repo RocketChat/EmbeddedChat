@@ -32,8 +32,6 @@ import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
-
-
 const GlobeIcon = ({ size }) => (
   <svg
     viewBox="0 0 24 24"
@@ -104,7 +102,12 @@ const ChatHeader = ({
   const workspaceLevelRoles = useUserStore((state) => state.roles);
 
   const { RCInstance, ECOptions } = useRCContext();
-  const { channelName, anonymousMode, showRoles, theme: configTheme } = ECOptions ?? {};
+  const {
+    channelName,
+    anonymousMode,
+    showRoles,
+    theme: configTheme,
+  } = ECOptions ?? {};
 
   const isFederated = channelInfo?.federated || configTheme === 'matrix';
 

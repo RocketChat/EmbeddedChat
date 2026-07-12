@@ -18,7 +18,12 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore, useChannelStore } from '../store';
+import {
+  useUserStore,
+  useLoginStore,
+  useMessageStore,
+  useChannelStore,
+} from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
 import MatrixTheme from '../theme/MatrixTheme';
 import { getTokenStorage } from '../lib/auth';

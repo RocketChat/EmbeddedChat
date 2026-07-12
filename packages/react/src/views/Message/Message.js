@@ -109,7 +109,9 @@ const Message = ({
 
   const isTimeline = ECOptions?.layoutMode === 'timeline';
   const variantStyles =
-    !isTimeline && !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
+    !isTimeline && !isInSidebar && variantOverrides === 'bubble'
+      ? bubbleStyles
+      : {};
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -235,7 +237,9 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          isTimeline ? styles.timelineMain : (variantStyles.messageParent || styles.main),
+          isTimeline
+            ? styles.timelineMain
+            : variantStyles.messageParent || styles.main,
           hoverStyle,
           editMessage._id === message._id && styles.messageEditing,
         ]}
