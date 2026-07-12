@@ -14,6 +14,7 @@ import { useMemberStore, useUserStore } from '../../store';
 import { getMessageHeaderStyles } from './Message.styles';
 import useDisplayNameColor from '../../hooks/useDisplayNameColor';
 import { useRCContext } from '../../context/RCInstance';
+import { parseFederatedIdentity } from '../../lib/federation/matrixUtils';
 
 const MessageHeader = ({
   message,
@@ -137,6 +138,27 @@ const MessageHeader = ({
           }
         >
           @{message.u.username}
+          {parseFederatedIdentity(message.u.username).isFederated && (
+            <Tooltip
+              text={`Federated: ${parseFederatedIdentity(message.u.username).server}`}
+              position="top"
+            >
+              <Box
+                as="span"
+                css={styles.userRole}
+                style={{
+                  marginLeft: '4px',
+                  backgroundColor: '#8d43b3',
+                  color: 'white',
+                  fontSize: '10px',
+                  padding: '1px 4px',
+                  borderRadius: '3px',
+                }}
+              >
+                Matrix
+              </Box>
+            </Tooltip>
+          )}
         </Box>
       )}
       {serverDomain && (
