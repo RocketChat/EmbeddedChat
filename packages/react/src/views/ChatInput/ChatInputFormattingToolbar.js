@@ -16,6 +16,7 @@ import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
 import InsertLinkToolBox from './InsertLinkToolBox';
+import useKeyboardNav from '../../hooks/useKeyboardNav';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -50,6 +51,8 @@ const ChatInputFormattingToolbar = ({
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
+
+  const handleToolbarKeyDown = useKeyboardNav({ direction: 'horizontal' });
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -104,6 +107,7 @@ const ChatInputFormattingToolbar = ({
             square
             ghost
             disabled={isRecordingMessage}
+            aria-label="Insert emoji"
             onClick={() => {
               if (isRecordingMessage) return;
               setEmojiOpen(true);
@@ -154,6 +158,7 @@ const ChatInputFormattingToolbar = ({
             square
             ghost
             disabled={isRecordingMessage}
+            aria-label="Upload file"
             onClick={() => {
               if (isRecordingMessage) return;
               handleClickToOpenFiles();
@@ -183,6 +188,7 @@ const ChatInputFormattingToolbar = ({
             square
             ghost
             disabled={isRecordingMessage}
+            aria-label="Insert link"
             onClick={() => {
               if (isRecordingMessage) return;
               setInsertLinkOpen(true);
@@ -224,6 +230,7 @@ const ChatInputFormattingToolbar = ({
               square
               disabled={isRecordingMessage}
               ghost
+              aria-label={`Format ${item.name}`}
               onClick={() => {
                 if (isRecordingMessage) return;
                 formatSelection(messageRef, item.pattern);
@@ -245,6 +252,9 @@ const ChatInputFormattingToolbar = ({
       css={styles.chatFormat}
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
+      role="toolbar"
+      aria-label="Message formatting"
+      onKeyDown={handleToolbarKeyDown}
     >
       <Box
         css={css`
@@ -327,6 +337,9 @@ const ChatInputFormattingToolbar = ({
               square
               ghost
               disabled={isRecordingMessage}
+              aria-label="More formatting options"
+              aria-expanded={isPopoverOpen}
+              aria-haspopup="true"
               onClick={() => {
                 if (isRecordingMessage) return;
                 setPopoverOpen(!isPopoverOpen);

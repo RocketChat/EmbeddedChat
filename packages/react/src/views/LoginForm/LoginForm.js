@@ -97,16 +97,23 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          {fields.map((field, index) => (
+          {fields.map((field, index) => {
+            const fieldId = `ec-login-field-${index}`;
+            const errorId = `ec-login-error-${index}`;
+            return (
             <Box key={index} css={styles.fieldContainer}>
-              <Box css={styles.fieldLabel}>{field.label}</Box>
+              <Box is="label" htmlFor={fieldId} css={styles.fieldLabel}>{field.label}</Box>
               <Box css={styles.fieldRow}>
                 <Input
+                  id={fieldId}
                   type={field.type || 'text'}
                   ref={field.ref}
                   onChange={field.onChange}
                   placeholder={field.placeholder}
                   onKeyPress={handleKeyPress}
+                  aria-required="true"
+                  aria-invalid={field.error ? 'true' : 'false'}
+                  aria-describedby={field.error ? errorId : undefined}
                   style={{
                     ...(field.error && {
                       borderColor: theme.colors.destructive,
@@ -116,8 +123,10 @@ export default function LoginForm() {
                 />
                 {field.label === 'Password' && (
                   <Box
+                    is="button"
                     type="button"
                     css={styles.passwordEye}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={handleTogglePassword}
                   >
                     <Icon name={iconName} size="1.25rem" />
@@ -127,6 +136,8 @@ export default function LoginForm() {
               {field.error && (
                 <Box
                   is="span"
+                  id={errorId}
+                  role="alert"
                   css={css`
                     color: ${theme.colors.destructive};
                     font-size: 13px;
@@ -136,7 +147,8 @@ export default function LoginForm() {
                 </Box>
               )}
             </Box>
-          ))}
+            );
+          })}
           <Button
             type="primary"
             onClick={handleSubmit}

@@ -303,6 +303,32 @@ const EmbeddedChat = (props) => {
           style={{ ...style, ...styleOverrides }}
         >
           <GlobalStyles />
+          <a
+            href="#ec-chat-main"
+            style={{
+              position: 'absolute',
+              top: '-999px',
+              left: '-999px',
+              zIndex: 9999,
+              padding: '8px 16px',
+              background: '#1d74f5',
+              color: '#fff',
+              borderRadius: '4px',
+              fontWeight: 700,
+              fontSize: '13px',
+              textDecoration: 'none',
+            }}
+            onFocus={(e) => {
+              e.target.style.top = '8px';
+              e.target.style.left = '8px';
+            }}
+            onBlur={(e) => {
+              e.target.style.top = '-999px';
+              e.target.style.left = '-999px';
+            }}
+          >
+            Skip to chat
+          </a>
           <ToastBarProvider position={toastBarPosition}>
             {hideHeader ? null : (
               <ChatHeader
@@ -313,7 +339,9 @@ const EmbeddedChat = (props) => {
               />
             )}
 
-            <ChatLayout />
+            <div id="ec-chat-main" tabIndex={-1} style={{ outline: 'none', display: 'contents' }}>
+              <ChatLayout />
+            </div>
 
             <div id="overlay-items" />
           </ToastBarProvider>

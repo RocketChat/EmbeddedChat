@@ -31,7 +31,12 @@ const CustomEmojiPicker = ({
       height="auto"
       width="auto"
     >
-      <Box css={styles.emojiPicker}>
+      <Box
+        css={styles.emojiPicker}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Emoji picker"
+      >
         <EmojiPicker
           height={400}
           width={350}
