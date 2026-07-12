@@ -187,6 +187,8 @@ This environment offers a complete setup for developing and testing the `Embedde
 
   - Theming Technical: [Technical Overview](https://rocketchat.github.io/EmbeddedChat/docs/docs/Development/theming_technical) – Technical aspects of theming.
 
+  - Matrix Integration: [Guide](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/matrix) – Configure Matrix Federation in Embedded Chat.
+
 ### Contributors
 
 <a href="https://github.com/RocketChat/EmbeddedChat/graphs/contributors">
