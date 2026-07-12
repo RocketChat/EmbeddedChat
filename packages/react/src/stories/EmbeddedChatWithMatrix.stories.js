@@ -18,6 +18,8 @@ export const WithMatrix = {
     auth: {
       flow: 'PASSWORD',
     },
-    dark: false,
+    theme: 'matrix',
+    layoutMode: 'timeline',
+    dark: true,
   },
 };

@@ -20,6 +20,7 @@ import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
 import { useUserStore, useLoginStore, useMessageStore, useChannelStore } from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
+import MatrixTheme from '../theme/MatrixTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
@@ -58,6 +59,7 @@ const EmbeddedChat = (props) => {
     secure = false,
     dark = false,
     remoteOpt = false,
+    layoutMode = 'bubble',
   } = config;
 
   const auth = useMemo(
@@ -244,6 +246,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      layoutMode,
     }),
     [
       enableThreads,
@@ -260,6 +263,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      layoutMode,
     ]
   );
 
@@ -268,14 +272,21 @@ const EmbeddedChat = (props) => {
     [RCInstance, ECOptions]
   );
 
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'matrix') {
+      return MatrixTheme;
+    }
+    return theme || DefaultTheme;
+  }, [theme]);
+
   if (!isSynced) return null;
 
   return (
-    <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
+    <ThemeProvider theme={resolvedTheme} mode={dark ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[
-            styles.embeddedchat(theme || DefaultTheme, dark),
+            styles.embeddedchat(resolvedTheme, dark),
             css`
               width: ${width};
               height: ${height};
