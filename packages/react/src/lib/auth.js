@@ -1,46 +1,31 @@
-async function saveTokenLocalStorage(token) {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('ec_token', token);
-  }
-}
-
-async function getTokenLocalStorage() {
-  if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem('ec_token');
-  }
-  return null;
-}
-
-async function deleteTokenLocalStorage() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('ec_token');
-  }
-}
-
-async function saveTokenSecure(token) {
-  this.handleSecureLogin('save', token);
-}
-
-async function getTokenSecure() {
-  const response = await this.handleSecureLogin('get');
-  return response?.token !== undefined ? response.token : null;
-}
-
-async function deleteTokenSecure() {
-  this.handleSecureLogin('delete');
-}
-
-export function getTokenStorage(secure = false) {
+export function getTokenStorage(secure = false, handleSecureLogin) {
   if (secure) {
     return {
-      saveToken: saveTokenSecure,
-      getToken: getTokenSecure,
-      deleteToken: deleteTokenSecure,
+      saveToken: async (token) => handleSecureLogin('save', token),
+      getToken: async () => {
+        const response = await handleSecureLogin('get');
+        return response?.token !== undefined ? response.token : null;
+      },
+      deleteToken: async () => handleSecureLogin('delete'),
     };
   }
+
   return {
-    saveToken: saveTokenLocalStorage,
-    getToken: getTokenLocalStorage,
-    deleteToken: deleteTokenLocalStorage,
+    async saveToken(token) {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('ec_token', token);
+      }
+    },
+    async getToken() {
+      if (typeof localStorage !== 'undefined') {
+        return localStorage.getItem('ec_token');
+      }
+      return null;
+    },
+    async deleteToken() {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('ec_token');
+      }
+    },
   };
 }
