@@ -65,6 +65,8 @@ import Arc from './Arc';
 import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
+import ListNumbers from './ListNumbers';
+import ListBullets from './ListBullets';
 import Team from './Team';
 
 const icons = {
@@ -136,6 +138,8 @@ const icons = {
   avatar: Avatar,
   'format-text': FormatText,
   cog: Cog,
+  'list-numbers': ListNumbers,
+  'list-bullets': ListBullets,
 };
 
 export default icons;

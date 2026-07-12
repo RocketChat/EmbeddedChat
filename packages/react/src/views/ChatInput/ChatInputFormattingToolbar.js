@@ -15,6 +15,7 @@ import AudioMessageRecorder from './AudioMessageRecorder';
 import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
+import insertListPrefix from '../../lib/insertListPrefix';
 import InsertLinkToolBox from './InsertLinkToolBox';
 
 const ChatInputFormattingToolbar = ({
@@ -23,7 +24,15 @@ const ChatInputFormattingToolbar = ({
   triggerButton,
   optionConfig = {
     surfaceItems: ['emoji', 'formatter', 'link', 'audio', 'video', 'file'],
-    formatters: ['bold', 'italic', 'strike', 'code', 'multiline'],
+    formatters: [
+      'bold',
+      'italic',
+      'strike',
+      'code',
+      'multiline',
+      'list-numbers',
+      'list-bullets',
+    ],
     smallScreenSurfaceItems: ['emoji', 'video', 'audio', 'file'],
     popOverItems: ['formatter', 'link'],
   },
@@ -55,7 +64,11 @@ const ChatInputFormattingToolbar = ({
     inputRef.current.click();
   };
   const handleFormatterClick = (item) => {
-    formatSelection(messageRef, item.pattern);
+    if (item.type === 'list') {
+      insertListPrefix(messageRef, item.listPrefix);
+    } else {
+      formatSelection(messageRef, item.pattern);
+    }
     setPopoverOpen(false);
   };
   const handleEmojiClick = (emojiEvent) => {
@@ -226,7 +239,7 @@ const ChatInputFormattingToolbar = ({
               ghost
               onClick={() => {
                 if (isRecordingMessage) return;
-                formatSelection(messageRef, item.pattern);
+                handleFormatterClick(item);
               }}
             >
               <Icon
@@ -306,9 +319,7 @@ const ChatInputFormattingToolbar = ({
                   square
                   disabled={isRecordingMessage}
                   ghost
-                  onClick={() =>
-                    formatSelection(messageRef, itemInFormatter.pattern)
-                  }
+                  onClick={() => handleFormatterClick(itemInFormatter)}
                 >
                   <Icon
                     disabled={isRecordingMessage}

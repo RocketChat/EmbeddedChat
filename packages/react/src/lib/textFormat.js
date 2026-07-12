@@ -24,4 +24,16 @@ export const formatter = [
     tooltip: 'Multi-line code',
     shortcut: '',
   },
+  {
+    name: 'list-numbers',
+    type: 'list',
+    listPrefix: (n) => `${n}. `,
+    tooltip: 'Ordered list',
+  },
+  {
+    name: 'list-bullets',
+    type: 'list',
+    listPrefix: () => '- ',
+    tooltip: 'Unordered list',
+  },
 ];

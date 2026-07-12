@@ -503,10 +503,51 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         formatSelection(messageRef, '*{{text}}*');
         break;
       }
-      case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter':
+      case (e.ctrlKey || e.metaKey || e.shiftKey) && e.code === 'Enter': {
         e.preventDefault();
-        handleNewLine(e);
+        const input = messageRef.current;
+        const { value, selectionStart } = input;
+        const textBefore = value.slice(0, selectionStart);
+        const currentLine = textBefore.split('\n').pop();
+        // Match numbered list: "1. ", "2. ", etc.
+        const olMatch = currentLine.match(/^(\d+)\.\s/);
+        // Match bullet list: "- "
+        const ulMatch = currentLine.match(/^-\s/);
+
+        if (olMatch && currentLine.trim() === `${olMatch[1]}.`) {
+          const lineStart = selectionStart - currentLine.length;
+          const rest = value.slice(selectionStart);
+          input.value = value.slice(0, lineStart) + rest;
+          input.selectionStart = lineStart;
+          input.selectionEnd = lineStart;
+          handleNewLine(e, false);
+        } else if (ulMatch && currentLine.trim() === '-') {
+          const lineStart = selectionStart - currentLine.length;
+          const rest = value.slice(selectionStart);
+          input.value = value.slice(0, lineStart) + rest;
+          input.selectionStart = lineStart;
+          input.selectionEnd = lineStart;
+          handleNewLine(e, false);
+        } else if (olMatch) {
+          const nextNum = parseInt(olMatch[1], 10) + 1;
+          const prefix = `\n${nextNum}. `;
+          const after = value.slice(selectionStart);
+          input.value = textBefore + prefix + after;
+          input.selectionStart = selectionStart + prefix.length;
+          input.selectionEnd = selectionStart + prefix.length;
+          handleNewLine(e, false);
+        } else if (ulMatch) {
+          const prefix = '\n- ';
+          const after = value.slice(selectionStart);
+          input.value = textBefore + prefix + after;
+          input.selectionStart = selectionStart + prefix.length;
+          input.selectionEnd = selectionStart + prefix.length;
+          handleNewLine(e, false);
+        } else {
+          handleNewLine(e);
+        }
         break;
+      }
       case e.code === 'Escape':
         if (editMessage.msg || editMessage.attachments) {
           e.preventDefault();
