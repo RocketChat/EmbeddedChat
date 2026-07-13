@@ -303,11 +303,18 @@ const ChatBody = ({
     }
   };
 
+  const prevMessagesLength = useRef(0);
+
   useEffect(() => {
-    if (messageListRef.current) {
+    if (
+      messageListRef.current &&
+      messages.length > prevMessagesLength.current &&
+      !loadingOlderMessages
+    ) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messages]);
+    prevMessagesLength.current = messages.length;
+  }, [messages, loadingOlderMessages]);
 
   useEffect(() => {
     checkOverflow();
