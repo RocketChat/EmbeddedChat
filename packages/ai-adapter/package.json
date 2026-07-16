@@ -35,5 +35,9 @@
     "rollup-plugin-dts": "^6.0.1",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@rocket.chat/ui-kit": "^0.31.25",
+    "ajv": "^8.12.0"
   }
 }
