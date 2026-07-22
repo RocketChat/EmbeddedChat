@@ -66,6 +66,7 @@ import Avatar from './Avatar';
 import FormatText from './FormatText';
 import Cog from './Cog';
 import Team from './Team';
+import Summarize from './Summarize';
 
 const icons = {
   file: File,
@@ -136,6 +137,7 @@ const icons = {
   avatar: Avatar,
   'format-text': FormatText,
   cog: Cog,
+  summarize: Summarize,
 };
 
 export default icons;

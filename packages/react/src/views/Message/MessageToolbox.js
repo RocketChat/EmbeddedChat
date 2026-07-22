@@ -10,6 +10,7 @@ import {
   useTheme,
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
+import { useAiStore, useUserStore } from '../../store';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
@@ -40,10 +41,12 @@ export const MessageToolbox = ({
   handleEditMessage,
   handleQuoteMessage,
   isEditing = false,
+  aiAdapter = null,
   optionConfig = {
     surfaceItems: [
       'reaction',
       'reply',
+      'summarize-thread',
       'quote',
       'star',
       'copy',
@@ -68,6 +71,9 @@ export const MessageToolbox = ({
   const instanceHost = RCInstance.getHost();
   const { theme } = useTheme();
   const styles = getMessageToolboxStyles(theme);
+  const userId = useUserStore((state) => state.userId);
+  const setThreadSummary = useAiStore((state) => state.setThreadSummary);
+  const setIsAiTyping = useAiStore((state) => state.setIsAiTyping);
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
   const menuItems =
@@ -196,6 +202,31 @@ export const MessageToolbox = ({
         iconName: 'report',
         visible: isAllowedToReport,
         type: 'destructive',
+      },
+      'summarize-thread': {
+        label: 'Summarize thread',
+        id: 'summarize-thread',
+        onClick: async () => {
+          if (!aiAdapter?.summarize) return;
+          setIsAiTyping(true);
+          try {
+            const res = await RCInstance.getThreadMessages(message._id);
+            const threadMsgs = res?.messages ?? [];
+            if (threadMsgs.length === 0) return;
+            const summary = await aiAdapter.summarize(threadMsgs, {
+              roomId: message.rid,
+              userId,
+              history: threadMsgs,
+            });
+            setThreadSummary(summary);
+          } catch (e) {
+            console.error('[AI Adapter] thread summarize failed:', e);
+          } finally {
+            setIsAiTyping(false);
+          }
+        },
+        iconName: 'summarize',
+        visible: !!(aiAdapter?.summarize && message.tcount > 0),
       },
     }),
     [
