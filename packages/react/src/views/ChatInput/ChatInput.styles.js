@@ -66,6 +66,46 @@ export const getChatInputStyles = (theme) => {
       max-height: 300px;
       overflow: scroll;
     `,
+
+    aiSuggestionsContainer: css`
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem 0;
+    `,
+
+    aiSuggestionChip: css`
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      cursor: pointer;
+    `,
+
+    aiActionButton: css`
+      font-size: 1rem;
+    `,
+
+    actionButtonsContainer: css`
+      padding: 0.25rem;
+    `,
+
+    summaryModal: css`
+      padding: 1em;
+    `,
+
+    summaryModalContent: css`
+      margin: 1em;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    `,
+
+    longMessageModal: css`
+      padding: 1em;
+    `,
+
+    longMessageModalContent: css`
+      margin: 1em;
+    `,
   };
 
   return styles;

@@ -19,6 +19,7 @@ import {
   useLoginStore,
   useChannelStore,
   useMemberStore,
+  useAiStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -37,10 +38,13 @@ import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
+import useAIComposer from '../../hooks/useAIComposer';
+import AIComposerToolbar from '../AIComposerToolbar';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
+  const aiAdapter = ECOptions?.aiAdapter ?? null;
   const { theme } = useTheme();
   const styles = getChatInputStyles(theme);
 
@@ -64,6 +68,26 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
+  const [summary, setSummary] = useState('');
+  const [showSummary, setShowSummary] = useState(false);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isAiAvailable, setIsAiAvailable] = useState(false);
+
+  const {
+    isAiTyping,
+    setIsAiTyping,
+    threadSummary,
+    showThreadSummary,
+    closeThreadSummary,
+  } = useAiStore((state) => ({
+    isAiTyping: state.isAiTyping,
+    setIsAiTyping: state.setIsAiTyping,
+    threadSummary: state.threadSummary,
+    showThreadSummary: state.showThreadSummary,
+    closeThreadSummary: state.closeThreadSummary,
+  }));
 
   const {
     isUserAuthenticated,
@@ -172,6 +196,17 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       .then((channelMembers) => setMembersHandler(channelMembers.members || []))
       .catch(console.error);
   }, [RCInstance, isUserAuthenticated, isChannelPrivate, setMembersHandler]);
+
+  useEffect(() => {
+    if (!aiAdapter) {
+      setIsAiAvailable(false);
+      return;
+    }
+    aiAdapter
+      .isAvailable()
+      .then(setIsAiAvailable)
+      .catch(() => setIsAiAvailable(false));
+  }, [aiAdapter]);
 
   useEffect(() => {
     if (editMessage.attachments) {
@@ -346,6 +381,28 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (res?.success) {
       clearQuoteMessages();
       replaceMessage(pendingMessage._id, res.message);
+
+      if (aiAdapter && ECOptions.aiAutoReply) {
+        const { messages: currentMessages } = useMessageStore.getState();
+        const aiContext = {
+          roomId: ECOptions.roomId,
+          userId,
+          history: currentMessages.slice(-20),
+        };
+        aiAdapter
+          .sendPrompt(aiContext, pendingMessage.msg)
+          .then((response) => {
+            if (response?.text) {
+              RCInstance.sendMessage(
+                { msg: response.text },
+                ECOptions.enableThreads ? threadId : undefined
+              ).catch(() => {});
+            }
+          })
+          .catch((e) => {
+            console.error('[AI Adapter] sendPrompt failed:', e);
+          });
+      }
     } else {
       // If REST send failed, remove the pending message so it doesn't stay grey
       removeMessage(pendingMessage._id);
@@ -384,6 +441,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
+  const aiComposer = useAIComposer({
+    aiAdapter,
+    ECOptions,
+    userId,
+    messageRef,
+    messages: useMessageStore.getState().messages,
+  });
+
   const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
@@ -413,9 +478,78 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     handleSendNewMessage(message);
     scrollToBottom();
+    setAiSuggestions([]);
+    aiComposer.rejectSuggestion(); // dismiss any pending AI suggestion
     // Clear unread divider when user sends a message
     if (clearUnreadDividerRef?.current) {
       clearUnreadDividerRef.current();
+    }
+  };
+
+  useEffect(() => {
+    if (!isUserAuthenticated) {
+      setAiSuggestions([]);
+      setSummary('');
+      setShowSummary(false);
+    }
+  }, [isUserAuthenticated]);
+
+  const handleGetSuggestions = async () => {
+    if (!aiAdapter || isFetchingSuggestions) return;
+    setIsFetchingSuggestions(true);
+    setIsAiTyping(true);
+    try {
+      const { messages } = useMessageStore.getState();
+      const aiContext = {
+        roomId: ECOptions.roomId,
+        userId,
+        history: messages.slice(-10),
+      };
+      const suggestions = aiAdapter.getSuggestions
+        ? await aiAdapter.getSuggestions(messages.slice(-10), aiContext)
+        : [];
+      setAiSuggestions(suggestions);
+    } catch (e) {
+      console.error('[AI Adapter] getSuggestions failed:', e);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Failed to generate suggestions. Please check your settings.',
+      });
+    } finally {
+      setIsFetchingSuggestions(false);
+      setIsAiTyping(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    messageRef.current.value = suggestion;
+    setDisableButton(false);
+    setAiSuggestions([]);
+    messageRef.current.focus();
+  };
+
+  const handleSummarize = async () => {
+    if (!aiAdapter?.summarize || isSummarizing) return;
+    setIsSummarizing(true);
+    setIsAiTyping(true);
+    try {
+      const { messages } = useMessageStore.getState();
+      const result = await aiAdapter.summarize(messages, {
+        roomId: ECOptions.roomId,
+        userId,
+        history: messages.slice(-20),
+      });
+      setSummary(result);
+      setShowSummary(true);
+    } catch (e) {
+      console.error('[AI Adapter] summarize failed:', e);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Failed to generate summary. Please check your settings.',
+      });
+    } finally {
+      setIsSummarizing(false);
+      setIsAiTyping(false);
     }
   };
 
@@ -432,7 +566,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     sendTypingStart();
     const message = val || e.target.value;
 
-    // Don't parse emojis if user is currently typing emoji autocomplete
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
     messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
 
@@ -653,8 +786,36 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
 
-        <TypingUsers />
+        <TypingUsers extraUsers={isAiTyping ? [aiAdapter?.name ?? 'AI'] : []} />
       </Box>
+      {/* AI Composer Toolbar — selection-based actions */}
+      {isAiAvailable && isUserAuthenticated && (
+        <AIComposerToolbar
+          showToolbar={aiComposer.showToolbar}
+          suggestion={aiComposer.suggestion}
+          isProcessing={aiComposer.isProcessing}
+          activeAction={aiComposer.activeAction}
+          actions={aiComposer.actions}
+          onAction={aiComposer.runAction}
+          onAccept={aiComposer.acceptSuggestion}
+          onReject={aiComposer.rejectSuggestion}
+        />
+      )}
+      {aiSuggestions.length > 0 && (
+        <Box css={styles.aiSuggestionsContainer}>
+          {aiSuggestions.map((s) => (
+            <Button
+              key={s}
+              size="small"
+              type="secondary"
+              onClick={() => handleSuggestionClick(s)}
+              css={styles.aiSuggestionChip}
+            >
+              {s}
+            </Button>
+          ))}
+        </Box>
+      )}
       <Box
         ref={chatInputContainer}
         css={[
@@ -688,6 +849,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
               `text-align: center;`}
             `}
             onChange={onTextChange}
+            onMouseUp={aiComposer.handleMouseUp}
+            onKeyUp={aiComposer.handleKeyUp}
             onBlur={() => {
               sendTypingStop();
               handleBlur();
@@ -699,11 +862,36 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          <Box
-            css={css`
-              padding: 0.25rem;
-            `}
-          >
+          <Box css={styles.actionButtonsContainer}>
+            {isAiAvailable && isUserAuthenticated && !isChannelArchived && (
+              <ActionButton
+                ghost
+                size="large"
+                onClick={handleGetSuggestions}
+                disabled={isFetchingSuggestions}
+                title="Get AI reply suggestions"
+                aria-label="Get AI reply suggestions"
+                css={styles.aiActionButton}
+              >
+                {isFetchingSuggestions ? <Throbber /> : '\u2728'}
+              </ActionButton>
+            )}
+            {isAiAvailable &&
+              aiAdapter?.summarize &&
+              isUserAuthenticated &&
+              !isChannelArchived && (
+                <ActionButton
+                  ghost
+                  size="large"
+                  onClick={handleSummarize}
+                  disabled={isSummarizing}
+                  title="Summarize chat"
+                  aria-label="Summarize chat"
+                  css={styles.aiActionButton}
+                >
+                  {isSummarizing ? <Throbber /> : '\ud83d\udcdd'}
+                </ActionButton>
+              )}
             {isUserAuthenticated ? (
               !isChannelArchived ? (
                 <ActionButton
@@ -734,11 +922,25 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
       </Box>
+      {showSummary && (
+        <Modal css={styles.summaryModal} onClose={() => setShowSummary(false)}>
+          <Modal.Header>
+            <Modal.Title>📝 Chat Summary</Modal.Title>
+            <Modal.Close onClick={() => setShowSummary(false)} />
+          </Modal.Header>
+          <Modal.Content css={styles.summaryModalContent}>
+            {summary}
+          </Modal.Content>
+          <Modal.Footer>
+            <Button type="primary" onClick={() => setShowSummary(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
       {isMsgLong && (
         <Modal
-          css={css`
-            padding: 1em;
-          `}
+          css={styles.longMessageModal}
           onClose={() => setIsMsgLong(false)}
         >
           <Modal.Header>
@@ -748,11 +950,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             </Modal.Title>
             <Modal.Close onClick={() => setIsMsgLong(false)} />
           </Modal.Header>
-          <Modal.Content
-            css={css`
-              margin: 1em;
-            `}
-          >
+          <Modal.Content css={styles.longMessageModalContent}>
             Send it as attachment instead?
           </Modal.Content>
           <Modal.Footer>
@@ -761,6 +959,22 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             </Button>
             <Button onClick={textToAttach} type="primary">
               Ok
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+      {showThreadSummary && (
+        <Modal css={styles.summaryModal} onClose={closeThreadSummary}>
+          <Modal.Header>
+            <Modal.Title>📝 Thread Summary</Modal.Title>
+            <Modal.Close onClick={closeThreadSummary} />
+          </Modal.Header>
+          <Modal.Content css={styles.summaryModalContent}>
+            {threadSummary}
+          </Modal.Content>
+          <Modal.Footer>
+            <Button type="primary" onClick={closeThreadSummary}>
+              Close
             </Button>
           </Modal.Footer>
         </Modal>
