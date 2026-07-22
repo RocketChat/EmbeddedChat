@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const require = createRequire(import.meta.url);
 const packageJson = require(path.resolve(__dirname, './package.json'));
 
-const name = packageJson.main.replace(/\.js$/, '');
+const name = packageJson.main.replace(/\.(?:c?js)$/, '');
 
 const bundle = (config) => ({
   ...config,
@@ -21,7 +21,7 @@ export default [
   bundle({
     plugins: [esbuild()],
     output: [
-      { file: `${name}.js`, format: 'cjs', sourcemap: true },
+      { file: `${name}.cjs`, format: 'cjs', sourcemap: true },
       { file: `${name}.mjs`, format: 'es', sourcemap: true },
     ],
   }),

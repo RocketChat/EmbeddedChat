@@ -381,28 +381,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (res?.success) {
       clearQuoteMessages();
       replaceMessage(pendingMessage._id, res.message);
-
-      if (aiAdapter && ECOptions.aiAutoReply) {
-        const { messages: currentMessages } = useMessageStore.getState();
-        const aiContext = {
-          roomId: ECOptions.roomId,
-          userId,
-          history: currentMessages.slice(-20),
-        };
-        aiAdapter
-          .sendPrompt(aiContext, pendingMessage.msg)
-          .then((response) => {
-            if (response?.text) {
-              RCInstance.sendMessage(
-                { msg: response.text },
-                ECOptions.enableThreads ? threadId : undefined
-              ).catch(() => {});
-            }
-          })
-          .catch((e) => {
-            console.error('[AI Adapter] sendPrompt failed:', e);
-          });
-      }
     } else {
       // If REST send failed, remove the pending message so it doesn't stay grey
       removeMessage(pendingMessage._id);

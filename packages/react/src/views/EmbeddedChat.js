@@ -65,7 +65,6 @@ const EmbeddedChat = (props) => {
     dark = false,
     remoteOpt = false,
     layoutMode = 'bubble',
-    aiAutoReply = false,
   } = config;
 
   const auth = useMemo(
@@ -258,7 +257,6 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       aiAdapter: memoizedAiAdapter,
-      aiAutoReply,
     }),
     [
       enableThreads,
@@ -277,7 +275,6 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       memoizedAiAdapter,
-      aiAutoReply,
     ]
   );
 
@@ -366,7 +363,6 @@ EmbeddedChat.propTypes = {
     summarize: PropTypes.func,
     isAvailable: PropTypes.func.isRequired,
   }),
-  aiAutoReply: PropTypes.bool,
 };
 
 export default memo(EmbeddedChat);
