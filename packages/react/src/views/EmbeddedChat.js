@@ -31,6 +31,8 @@ import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
 
+import { ErrorBoundary } from './ErrorBoundary';
+
 const EmbeddedChat = (props) => {
   const [remoteOverrides, setRemoteOverrides] = useState({});
 
@@ -288,37 +290,39 @@ const EmbeddedChat = (props) => {
 
   return (
     <ThemeProvider theme={resolvedTheme} mode={dark ? 'dark' : 'light'}>
-      <RCInstanceProvider value={RCContextValue}>
-        <Box
-          css={[
-            styles.embeddedchat(resolvedTheme, dark),
-            css`
-              width: ${width};
-              height: ${height};
-              position: relative;
-            `,
-            fullScreen && styles.fullscreen,
-          ]}
-          className={`ec-embedded-chat ${className} ${classNames}`}
-          style={{ ...style, ...styleOverrides }}
-        >
-          <GlobalStyles />
-          <ToastBarProvider position={toastBarPosition}>
-            {hideHeader ? null : (
-              <ChatHeader
-                isClosable={isClosable}
-                setClosableState={setClosableState}
-                fullScreen={fullScreen}
-                setFullScreen={setFullScreen}
-              />
-            )}
+      <ErrorBoundary>
+        <RCInstanceProvider value={RCContextValue}>
+          <Box
+            css={[
+              styles.embeddedchat(resolvedTheme, dark),
+              css`
+                width: ${width};
+                height: ${height};
+                position: relative;
+              `,
+              fullScreen && styles.fullscreen,
+            ]}
+            className={`ec-embedded-chat ${className} ${classNames}`}
+            style={{ ...style, ...styleOverrides }}
+          >
+            <GlobalStyles />
+            <ToastBarProvider position={toastBarPosition}>
+              {hideHeader ? null : (
+                <ChatHeader
+                  isClosable={isClosable}
+                  setClosableState={setClosableState}
+                  fullScreen={fullScreen}
+                  setFullScreen={setFullScreen}
+                />
+              )}
 
-            <ChatLayout />
+              <ChatLayout />
 
-            <div id="overlay-items" />
-          </ToastBarProvider>
-        </Box>
-      </RCInstanceProvider>
+              <div id="overlay-items" />
+            </ToastBarProvider>
+          </Box>
+        </RCInstanceProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };
