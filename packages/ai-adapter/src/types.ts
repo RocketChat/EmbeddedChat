@@ -11,6 +11,8 @@ export interface AIContext {
   history: Message[];
   metadata?: {
     federated?: boolean;
+    composerTransformation?: boolean;
+    replySuggestions?: boolean;
   };
 }
 
