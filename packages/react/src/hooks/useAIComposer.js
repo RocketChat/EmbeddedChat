@@ -1,189 +1,224 @@
-import { useState, useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { renderComposerMarkdown } from '../lib/contentEditableComposer';
 
-// ─── Actions ──────────────────────────────────────────────────────────────────
-// Split into two rows for the toolbar UI
 const ACTIONS = [
-  { key: 'grammar', label: '🛠️ Grammar', group: 1 },
-  { key: 'spelling', label: '✏️ Spelling', group: 1 },
-  { key: 'rephrase', label: '✨ Rephrase', group: 1 },
-  { key: 'match_tone', label: '🎯 Match Tone', group: 1 },
-  { key: 'formal', label: '💼 Formal', group: 2 },
-  { key: 'casual', label: '😊 Casual', group: 2 },
-  { key: 'shorten', label: '✂️ Shorten', group: 2 },
-  { key: 'expand', label: '📖 Expand', group: 2 },
-  { key: 'emojify', label: '😄 Add Emojis', group: 2 },
-  { key: 'translate', label: '🌐 Translate', group: 2 },
+  { key: 'grammar', label: 'Fix grammar' },
+  { key: 'shorten', label: 'Shorten' },
+  { key: 'translate', label: 'Translate' },
+  { key: 'emojify', label: 'Emojify' },
 ];
 
-// ─── Prompt builders ───────────────────────────────────────────────────────────
-const historySnippet = (messages = []) => {
-  if (!messages.length) return '';
-  const recent = messages
-    .slice(-8)
-    .filter((m) => m.msg)
-    .map((m) => `- ${m.msg}`)
-    .join('\n');
-  return recent
-    ? `\n\nRecent messages in this channel for context:\n${recent}\n`
-    : '';
+const transformationPrompt = (
+  instruction,
+  text
+) => `You are an exact text transformation function.
+
+${instruction}
+
+Transform ONLY the text between <source> and </source>. Do not use, continue, quote, answer, or infer anything from a chat conversation. Do not add commentary, explanations, labels, notes, quotation marks, markdown fences, or alternatives. Return only the transformed source text.
+
+<source>
+${text}
+</source>`;
+
+const prompts = {
+  grammar: (text) =>
+    transformationPrompt(
+      'Correct grammar and spelling. Preserve the original meaning, language, and tone.',
+      text
+    ),
+  shorten: (text) =>
+    transformationPrompt(
+      'Make the source shorter while retaining every key point. Do not introduce new facts.',
+      text
+    ),
+  translate: (text) =>
+    transformationPrompt(
+      'Translate the source to English. Preserve its meaning, names, and formatting.',
+      text
+    ),
+  emojify: (text) =>
+    transformationPrompt(
+      'Copy the complete source text verbatim, then insert at most three relevant, natural emojis. Preserve every original word in the same order. Never replace words with emojis and never return emojis alone.',
+      text
+    ),
 };
 
-const PROMPTS = {
-  grammar: (t) =>
-    `Fix all grammar mistakes in the following text. Keep the original meaning and style. Return ONLY the corrected text, no explanation.\n\nText: ${t}`,
-
-  spelling: (t, msgs) =>
-    `Correct any spelling errors in the following text.${historySnippet(
-      msgs
-    )}Use the conversation context above to correctly identify technical terms, proper nouns, and domain-specific vocabulary. Return ONLY the corrected text, no explanation.\n\nText: ${t}`,
-
-  rephrase: (t) =>
-    `Rephrase the following for clarity and natural flow. Eliminate jargon unless it is domain-appropriate. Return ONLY the rephrased text, no explanation.\n\nText: ${t}`,
-
-  match_tone: (t, msgs) => {
-    const ctx = historySnippet(msgs);
-    if (!ctx) {
-      return `Rephrase the following in a conversational, natural tone. Return ONLY the rephrased text, no explanation.\n\nText: ${t}`;
-    }
-    return `Analyze the tone, vocabulary, and writing style of the recent messages below, then rewrite the given text to match that style exactly.${ctx}Rewrite in the same tone and style. Return ONLY the rewritten text, no explanation.\n\nText: ${t}`;
-  },
-
-  formal: (t) =>
-    `Rewrite the following in a professional and formal tone. Return ONLY the rewritten text, no explanation.\n\nText: ${t}`,
-
-  casual: (t) =>
-    `Rewrite the following in a friendly, conversational tone. Return ONLY the rewritten text, no explanation.\n\nText: ${t}`,
-
-  shorten: (t) =>
-    `Summarize the following into one concise sentence without losing the key point. Return ONLY the shortened text, no explanation.\n\nText: ${t}`,
-
-  expand: (t) =>
-    `Elaborate the following with more relevant detail and context. Return ONLY the expanded text, no explanation.\n\nText: ${t}`,
-
-  emojify: (t) =>
-    `Add relevant, expressive emojis to the following message. Place them naturally within or at the end of sentences — do not overdo it. Return ONLY the emojified text, no explanation.\n\nText: ${t}`,
-
-  translate: (t) =>
-    `Translate the following to English. Return ONLY the translated text, no explanation.\n\nText: ${t}`,
+const preservesSourceWords = (source, result) => {
+  const words = (text) =>
+    text
+      .toLocaleLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim()
+      .replace(/\s+/g, ' ');
+  const sourceWords = words(source);
+  return !sourceWords || words(result).includes(sourceWords);
 };
 
-// ─── Response cleaner ──────────────────────────────────────────────────────────
 const cleanResponse = (text) =>
   text
-    .replace(
-      /^(sure[!,.]?|here('s| is)[^:]*:|of course[!,.]?|absolutely[!,.]?)\s*/i,
-      ''
-    )
-    .replace(/^["""'`]|["""'`]$/g, '')
+    .replace(/^(sure[!,.]?|here('s| is)[^:]*:|of course[!,.]?)\s*/i, '')
+    .replace(/^["'`]|["'`]$/g, '')
     .trim();
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-const useAIComposer = ({
-  aiAdapter,
-  ECOptions,
-  userId,
-  messageRef,
-  messages = [],
-}) => {
-  const [showToolbar, setShowToolbar] = useState(false);
-  const [suggestion, setSuggestion] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [activeAction, setActiveAction] = useState(null);
-  const selectionRef = useRef({ start: 0, end: 0, text: '' });
+const dispatchInput = (node) =>
+  node.dispatchEvent(new Event('input', { bubbles: true }));
 
-  const handleMouseUp = useCallback(() => {
-    if (!aiAdapter || !messageRef.current) return;
-    const { selectionStart, selectionEnd, value } = messageRef.current;
-    const selected = value.slice(selectionStart, selectionEnd).trim();
-    if (selected.length < 2) {
-      setShowToolbar(false);
-      return;
-    }
-    selectionRef.current = {
-      start: selectionStart,
-      end: selectionEnd,
-      text: selected,
-    };
-    setShowToolbar(true);
-    setSuggestion(null);
-  }, [aiAdapter, messageRef]);
+const typeSuggestion = (span, text) =>
+  new Promise((resolve) => {
+    let index = 0;
+    const timer = window.setInterval(() => {
+      if (!span.isConnected) {
+        window.clearInterval(timer);
+        resolve();
+        return;
+      }
+      renderComposerMarkdown(span, text.slice(0, index + 1));
+      index += 1;
+      if (index >= text.length) {
+        window.clearInterval(timer);
+        resolve();
+      }
+    }, 18);
+  });
 
-  const handleKeyUp = useCallback(() => {
-    if (!aiAdapter || !messageRef.current) return;
-    const { selectionStart, selectionEnd, value } = messageRef.current;
-    const selected = value.slice(selectionStart, selectionEnd).trim();
-    if (selected.length < 2) setShowToolbar(false);
-  }, [aiAdapter, messageRef]);
+const addSuggestionControls = (span, original, replacement, onChange) => {
+  span.className = 'ec-ai-suggestion';
+  span.contentEditable = 'false';
+  renderComposerMarkdown(span, replacement);
+
+  const controls = document.createElement('span');
+  controls.className = 'ec-ai-suggestion-controls';
+  controls.contentEditable = 'false';
+
+  const settle = (text) => {
+    if (!span.parentNode) return;
+    const node = document.createTextNode(text);
+    span.parentNode.replaceChild(node, span);
+    onChange();
+  };
+
+  const accept = document.createElement('button');
+  accept.type = 'button';
+  accept.className = 'ec-ai-suggestion-accept';
+  accept.setAttribute('aria-label', 'Accept AI change');
+  accept.title = 'Accept change';
+  accept.addEventListener('mousedown', (event) => event.preventDefault());
+  accept.addEventListener('click', () => settle(replacement));
+
+  const reject = document.createElement('button');
+  reject.type = 'button';
+  reject.className = 'ec-ai-suggestion-reject';
+  reject.setAttribute('aria-label', 'Discard AI change');
+  reject.title = 'Discard change';
+  reject.addEventListener('mousedown', (event) => event.preventDefault());
+  reject.addEventListener('click', () => settle(original));
+
+  controls.append(accept, reject);
+  span.append(controls);
+};
+
+const useAIComposer = ({ aiAdapter, ECOptions, userId, messageRef }) => {
+  const [popup, setPopup] = useState(null);
+  const rangeRef = useRef(null);
+
+  const updateSelection = useCallback(
+    (event) => {
+      const editor = messageRef.current;
+      const selection = window.getSelection();
+      if (
+        !editor ||
+        !aiAdapter ||
+        !selection?.rangeCount ||
+        selection.isCollapsed
+      ) {
+        setPopup(null);
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      if (
+        !editor.contains(range.commonAncestorContainer) ||
+        !range.toString().trim()
+      ) {
+        setPopup(null);
+        return;
+      }
+
+      rangeRef.current = range.cloneRange();
+      const rect = range.getBoundingClientRect();
+      setPopup({
+        x: event?.clientX ?? rect.left,
+        y: event?.clientY ?? rect.bottom + 6,
+      });
+    },
+    [aiAdapter, messageRef]
+  );
 
   const runAction = useCallback(
     async (actionKey) => {
-      const { text, start, end } = selectionRef.current;
-      if (!text || !aiAdapter || isProcessing) return;
-      setIsProcessing(true);
-      setActiveAction(actionKey);
-      setShowToolbar(false);
+      const editor = messageRef.current;
+      const range = rangeRef.current;
+      if (!editor || !range || !aiAdapter) return;
+
+      const original = range.toString();
+      if (!original.trim()) return;
+      const span = document.createElement('span');
+      span.className = 'ec-ai-pending';
+      span.contentEditable = 'false';
+      span.textContent = original;
+      range.deleteContents();
+      range.insertNode(span);
+      window.getSelection()?.removeAllRanges();
+      rangeRef.current = null;
+      setPopup(null);
+      dispatchInput(editor);
+
       try {
-        const aiContext = {
-          roomId: ECOptions?.roomId ?? '',
-          userId,
-          history: [],
-        };
-        const prompt = PROMPTS[actionKey](text, messages);
-        const response = await aiAdapter.sendPrompt(aiContext, prompt);
-        if (response?.text) {
-          setSuggestion({
-            text: cleanResponse(response.text),
-            selStart: start,
-            selEnd: end,
-            original: text,
-            actionKey,
-          });
+        const response = await aiAdapter.sendPrompt(
+          {
+            roomId: ECOptions?.roomId ?? '',
+            userId,
+            history: [],
+            metadata: { composerTransformation: true },
+          },
+          prompts[actionKey](original)
+        );
+        const replacement = response?.text && cleanResponse(response.text);
+        const isInvalidEmojify =
+          actionKey === 'emojify' &&
+          replacement &&
+          !preservesSourceWords(original, replacement);
+        if (!replacement || isInvalidEmojify || !span.isConnected) {
+          if (span.isConnected)
+            span.replaceWith(document.createTextNode(original));
+          dispatchInput(editor);
+          return;
         }
-      } catch (e) {
-        console.error('[AI Composer] action failed:', e);
-      } finally {
-        setIsProcessing(false);
-        setActiveAction(null);
+
+        await typeSuggestion(span, replacement);
+        if (span.isConnected) {
+          addSuggestionControls(span, original, replacement, () =>
+            dispatchInput(editor)
+          );
+          dispatchInput(editor);
+        }
+      } catch (error) {
+        console.error('[AI Composer] action failed:', error);
+        if (span.isConnected)
+          span.replaceWith(document.createTextNode(original));
+        dispatchInput(editor);
       }
     },
-    [aiAdapter, ECOptions, userId, messages, isProcessing]
+    [aiAdapter, ECOptions?.roomId, messageRef, userId]
   );
 
-  const acceptSuggestion = useCallback(() => {
-    if (!suggestion || !messageRef.current) return;
-    const { value } = messageRef.current;
-    const newValue =
-      value.slice(0, suggestion.selStart) +
-      suggestion.text +
-      value.slice(suggestion.selEnd);
-    messageRef.current.value = newValue;
-    const newCursor = suggestion.selStart + suggestion.text.length;
-    messageRef.current.setSelectionRange(newCursor, newCursor);
-    messageRef.current.focus();
-    setSuggestion(null);
-  }, [suggestion, messageRef]);
-
-  const rejectSuggestion = useCallback(() => {
-    setSuggestion(null);
-    messageRef.current?.focus();
-  }, [messageRef]);
-
-  const dismissToolbar = useCallback(() => {
-    setShowToolbar(false);
-  }, []);
-
   return {
-    showToolbar,
-    suggestion,
-    isProcessing,
-    activeAction,
     actions: ACTIONS,
-    handleMouseUp,
-    handleKeyUp,
+    popup,
+    updateSelection,
     runAction,
-    acceptSuggestion,
-    rejectSuggestion,
-    dismissToolbar,
+    dismissActions: () => setPopup(null),
   };
 };
 

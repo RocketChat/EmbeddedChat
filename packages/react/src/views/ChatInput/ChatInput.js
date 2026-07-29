@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
   Button,
-  Input,
   Icon,
   ActionButton,
   Modal,
@@ -19,7 +18,6 @@ import {
   useLoginStore,
   useChannelStore,
   useMemberStore,
-  useAiStore,
 } from '../../store';
 import ChatInputFormattingToolbar from './ChatInputFormattingToolbar';
 import useAttachmentWindowStore from '../../store/attachmentwindow';
@@ -40,6 +38,7 @@ import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
 import useAIComposer from '../../hooks/useAIComposer';
 import AIComposerToolbar from '../AIComposerToolbar';
+import { installContentEditableApi } from '../../lib/contentEditableComposer';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -53,6 +52,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
   const timerRef = useRef();
+  const lastSuggestedMessageRef = useRef(null);
+  const setMessageRef = useCallback((node) => {
+    messageRef.current = node;
+    if (node) installContentEditableApi(node);
+  }, []);
 
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
@@ -69,25 +73,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState([]);
-  const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
-  const [summary, setSummary] = useState('');
-  const [showSummary, setShowSummary] = useState(false);
-  const [isSummarizing, setIsSummarizing] = useState(false);
   const [isAiAvailable, setIsAiAvailable] = useState(false);
-
-  const {
-    isAiTyping,
-    setIsAiTyping,
-    threadSummary,
-    showThreadSummary,
-    closeThreadSummary,
-  } = useAiStore((state) => ({
-    isAiTyping: state.isAiTyping,
-    setIsAiTyping: state.setIsAiTyping,
-    threadSummary: state.threadSummary,
-    showThreadSummary: state.showThreadSummary,
-    closeThreadSummary: state.closeThreadSummary,
-  }));
 
   const {
     isUserAuthenticated,
@@ -135,6 +121,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     clearQuoteMessages,
     threadId,
     deletedMessage,
+    messages,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
@@ -146,6 +133,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     clearQuoteMessages: state.clearQuoteMessages,
     removeMessage: state.removeMessage,
     deletedMessage: state.deletedMessage,
+    messages: state.messages,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -209,6 +197,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }, [aiAdapter]);
 
   useEffect(() => {
+    if (!messageRef.current) return;
     if (editMessage.attachments) {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
@@ -227,7 +216,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       editMessage._id &&
       deletedMessage._id === editMessage._id
     ) {
-      messageRef.current.value = '';
+      if (messageRef.current) messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
     }
@@ -424,7 +413,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     ECOptions,
     userId,
     messageRef,
-    messages: useMessageStore.getState().messages,
   });
 
   const sendMessage = async () => {
@@ -457,7 +445,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     handleSendNewMessage(message);
     scrollToBottom();
     setAiSuggestions([]);
-    aiComposer.rejectSuggestion(); // dismiss any pending AI suggestion
+    aiComposer.dismissActions();
     // Clear unread divider when user sends a message
     if (clearUnreadDividerRef?.current) {
       clearUnreadDividerRef.current();
@@ -467,37 +455,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   useEffect(() => {
     if (!isUserAuthenticated) {
       setAiSuggestions([]);
-      setSummary('');
-      setShowSummary(false);
     }
   }, [isUserAuthenticated]);
-
-  const handleGetSuggestions = async () => {
-    if (!aiAdapter || isFetchingSuggestions) return;
-    setIsFetchingSuggestions(true);
-    setIsAiTyping(true);
-    try {
-      const { messages } = useMessageStore.getState();
-      const aiContext = {
-        roomId: ECOptions.roomId,
-        userId,
-        history: messages.slice(-10),
-      };
-      const suggestions = aiAdapter.getSuggestions
-        ? await aiAdapter.getSuggestions(messages.slice(-10), aiContext)
-        : [];
-      setAiSuggestions(suggestions);
-    } catch (e) {
-      console.error('[AI Adapter] getSuggestions failed:', e);
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Failed to generate suggestions. Please check your settings.',
-      });
-    } finally {
-      setIsFetchingSuggestions(false);
-      setIsAiTyping(false);
-    }
-  };
 
   const handleSuggestionClick = (suggestion) => {
     messageRef.current.value = suggestion;
@@ -506,30 +465,58 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     messageRef.current.focus();
   };
 
-  const handleSummarize = async () => {
-    if (!aiAdapter?.summarize || isSummarizing) return;
-    setIsSummarizing(true);
-    setIsAiTyping(true);
-    try {
-      const { messages } = useMessageStore.getState();
-      const result = await aiAdapter.summarize(messages, {
-        roomId: ECOptions.roomId,
-        userId,
-        history: messages.slice(-20),
-      });
-      setSummary(result);
-      setShowSummary(true);
-    } catch (e) {
-      console.error('[AI Adapter] summarize failed:', e);
-      dispatchToastMessage({
-        type: 'error',
-        message: 'Failed to generate summary. Please check your settings.',
-      });
-    } finally {
-      setIsSummarizing(false);
-      setIsAiTyping(false);
+  useEffect(() => {
+    if (!isAiAvailable || !aiAdapter?.getSuggestions || !isUserAuthenticated) {
+      return undefined;
     }
-  };
+
+    // Use timestamps rather than the store's insertion order. The initial REST
+    // load and realtime messages both normally arrive newest-first, but this
+    // keeps the AI snapshot correct if either source changes its ordering.
+    const newestFirstMessages = messages
+      .filter((message) => message?.msg)
+      .slice()
+      .sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
+    const newestMessage = newestFirstMessages[0];
+    const recentMessages = newestFirstMessages.slice(0, 10).reverse();
+    if (
+      !newestMessage?.msg ||
+      newestMessage?.u?._id === userId ||
+      newestMessage?._id === lastSuggestedMessageRef.current ||
+      messageRef.current?.value
+    ) {
+      return undefined;
+    }
+
+    let active = true;
+    const timeout = setTimeout(async () => {
+      try {
+        const suggestions = await aiAdapter.getSuggestions(recentMessages, {
+          roomId: ECOptions.roomId,
+          userId,
+          history: recentMessages,
+        });
+        if (active) {
+          lastSuggestedMessageRef.current = newestMessage._id;
+          setAiSuggestions((suggestions || []).slice(0, 3));
+        }
+      } catch (error) {
+        console.error('[AI Adapter] automatic replies failed:', error);
+      }
+    }, 700);
+
+    return () => {
+      active = false;
+      clearTimeout(timeout);
+    };
+  }, [
+    aiAdapter,
+    ECOptions.roomId,
+    isAiAvailable,
+    isUserAuthenticated,
+    messages,
+    userId,
+  ]);
 
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -542,17 +529,23 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const onTextChange = (e, val) => {
     sendTypingStart();
-    const message = val || e.target.value;
+    const message = val ?? e?.target?.value ?? messageRef.current?.value ?? '';
 
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
-    messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
+    const parsedMessage = shouldParseEmoji ? parseEmoji(message) : message;
+    // Toolbar actions (for example, link insertion) provide a new value without
+    // a native input event. Those updates must be written explicitly; native
+    // input events are left untouched to preserve inline AI suggestion spans.
+    if ((e === null || parsedMessage !== message) && messageRef.current) {
+      messageRef.current.value = parsedMessage;
+    }
 
-    setDisableButton(!messageRef.current.value.length);
+    setDisableButton(!(messageRef.current?.value || '').length);
     if (e !== null) {
       handleNewLine(e, false);
-      searchMentionUser(message);
-      showCommands(e.target.selectionStart, e.target.value);
-      searchEmoji(message);
+      searchMentionUser(parsedMessage);
+      showCommands(e.target.selectionStart, parsedMessage);
+      searchEmoji(parsedMessage);
     }
   };
 
@@ -764,33 +757,27 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
 
-        <TypingUsers extraUsers={isAiTyping ? [aiAdapter?.name ?? 'AI'] : []} />
+        <TypingUsers />
       </Box>
       {/* AI Composer Toolbar — selection-based actions */}
       {isAiAvailable && isUserAuthenticated && (
         <AIComposerToolbar
-          showToolbar={aiComposer.showToolbar}
-          suggestion={aiComposer.suggestion}
-          isProcessing={aiComposer.isProcessing}
-          activeAction={aiComposer.activeAction}
+          popup={aiComposer.popup}
           actions={aiComposer.actions}
           onAction={aiComposer.runAction}
-          onAccept={aiComposer.acceptSuggestion}
-          onReject={aiComposer.rejectSuggestion}
         />
       )}
       {aiSuggestions.length > 0 && (
         <Box css={styles.aiSuggestionsContainer}>
           {aiSuggestions.map((s) => (
-            <Button
+            <button
               key={s}
-              size="small"
-              type="secondary"
+              type="button"
               onClick={() => handleSuggestionClick(s)}
               css={styles.aiSuggestionChip}
             >
               {s}
-            </Button>
+            </button>
           ))}
         </Box>
       )}
@@ -802,16 +789,25 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         ]}
       >
         <Box css={styles.inputBox}>
-          <Input
-            textArea
-            rows={1}
-            disabled={
+          <Box
+            is="div"
+            role="textbox"
+            aria-multiline="true"
+            aria-disabled={
               !isUserAuthenticated ||
               !canSendMsg ||
               isRecordingMessage ||
               isChannelArchived
             }
-            placeholder={
+            contentEditable={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+                ? 'false'
+                : 'true'
+            }
+            data-placeholder={
               isUserAuthenticated
                 ? isChannelArchived
                   ? 'Room archived'
@@ -826,9 +822,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
               isUserAuthenticated &&
               `text-align: center;`}
             `}
-            onChange={onTextChange}
-            onMouseUp={aiComposer.handleMouseUp}
-            onKeyUp={aiComposer.handleKeyUp}
+            onInput={onTextChange}
+            onMouseUp={aiComposer.updateSelection}
+            onKeyUp={aiComposer.updateSelection}
             onBlur={() => {
               sendTypingStop();
               handleBlur();
@@ -836,40 +832,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             onFocus={handleFocus}
             onKeyDown={onKeyDown}
             onPaste={handlePasting}
-            ref={messageRef}
+            ref={setMessageRef}
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
           <Box css={styles.actionButtonsContainer}>
-            {isAiAvailable && isUserAuthenticated && !isChannelArchived && (
-              <ActionButton
-                ghost
-                size="large"
-                onClick={handleGetSuggestions}
-                disabled={isFetchingSuggestions}
-                title="Get AI reply suggestions"
-                aria-label="Get AI reply suggestions"
-                css={styles.aiActionButton}
-              >
-                {isFetchingSuggestions ? <Throbber /> : '\u2728'}
-              </ActionButton>
-            )}
-            {isAiAvailable &&
-              aiAdapter?.summarize &&
-              isUserAuthenticated &&
-              !isChannelArchived && (
-                <ActionButton
-                  ghost
-                  size="large"
-                  onClick={handleSummarize}
-                  disabled={isSummarizing}
-                  title="Summarize chat"
-                  aria-label="Summarize chat"
-                  css={styles.aiActionButton}
-                >
-                  {isSummarizing ? <Throbber /> : '\ud83d\udcdd'}
-                </ActionButton>
-              )}
             {isUserAuthenticated ? (
               !isChannelArchived ? (
                 <ActionButton
@@ -900,22 +867,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           />
         )}
       </Box>
-      {showSummary && (
-        <Modal css={styles.summaryModal} onClose={() => setShowSummary(false)}>
-          <Modal.Header>
-            <Modal.Title>📝 Chat Summary</Modal.Title>
-            <Modal.Close onClick={() => setShowSummary(false)} />
-          </Modal.Header>
-          <Modal.Content css={styles.summaryModalContent}>
-            {summary}
-          </Modal.Content>
-          <Modal.Footer>
-            <Button type="primary" onClick={() => setShowSummary(false)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
       {isMsgLong && (
         <Modal
           css={styles.longMessageModal}
@@ -937,22 +888,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             </Button>
             <Button onClick={textToAttach} type="primary">
               Ok
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-      {showThreadSummary && (
-        <Modal css={styles.summaryModal} onClose={closeThreadSummary}>
-          <Modal.Header>
-            <Modal.Title>📝 Thread Summary</Modal.Title>
-            <Modal.Close onClick={closeThreadSummary} />
-          </Modal.Header>
-          <Modal.Content css={styles.summaryModalContent}>
-            {threadSummary}
-          </Modal.Content>
-          <Modal.Footer>
-            <Button type="primary" onClick={closeThreadSummary}>
-              Close
             </Button>
           </Modal.Footer>
         </Modal>
