@@ -22,6 +22,7 @@ import {
   useUserStore,
   useChannelStore,
   useLoginStore,
+  useAiStore,
 } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
@@ -55,6 +56,9 @@ const ChatBody = ({
   const { RCInstance, ECOptions } = useContext(RCContext);
   const showAnnouncement = ECOptions?.showAnnouncement;
   const messages = useMessageStore((state) => state.messages);
+  const channelCatchUps = useAiStore((state) => state.channelCatchUps);
+  const threadCatchUps = useAiStore((state) => state.threadCatchUps);
+  const dismissCatchUp = useAiStore((state) => state.dismissCatchUp);
   const offset = useMessageStore((state) => state.messagesOffset);
   const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const threadMessages = useMessageStore((state) => state.threadMessages);
@@ -307,7 +311,7 @@ const ChatBody = ({
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, channelCatchUps, threadCatchUps]);
 
   useEffect(() => {
     checkOverflow();
@@ -410,6 +414,12 @@ const ChatBody = ({
           <ThreadMessageList
             threadMainMessage={threadMainMessage}
             threadMessages={threadMessages}
+            catchUps={threadCatchUps.filter(
+              (catchUp) => catchUp.threadId === threadMainMessage?._id
+            )}
+            onDismissCatchUp={(id) =>
+              dismissCatchUp(id, threadMainMessage?._id)
+            }
           />
         ) : (
           <MessageList
@@ -418,6 +428,8 @@ const ChatBody = ({
             isUserAuthenticated={isUserAuthenticated}
             hasMoreMessages={hasMoreMessages}
             firstUnreadMessageId={firstUnreadMessageId}
+            catchUps={channelCatchUps}
+            onDismissCatchUp={dismissCatchUp}
           />
         )}
 

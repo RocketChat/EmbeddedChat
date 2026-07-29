@@ -6,8 +6,14 @@ import MessageReportWindow from '../ReportMessage/MessageReportWindow';
 import isMessageSequential from '../../lib/isMessageSequential';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { Message } from '../Message';
+import LocalAIMessage from '../LocalAIMessage';
 
-const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
+const ThreadMessageList = ({
+  threadMessages,
+  threadMainMessage,
+  catchUps = [],
+  onDismissCatchUp,
+}) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
 
@@ -39,6 +45,13 @@ const ThreadMessageList = ({ threadMessages, threadMainMessage }) => {
           />
         );
       })}
+      {catchUps.map((catchUp) => (
+        <LocalAIMessage
+          key={catchUp.id}
+          catchUp={catchUp}
+          onDismiss={onDismissCatchUp}
+        />
+      ))}
       {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
     </>
   );
@@ -49,4 +62,6 @@ export default ThreadMessageList;
 ThreadMessageList.propTypes = {
   threadMessages: PropTypes.arrayOf(PropTypes.object),
   threadMainMessage: PropTypes.object,
+  catchUps: PropTypes.arrayOf(PropTypes.object),
+  onDismissCatchUp: PropTypes.func,
 };
