@@ -87,33 +87,54 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "Docs",
+            title: "Company",
             items: [
               {
-                label: "Tutorial",
-                to: "/docs/introduction",
+                label: "About Rocket.Chat",
+                href: "https://www.rocket.chat/about",
+              },
+              {
+                label: "Careers",
+                href: "https://www.rocket.chat/careers",
+              },
+              {
+                label: "Contact",
+                href: "https://www.rocket.chat/contact",
               },
             ],
           },
           {
-            title: "Community",
+            title: "Platform",
             items: [
               {
-                label: "Rocket.Chat",
+                label: "Embedded Chat",
+                to: "/",
+              },
+              {
+                label: "Rocket.Chat Server",
+                href: "https://www.rocket.chat/docs",
+              },
+            ],
+          },
+          {
+            title: "Resources",
+            items: [
+              {
+                label: "Blog",
+                to: "/blog",
+              },
+              {
+                label: "Community",
                 href: "https://open.rocket.chat/",
               },
+            ],
+          },
+          {
+            title: "Social",
+            items: [
               {
                 label: "Twitter",
                 href: "https://x.com/rocketchat",
-              },
-            ],
-          },
-          {
-            title: "More",
-            items: [
-              {
-                label: "Blogs",
-                to: "/blog",
               },
               {
                 label: "GitHub",
@@ -122,6 +143,13 @@ const config = {
             ],
           },
         ],
+        logo: {
+          alt: "Rocket.Chat Logo",
+          src: "img/rocketchat-logo-white-v2.png",
+          href: "https://www.rocket.chat",
+          width: 160,
+        },
+        copyright: `Copyright © ${new Date().getFullYear()} Rocket.Chat Technologies Corp.`,
       },
     colorMode: {
      defaultMode: 'light',

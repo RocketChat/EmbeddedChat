@@ -1,30 +1,94 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Rocket.Chat Brand Identity Overrides
  */
 
-/* You can override the default Infima variables here. */
-[data-theme='light']:root {
-  --ifm-color-primary: #1f3e05;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+:root {
+  --ifm-color-primary: #F5455C;
+  --ifm-color-primary-dark: #E03F54;
+  --ifm-color-primary-darker: #D43A4F;
+  --ifm-color-primary-darkest: #AF3041;
+  --ifm-color-primary-light: #F76A7D;
+  --ifm-color-primary-lighter: #F98F9D;
+  --ifm-color-primary-lightest: #FBB4BD;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Footer Variables */
+  --ifm-footer-background-color: #000000 !important;
+  --ifm-footer-color: #ffffff;
+  --ifm-footer-link-color: #BCC3CD;
+  --ifm-footer-link-hover-color: #ffffff;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #a0c680;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #F5455C;
+  --ifm-color-primary-dark: #E03F54;
+  --ifm-color-primary-darker: #D43A4F;
+  --ifm-color-primary-darkest: #AF3041;
+  --ifm-color-primary-light: #F76A7D;
+  --ifm-color-primary-lighter: #F98F9D;
+  --ifm-color-primary-lightest: #FBB4BD;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* Footer Enhancements */
+.footer.footer--dark {
+  background-color: #000000 !important;
+  padding: 4rem 2rem 2rem;
+}
+
+.footer__title {
+  color: #ffffff !important;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.footer__link-item {
+  color: var(--ifm-footer-link-color) !important;
+  transition: all 0.2s ease-in-out;
+  line-height: 2;
+  font-size: 0.95rem;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-footer-link-hover-color) !important;
+  text-decoration: none;
+}
+
+.footer__copyright {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #2F343D;
+  color: #9EA2A8;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.footer__logo {
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.footer__logo:hover {
+  opacity: 1;
+}
+
+/* Responsive Grid Tweaks */
+@media (max-width: 996px) {
+  .footer__links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__links {
+    grid-template-columns: 1fr;
+  }
+}
+
