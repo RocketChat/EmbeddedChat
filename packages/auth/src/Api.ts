@@ -44,7 +44,8 @@ export class Api {
     if (!response.ok) {
       throw new ApiError(response, "Failed Api Request for " + endpoint);
     }
-    const jsonData = await response.json();
+    const text = await response.text();
+    const jsonData = text.length ? JSON.parse(text) : {};
     return { data: jsonData };
   }
 

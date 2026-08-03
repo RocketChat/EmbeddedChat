@@ -6,18 +6,21 @@ import {
   useMemberStore,
   useMessageStore,
   useStarredMessageStore,
+  usePinnedMessageStore,
 } from '../store';
 
 const useFetchChatData = (showRoles) => {
-  const { RCInstance, ECOptions } = useContext(RCContext);
-  const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
-  const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
+  const { RCInstance } = useContext(RCContext);
   const setMessages = useMessageStore((state) => state.setMessages);
   const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const setAdmins = useMemberStore((state) => state.setAdmins);
+  const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
   const permissionsRef = useRef(null);
   const setStarredMessages = useStarredMessageStore(
     (state) => state.setStarredMessages
+  );
+  const setPinnedMessages = usePinnedMessageStore(
+    (state) => state.setPinnedMessages
   );
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -123,18 +126,26 @@ const useFetchChatData = (showRoles) => {
           return;
         }
 
+        let channelIsPrivate = false;
+        if (!anonymousMode) {
+          const { channelInfo, setChannelInfo, setIsChannelPrivate } =
+            useChannelStore.getState();
+          if (channelInfo?._id) {
+            channelIsPrivate = channelInfo.t === 'p';
+          } else {
+            const res = await RCInstance.channelInfo();
+            if (res?.success) {
+              setChannelInfo(res.room);
+              channelIsPrivate = res.room.t === 'p';
+              if (channelIsPrivate) setIsChannelPrivate(true);
+            }
+          }
+        }
+
         const { messages, count } = await RCInstance.getMessages(
           anonymousMode,
-          ECOptions?.enableThreads
-            ? {
-                query: {
-                  tmid: {
-                    $exists: false,
-                  },
-                },
-              }
-            : undefined,
-          anonymousMode ? false : isChannelPrivate
+          undefined,
+          channelIsPrivate
         );
 
         if (messages) {
@@ -147,7 +158,7 @@ const useFetchChatData = (showRoles) => {
         }
 
         if (showRoles) {
-          const { roles } = await RCInstance.getChannelRoles(isChannelPrivate);
+          const { roles } = await RCInstance.getChannelRoles(channelIsPrivate);
           const fetchedRoles = await RCInstance.getUserRoles();
           const fetchedAdmins = fetchedRoles?.result;
 
@@ -171,8 +182,6 @@ const useFetchChatData = (showRoles) => {
     [
       isUserAuthenticated,
       RCInstance,
-      ECOptions?.enableThreads,
-      isChannelPrivate,
       showRoles,
       setMessages,
       setAdmins,
@@ -197,9 +206,27 @@ const useFetchChatData = (showRoles) => {
     [isUserAuthenticated, RCInstance, setStarredMessages]
   );
 
+  const getPinnedMessages = useCallback(
+    async (anonymousMode) => {
+      if (isUserAuthenticated) {
+        try {
+          if (!isUserAuthenticated && !anonymousMode) {
+            return;
+          }
+          const { messages } = await RCInstance.getPinnedMessages();
+          setPinnedMessages(messages);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [isUserAuthenticated, RCInstance, setPinnedMessages]
+  );
+
   return {
     getMessagesAndRoles,
     getStarredMessages,
+    getPinnedMessages,
     fetchAndSetPermissions,
     permissionsRef,
   };

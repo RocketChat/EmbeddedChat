@@ -66,7 +66,7 @@ const Message = ({
   );
   const addQuoteMessage = useMessageStore((state) => state.addQuoteMessage);
   const openThread = useMessageStore((state) => state.openThread);
-  const { getStarredMessages } = useFetchChatData();
+  const { getStarredMessages, getPinnedMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
   const { editMessage, setEditMessage } = useMessageStore((state) => ({
     editMessage: state.editMessage,
@@ -107,8 +107,11 @@ const Message = ({
   const deleteOwnMessageRoles = new Set(deleteOwnMessagePermissions);
   const forceDeleteMessageRoles = new Set(forceDeleteMessagePermissions);
 
+  const isTimeline = ECOptions?.layoutMode === 'timeline';
   const variantStyles =
-    !isInSidebar && variantOverrides === 'bubble' ? bubbleStyles : {};
+    !isTimeline && !isInSidebar && variantOverrides === 'bubble'
+      ? bubbleStyles
+      : {};
 
   const handleStarMessage = async (msg) => {
     const isStarred =
@@ -146,6 +149,7 @@ const Message = ({
         type: 'success',
         message: isPinned ? 'Message unpinned' : 'Message pinned',
       });
+      getPinnedMessages();
     }
   };
 
@@ -233,7 +237,9 @@ const Message = ({
       <Box
         className={appendClassNames('ec-message', classNames)}
         css={[
-          variantStyles.messageParent || styles.main,
+          isTimeline
+            ? styles.timelineMain
+            : variantStyles.messageParent || styles.main,
           hoverStyle,
           editMessage._id === message._id && styles.messageEditing,
         ]}

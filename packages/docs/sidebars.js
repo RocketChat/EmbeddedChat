@@ -38,6 +38,7 @@ const sidebars = {
         'Usage/theming',
         'Usage/authentication',
         'Usage/ec_rc_setup',
+        'Usage/matrix',
       ],
     },
   ],

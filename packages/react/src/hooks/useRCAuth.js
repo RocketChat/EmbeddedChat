@@ -50,9 +50,6 @@ export const useRCAuth = () => {
 
         if (res.status === 'success') {
           setIsLoginModalOpen(false);
-          setUserAvatarUrl(res.me.avatarUrl);
-          setAuthenticatedUserUsername(res.me.username);
-          setIsUserAuthenticated(true);
           setIsTotpModalOpen(false);
           setEmailorUser(null);
           setPassword(null);

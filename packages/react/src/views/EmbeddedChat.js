@@ -18,19 +18,27 @@ import {
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
 import { RCInstanceProvider } from '../context/RCInstance';
-import { useUserStore, useLoginStore, useMessageStore } from '../store';
+import {
+  useUserStore,
+  useLoginStore,
+  useMessageStore,
+  useChannelStore,
+} from '../store';
 import DefaultTheme from '../theme/DefaultTheme';
+import MatrixTheme from '../theme/MatrixTheme';
 import { getTokenStorage } from '../lib/auth';
 import { styles } from './EmbeddedChat.styles';
 import GlobalStyles from './GlobalStyles';
 import { overrideECProps } from '../lib/overrideECProps';
 
 const EmbeddedChat = (props) => {
-  const [config, setConfig] = useState(() => props);
+  const [remoteOverrides, setRemoteOverrides] = useState({});
 
-  useEffect(() => {
-    setConfig(props);
-  }, [props]);
+  const config = useMemo(
+    () => ({ ...props, ...remoteOverrides }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props, remoteOverrides]
+  );
 
   const {
     isClosable = false,
@@ -52,13 +60,18 @@ const EmbeddedChat = (props) => {
     className = '',
     style = {},
     hideHeader = false,
-    auth = {
-      flow: 'PASSWORD',
-    },
+    auth: authProp = null,
     secure = false,
     dark = false,
     remoteOpt = false,
+    layoutMode = 'bubble',
   } = config;
+
+  const auth = useMemo(
+    () => authProp ?? { flow: 'PASSWORD' },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [authProp?.flow, authProp?.credentials]
+  );
 
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
@@ -83,6 +96,8 @@ const EmbeddedChat = (props) => {
   }));
 
   const setIsLoginIn = useLoginStore((state) => state.setIsLoginIn);
+  const setMessages = useMessageStore((state) => state.setMessages);
+
   if (isClosable && !setClosableState) {
     throw Error(
       'Please provide a setClosableState to props when isClosable = true'
@@ -100,24 +115,52 @@ const EmbeddedChat = (props) => {
   }, [host, roomId, getToken, deleteToken, saveToken]);
 
   const [RCInstance, setRCInstance] = useState(() => initializeRCInstance());
+  const rcInstanceRef = useRef(RCInstance);
+  rcInstanceRef.current = RCInstance;
 
   useEffect(() => {
-    const reInstantiate = () => {
-      const newRCInstance = initializeRCInstance();
-      setRCInstance(newRCInstance);
-    };
-
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
     }
 
-    RCInstance.close().then(reInstantiate).catch(console.error);
+    const newRCInstance = initializeRCInstance();
+    const oldRCInstance = rcInstanceRef.current;
 
-    return () => {
-      RCInstance.close().catch(console.error);
-    };
-  }, [roomId, host, initializeRCInstance]);
+    // Clear global state so that the UI resets and waits for new host's auth and data
+    setIsUserAuthenticated(false);
+    setAuthenticatedUsername(null);
+    setAuthenticatedAvatarUrl(null);
+    setAuthenticatedUserId(null);
+    setAuthenticatedName(null);
+    setAuthenticatedUserRoles([]);
+    setMessages([]);
+
+    setRCInstance(newRCInstance);
+    oldRCInstance.close().catch((e) => console.error(e?.message || e));
+  }, [
+    roomId,
+    host,
+    initializeRCInstance,
+    setIsUserAuthenticated,
+    setAuthenticatedUsername,
+    setAuthenticatedAvatarUrl,
+    setAuthenticatedUserId,
+    setAuthenticatedName,
+    setAuthenticatedUserRoles,
+    setMessages,
+  ]);
+
+  useEffect(
+    () => () => {
+      if (hasMounted.current) {
+        rcInstanceRef.current
+          .close()
+          .catch((e) => console.error(e?.message || e));
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const autoLogin = async () => {
@@ -125,7 +168,7 @@ const EmbeddedChat = (props) => {
       try {
         await RCInstance.autoLogin(auth);
       } catch (error) {
-        console.error(error);
+        console.error(error?.message || error);
       } finally {
         setIsLoginIn(false);
       }
@@ -134,24 +177,34 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
-    RCInstance.auth.onAuthChange((user) => {
+    const handleAuthChange = (user) => {
       if (user) {
-        RCInstance.connect()
+        const { isChannelPrivate } = useChannelStore.getState();
+        RCInstance.connect(isChannelPrivate)
           .then(() => {
             console.log(`Connected to RocketChat ${RCInstance.host}`);
-            const { me } = user;
-            setAuthenticatedAvatarUrl(me.avatarUrl);
-            setAuthenticatedUsername(me.username);
-            setAuthenticatedUserId(me._id);
-            setAuthenticatedName(me.name);
-            setAuthenticatedUserRoles(me.roles);
+            const me = user.me || user.data?.me;
+            if (me) {
+              setAuthenticatedAvatarUrl(me.avatarUrl);
+              setAuthenticatedUsername(me.username);
+              setAuthenticatedUserId(me._id);
+              setAuthenticatedName(me.name);
+              setAuthenticatedUserRoles(me.roles);
+            }
             setIsUserAuthenticated(true);
           })
           .catch(console.error);
       } else {
+        // Close the DDP connection on logout so the next login gets a fresh connection.
+        RCInstance.close().catch(console.error);
         setIsUserAuthenticated(false);
       }
-    });
+    };
+    RCInstance.auth.onAuthChange(handleAuthChange);
+
+    return () => {
+      RCInstance.auth.removeAuthListener(handleAuthChange);
+    };
   }, [
     RCInstance,
     setAuthenticatedName,
@@ -169,10 +222,10 @@ const EmbeddedChat = (props) => {
 
         if (appInfo) {
           const remoteConfig = appInfo.propConfig;
-          setConfig((prevConfig) => overrideECProps(prevConfig, remoteConfig));
+          setRemoteOverrides((prev) => overrideECProps(prev, remoteConfig));
         }
       } catch (error) {
-        console.error('Error fetching remote config:', error);
+        console.error('Error fetching remote config:', error?.message || error);
       } finally {
         setIsSynced(true);
       }
@@ -180,7 +233,7 @@ const EmbeddedChat = (props) => {
     if (remoteOpt) {
       getConfig();
     }
-  }, [RCInstance, remoteOpt, setConfig, setIsSynced]);
+  }, [RCInstance, remoteOpt, setIsSynced]);
 
   const ECOptions = useMemo(
     () => ({
@@ -198,6 +251,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      layoutMode,
     }),
     [
       enableThreads,
@@ -214,6 +268,7 @@ const EmbeddedChat = (props) => {
       showUsername,
       hideHeader,
       anonymousMode,
+      layoutMode,
     ]
   );
 
@@ -222,14 +277,21 @@ const EmbeddedChat = (props) => {
     [RCInstance, ECOptions]
   );
 
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'matrix') {
+      return MatrixTheme;
+    }
+    return theme || DefaultTheme;
+  }, [theme]);
+
   if (!isSynced) return null;
 
   return (
-    <ThemeProvider theme={theme || DefaultTheme} mode={dark ? 'dark' : 'light'}>
+    <ThemeProvider theme={resolvedTheme} mode={dark ? 'dark' : 'light'}>
       <RCInstanceProvider value={RCContextValue}>
         <Box
           css={[
-            styles.embeddedchat(theme || DefaultTheme, dark),
+            styles.embeddedchat(resolvedTheme, dark),
             css`
               width: ${width};
               height: ${height};

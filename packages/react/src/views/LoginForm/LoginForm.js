@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   GenericModal,
@@ -13,8 +13,8 @@ import { useRCAuth } from '../../hooks/useRCAuth';
 import styles from './LoginForm.styles';
 
 export default function LoginForm() {
-  const [userOrEmail, setUserOrEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const userRef = useRef(null);
+  const passRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -26,36 +26,40 @@ export default function LoginForm() {
 
   const { theme } = useTheme();
 
-  useEffect(() => {
-    if (userOrEmail !== null && userOrEmail.trim() === '') {
+  const handleSubmit = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const userOrEmail = userRef.current?.value || '';
+    const password = passRef.current?.value || '';
+
+    let hasError = false;
+    if (userOrEmail.trim() === '') {
       setUsernameError(true);
+      hasError = true;
     } else {
       setUsernameError(false);
     }
 
-    if (password !== null && password.trim() === '') {
+    if (password.trim() === '') {
       setPasswordError(true);
+      hasError = true;
     } else {
       setPasswordError(false);
     }
-  }, [userOrEmail, password]);
 
-  const handleSubmit = () => {
-    if (!userOrEmail) setUserOrEmail('');
-    if (!password) setPassword('');
-    handleLogin(userOrEmail, password);
+    if (!hasError) {
+      handleLogin(userOrEmail, password);
+    }
   };
+
   const handleClose = () => {
-    setUserOrEmail(null);
-    setPassword(null);
     setIsLoginModalOpen(false);
   };
 
-  const handleEdituserOrEmail = (e) => {
-    setUserOrEmail(e.target.value);
+  const handleEdituserOrEmail = () => {
+    if (usernameError) setUsernameError(false);
   };
-  const handleEditPassword = (e) => {
-    setPassword(e.target.value);
+  const handleEditPassword = () => {
+    if (passwordError) setPasswordError(false);
   };
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -69,15 +73,18 @@ export default function LoginForm() {
   const fields = [
     {
       label: 'Email or username',
+      ref: userRef,
       onChange: handleEdituserOrEmail,
       placeholder: 'example@example.com',
       error: usernameError,
     },
     {
       label: 'Password',
+      ref: passRef,
       type: showPassword ? 'text' : 'password',
       onChange: handleEditPassword,
       error: passwordError,
+      autoComplete: 'new-password',
     },
   ];
 
@@ -96,6 +103,7 @@ export default function LoginForm() {
               <Box css={styles.fieldRow}>
                 <Input
                   type={field.type || 'text'}
+                  ref={field.ref}
                   onChange={field.onChange}
                   placeholder={field.placeholder}
                   onKeyPress={handleKeyPress}

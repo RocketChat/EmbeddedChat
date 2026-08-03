@@ -32,6 +32,7 @@ const Tooltip = ({ children, text, position }) => {
 
   return (
     <Box
+      is="span"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -43,9 +44,9 @@ const Tooltip = ({ children, text, position }) => {
     >
       {children}
       {isTooltipVisible && (
-        <Box css={styles.tooltip}>
+        <Box is="span" css={styles.tooltip}>
           {text.charAt(0).toUpperCase() + text.slice(1)}
-          <Box css={styles.tooltipArrow} />
+          <Box is="span" css={styles.tooltipArrow} />
         </Box>
       )}
     </Box>
