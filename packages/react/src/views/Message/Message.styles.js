@@ -291,6 +291,7 @@ export const MessageMetricsStyles = {
     align-items: center;
     margin-left: 10px;
     margin-top: 2px;
+    gap: 3px;
   `,
 
   metricsItemLabel: css`
@@ -347,6 +348,29 @@ export const getMessageReactionsStyles = (theme) => {
       overflow-wrap: break-word;
       word-break: break-word;
       font-size: 0.85rem;
+    `,
+  };
+
+  return styles;
+};
+
+export const getThreadFollowUnfollowButtonStyles = (theme) => {
+  const styles = {
+    notification: css`
+      position: relative;
+      width: fit-content;
+    `,
+
+    badge: css`
+      postion: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      color: orange;
     `,
   };
 
