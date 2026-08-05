@@ -23,9 +23,10 @@ const useMessageStore = create((set, get) => ({
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (newMessages, append = false) =>
     set((state) => {
+      const incomingAscending = [...newMessages].reverse();
       const allMessages = append
-        ? [...state.messages, ...newMessages]
-        : newMessages;
+        ? [...incomingAscending, ...state.messages]
+        : incomingAscending;
       const uniqueMessages = Array.from(
         new Map(allMessages.map((msg) => [msg._id, msg])).values()
       );

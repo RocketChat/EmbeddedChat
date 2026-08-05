@@ -43,7 +43,7 @@ export const MessageAggregator = ({
   const messages = useMessageStore((state) => state.messages);
   const threadMessages = useMessageStore((state) => state.threadMessages) || [];
   const allMessages = useMemo(
-    () => [...messages, ...[...threadMessages].reverse()],
+    () => [...messages, ...threadMessages],
     [messages, threadMessages]
   );
 
