@@ -24,6 +24,7 @@ import {
   useStarredMessageStore,
   useFileStore,
   useSidebarStore,
+  useKeyboardShortcutStore,
 } from '../../store';
 import { DynamicHeader } from '../DynamicHeader';
 import useFetchChatData from '../../hooks/useFetchChatData';
@@ -68,6 +69,7 @@ const ChatHeader = ({
       'members',
       'search',
       'rInfo',
+      'keyboard',
       'logout',
     ],
   },
@@ -148,6 +150,10 @@ const ChatHeader = ({
     const host = RCInstance.getHost();
     return `${host}/avatar/${channelname}`;
   };
+  const setShowKeyboardShortcuts = useKeyboardShortcutStore(
+    (state) => state.setShowKeyboardShortcuts
+  );
+
   const handleGoBack = async () => {
     if (isUserAuthenticated) {
       getMessagesAndRoles();
@@ -329,6 +335,13 @@ const ChatHeader = ({
         iconName: 'info',
         visible: isUserAuthenticated,
       },
+      keyboard: {
+        label: 'Keyboard Shortcuts',
+        id: 'keyboard',
+        onClick: () => setExclusiveState(setShowKeyboardShortcuts),
+        iconName: 'key',
+        visible: true,
+      },
       logout: {
         label: 'Logout',
         id: 'logout',
@@ -353,6 +366,7 @@ const ChatHeader = ({
       setShowAllFiles,
       setShowSearch,
       setShowChannelinfo,
+      setShowKeyboardShortcuts,
     ]
   );
 
