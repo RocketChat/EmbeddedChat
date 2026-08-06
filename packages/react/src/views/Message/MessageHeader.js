@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -27,6 +28,9 @@ const MessageHeader = ({
   const { theme } = useTheme();
   const styles = getMessageHeaderStyles(theme);
   const getDisplayNameColor = useDisplayNameColor();
+  const username = message.u?.username || '';
+  const isFederatedUser = username.includes(':');
+  const serverDomain = isFederatedUser ? username.split(':')[1] : null;
 
   const authenticatedUserId = useUserStore((state) => state.userId);
   const showUsername = ECOptions?.showUsername;
@@ -133,6 +137,25 @@ const MessageHeader = ({
           }
         >
           @{message.u.username}
+        </Box>
+      )}
+      {serverDomain && (
+        <Box
+          is="span"
+          css={css`
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid ${theme.colors.primary};
+            color: ${theme.colors.primary};
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0 4px;
+            border-radius: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+          `}
+        >
+          {serverDomain}
         </Box>
       )}
       {!message.t && ECOptions?.showRoles && isRoles && (

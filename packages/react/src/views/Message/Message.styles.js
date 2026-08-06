@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const getMessageStyles = ({ theme }) => {
+export const getMessageStyles = ({ theme, mode }) => {
   const styles = {
     main: css`
       display: flex;
@@ -11,6 +11,26 @@ export const getMessageStyles = ({ theme }) => {
       padding-left: 2.25rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
+      @media (max-width: 768px) {
+        padding-left: 0.8rem;
+      }
+    `,
+    timelineMain: css`
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      padding-left: 2.25rem;
+      padding-right: 2.25rem;
+      color: ${theme.colors.foreground};
+      border-left: 3px solid transparent;
+      &:hover {
+        border-left: 3px solid ${theme.colors.primary};
+        background-color: ${mode === 'light'
+          ? 'rgba(13, 189, 139, 0.05)'
+          : 'rgba(13, 189, 139, 0.1)'};
+      }
       @media (max-width: 768px) {
         padding-left: 0.8rem;
       }

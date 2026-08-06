@@ -32,6 +32,24 @@ import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
+const GlobeIcon = ({ size }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ marginRight: '4px', flexShrink: 0 }}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+);
+
 const ChatHeader = ({
   isClosable,
   setClosableState,
@@ -84,7 +102,14 @@ const ChatHeader = ({
   const workspaceLevelRoles = useUserStore((state) => state.roles);
 
   const { RCInstance, ECOptions } = useRCContext();
-  const { channelName, anonymousMode, showRoles } = ECOptions ?? {};
+  const {
+    channelName,
+    anonymousMode,
+    showRoles,
+    theme: configTheme,
+  } = ECOptions ?? {};
+
+  const isFederated = channelInfo?.federated || configTheme === 'matrix';
 
   const isUserAuthenticated = useUserStore(
     (state) => state.isUserAuthenticated
@@ -203,8 +228,7 @@ const ChatHeader = ({
       ) {
         setIsChannelArchived(true);
         const roomInfo = await RCInstance.getRoomInfo();
-        const roomData = roomInfo.result[roomInfo.result.length - 1];
-        setChannelInfo(roomData);
+        setChannelInfo(roomInfo?.room);
       } else if ('errorType' in res && res.errorType === 'Not Allowed') {
         dispatchToastMessage({
           type: 'error',
@@ -391,16 +415,20 @@ const ChatHeader = ({
                       css={styles.channelName}
                       onClick={() => setExclusiveState(setShowChannelinfo)}
                     >
-                      <Icon
-                        name={
-                          isRoomTeam
-                            ? 'team'
-                            : isChannelPrivate
-                            ? 'hash_lock'
-                            : 'hash'
-                        }
-                        size={fullScreen ? '1.25rem' : '1rem'}
-                      />
+                      {isFederated ? (
+                        <GlobeIcon size={fullScreen ? '1.25rem' : '1rem'} />
+                      ) : (
+                        <Icon
+                          name={
+                            isRoomTeam
+                              ? 'team'
+                              : isChannelPrivate
+                              ? 'hash_lock'
+                              : 'hash'
+                          }
+                          size={fullScreen ? '1.25rem' : '1rem'}
+                        />
+                      )}
                       <div
                         css={css`
                           font-size: ${fullScreen ? '1.3rem' : '1.25rem'};

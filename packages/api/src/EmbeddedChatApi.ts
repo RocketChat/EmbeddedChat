@@ -238,12 +238,12 @@ export default class EmbeddedChatApi {
    * All subscriptions are implemented here.
    * TODO: Add logic to call thread message event listeners. To be done after thread implementation
    */
-  async connect() {
+  async connect(isChannelPrivate = false) {
     // Guard against concurrent connect() calls (e.g. React StrictMode double-invoke)
     if (this._connectPromise) {
       return this._connectPromise;
     }
-    this._connectPromise = this._doConnect().finally(() => {
+    this._connectPromise = this._doConnect(isChannelPrivate).finally(() => {
       this._connectPromise = null;
     });
     return this._connectPromise;
@@ -261,7 +261,18 @@ export default class EmbeddedChatApi {
     return message;
   }
 
-  private async _doConnect() {
+  async joinRoom(isChannelPrivate = false) {
+    try {
+      const roomType = isChannelPrivate ? "groups" : "channels";
+      await this._restRequest(`/v1/${roomType}.join`, "POST", {
+        roomId: this.rid,
+      });
+    } catch (err) {
+      console.debug("[EmbeddedChat] joinRoom skipped:", err);
+    }
+  }
+
+  private async _doConnect(isChannelPrivate = false) {
     try {
       this.close(); // before connection, all previous subscriptions should be cancelled
       await this.sdk.connection.connect();
@@ -269,7 +280,9 @@ export default class EmbeddedChatApi {
       const currentUser = (await this.auth.getCurrentUser()) as any;
       const token = currentUser?.authToken || currentUser?.data?.authToken;
       if (token) {
+        this._applyCredentials(currentUser);
         await this.sdk.account.loginWithToken(token);
+        await this.joinRoom(isChannelPrivate);
       }
 
       // Subscribe to room messages
