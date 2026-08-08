@@ -561,6 +561,7 @@ const ChatHeader = ({
           {menuOptions.length > 0 && <Menu options={menuOptions} />}
         </Box>
       </Box>
+
       {isThreadOpen && (
         <DynamicHeader
           title={threadMainMessage}

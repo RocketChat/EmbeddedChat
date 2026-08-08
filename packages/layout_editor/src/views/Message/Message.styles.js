@@ -145,7 +145,7 @@ export const getMessageHeaderStyles = ({ theme }) => {
     `,
 
     userName: css`
-      color: ${theme.colors.accentForeground};
+      color: ${theme.colors.primary};
       font-weight: 700;
       letter-spacing: 0rem;
       font-size: 0.875rem;
@@ -171,7 +171,7 @@ export const getMessageHeaderStyles = ({ theme }) => {
     `,
 
     userActions: css`
-      color: ${theme.colors.accentForeground};
+      color: ${theme.colors.primary};
       letter-spacing: 0rem;
       font-size: 0.875rem;
       line-height: 1.25rem;
@@ -182,7 +182,7 @@ export const getMessageHeaderStyles = ({ theme }) => {
     `,
 
     timestamp: css`
-      color: ${theme.colors.accentForeground};
+      color: ${theme.colors.mutedForeground};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

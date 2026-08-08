@@ -42,6 +42,7 @@ const Menu = ({
           icon="kebab"
           size={size}
           onClick={handleMenuVisibility}
+          style={{ color: theme.theme.colors.foreground }}
         />
       </Tooltip>
 
