@@ -1,36 +1,12 @@
 import React, { useState } from 'react';
 import { Box, StaticSelect, useTheme } from '@embeddedchat/ui-elements';
 import { getFontManagerStyles } from './ThemeLab.styles';
+import { FONT_FAMILY_OPTIONS } from './themeOptions';
 
 const FontManager = () => {
   const themeObj = useTheme();
   const styles = getFontManagerStyles(themeObj);
   const { theme, setTheme } = themeObj;
-
-  const fontFamilyOptions = [
-    { label: 'Arial', value: 'Arial, sans-serif' },
-    { label: 'Arial Black', value: '"Arial Black", Gadget, sans-serif' },
-    { label: 'Comic Sans MS', value: '"Comic Sans MS", cursive, sans-serif' },
-    { label: 'Courier New', value: '"Courier New", Courier, monospace' },
-    { label: 'Georgia', value: 'Georgia, serif' },
-    { label: 'Helvetica', value: 'Helvetica, sans-serif' },
-    { label: 'Impact', value: 'Impact, Charcoal, sans-serif' },
-    { label: 'Lucida Console', value: '"Lucida Console", Monaco, monospace' },
-    {
-      label: 'Lucida Sans Unicode',
-      value: '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
-    },
-    {
-      label: 'Palatino Linotype',
-      value: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-    },
-    { label: 'Tahoma', value: 'Tahoma, Geneva, sans-serif' },
-    { label: 'Times New Roman', value: "'Times New Roman', serif" },
-    { label: 'Trebuchet MS', value: '"Trebuchet MS", Helvetica, sans-serif' },
-    { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
-    { label: 'MS Sans Serif', value: '"MS Sans Serif", Geneva, sans-serif' },
-    { label: 'MS Serif', value: '"MS Serif", "New York", serif' },
-  ];
 
   const fontSizeOptions = [
     { label: 'Small', value: 12 },
@@ -105,7 +81,7 @@ const FontManager = () => {
           <b>Font Family</b>
         </Box>
         <StaticSelect
-          options={fontFamilyOptions}
+          options={FONT_FAMILY_OPTIONS}
           style={{ position: 'absolute', top: '16px', right: 0, zIndex: 2 }}
           placeholder="Choose"
           value={fontFamily}

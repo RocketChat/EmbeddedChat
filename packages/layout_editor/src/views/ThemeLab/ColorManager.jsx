@@ -6,19 +6,9 @@ import React, {
   useMemo,
 } from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
-import { ChromePicker } from 'react-color';
 import { getColorMangerStyles } from './ThemeLab.styles';
 import debounce from 'lodash/debounce';
-
-const ColorPicker = ({ color, onChange }) => {
-  return (
-    <ChromePicker
-      color={color}
-      disableAlpha={true}
-      onChange={(updatedColor) => onChange(updatedColor.hsl)}
-    />
-  );
-};
+import ColorPicker from './ColorPicker';
 
 const ColorManager = () => {
   const { theme, mode, setTheme } = useTheme();
@@ -100,7 +90,7 @@ const ColorManager = () => {
             <Box css={styles.colorPicker} ref={pickerRef}>
               <ColorPicker
                 color={value}
-                onChange={(newColor) => handleColorChange(key, newColor)}
+                onChange={(newColor) => handleColorChange(key, newColor.hsl)}
               />
             </Box>
           )}
