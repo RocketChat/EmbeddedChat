@@ -28,7 +28,7 @@ const componentTypeIconMap = {
   info: 'info',
 };
 
-const ChatInputToolbar = ({ messageRef, inputRef }) => {
+const ChatInputToolbar = () => {
   const styles = getChatInputToolbarStyles(useTheme());
   const { surfaceItems, setSurfaceItems, formatters, setFormatters } =
     useChatInputItemsStore((state) => ({
@@ -41,7 +41,7 @@ const ChatInputToolbar = ({ messageRef, inputRef }) => {
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [formattersVisible, setFormattersVisible] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
-  
+
   const { publishedBlocks, publishedSurface, publishedComponentType } = useAiGeneratedBlocksStore(
     (state) => ({
       publishedBlocks: state.publishedBlocks,

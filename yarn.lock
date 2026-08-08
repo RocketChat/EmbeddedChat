@@ -2441,6 +2441,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@embeddedchat/ai-adapter@workspace:packages/ai-adapter"
   dependencies:
+    "@rocket.chat/ui-kit": ^0.31.25
+    ajv: ^8.12.0
     prettier: ^2.8.1
     rollup: ^3.23.0
     rollup-plugin-dts: ^6.0.1
@@ -10099,7 +10101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.17.1":
+"ajv@npm:^8.12.0, ajv@npm:^8.17.1":
   version: 8.20.0
   resolution: "ajv@npm:8.20.0"
   dependencies:
@@ -20504,6 +20506,7 @@ __metadata:
     "@embeddedchat/ai-adapter": "workspace:*"
     "@embeddedchat/markups": "workspace:^"
     "@embeddedchat/ui-elements": "workspace:^"
+    "@embeddedchat/ui-kit": "workspace:^"
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@vitejs/plugin-react": ^4.2.1
     eslint: ^8.56.0

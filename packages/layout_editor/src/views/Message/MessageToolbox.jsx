@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Box, useTheme, ActionButton, Tooltip } from '@embeddedchat/ui-elements';
+import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Menu } from '../../components/SortableMenu';
 import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
@@ -40,7 +40,6 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
     }));
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
-  const [openSection, setOpenSection] = useState(null);
   const [aiOpen, setAiOpen] = useState(false);
   const { publishedBlocks, publishedSurface, publishedComponentType } = useAiGeneratedBlocksStore(
     (state) => ({

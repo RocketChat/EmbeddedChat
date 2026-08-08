@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import {
   Box,
   useTheme,
@@ -19,7 +18,7 @@ import useLayoutStore from '../../store/layoutStore';
 import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
 import PreviewErrorBoundary from '../../components/PreviewErrorBoundary';
 
-const AICodePanel = ({ onSaveLayout }) => {
+const AICodePanel = () => {
   const { theme } = useTheme();
   const styles = getAICodePanelStyles(theme);
   const dispatchToastMessage = useToastBarDispatch();
@@ -151,7 +150,7 @@ const AICodePanel = ({ onSaveLayout }) => {
     const jsonStr = JSON.stringify(draftBlocks, null, 2);
     const indentedJson = jsonStr.replace(/\n/g, '\n    ');
     const jsxSnippet = `<EmbeddedChat\n  customSurfaces={{\n    contextualBar: ${indentedJson},\n    onAction: (interaction) => {\n      // TODO: handle interaction — interaction.type is 'blockAction' (button clicks) or 'stateUpdate' (input changes)\n      console.log(interaction);\n    },\n  }}\n/>`;
-    
+
     navigator.clipboard
       .writeText(jsxSnippet)
       .then(() => {
@@ -501,10 +500,6 @@ const AICodePanel = ({ onSaveLayout }) => {
       )}
     </Box>
   );
-};
-
-AICodePanel.propTypes = {
-  onSaveLayout: PropTypes.func,
 };
 
 AICodePanel.displayName = 'AICodePanel';
