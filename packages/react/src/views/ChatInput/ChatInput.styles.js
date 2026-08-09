@@ -65,6 +65,7 @@ export const getChatInputStyles = (theme) => {
 
       .ec-ai-pending {
         margin: 0 1px;
+        white-space: pre-wrap;
         border-radius: 3px;
         background: color-mix(
           in srgb,
@@ -77,6 +78,7 @@ export const getChatInputStyles = (theme) => {
       .ec-ai-suggestion {
         position: relative;
         margin: 0 1px;
+        white-space: pre-wrap;
         border-bottom: 1px dashed ${theme.colors.primary};
         background: color-mix(
           in srgb,

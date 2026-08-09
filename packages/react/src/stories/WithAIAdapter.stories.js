@@ -1,7 +1,6 @@
 import React from 'react';
 import { OllamaAdapter } from '@embeddedchat/ai-adapter';
 import { EmbeddedChat } from '..';
-import AITheme from '../theme/AITheme';
 
 const OLLAMA_BASE_URL =
   process.env.STORYBOOK_OLLAMA_URL || 'http://localhost:11434';
@@ -32,7 +31,6 @@ export const WithAIAdapter = {
     showRoles: true,
     enableThreads: true,
     auth: { flow: 'PASSWORD' },
-    dark: true,
-    theme: AITheme,
+    dark: false,
   },
 };

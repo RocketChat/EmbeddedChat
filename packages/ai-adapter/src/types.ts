@@ -5,14 +5,24 @@ export interface Message {
   ts: Date;
 }
 
+export type AITaskType = "chat" | "composer" | "replySuggestions";
+
+export interface AITaskConfig {
+  model?: string;
+  systemPrompt?: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
+export type AITaskConfigs = Partial<Record<AITaskType, AITaskConfig>>;
+
 export interface AIContext {
   roomId: string;
   userId: string;
   history: Message[];
   metadata?: {
     federated?: boolean;
-    composerTransformation?: boolean;
-    replySuggestions?: boolean;
+    task?: AITaskType;
   };
 }
 

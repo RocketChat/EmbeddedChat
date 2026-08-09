@@ -30,7 +30,23 @@ npm install @embeddedchat/ai-adapter
 import { EmbeddedChat } from '@embeddedchat/react';
 import { OpenAIAdapter } from '@embeddedchat/ai-adapter';
 
-const adapter = new OpenAIAdapter({ apiKey: process.env.OPENAI_API_KEY });
+const adapter = new OpenAIAdapter({
+  apiKey: process.env.OPENAI_API_KEY,
+  tasks: {
+    chat: { model: 'gpt-4o-mini', systemPrompt: 'Be concise and helpful.' },
+    composer: {
+      model: 'gpt-4o',
+      systemPrompt: 'Return only the requested text transformation.',
+      temperature: 0,
+    },
+    replySuggestions: {
+      model: 'gpt-4o-mini',
+      systemPrompt: 'Return only short, natural replies for the current user.',
+      temperature: 0,
+      maxTokens: 90,
+    },
+  },
+});
 
 <EmbeddedChat
   host="https://chat.example.com"
@@ -39,7 +55,7 @@ const adapter = new OpenAIAdapter({ apiKey: process.env.OPENAI_API_KEY });
 />
 ```
 
-When `aiAdapter` is provided, a ✨ button appears in the message input toolbar. Clicking it calls `getSuggestions()` with the recent conversation history and displays clickable reply chips above the input.
+When `aiAdapter` is provided, EmbeddedChat adds a header-level **Catch up** action, automatic reply suggestions, and selection-based composer actions. Catch ups are stored locally as **You only** messages; they are never sent to Rocket.Chat.
 
 When `aiAdapter` is **not** provided: zero UI changes, zero bundle size impact.
 
@@ -57,6 +73,7 @@ const adapter = new OpenAIAdapter({
   baseUrl: 'https://api.openai.com/v1',  // override for proxies
   headers: { 'X-Custom-Key': '...' },    // extra headers forwarded to every request
   assistantUsername: 'ai-bot',           // RC username of the AI — maps its messages to 'assistant' role
+  tasks: { /* optional task-specific model and prompt configuration */ },
 });
 ```
 
@@ -88,6 +105,35 @@ const adapter = new OllamaAdapter({
 ```
 
 No API key required for Ollama. Runs entirely on your own hardware — ideal for privacy-conscious deployments.
+
+## Task configuration
+
+Every built-in adapter accepts `tasks`. This lets one adapter select a model and system prompt for each EmbeddedChat task instead of keeping prompts inside provider implementations.
+
+```typescript
+const adapter = new OpenAIAdapter({
+  apiKey: 'sk-...',
+  model: 'gpt-4o-mini', // fallback for tasks without a model override
+  tasks: {
+    chat: {
+      systemPrompt: 'Answer clearly and concisely.',
+    },
+    composer: {
+      model: 'gpt-4o',
+      systemPrompt: 'Return only the transformed source text.',
+      temperature: 0,
+    },
+    replySuggestions: {
+      model: 'gpt-4o-mini',
+      systemPrompt: 'Return three short replies and no transcript labels.',
+      temperature: 0,
+      maxTokens: 90,
+    },
+  },
+});
+```
+
+The available task keys are `chat`, `composer`, and `replySuggestions`. All task fields are optional. If a task has no configuration, the adapter uses its top-level model and no system prompt.
 
 ## Writing a Custom Adapter
 
@@ -126,22 +172,22 @@ interface AIContext {
   roomId: string;
   userId: string;
   history: Message[];
-  metadata?: { federated?: boolean };
+  metadata?: { federated?: boolean; task?: AITaskType };
+}
+
+type AITaskType = 'chat' | 'composer' | 'replySuggestions';
+
+interface AITaskConfig {
+  model?: string;
+  systemPrompt?: string;
+  temperature?: number;
+  maxTokens?: number;
 }
 
 interface AIResponse {
   text: string;
   suggestions?: string[];
 }
-```
-
-## Testing / Demo
-
-```typescript
-import { MockAdapter } from '@embeddedchat/ai-adapter';
-// For testing/demo only — returns hardcoded responses, no API key required
-
-const adapter = new MockAdapter();
 ```
 
 ## License

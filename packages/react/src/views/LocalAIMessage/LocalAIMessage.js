@@ -18,11 +18,16 @@ const LocalAIMessage = ({ catchUp, onDismiss }) => {
       css={css`
         display: flex;
         gap: 0.7rem;
-        margin: 0.75rem 1rem;
+        margin: 0.5rem 2rem 1rem;
         padding: 0.7rem 0.8rem;
         border: 1px solid ${theme.colors.border};
         border-radius: ${theme.radius};
         background: ${theme.colors.card};
+
+        @media (max-width: 500px) {
+          margin: 0;
+          border-radius: 0;
+        }
       `}
     >
       <Box

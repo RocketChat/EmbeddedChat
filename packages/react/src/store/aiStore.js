@@ -18,8 +18,15 @@ const useAiStore = create((set) => ({
         threadId,
       };
       return threadId
-        ? { threadCatchUps: [...state.threadCatchUps, catchUp] }
-        : { channelCatchUps: [...state.channelCatchUps, catchUp] };
+        ? {
+            threadCatchUps: [
+              ...state.threadCatchUps.filter(
+                (existingCatchUp) => existingCatchUp.threadId !== threadId
+              ),
+              catchUp,
+            ],
+          }
+        : { channelCatchUps: [catchUp] };
     }),
   dismissCatchUp: (id, threadId = null) =>
     set((state) =>

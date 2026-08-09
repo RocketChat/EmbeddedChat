@@ -180,7 +180,7 @@ const useAIComposer = ({ aiAdapter, ECOptions, userId, messageRef }) => {
             roomId: ECOptions?.roomId ?? '',
             userId,
             history: [],
-            metadata: { composerTransformation: true },
+            metadata: { task: 'composer' },
           },
           prompts[actionKey](original)
         );

@@ -16,9 +16,9 @@ export abstract class BaseAIAdapter implements IAIAdapter {
     systemPrompt: string,
     assistantUsername = ""
   ): ChatMessage[] {
-    const chatMessages: ChatMessage[] = [
-      { role: "system", content: systemPrompt },
-    ];
+    const chatMessages: ChatMessage[] = systemPrompt
+      ? [{ role: "system", content: systemPrompt }]
+      : [];
 
     for (const item of context.history.slice(-10)) {
       const role =
@@ -28,7 +28,7 @@ export abstract class BaseAIAdapter implements IAIAdapter {
       const content = `${item.u.username}: ${item.msg}`;
       const lastMessage = chatMessages[chatMessages.length - 1];
 
-      if (lastMessage.role === role) {
+      if (lastMessage?.role === role) {
         lastMessage.content += `\n${content}`;
       } else {
         chatMessages.push({ role, content });
@@ -36,7 +36,7 @@ export abstract class BaseAIAdapter implements IAIAdapter {
     }
 
     const lastMessage = chatMessages[chatMessages.length - 1];
-    if (lastMessage.role === "user") {
+    if (lastMessage?.role === "user") {
       lastMessage.content += `\n${message}`;
     } else {
       chatMessages.push({ role: "user", content: message });
@@ -59,19 +59,27 @@ export abstract class BaseAIAdapter implements IAIAdapter {
       history: [],
       metadata: {
         ...context?.metadata,
-        replySuggestions: true,
+        task: "replySuggestions",
       },
     };
 
     const participantPrefixes = history
       .map((message) => message.u.username)
       .filter(Boolean)
-      .map((username) => new RegExp(`^${username.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}:\\s*`, "i"));
+      .map(
+        (username) =>
+          new RegExp(
+            `^${username.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}:\\s*`,
+            "i"
+          )
+      );
 
     const transcript = history
       .map(
         (message) =>
-          `${message.u._id === ctx.userId ? "CURRENT USER" : "OTHER PARTICIPANT"}: ${message.msg}`
+          `${
+            message.u._id === ctx.userId ? "CURRENT USER" : "OTHER PARTICIPANT"
+          }: ${message.msg}`
       )
       .join("\n");
 
@@ -95,7 +103,10 @@ export abstract class BaseAIAdapter implements IAIAdapter {
     );
 
     if (response.suggestions && response.suggestions.length > 0) {
-      return response.suggestions.map(cleanSuggestion).filter(Boolean).slice(0, 3);
+      return response.suggestions
+        .map(cleanSuggestion)
+        .filter(Boolean)
+        .slice(0, 3);
     }
 
     return response.text
