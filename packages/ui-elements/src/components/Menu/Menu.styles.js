@@ -29,6 +29,13 @@ export const getMenuStyles = (theme) => {
       background: transparent;
     `,
 
+    backdropInContainer: css`
+      position: absolute;
+      inset: 0;
+      z-index: ${theme.zIndex?.menu || 1300};
+      background: transparent;
+    `,
+
     sheet: css`
       position: fixed;
       left: 0.5rem;
@@ -42,6 +49,10 @@ export const getMenuStyles = (theme) => {
       border-radius: 0.75rem;
       padding: 0.75rem 0;
       background-color: ${theme.colors.background};
+    `,
+
+    sheetInContainer: css`
+      position: absolute;
     `,
   };
 
@@ -78,8 +89,12 @@ export const getMenuItemStyles = ({ theme, mode }) => {
       justify-content: flex-start;
       gap: 0.5rem;
       padding: 0.75rem 1rem;
+      width: 100%;
       white-space: nowrap;
       color: ${theme.colors.foreground};
+      text-align: left;
+      border: 0;
+      background: transparent;
       &:hover {
         background-color: ${mode === 'light'
           ? darken(theme.colors.background, 0.05)
