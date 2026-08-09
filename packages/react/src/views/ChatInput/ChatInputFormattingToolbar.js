@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -16,6 +16,9 @@ import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
 import InsertLinkToolBox from './InsertLinkToolBox';
+import useIsMobileViewport, {
+  MOBILE_BREAKPOINT,
+} from '../../hooks/useIsMobileViewport';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -45,6 +48,7 @@ const ChatInputFormattingToolbar = ({
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
   );
+  const isMobileViewport = useIsMobileViewport();
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
@@ -57,6 +61,14 @@ const ChatInputFormattingToolbar = ({
   const handleFormatterClick = (item) => {
     formatSelection(messageRef, item.pattern);
     setPopoverOpen(false);
+  };
+  const openEmojiPicker = () => {
+    if (isMobileViewport) {
+      messageRef.current?.blur?.();
+    }
+
+    setPopoverOpen(false);
+    setEmojiOpen(true);
   };
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
@@ -92,7 +104,7 @@ const ChatInputFormattingToolbar = ({
           disabled={isRecordingMessage}
           onClick={() => {
             if (isRecordingMessage) return;
-            setEmojiOpen(true);
+            openEmojiPicker();
           }}
         >
           <Icon name="emoji" size="1rem" />
@@ -106,7 +118,7 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage}
             onClick={() => {
               if (isRecordingMessage) return;
-              setEmojiOpen(true);
+              openEmojiPicker();
             }}
           >
             <Icon name="emoji" size="1.25rem" />
@@ -249,7 +261,7 @@ const ChatInputFormattingToolbar = ({
       <Box
         css={css`
           display: flex;
-          @media (max-width: 499px) {
+          @media (max-width: ${MOBILE_BREAKPOINT}px) {
             display: none;
           }
         `}
@@ -286,7 +298,7 @@ const ChatInputFormattingToolbar = ({
 
       <Box
         css={css`
-          @media (min-width: 500px) {
+          @media (min-width: ${MOBILE_BREAKPOINT + 1}px) {
             display: none;
           }
         `}
@@ -345,6 +357,7 @@ const ChatInputFormattingToolbar = ({
             handleEmojiClick(emoji);
           }}
           onClose={() => setEmojiOpen(false)}
+          useMobileBottomSheet={isMobileViewport}
           positionStyles={css`
             position: absolute;
             bottom: 7rem;

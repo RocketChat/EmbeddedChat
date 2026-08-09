@@ -107,6 +107,101 @@ const getEmojiPickerStyles = ({ theme, mode }) => {
         background: ${theme.colors.primary};
       }
     `,
+    mobileSheetBackdrop: css`
+      position: fixed;
+      inset: 0;
+      z-index: ${(theme.zIndex?.modal || 1500) - 1};
+      background: ${alpha(theme.colors.foreground, 0.08)};
+      animation: ec-emoji-sheet-backdrop-in 180ms ease-out;
+
+      @keyframes ec-emoji-sheet-backdrop-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    `,
+    mobileSheet: css`
+      position: fixed;
+      left: 0.5rem;
+      right: 0.5rem;
+      bottom: 0.5rem;
+      z-index: ${theme.zIndex?.modal || 1500};
+      display: flex;
+      flex-direction: column;
+      height: min(28rem, calc(100vh - 4rem));
+      max-height: min(28rem, calc(100vh - 4rem));
+      overflow: hidden;
+      border: 1px solid ${theme.colors.border};
+      border-radius: ${theme.radius};
+      background: ${theme.colors.background};
+      box-shadow: ${theme.shadows[2]};
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      animation: ec-emoji-sheet-slide-up 180ms ease-out;
+
+      @keyframes ec-emoji-sheet-slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(1rem);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+
+      @supports (height: 100dvh) {
+        height: min(28rem, calc(100dvh - 4rem));
+        max-height: min(28rem, calc(100dvh - 4rem));
+      }
+    `,
+    mobileSheetHeader: css`
+      display: flex;
+      flex: 0 0 2.5rem;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 0.5rem;
+    `,
+    mobileSheetClose: css`
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border: 0;
+      border-radius: ${theme.radius};
+      background: transparent;
+      color: ${theme.colors.foreground};
+      cursor: pointer;
+
+      &:hover,
+      &:focus-visible {
+        background: ${calculatedColors};
+      }
+    `,
+    mobileEmojiPicker: css`
+      min-height: 0;
+      height: auto;
+      flex: 1 1 auto;
+
+      .EmojiPickerReact {
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+        border-radius: inherit;
+      }
+    `,
   };
 
   return styles;
