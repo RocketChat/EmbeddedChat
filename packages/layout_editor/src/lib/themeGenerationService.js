@@ -272,15 +272,22 @@ const requestAdapterSuggestion = async ({
     throw new Error(`${THEME_PROVIDERS[provider].label} requires an API key.`);
   }
 
-  const adapter = provider === 'gemini'
-    ? new GeminiAdapter({ apiKey: apiKey.trim(), model, baseUrl })
-    : new OpenAIAdapter({ apiKey: apiKey.trim(), model, baseUrl });
+  const Adapter = provider === 'gemini' ? GeminiAdapter : OpenAIAdapter;
+  const adapter = new Adapter({
+    apiKey: apiKey.trim(),
+    model,
+    baseUrl,
+    tasks: { composer: { temperature: 0, maxTokens: 300 } },
+  });
   const response = await adapter.sendPrompt(
     {
       roomId: 'layout-editor',
       userId: 'theme-generator',
       history: [],
-      metadata: { composerTransformation: true },
+      // The adapter's generic composer task provides a deterministic,
+      // short-form request profile. The prompt below still defines the
+      // theme-specific JSON contract.
+      metadata: { task: 'composer' },
     },
     getAdapterPrompt(description, context, preserveExisting)
   );
