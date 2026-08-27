@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
   Button,
-  Input,
   Icon,
   ActionButton,
   Modal,
@@ -37,10 +36,14 @@ import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
 import useDropBox from '../../hooks/useDropBox';
+import useAIComposer from '../../hooks/useAIComposer';
+import AIComposerToolbar from '../AIComposerToolbar';
+import { installContentEditableApi } from '../../lib/contentEditableComposer';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
   const { RCInstance, ECOptions } = useRCContext();
+  const aiAdapter = ECOptions?.aiAdapter ?? null;
   const { theme } = useTheme();
   const styles = getChatInputStyles(theme);
 
@@ -49,6 +52,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
   const timerRef = useRef();
+  const lastSuggestedMessageRef = useRef(null);
+  const setMessageRef = useCallback((node) => {
+    messageRef.current = node;
+    if (node) installContentEditableApi(node);
+  }, []);
 
   const [commands, setCommands] = useState([]);
   const [disableButton, setDisableButton] = useState(true);
@@ -64,6 +72,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [emojiIndex, setEmojiIndex] = useState(-1);
   const [startReadEmoji, setStartReadEmoji] = useState(false);
   const [isMsgLong, setIsMsgLong] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isAiAvailable, setIsAiAvailable] = useState(false);
 
   const {
     isUserAuthenticated,
@@ -111,6 +121,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     clearQuoteMessages,
     threadId,
     deletedMessage,
+    messages,
   } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
@@ -122,6 +133,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     clearQuoteMessages: state.clearQuoteMessages,
     removeMessage: state.removeMessage,
     deletedMessage: state.deletedMessage,
+    messages: state.messages,
   }));
 
   const setIsLoginModalOpen = useLoginStore(
@@ -174,6 +186,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }, [RCInstance, isUserAuthenticated, isChannelPrivate, setMembersHandler]);
 
   useEffect(() => {
+    if (!aiAdapter) {
+      setIsAiAvailable(false);
+      return;
+    }
+    aiAdapter
+      .isAvailable()
+      .then(setIsAiAvailable)
+      .catch(() => setIsAiAvailable(false));
+  }, [aiAdapter]);
+
+  useEffect(() => {
+    if (!messageRef.current) return;
     if (editMessage.attachments) {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
@@ -192,7 +216,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       editMessage._id &&
       deletedMessage._id === editMessage._id
     ) {
-      messageRef.current.value = '';
+      if (messageRef.current) messageRef.current.value = '';
       setDisableButton(true);
       setEditMessage({});
     }
@@ -384,6 +408,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
+  const aiComposer = useAIComposer({
+    aiAdapter,
+    ECOptions,
+    userId,
+    messageRef,
+  });
+
   const sendMessage = async () => {
     messageRef.current.focus();
     messageRef.current.style.height = '44px';
@@ -413,11 +444,79 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     handleSendNewMessage(message);
     scrollToBottom();
+    setAiSuggestions([]);
+    aiComposer.dismissActions();
     // Clear unread divider when user sends a message
     if (clearUnreadDividerRef?.current) {
       clearUnreadDividerRef.current();
     }
   };
+
+  useEffect(() => {
+    if (!isUserAuthenticated) {
+      setAiSuggestions([]);
+    }
+  }, [isUserAuthenticated]);
+
+  const handleSuggestionClick = (suggestion) => {
+    messageRef.current.value = suggestion;
+    setDisableButton(false);
+    setAiSuggestions([]);
+    messageRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (!isAiAvailable || !aiAdapter?.getSuggestions || !isUserAuthenticated) {
+      return undefined;
+    }
+
+    // Use timestamps rather than the store's insertion order. The initial REST
+    // load and realtime messages both normally arrive newest-first, but this
+    // keeps the AI snapshot correct if either source changes its ordering.
+    const newestFirstMessages = messages
+      .filter((message) => message?.msg)
+      .slice()
+      .sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
+    const newestMessage = newestFirstMessages[0];
+    const recentMessages = newestFirstMessages.slice(0, 10).reverse();
+    if (
+      !newestMessage?.msg ||
+      newestMessage?.u?._id === userId ||
+      newestMessage?._id === lastSuggestedMessageRef.current ||
+      messageRef.current?.value
+    ) {
+      return undefined;
+    }
+
+    let active = true;
+    const timeout = setTimeout(async () => {
+      try {
+        const suggestions = await aiAdapter.getSuggestions(recentMessages, {
+          roomId: ECOptions.roomId,
+          userId,
+          history: recentMessages,
+        });
+        if (active) {
+          lastSuggestedMessageRef.current = newestMessage._id;
+          setAiSuggestions((suggestions || []).slice(0, 3));
+        }
+      } catch (error) {
+        console.error('[AI Adapter] automatic replies failed:', error);
+      }
+    }, 700);
+
+    return () => {
+      active = false;
+      clearTimeout(timeout);
+    };
+  }, [
+    aiAdapter,
+    ECOptions.roomId,
+    isAiAvailable,
+    isUserAuthenticated,
+    messages,
+    userId,
+  ]);
 
   const sendAttachment = (event) => {
     const fileObj = event.target.files && event.target.files[0];
@@ -430,18 +529,23 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const onTextChange = (e, val) => {
     sendTypingStart();
-    const message = val || e.target.value;
+    const message = val ?? e?.target?.value ?? messageRef.current?.value ?? '';
 
-    // Don't parse emojis if user is currently typing emoji autocomplete
     const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
-    messageRef.current.value = shouldParseEmoji ? parseEmoji(message) : message;
+    const parsedMessage = shouldParseEmoji ? parseEmoji(message) : message;
+    // Toolbar actions (for example, link insertion) provide a new value without
+    // a native input event. Those updates must be written explicitly; native
+    // input events are left untouched to preserve inline AI suggestion spans.
+    if ((e === null || parsedMessage !== message) && messageRef.current) {
+      messageRef.current.value = parsedMessage;
+    }
 
-    setDisableButton(!messageRef.current.value.length);
+    setDisableButton(!(messageRef.current?.value || '').length);
     if (e !== null) {
       handleNewLine(e, false);
-      searchMentionUser(message);
-      showCommands(e.target.selectionStart, e.target.value);
-      searchEmoji(message);
+      searchMentionUser(parsedMessage);
+      showCommands(e.target.selectionStart, parsedMessage);
+      searchEmoji(parsedMessage);
     }
   };
 
@@ -655,6 +759,28 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
         <TypingUsers />
       </Box>
+      {/* AI Composer Toolbar — selection-based actions */}
+      {isAiAvailable && isUserAuthenticated && (
+        <AIComposerToolbar
+          popup={aiComposer.popup}
+          actions={aiComposer.actions}
+          onAction={aiComposer.runAction}
+        />
+      )}
+      {aiSuggestions.length > 0 && (
+        <Box css={styles.aiSuggestionsContainer}>
+          {aiSuggestions.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => handleSuggestionClick(s)}
+              css={styles.aiSuggestionChip}
+            >
+              {s}
+            </button>
+          ))}
+        </Box>
+      )}
       <Box
         ref={chatInputContainer}
         css={[
@@ -663,16 +789,25 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         ]}
       >
         <Box css={styles.inputBox}>
-          <Input
-            textArea
-            rows={1}
-            disabled={
+          <Box
+            is="div"
+            role="textbox"
+            aria-multiline="true"
+            aria-disabled={
               !isUserAuthenticated ||
               !canSendMsg ||
               isRecordingMessage ||
               isChannelArchived
             }
-            placeholder={
+            contentEditable={
+              !isUserAuthenticated ||
+              !canSendMsg ||
+              isRecordingMessage ||
+              isChannelArchived
+                ? 'false'
+                : 'true'
+            }
+            data-placeholder={
               isUserAuthenticated
                 ? isChannelArchived
                   ? 'Room archived'
@@ -687,7 +822,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
               isUserAuthenticated &&
               `text-align: center;`}
             `}
-            onChange={onTextChange}
+            onInput={onTextChange}
+            onMouseUp={aiComposer.updateSelection}
+            onKeyUp={aiComposer.updateSelection}
             onBlur={() => {
               sendTypingStop();
               handleBlur();
@@ -695,15 +832,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             onFocus={handleFocus}
             onKeyDown={onKeyDown}
             onPaste={handlePasting}
-            ref={messageRef}
+            ref={setMessageRef}
           />
 
           <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
-          <Box
-            css={css`
-              padding: 0.25rem;
-            `}
-          >
+          <Box css={styles.actionButtonsContainer}>
             {isUserAuthenticated ? (
               !isChannelArchived ? (
                 <ActionButton
@@ -736,9 +869,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       </Box>
       {isMsgLong && (
         <Modal
-          css={css`
-            padding: 1em;
-          `}
+          css={styles.longMessageModal}
           onClose={() => setIsMsgLong(false)}
         >
           <Modal.Header>
@@ -748,11 +879,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             </Modal.Title>
             <Modal.Close onClick={() => setIsMsgLong(false)} />
           </Modal.Header>
-          <Modal.Content
-            css={css`
-              margin: 1em;
-            `}
-          >
+          <Modal.Content css={styles.longMessageModalContent}>
             Send it as attachment instead?
           </Modal.Content>
           <Modal.Footer>
