@@ -296,9 +296,8 @@ const ChatInputFormattingToolbar = ({
           if (itemInFormatter) {
             return (
               <Tooltip
-                text={`${itemInFormatter.name} ${
-                  itemInFormatter.shortcut && `(${itemInFormatter.shortcut})`
-                }`}
+                text={`${itemInFormatter.name} ${itemInFormatter.shortcut && `(${itemInFormatter.shortcut})`
+                  }`}
                 position="top"
                 key={`formatter-${itemInFormatter.name}`}
               >
@@ -341,7 +340,6 @@ const ChatInputFormattingToolbar = ({
         <EmojiPicker
           key="emoji-picker"
           handleEmojiClick={(emoji) => {
-            setEmojiOpen(false);
             handleEmojiClick(emoji);
           }}
           onClose={() => setEmojiOpen(false)}
