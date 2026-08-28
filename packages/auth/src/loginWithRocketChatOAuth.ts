@@ -42,7 +42,7 @@ const loginWithRocketChatOAuth = async (config: { api: Api }) => {
 width=800,height=600,left=-1000,top=-1000,rel=opener`;
   const popup = window.open(authorizeUrl, "Login", params);
 
-  return new Promise<any>((resolve) => {
+  return new Promise<any>((resolve, reject) => {
     if (popup) {
       const onMessage = async (e: MessageEvent) => {
         if (e.origin !== new URL(config.api.baseUrl).origin) {
@@ -64,6 +64,7 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
         if (popup.closed) {
           clearInterval(checkInterval);
           window.removeEventListener("message", onMessage);
+          reject(new Error("OAuth login cancelled"));
         }
       }, 1000);
     } else {
