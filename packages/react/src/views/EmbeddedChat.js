@@ -73,6 +73,8 @@ const EmbeddedChat = (props) => {
     [authProp?.flow, authProp?.credentials]
   );
 
+  const aiAdapter = props.aiAdapter ?? null;
+
   const hasMounted = useRef(false);
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
@@ -235,6 +237,8 @@ const EmbeddedChat = (props) => {
     }
   }, [RCInstance, remoteOpt, setIsSynced]);
 
+  const memoizedAiAdapter = useMemo(() => aiAdapter, [aiAdapter]);
+
   const ECOptions = useMemo(
     () => ({
       enableThreads,
@@ -252,6 +256,7 @@ const EmbeddedChat = (props) => {
       hideHeader,
       anonymousMode,
       layoutMode,
+      aiAdapter: memoizedAiAdapter,
     }),
     [
       enableThreads,
@@ -269,6 +274,7 @@ const EmbeddedChat = (props) => {
       hideHeader,
       anonymousMode,
       layoutMode,
+      memoizedAiAdapter,
     ]
   );
 
@@ -350,6 +356,13 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  aiAdapter: PropTypes.shape({
+    name: PropTypes.string,
+    sendPrompt: PropTypes.func.isRequired,
+    getSuggestions: PropTypes.func,
+    summarize: PropTypes.func,
+    isAvailable: PropTypes.func.isRequired,
+  }),
 };
 
 export default memo(EmbeddedChat);

@@ -1,0 +1,39 @@
+{
+  "name": "@embeddedchat/ai-adapter",
+  "version": "0.0.1",
+  "description": "Pluggable AI adapter layer for EmbeddedChat — connect any local or cloud AI provider",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "format": "prettier --write 'src/'",
+    "format:check": "prettier --check 'src/'"
+  },
+  "keywords": [
+    "embeddedchat",
+    "ai",
+    "adapter",
+    "rocketchat",
+    "openai",
+    "ollama"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.8.1",
+    "rollup": "^3.23.0",
+    "rollup-plugin-dts": "^6.0.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -16,6 +16,9 @@ import VideoMessageRecorder from './VideoMessageRecoder';
 import { getChatInputFormattingToolbarStyles } from './ChatInput.styles';
 import formatSelection from '../../lib/formatSelection';
 import InsertLinkToolBox from './InsertLinkToolBox';
+import useIsMobileViewport, {
+  MOBILE_BREAKPOINT,
+} from '../../hooks/useIsMobileViewport';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -45,9 +48,15 @@ const ChatInputFormattingToolbar = ({
   const isRecordingMessage = useMessageStore(
     (state) => state.isRecordingMessage
   );
+  const isMobileViewport = useIsMobileViewport();
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const [isInsertLinkOpen, setInsertLinkOpen] = useState(false);
+  const [linkSelection, setLinkSelection] = useState({
+    start: 0,
+    end: 0,
+    text: '',
+  });
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
@@ -58,6 +67,14 @@ const ChatInputFormattingToolbar = ({
     formatSelection(messageRef, item.pattern);
     setPopoverOpen(false);
   };
+  const openEmojiPicker = () => {
+    if (isMobileViewport) {
+      messageRef.current?.blur?.();
+    }
+
+    setPopoverOpen(false);
+    setEmojiOpen(true);
+  };
   const handleEmojiClick = (emojiEvent) => {
     const [emoji] = emojiEvent.names;
     const message = `${messageRef.current.value} :${emoji.replace(
@@ -67,17 +84,27 @@ const ChatInputFormattingToolbar = ({
     triggerButton?.(null, message);
   };
 
+  const openInsertLink = () => {
+    const input = messageRef.current;
+    if (!input) return;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    setLinkSelection({ start, end, text: input.value.slice(start, end) });
+    setInsertLinkOpen(true);
+  };
+
   const handleAddLink = (linkText, linkUrl) => {
     if (!linkText || !linkUrl) {
       setInsertLinkOpen(false);
       return;
     }
 
-    const start = messageRef.current.selectionStart;
-    const end = messageRef.current.selectionEnd;
     const msg = messageRef.current.value;
     const hyperlink = `[${linkText}](${linkUrl})`;
-    const message = msg.slice(0, start) + hyperlink + msg.slice(end);
+    const message =
+      msg.slice(0, linkSelection.start) +
+      hyperlink +
+      msg.slice(linkSelection.end);
 
     triggerButton?.(null, message);
     setInsertLinkOpen(false);
@@ -92,7 +119,7 @@ const ChatInputFormattingToolbar = ({
           disabled={isRecordingMessage}
           onClick={() => {
             if (isRecordingMessage) return;
-            setEmojiOpen(true);
+            openEmojiPicker();
           }}
         >
           <Icon name="emoji" size="1rem" />
@@ -106,7 +133,7 @@ const ChatInputFormattingToolbar = ({
             disabled={isRecordingMessage}
             onClick={() => {
               if (isRecordingMessage) return;
-              setEmojiOpen(true);
+              openEmojiPicker();
             }}
           >
             <Icon name="emoji" size="1.25rem" />
@@ -169,9 +196,10 @@ const ChatInputFormattingToolbar = ({
           key="link"
           css={styles.popOverItemStyles}
           disabled={isRecordingMessage}
+          onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
             if (isRecordingMessage) return;
-            setInsertLinkOpen(true);
+            openInsertLink();
           }}
         >
           <Icon name="link" size="1rem" />
@@ -183,9 +211,10 @@ const ChatInputFormattingToolbar = ({
             square
             ghost
             disabled={isRecordingMessage}
+            onMouseDown={(event) => event.preventDefault()}
             onClick={() => {
               if (isRecordingMessage) return;
-              setInsertLinkOpen(true);
+              openInsertLink();
             }}
           >
             <Icon name="link" size="1.25rem" />
@@ -249,7 +278,7 @@ const ChatInputFormattingToolbar = ({
       <Box
         css={css`
           display: flex;
-          @media (max-width: 499px) {
+          @media (max-width: ${MOBILE_BREAKPOINT}px) {
             display: none;
           }
         `}
@@ -286,7 +315,7 @@ const ChatInputFormattingToolbar = ({
 
       <Box
         css={css`
-          @media (min-width: 500px) {
+          @media (min-width: ${MOBILE_BREAKPOINT + 1}px) {
             display: none;
           }
         `}
@@ -345,6 +374,7 @@ const ChatInputFormattingToolbar = ({
             handleEmojiClick(emoji);
           }}
           onClose={() => setEmojiOpen(false)}
+          useMobileBottomSheet={isMobileViewport}
           positionStyles={css`
             position: absolute;
             bottom: 7rem;
@@ -355,7 +385,7 @@ const ChatInputFormattingToolbar = ({
 
       {isInsertLinkOpen && (
         <InsertLinkToolBox
-          selectedText={window.getSelection().toString()}
+          selectedText={linkSelection.text}
           handleAddLink={handleAddLink}
           onClose={() => setInsertLinkOpen(false)}
         />

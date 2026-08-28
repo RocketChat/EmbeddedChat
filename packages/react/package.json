@@ -31,6 +31,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@embeddedchat/ai-adapter": "workspace:*",
     "@emotion/babel-plugin": "^11.11.0",
     "@open-wc/building-rollup": "^3.0.2",
     "@rollup/plugin-babel": "^5.3.1",

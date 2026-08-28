@@ -10,6 +10,7 @@ import { Message } from '../Message';
 import isMessageLastSequential from '../../lib/isMessageLastSequential';
 import { MessageBody } from '../Message/MessageBody';
 import { MessageDivider } from '../Message/MessageDivider';
+import LocalAIMessage from '../LocalAIMessage';
 
 const MessageList = ({
   messages,
@@ -17,6 +18,8 @@ const MessageList = ({
   isUserAuthenticated,
   hasMoreMessages,
   firstUnreadMessageId,
+  catchUps = [],
+  onDismissCatchUp,
 }) => {
   const showReportMessage = useMessageStore((state) => state.showReportMessage);
   const messageToReport = useMessageStore((state) => state.messageToReport);
@@ -107,6 +110,13 @@ const MessageList = ({
                 </React.Fragment>
               );
             })}
+          {catchUps.map((catchUp) => (
+            <LocalAIMessage
+              key={catchUp.id}
+              catchUp={catchUp}
+              onDismiss={onDismissCatchUp}
+            />
+          ))}
           {showReportMessage && (
             <MessageReportWindow
               messageId={messageToReport}
@@ -121,6 +131,8 @@ const MessageList = ({
 
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape),
+  catchUps: PropTypes.arrayOf(PropTypes.object),
+  onDismissCatchUp: PropTypes.func,
 };
 
 export default MessageList;
