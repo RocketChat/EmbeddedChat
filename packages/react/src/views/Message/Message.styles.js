@@ -1,3 +1,4 @@
+
 import { css } from '@emotion/react';
 
 export const getMessageStyles = ({ theme, mode }) => {
@@ -11,9 +12,6 @@ export const getMessageStyles = ({ theme, mode }) => {
       padding-left: 2.25rem;
       padding-right: 2.25rem;
       color: ${theme.colors.foreground};
-      @media (max-width: 768px) {
-        padding-left: 0.8rem;
-      }
     `,
     timelineMain: css`
       display: flex;
@@ -97,9 +95,6 @@ export const getMessageDividerStyles = (theme) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
-      @media (max-width: 780px) {
-        z-index: 1;
-      }
     `,
 
     dividerContent: css`
@@ -149,9 +144,6 @@ export const getUnreadMessageDividerStyles = (theme, mode) => {
       margin-bottom: 0.75rem;
       padding-left: 1.25rem;
       padding-right: 1.25rem;
-      @media (max-width: 780px) {
-        z-index: 1;
-      }
     `,
 
     dividerContent: css`
@@ -185,6 +177,7 @@ export const getMessageHeaderStyles = (theme) => {
     header: css`
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       flex-grow: 0;
       flex-shrink: 1;
       min-width: 1px;
@@ -248,7 +241,8 @@ export const getMessageHeaderStyles = (theme) => {
       font-weight: 400;
       line-height: 1rem;
       flex-shrink: 0;
-      margin-left: 0.25rem;
+      margin-left: auto; 
+      min-width: fit-content;   
     `,
     messageStatus: css`
       display: flex;
