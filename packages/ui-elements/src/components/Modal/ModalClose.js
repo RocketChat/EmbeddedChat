@@ -23,7 +23,13 @@ export const ModalClose = ({
       style={{ ...style, ...styleOverrides }}
       {...props}
     >
-      <ActionButton ghost icon="cross" onClick={onClick} tabIndex={tabIndex} />
+      <ActionButton
+        ghost
+        icon="cross"
+        onClick={onClick}
+        tabIndex={tabIndex}
+        aria-label="Close"
+      />
     </Box>
   );
 };
