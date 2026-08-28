@@ -27,6 +27,15 @@ const RoomMemberItem = ({ user, host, userStatus }) => {
       css={styles.container}
       style={{ cursor: 'pointer' }}
       onClick={handleShowUserInfo}
+      role="listitem"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleShowUserInfo();
+        }
+      }}
+      aria-label={`View info for ${user.name || user.username}`}
     >
       <Avatar
         url={avatarUrl}
