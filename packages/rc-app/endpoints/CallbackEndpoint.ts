@@ -41,7 +41,14 @@ export class CallbackEndpoint extends ApiEndpoint {
             readEnvironment.getValueById("client-id"),
             readEnvironment.getValueById("client-secret"),
             getCallbackUrl(this.app),
-            Promise.resolve(decodeURIComponent(state)),
+            Promise.resolve((() => {
+                try {
+                    return decodeURIComponent(state);
+                } catch (_e) {
+                    console.warn("[CallbackEndpoint] Malformed state parameter, using raw value:", state);
+                    return state;
+                }
+            })()),
             getTokenUrl(read),
         ]);
 
