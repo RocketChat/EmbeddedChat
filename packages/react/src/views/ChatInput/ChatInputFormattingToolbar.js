@@ -245,7 +245,7 @@ const ChatInputFormattingToolbar = ({
           </React.Fragment>
         ) : (
           <Tooltip
-            text={`${item.name} ${item.shortcut && `(${item.shortcut})`}`}
+           text={`${item.name}${item.shortcut ? ` (${item.shortcut})` : ""}`}
             position="top"
             key={`formatter-${item.name}`}
           >
