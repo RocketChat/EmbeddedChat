@@ -30,8 +30,12 @@ const SurfaceItem = ({
         label,
       },
     });
-  const theme = useTheme();
-  const styles = getSurfaceItemStyles(theme);
+  const themeContext = useTheme();
+  const styles = getSurfaceItemStyles(themeContext);
+  const iconColor =
+    type === 'destructive'
+      ? themeContext.theme.colors.destructive
+      : themeContext.theme.colors.foreground;
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -59,6 +63,7 @@ const SurfaceItem = ({
             color={type}
             style={{
               cursor: cursor,
+              color: iconColor,
             }}
           />
 

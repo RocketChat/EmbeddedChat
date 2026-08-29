@@ -3,6 +3,7 @@ import { Box, StaticSelect, useTheme } from '@embeddedchat/ui-elements';
 import { getPaletteSettings } from './ThemeLab.styles';
 import ColorManager from './ColorManager';
 import FontManager from './FontManager';
+import AIThemePanel from './AIThemePanel';
 
 const ThemeSetting = () => {
   const themeObject = useTheme();
@@ -54,6 +55,7 @@ const ThemeSetting = () => {
         <h3>Typography</h3>
         <FontManager />
       </Box>
+      <AIThemePanel />
     </Box>
   );
 };

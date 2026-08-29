@@ -84,7 +84,9 @@ const getButtonStyles = (theme) => {
       }
       &.ghost {
         background: none;
-        color: ${theme.colors[`${type}`] || theme.colors.accentForeground};
+        color: ${type === 'default'
+          ? theme.colors.foreground
+          : theme.colors[`${type}`] || theme.colors.foreground};
         border: none;
       }
       &.disabled.ghost {

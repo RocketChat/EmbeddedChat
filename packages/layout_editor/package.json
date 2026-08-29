@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "test": "node --test src/lib/*.test.js",
     "preview": "vite preview"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^8.0.0",
+    "@embeddedchat/ai-adapter": "workspace:*",
     "@embeddedchat/markups": "workspace:^",
     "@embeddedchat/ui-elements": "workspace:^",
     "react": "^19.0.0",

@@ -46,6 +46,53 @@ To apply your custom theme:
 
 Alternatively, you can paste the theme object into the Theme settings of the EmbeddedChat RC App. Note: These settings will only take effect if the `remoteOpt` prop is set to `true` when configuring EmbeddedChat.
 
+### AI Theme Generator integration
+
+The Layout Editor can generate a complete, accessible EmbeddedChat theme from a developer's description. It talks directly to Ollama running on the developer's machine—no API key or separate proxy service is required.
+
+Install Ollama, start a local model, then open the AI Theme Generator:
+
+```bash
+ollama run gemma4
+```
+
+The default URL is `http://localhost:11434` and the default model is `gemma4`; both can be changed directly in the panel or configured at build time:
+
+```bash
+VITE_OLLAMA_BASE_URL=http://localhost:11434
+VITE_OLLAMA_MODEL=gemma4
+```
+
+The adapter selector also supports OpenAI and Google Gemini. These providers
+use the shared `@embeddedchat/ai-adapter` package; enter a development API key,
+model, and optional compatible base URL in the panel. Keys are kept in memory
+only and are never stored by the Layout Editor.
+
+If the editor is served from `http://localhost:5173` and the browser reports a
+CORS error, start Ollama once with that origin allowed:
+
+```bash
+OLLAMA_ORIGINS=http://localhost:5173 ollama serve
+```
+
+Use the actual Layout Editor origin if it differs. Ollama permits local API
+access without authentication, and can be configured to allow additional web
+origins when needed.
+
+Ollama is asked for a narrow JSON schema:
+
+```json
+{
+  "primaryHex": "#f59e0b",
+  "accentHex": "#8b5cf6",
+  "radius": "0.5rem",
+  "fontFamily": "Arial, Helvetica, sans-serif",
+  "mode": "dark"
+}
+```
+
+The generator only allows local Ollama URLs (`localhost`, `127.0.0.1`, or `::1`). Follow-up prompts include prior instructions, but patch only the explicitly requested tokens—refining corner radius or typography cannot regenerate the palette. Select **Deterministic fallback** in the adapter selector to use the offline parser instead. The browser validates the response, checks text contrast, and presents a draft before applying or exporting the final JSON.
+
 ### Development
 
 Clone the repo, navigate to `packages/layout_editor`, then run:

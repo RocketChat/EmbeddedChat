@@ -6,6 +6,10 @@ import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
 import useHeaderItemsStore from '../../store/headerItemsStore';
 import useMessageItemsStore from '../../store/messageItemsStore';
 import useChatInputItemsStore from '../../store/chatInputItemsStore';
+import {
+  DISPLAY_NAME_OPTIONS,
+  MESSAGE_VIEW_OPTIONS,
+} from './themeOptions';
 
 const LayoutSetting = () => {
   const styles = getLayoutSettings(useTheme());
@@ -17,30 +21,6 @@ const LayoutSetting = () => {
       displayName: state.displayName,
       setDisplayName: state.setDisplayName,
     }));
-
-  const messageViewOptions = [
-    {
-      label: 'Flat',
-      value: 'flat',
-    },
-
-    {
-      label: 'Bubble',
-      value: 'bubble',
-    },
-  ];
-
-  const displayNameOptions = [
-    {
-      label: 'Normal',
-      value: 'normal',
-    },
-
-    {
-      label: 'Colorize',
-      value: 'colorize',
-    },
-  ];
 
   const {
     surfaceItems: headerSurfaceItems,
@@ -422,7 +402,7 @@ const LayoutSetting = () => {
             <b>Message View</b>
           </Box>
           <StaticSelect
-            options={messageViewOptions}
+            options={MESSAGE_VIEW_OPTIONS}
             style={{
               position: 'absolute',
               top: '16px',
@@ -440,7 +420,7 @@ const LayoutSetting = () => {
             <b>Display Name</b>
           </Box>
           <StaticSelect
-            options={displayNameOptions}
+            options={DISPLAY_NAME_OPTIONS}
             style={{ position: 'absolute', top: '16px', right: 0 }}
             placeholder="Choose"
             value={displayName}

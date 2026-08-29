@@ -19,7 +19,8 @@ import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
 import useHeaderItemsStore from '../../store/headerItemsStore';
 
 const ChatHeader = () => {
-  const styles = getChatHeaderStyles(useTheme());
+  const theme = useTheme();
+  const styles = getChatHeaderStyles(theme);
   const { surfaceItems, menuItems, setSurfaceItems, setMenuItems } =
     useHeaderItemsStore((state) => ({
       surfaceItems: state.surfaceItems,
@@ -235,7 +236,11 @@ const ChatHeader = () => {
     <Box css={styles.chatHeaderParent}>
       <Box css={styles.chatHeaderChild}>
         <Box css={styles.channelDescription}>
-          <Icon name="hash" size="1.25rem" />
+          <Icon
+            name="hash"
+            size="1.25rem"
+            color={theme.theme.colors.foreground}
+          />
           <Box>
             <Heading
               level={3}
