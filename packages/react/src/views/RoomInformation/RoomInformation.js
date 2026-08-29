@@ -19,6 +19,7 @@ const Roominfo = () => {
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const isRoomTeam = useChannelStore((state) => state.isRoomTeam);
+  const isChannelArchived = useChannelStore((state) => state.isChannelArchived);
   const { variantOverrides } = useComponentOverrides('RoomMember');
   const viewType = variantOverrides.viewType || 'Sidebar';
   const setExclusiveState = useSetExclusiveState();
@@ -63,18 +64,20 @@ const Roominfo = () => {
           />
         </Box>
         <Box css={styles.infoContainer}>
-          <Box css={styles.archivedRoomInfo}>
-            <Icon
-              name="report"
-              size="1.25rem"
-              fill={
-                mode === 'light'
-                  ? theme.colors.warning
-                  : theme.colors.warningForeground
-              }
-            />
-            <Box css={styles.archivedText}>Room Archived</Box>
-          </Box>
+          {isChannelArchived && (
+            <Box css={styles.archivedRoomInfo}>
+              <Icon
+                name="report"
+                size="1.25rem"
+                fill={
+                  mode === 'light'
+                    ? theme.colors.warning
+                    : theme.colors.warningForeground
+                }
+              />
+              <Box css={styles.archivedText}>Room Archived</Box>
+            </Box>
+          )}
           <Box css={styles.infoHeader}>
             <Icon
               name={
