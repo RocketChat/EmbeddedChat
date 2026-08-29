@@ -11,10 +11,14 @@ const hasInitialOption = (element) => 'initialOption' in element;
 const hasInitialOptions = (element) => 'initialOptions' in element;
 
 export const getInitialValue = (element) =>
-  (hasInitialValue(element) && element.initialValue) ||
-  (hasInitialTime(element) && element.initialTime) ||
-  (hasInitialDate(element) && element.initialDate) ||
-  (hasInitialOption(element) && element.initialOption.value) ||
-  (hasInitialOptions(element) &&
-    element.initialOptions.map((option) => option.value)) ||
-  undefined;
+  hasInitialValue(element) && element.initialValue !== undefined
+    ? element.initialValue
+    : hasInitialTime(element) && element.initialTime !== undefined
+    ? element.initialTime
+    : hasInitialDate(element) && element.initialDate !== undefined
+    ? element.initialDate
+    : hasInitialOption(element) && element.initialOption?.value !== undefined
+    ? element.initialOption.value
+    : hasInitialOptions(element)
+    ? element.initialOptions.map((option) => option.value)
+    : undefined;
