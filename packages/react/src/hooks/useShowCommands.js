@@ -8,7 +8,11 @@ const useShowCommands = (commands, setFilteredCommands, setShowCommandList) =>
 
       const tokens = value.slice(0, cursor).split(/\s+/);
 
-      if (tokens.length === 1 && tokens[0].startsWith('/')) {
+      if (
+        tokens.length === 1 &&
+        tokens[0].startsWith('/') &&
+        getFilteredCommands(tokens[0]).length > 0
+      ) {
         setFilteredCommands(getFilteredCommands(tokens[0]));
         setShowCommandList(true);
       } else {
