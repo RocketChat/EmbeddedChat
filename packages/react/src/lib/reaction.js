@@ -14,4 +14,5 @@ export const serializeReactions = (reactions) => {
 };
 
 export const isSameUser = (reaction, username) =>
+  
   reaction.usernames.find((u) => u === username);

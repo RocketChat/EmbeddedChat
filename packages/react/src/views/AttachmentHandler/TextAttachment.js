@@ -10,6 +10,8 @@ import { Markdown } from '../Markdown';
 import AudioAttachment from './AudioAttachment';
 import VideoAttachment from './VideoAttachment';
 import ImageAttachment from './ImageAttachment';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
+import { useUserStore } from '../../store';
 
 const FileAttachment = ({
   attachment,
@@ -21,6 +23,11 @@ const FileAttachment = ({
   const { RCInstance } = useContext(RCContext);
   const { theme, mode } = useTheme();
   const [isExpanded, setIsExpanded] = useState(true);
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
 
   const getUserAvatarUrl = (icon) => {
     const instanceHost = RCInstance.getHost();
@@ -29,6 +36,25 @@ const FileAttachment = ({
 
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
+  };
+
+  const handleShowUserInfo = async (username, fallbackName = username) => {
+    if (!username) return;
+
+    setExclusiveState(setShowCurrentUserInfo);
+    setCurrentUser({
+      username,
+      name: fallbackName || username,
+    });
+
+    try {
+      const res = await RCInstance.userData(username);
+      if (res?.user) {
+        setCurrentUser(res.user);
+      }
+    } catch {
+      // Keep fallback user data.
+    }
   };
 
   const getMessageIdFromAttachment = (quoteAttachment) => {
@@ -130,8 +156,19 @@ const FileAttachment = ({
               url={getUserAvatarUrl(attachment?.author_icon)}
               alt="avatar"
               size="1.2em"
+              onClick={() =>
+                handleShowUserInfo(attachment?.author_name, attachment?.author_name)
+              }
+              style={{ cursor: 'pointer' }}
             />
-            <Box>@{attachment?.author_name}</Box>
+            <Box
+              onClick={() =>
+                handleShowUserInfo(attachment?.author_name, attachment?.author_name)
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              @{attachment?.author_name}
+            </Box>
             {getTimeString(attachment?.ts) && (
               <Box
                 onClick={() => handleQuoteClick(attachment)}
@@ -373,8 +410,25 @@ const FileAttachment = ({
                         url={getUserAvatarUrl(nestedAttachment?.author_icon)}
                         alt="avatar"
                         size="1.2em"
+                        onClick={() =>
+                          handleShowUserInfo(
+                            nestedAttachment?.author_name,
+                            nestedAttachment?.author_name
+                          )
+                        }
+                        style={{ cursor: 'pointer' }}
                       />
-                      <Box>@{nestedAttachment?.author_name}</Box>
+                      <Box
+                        onClick={() =>
+                          handleShowUserInfo(
+                            nestedAttachment?.author_name,
+                            nestedAttachment?.author_name
+                          )
+                        }
+                        style={{ cursor: 'pointer' }}
+                      >
+                        @{nestedAttachment?.author_name}
+                      </Box>
                       {getTimeString(nestedAttachment?.ts) && (
                         <Box
                           onClick={() => handleQuoteClick(nestedAttachment)}
