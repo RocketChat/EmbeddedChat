@@ -68,9 +68,16 @@ const Message = ({
   const openThread = useMessageStore((state) => state.openThread);
   const { getStarredMessages, getPinnedMessages } = useFetchChatData();
   const dispatchToastMessage = useToastBarDispatch();
-  const { editMessage, setEditMessage } = useMessageStore((state) => ({
+  const {
+    editMessage,
+    setEditMessage,
+    setBulkSelectMode,
+    toggleSelectedMessageId,
+  } = useMessageStore((state) => ({
     editMessage: state.editMessage,
     setEditMessage: state.setEditMessage,
+    setBulkSelectMode: state.setBulkSelectMode,
+    toggleSelectedMessageId: state.toggleSelectedMessageId,
   }));
   const deleteMessagePermissions = useMessageStore(
     (state) => state.deleteMessageRoles.roles
@@ -213,9 +220,13 @@ const Message = ({
     getStarredMessages();
   };
 
-  const handleEmojiClick = async (e, msg, canReact) => {
+  const handleEmojiClick = async (e, msg, _canReact) => {
     const emoji = (e.names?.[0] || e.name).replace(/\s/g, '_');
-    await RCInstance.reactToMessage(emoji, msg._id, canReact);
+    const reactionKeysToCheck = emoji?.startsWith(':') ? [emoji] : [emoji, `:${emoji}:`];
+    const alreadyReacted = reactionKeysToCheck.some((key) =>
+      msg?.reactions?.[key]?.usernames?.includes(authenticatedUserUsername)
+    );
+    await RCInstance.reactToMessage(emoji, msg._id, !alreadyReacted);
   };
 
   const handleOpenThread = (msg) => async () => {
@@ -327,6 +338,10 @@ const Message = ({
                       }
                     }}
                     handleQuoteMessage={() => addQuoteMessage(message)}
+                    handleSelectMessages={(msg) => {
+                      setBulkSelectMode(true);
+                      toggleSelectedMessageId(msg._id);
+                    }}
                     handleEmojiClick={handleEmojiClick}
                     handlerReportMessage={() => {
                       setMessageToReport(message._id);

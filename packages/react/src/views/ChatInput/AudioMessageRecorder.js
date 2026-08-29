@@ -32,9 +32,17 @@ const AudioMessageRecorder = (props) => {
   const [isRecorded, setIsRecorded] = useState(false);
 
   const onStop = (audioChunks) => {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-    const fileName = 'Audio record.mp3';
-    setFile(new File([audioBlob], fileName, { type: 'audio/mpeg' }));
+    const detectedMimeType = audioChunks?.[0]?.type || 'audio/webm';
+    const extension = detectedMimeType.includes('mpeg')
+      ? 'mp3'
+      : detectedMimeType.includes('ogg')
+      ? 'ogg'
+      : detectedMimeType.includes('wav')
+      ? 'wav'
+      : 'webm';
+    const audioBlob = new Blob(audioChunks, { type: detectedMimeType });
+    const fileName = `Audio record.${extension}`;
+    setFile(new File([audioBlob], fileName, { type: detectedMimeType }));
   };
 
   const [start, stop] = useMediaRecorder({
