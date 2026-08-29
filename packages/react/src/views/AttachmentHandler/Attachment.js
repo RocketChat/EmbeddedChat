@@ -32,7 +32,11 @@ const Attachment = ({ attachment, host, type, variantStyles = {}, msg }) => {
       />
     );
   }
-  if (attachment && attachment.image_url) {
+  if (
+    attachment &&
+    (attachment.image_url ||
+      (attachment.image_type?.startsWith('image/') && attachment.title_link))
+  ) {
     return (
       <ImageAttachment
         attachment={attachment}
