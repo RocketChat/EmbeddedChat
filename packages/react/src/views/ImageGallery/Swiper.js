@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 /* eslint-disable import/no-unresolved */
-import { register } from 'swiper/element/bundle';
+import { register } from 'swiper/element';
 
 export function Swiper(props) {
   const swiperRef = useRef(null);
