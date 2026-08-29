@@ -1,22 +1,3 @@
-async function saveTokenLocalStorage(token) {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('ec_token', token);
-  }
-}
-
-async function getTokenLocalStorage() {
-  if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem('ec_token');
-  }
-  return null;
-}
-
-async function deleteTokenLocalStorage() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('ec_token');
-  }
-}
-
 async function saveTokenSecure(token) {
   this.handleSecureLogin('save', token);
 }
@@ -30,7 +11,7 @@ async function deleteTokenSecure() {
   this.handleSecureLogin('delete');
 }
 
-export function getTokenStorage(secure = false) {
+export function getTokenStorage(secure = false, key = 'ec_token') {
   if (secure) {
     return {
       saveToken: saveTokenSecure,
@@ -39,8 +20,21 @@ export function getTokenStorage(secure = false) {
     };
   }
   return {
-    saveToken: saveTokenLocalStorage,
-    getToken: getTokenLocalStorage,
-    deleteToken: deleteTokenLocalStorage,
+    saveToken: (token) => {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(key, token);
+      }
+    },
+    getToken: () => {
+      if (typeof localStorage !== 'undefined') {
+        return localStorage.getItem(key);
+      }
+      return null;
+    },
+    deleteToken: () => {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(key);
+      }
+    },
   };
 }
