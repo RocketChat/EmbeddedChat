@@ -213,9 +213,13 @@ const Message = ({
     getStarredMessages();
   };
 
-  const handleEmojiClick = async (e, msg, canReact) => {
+  const handleEmojiClick = async (e, msg, _canReact) => {
     const emoji = (e.names?.[0] || e.name).replace(/\s/g, '_');
-    await RCInstance.reactToMessage(emoji, msg._id, canReact);
+    const reactionKeysToCheck = emoji?.startsWith(':') ? [emoji] : [emoji, `:${emoji}:`];
+    const alreadyReacted = reactionKeysToCheck.some((key) =>
+      msg?.reactions?.[key]?.usernames?.includes(authenticatedUserUsername)
+    );
+    await RCInstance.reactToMessage(emoji, msg._id, !alreadyReacted);
   };
 
   const handleOpenThread = (msg) => async () => {
