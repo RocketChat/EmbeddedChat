@@ -109,7 +109,6 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            )
           </Box>
         )}
       </Box>
