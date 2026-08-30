@@ -59,9 +59,17 @@ const useMessageStore = create((set, get) => ({
       }));
     }
     if (message) {
+      const isThreadMainMessage = get().threadMainMessage?._id === messageId;
       return set((state) => ({
         deletedMessage: message,
         messages: cloneArray(state.messages).filter((m) => m._id !== messageId),
+        // If the deleted message is the parent of the open thread, close the
+        // thread so it doesn't keep showing a message that no longer exists.
+        ...(isThreadMainMessage && {
+          isThreadOpen: false,
+          threadMainMessage: null,
+          threadMessages: [],
+        }),
       }));
     }
   },
