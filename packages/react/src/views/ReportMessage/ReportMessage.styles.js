@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 const styles = {
-  conatiner: css`
+  container: css`
     display: flex;
     justify-content: center;
     flex-direction: column;
