@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "rollup -c --context=window --environment NODE_ENV:production",
+    "build": "node init && rollup -c --context=window --environment NODE_ENV:production",
     "watch": "rollup -c --watch --context=window",
     "test:lint": "eslint src/**/*.js",
     "format": "prettier --write 'src/' ",
@@ -21,8 +21,8 @@
     "lint": "eslint 'src/**/*.js'",
     "lint:fix": "eslint 'src/**/*.js' --fix",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "build-icons": "node tools/icons-generator.js"
+    "build-storybook": "node init && storybook build",
+    "build-icons": "node init && node tools/icons-generator.js"
   },
   "author": "",
   "license": "ISC",

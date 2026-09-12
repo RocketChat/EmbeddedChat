@@ -7,7 +7,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "vite build && node postbuild.cjs",
+    "build": "node init && vite build && node postbuild.cjs",
     "preview": "npm run build && vite preview --port=4001",
     "format": "prettier --write 'src/' ",
     "format:check": "prettier --check 'src/' "
