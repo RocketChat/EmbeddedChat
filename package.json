@@ -10,7 +10,7 @@
   "scripts": {
     "preinstall": "node scripts/node-check.js",
     "postinstall": "yarn build",
-    "build": "lerna run build",
+    "build": "node api.js && lerna run build",
     "lint": "lerna run lint",
     "build:storybook": "lerna run build-storybook",
     "format": "lerna run format",
