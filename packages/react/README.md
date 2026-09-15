@@ -4,7 +4,6 @@ An easy-to-use, full-stack component (React.js + backend behaviors) for embeddin
 
 ![ec-demo-image](https://github.com/RocketChat/EmbeddedChat/assets/78961432/b85c7b8a-65e2-4a90-a843-f4072c942ac0)
 
-
 ## Installation
 
 ```bash
@@ -72,6 +71,8 @@ EmbeddedChat supports various props that are used to customize different aspects
 - `secure` (boolean): Uses HTTP-only cookies for authentication. Defaults to `false`.
 - `dark` (boolean): Enables dark mode in the application. Defaults to `false`.
 - `remoteOpt` (boolean): Allows props override remotely using `EmbeddedChat RC App`. Defaults to `false`.
+- `generatedUi` (object | object[]): A versioned Generated UI configuration exported by the Layout Editor.
+- `onGeneratedUiAction` (function): Receives button/input actions from a generated UI configuration.
 
 ## Understanding Prop Functionality
 
@@ -152,6 +153,113 @@ This section of the guide aims to provide a detailed explanation of these props.
   However, the `theme` object must follow a specific format. For detailed information on theming EmbeddedChat, refer to [theming.md](https://rocketchat.github.io/EmbeddedChat/docs/docs/Usage/theming).
 
   In Storybook, demonstrations of different themes and variants are provided in the 'Design Variants' section.
+
+- ### Generated UI
+
+  The Layout Editor exports a JSON-safe configuration for generated UI. It is application data: save it in your project, CMS, or backend, then load it in the host application and pass it to `EmbeddedChat`. The package does not fetch a URL itself, so the host remains responsible for authentication, authorization, caching, and choosing which layout a user can access.
+
+  A configuration has this shape:
+
+  ```json
+  {
+    "version": 1,
+    "id": "contact-support",
+    "title": "Contact support",
+    "surface": "modal",
+    "placements": ["composer", "messageToolbox"],
+    "componentType": "form",
+    "blocks": []
+  }
+  ```
+
+  In the Layout Editor, generate the component, choose **Open from**, then open **Export** and select **Download JSON** or **Copy Config**. The `surface` controls how the generated blocks are displayed; `placements` controls which EmbeddedChat toolbar shows its icon.
+
+  For a browser-rendered React application, save the exported file as `contact-support.json` beside your chat component and import it directly. No EmbeddedChat checkout or Layout Editor server is needed at runtime:
+
+  ```jsx
+  import { EmbeddedChat } from '@embeddedchat/react';
+  import configuration from './contact-support.json';
+
+  export default function Chat() {
+    return (
+      <EmbeddedChat
+        host="https://chat.example.com"
+        roomId="ROOM_ID"
+        generatedUi={configuration}
+        onGeneratedUiAction={handleGeneratedUiAction}
+      />
+    );
+  }
+
+  async function handleGeneratedUiAction({
+    id,
+    actionId,
+    values,
+    roomId,
+    messageId,
+  }) {
+    if (id !== 'contact-support' || actionId !== 'submit_support_request')
+      return;
+    const response = await fetch('/api/support-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values, roomId, messageId }),
+    });
+    if (!response.ok)
+      throw new Error('Unable to send your request. Please retry.');
+  }
+  ```
+
+  Replace the example IDs with those in your export. For server-rendered applications, load the chat through your framework's browser-only entry point. The examples here demonstrate the browser integration, not server-side rendering.
+
+  Alternatively, your application can fetch the configuration from its own static hosting, CMS, or authenticated backend. Keep loading and error handling in the host:
+
+  ```jsx
+  import { useEffect, useState } from 'react';
+  import { EmbeddedChat } from '@embeddedchat/react';
+
+  export default function Chat() {
+    const [generatedUi, setGeneratedUi] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+      const controller = new AbortController();
+      fetch('/api/generated-ui/contact-support', { signal: controller.signal })
+        .then((response) => {
+          if (!response.ok)
+            throw new Error('Unable to load the chat component.');
+          return response.json();
+        })
+        .then((configuration) => {
+          if (!controller.signal.aborted) setGeneratedUi(configuration);
+        })
+        .catch((failure) => {
+          if (!controller.signal.aborted) setError(failure.message);
+        });
+      return () => controller.abort();
+    }, []);
+
+    return (
+      <>
+        {error && <p role="alert">{error} Reload to retry.</p>}
+        <EmbeddedChat
+          host="https://chat.example.com"
+          roomId="ROOM_ID"
+          generatedUi={generatedUi}
+          onGeneratedUiAction={handleGeneratedUiAction}
+        />
+      </>
+    );
+  }
+  ```
+
+  Use `handleGeneratedUiAction` from the first example. The callback receives `id`, `title`, `componentType`, `surface`, `placement`, `actionId`, `value`, `blockId`, `roomId`, `messageId` (for message-toolbox actions), and current `values` keyed by action ID (including input values). Return a promise for asynchronous actions: buttons remain disabled while it is pending, and a rejected promise displays an error while preserving input for retry. Throw a user-safe error when your API returns an unsuccessful status; `fetch` does not reject on HTTP errors automatically.
+
+  Configurations are validated before toolbar insertion. Unsupported blocks, unsafe image URLs, duplicate action IDs, and unknown properties are rejected with console diagnostics. Duplicate configuration IDs are all rejected; independent valid configurations still render. The supported blocks are `section`, `divider`, `image`, `actions` (buttons), `input` (plain-text input), and `context` (text/images). Limits are 20 configurations, 100 blocks per configuration, 20 nesting levels, and 256 KiB per configuration. Optional input `initialValue` and `multiline` settings can be edited manually in the JSON.
+
+  Input edits survive equivalent prop rerenders. Changing component ID, blocks, surface, or originating message/room starts a new form session; closing and reopening also resets it. A callback is optional for local preview, but needed for application behavior. Nothing automatically posts generated UI or form data into the chat history.
+
+  JSON contains no executable callbacks. Images and rendered links can still load external resources; review exported content before deployment. Your backend must validate values, authorize the requested action and room/message access, and apply its normal CSRF/idempotency protections. Do not store secrets in the configuration. This feature does not provision a backend or publish layouts to npm.
 
 - ### Authentication Guide
 
