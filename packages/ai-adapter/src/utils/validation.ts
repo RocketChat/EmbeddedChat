@@ -1,5 +1,10 @@
 import { LayoutBlock } from "@rocket.chat/ui-kit";
-import Ajv from "ajv";
+import {
+  UI_KIT_JSON_SCHEMA,
+  validateGeneratedUiBlocks,
+} from "@embeddedchat/ui-kit/generated-ui.mjs";
+
+export { UI_KIT_JSON_SCHEMA };
 
 export const UI_KIT_GENERATION_SYSTEM_PROMPT = `You are a Rocket.Chat UI-Kit Block generator.
 Your goal is to generate or modify a list of UI-Kit layout blocks (JSON) according to the user's instructions.
@@ -29,204 +34,6 @@ If asked for something with no direct schema match, represent it using the close
 
 If existingBlocks is provided, update, add to, or modify that list based on the prompt.`;
 
-export const UI_KIT_JSON_SCHEMA = {
-  type: "object",
-  properties: {
-    componentType: {
-      type: "string",
-      enum: ["form", "profile", "gallery", "cta", "info"],
-    },
-    blocks: {
-      type: "array",
-      items: {
-        anyOf: [
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "divider" },
-            },
-            required: ["type"],
-            additionalProperties: false,
-          },
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "image" },
-              imageUrl: { type: "string" },
-              altText: { type: "string" },
-            },
-            required: ["type", "imageUrl", "altText"],
-            additionalProperties: false,
-          },
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "section" },
-              text: {
-                type: "object",
-                properties: {
-                  type: { type: "string", enum: ["plain_text", "mrkdwn"] },
-                  text: { type: "string" },
-                },
-                required: ["type", "text"],
-                additionalProperties: false,
-              },
-              accessory: {
-                anyOf: [
-                  { type: "null" },
-                  {
-                    type: "object",
-                    properties: {
-                      type: { type: "string", const: "button" },
-                      text: {
-                        type: "object",
-                        properties: {
-                          type: { type: "string", const: "plain_text" },
-                          text: { type: "string" },
-                        },
-                        required: ["type", "text"],
-                        additionalProperties: false,
-                      },
-                      actionId: { type: "string" },
-                      value: { type: "string" },
-                    },
-                    required: ["type", "text", "actionId", "value"],
-                    additionalProperties: false,
-                  },
-                  {
-                    type: "object",
-                    properties: {
-                      type: { type: "string", const: "image" },
-                      imageUrl: { type: "string" },
-                      altText: { type: "string" },
-                    },
-                    required: ["type", "imageUrl", "altText"],
-                    additionalProperties: false,
-                  },
-                ],
-              },
-            },
-            required: ["type", "text", "accessory"],
-            additionalProperties: false,
-          },
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "actions" },
-              elements: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    type: { type: "string", const: "button" },
-                    text: {
-                      type: "object",
-                      properties: {
-                        type: { type: "string", const: "plain_text" },
-                        text: { type: "string" },
-                      },
-                      required: ["type", "text"],
-                      additionalProperties: false,
-                    },
-                    actionId: { type: "string" },
-                    value: { type: "string" },
-                  },
-                  required: ["type", "text", "actionId", "value"],
-                  additionalProperties: false,
-                },
-              },
-            },
-            required: ["type", "elements"],
-            additionalProperties: false,
-          },
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "input" },
-              element: {
-                type: "object",
-                properties: {
-                  type: { type: "string", const: "plain_text_input" },
-                  actionId: { type: "string" },
-                  placeholder: {
-                    anyOf: [
-                      { type: "null" },
-                      {
-                        type: "object",
-                        properties: {
-                          type: { type: "string", const: "plain_text" },
-                          text: { type: "string" },
-                        },
-                        required: ["type", "text"],
-                        additionalProperties: false,
-                      },
-                    ],
-                  },
-                },
-                required: ["type", "actionId", "placeholder"],
-                additionalProperties: false,
-              },
-              label: {
-                type: "object",
-                properties: {
-                  type: { type: "string", const: "plain_text" },
-                  text: { type: "string" },
-                },
-                required: ["type", "text"],
-                additionalProperties: false,
-              },
-            },
-            required: ["type", "element", "label"],
-            additionalProperties: false,
-          },
-          {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "context" },
-              elements: {
-                type: "array",
-                items: {
-                  anyOf: [
-                    {
-                      type: "object",
-                      properties: {
-                        type: {
-                          type: "string",
-                          enum: ["plain_text", "mrkdwn"],
-                        },
-                        text: { type: "string" },
-                      },
-                      required: ["type", "text"],
-                      additionalProperties: false,
-                    },
-                    {
-                      type: "object",
-                      properties: {
-                        type: { type: "string", const: "image" },
-                        imageUrl: { type: "string" },
-                        altText: { type: "string" },
-                      },
-                      required: ["type", "imageUrl", "altText"],
-                      additionalProperties: false,
-                    },
-                  ],
-                },
-              },
-            },
-            required: ["type", "elements"],
-            additionalProperties: false,
-          },
-        ],
-      },
-    },
-  },
-  required: ["blocks", "componentType"],
-  additionalProperties: false,
-};
-
-const ajv = new Ajv();
-const validate = ajv.compile(UI_KIT_JSON_SCHEMA);
-
 export interface UIBlocksAndType {
   blocks: LayoutBlock[];
   componentType: string;
@@ -237,9 +44,7 @@ export function validateAndExtractBlocks(text: string): UIBlocksAndType {
   try {
     parsed = JSON.parse(text);
   } catch (e: any) {
-    throw new Error(
-      `Failed to parse AI layout response: ${e.message}. Response was: ${text}`
-    );
+    throw new Error(`Failed to parse AI layout response: ${e.message}`);
   }
 
   if (parsed && Array.isArray(parsed.blocks)) {
@@ -255,11 +60,11 @@ export function validateAndExtractBlocks(text: string): UIBlocksAndType {
     });
   }
 
-  const valid = validate(parsed);
+  const { valid, errors } = validateGeneratedUiBlocks(parsed);
   if (!valid) {
-    const errorText = ajv.errorsText(validate.errors);
+    const errorText = errors.join(" ");
     throw new Error(
-      `AI layout response schema validation failed: ${errorText}. Response was: ${text}`
+      `AI layout response schema validation failed: ${errorText}`
     );
   }
 

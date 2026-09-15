@@ -86,7 +86,11 @@ export class OpenAIAdapter extends BaseAIAdapter {
       "gpt-3.5-turbo",
     ];
 
-    if (!strictCapableModels.some((candidate) => model.toLowerCase().includes(candidate))) {
+    if (
+      !strictCapableModels.some((candidate) =>
+        model.toLowerCase().includes(candidate)
+      )
+    ) {
       return { type: "json_object" };
     }
 
@@ -108,7 +112,8 @@ export class OpenAIAdapter extends BaseAIAdapter {
       "Content-Type": "application/json",
       ...this.config.headers,
     };
-    if (this.config.apiKey) headers.Authorization = `Bearer ${this.config.apiKey}`;
+    if (this.config.apiKey)
+      headers.Authorization = `Bearer ${this.config.apiKey}`;
 
     const requestBody = {
       model: this.config.model,
@@ -116,7 +121,9 @@ export class OpenAIAdapter extends BaseAIAdapter {
         { role: "system", content: UI_KIT_GENERATION_SYSTEM_PROMPT },
         {
           role: "user",
-          content: `Prompt: "${prompt}"\n\nExisting Blocks:\n${JSON.stringify(existingBlocks ?? [])}`,
+          content: `Prompt: "${prompt}"\n\nExisting Blocks:\n${JSON.stringify(
+            existingBlocks ?? []
+          )}`,
         },
       ],
       max_tokens: Math.max(this.config.maxTokens, 2000),

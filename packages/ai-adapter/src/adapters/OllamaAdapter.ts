@@ -85,7 +85,9 @@ export class OllamaAdapter extends BaseAIAdapter {
           { role: "system", content: UI_KIT_GENERATION_SYSTEM_PROMPT },
           {
             role: "user",
-            content: `Prompt: "${prompt}"\n\nExisting Blocks:\n${JSON.stringify(existingBlocks ?? [])}`,
+            content: `Prompt: "${prompt}"\n\nExisting Blocks:\n${JSON.stringify(
+              existingBlocks ?? []
+            )}`,
           },
         ],
         stream: false,

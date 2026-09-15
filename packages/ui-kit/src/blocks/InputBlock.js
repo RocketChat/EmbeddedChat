@@ -5,7 +5,9 @@ import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { useUiKitState } from '../hooks/useUiKitState';
 
 const InputBlock = ({ className, block, surfaceRenderer, context }) => {
-  const { colors } = useTheme();
+  const {
+    theme: { colors },
+  } = useTheme();
   const inputElement = useMemo(
     () => ({
       ...block.element,
@@ -23,7 +25,7 @@ const InputBlock = ({ className, block, surfaceRenderer, context }) => {
       style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}
     >
       {block.label && (
-        <Box>
+        <Box is="label" htmlFor={inputElement.actionId}>
           {surfaceRenderer.renderTextObject(
             block.label,
             0,

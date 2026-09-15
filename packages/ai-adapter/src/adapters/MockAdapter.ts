@@ -2,6 +2,7 @@
 import { LayoutBlock } from "@rocket.chat/ui-kit";
 import { BaseAIAdapter } from "../BaseAIAdapter";
 import { AIContext, AIResponse } from "../types";
+import { validateAndExtractBlocks } from "../utils/validation";
 
 export class MockAdapter extends BaseAIAdapter {
   name = "Mock (Demo)";
@@ -61,7 +62,10 @@ export class MockAdapter extends BaseAIAdapter {
           ],
         },
       ];
-    } else if (lowerPrompt.includes("profile") || lowerPrompt.includes("user")) {
+    } else if (
+      lowerPrompt.includes("profile") ||
+      lowerPrompt.includes("user")
+    ) {
       componentType = "profile";
       blocks = [
         {
@@ -77,7 +81,11 @@ export class MockAdapter extends BaseAIAdapter {
           },
         },
       ];
-    } else if (lowerPrompt.includes("gallery") || lowerPrompt.includes("media") || lowerPrompt.includes("images")) {
+    } else if (
+      lowerPrompt.includes("gallery") ||
+      lowerPrompt.includes("media") ||
+      lowerPrompt.includes("images")
+    ) {
       componentType = "gallery";
       blocks = [
         {
@@ -103,7 +111,11 @@ export class MockAdapter extends BaseAIAdapter {
           ],
         },
       ];
-    } else if (lowerPrompt.includes("cta") || lowerPrompt.includes("action") || lowerPrompt.includes("button")) {
+    } else if (
+      lowerPrompt.includes("cta") ||
+      lowerPrompt.includes("action") ||
+      lowerPrompt.includes("button")
+    ) {
       componentType = "cta";
       blocks = [
         {
@@ -141,7 +153,14 @@ export class MockAdapter extends BaseAIAdapter {
       ];
     }
 
-    return { blocks: blocks as LayoutBlock[], componentType };
+    return validateAndExtractBlocks(
+      JSON.stringify({
+        blocks: blocks.map((block) =>
+          block.type === "section" ? { accessory: null, ...block } : block
+        ),
+        componentType,
+      })
+    );
   }
 
   async isAvailable(): Promise<boolean> {
