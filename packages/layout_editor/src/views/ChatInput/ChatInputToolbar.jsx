@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { getChatInputToolbarStyles } from './ChatInput.styles';
 import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
@@ -6,8 +6,7 @@ import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
 import Formatters from './Formatters';
 import useChatInputItemsStore from '../../store/chatInputItemsStore';
 import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
-import PreviewErrorBoundary from '../../components/PreviewErrorBoundary';
-import { UiKitMessage, UiKitModal, UiKitContextualBar } from '@embeddedchat/ui-kit';
+import { GeneratedUiSurface, getGeneratedUiIcon } from '@embeddedchat/ui-kit';
 import {
   DndContext,
   closestCenter,
@@ -19,14 +18,6 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
-
-const componentTypeIconMap = {
-  form: 'edit',
-  profile: 'user',
-  gallery: 'file',
-  cta: 'star',
-  info: 'info',
-};
 
 const ChatInputToolbar = () => {
   const styles = getChatInputToolbarStyles(useTheme());
@@ -42,13 +33,10 @@ const ChatInputToolbar = () => {
   const [formattersVisible, setFormattersVisible] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
 
-  const { publishedBlocks, publishedSurface, publishedComponentType } = useAiGeneratedBlocksStore(
-    (state) => ({
-      publishedBlocks: state.publishedBlocks,
-      publishedSurface: state.publishedSurface,
-      publishedComponentType: state.publishedComponentType,
-    })
+  const publishedConfiguration = useAiGeneratedBlocksStore(
+    (state) => state.publishedConfiguration
   );
+  const generatedUiAnchor = useRef(null);
 
   const placeholderSurfaceItem = 'placeholder-surface';
 
@@ -88,7 +76,7 @@ const ChatInputToolbar = () => {
         onClick: () => {},
         iconName: 'attachment',
         visible: true,
-      },      
+      },
       formatter: {
         label: 'Formatter',
         id: 'formatter',
@@ -104,11 +92,13 @@ const ChatInputToolbar = () => {
         onClick: () => {
           setAiOpen((prev) => !prev);
         },
-        iconName: componentTypeIconMap[publishedComponentType] || 'info',
-        visible: true,
+        iconName: getGeneratedUiIcon(publishedConfiguration?.componentType),
+        visible: Boolean(
+          publishedConfiguration?.placements.includes('composer')
+        ),
       },
     };
-  }, [setAiOpen, publishedComponentType]);
+  }, [setAiOpen, publishedConfiguration]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -195,7 +185,11 @@ const ChatInputToolbar = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
+      <Box
+        ref={generatedUiAnchor}
+        css={styles.chatFormat}
+        className="ec-chat-input-formatting-toolbar"
+      >
         {surfaceOptions.length > 0 && (
           <SurfaceMenu
             options={surfaceOptions}
@@ -203,41 +197,14 @@ const ChatInputToolbar = () => {
             onRemove={removeSurfaceItem}
           />
         )}
-        {aiOpen && (
-          <Box
-            style={{
-              position: 'absolute',
-              bottom: '100%',
-              right: 0,
-              zIndex: 1000,
-              background: '#ffffff',
-              border: '1px solid #d1d5db',
-              borderRadius: '0.375rem',
-              padding: '1rem',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-              minWidth: '250px',
-              color: '#374151',
-              marginBottom: '0.5rem',
-            }}
-          >
-            <div style={{ fontWeight: 'bold', marginBottom: '0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.375rem' }}>
-              <span>AI Generated Component</span>
-              <button onClick={() => setAiOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.875rem', color: '#9ca3af' }}>✕</button>
-            </div>
-            <PreviewErrorBoundary>
-              {publishedBlocks && publishedBlocks.length > 0 ? (
-                publishedSurface === 'contextualBar'
-                  ? UiKitContextualBar(publishedBlocks)
-                  : publishedSurface === 'modal'
-                  ? UiKitModal(publishedBlocks)
-                  : UiKitMessage(publishedBlocks)
-              ) : (
-                <div style={{ fontSize: '0.85rem', color: '#6b7280', textAlign: 'center' }}>
-                  No AI content published yet.
-                </div>
-              )}
-            </PreviewErrorBoundary>
-          </Box>
+        {aiOpen && publishedConfiguration?.placements.includes('composer') && (
+          <GeneratedUiSurface
+            open
+            configuration={publishedConfiguration}
+            placement="composer"
+            anchorRef={generatedUiAnchor}
+            onClose={() => setAiOpen(false)}
+          />
         )}
       </Box>
 

@@ -5,7 +5,11 @@ import {
   useToastBarDispatch,
   Icon,
 } from '@embeddedchat/ui-elements';
-import { UiKitMessage, UiKitModal, UiKitContextualBar } from '@embeddedchat/ui-kit';
+import {
+  GeneratedUiContent,
+  createGeneratedUiConfiguration,
+  GENERATED_UI_PLACEMENTS,
+} from '@embeddedchat/ui-kit';
 import {
   OllamaAdapter,
   OpenAIAdapter,
@@ -14,9 +18,9 @@ import {
 import { getAICodePanelStyles } from './AICodePanel.styles';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import useLayoutStore from '../../store/layoutStore';
 import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
-import PreviewErrorBoundary from '../../components/PreviewErrorBoundary';
+import { useGeneratedUiExport } from './useGeneratedUiExport';
+import GeneratedUiActions from './GeneratedUiActions';
 
 const AICodePanel = () => {
   const { theme } = useTheme();
@@ -42,34 +46,89 @@ const AICodePanel = () => {
   const [openAIModel, setOpenAIModel] = useState(
     () => localStorage.getItem('ec_openai_model') || 'gpt-4o'
   );
-  const [openAIBaseUrl, setOpenAIBaseUrl] = useState('https://api.openai.com/v1');
+  const [openAIBaseUrl, setOpenAIBaseUrl] = useState(
+    'https://api.openai.com/v1'
+  );
 
   // Generation & Layout states
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [draftBlocks, setDraftBlocks] = useState([]);
   const [draftComponentType, setDraftComponentType] = useState('info');
+  const [componentId, setComponentId] = useState(
+    () => localStorage.getItem('ec_draft_component_id') || 'generated-ui'
+  );
+  const [componentTitle, setComponentTitle] = useState(
+    () => localStorage.getItem('ec_draft_component_title') || 'Generated UI'
+  );
   const [errorMsg, setErrorMsg] = useState(null);
   const [tab, setTab] = useState('preview');
   const [surface, setSurface] = useState('message');
+  const [placements, setPlacements] = useState(['composer']);
 
-  const publishBlocks = useAiGeneratedBlocksStore((state) => state.publishBlocks);
+  const publishConfiguration = useAiGeneratedBlocksStore(
+    (state) => state.publishConfiguration
+  );
 
   // Load draft from storage on mount
   useEffect(() => {
     const saved = localStorage.getItem('ec_draft_blocks');
     if (saved) {
       try {
-        setDraftBlocks(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        createGeneratedUiConfiguration({ blocks: parsed });
+        setDraftBlocks(parsed);
       } catch (e) {
-        console.error('Failed to parse saved draft blocks', e);
+        setErrorMsg(
+          'The saved draft is invalid. Reset it or generate a new component.'
+        );
       }
     }
     const savedType = localStorage.getItem('ec_draft_component_type');
     if (savedType) {
       setDraftComponentType(savedType);
     }
+    const savedPlacements = localStorage.getItem('ec_draft_placements');
+    if (savedPlacements) {
+      try {
+        const parsedPlacements = JSON.parse(savedPlacements);
+        const validPlacements = Array.isArray(parsedPlacements)
+          ? Array.from(
+              new Set(
+                parsedPlacements.filter((placement) =>
+                  GENERATED_UI_PLACEMENTS.includes(placement)
+                )
+              )
+            )
+          : [];
+        if (validPlacements.length > 0) {
+          setPlacements(validPlacements);
+        }
+      } catch (e) {
+        console.error('Failed to parse saved generated UI placements', e);
+      }
+    }
   }, []);
+
+  const {
+    configuration,
+    exportError,
+    getGeneratedUiConfiguration,
+    isDevMode,
+    toggleDevMode,
+    isSyncingPreview,
+    handleSyncToEmbeddedChat,
+    handleCopyGeneratedUiConfiguration,
+    handleDownloadGeneratedUiConfiguration,
+  } = useGeneratedUiExport({
+    componentId,
+    componentTitle,
+    draftBlocks,
+    surface,
+    draftComponentType,
+    placements,
+    dispatchToastMessage,
+  });
 
   const handleGenerate = useCallback(async () => {
     if (!prompt.trim() || isGenerating) return;
@@ -102,7 +161,8 @@ const AICodePanel = () => {
         adapter = new MockAdapter();
       }
 
-      const { blocks: updatedBlocks, componentType: updatedType } = await adapter.generateUIBlocks(prompt, draftBlocks);
+      const { blocks: updatedBlocks, componentType: updatedType } =
+        await adapter.generateUIBlocks(prompt, draftBlocks);
       setDraftBlocks(updatedBlocks);
       setDraftComponentType(updatedType);
       localStorage.setItem('ec_draft_blocks', JSON.stringify(updatedBlocks));
@@ -137,36 +197,35 @@ const AICodePanel = () => {
   ]);
 
   const handlePublish = useCallback(() => {
-    if (!draftBlocks || draftBlocks.length === 0) return;
-    publishBlocks(draftBlocks, surface, draftComponentType);
-    dispatchToastMessage({
-      type: 'success',
-      message: `Layout published as ${surface}!`,
-    });
-  }, [draftBlocks, surface, draftComponentType, publishBlocks, dispatchToastMessage]);
-
-
-  const handleCopyConfig = useCallback(() => {
-    const jsonStr = JSON.stringify(draftBlocks, null, 2);
-    const indentedJson = jsonStr.replace(/\n/g, '\n    ');
-    const jsxSnippet = `<EmbeddedChat\n  customSurfaces={{\n    contextualBar: ${indentedJson},\n    onAction: (interaction) => {\n      // TODO: handle interaction — interaction.type is 'blockAction' (button clicks) or 'stateUpdate' (input changes)\n      console.log(interaction);\n    },\n  }}\n/>`;
-
-    navigator.clipboard
-      .writeText(jsxSnippet)
-      .then(() => {
-        dispatchToastMessage({
-          type: 'success',
-          message: 'JSX configuration copied to clipboard.',
-        });
-      })
-      .catch((err) => {
-        console.error('Copy config failed', err);
-        dispatchToastMessage({
-          type: 'error',
-          message: 'Failed to copy JSX configuration.',
-        });
+    try {
+      publishConfiguration(getGeneratedUiConfiguration());
+      dispatchToastMessage({
+        type: 'success',
+        message: 'Component applied to the editor preview.',
       });
-  }, [draftBlocks, dispatchToastMessage]);
+    } catch (error) {
+      dispatchToastMessage({ type: 'error', message: error.message });
+    }
+  }, [publishConfiguration, getGeneratedUiConfiguration, dispatchToastMessage]);
+
+  const togglePlacement = useCallback((placement) => {
+    setPlacements((currentPlacements) => {
+      const isSelected = currentPlacements.includes(placement);
+      const nextPlacements = isSelected
+        ? currentPlacements.length === 1
+          ? currentPlacements
+          : currentPlacements.filter(
+              (currentPlacement) => currentPlacement !== placement
+            )
+        : [...currentPlacements, placement];
+
+      localStorage.setItem(
+        'ec_draft_placements',
+        JSON.stringify(nextPlacements)
+      );
+      return nextPlacements;
+    });
+  }, []);
 
   const handleReset = useCallback(() => {
     setDraftBlocks([]);
@@ -174,6 +233,12 @@ const AICodePanel = () => {
     setErrorMsg(null);
     localStorage.removeItem('ec_draft_blocks');
     localStorage.removeItem('ec_draft_component_type');
+    localStorage.removeItem('ec_draft_placements');
+    localStorage.removeItem('ec_draft_component_id');
+    localStorage.removeItem('ec_draft_component_title');
+    setComponentId('generated-ui');
+    setComponentTitle('Generated UI');
+    setPlacements(['composer']);
     dispatchToastMessage({
       type: 'success',
       message: 'Draft blocks cleared.',
@@ -205,7 +270,8 @@ const AICodePanel = () => {
       <Box
         css={styles.header}
         onClick={() => setOpen((o) => !o)}
-        role="button"
+        is="button"
+        type="button"
         aria-expanded={open}
       >
         <Box css={styles.headerTitle}>
@@ -313,6 +379,37 @@ const AICodePanel = () => {
             />
           </Box>
 
+          <Box>
+            <span css={styles.fieldLabel}>Component ID</span>
+            <input
+              css={styles.input}
+              value={componentId}
+              onChange={(e) => {
+                setComponentId(e.target.value);
+                localStorage.setItem('ec_draft_component_id', e.target.value);
+              }}
+              placeholder="generated-ui"
+              aria-label="Generated UI component ID"
+            />
+          </Box>
+
+          <Box>
+            <span css={styles.fieldLabel}>Component title</span>
+            <input
+              css={styles.input}
+              value={componentTitle}
+              onChange={(e) => {
+                setComponentTitle(e.target.value);
+                localStorage.setItem(
+                  'ec_draft_component_title',
+                  e.target.value
+                );
+              }}
+              placeholder="Generated UI"
+              aria-label="Generated UI component title"
+            />
+          </Box>
+
           {/* Processing indicator */}
           {isGenerating && (
             <Box css={styles.processingRow}>
@@ -355,7 +452,10 @@ const AICodePanel = () => {
               <Box css={styles.tabRow}>
                 <button
                   type="button"
-                  css={[styles.tabBtn, tab === 'preview' && styles.tabBtnActive]}
+                  css={[
+                    styles.tabBtn,
+                    tab === 'preview' && styles.tabBtnActive,
+                  ]}
                   onClick={() => setTab('preview')}
                 >
                   Preview
@@ -402,47 +502,109 @@ const AICodePanel = () => {
                         justifyContent: 'space-between',
                       }}
                     >
-                      {[['message', 'Message'], ['contextualBar', 'Contextual Bar'], ['modal', 'Modal']].map(
-                        ([val, label]) => (
-                          <button
-                            key={val}
-                            type="button"
-                            onClick={() => setSurface(val)}
-                            style={{
-                              flex: 1,
-                              fontSize: '0.7rem',
-                              padding: '0.3rem 0.15rem',
-                              borderRadius: '0.2rem',
-                              border: '1px solid',
-                              borderColor: surface === val ? '#6366f1' : '#d1d5db',
-                              background: surface === val ? '#6366f1' : 'transparent',
-                              color: surface === val ? '#fff' : 'inherit',
-                              cursor: 'pointer',
-                              fontWeight: surface === val ? 700 : 400,
-                              transition: 'all 0.15s',
-                              whiteSpace: 'normal',
-                              minWidth: '0',
-                              textAlign: 'center',
-                              wordBreak: 'break-word',
-                            }}
-                          >
-                            {label}
-                          </button>
-                        )
-                      )}
+                      {[
+                        ['message', 'Message'],
+                        ['contextualBar', 'Contextual Bar'],
+                        ['modal', 'Modal'],
+                      ].map(([val, label]) => (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setSurface(val)}
+                          style={{
+                            flex: 1,
+                            fontSize: '0.7rem',
+                            padding: '0.3rem 0.15rem',
+                            borderRadius: '0.2rem',
+                            border: '1px solid',
+                            borderColor:
+                              surface === val ? '#6366f1' : '#d1d5db',
+                            background:
+                              surface === val ? '#6366f1' : 'transparent',
+                            color: surface === val ? '#fff' : 'inherit',
+                            cursor: 'pointer',
+                            fontWeight: surface === val ? 700 : 400,
+                            transition: 'all 0.15s',
+                            whiteSpace: 'normal',
+                            minWidth: '0',
+                            textAlign: 'center',
+                            wordBreak: 'break-word',
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </Box>
+                  </Box>
+                  <Box
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.4rem',
+                      padding: '0.4rem 0.5rem',
+                      background: 'rgba(0,0,0,0.04)',
+                      border: '1px solid',
+                      borderColor: 'var(--ec-border, #e0e0e0)',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.65rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: '#888',
+                      }}
+                    >
+                      Open from:
+                    </span>
+                    <Box style={{ display: 'flex', gap: '0.35rem' }}>
+                      {[
+                        ['composer', 'Composer'],
+                        ['messageToolbox', 'Message toolbox'],
+                      ].map(([placement, label]) => (
+                        <button
+                          key={placement}
+                          type="button"
+                          onClick={() => togglePlacement(placement)}
+                          style={{
+                            flex: 1,
+                            fontSize: '0.7rem',
+                            padding: '0.3rem 0.15rem',
+                            borderRadius: '0.2rem',
+                            border: '1px solid',
+                            borderColor: placements.includes(placement)
+                              ? '#6366f1'
+                              : '#d1d5db',
+                            background: placements.includes(placement)
+                              ? '#6366f1'
+                              : 'transparent',
+                            color: placements.includes(placement)
+                              ? '#fff'
+                              : 'inherit',
+                            cursor: 'pointer',
+                            fontWeight: placements.includes(placement)
+                              ? 700
+                              : 400,
+                          }}
+                        >
+                          {label}
+                        </button>
+                      ))}
                     </Box>
                   </Box>
                   <Box
                     css={styles.previewBox}
                     style={{ display: 'block', minHeight: 'auto' }}
                   >
-                    <PreviewErrorBoundary key={surface}>
-                      {surface === 'contextualBar'
-                        ? UiKitContextualBar(draftBlocks)
-                        : surface === 'modal'
-                        ? UiKitModal(draftBlocks)
-                        : UiKitMessage(draftBlocks)}
-                    </PreviewErrorBoundary>
+                    {configuration ? (
+                      <GeneratedUiContent
+                        configuration={configuration}
+                        placement="editor"
+                      />
+                    ) : (
+                      <Box role="alert">{exportError}</Box>
+                    )}
                   </Box>
                 </>
               ) : (
@@ -468,32 +630,58 @@ const AICodePanel = () => {
                 </Box>
               )}
 
-              {/* Action Buttons Row */}
-              <Box style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <GeneratedUiActions
+                styles={styles}
+                disabled={Boolean(exportError)}
+                onApply={handlePublish}
+                onCopy={handleCopyGeneratedUiConfiguration}
+                onDownload={handleDownloadGeneratedUiConfiguration}
+                onReset={handleReset}
+              />
+              {import.meta.env.DEV && (
+                <Box css={styles.devModeControl}>
+                  <Box>
+                    <span css={styles.devModeTitle}>Dev mode</span>
+                    <p css={styles.devModeHint}>
+                      Show the local EmbeddedChat preview sync action.
+                    </p>
+                  </Box>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isDevMode}
+                    aria-label="Enable developer mode"
+                    css={[
+                      styles.devModeSwitch,
+                      isDevMode && styles.devModeSwitchActive,
+                    ]}
+                    onClick={toggleDevMode}
+                  >
+                    <span
+                      css={[
+                        styles.devModeThumb,
+                        isDevMode && styles.devModeThumbActive,
+                      ]}
+                    />
+                  </button>
+                </Box>
+              )}
+              {import.meta.env.DEV && isDevMode && (
                 <button
                   type="button"
-                  css={styles.generateBtn}
-                  style={{ flex: 1 }}
-                  onClick={handlePublish}
+                  css={[
+                    styles.actionButton,
+                    styles.secondaryAction,
+                    styles.syncAction,
+                  ]}
+                  onClick={handleSyncToEmbeddedChat}
+                  disabled={isSyncingPreview || Boolean(exportError)}
                 >
-                  Publish Layout
+                  {isSyncingPreview
+                    ? 'Syncing EmbeddedChat preview…'
+                    : 'Sync to EmbeddedChat preview'}
                 </button>
-                <button
-                  type="button"
-                  css={styles.generateBtn}
-                  style={{ flex: 1 }}
-                  onClick={handleCopyConfig}
-                >
-                  Copy Config
-                </button>
-                <button
-                  type="button"
-                  css={styles.resetBtn}
-                  onClick={handleReset}
-                >
-                  Reset
-                </button>
-              </Box>
+              )}
             </>
           )}
         </Box>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Menu } from '../../components/SortableMenu';
 import { getMessageToolboxStyles } from './Message.styles';
@@ -18,16 +18,7 @@ import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import useMessageItemsStore from '../../store/messageItemsStore';
 import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
-import PreviewErrorBoundary from '../../components/PreviewErrorBoundary';
-import { UiKitMessage, UiKitModal, UiKitContextualBar } from '@embeddedchat/ui-kit';
-
-const componentTypeIconMap = {
-  form: 'edit',
-  profile: 'user',
-  gallery: 'file',
-  cta: 'star',
-  info: 'info',
-};
+import { GeneratedUiSurface, getGeneratedUiIcon } from '@embeddedchat/ui-kit';
 
 export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
   const styles = getMessageToolboxStyles(useTheme());
@@ -41,13 +32,10 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
   const [aiOpen, setAiOpen] = useState(false);
-  const { publishedBlocks, publishedSurface, publishedComponentType } = useAiGeneratedBlocksStore(
-    (state) => ({
-      publishedBlocks: state.publishedBlocks,
-      publishedSurface: state.publishedSurface,
-      publishedComponentType: state.publishedComponentType,
-    })
+  const publishedConfiguration = useAiGeneratedBlocksStore(
+    (state) => state.publishedConfiguration
   );
+  const generatedUiAnchor = useRef(null);
 
   const placeholderSurfaceItem = 'placeholder-surface';
   const placeholderMenuItem = 'placeholder-menu';
@@ -189,11 +177,13 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
         onClick: () => {
           setAiOpen((prev) => !prev);
         },
-        iconName: componentTypeIconMap[publishedComponentType] || 'info',
-        visible: true,
+        iconName: getGeneratedUiIcon(publishedConfiguration?.componentType),
+        visible: Boolean(
+          publishedConfiguration?.placements.includes('messageToolbox')
+        ),
       },
     }),
-    [setAiOpen, publishedComponentType]
+    [setAiOpen, publishedConfiguration]
   );
 
   const menuOptions =
@@ -250,7 +240,13 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
         >
-          <Box css={styles.toolbox} className="ec-message-toolbox" style={{ position: 'relative' }} {...props}>
+          <Box
+            css={styles.toolbox}
+            ref={generatedUiAnchor}
+            className="ec-message-toolbox"
+            style={{ position: 'relative' }}
+            {...props}
+          >
             {surfaceOptions?.length > 0 && (
               <SurfaceMenu
                 options={surfaceOptions}
@@ -269,42 +265,16 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
                 onRemove={removeMenuItem}
               />
             )}
-            {aiOpen && (
-              <Box
-                style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  right: 0,
-                  zIndex: 1000,
-                  background: '#ffffff',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.375rem',
-                  padding: '1rem',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  minWidth: '250px',
-                  color: '#374151',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                <div style={{ fontWeight: 'bold', marginBottom: '0.875rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.375rem' }}>
-                  <span>AI Generated Component</span>
-                  <button onClick={() => setAiOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.875rem', color: '#9ca3af' }}>✕</button>
-                </div>
-                <PreviewErrorBoundary>
-                  {publishedBlocks && publishedBlocks.length > 0 ? (
-                    publishedSurface === 'contextualBar'
-                      ? UiKitContextualBar(publishedBlocks)
-                      : publishedSurface === 'modal'
-                      ? UiKitModal(publishedBlocks)
-                      : UiKitMessage(publishedBlocks)
-                  ) : (
-                    <div style={{ fontSize: '0.85rem', color: '#6b7280', textAlign: 'center' }}>
-                      No AI content published yet.
-                    </div>
-                  )}
-                </PreviewErrorBoundary>
-              </Box>
-            )}
+            {aiOpen &&
+              publishedConfiguration?.placements.includes('messageToolbox') && (
+                <GeneratedUiSurface
+                  open
+                  configuration={publishedConfiguration}
+                  placement="messageToolbox"
+                  anchorRef={generatedUiAnchor}
+                  onClose={() => setAiOpen(false)}
+                />
+              )}
           </Box>
           {createPortal(
             <DragOverlay zIndex={1700}>
