@@ -43,6 +43,19 @@ export const CodeBlockStyles = () => {
   return styles;
 };
 
+export const HighlightStyles = () => {
+  const { theme } = useTheme();
+  const styles = {
+    highlight: css`
+      background-color: ${theme.colors.warning};
+      color: ${theme.colors.warningForeground};
+      border-radius: 2px;
+      padding: 0 1px;
+    `,
+  };
+  return styles;
+};
+
 export const ColorElementStyles = {
   colorBox: (r, g, b, a) => css`
     background-color: rgba(${r}, ${g}, ${b}, ${(a / 255) * 100}%);
