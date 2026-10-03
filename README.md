@@ -37,16 +37,22 @@ Ensure that the "Enable CORS" option is turned on in your Rocket.Chat server. Yo
 
 #### Prerequisites
 
-- **Node.js**: Version 22 (LTS) is required. Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
-
-  To install and use the correct Node.js version, execute the following commands with the specific version number:
+- **Node.js**: the required version is pinned in [`.nvmrc`](.nvmrc) at the repo root. Instead of copying a version number by hand, let [NVM](https://github.com/nvm-sh/nvm) read it for you — run these from the repo root:
 
   ```bash
-  nvm install <version>
-  nvm use <version>
+  nvm install
+  nvm use
   ```
 
-  Replace `<version>` with the required Node.js version
+  With no argument, both commands read `.nvmrc`, so they stay correct whenever the pinned version changes.
+
+  `yarn` verifies this before it installs anything: a `preinstall` hook (`scripts/node-check.js`) compares your Node major version against `.nvmrc` and stops with a message like
+
+  ```
+  Error: Required Node.js major version is 24, but found v22.11.0.
+  ```
+
+  If you see that, run `nvm install && nvm use` from the repo root and install again.
 
 - **Yarn Workspaces**: Ensure Yarn workspaces are enabled. If not, run:
 
@@ -69,6 +75,26 @@ After installing dependencies, build the packages (`auth`, `api`, and `react`) b
 ```bash
 yarn build
 ```
+
+#### Running the Tests
+
+Tests live alongside the package they cover, and **each package is run from its own directory**. Babel and the test runners resolve their configuration from the current working directory, so running them from the repo root will not pick up a package's `babel.config.js`.
+
+`packages/layout_editor` uses Node's built-in test runner:
+
+```bash
+cd packages/layout_editor
+yarn test
+```
+
+`packages/e2e-react` holds the Playwright end-to-end suite. It needs a running Rocket.Chat server and a built `react` package:
+
+```bash
+cd packages/e2e-react
+yarn test
+```
+
+`packages/react` contains `src/index.test.js`, but it cannot be run on `develop` as things stand — see [#1191](https://github.com/RocketChat/EmbeddedChat/issues/1191).
 
 #### Starting Storybook for React
 
