@@ -35,6 +35,11 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import {
+  getDraftMessage,
+  saveDraftMessage,
+  deleteDraftMessage,
+} from '../../lib/draftMessage';
 import useDropBox from '../../hooks/useDropBox';
 import useAIComposer from '../../hooks/useAIComposer';
 import AIComposerToolbar from '../AIComposerToolbar';
@@ -49,6 +54,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const inputRef = useRef(null);
   const typingRef = useRef();
+  const draftTimerRef = useRef();
   const messageRef = useRef(null);
   const chatInputContainer = useRef(null);
   const timerRef = useRef();
@@ -74,6 +80,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const [isMsgLong, setIsMsgLong] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState([]);
   const [isAiAvailable, setIsAiAvailable] = useState(false);
+  const [isDraftRestored, setIsDraftRestored] = useState(false);
 
   const {
     isUserAuthenticated,
@@ -206,9 +213,22 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       messageRef.current.value = editMessage.msg;
       messageRef.current.focus();
     } else {
-      messageRef.current.value = '';
+      const draft = getDraftMessage(ECOptions.roomId, threadId);
+      messageRef.current.value = draft || '';
+      setDisableButton(!draft);
+      setIsDraftRestored(!!draft);
     }
   }, [editMessage]);
+
+  useEffect(() => {
+    if (!messageRef.current || editMessage.msg || editMessage.attachments) {
+      return;
+    }
+    const draft = getDraftMessage(ECOptions.roomId, threadId);
+    messageRef.current.value = draft || '';
+    setDisableButton(!draft);
+    setIsDraftRestored(!!draft);
+  }, [ECOptions.roomId, threadId]);
 
   useEffect(() => {
     if (
@@ -321,6 +341,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const handleSendNewMessage = async (message) => {
     messageRef.current.value = '';
     setDisableButton(true);
+    clearTimeout(draftTimerRef.current);
+    deleteDraftMessage(ECOptions.roomId, threadId);
+    setIsDraftRestored(false);
 
     let pendingMessage = '';
     let quotedMessages = '';
@@ -403,6 +426,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (commands.find((c) => c.command === command.replace('/', ''))) {
       messageRef.current.value = '';
       setDisableButton(true);
+      clearTimeout(draftTimerRef.current);
+      deleteDraftMessage(ECOptions.roomId, threadId);
+      setIsDraftRestored(false);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
     }
@@ -541,6 +567,18 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
 
     setDisableButton(!(messageRef.current?.value || '').length);
+
+    if (!(editMessage.msg || editMessage.attachments)) {
+      const draftText = messageRef.current?.value ?? '';
+      clearTimeout(draftTimerRef.current);
+      draftTimerRef.current = setTimeout(() => {
+        saveDraftMessage(ECOptions.roomId, threadId, draftText);
+      }, 300);
+      if (!draftText.length) {
+        setIsDraftRestored(false);
+      }
+    }
+
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(parsedMessage);
@@ -715,6 +753,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 : undefined
             }
           />
+        ) : null}
+        {isDraftRestored &&
+        !(editMessage.msg || editMessage.attachments) &&
+        !isChannelReadOnly ? (
+          <ChannelState status="Draft" iconName="edit" />
         ) : null}
         <Box
           css={css`
