@@ -51,6 +51,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const aiAdapter = ECOptions?.aiAdapter ?? null;
   const { theme } = useTheme();
   const styles = getChatInputStyles(theme);
+  const draftHost = RCInstance.getHost();
 
   const inputRef = useRef(null);
   const typingRef = useRef();
@@ -213,7 +214,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       messageRef.current.value = editMessage.msg;
       messageRef.current.focus();
     } else {
-      const draft = getDraftMessage(ECOptions.roomId, threadId);
+      const draft = getDraftMessage(
+        ECOptions.roomId,
+        threadId,
+        userId,
+        draftHost
+      );
       messageRef.current.value = draft || '';
       setDisableButton(!draft);
       setIsDraftRestored(!!draft);
@@ -224,7 +230,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     if (!messageRef.current || editMessage.msg || editMessage.attachments) {
       return;
     }
-    const draft = getDraftMessage(ECOptions.roomId, threadId);
+    const draft = getDraftMessage(
+      ECOptions.roomId,
+      threadId,
+      userId,
+      draftHost
+    );
     messageRef.current.value = draft || '';
     setDisableButton(!draft);
     setIsDraftRestored(!!draft);
@@ -277,6 +288,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const textToAttach = () => {
     const message = messageRef.current.value.trim();
     messageRef.current.value = '';
+    clearTimeout(draftTimerRef.current);
+    deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
+    setIsDraftRestored(false);
     setEditMessage({});
     setIsMsgLong(false);
     const messageBlob = new Blob([message], { type: 'text/plain' });
@@ -342,7 +356,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     messageRef.current.value = '';
     setDisableButton(true);
     clearTimeout(draftTimerRef.current);
-    deleteDraftMessage(ECOptions.roomId, threadId);
+    deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
     setIsDraftRestored(false);
 
     let pendingMessage = '';
@@ -427,7 +441,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       messageRef.current.value = '';
       setDisableButton(true);
       clearTimeout(draftTimerRef.current);
-      deleteDraftMessage(ECOptions.roomId, threadId);
+      deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
       setIsDraftRestored(false);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
@@ -572,7 +586,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       const draftText = messageRef.current?.value ?? '';
       clearTimeout(draftTimerRef.current);
       draftTimerRef.current = setTimeout(() => {
-        saveDraftMessage(ECOptions.roomId, threadId, draftText);
+        saveDraftMessage(
+          ECOptions.roomId,
+          threadId,
+          userId,
+          draftHost,
+          draftText
+        );
       }, 300);
       if (!draftText.length) {
         setIsDraftRestored(false);
