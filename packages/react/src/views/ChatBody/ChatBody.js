@@ -23,6 +23,7 @@ import {
   useChannelStore,
   useLoginStore,
   useAiStore,
+  usePinnedMessageStore,
 } from '../../store';
 import MessageList from '../MessageList';
 import TotpModal from '../TotpModal/TwoFactorTotpModal';
@@ -68,6 +69,12 @@ const ChatBody = ({
   const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const removeMessage = useMessageStore((state) => state.removeMessage);
+  const updatePinnedMessage = usePinnedMessageStore(
+    (state) => state.updatePinnedMessage
+  );
+  const removePinnedMessage = usePinnedMessageStore(
+    (state) => state.removePinnedMessage
+  );
   const isChannelPrivate = useChannelStore((state) => state.isChannelPrivate);
   const channelInfo = useChannelStore((state) => state.channelInfo);
   const isLoginIn = useLoginStore((state) => state.isLoginIn);
@@ -97,8 +104,12 @@ const ChatBody = ({
 
   const username = useUserStore((state) => state.username);
 
-  const { getMessagesAndRoles, fetchAndSetPermissions, permissionsRef } =
-    useFetchChatData(showRoles);
+  const {
+    getMessagesAndRoles,
+    getPinnedMessages,
+    fetchAndSetPermissions,
+    permissionsRef,
+  } = useFetchChatData(showRoles);
 
   const getThreadMessages = useCallback(async () => {
     if (isUserAuthenticated && threadMainMessage?._id) {
@@ -142,9 +153,30 @@ const ChatBody = ({
           }
         }
       }
+      if ('pinned' in message) {
+        updatePinnedMessage(message);
+      }
+      if (message.t === 'message_pinned') {
+        getPinnedMessages();
+      }
       upsertMessage(message, ECOptions?.enableThreads);
     },
-    [upsertMessage, ECOptions?.enableThreads, username, messageListRef]
+    [
+      upsertMessage,
+      updatePinnedMessage,
+      getPinnedMessages,
+      ECOptions?.enableThreads,
+      username,
+      messageListRef,
+    ]
+  );
+
+  const handleRemoveMessage = useCallback(
+    (messageId) => {
+      removeMessage(messageId);
+      removePinnedMessage(messageId);
+    },
+    [removeMessage, removePinnedMessage]
   );
 
   const onActionTriggerResponse = useCallback(
@@ -157,14 +189,14 @@ const ChatBody = ({
   useEffect(() => {
     if (isUserAuthenticated) {
       RCInstance.addMessageListener(addMessage);
-      RCInstance.addMessageDeleteListener(removeMessage);
+      RCInstance.addMessageDeleteListener(handleRemoveMessage);
       RCInstance.addActionTriggeredListener(onActionTriggerResponse);
       RCInstance.addUiInteractionListener(onActionTriggerResponse);
     }
 
     return () => {
       RCInstance.removeMessageListener(addMessage);
-      RCInstance.removeMessageDeleteListener(removeMessage);
+      RCInstance.removeMessageDeleteListener(handleRemoveMessage);
       RCInstance.removeActionTriggeredListener(onActionTriggerResponse);
       RCInstance.removeUiInteractionListener(onActionTriggerResponse);
     };
@@ -172,7 +204,7 @@ const ChatBody = ({
     RCInstance,
     isUserAuthenticated,
     addMessage,
-    removeMessage,
+    handleRemoveMessage,
     onActionTriggerResponse,
   ]);
 

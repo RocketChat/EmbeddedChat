@@ -235,6 +235,7 @@ const Message = ({
         </MessageDivider>
       )}
       <Box
+        id={`ec-message-${message._id}`}
         className={appendClassNames('ec-message', classNames)}
         css={[
           isTimeline
