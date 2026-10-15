@@ -3,6 +3,7 @@ import debounce from 'lodash/debounce';
 import { useComponentOverrides } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { MessageAggregator } from './common/MessageAggregator';
+import SearchHighlightContext from '../../context/SearchHighlightContext';
 
 const SearchMessages = () => {
   const { variantOverrides } = useComponentOverrides('SearchMessages');
@@ -10,6 +11,7 @@ const SearchMessages = () => {
   const { RCInstance } = useContext(RCContext);
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
+  const [highlightTerm, setHighlightTerm] = useState('');
 
   const handleInputChange = (e) => {
     setText(e.target.value);
@@ -18,6 +20,7 @@ const SearchMessages = () => {
   const searchMessages = useCallback(async () => {
     const { messages } = await RCInstance.getSearchMessages(text);
     setMessageList(messages);
+    setHighlightTerm(text);
   }, [text, RCInstance]);
 
   const debouncedSearch = useCallback(
@@ -32,6 +35,7 @@ const SearchMessages = () => {
       if (messageList.length > 0) {
         setMessageList([]);
       }
+      setHighlightTerm('');
     } else {
       debouncedSearch();
     }
@@ -41,19 +45,21 @@ const SearchMessages = () => {
   }, [text, debouncedSearch, messageList.length]);
 
   return (
-    <MessageAggregator
-      title="Search Messages"
-      iconName="magnifier"
-      noMessageInfo="No results found"
-      searchProps={{
-        isSearch: true,
-        handleInputChange,
-        placeholder: 'Search Messages',
-      }}
-      searchFiltered={messageList}
-      shouldRender={(msg) => !!msg}
-      viewType={viewType}
-    />
+    <SearchHighlightContext.Provider value={highlightTerm}>
+      <MessageAggregator
+        title="Search Messages"
+        iconName="magnifier"
+        noMessageInfo="No results found"
+        searchProps={{
+          isSearch: true,
+          handleInputChange,
+          placeholder: 'Search Messages',
+        }}
+        searchFiltered={messageList}
+        shouldRender={(msg) => !!msg}
+        viewType={viewType}
+      />
+    </SearchHighlightContext.Provider>
   );
 };
 export default SearchMessages;
