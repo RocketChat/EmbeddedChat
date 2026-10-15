@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { Menu } from '../../components/SortableMenu';
 import { getMessageToolboxStyles } from './Message.styles';
@@ -17,6 +17,8 @@ import {
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import useMessageItemsStore from '../../store/messageItemsStore';
+import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
+import { GeneratedUiSurface, getGeneratedUiIcon } from '@embeddedchat/ui-kit';
 
 export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
   const styles = getMessageToolboxStyles(useTheme());
@@ -29,6 +31,11 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
     }));
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [activeMenuItem, setActiveMenuItem] = useState(null);
+  const [aiOpen, setAiOpen] = useState(false);
+  const publishedConfiguration = useAiGeneratedBlocksStore(
+    (state) => state.publishedConfiguration
+  );
+  const generatedUiAnchor = useRef(null);
 
   const placeholderSurfaceItem = 'placeholder-surface';
   const placeholderMenuItem = 'placeholder-menu';
@@ -164,8 +171,19 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
         visible: true,
         type: 'destructive',
       },
+      ai: {
+        label: 'AI-Generated Content',
+        id: 'ai',
+        onClick: () => {
+          setAiOpen((prev) => !prev);
+        },
+        iconName: getGeneratedUiIcon(publishedConfiguration?.componentType),
+        visible: Boolean(
+          publishedConfiguration?.placements.includes('messageToolbox')
+        ),
+      },
     }),
-    []
+    [setAiOpen, publishedConfiguration]
   );
 
   const menuOptions =
@@ -222,7 +240,13 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
         >
-          <Box css={styles.toolbox} className="ec-message-toolbox" {...props}>
+          <Box
+            css={styles.toolbox}
+            ref={generatedUiAnchor}
+            className="ec-message-toolbox"
+            style={{ position: 'relative' }}
+            {...props}
+          >
             {surfaceOptions?.length > 0 && (
               <SurfaceMenu
                 options={surfaceOptions}
@@ -241,6 +265,16 @@ export const MessageToolbox = ({ variantStyles = {}, ...props }) => {
                 onRemove={removeMenuItem}
               />
             )}
+            {aiOpen &&
+              publishedConfiguration?.placements.includes('messageToolbox') && (
+                <GeneratedUiSurface
+                  open
+                  configuration={publishedConfiguration}
+                  placement="messageToolbox"
+                  anchorRef={generatedUiAnchor}
+                  onClose={() => setAiOpen(false)}
+                />
+              )}
           </Box>
           {createPortal(
             <DragOverlay zIndex={1700}>

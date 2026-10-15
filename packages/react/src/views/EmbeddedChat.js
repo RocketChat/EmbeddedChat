@@ -9,6 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
+import { parseGeneratedUiConfigurations } from '@embeddedchat/ui-kit';
 import {
   Box,
   ToastBarProvider,
@@ -65,6 +66,8 @@ const EmbeddedChat = (props) => {
     dark = false,
     remoteOpt = false,
     layoutMode = 'bubble',
+    generatedUi = null,
+    onGeneratedUiAction = null,
   } = config;
 
   const auth = useMemo(
@@ -238,6 +241,18 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, remoteOpt, setIsSynced]);
 
   const memoizedAiAdapter = useMemo(() => aiAdapter, [aiAdapter]);
+  const generatedUiResult = useMemo(
+    () => parseGeneratedUiConfigurations(generatedUi),
+    [generatedUi]
+  );
+  useEffect(() => {
+    if (generatedUiResult.errors.length) {
+      console.error(
+        '[EmbeddedChat] Invalid generated UI:',
+        generatedUiResult.errors.join(' ')
+      );
+    }
+  }, [generatedUiResult]);
 
   const ECOptions = useMemo(
     () => ({
@@ -257,6 +272,8 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       aiAdapter: memoizedAiAdapter,
+      generatedUi: generatedUiResult.configurations,
+      onGeneratedUiAction,
     }),
     [
       enableThreads,
@@ -275,6 +292,8 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       memoizedAiAdapter,
+      generatedUiResult,
+      onGeneratedUiAction,
     ]
   );
 
@@ -363,6 +382,11 @@ EmbeddedChat.propTypes = {
     summarize: PropTypes.func,
     isAvailable: PropTypes.func.isRequired,
   }),
+  generatedUi: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.arrayOf(PropTypes.object),
+  ]),
+  onGeneratedUiAction: PropTypes.func,
 };
 
 export default memo(EmbeddedChat);

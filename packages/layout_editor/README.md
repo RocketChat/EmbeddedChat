@@ -93,6 +93,26 @@ Ollama is asked for a narrow JSON schema:
 
 The generator only allows local Ollama URLs (`localhost`, `127.0.0.1`, or `::1`). Follow-up prompts include prior instructions, but patch only the explicitly requested tokens—refining corner radius or typography cannot regenerate the palette. Select **Deterministic fallback** in the adapter selector to use the offline parser instead. The browser validates the response, checks text contrast, and presents a draft before applying or exporting the final JSON.
 
+### AI Component Generator integration
+
+The AI Component Generator creates validated Rocket.Chat UI-Kit blocks. It exports a versioned JSON configuration for the public `generatedUi` prop in `@embeddedchat/react`; it does not publish to, or modify, an npm installation.
+
+Generate a component, choose its display surface and **Open from** placement, then open **Export** and select **Download JSON** or **Copy Config**. Store the resulting JSON in the host application's repository, CMS, or backend. The host application fetches or loads that JSON and passes it to `EmbeddedChat`, along with an `onGeneratedUiAction` callback for buttons and form values.
+
+The optional **Dev mode** sync action is only a local contributor aid. It writes a Storybook fixture through the Layout Editor's Vite development server so contributors can exercise the same public package contract without manually pasting generated JSON. It is excluded from production builds and is not part of the npm integration path.
+
+**Apply to editor** updates the Layout Editor's own chat preview; it is not deployment. The editor and EmbeddedChat use the same renderer and validation contract. Copy Config contains the entire configuration, not just `blocks`: store it as a `.json` file in your application. If manually replacing the local JavaScript fixture, keep its `export const generatedUiPreview = ...;` wrapper around that object.
+
+For local contributor testing:
+
+1. Build the workspaces with `yarn build` from the repository root.
+2. Start the editor with `yarn workspace layout_editor dev` and React Storybook with `yarn workspace @embeddedchat/react storybook` in separate terminals.
+3. Open the editor using `localhost` or `127.0.0.1`, generate a component, choose its surface and placement, and enable **Dev mode**.
+4. Select **Sync to EmbeddedChat preview**. This replaces only `packages/layout_editor/src/fixtures/generatedUiPreview.js`; Storybook's **EmbeddedChat/WithGenUi** story imports that fixture and reloads it. Use your usual Rocket.Chat host/room/auth Storybook controls to test in a connected chat.
+5. Open the generated icon in the chosen toolbar. Form edits and actions are local preview behavior unless your host supplies an action callback; sync does not post anything to Rocket.Chat.
+
+Sync accepts only same-origin JSON POSTs on the local development server, validates the payload, caps requests at 256 KiB, and serializes atomic fixture writes. It is unavailable on deployed/static editors and non-loopback hosts. Hosted consumers should follow the [Generated UI integration guide](../react/README.md#generated-ui) instead.
+
 ### Development
 
 Clone the repo, navigate to `packages/layout_editor`, then run:
