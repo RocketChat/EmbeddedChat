@@ -35,15 +35,15 @@ import useSearchMentionUser from '../../hooks/useSearchMentionUser';
 import useSearchEmoji from '../../hooks/useSearchEmoji';
 import formatSelection from '../../lib/formatSelection';
 import { parseEmoji } from '../../lib/emoji';
+import useDropBox from '../../hooks/useDropBox';
+import useAIComposer from '../../hooks/useAIComposer';
+import AIComposerToolbar from '../AIComposerToolbar';
+import { installContentEditableApi } from '../../lib/contentEditableComposer';
 import {
   getDraftMessage,
   saveDraftMessage,
   deleteDraftMessage,
 } from '../../lib/draftMessage';
-import useDropBox from '../../hooks/useDropBox';
-import useAIComposer from '../../hooks/useAIComposer';
-import AIComposerToolbar from '../AIComposerToolbar';
-import { installContentEditableApi } from '../../lib/contentEditableComposer';
 
 const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const { styleOverrides, classNames } = useComponentOverrides('ChatInput');
@@ -51,7 +51,6 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const aiAdapter = ECOptions?.aiAdapter ?? null;
   const { theme } = useTheme();
   const styles = getChatInputStyles(theme);
-  const draftHost = RCInstance.getHost();
 
   const inputRef = useRef(null);
   const typingRef = useRef();
@@ -156,6 +155,10 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   }));
 
   const userInfo = { _id: userId, username, name };
+  const draftHost = RCInstance?.getHost
+    ? RCInstance.getHost()
+    : ECOptions?.host;
+  const currentRoomId = ECOptions?.roomId || channelInfo?._id;
 
   const dispatchToastMessage = useToastBarDispatch();
   const showCommands = useShowCommands(
@@ -210,36 +213,64 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       messageRef.current.value =
         editMessage.attachments[0]?.description || editMessage.msg;
       messageRef.current.focus();
+      setIsDraftRestored(false);
     } else if (editMessage.msg) {
       messageRef.current.value = editMessage.msg;
       messageRef.current.focus();
+      setIsDraftRestored(false);
     } else {
-      const draft = getDraftMessage(
-        ECOptions.roomId,
-        threadId,
-        userId,
-        draftHost
-      );
+      const draft = getDraftMessage(currentRoomId, threadId, userId, draftHost);
       messageRef.current.value = draft || '';
       setDisableButton(!draft);
       setIsDraftRestored(!!draft);
     }
-  }, [editMessage]);
+  }, [editMessage, currentRoomId, threadId, userId, draftHost]);
 
   useEffect(() => {
     if (!messageRef.current || editMessage.msg || editMessage.attachments) {
       return;
     }
-    const draft = getDraftMessage(
-      ECOptions.roomId,
-      threadId,
-      userId,
-      draftHost
-    );
+    const draft = getDraftMessage(currentRoomId, threadId, userId, draftHost);
     messageRef.current.value = draft || '';
     setDisableButton(!draft);
     setIsDraftRestored(!!draft);
-  }, [ECOptions.roomId, threadId]);
+  }, [currentRoomId, threadId, userId, draftHost]);
+
+  useEffect(() => {
+    const flushDraft = () => {
+      clearTimeout(draftTimerRef.current);
+      if (
+        messageRef.current &&
+        !(editMessage.msg || editMessage.attachments) &&
+        currentRoomId
+      ) {
+        saveDraftMessage(
+          currentRoomId,
+          threadId,
+          userId,
+          draftHost,
+          messageRef.current.value
+        );
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      flushDraft();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('pagehide', handleBeforeUnload);
+    }
+
+    return () => {
+      flushDraft();
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.removeEventListener('pagehide', handleBeforeUnload);
+      }
+    };
+  }, [currentRoomId, threadId, userId, draftHost, editMessage]);
 
   useEffect(() => {
     if (
@@ -289,7 +320,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     const message = messageRef.current.value.trim();
     messageRef.current.value = '';
     clearTimeout(draftTimerRef.current);
-    deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
+    deleteDraftMessage(currentRoomId, threadId, userId, draftHost);
     setIsDraftRestored(false);
     setEditMessage({});
     setIsMsgLong(false);
@@ -356,7 +387,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     messageRef.current.value = '';
     setDisableButton(true);
     clearTimeout(draftTimerRef.current);
-    deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
+    deleteDraftMessage(currentRoomId, threadId, userId, draftHost);
     setIsDraftRestored(false);
 
     let pendingMessage = '';
@@ -441,7 +472,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       messageRef.current.value = '';
       setDisableButton(true);
       clearTimeout(draftTimerRef.current);
-      deleteDraftMessage(ECOptions.roomId, threadId, userId, draftHost);
+      deleteDraftMessage(currentRoomId, threadId, userId, draftHost);
       setIsDraftRestored(false);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
@@ -586,19 +617,12 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       const draftText = messageRef.current?.value ?? '';
       clearTimeout(draftTimerRef.current);
       draftTimerRef.current = setTimeout(() => {
-        saveDraftMessage(
-          ECOptions.roomId,
-          threadId,
-          userId,
-          draftHost,
-          draftText
-        );
+        saveDraftMessage(currentRoomId, threadId, userId, draftHost, draftText);
       }, 300);
-      if (!draftText.length) {
+      if (!draftText.trim().length) {
         setIsDraftRestored(false);
       }
     }
-
     if (e !== null) {
       handleNewLine(e, false);
       searchMentionUser(parsedMessage);
@@ -675,6 +699,13 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
           messageRef.current.value = '';
           setDisableButton(true);
           setEditMessage({});
+        } else if (isDraftRestored) {
+          e.preventDefault();
+          messageRef.current.value = '';
+          setDisableButton(true);
+          clearTimeout(draftTimerRef.current);
+          deleteDraftMessage(currentRoomId, threadId, userId, draftHost);
+          setIsDraftRestored(false);
         }
         break;
 
@@ -777,7 +808,11 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
         {isDraftRestored &&
         !(editMessage.msg || editMessage.attachments) &&
         !isChannelReadOnly ? (
-          <ChannelState status="Draft" iconName="edit" />
+          <ChannelState
+            status="Draft"
+            iconName="edit"
+            instructions="esc or clear to discard"
+          />
         ) : null}
         <Box
           css={css`
