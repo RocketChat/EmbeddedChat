@@ -131,7 +131,11 @@ const FileAttachment = ({
               alt="avatar"
               size="1.2em"
             />
-            <Box>@{attachment?.author_name}</Box>
+            <Box
+              css={css`
+                font-weight: 500;
+              `}
+            >{attachment?.author_name}</Box>
             {getTimeString(attachment?.ts) && (
               <Box
                 onClick={() => handleQuoteClick(attachment)}
@@ -165,10 +169,12 @@ const FileAttachment = ({
             css={css`
               margin-top: 0.5rem;
               white-space: pre-line;
-              background: ${theme.colors.background};
-              padding: 8px 12px;
-              border-radius: 4px;
-              border: 1px solid ${theme.colors.border};
+              ${!attachment?.author_name ? `
+                background: ${theme.colors.background};
+                padding: 8px 12px;
+                border-radius: 4px;
+                border: 1px solid ${theme.colors.border};
+              ` : ''}
               line-height: normal;
             `}
           >
@@ -374,7 +380,11 @@ const FileAttachment = ({
                         alt="avatar"
                         size="1.2em"
                       />
-                      <Box>@{nestedAttachment?.author_name}</Box>
+                      <Box
+                        css={css`
+                          font-weight: 500;
+                        `}
+                      >{nestedAttachment?.author_name}</Box>
                       {getTimeString(nestedAttachment?.ts) && (
                         <Box
                           onClick={() => handleQuoteClick(nestedAttachment)}
@@ -409,6 +419,12 @@ const FileAttachment = ({
                     css={css`
                       margin-top: 0.5rem;
                       white-space: pre-line;
+                      ${!nestedAttachment?.author_name ? `
+                        background: ${theme.colors.background};
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        border: 1px solid ${theme.colors.border};
+                      ` : ''}
                     `}
                   >
                     {nestedAttachment?.text ? (
