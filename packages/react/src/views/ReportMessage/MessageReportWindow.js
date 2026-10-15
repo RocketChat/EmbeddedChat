@@ -17,7 +17,7 @@ const MessageReportWindow = ({ messageId, message }) => {
       messageId={messageId}
       message={message}
     >
-      <Box css={styles.conatiner}>
+      <Box css={styles.container}>
         <Input
           textArea
           placeholder="Why do you want to report this message?"
