@@ -15,6 +15,8 @@ import { getMessageToolboxStyles } from './Message.styles';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 import { Markdown } from '../Markdown';
 import Attachment from '../AttachmentHandler/Attachment';
+import { useUserStore } from '../../store';
+import ReactionDetailsModal from '../ReactionDetailsModal/ReactionDetailsModal';
 
 export const MessageToolbox = ({
   className = '',
@@ -74,8 +76,9 @@ export const MessageToolbox = ({
     configOverrides.optionConfig?.menuItems || optionConfig.menuItems;
 
   const [isEmojiOpen, setEmojiOpen] = useState(false);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showReactionModal, setShowReactionModal] = useState(false);
+  const authenticatedUserUsername = useUserStore((state) => state.username);
 
   const handleOnClose = () => {
     setShowDeleteModal(false);
@@ -150,6 +153,15 @@ export const MessageToolbox = ({
         onClick: () => setEmojiOpen(true),
         iconName: 'emoji',
         visible: true,
+      },
+      reactions: {
+        label: 'Reactions',
+        id: 'reactions',
+        onClick: () => setShowReactionModal(true),
+        iconName: 'emoji',
+        visible: Boolean(
+          message.reactions && Object.keys(message.reactions).length > 0
+        ),
       },
       pin: {
         label: message.pinned ? 'Unpin' : 'Pin',
@@ -379,6 +391,15 @@ export const MessageToolbox = ({
             </Button>
           </Modal.Footer>
         </Modal>
+      )}
+
+      {showReactionModal && (
+        <ReactionDetailsModal
+          message={message}
+          authenticatedUserUsername={authenticatedUserUsername}
+          handleEmojiClick={handleEmojiClick}
+          onClose={() => setShowReactionModal(false)}
+        />
       )}
     </>
   );
