@@ -11,6 +11,7 @@ import analyze from 'rollup-plugin-analyzer';
 
 const packageJson = require('./package.json');
 const PRODUCTION = process.env.NODE_ENV === 'production';
+const TERSER_OPTIONS = { numWorkers: 1 };
 
 export default [
   {
@@ -20,13 +21,13 @@ export default [
         file: packageJson.main,
         format: 'cjs',
         sourcemap: true,
-        plugins: [PRODUCTION && terser()],
+        plugins: [PRODUCTION && terser(TERSER_OPTIONS)],
       },
       {
         file: packageJson.module,
         format: 'esm',
         sourcemap: true,
-        plugins: [PRODUCTION && terser()],
+        plugins: [PRODUCTION && terser(TERSER_OPTIONS)],
       },
     ],
     external: [
