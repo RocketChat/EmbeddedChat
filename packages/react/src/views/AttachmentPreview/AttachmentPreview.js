@@ -29,6 +29,7 @@ const AttachmentPreview = () => {
   const setData = useAttachmentWindowStore((state) => state.setData);
 
   const [isPending, setIsPending] = useState(false);
+  const isMountedRef = useRef(true);
   const messageRef = useRef(null);
   const [showMembersList, setShowMembersList] = useState(false);
   const [filteredMembers, setFilteredMembers] = useState([]);
@@ -37,6 +38,12 @@ const AttachmentPreview = () => {
 
   const [fileName, setFileName] = useState(data?.name ?? '');
   useEffect(() => setFileName(data?.name ?? ''), [data?.name]);
+  useEffect(
+    () => () => {
+      isMountedRef.current = false;
+    },
+    []
+  );
 
   const [description, setDescription] = useState('');
   const charCount = description.length;
@@ -68,22 +75,61 @@ const AttachmentPreview = () => {
     searchMentionUser(raw);
   };
 
+  const getExtensionFromMimeType = (mimeType = '') => {
+    if (!mimeType.includes('/')) return '';
+    const ext = mimeType.split('/')[1].toLowerCase();
+    if (ext === 'mpeg') return 'mp3';
+    if (ext === 'jpeg') return 'jpg';
+    return ext;
+  };
+
+  const getNormalizedUploadFileName = () => {
+    const originalName = (data?.name || '').trim();
+    const desiredName = (fileName || '').trim();
+
+    if (!desiredName) return originalName || 'upload';
+
+    const originalExtension = originalName.includes('.')
+      ? originalName.split('.').pop().toLowerCase()
+      : getExtensionFromMimeType(data?.type || '');
+    const hasDesiredExtension = /\.[a-z0-9]+$/i.test(desiredName);
+
+    // Keep media files downloadable/playable even after rename.
+    if ((data?.type || '').startsWith('audio/')) {
+      if (!hasDesiredExtension && originalExtension) {
+        return `${desiredName}.${originalExtension}`;
+      }
+
+      if (hasDesiredExtension) {
+        const desiredExtension = desiredName.split('.').pop().toLowerCase();
+        if (['txt', 'text'].includes(desiredExtension) && originalExtension) {
+          return `${desiredName.replace(/\.[^.]+$/, '')}.${originalExtension}`;
+        }
+      }
+    }
+
+    return desiredName;
+  };
+
   const submit = async () => {
     if (isPending) return;
     if (msgMaxLength && description.length > msgMaxLength) return;
 
     setIsPending(true);
     try {
+      const normalizedFileName = getNormalizedUploadFileName();
       await RCInstance.sendAttachment(
         data,
-        fileName,
+        normalizedFileName,
         parseEmoji(description),
         ECOptions?.enableThreads ? threadId : undefined
       );
       toggle();
       setData(null);
     } finally {
-      setIsPending(false);
+      if (isMountedRef.current) {
+        setIsPending(false);
+      }
     }
   };
 

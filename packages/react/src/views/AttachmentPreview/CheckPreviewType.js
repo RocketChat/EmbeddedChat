@@ -24,11 +24,14 @@ const CheckPreviewType = ({ data }) => {
     return null;
   }
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    setPreviewURL(e.target.result);
-  };
-  reader.readAsDataURL(data);
+  useEffect(() => {
+    const url = URL.createObjectURL(data);
+    setPreviewURL(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [data]);
 
   switch (type) {
     case 'image': {

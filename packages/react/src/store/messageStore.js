@@ -20,6 +20,8 @@ const useMessageStore = create((set, get) => ({
   isThreadOpen: false,
   threadMainMessage: null,
   headerTitle: null,
+  isBulkSelectMode: false,
+  selectedMessageIds: [],
   setFilter: (filter) => set(() => ({ filtered: filter })),
   setMessages: (newMessages, append = false) =>
     set((state) => {
@@ -135,6 +137,34 @@ const useMessageStore = create((set, get) => ({
     set((state) => ({ ...state, forceDeleteMessageRoles })),
   setThreadMessages: (messages) => set(() => ({ threadMessages: messages })),
   setHeaderTitle: (title) => set(() => ({ headerTitle: title })),
+  setBulkSelectMode: (isBulkSelectMode) =>
+    set(() => ({
+      isBulkSelectMode,
+      selectedMessageIds: isBulkSelectMode ? get().selectedMessageIds : [],
+    })),
+  clearBulkSelection: () =>
+    set(() => ({
+      isBulkSelectMode: false,
+      selectedMessageIds: [],
+    })),
+  toggleSelectedMessageId: (messageId) =>
+    set((state) => {
+      const isSelected = state.selectedMessageIds.includes(messageId);
+      const selectedMessageIds = isSelected
+        ? state.selectedMessageIds.filter((id) => id !== messageId)
+        : [...state.selectedMessageIds, messageId];
+      return {
+        selectedMessageIds,
+        isBulkSelectMode: selectedMessageIds.length
+          ? true
+          : state.isBulkSelectMode,
+      };
+    }),
+  setSelectedMessageIds: (selectedMessageIds) =>
+    set(() => ({
+      selectedMessageIds,
+      isBulkSelectMode: selectedMessageIds.length ? true : get().isBulkSelectMode,
+    })),
 }));
 
 export default useMessageStore;
