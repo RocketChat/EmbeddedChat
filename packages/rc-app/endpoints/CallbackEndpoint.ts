@@ -28,20 +28,54 @@ export class CallbackEndpoint extends ApiEndpoint {
         persis: IPersistence
     ): Promise<IApiResponse> {
         const { state, code } = request.query;
+        const contentSecurityPolicy =
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'";
+
+        if (typeof state !== "string") {
+            return {
+                status: 400,
+                content: await getCallbackContent(
+                    read,
+                    null,
+                    "",
+                    "Invalid state parameter"
+                ),
+                headers: {
+                    "Content-Security-Policy": contentSecurityPolicy,
+                },
+            };
+        }
+
+        let origin;
+        try {
+            origin = decodeURIComponent(state);
+        } catch (e) {
+            return {
+                status: 400,
+                content: await getCallbackContent(
+                    read,
+                    null,
+                    "",
+                    "Invalid state parameter"
+                ),
+                headers: {
+                    "Content-Security-Policy": contentSecurityPolicy,
+                },
+            };
+        }
+
         const readEnvironment = read.getEnvironmentReader().getSettings();
         const [
             customOAuthName,
             client_id,
             client_secret,
             redirect_uri,
-            origin,
             tokenUrl,
         ] = await Promise.all([
             readEnvironment.getValueById("custom-oauth-name"),
             readEnvironment.getValueById("client-id"),
             readEnvironment.getValueById("client-secret"),
             getCallbackUrl(this.app),
-            Promise.resolve(decodeURIComponent(state)),
             getTokenUrl(read),
         ]);
 
@@ -69,8 +103,7 @@ export class CallbackEndpoint extends ApiEndpoint {
                     response.data.error_description || "Unknown"
                 ),
                 headers: {
-                    "Content-Security-Policy":
-                        "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
+                    "Content-Security-Policy": contentSecurityPolicy,
                 },
             };
         }
@@ -88,8 +121,7 @@ export class CallbackEndpoint extends ApiEndpoint {
                 false
             ),
             headers: {
-                "Content-Security-Policy":
-                    "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; frame-src 'self'; font-src 'self'; object-src 'none'",
+                "Content-Security-Policy": contentSecurityPolicy,
             },
         };
     }
