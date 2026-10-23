@@ -2441,6 +2441,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@embeddedchat/ai-adapter@workspace:packages/ai-adapter"
   dependencies:
+    "@embeddedchat/ui-kit": "workspace:^"
+    "@rocket.chat/ui-kit": ^0.31.25
     prettier: ^2.8.1
     rollup: ^3.23.0
     rollup-plugin-dts: ^6.0.1
@@ -2759,6 +2761,7 @@ __metadata:
     "@babel/preset-env": ^7.16.11
     "@babel/preset-react": ^7.16.7
     "@embeddedchat/markups": "workspace:^"
+    "@embeddedchat/ui-elements": "workspace:^"
     "@emotion/babel-plugin": ^11.11.0
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@emotion/react": 11.7.1
@@ -20504,6 +20507,7 @@ __metadata:
     "@embeddedchat/ai-adapter": "workspace:*"
     "@embeddedchat/markups": "workspace:^"
     "@embeddedchat/ui-elements": "workspace:^"
+    "@embeddedchat/ui-kit": "workspace:^"
     "@emotion/babel-preset-css-prop": ^11.11.0
     "@vitejs/plugin-react": ^4.2.1
     eslint: ^8.56.0

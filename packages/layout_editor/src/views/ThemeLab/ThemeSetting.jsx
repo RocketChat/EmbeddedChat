@@ -4,6 +4,7 @@ import { getPaletteSettings } from './ThemeLab.styles';
 import ColorManager from './ColorManager';
 import FontManager from './FontManager';
 import AIThemePanel from './AIThemePanel';
+import AICodePanel from './AICodePanel';
 
 const ThemeSetting = () => {
   const themeObject = useTheme();
@@ -56,6 +57,7 @@ const ThemeSetting = () => {
         <FontManager />
       </Box>
       <AIThemePanel />
+      <AICodePanel />
     </Box>
   );
 };

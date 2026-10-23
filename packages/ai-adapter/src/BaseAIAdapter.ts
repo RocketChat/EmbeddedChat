@@ -1,3 +1,4 @@
+import { LayoutBlock } from "@rocket.chat/ui-kit";
 import { IAIAdapter, AIContext, AIResponse, Message } from "./types";
 
 type ChatMessage = {
@@ -8,6 +9,10 @@ type ChatMessage = {
 export abstract class BaseAIAdapter implements IAIAdapter {
   abstract name: string;
   abstract sendPrompt(context: AIContext, message: string): Promise<AIResponse>;
+  abstract generateUIBlocks(
+    prompt: string,
+    existingBlocks?: LayoutBlock[]
+  ): Promise<{ blocks: LayoutBlock[]; componentType: string }>;
   abstract isAvailable(): Promise<boolean>;
 
   protected buildChatMessages(

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useId } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -8,6 +8,11 @@ import {
   useComponentOverrides,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import {
+  GeneratedUiSurface,
+  getGeneratedUiIcon,
+  withGeneratedUiItems,
+} from '@embeddedchat/ui-kit';
 import { EmojiPicker } from '../EmojiPicker/index';
 import { useMessageStore } from '../../store';
 import { formatter } from '../../lib/textFormat';
@@ -19,6 +24,7 @@ import InsertLinkToolBox from './InsertLinkToolBox';
 import useIsMobileViewport, {
   MOBILE_BREAKPOINT,
 } from '../../hooks/useIsMobileViewport';
+import { useRCContext } from '../../context/RCInstance';
 
 const ChatInputFormattingToolbar = ({
   messageRef,
@@ -36,6 +42,16 @@ const ChatInputFormattingToolbar = ({
   );
   const theme = useTheme();
   const styles = getChatInputFormattingToolbarStyles(theme);
+  const { ECOptions } = useRCContext();
+  const generatedUiConfigurations = useMemo(
+    () =>
+      (ECOptions?.generatedUi || []).filter(({ placements }) =>
+        placements.includes('composer')
+      ),
+    [ECOptions?.generatedUi]
+  );
+  const generatedUiAnchor = useRef(null);
+  const generatedUiDialogId = useId();
   const surfaceItems =
     configOverrides.optionConfig?.surfaceItems || optionConfig.surfaceItems;
   const formatters =
@@ -58,7 +74,22 @@ const ChatInputFormattingToolbar = ({
     text: '',
   });
   const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const [openGeneratedUiId, setOpenGeneratedUiId] = useState(null);
   const popoverRef = useRef(null);
+
+  const visibleSurfaceItems = withGeneratedUiItems(
+    surfaceItems,
+    popOverItems,
+    generatedUiConfigurations
+  );
+  const visibleSmallScreenSurfaceItems = withGeneratedUiItems(
+    smallScreenSurfaceItems,
+    popOverItems,
+    generatedUiConfigurations
+  );
+  const openGeneratedUiConfiguration = generatedUiConfigurations.find(
+    (configuration) => configuration.id === openGeneratedUiId
+  );
 
   const handleClickToOpenFiles = () => {
     inputRef.current.click();
@@ -267,10 +298,44 @@ const ChatInputFormattingToolbar = ({
           </Tooltip>
         )
       ),
+    ...Object.fromEntries(
+      generatedUiConfigurations.map((configuration) => {
+        const itemId = `generated-ui-${configuration.id}`;
+        const title = configuration.title || 'Generated UI';
+        return [
+          itemId,
+          <Tooltip text={title} position="top" key={itemId}>
+            <ActionButton
+              square
+              ghost
+              onClick={() =>
+                setOpenGeneratedUiId((openId) =>
+                  openId === configuration.id ? null : configuration.id
+                )
+              }
+              aria-label={`Open ${title}`}
+              aria-haspopup="dialog"
+              aria-expanded={openGeneratedUiId === configuration.id}
+              aria-controls={
+                openGeneratedUiId === configuration.id
+                  ? generatedUiDialogId
+                  : undefined
+              }
+            >
+              <Icon
+                name={getGeneratedUiIcon(configuration.componentType)}
+                size="1.25rem"
+              />
+            </ActionButton>
+          </Tooltip>,
+        ];
+      })
+    ),
   };
 
   return (
     <Box
+      ref={generatedUiAnchor}
       css={styles.chatFormat}
       className={`ec-chat-input-formatting-toolbar ${classNames}`}
       style={styleOverrides}
@@ -283,7 +348,7 @@ const ChatInputFormattingToolbar = ({
           }
         `}
       >
-        {surfaceItems.map((key) => chatToolMap[key])}
+        {visibleSurfaceItems.map((key) => chatToolMap[key])}
       </Box>
       {isPopoverOpen && (
         <Box ref={popoverRef} css={styles.popOverStyles}>
@@ -320,7 +385,7 @@ const ChatInputFormattingToolbar = ({
           }
         `}
       >
-        {smallScreenSurfaceItems.map((name) => {
+        {visibleSmallScreenSurfaceItems.map((name) => {
           const itemInFormatter = formatter.find((item) => item.name === name);
           if (itemInFormatter) {
             return (
@@ -388,6 +453,18 @@ const ChatInputFormattingToolbar = ({
           selectedText={linkSelection.text}
           handleAddLink={handleAddLink}
           onClose={() => setInsertLinkOpen(false)}
+        />
+      )}
+      {openGeneratedUiConfiguration && (
+        <GeneratedUiSurface
+          open
+          anchorRef={generatedUiAnchor}
+          dialogId={generatedUiDialogId}
+          roomId={ECOptions?.roomId}
+          onClose={() => setOpenGeneratedUiId(null)}
+          configuration={openGeneratedUiConfiguration}
+          placement="composer"
+          onAction={ECOptions?.onGeneratedUiAction}
         />
       )}
     </Box>
