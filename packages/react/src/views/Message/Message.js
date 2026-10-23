@@ -142,7 +142,7 @@ const Message = ({
       msg.pinned = isPinned;
       dispatchToastMessage({
         type: 'error',
-        message: 'Error pinning message',
+        message: isPinned ? 'Error unpinning message' : 'Error pinning message',
       });
     } else {
       dispatchToastMessage({

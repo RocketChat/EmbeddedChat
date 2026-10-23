@@ -808,7 +808,9 @@ export default class EmbeddedChatApi {
       });
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
-      return err;
+      // Mirrors pinMessage(): callers detect failure via the `error`
+      // property, so a raw error would be read as a successful unpin.
+      return { error: err };
     }
   }
 
