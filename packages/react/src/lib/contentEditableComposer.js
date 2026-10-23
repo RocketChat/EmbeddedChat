@@ -44,6 +44,41 @@ const findLink = (text, start) => {
   };
 };
 
+const EMPHASIS_MARKERS = new Set(['*', '**', '_', '__']);
+
+const isWhitespace = (character) =>
+  character === undefined || /\s/.test(character);
+
+const isWordCharacter = (character) =>
+  character !== undefined && /[\p{L}\p{N}]/u.test(character);
+
+// CommonMark only lets a delimiter run open emphasis when it is left-flanking
+// and close it when it is right-flanking, and never lets `_` do either inside a
+// word. Without these checks `my_file_name.js` and `2 * 3 * 4` become emphasis.
+const canOpenEmphasis = (text, start, marker) => {
+  if (!EMPHASIS_MARKERS.has(marker)) return true;
+  if (isWhitespace(text[start + marker.length])) return false;
+  if (marker[0] === '_' && isWordCharacter(text[start - 1])) return false;
+  return true;
+};
+
+const canCloseEmphasis = (text, end, marker) => {
+  if (!EMPHASIS_MARKERS.has(marker)) return true;
+  if (isWhitespace(text[end - 1])) return false;
+  if (marker[0] === '_' && isWordCharacter(text[end + marker.length])) {
+    return false;
+  }
+  return true;
+};
+
+const findClosingMarker = (text, from, marker) => {
+  let end = text.indexOf(marker, from);
+  while (end !== -1 && !canCloseEmphasis(text, end, marker)) {
+    end = text.indexOf(marker, end + marker.length);
+  }
+  return end;
+};
+
 const appendMarkdown = (parent, text) => {
   const tokens = [
     ['**', 'strong'],
@@ -89,9 +124,13 @@ const appendMarkdown = (parent, text) => {
         }
       }
 
+      if (token && !canOpenEmphasis(text, index, token[0])) {
+        token = undefined;
+      }
+
       if (token) {
         const [marker, tagName] = token;
-        const end = text.indexOf(marker, index + marker.length);
+        const end = findClosingMarker(text, index + marker.length, marker);
         if (end > index + marker.length) {
           flush();
           const formatted = document.createElement(tagName);
