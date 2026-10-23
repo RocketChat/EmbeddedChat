@@ -106,24 +106,18 @@ const ChatLayout = () => {
   ]);
 
   const getPinnedMessages = useCallback(async () => {
-    if (isUserAuthenticated && showPinned) {
+    if (!isUserAuthenticated && !anonymousMode) {
+      return;
+    }
+    if (isUserAuthenticated) {
       try {
-        if (!isUserAuthenticated && !anonymousMode) {
-          return;
-        }
         const { messages } = await RCInstance.getPinnedMessages();
         setPinnedMessages(messages);
       } catch (e) {
         console.error(e);
       }
     }
-  }, [
-    isUserAuthenticated,
-    anonymousMode,
-    RCInstance,
-    showPinned,
-    setPinnedMessages,
-  ]);
+  }, [isUserAuthenticated, anonymousMode, RCInstance, setPinnedMessages]);
 
   useEffect(() => {
     getStarredMessages();
@@ -131,7 +125,7 @@ const ChatLayout = () => {
 
   useEffect(() => {
     getPinnedMessages();
-  }, [getPinnedMessages, showSidebar, showPinned]);
+  }, [getPinnedMessages]);
   return (
     <Box
       css={styles.layout}
