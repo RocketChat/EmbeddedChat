@@ -1,15 +1,20 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box } from '@embeddedchat/ui-elements';
 import { Markup, MarkupInteractionContext } from '@embeddedchat/markups/src';
 import EmojiReaction from '../EmojiReaction/EmojiReaction';
 import { useMemberStore, useUserStore } from '../../store';
+import SearchHighlightContext from '../../context/SearchHighlightContext';
 
 const Markdown = ({ body, md, isReaction = false }) => {
   const members = useMemberStore((state) => state.members);
   const username = useUserStore((state) => state.username);
-  const value = useMemo(() => ({ members, username }), [members, username]);
+  const highlight = useContext(SearchHighlightContext);
+  const value = useMemo(
+    () => ({ members, username, highlight }),
+    [members, username, highlight]
+  );
 
   if (isReaction) {
     return (
