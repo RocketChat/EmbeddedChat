@@ -231,6 +231,16 @@ export default class EmbeddedChatApi {
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
       return err;
+    } finally {
+      // Tear down the realtime connection even if the logout request
+      // failed, otherwise the socket stays subscribed to the room and
+      // keeps receiving messages for a session that is no longer
+      // authenticated.
+      try {
+        await this.close();
+      } catch (err: any) {
+        console.error(err instanceof Error ? err.message : err);
+      }
     }
   }
 
