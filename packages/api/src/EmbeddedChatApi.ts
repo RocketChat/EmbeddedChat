@@ -192,6 +192,7 @@ export default class EmbeddedChatApi {
         return { error: authErrorRes?.error };
       }
       console.error(error instanceof Error ? error.message : error);
+      throw error;
     }
   }
 
