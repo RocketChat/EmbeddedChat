@@ -279,15 +279,15 @@ const Message = ({
               >
                 {message.attachments && message.attachments.length > 0 ? (
                   <>
-                    <Markdown
-                      body={message}
-                      md={message.md}
-                      isReaction={false}
-                    />
                     <Attachments
                       attachments={message.attachments}
                       variantStyles={variantStyles}
                       msg={message}
+                    />
+                    <Markdown
+                      body={message}
+                      md={message.md}
+                      isReaction={false}
                     />
                   </>
                 ) : (
