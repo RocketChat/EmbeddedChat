@@ -281,6 +281,11 @@ const ChatHeader = ({
           setIsChannelReadOnly(true);
           setMessageAllowed();
         }
+        if (res.room.archived) {
+          setIsChannelArchived(true);
+        } else {
+          setIsChannelArchived(false);
+        }
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-not-found'
@@ -323,6 +328,7 @@ const ChatHeader = ({
     setMessageLimit,
     workspaceLevelRoles,
     setIsChannelReadOnly,
+    setIsChannelArchived,
   ]);
 
   const options = useMemo(
