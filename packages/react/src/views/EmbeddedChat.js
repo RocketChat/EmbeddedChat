@@ -184,7 +184,6 @@ const EmbeddedChat = (props) => {
         const { isChannelPrivate } = useChannelStore.getState();
         RCInstance.connect(isChannelPrivate)
           .then(() => {
-            console.log(`Connected to RocketChat ${RCInstance.host}`);
             const me = user.me || user.data?.me;
             if (me) {
               setAuthenticatedAvatarUrl(me.avatarUrl);
