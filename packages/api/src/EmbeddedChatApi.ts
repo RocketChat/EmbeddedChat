@@ -169,7 +169,7 @@ export default class EmbeddedChatApi {
   async login(userOrEmail: string, password: string, code: string) {
     let credentials;
     if (!code) {
-      credentials = credentials = {
+      credentials = {
         user: userOrEmail.trim(),
         password,
       };
@@ -441,33 +441,39 @@ export default class EmbeddedChatApi {
     );
   }
 
-  handleTypingEvent({
+  async handleTypingEvent({
     typingUser,
     isTyping,
   }: {
     typingUser: string;
     isTyping: boolean;
   }) {
-    // don't wait for more than 2 seconds. Though in practical, the waiting time is insignificant.
-    setTimeout(() => {
-      typingHandlerLock = 0;
-    }, 2000);
-    // eslint-disable-next-line no-empty
-    while (typingHandlerLock) {}
+    // wait for lock to release
+    while (typingHandlerLock) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    
     typingHandlerLock = 1;
-    // move user to front if typing else remove it.
-    const idx = this.typingUsers.indexOf(typingUser);
-    if (idx !== -1) {
-      this.typingUsers.splice(idx, 1);
+    
+    try {
+      // move user to front if typing else remove it.
+      const idx = this.typingUsers.indexOf(typingUser);
+      if (idx !== -1) {
+        this.typingUsers.splice(idx, 1);
+      }
+      if (isTyping) {
+        this.typingUsers.unshift(typingUser);
+      }
+
+      const newTypingStatus = cloneArray(this.typingUsers);
+      this.onTypingStatusCallbacks.forEach((callback) =>
+        callback(newTypingStatus)
+      );
+    } catch (error) {
+      console.error("Error in handleTypingEvent:", error);
+    } finally {
+      typingHandlerLock = 0;
     }
-    if (isTyping) {
-      this.typingUsers.unshift(typingUser);
-    }
-    typingHandlerLock = 0;
-    const newTypingStatus = cloneArray(this.typingUsers);
-    this.onTypingStatusCallbacks.forEach((callback) =>
-      callback(newTypingStatus)
-    );
   }
 
   async getRCAppInfo() {
