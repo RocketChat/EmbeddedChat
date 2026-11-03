@@ -33,6 +33,14 @@ import getChatHeaderStyles from './ChatHeader.styles';
 import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import SurfaceMenu from '../SurfaceMenu/SurfaceMenu';
 
+const ROOM_CHANGE_TYPES = new Set([
+  'r',
+  'room_changed_topic',
+  'room_changed_announcement',
+  'room_changed_description',
+  'room_changed_privacy',
+]);
+
 const GlobeIcon = ({ size }) => (
   <svg
     viewBox="0 0 24 24"
@@ -324,6 +332,21 @@ const ChatHeader = ({
     workspaceLevelRoles,
     setIsChannelReadOnly,
   ]);
+
+  // Room setting changes only arrive as system messages, so refetch the room to show the new values.
+  useEffect(() => {
+    if (!isUserAuthenticated) return undefined;
+    const onRoomChanged = async (message) => {
+      if (!ROOM_CHANGE_TYPES.has(message?.t)) return;
+      const res = await RCInstance.channelInfo();
+      if (res?.success) {
+        setChannelInfo(res.room);
+        setIsChannelPrivate(res.room.t === 'p');
+      }
+    };
+    RCInstance.addMessageListener(onRoomChanged);
+    return () => RCInstance.removeMessageListener(onRoomChanged);
+  }, [RCInstance, isUserAuthenticated, setChannelInfo, setIsChannelPrivate]);
 
   const options = useMemo(
     () => ({
