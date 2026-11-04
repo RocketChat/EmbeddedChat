@@ -396,20 +396,31 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
     upsertMessage(pendingMessage, ECOptions.enableThreads);
 
-    const res = await RCInstance.sendMessage(
-      {
-        msg: pendingMessage.msg,
-        _id: pendingMessage._id,
-      },
-      ECOptions.enableThreads ? threadId : undefined
-    );
+    try {
+      const res = await RCInstance.sendMessage(
+        {
+          msg: pendingMessage.msg,
+          _id: pendingMessage._id,
+        },
+        ECOptions.enableThreads ? threadId : undefined
+      );
 
-    if (res?.success) {
-      clearQuoteMessages();
-      replaceMessage(pendingMessage._id, res.message);
-    } else {
-      // If REST send failed, remove the pending message so it doesn't stay grey
+      if (res?.success) {
+        clearQuoteMessages();
+        replaceMessage(pendingMessage._id, res.message);
+      } else {
+        removeMessage(pendingMessage._id);
+        dispatchToastMessage({
+          type: 'error',
+          message: 'Failed to send message',
+        });
+      }
+    } catch (error) {
       removeMessage(pendingMessage._id);
+      dispatchToastMessage({
+        type: 'error',
+        message: error?.message || 'Error sending message',
+      });
     }
   };
 
