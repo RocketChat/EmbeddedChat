@@ -4,14 +4,14 @@ This is the official documentation website of EmbeddedChat.
 
 > **Node.js Version Requirement**
 >
-> The `docs/` folder requires **Node.js v22 or higher** to run correctly.
-> If you’re using a lower version (e.g., v18), you may encounter errors.
+> The `docs/` folder requires **Node.js v24 or higher** to run correctly (as defined in `package.json` engines).
+> If you're using a lower version, you may encounter installation errors.
 >
 > Use [NVM](https://github.com/nvm-sh/nvm) to install and switch to the correct version:
 >
 > ```bash
-> nvm install 22
-> nvm use 22
+> nvm install 24
+> nvm use 24
 > ```
 
 ### Installation
