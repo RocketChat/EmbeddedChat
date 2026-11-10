@@ -370,7 +370,6 @@ const ChatInputFormattingToolbar = ({
         <EmojiPicker
           key="emoji-picker"
           handleEmojiClick={(emoji) => {
-            setEmojiOpen(false);
             handleEmojiClick(emoji);
           }}
           onClose={() => setEmojiOpen(false)}
