@@ -15,6 +15,7 @@ export const RCInstanceProvider = RCContext.Provider;
  * @property {string} channelName
  * @property {boolean} showRoles
  * @property {boolean} showAvatar
+ * @property {boolean} [showPinnedBanner]
  * @property {boolean} hideHeader
  * @property {boolean} anonymousMode
  *
