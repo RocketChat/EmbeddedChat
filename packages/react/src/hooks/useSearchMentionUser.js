@@ -47,10 +47,16 @@ const useSearchMentionUser = (
               member.username.toLowerCase().includes(query)
           );
 
-          setFilteredMembers(filteredMentionMembers);
-
           const isValidUsername = filteredMentionMembers.length > 0;
 
+          if (query.includes('.') && !isValidUsername) {
+            setShowMembersList(false);
+            setFilteredMembers([]);
+            setMentionIndex(-1);
+            return;
+          }
+
+          setFilteredMembers(filteredMentionMembers);
           setShowMembersList(isValidUsername);
           setMentionIndex(isValidUsername ? 0 : -1);
         }
