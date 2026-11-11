@@ -2,16 +2,7 @@ import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
-
-const getSize = ({ small, large, size }) => {
-  if (small) {
-    return '1.25rem';
-  }
-  if (large) {
-    return '1.75rem';
-  }
-  return size || '1.5rem';
-};
+import getIconSize from './getIconSize';
 
 const ActionButton = forwardRef(
   (
@@ -27,7 +18,7 @@ const ActionButton = forwardRef(
   ) => (
     <Button ref={ref} square size={size} type={color} {...props}>
       {children}
-      <Icon name={icon} size={getSize(iconSize)} />
+      <Icon name={icon} size={getIconSize(iconSize, size)} />
     </Button>
   )
 );
@@ -41,6 +32,15 @@ ActionButton.propTypes = {
     PropTypes.node,
   ]),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
+  iconSize: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      small: PropTypes.bool,
+      large: PropTypes.bool,
+      size: PropTypes.string,
+    }),
+  ]),
 };
 
+export { getIconSize };
 export default ActionButton;

@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 
-const getTooltipStyles = (theme, position) => {
+const getTooltipStyles = (theme, position = 'top') => {
+  const isBottom = position === 'bottom' || position === 'down';
+
   const styles = {
     tooltip: css`
       position: absolute;
-      left: 64%;
+      left: 50%;
       transform: translateX(-50%);
       background-color: ${theme.invertedColors.secondary};
       color: ${theme.invertedColors.secondaryForeground};
@@ -16,22 +18,32 @@ const getTooltipStyles = (theme, position) => {
       font-weight: 500;
       white-space: nowrap;
       font-family: sans-serif;
-      top: ${position === 'top' ? 'calc(-100% - 20px)' : 'calc(100% + 10px)'};
+      pointer-events: none;
+      ${isBottom
+        ? css`
+            top: calc(100% + 8px);
+          `
+        : css`
+            bottom: calc(100% + 8px);
+          `}
     `,
     tooltipArrow: css`
       content: '';
       position: absolute;
       left: 50%;
-      margin-left: -4px;
       border-width: 6px;
       border-style: solid;
       border-color: ${theme.invertedColors.secondary} transparent transparent
         transparent;
-      top: ${position === 'top' ? '100%' : 'auto'};
-      bottom: ${position === 'bottom' ? '100%' : 'auto'};
-      transform: ${position === 'bottom'
-        ? 'translateX(-50%) rotate(180deg)'
-        : 'translateX(-50%)'};
+      ${isBottom
+        ? css`
+            bottom: 100%;
+            transform: translateX(-50%) rotate(180deg);
+          `
+        : css`
+            top: 100%;
+            transform: translateX(-50%);
+          `}
     `,
   };
 
