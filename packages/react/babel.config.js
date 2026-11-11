@@ -3,7 +3,7 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false,
+        modules: process.env.NODE_ENV === 'test' ? 'commonjs' : false,
         bugfixes: true,
         targets: { browsers: '> 0.25%, ie 11, not op_mini all, not dead' },
       },
