@@ -12,6 +12,7 @@ export default class EmbeddedChatApi {
   rid: string;
   sdk: DDPSDK;
   onMessageCallbacks: ((message: any) => void)[];
+  onThreadMessageCallbacks: ((message: any) => void)[];
   onMessageDeleteCallbacks: ((messageId: string) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
   onActionTriggeredCallbacks: ((data: any) => void)[];
@@ -34,6 +35,7 @@ export default class EmbeddedChatApi {
       retryTime: 2000,
     });
     this.onMessageCallbacks = [];
+    this.onThreadMessageCallbacks = [];
     this.onMessageDeleteCallbacks = [];
     this.onTypingStatusCallbacks = [];
     this.typingUsers = [];
@@ -235,7 +237,6 @@ export default class EmbeddedChatApi {
 
   /**
    * All subscriptions are implemented here.
-   * TODO: Add logic to call thread message event listeners. To be done after thread implementation
    */
   async connect(isChannelPrivate = false) {
     // Guard against concurrent connect() calls (e.g. React StrictMode double-invoke)
@@ -292,6 +293,11 @@ export default class EmbeddedChatApi {
           const message = this._normalizeMessage(data);
           if (message) {
             this.onMessageCallbacks.forEach((callback) => callback(message));
+            if (message.tmid) {
+              this.onThreadMessageCallbacks.forEach((callback) =>
+                callback(message)
+              );
+            }
           }
         }
       );
@@ -344,6 +350,11 @@ export default class EmbeddedChatApi {
             if (message) {
               message.renderType = "blocks";
               this.onMessageCallbacks.forEach((callback) => callback(message));
+              if (message.tmid) {
+                this.onThreadMessageCallbacks.forEach((callback) =>
+                  callback(message)
+                );
+              }
             }
           }
         );
@@ -374,6 +385,21 @@ export default class EmbeddedChatApi {
 
   async removeMessageListener(callback: (message: any) => void) {
     this.onMessageCallbacks = this.onMessageCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addThreadMessageListener(callback: (message: any) => void) {
+    const idx = this.onThreadMessageCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onThreadMessageCallbacks[idx] = callback;
+    } else {
+      this.onThreadMessageCallbacks.push(callback);
+    }
+  }
+
+  async removeThreadMessageListener(callback: (message: any) => void) {
+    this.onThreadMessageCallbacks = this.onThreadMessageCallbacks.filter(
       (c) => c !== callback
     );
   }
