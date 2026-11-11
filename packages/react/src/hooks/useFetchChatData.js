@@ -191,16 +191,14 @@ const useFetchChatData = (showRoles) => {
 
   const getStarredMessages = useCallback(
     async (anonymousMode) => {
-      if (isUserAuthenticated) {
-        try {
-          if (!isUserAuthenticated && !anonymousMode) {
-            return;
-          }
-          const { messages } = await RCInstance.getStarredMessages();
-          setStarredMessages(messages);
-        } catch (e) {
-          console.error(e);
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
         }
+        const { messages } = await RCInstance.getStarredMessages();
+        setStarredMessages(messages);
+      } catch (e) {
+        console.error(e);
       }
     },
     [isUserAuthenticated, RCInstance, setStarredMessages]
@@ -208,16 +206,14 @@ const useFetchChatData = (showRoles) => {
 
   const getPinnedMessages = useCallback(
     async (anonymousMode) => {
-      if (isUserAuthenticated) {
-        try {
-          if (!isUserAuthenticated && !anonymousMode) {
-            return;
-          }
-          const { messages } = await RCInstance.getPinnedMessages();
-          setPinnedMessages(messages);
-        } catch (e) {
-          console.error(e);
+      try {
+        if (!isUserAuthenticated && !anonymousMode) {
+          return;
         }
+        const { messages } = await RCInstance.getPinnedMessages();
+        setPinnedMessages(messages);
+      } catch (e) {
+        console.error(e);
       }
     },
     [isUserAuthenticated, RCInstance, setPinnedMessages]
