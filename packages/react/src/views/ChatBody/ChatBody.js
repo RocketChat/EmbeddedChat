@@ -134,7 +134,12 @@ const ChatBody = ({
     (message) => {
       if (message.u.username !== username) {
         const isScrolledUp = messageListRef?.current?.scrollTop !== 0;
-        if (isScrolledUp && !('pinned' in message) && !('starred' in message)) {
+        if (
+          isScrolledUp &&
+          !message.tmid &&
+          !('pinned' in message) &&
+          !('starred' in message)
+        ) {
           setOtherUserMessage(true);
           // Track the first unread message (only set if not already tracking)
           if (!pendingFirstUnreadRef.current) {

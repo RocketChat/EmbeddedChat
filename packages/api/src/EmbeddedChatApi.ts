@@ -12,8 +12,14 @@ export default class EmbeddedChatApi {
   rid: string;
   sdk: DDPSDK;
   onMessageCallbacks: ((message: any) => void)[];
-  onMessageDeleteCallbacks: ((messageId: string) => void)[];
+  onMessageDeleteCallbacks: ((messageId: string, threadId?: string) => void)[];
+  onThreadMessageCallbacks: ((message: any) => void)[];
+  onThreadMessageDeleteCallbacks: ((
+    messageId: string,
+    threadId?: string
+  ) => void)[];
   onTypingStatusCallbacks: ((users: string[]) => void)[];
+
   onActionTriggeredCallbacks: ((data: any) => void)[];
   onUiInteractionCallbacks: ((data: any) => void)[];
   typingUsers: string[];
@@ -35,7 +41,10 @@ export default class EmbeddedChatApi {
     });
     this.onMessageCallbacks = [];
     this.onMessageDeleteCallbacks = [];
+    this.onThreadMessageCallbacks = [];
+    this.onThreadMessageDeleteCallbacks = [];
     this.onTypingStatusCallbacks = [];
+
     this.typingUsers = [];
     this.onActionTriggeredCallbacks = [];
     this.onUiInteractionCallbacks = [];
@@ -184,7 +193,7 @@ export default class EmbeddedChatApi {
         await this.updateUserUsername(data.userId, data.me.name);
       }
       return { status: "success", me: data.me };
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ApiError && error.response?.status === 401) {
         const authErrorRes = await error.response.json();
         return { error: authErrorRes?.error };
@@ -234,8 +243,8 @@ export default class EmbeddedChatApi {
   }
 
   /**
-   * All subscriptions are implemented here.
-   * TODO: Add logic to call thread message event listeners. To be done after thread implementation
+   * Initializes all realtime subscriptions (room messages, thread messages,
+   * typing notifications, delete events, and user interactions).
    */
   async connect(isChannelPrivate = false) {
     // Guard against concurrent connect() calls (e.g. React StrictMode double-invoke)
@@ -284,7 +293,7 @@ export default class EmbeddedChatApi {
         await this.joinRoom(isChannelPrivate);
       }
 
-      // Subscribe to room messages
+      // Subscribe to room messages and thread replies
       const roomMsgSub = this.sdk.stream(
         "room-messages",
         [this.rid, false],
@@ -292,6 +301,11 @@ export default class EmbeddedChatApi {
           const message = this._normalizeMessage(data);
           if (message) {
             this.onMessageCallbacks.forEach((callback) => callback(message));
+            if (message.tmid) {
+              this.onThreadMessageCallbacks.forEach((callback) =>
+                callback(message)
+              );
+            }
           }
         }
       );
@@ -320,11 +334,17 @@ export default class EmbeddedChatApi {
         "notify-room",
         [`${this.rid}/deleteMessage`, false],
         (...args: any[]) => {
-          const messageId = args[0]?._id;
+          const messageData = args[0];
+          const messageId = messageData?._id;
           if (messageId) {
             this.onMessageDeleteCallbacks.forEach((callback) =>
-              callback(messageId)
+              callback(messageId, messageData?.tmid)
             );
+            if (messageData?.tmid) {
+              this.onThreadMessageDeleteCallbacks.forEach((callback) =>
+                callback(messageId, messageData.tmid)
+              );
+            }
           }
         }
       );
@@ -378,7 +398,9 @@ export default class EmbeddedChatApi {
     );
   }
 
-  async addMessageDeleteListener(callback: (messageId: string) => void) {
+  async addMessageDeleteListener(
+    callback: (messageId: string, threadId?: string) => void
+  ) {
     const idx = this.onMessageDeleteCallbacks.findIndex((c) => c === callback);
     if (idx !== -1) {
       this.onMessageDeleteCallbacks[idx] = callback;
@@ -387,10 +409,47 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async removeMessageDeleteListener(callback: (messageId: string) => void) {
+  async removeMessageDeleteListener(
+    callback: (messageId: string, threadId?: string) => void
+  ) {
     this.onMessageDeleteCallbacks = this.onMessageDeleteCallbacks.filter(
       (c) => c !== callback
     );
+  }
+
+  async addThreadMessageListener(callback: (message: any) => void) {
+    const idx = this.onThreadMessageCallbacks.findIndex((c) => c === callback);
+    if (idx !== -1) {
+      this.onThreadMessageCallbacks[idx] = callback;
+    } else {
+      this.onThreadMessageCallbacks.push(callback);
+    }
+  }
+
+  async removeThreadMessageListener(callback: (message: any) => void) {
+    this.onThreadMessageCallbacks = this.onThreadMessageCallbacks.filter(
+      (c) => c !== callback
+    );
+  }
+
+  async addThreadMessageDeleteListener(
+    callback: (messageId: string, threadId?: string) => void
+  ) {
+    const idx = this.onThreadMessageDeleteCallbacks.findIndex(
+      (c) => c === callback
+    );
+    if (idx !== -1) {
+      this.onThreadMessageDeleteCallbacks[idx] = callback;
+    } else {
+      this.onThreadMessageDeleteCallbacks.push(callback);
+    }
+  }
+
+  async removeThreadMessageDeleteListener(
+    callback: (messageId: string, threadId?: string) => void
+  ) {
+    this.onThreadMessageDeleteCallbacks =
+      this.onThreadMessageDeleteCallbacks.filter((c) => c !== callback);
   }
 
   async addTypingStatusListener(callback: (users: string[]) => void) {
