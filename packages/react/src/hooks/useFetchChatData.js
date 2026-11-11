@@ -137,7 +137,7 @@ const useFetchChatData = (showRoles) => {
             if (res?.success) {
               setChannelInfo(res.room);
               channelIsPrivate = res.room.t === 'p';
-              if (channelIsPrivate) setIsChannelPrivate(true);
+              setIsChannelPrivate(channelIsPrivate);
             }
           }
         }

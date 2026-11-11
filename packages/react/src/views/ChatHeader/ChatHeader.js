@@ -275,7 +275,7 @@ const ChatHeader = ({
       const res = await RCInstance.channelInfo();
       if (res.success) {
         setChannelInfo(res.room);
-        if (res.room.t === 'p') setIsChannelPrivate(true);
+        setIsChannelPrivate(res.room.t === 'p');
         if (res.room?.teamMain) setIsRoomTeam(true);
         if (res.room.ro) {
           setIsChannelReadOnly(true);
