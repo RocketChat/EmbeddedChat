@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
 import { getChatInputToolbarStyles } from './ChatInput.styles';
 import SurfaceMenu from '../../components/SurfaceMenu/SurfaceMenu';
 import SurfaceItem from '../../components/SurfaceMenu/SurfaceItem';
 import Formatters from './Formatters';
 import useChatInputItemsStore from '../../store/chatInputItemsStore';
+import useAiGeneratedBlocksStore from '../../store/aiGeneratedBlocksStore';
+import { GeneratedUiSurface, getGeneratedUiIcon } from '@embeddedchat/ui-kit';
 import {
   DndContext,
   closestCenter,
@@ -29,6 +31,12 @@ const ChatInputToolbar = () => {
 
   const [activeSurfaceItem, setActiveSurfaceItem] = useState(null);
   const [formattersVisible, setFormattersVisible] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
+
+  const publishedConfiguration = useAiGeneratedBlocksStore(
+    (state) => state.publishedConfiguration
+  );
+  const generatedUiAnchor = useRef(null);
 
   const placeholderSurfaceItem = 'placeholder-surface';
 
@@ -68,7 +76,7 @@ const ChatInputToolbar = () => {
         onClick: () => {},
         iconName: 'attachment',
         visible: true,
-      },      
+      },
       formatter: {
         label: 'Formatter',
         id: 'formatter',
@@ -78,8 +86,19 @@ const ChatInputToolbar = () => {
         iconName: 'format-text',
         visible: true,
       },
+      ai: {
+        label: 'AI-Generated Content',
+        id: 'ai',
+        onClick: () => {
+          setAiOpen((prev) => !prev);
+        },
+        iconName: getGeneratedUiIcon(publishedConfiguration?.componentType),
+        visible: Boolean(
+          publishedConfiguration?.placements.includes('composer')
+        ),
+      },
     };
-  }, []);
+  }, [setAiOpen, publishedConfiguration]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -166,12 +185,25 @@ const ChatInputToolbar = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <Box css={styles.chatFormat} className="ec-chat-input-formatting-toolbar">
+      <Box
+        ref={generatedUiAnchor}
+        css={styles.chatFormat}
+        className="ec-chat-input-formatting-toolbar"
+      >
         {surfaceOptions.length > 0 && (
           <SurfaceMenu
             options={surfaceOptions}
             tooltipPosition="top"
             onRemove={removeSurfaceItem}
+          />
+        )}
+        {aiOpen && publishedConfiguration?.placements.includes('composer') && (
+          <GeneratedUiSurface
+            open
+            configuration={publishedConfiguration}
+            placement="composer"
+            anchorRef={generatedUiAnchor}
+            onClose={() => setAiOpen(false)}
           />
         )}
       </Box>

@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useSafely } from '@rocket.chat/fuselage-hooks';
 import * as UiKit from '@rocket.chat/ui-kit';
 
@@ -7,7 +7,7 @@ import { UiKitContext } from '../contexts/UiKitContext';
 import { getInitialValue } from '../utils/getInitialValue';
 
 const getElementValueFromState = (actionId, values, initialValue) =>
-  (values && (values[actionId]?.value || initialValue)) ?? initialValue;
+  values?.[actionId]?.value ?? initialValue;
 
 export const useUiKitState = (element, context) => {
   const { blockId, actionId, appId, dispatchActionConfig } = element;
@@ -18,6 +18,7 @@ export const useUiKitState = (element, context) => {
     updateState,
     values,
     errors,
+    busy = false,
   } = useContext(UiKitContext);
 
   const initialValue = getInitialValue(element);
@@ -26,40 +27,45 @@ export const useUiKitState = (element, context) => {
 
   const [value, setValue] = useSafely(useState(_value));
   const [loading, setLoading] = useSafely(useState(false));
+  const pending = useRef(false);
 
   const actionFunction = useCallback(
     async (e) => {
-      const {
-        target: { value: elValue },
-      } = e;
+      if (pending.current || busy) return;
+      pending.current = true;
+      const elValue =
+        element.type === 'button' ? element.value : e.target.value;
       setLoading(true);
-
-      if (Array.isArray(value)) {
-        const idx = value.findIndex((val) => val === elValue);
-        if (idx > -1) {
-          setValue(value.filter((_, i) => i !== idx));
+      try {
+        if (Array.isArray(value)) {
+          const idx = value.findIndex((val) => val === elValue);
+          if (idx > -1) {
+            setValue(value.filter((_, i) => i !== idx));
+          } else {
+            setValue([...value, elValue]);
+          }
         } else {
-          setValue([...value, elValue]);
+          setValue(elValue);
         }
-      } else {
-        setValue(elValue);
-      }
 
-      await updateState?.(
-        { blockId, appId, actionId, value: elValue, viewId },
-        e
-      );
-      await action(
-        {
-          blockId,
-          appId: appId || appIdFromContext,
-          actionId,
-          value: elValue,
-          viewId,
-        },
-        e
-      );
-      setLoading(false);
+        await updateState?.(
+          { blockId, appId, actionId, value: elValue, viewId },
+          e
+        );
+        await action(
+          {
+            blockId,
+            appId: appId || appIdFromContext,
+            actionId,
+            value: elValue,
+            viewId,
+          },
+          e
+        );
+      } finally {
+        pending.current = false;
+        setLoading(false);
+      }
     },
     [
       value,
@@ -72,6 +78,9 @@ export const useUiKitState = (element, context) => {
       actionId,
       viewId,
       appIdFromContext,
+      element.type,
+      element.value,
+      busy,
     ]
   );
 
@@ -123,8 +132,8 @@ export const useUiKitState = (element, context) => {
   );
 
   const result = useMemo(
-    () => ({ loading, setLoading, error, value }),
-    [loading, setLoading, error, value]
+    () => ({ loading: loading || busy, setLoading, error, value }),
+    [loading, busy, setLoading, error, value]
   );
 
   if (

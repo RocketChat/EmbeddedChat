@@ -7,6 +7,12 @@ const isActionableElement = (element) =>
   'actionId' in element && typeof element.actionId === 'string';
 
 const reduceInitialValuesFromLayoutBlock = (state, block) => {
+  if (block.accessory && isActionableElement(block.accessory)) {
+    state[block.accessory.actionId] = {
+      value: getInitialValue(block.accessory),
+      blockId: block.blockId,
+    };
+  }
   if (hasElement(block)) {
     if (isActionableElement(block.element)) {
       state[block.element.actionId] = {

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo, useRef, useId } from 'react';
 import {
   Box,
   Modal,
@@ -9,6 +9,11 @@ import {
   appendClassNames,
   useTheme,
 } from '@embeddedchat/ui-elements';
+import {
+  GeneratedUiSurface,
+  getGeneratedUiIcon,
+  withGeneratedUiItems,
+} from '@embeddedchat/ui-kit';
 import RCContext from '../../context/RCInstance';
 import { EmojiPicker } from '../EmojiPicker';
 import { getMessageToolboxStyles } from './Message.styles';
@@ -64,8 +69,17 @@ export const MessageToolbox = ({
     className,
     style
   );
-  const { RCInstance } = useContext(RCContext);
+  const { RCInstance, ECOptions } = useContext(RCContext);
   const instanceHost = RCInstance.getHost();
+  const generatedUiConfigurations = useMemo(
+    () =>
+      (ECOptions?.generatedUi || []).filter(({ placements }) =>
+        placements.includes('messageToolbox')
+      ),
+    [ECOptions?.generatedUi]
+  );
+  const generatedUiAnchor = useRef(null);
+  const generatedUiDialogId = useId();
   const { theme } = useTheme();
   const styles = getMessageToolboxStyles(theme);
   const surfaceItems =
@@ -76,6 +90,7 @@ export const MessageToolbox = ({
   const [isEmojiOpen, setEmojiOpen] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [openGeneratedUiId, setOpenGeneratedUiId] = useState(null);
 
   const handleOnClose = () => {
     setShowDeleteModal(false);
@@ -197,6 +212,32 @@ export const MessageToolbox = ({
         visible: isAllowedToReport,
         type: 'destructive',
       },
+      ...Object.fromEntries(
+        generatedUiConfigurations.map((configuration) => {
+          const itemId = `generated-ui-${configuration.id}`;
+          return [
+            itemId,
+            {
+              label: configuration.title || 'Generated UI',
+              id: itemId,
+              onClick: () =>
+                setOpenGeneratedUiId((openId) =>
+                  openId === configuration.id ? null : configuration.id
+                ),
+              iconName: getGeneratedUiIcon(configuration.componentType),
+              visible: true,
+              ariaProps: {
+                'aria-haspopup': 'dialog',
+                'aria-expanded': openGeneratedUiId === configuration.id,
+                'aria-controls':
+                  openGeneratedUiId === configuration.id
+                    ? generatedUiDialogId
+                    : undefined,
+              },
+            },
+          ];
+        })
+      ),
     }),
     [
       handleOpenThread,
@@ -211,6 +252,13 @@ export const MessageToolbox = ({
       handlerReportMessage,
       handleCopyMessage,
       isAllowedToPin,
+      generatedUiConfigurations,
+      openGeneratedUiId,
+      generatedUiDialogId,
+      canDeleteMessage,
+      handleCopyMessageLink,
+      isAllowedToEditMessage,
+      isAllowedToReport,
     ]
   );
 
@@ -228,7 +276,11 @@ export const MessageToolbox = ({
     })
     .filter((option) => option !== null);
 
-  const surfaceOptions = surfaceItems
+  const surfaceOptions = withGeneratedUiItems(
+    surfaceItems,
+    menuItems,
+    generatedUiConfigurations
+  )
     ?.map((item) => {
       if (item in options && options[item].visible) {
         return {
@@ -237,17 +289,29 @@ export const MessageToolbox = ({
           label: options[item].label,
           iconName: options[item].iconName,
           type: options[item].type,
+          ariaProps: options[item].ariaProps,
         };
       }
       return null;
     })
     .filter((option) => option !== null);
 
+  const openGeneratedUiConfiguration = generatedUiConfigurations.find(
+    (configuration) => configuration.id === openGeneratedUiId
+  );
+
   return (
     <>
-      <Box css={variantStyles.toolboxContainer || styles.toolboxContainer}>
+      <Box
+        css={variantStyles.toolboxContainer || styles.toolboxContainer}
+        data-generated-ui-open={Boolean(openGeneratedUiConfiguration)}
+      >
         <Box
-          css={styles.toolbox}
+          ref={generatedUiAnchor}
+          css={[
+            styles.toolbox,
+            generatedUiConfigurations.length > 0 && { position: 'relative' },
+          ]}
           className={appendClassNames('ec-message-toolbox', classNames)}
           style={styleOverrides}
           {...props}
@@ -262,6 +326,19 @@ export const MessageToolbox = ({
               tooltip={{ isToolTip: true, position: 'top', text: 'More' }}
               useWrapper={false}
               style={{ top: 'auto', bottom: `calc(100% + 2px)` }}
+            />
+          )}
+          {openGeneratedUiConfiguration && (
+            <GeneratedUiSurface
+              open
+              anchorRef={generatedUiAnchor}
+              dialogId={generatedUiDialogId}
+              roomId={message.rid || ECOptions?.roomId}
+              messageId={message._id}
+              onClose={() => setOpenGeneratedUiId(null)}
+              configuration={openGeneratedUiConfiguration}
+              placement="messageToolbox"
+              onAction={ECOptions?.onGeneratedUiAction}
             />
           )}
 
