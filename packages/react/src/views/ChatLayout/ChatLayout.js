@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { Box, useComponentOverrides } from '@embeddedchat/ui-elements';
+import { ErrorBoundary } from '../ErrorBoundary';
 import styles from './ChatLayout.styles';
 import {
   useChannelStore,
@@ -143,17 +144,21 @@ const ChatLayout = () => {
       onDrop={(e) => handleDragDrop(e)}
     >
       <Box css={styles.chatMain}>
-        <ChatBody
-          anonymousMode={anonymousMode}
-          showRoles={showRoles}
-          messageListRef={messageListRef}
-          scrollToBottom={scrollToBottom}
-          clearUnreadDividerRef={clearUnreadDividerRef}
-        />
-        <ChatInput
-          scrollToBottom={scrollToBottom}
-          clearUnreadDividerRef={clearUnreadDividerRef}
-        />
+        <ErrorBoundary>
+          <ChatBody
+            anonymousMode={anonymousMode}
+            showRoles={showRoles}
+            messageListRef={messageListRef}
+            scrollToBottom={scrollToBottom}
+            clearUnreadDividerRef={clearUnreadDividerRef}
+          />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <ChatInput
+            scrollToBottom={scrollToBottom}
+            clearUnreadDividerRef={clearUnreadDividerRef}
+          />
+        </ErrorBoundary>
         <div id="emoji-popup" />
       </Box>
 
