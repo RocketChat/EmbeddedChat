@@ -65,6 +65,7 @@ const EmbeddedChat = (props) => {
     dark = false,
     remoteOpt = false,
     layoutMode = 'bubble',
+    tokenStorageKey = null,
   } = config;
 
   const auth = useMemo(
@@ -79,7 +80,21 @@ const EmbeddedChat = (props) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
+  const storageKey = useMemo(() => {
+    if (tokenStorageKey) {
+      return tokenStorageKey;
+    }
+    if (host) {
+      const normalizedHost = host.trim().replace(/\/+$/, '');
+      return `ec_token_${normalizedHost}`;
+    }
+    return 'ec_token';
+  }, [tokenStorageKey, host]);
+
+  const { getToken, saveToken, deleteToken } = useMemo(
+    () => getTokenStorage(secure, storageKey),
+    [secure, storageKey]
+  );
   const {
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
@@ -356,6 +371,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  tokenStorageKey: PropTypes.string,
   aiAdapter: PropTypes.shape({
     name: PropTypes.string,
     sendPrompt: PropTypes.func.isRequired,
