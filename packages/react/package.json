@@ -15,6 +15,7 @@
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 rollup -c --context=window --environment NODE_ENV:production",
     "watch": "cross-env NODE_OPTIONS=--max-old-space-size=4096 rollup -c --watch --context=window",
+    "test": "node --test src/lib/*.test.mjs",
     "test:lint": "eslint src/**/*.js",
     "format": "prettier --write 'src/' ",
     "format:check": "prettier --check 'src/' ",
