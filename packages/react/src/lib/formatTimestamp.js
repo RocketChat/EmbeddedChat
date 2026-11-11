@@ -1,5 +1,9 @@
 const formatTimestamp = (timestamp) => {
+  if (!timestamp) return '';
+
   const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return '';
+
   const now = new Date();
 
   const isDifferentDay =
@@ -12,8 +16,10 @@ const formatTimestamp = (timestamp) => {
 
   return isDifferentDay
     ? `${date.toLocaleDateString('en-US', {
-        weekday: 'long',
-      })} ${formattedTime}`
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })}, ${formattedTime}`
     : formattedTime;
 };
 
