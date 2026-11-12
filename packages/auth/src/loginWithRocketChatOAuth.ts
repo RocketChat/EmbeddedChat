@@ -42,32 +42,44 @@ const loginWithRocketChatOAuth = async (config: { api: Api }) => {
 width=800,height=600,left=-1000,top=-1000,rel=opener`;
   const popup = window.open(authorizeUrl, "Login", params);
 
-  return new Promise<any>((resolve) => {
+  return new Promise<any>((resolve, reject) => {
     if (popup) {
+      const cleanup = () => {
+        clearInterval(checkInterval);
+        window.removeEventListener("message", onMessage);
+      };
+
       const onMessage = async (e: MessageEvent) => {
         if (e.origin !== new URL(config.api.baseUrl).origin) {
           return;
         }
         if (e.data.type === "rc-oauth-callback") {
+          cleanup();
           const { accessToken, expiresIn, serviceName } = e.data.credentials;
-          const response = await config.api.post("/api/v1/login", {
-            accessToken,
-            expiresIn,
-            serviceName,
-          });
-          popup.close();
-          resolve(response.data);
+          try {
+            const response = await config.api.post("/api/v1/login", {
+              accessToken,
+              expiresIn,
+              serviceName,
+            });
+            popup.close();
+            resolve(response.data);
+          } catch (err) {
+            reject(err);
+          }
         }
       };
+
       window.addEventListener("message", onMessage);
+
       const checkInterval = setInterval(() => {
         if (popup.closed) {
-          clearInterval(checkInterval);
-          window.removeEventListener("message", onMessage);
+          cleanup();
+          reject(new Error("OAuth login cancelled: popup closed by user"));
         }
       }, 1000);
     } else {
-      throw new Error("Popup blocked");
+      reject(new Error("Popup blocked"));
     }
   });
 };
