@@ -8,10 +8,6 @@ const MOCK_USER = {
   avatarUrl: "https://open.rocket.chat/avatar/test_acc",
 };
 
-if (typeof localStorage !== "undefined" && !localStorage.getItem("ec_token")) {
-  localStorage.setItem("ec_token", "mock-auth-token-12345");
-}
-
 const activeSockets = new Set<MockWebSocket>();
 
 class MockWebSocket extends EventTarget {
@@ -141,12 +137,7 @@ let mockMessages = [
 ];
 
 window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-  const url =
-    typeof input === "string"
-      ? input
-      : input instanceof URL
-      ? input.href
-      : input.url;
+  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
 
   const isRcRequest =
     url.includes("localhost:3000") ||
