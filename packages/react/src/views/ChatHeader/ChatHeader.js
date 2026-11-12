@@ -289,7 +289,7 @@ const ChatHeader = ({
           type: 'error',
           message: "Channel doesn't exist. Logging out.",
         });
-        await RCInstance.logout();
+        await handleLogout();
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-archived'
@@ -303,7 +303,7 @@ const ChatHeader = ({
           message:
             "You don't have permission to access this channel. Logging out",
         });
-        await RCInstance.logout();
+        await handleLogout();
       }
     };
 
@@ -315,6 +315,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     RCInstance,
     setChannelInfo,
+    handleLogout,
     setIsChannelPrivate,
     dispatchToastMessage,
     isChannelPrivate,

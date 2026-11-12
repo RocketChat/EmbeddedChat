@@ -42,7 +42,7 @@ async function printResult(result) {
     if (outputElement) {
       const escapedMessage = escapeHTML(result.message);
       const escapedStack = escapeHTML(result.stack);
-      outputElement.innerHTML = `<code>\nError: ${escapedMessage}\nStack: ${escapedStack}</co>`;
+      outputElement.innerHTML = `<code>\nError: ${escapedMessage}\nStack: ${escapedStack}</code>`;
     }
   } else {
     outputElement.innerHTML = "\n" + JSON.stringify(result, null, 2);
