@@ -12,6 +12,19 @@ import LinkSpan from './LinkSpan';
 import UserMention from '../mentions/UserMention';
 import TimestampElement from './TimestampElement';
 
+const isPlainTextToken = (token) => token?.type === 'PLAIN_TEXT';
+
+const isWrappedMention = (items, index) => {
+  const previous = items[index - 1];
+  const next = items[index + 1];
+
+  if (!isPlainTextToken(previous) || !isPlainTextToken(next)) {
+    return false;
+  }
+
+  return /\(\s*$/.test(previous.value) && /^\s*\)/.test(next.value);
+};
+
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
     switch (content.type) {
@@ -34,6 +47,9 @@ const InlineElements = ({ contents }) =>
         return <ChannelMention key={index} mention={content.value.value} />;
 
       case 'MENTION_USER':
+        if (isWrappedMention(contents, index)) {
+          return <PlainSpan key={index} contents={`@${content.value.value}`} />;
+        }
         return <UserMention key={index} contents={content.value} />;
 
       case 'EMOJI':
