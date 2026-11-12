@@ -11,6 +11,7 @@ import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
 import UserMention from '../mentions/UserMention';
 import TimestampElement from './TimestampElement';
+import HighlightSpan from './HighlightSpan';
 
 const InlineElements = ({ contents }) =>
   contents.map((content, index) => {
@@ -57,6 +58,9 @@ const InlineElements = ({ contents }) =>
 
       case 'TIMESTAMP':
         return <TimestampElement key={index} contents={content.value} />;
+
+      case 'HIGHLIGHT_TEXT':
+        return <HighlightSpan key={index} contents={content.value} />;
 
       default:
         return null;
