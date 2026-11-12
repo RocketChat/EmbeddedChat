@@ -24,5 +24,6 @@ export async function tokenRequestHandler(
     return response.json();
   } catch (error) {
     console.error(`Error with ${method} request:`, error);
+    throw error;
   }
 }
