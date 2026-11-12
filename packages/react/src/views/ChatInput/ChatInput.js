@@ -430,8 +430,25 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
 
   const handleCommandExecution = async (message) => {
     const execCommand = async (command, params) => {
-      await RCInstance.execCommand({ command, params, tmid: threadId });
-      setFilteredCommands([]);
+      try {
+        const result = await RCInstance.execCommand({
+          command,
+          params,
+          tmid: threadId,
+        });
+        if (!result.success) {
+          dispatchToastMessage({
+            type: 'error',
+            message: result.error || 'No such command',
+          });
+        }
+        setFilteredCommands([]);
+      } catch (e) {
+        dispatchToastMessage({
+          type: 'error',
+          message: 'No such command',
+        });
+      }
     };
 
     const [command, ...paramsArray] = message.split(' ');
@@ -445,7 +462,14 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       setIsDraftRestored(false);
       setEditMessage({});
       await execCommand(command.replace('/', ''), params);
+      return true;
     }
+
+    messageRef.current.value = '';
+    setDisableButton(true);
+    setEditMessage({});
+    await execCommand(command.replace('/', ''), params);
+    return true;
   };
 
   const aiComposer = useAIComposer({
@@ -478,7 +502,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
       return;
     }
     if (message.startsWith('/')) {
-      handleCommandExecution(message);
+      await handleCommandExecution(message);
       return;
     }
 
