@@ -21,6 +21,7 @@ export default class EmbeddedChatApi {
   typingUsers: string[];
   auth: RocketChatAuth;
   private _connectPromise: Promise<void> | null = null;
+  private _cancelConnect: (() => void) | null = null;
   private _activeSubscriptions: { stop: () => void }[] = [];
   // Incremented by close() so that a connect() which is still awaiting
   // can detect that it has been superseded or cancelled.
@@ -256,10 +257,30 @@ export default class EmbeddedChatApi {
     if (this._connectPromise) {
       return this._connectPromise;
     }
-    this._connectPromise = this._doConnect(isChannelPrivate).finally(() => {
-      this._connectPromise = null;
+
+    // Cancel previous subscriptions and snapshot the new connection generation
+    // before registering this attempt's cancellation callback.
+    this.close();
+    const generation = this._connectionGeneration;
+    let cancelConnect: () => void;
+    const cancelled = new Promise<void>((resolve) => {
+      cancelConnect = resolve;
     });
-    return this._connectPromise;
+    this._cancelConnect = cancelConnect!;
+
+    const connectPromise = Promise.race([
+      this._doConnect(generation, isChannelPrivate),
+      cancelled,
+    ]).finally(() => {
+      // A cancelled handshake may finish after a newer connect() has started.
+      // Do not let its cleanup clear the newer attempt.
+      if (this._connectPromise === connectPromise) {
+        this._connectPromise = null;
+        this._cancelConnect = null;
+      }
+    });
+    this._connectPromise = connectPromise;
+    return connectPromise;
   }
 
   private _normalizeMessage(data: any) {
@@ -285,14 +306,10 @@ export default class EmbeddedChatApi {
     }
   }
 
-  private async _doConnect(isChannelPrivate = false) {
-    // Take a snapshot of the generation: every close() invalidates it, so
-    // a connect() which is interrupted while awaiting (for example by a
-    // logout happening during joinRoom()) can stop before subscribing.
-    // Without this the subscriptions would be created after the socket
-    // was torn down, and the DDP client would replay them on reconnect.
-    this.close();
-    const generation = this._connectionGeneration;
+  private async _doConnect(generation: number, isChannelPrivate = false) {
+    // Every close() invalidates this generation, so a connect() interrupted
+    // while awaiting can stop before subscribing. The cancellation promise in
+    // connect() separately releases callers if the DDP handshake never settles.
     const isStale = () => generation !== this._connectionGeneration;
     try {
       await this.sdk.connection.connect();
@@ -587,10 +604,15 @@ export default class EmbeddedChatApi {
   }
 
   async close() {
-    // Invalidate any connect() which is currently in flight, so that it
-    // does not register subscriptions after this teardown.
+    // Invalidate and release any connect() currently waiting on a DDP
+    // handshake. The underlying promise may remain pending in the DDP client,
+    // but it can no longer block a subsequent connect().
     this._connectionGeneration += 1;
     this._stopSubscriptions();
+    const cancelConnect = this._cancelConnect;
+    this._cancelConnect = null;
+    this._connectPromise = null;
+    cancelConnect?.();
     this.sdk.connection.close();
   }
 

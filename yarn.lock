@@ -2456,6 +2456,7 @@ __metadata:
     "@embeddedchat/auth": "workspace:^"
     "@rocket.chat/ddp-client": 1.0.9-rc.2
     "@rocket.chat/emitter": ^0.31.25
+    esbuild: ^0.17.19
     parcel: ^2.10.3
     rollup: ^3.23.0
     rollup-plugin-dts: ^6.0.1
