@@ -10,11 +10,17 @@ const formatTimestamp = (timestamp) => {
   const options = { hour: 'numeric', minute: 'numeric', hour12: true };
   const formattedTime = date.toLocaleTimeString('en-US', options);
 
-  return isDifferentDay
-    ? `${date.toLocaleDateString('en-US', {
-        weekday: 'long',
-      })} ${formattedTime}`
-    : formattedTime;
+  if (!isDifferentDay) {
+    return formattedTime;
+  }
+
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  return `${formattedDate}, ${formattedTime}`;
 };
 
 export default formatTimestamp;
