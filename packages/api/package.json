@@ -7,7 +7,7 @@
   "typings": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "yarn build && yarn esbuild src/EmbeddedChatApi.ts --bundle --platform=node --format=esm --main-fields=module,main --outfile=dist/EmbeddedChatApi.test.mjs && node --test test/*.test.mjs",
     "build": "rollup -c",
     "dev": "yarn parcel playground/index.html",
     "format": "prettier --write 'src/'",
@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "esbuild": "^0.17.19",
     "parcel": "^2.10.3",
     "rollup": "^3.23.0",
     "rollup-plugin-dts": "^6.0.1",

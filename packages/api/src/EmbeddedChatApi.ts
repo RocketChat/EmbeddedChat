@@ -19,7 +19,11 @@ export default class EmbeddedChatApi {
   typingUsers: string[];
   auth: RocketChatAuth;
   private _connectPromise: Promise<void> | null = null;
+  private _cancelConnect: (() => void) | null = null;
   private _activeSubscriptions: { stop: () => void }[] = [];
+  // Incremented by close() so that a connect() which is still awaiting
+  // can detect that it has been superseded or cancelled.
+  private _connectionGeneration = 0;
   private _authListener: ((user: any) => void) | null = null;
 
   constructor(
@@ -230,6 +234,16 @@ export default class EmbeddedChatApi {
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
       return err;
+    } finally {
+      // Tear down the realtime connection even if the logout request
+      // failed, otherwise the socket stays subscribed to the room and
+      // keeps receiving messages for a session that is no longer
+      // authenticated.
+      try {
+        await this.close();
+      } catch (err: any) {
+        console.error(err instanceof Error ? err.message : err);
+      }
     }
   }
 
@@ -242,10 +256,30 @@ export default class EmbeddedChatApi {
     if (this._connectPromise) {
       return this._connectPromise;
     }
-    this._connectPromise = this._doConnect(isChannelPrivate).finally(() => {
-      this._connectPromise = null;
+
+    // Cancel previous subscriptions and snapshot the new connection generation
+    // before registering this attempt's cancellation callback.
+    this.close();
+    const generation = this._connectionGeneration;
+    let cancelConnect: () => void;
+    const cancelled = new Promise<void>((resolve) => {
+      cancelConnect = resolve;
     });
-    return this._connectPromise;
+    this._cancelConnect = cancelConnect!;
+
+    const connectPromise = Promise.race([
+      this._doConnect(generation, isChannelPrivate),
+      cancelled,
+    ]).finally(() => {
+      // A cancelled handshake may finish after a newer connect() has started.
+      // Do not let its cleanup clear the newer attempt.
+      if (this._connectPromise === connectPromise) {
+        this._connectPromise = null;
+        this._cancelConnect = null;
+      }
+    });
+    this._connectPromise = connectPromise;
+    return connectPromise;
   }
 
   private _normalizeMessage(data: any) {
@@ -271,17 +305,24 @@ export default class EmbeddedChatApi {
     }
   }
 
-  private async _doConnect(isChannelPrivate = false) {
+  private async _doConnect(generation: number, isChannelPrivate = false) {
+    // Every close() invalidates this generation, so a connect() interrupted
+    // while awaiting can stop before subscribing. The cancellation promise in
+    // connect() separately releases callers if the DDP handshake never settles.
+    const isStale = () => generation !== this._connectionGeneration;
     try {
-      this.close(); // before connection, all previous subscriptions should be cancelled
       await this.sdk.connection.connect();
+      if (isStale()) return;
 
       const currentUser = (await this.auth.getCurrentUser()) as any;
+      if (isStale()) return;
       const token = currentUser?.authToken || currentUser?.data?.authToken;
       if (token) {
         this._applyCredentials(currentUser);
         await this.sdk.account.loginWithToken(token);
+        if (isStale()) return;
         await this.joinRoom(isChannelPrivate);
+        if (isStale()) return;
       }
 
       // Subscribe to room messages
@@ -357,6 +398,12 @@ export default class EmbeddedChatApi {
           }
         );
         this._activeSubscriptions.push(notifyUserUiSub);
+      }
+
+      // A close() may have happened while the subscriptions above were
+      // being registered, so drop them if this connect is no longer current.
+      if (isStale()) {
+        this._stopSubscriptions();
       }
     } catch (err) {
       this.close();
@@ -542,9 +589,21 @@ export default class EmbeddedChatApi {
     }
   }
 
-  async close() {
+  private _stopSubscriptions() {
     this._activeSubscriptions.forEach((sub) => sub.stop());
     this._activeSubscriptions = [];
+  }
+
+  async close() {
+    // Invalidate and release any connect() currently waiting on a DDP
+    // handshake. The underlying promise may remain pending in the DDP client,
+    // but it can no longer block a subsequent connect().
+    this._connectionGeneration += 1;
+    this._stopSubscriptions();
+    const cancelConnect = this._cancelConnect;
+    this._cancelConnect = null;
+    this._connectPromise = null;
+    cancelConnect?.();
     this.sdk.connection.close();
   }
 
