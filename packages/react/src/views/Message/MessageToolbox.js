@@ -39,6 +39,7 @@ export const MessageToolbox = ({
   handleCopyMessageLink,
   handleEditMessage,
   handleQuoteMessage,
+  handleSelectMessages,
   isEditing = false,
   optionConfig = {
     surfaceItems: [
@@ -50,6 +51,7 @@ export const MessageToolbox = ({
       'link',
       'pin',
       'edit',
+      'select',
       'delete',
       'report',
     ],
@@ -115,6 +117,13 @@ export const MessageToolbox = ({
 
   const options = useMemo(
     () => ({
+      select: {
+        label: 'Select message',
+        id: 'select',
+        onClick: () => handleSelectMessages(message),
+        iconName: 'check',
+        visible: true,
+      },
       reply: {
         label: 'Reply in thread',
         id: 'reply',
@@ -204,6 +213,7 @@ export const MessageToolbox = ({
       isThreadMessage,
       authenticatedUserId,
       isEditing,
+      handleSelectMessages,
       handleQuoteMessage,
       handleStarMessage,
       handlePinMessage,
@@ -243,6 +253,29 @@ export const MessageToolbox = ({
     })
     .filter((option) => option !== null);
 
+  const hasSelectAction = surfaceOptions?.some((option) => option.id === 'select');
+  const mergedSurfaceOptions = hasSelectAction
+    ? surfaceOptions
+    : (() => {
+        const fallbackOptions = [...(surfaceOptions || [])];
+        const editIndex = fallbackOptions.findIndex((option) => option.id === 'edit');
+        const selectOption = {
+          id: options.select.id,
+          onClick: options.select.onClick,
+          label: options.select.label,
+          iconName: options.select.iconName,
+          type: options.select.type,
+        };
+
+        if (editIndex >= 0) {
+          fallbackOptions.splice(editIndex + 1, 0, selectOption);
+        } else {
+          fallbackOptions.push(selectOption);
+        }
+
+        return fallbackOptions;
+      })();
+
   return (
     <>
       <Box css={variantStyles.toolboxContainer || styles.toolboxContainer}>
@@ -252,8 +285,8 @@ export const MessageToolbox = ({
           style={styleOverrides}
           {...props}
         >
-          {surfaceOptions?.length > 0 && (
-            <SurfaceMenu options={surfaceOptions} size="small" />
+          {mergedSurfaceOptions?.length > 0 && (
+            <SurfaceMenu options={mergedSurfaceOptions} size="small" />
           )}
           {menuOptions?.length > 0 && (
             <Menu
