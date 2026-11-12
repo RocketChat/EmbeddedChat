@@ -10,6 +10,9 @@ import {
 } from '@embeddedchat/ui-elements';
 import RCContext from '../../context/RCInstance';
 import { useMessageStore } from '../../store';
+import { useUserStore } from '../../store';
+import { useSidebarStore } from '../../store';
+import useSetExclusiveState from '../../hooks/useSetExclusiveState';
 import getQuoteMessageStyles from './QuoteMessage.styles';
 import Attachment from '../AttachmentHandler/Attachment';
 import FileAttachment from '../AttachmentHandler/TextAttachment';
@@ -33,6 +36,50 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
     (state) => state.removeQuoteMessage
   );
 
+  const setExclusiveState = useSetExclusiveState();
+  const { setShowCurrentUserInfo, setCurrentUser } = useUserStore((state) => ({
+    setShowCurrentUserInfo: state.setShowCurrentUserInfo,
+    setCurrentUser: state.setCurrentUser,
+  }));
+  const setShowSidebar = useSidebarStore((state) => state.setShowSidebar);
+
+  const handleAvatarClick = async () => {
+    const username =
+      message?.u?.username || message?.username || message?.author_name;
+    if (!username) return;
+
+    // Open sidebar immediately so UI doesn't depend on async userData fetch.
+    setExclusiveState(setShowCurrentUserInfo);
+    setShowCurrentUserInfo(true);
+    setShowSidebar(true);
+
+    // Set a fallback user first to ensure UserInformation renders.
+    setCurrentUser({
+      _id: message?.u?._id,
+      username,
+      name: message?.u?.name || username,
+    });
+
+    try {
+      const res = await RCInstance.userData(username);
+      if (res?.user) {
+        setCurrentUser(res.user);
+      } else {
+        setCurrentUser({
+          _id: message?.u?._id,
+          username,
+          name: message?.u?.name || username,
+        });
+      }
+    } catch {
+      setCurrentUser({
+        _id: message?.u?._id,
+        username,
+        name: message?.u?.name || username,
+      });
+    }
+  };
+
   const { classNames, styleOverrides } = useComponentOverrides('QuoteMessage');
   return (
     <Box
@@ -50,12 +97,18 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         </ActionButton>
       </Box>
       <Box css={styles.avatarContainer}>
-        <Avatar
-          url={getUserAvatarUrl(message?.u.username)}
-          alt="avatar"
-          size="1.5em"
-        />
-        <Box>{message?.u.username}</Box>
+        <Box
+          onClick={handleAvatarClick}
+          css={styles.avatarContainer}
+          style={{ cursor: 'pointer', alignItems: 'center' }}
+        >
+          <Avatar
+            url={getUserAvatarUrl(message?.u.username)}
+            alt="avatar"
+            size="1.5em"
+          />
+          {message?.u.username}
+        </Box>
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={styles.message}>
