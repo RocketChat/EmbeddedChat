@@ -6,8 +6,8 @@ import * as UiKit from '@rocket.chat/ui-kit';
 import { UiKitContext } from '../contexts/UiKitContext';
 import { getInitialValue } from '../utils/getInitialValue';
 
-const getElementValueFromState = (actionId, values, initialValue) =>
-  (values && (values[actionId]?.value || initialValue)) ?? initialValue;
+export const getElementValueFromState = (actionId, values, initialValue) =>
+  values?.[actionId]?.value ?? initialValue;
 
 export const useUiKitState = (element, context) => {
   const { blockId, actionId, appId, dispatchActionConfig } = element;
