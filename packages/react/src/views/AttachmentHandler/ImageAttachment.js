@@ -35,6 +35,16 @@ const ImageAttachment = ({
     setIsExpanded((prevState) => !prevState);
   };
 
+  const getImageUrl = (url) => {
+    if (!url) {
+      return;
+    }
+    if (url.startsWith('http') || url.startsWith('//')) {
+      return url;
+    }
+    return `${host}${url}`;
+  };
+
   return (
     <Box css={variantStyles.imageAttachmentContainer}>
       <Box
@@ -86,7 +96,7 @@ const ImageAttachment = ({
         >
           <AttachmentMetadata
             attachment={attachment}
-            url={host + (attachment.title_link || attachment.image_url)}
+            url={getImageUrl(attachment.title_link || attachment.image_url)}
             variantStyles={variantStyles}
             msg={msg}
             onExpandCollapseClick={toggleExpanded}
@@ -94,9 +104,20 @@ const ImageAttachment = ({
           />
         </Box>
         {isExpanded && (
-          <Box onClick={() => setShowGallery(true)}>
+          <Box
+            onClick={() =>
+              extractIdFromUrl(attachment.title_link)
+                ? setShowGallery(true)
+                : null
+            }
+            style={{
+              cursor: extractIdFromUrl(attachment.title_link)
+                ? 'pointer'
+                : 'default',
+            }}
+          >
             <img
-              src={host + attachment.image_url}
+              src={getImageUrl(attachment.image_url || attachment.title_link)}
               style={{
                 maxWidth: '100%',
                 objectFit: 'contain',
@@ -110,10 +131,16 @@ const ImageAttachment = ({
           attachment.attachments.map((nestedAttachment, index) => (
             <Box css={variantStyles.imageAttachmentContainer} key={index}>
               <Box
-                onClick={() => setShowGallery(true)}
+                onClick={() =>
+                  extractIdFromUrl(nestedAttachment.title_link)
+                    ? setShowGallery(true)
+                    : null
+                }
                 css={[
                   css`
-                    cursor: pointer;
+                    cursor: ${extractIdFromUrl(nestedAttachment.title_link)
+                      ? 'pointer'
+                      : 'default'};
                     border-radius: inherit;
                     line-height: 0;
                     padding: 0.5rem;
@@ -153,14 +180,15 @@ const ImageAttachment = ({
                 )}
                 <AttachmentMetadata
                   attachment={nestedAttachment}
-                  url={
-                    host +
-                    (nestedAttachment.title_link || nestedAttachment.image_url)
-                  }
+                  url={getImageUrl(
+                    nestedAttachment.title_link || nestedAttachment.image_url
+                  )}
                   variantStyles={variantStyles}
                 />
                 <img
-                  src={host + nestedAttachment.image_url}
+                  src={getImageUrl(
+                    nestedAttachment.image_url || nestedAttachment.title_link
+                  )}
                   style={{
                     maxWidth: '100%',
                     objectFit: 'contain',
