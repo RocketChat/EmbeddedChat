@@ -59,6 +59,18 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         <Box>{format(new Date(message.ts), 'h:mm a')}</Box>
       </Box>
       <Box css={styles.message}>
+        {message.attachments &&
+          message.attachments.length > 0 &&
+          message.msg &&
+          message.msg[0] === '[' &&
+          message.attachments.map((attachment, index) => (
+            <Attachment
+              key={index}
+              attachment={attachment}
+              type={attachment.type}
+              host={instanceHost}
+            />
+          ))}
         {message.file ? (
           message.file.type.startsWith('image/') ? (
             <div>
@@ -112,18 +124,6 @@ const QuoteMessage = ({ className = '', style = {}, message }) => {
         ) : (
           <Markdown body={message} md={message.md} isReaction={false} />
         )}
-        {message.attachments &&
-          message.attachments.length > 0 &&
-          message.msg &&
-          message.msg[0] === '[' &&
-          message.attachments.map((attachment, index) => (
-            <Attachment
-              key={index}
-              attachment={attachment}
-              type={attachment.type}
-              host={instanceHost}
-            />
-          ))}
       </Box>
     </Box>
   );

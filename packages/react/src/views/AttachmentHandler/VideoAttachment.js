@@ -52,7 +52,8 @@ const VideoAttachment = ({
           (type ? variantStyles.pinnedContainer : '') ||
             css`
               ${type === 'file'
-                ? `border: 3px solid ${theme.colors.border};`
+                ? `border-inline-start: 2px solid ${theme.colors.border};
+                 background: ${theme.colors.primaryForeground};`
                 : ''}
             `,
         ]}
@@ -84,7 +85,7 @@ const VideoAttachment = ({
                   }
                 `}
               >
-                @{authorName}
+                {authorName}
               </Box>
             </Box>
           </>
@@ -141,7 +142,8 @@ const VideoAttachment = ({
                     : variantStyles.quoteContainer) ||
                     css`
                       ${type === 'file'
-                        ? `border: 3px solid ${theme.colors.border};`
+                        ? `border-inline-start: 2px solid ${theme.colors.border};
+                           background: ${theme.colors.primaryForeground};`
                         : ''}
                     `,
                 ]}
@@ -167,7 +169,7 @@ const VideoAttachment = ({
                         alt="avatar"
                         size="1.2em"
                       />
-                      <Box>@{authorName}</Box>
+                      <Box>{authorName}</Box>
                     </Box>
                   </>
                 ) : (
