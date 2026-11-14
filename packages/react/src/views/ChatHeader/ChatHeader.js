@@ -239,7 +239,14 @@ const ChatHeader = ({
     } finally {
       setIsUserAuthenticated(false);
     }
-  }, [RCInstance, setIsUserAuthenticated]);
+  }, [
+    RCInstance,
+    setIsUserAuthenticated,
+    setMessages,
+    setChannelInfo,
+    setShowSidebar,
+    setUserAvatarUrl,
+  ]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -289,7 +296,7 @@ const ChatHeader = ({
           type: 'error',
           message: "Channel doesn't exist. Logging out.",
         });
-        await RCInstance.logout();
+        await handleLogout();
       } else if (
         'errorType' in res &&
         res.errorType === 'error-room-archived'
@@ -303,7 +310,7 @@ const ChatHeader = ({
           message:
             "You don't have permission to access this channel. Logging out",
         });
-        await RCInstance.logout();
+        await handleLogout();
       }
     };
 
@@ -323,6 +330,7 @@ const ChatHeader = ({
     setMessageLimit,
     workspaceLevelRoles,
     setIsChannelReadOnly,
+    handleLogout,
   ]);
 
   const options = useMemo(
