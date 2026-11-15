@@ -1,47 +1,78 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import RCContext from '../context/RCInstance';
 
+// In-memory cache for protected media blobs to avoid redundant network fetches
+const mediaBlobCache = new Map();
+const MAX_CACHE_SIZE = 100;
+
+const cacheBlob = (url, blob) => {
+  if (mediaBlobCache.size >= MAX_CACHE_SIZE) {
+    const oldestKey = mediaBlobCache.keys().next().value;
+    mediaBlobCache.delete(oldestKey);
+  }
+  mediaBlobCache.set(url, blob);
+};
+
+export const clearMediaBlobCache = () => {
+  mediaBlobCache.clear();
+};
+
 /**
- * Builds an authenticated URL for Rocket.Chat media uploads.
- * Only appends credentials if the target is an internal /file-upload/ path.
- * External URLs are strictly returned untouched to prevent credential leakage.
+ * Resolves a media path relative to the host if needed.
  */
-export const buildAuthenticatedUrl = (mediaPath, host, token, userId) => {
+export const resolveMediaUrl = (mediaPath, host) => {
   if (!mediaPath || typeof mediaPath !== 'string') {
     return '';
   }
 
   const isHttpUrl = /^https?:\/\//i.test(mediaPath);
-
   if (!isHttpUrl && !host) {
     return mediaPath;
   }
 
   try {
     const targetUrl = isHttpUrl ? new URL(mediaPath) : new URL(mediaPath, host);
-    const hostUrl = host ? new URL(host) : null;
-
-    const isSameHost = hostUrl
-      ? targetUrl.origin === hostUrl.origin
-      : !isHttpUrl;
-    const isFileUpload = targetUrl.pathname.startsWith('/file-upload/');
-
-    if (isFileUpload && isSameHost && token && userId) {
-      targetUrl.searchParams.set('rc_token', token);
-      targetUrl.searchParams.set('rc_uid', userId);
-      return targetUrl.toString();
-    }
-
-    return isHttpUrl ? mediaPath : targetUrl.toString();
+    return targetUrl.toString();
   } catch (e) {
     return isHttpUrl ? mediaPath : `${host || ''}${mediaPath}`;
   }
 };
 
-const getCredentialsFromUser = (user) => {
-  if (!user) return { token: null, userId: null };
-  const token = user.authToken || user.data?.authToken || null;
-  const userId = user.userId || user.data?.userId || user._id || null;
+/**
+ * Checks whether a media URL targets an internal Rocket.Chat /file-upload/ path.
+ */
+export const isProtectedFileUpload = (mediaPath, host) => {
+  if (!mediaPath || typeof mediaPath !== 'string') {
+    return false;
+  }
+
+  const isHttpUrl = /^https?:\/\//i.test(mediaPath);
+  if (!isHttpUrl && !host) {
+    return false;
+  }
+
+  try {
+    const targetUrl = isHttpUrl ? new URL(mediaPath) : new URL(mediaPath, host);
+    const hostUrl = host ? new URL(host) : null;
+    const isSameHost = hostUrl
+      ? targetUrl.origin === hostUrl.origin
+      : !isHttpUrl;
+
+    return isSameHost && targetUrl.pathname.startsWith('/file-upload/');
+  } catch (e) {
+    return false;
+  }
+};
+
+const getCredentialsFromUser = (user, RCInstance) => {
+  const token =
+    user?.authToken || user?.data?.authToken || RCInstance?.token || null;
+  const userId =
+    user?.userId ||
+    user?.data?.userId ||
+    user?._id ||
+    RCInstance?.userId ||
+    null;
   return { token, userId };
 };
 
@@ -49,46 +80,112 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
   const { RCInstance } = useContext(RCContext);
   const effectiveHost = host || RCInstance?.getHost?.() || '';
 
-  const currentUser = RCInstance?.auth?.currentUser;
-  const initialCreds = getCredentialsFromUser(currentUser);
-
-  const [authenticatedUrl, setAuthenticatedUrl] = useState(() =>
-    buildAuthenticatedUrl(
-      mediaPath,
-      effectiveHost,
-      initialCreds.token,
-      initialCreds.userId
-    )
+  const [mediaUrl, setMediaUrl] = useState(() =>
+    resolveMediaUrl(mediaPath, effectiveHost)
   );
+
+  const activeBlobUrlRef = useRef(null);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
 
-    const updateUrl = (user) => {
-      if (!isMounted) return;
-      const { token, userId } = getCredentialsFromUser(user);
-      const newUrl = buildAuthenticatedUrl(
-        mediaPath,
-        effectiveHost,
-        token,
-        userId
-      );
-      setAuthenticatedUrl(newUrl);
+    if (!mediaPath || typeof mediaPath !== 'string') {
+      setMediaUrl('');
+      return undefined;
+    }
+
+    const cleanUrl = resolveMediaUrl(mediaPath, effectiveHost);
+    const isProtected = isProtectedFileUpload(mediaPath, effectiveHost);
+
+    // External media or non-protected uploads are delivered directly with zero overhead
+    if (!isProtected) {
+      setMediaUrl(cleanUrl);
+      return undefined;
+    }
+
+    const loadProtectedMedia = async (user) => {
+      const { token, userId } = getCredentialsFromUser(user, RCInstance);
+
+      if (!token || !userId) {
+        if (isMounted) setMediaUrl(cleanUrl);
+        return;
+      }
+
+      // Check in-memory blob cache first
+      if (mediaBlobCache.has(cleanUrl)) {
+        const cachedBlob = mediaBlobCache.get(cleanUrl);
+        const objectUrl = URL.createObjectURL(cachedBlob);
+        if (isMounted) {
+          if (activeBlobUrlRef.current) {
+            URL.revokeObjectURL(activeBlobUrlRef.current);
+          }
+          activeBlobUrlRef.current = objectUrl;
+          setMediaUrl(objectUrl);
+        } else {
+          URL.revokeObjectURL(objectUrl);
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(cleanUrl, {
+          method: 'GET',
+          headers: {
+            'X-Auth-Token': token,
+            'X-User-Id': userId,
+          },
+          credentials: 'include',
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Media fetch failed with status ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        cacheBlob(cleanUrl, blob);
+
+        const objectUrl = URL.createObjectURL(blob);
+        if (isMounted) {
+          if (activeBlobUrlRef.current) {
+            URL.revokeObjectURL(activeBlobUrlRef.current);
+          }
+          activeBlobUrlRef.current = objectUrl;
+          setMediaUrl(objectUrl);
+        } else {
+          URL.revokeObjectURL(objectUrl);
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          // Gracefully fallback to cleanUrl on fetch error
+          if (isMounted) setMediaUrl(cleanUrl);
+        }
+      }
     };
 
-    if (RCInstance?.auth?.getCurrentUser) {
+    const currentUser = RCInstance?.auth?.currentUser;
+    if (currentUser) {
+      loadProtectedMedia(currentUser);
+    } else if (RCInstance?.auth?.getCurrentUser) {
       RCInstance.auth
         .getCurrentUser()
         .then((user) => {
-          updateUrl(user);
+          if (isMounted) loadProtectedMedia(user);
         })
         .catch(() => {
-          // Gracefully maintain existing url state on failure
+          if (isMounted) setMediaUrl(cleanUrl);
         });
+    } else {
+      loadProtectedMedia(null);
     }
 
     const handleAuthChange = (user) => {
-      updateUrl(user);
+      if (!isMounted) return;
+      if (!user) {
+        clearMediaBlobCache();
+      }
+      loadProtectedMedia(user);
     };
 
     if (RCInstance?.auth?.onAuthChange) {
@@ -97,13 +194,18 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
     return () => {
       isMounted = false;
+      controller.abort();
+      if (activeBlobUrlRef.current) {
+        URL.revokeObjectURL(activeBlobUrlRef.current);
+        activeBlobUrlRef.current = null;
+      }
       if (RCInstance?.auth?.removeAuthListener) {
         RCInstance.auth.removeAuthListener(handleAuthChange);
       }
     };
   }, [RCInstance, mediaPath, effectiveHost]);
 
-  return authenticatedUrl;
+  return mediaUrl;
 };
 
 export default useAuthenticatedMediaUrl;
