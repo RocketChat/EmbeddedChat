@@ -37,7 +37,7 @@ const EmbeddedChat = (props) => {
   const config = useMemo(
     () => ({ ...props, ...remoteOverrides }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props, remoteOverrides]
+    [props, remoteOverrides],
   );
 
   const {
@@ -71,7 +71,7 @@ const EmbeddedChat = (props) => {
   const auth = useMemo(
     () => authProp ?? { flow: 'PASSWORD' },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [authProp?.flow, authProp?.credentials]
+    [authProp?.flow, authProp?.credentials],
   );
 
   const aiAdapter = props.aiAdapter ?? null;
@@ -81,19 +81,18 @@ const EmbeddedChat = (props) => {
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
   const storageKey = useMemo(() => {
-    if (tokenStorageKey) {
-      return tokenStorageKey;
+    if (tokenStorageKey) return tokenStorageKey;
+    try {
+      const url = new URL(host?.includes('://') ? host : `http://${host}`);
+      return url.host ? `ec_token_${url.host}` : 'ec_token';
+    } catch {
+      return 'ec_token';
     }
-    if (host) {
-      const normalizedHost = host.trim().replace(/\/+$/, '');
-      return `ec_token_${normalizedHost}`;
-    }
-    return 'ec_token';
   }, [tokenStorageKey, host]);
 
   const { getToken, saveToken, deleteToken } = useMemo(
     () => getTokenStorage(secure, storageKey),
-    [secure, storageKey]
+    [secure, storageKey],
   );
   const {
     setIsUserAuthenticated,
@@ -117,7 +116,7 @@ const EmbeddedChat = (props) => {
 
   if (isClosable && !setClosableState) {
     throw Error(
-      'Please provide a setClosableState to props when isClosable = true'
+      'Please provide a setClosableState to props when isClosable = true',
     );
   }
 
@@ -176,7 +175,7 @@ const EmbeddedChat = (props) => {
           .catch((e) => console.error(e?.message || e));
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -290,12 +289,12 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       memoizedAiAdapter,
-    ]
+    ],
   );
 
   const RCContextValue = useMemo(
     () => ({ RCInstance, ECOptions }),
-    [RCInstance, ECOptions]
+    [RCInstance, ECOptions],
   );
 
   const resolvedTheme = useMemo(() => {

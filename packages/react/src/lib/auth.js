@@ -6,18 +6,7 @@ async function saveTokenLocalStorage(token, key = 'ec_token') {
 
 async function getTokenLocalStorage(key = 'ec_token') {
   if (typeof localStorage !== 'undefined') {
-    const token = localStorage.getItem(key);
-    if (token) {
-      return token;
-    }
-    // Backward compatibility: fallback and migrate legacy 'ec_token' if namespaced key is empty
-    if (key !== 'ec_token') {
-      const legacyToken = localStorage.getItem('ec_token');
-      if (legacyToken) {
-        localStorage.setItem(key, legacyToken);
-        return legacyToken;
-      }
-    }
+    return localStorage.getItem(key);
   }
   return null;
 }
@@ -25,9 +14,6 @@ async function getTokenLocalStorage(key = 'ec_token') {
 async function deleteTokenLocalStorage(key = 'ec_token') {
   if (typeof localStorage !== 'undefined') {
     localStorage.removeItem(key);
-    if (key !== 'ec_token') {
-      localStorage.removeItem('ec_token');
-    }
   }
 }
 
