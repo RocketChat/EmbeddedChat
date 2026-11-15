@@ -239,7 +239,14 @@ const ChatHeader = ({
     } finally {
       setIsUserAuthenticated(false);
     }
-  }, [RCInstance, setIsUserAuthenticated]);
+  }, [
+    RCInstance,
+    setChannelInfo,
+    setIsUserAuthenticated,
+    setMessages,
+    setShowSidebar,
+    setUserAvatarUrl,
+  ]);
 
   useEffect(() => {
     const getMessageLimit = async () => {
@@ -253,57 +260,73 @@ const ChatHeader = ({
     };
 
     const setMessageAllowed = async () => {
-      const permissionRes = await RCInstance.permissionInfo();
-      const channelRolesRes = await RCInstance.getChannelRoles(
-        isChannelPrivate
-      );
+      try {
+        const permissionRes = await RCInstance.permissionInfo();
+        const channelRolesRes = await RCInstance.getChannelRoles(
+          isChannelPrivate
+        );
 
-      if (permissionRes.success && channelRolesRes.success) {
-        const postMsgRoles = permissionRes.update[140]?.roles || [];
-        const channelLevelRoles = channelRolesRes.roles
-          .filter((chRole) => chRole.u?._id === authenticatedUserId)
-          .flatMap((chRole) => chRole.roles);
+        if (permissionRes?.success && channelRolesRes?.success) {
+          const postMsgRoles = permissionRes.update?.[140]?.roles || [];
+          const channelLevelRoles = (channelRolesRes.roles || [])
+            .filter((chRole) => chRole.u?._id === authenticatedUserId)
+            .flatMap((chRole) => chRole.roles);
 
-        const allRoles = [...channelLevelRoles, ...workspaceLevelRoles];
-        const canSendMsg = postMsgRoles.some((role) => allRoles.includes(role));
+          const allRoles = [...channelLevelRoles, ...workspaceLevelRoles];
+          const canSendMsg = postMsgRoles.some((role) =>
+            allRoles.includes(role)
+          );
 
-        setCanSendMsg(canSendMsg);
+          setCanSendMsg(canSendMsg);
+        }
+      } catch (e) {
+        console.error('Failed to check message permissions', e);
       }
     };
 
     const getChannelInfo = async () => {
-      const res = await RCInstance.channelInfo();
-      if (res.success) {
-        setChannelInfo(res.room);
-        if (res.room.t === 'p') setIsChannelPrivate(true);
-        if (res.room?.teamMain) setIsRoomTeam(true);
-        if (res.room.ro) {
-          setIsChannelReadOnly(true);
-          setMessageAllowed();
+      try {
+        const res = await RCInstance.channelInfo();
+        if (res?.success) {
+          setChannelInfo(res.room);
+          if (res.room?.t === 'p') setIsChannelPrivate(true);
+          if (res.room?.teamMain) setIsRoomTeam(true);
+          if (res.room?.ro) {
+            setIsChannelReadOnly(true);
+            setMessageAllowed();
+          }
+        } else if (
+          res &&
+          'errorType' in res &&
+          res.errorType === 'error-room-not-found'
+        ) {
+          dispatchToastMessage({
+            type: 'error',
+            message: "Channel doesn't exist. Logging out.",
+          });
+          await handleLogout();
+        } else if (
+          res &&
+          'errorType' in res &&
+          res.errorType === 'error-room-archived'
+        ) {
+          setIsChannelArchived(true);
+          const roomInfo = await RCInstance.getRoomInfo();
+          setChannelInfo(roomInfo?.room);
+        } else if (
+          res &&
+          'errorType' in res &&
+          res.errorType === 'Not Allowed'
+        ) {
+          dispatchToastMessage({
+            type: 'error',
+            message:
+              "You don't have permission to access this channel. Logging out",
+          });
+          await handleLogout();
         }
-      } else if (
-        'errorType' in res &&
-        res.errorType === 'error-room-not-found'
-      ) {
-        dispatchToastMessage({
-          type: 'error',
-          message: "Channel doesn't exist. Logging out.",
-        });
-        await RCInstance.logout();
-      } else if (
-        'errorType' in res &&
-        res.errorType === 'error-room-archived'
-      ) {
-        setIsChannelArchived(true);
-        const roomInfo = await RCInstance.getRoomInfo();
-        setChannelInfo(roomInfo?.room);
-      } else if ('errorType' in res && res.errorType === 'Not Allowed') {
-        dispatchToastMessage({
-          type: 'error',
-          message:
-            "You don't have permission to access this channel. Logging out",
-        });
-        await RCInstance.logout();
+      } catch (e) {
+        console.error('Failed to fetch channel info', e);
       }
     };
 
@@ -316,6 +339,8 @@ const ChatHeader = ({
     RCInstance,
     setChannelInfo,
     setIsChannelPrivate,
+    setIsChannelArchived,
+    setIsRoomTeam,
     dispatchToastMessage,
     isChannelPrivate,
     setCanSendMsg,
@@ -323,8 +348,8 @@ const ChatHeader = ({
     setMessageLimit,
     workspaceLevelRoles,
     setIsChannelReadOnly,
+    handleLogout,
   ]);
-
   const options = useMemo(
     () => ({
       'catch-up': {
