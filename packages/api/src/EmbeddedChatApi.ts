@@ -9,6 +9,14 @@ import {
 
 // mutliple typing status can come at the same time they should be processed in order.
 let typingHandlerLock = 0;
+
+class ConnectionCancelledError extends Error {
+  constructor() {
+    super("Connection attempt was cancelled");
+    this.name = "ConnectionCancelledError";
+  }
+}
+
 export default class EmbeddedChatApi {
   host: string;
   rid: string;
@@ -263,8 +271,8 @@ export default class EmbeddedChatApi {
     this.close();
     const generation = this._connectionGeneration;
     let cancelConnect: () => void;
-    const cancelled = new Promise<void>((resolve) => {
-      cancelConnect = resolve;
+    const cancelled = new Promise<never>((_, reject) => {
+      cancelConnect = () => reject(new ConnectionCancelledError());
     });
     this._cancelConnect = cancelConnect!;
 

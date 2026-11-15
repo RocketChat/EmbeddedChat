@@ -78,9 +78,9 @@ test("logout during handshake allows the next login to reconnect", async () => {
   assert.equal(getConnectCalls(), 1);
 
   await api.logout();
-  await withTimeout(
-    interruptedConnect,
-    "the interrupted connection did not settle"
+  await assert.rejects(
+    withTimeout(interruptedConnect, "the interrupted connection did not settle"),
+    { name: "ConnectionCancelledError" }
   );
 
   login();
