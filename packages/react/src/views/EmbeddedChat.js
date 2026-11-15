@@ -37,7 +37,7 @@ const EmbeddedChat = (props) => {
   const config = useMemo(
     () => ({ ...props, ...remoteOverrides }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props, remoteOverrides],
+    [props, remoteOverrides]
   );
 
   const {
@@ -71,7 +71,7 @@ const EmbeddedChat = (props) => {
   const auth = useMemo(
     () => authProp ?? { flow: 'PASSWORD' },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [authProp?.flow, authProp?.credentials],
+    [authProp?.flow, authProp?.credentials]
   );
 
   const aiAdapter = props.aiAdapter ?? null;
@@ -92,7 +92,7 @@ const EmbeddedChat = (props) => {
 
   const { getToken, saveToken, deleteToken } = useMemo(
     () => getTokenStorage(secure, storageKey),
-    [secure, storageKey],
+    [secure, storageKey]
   );
   const {
     setIsUserAuthenticated,
@@ -116,7 +116,7 @@ const EmbeddedChat = (props) => {
 
   if (isClosable && !setClosableState) {
     throw Error(
-      'Please provide a setClosableState to props when isClosable = true',
+      'Please provide a setClosableState to props when isClosable = true'
     );
   }
 
@@ -175,7 +175,7 @@ const EmbeddedChat = (props) => {
           .catch((e) => console.error(e?.message || e));
       }
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -289,12 +289,12 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       memoizedAiAdapter,
-    ],
+    ]
   );
 
   const RCContextValue = useMemo(
     () => ({ RCInstance, ECOptions }),
-    [RCInstance, ECOptions],
+    [RCInstance, ECOptions]
   );
 
   const resolvedTheme = useMemo(() => {
