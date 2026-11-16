@@ -45,6 +45,7 @@ const DynamicHeader = ({
           display="inline"
           square
           size="small"
+          aria-label="Go back"
         >
           <Icon name={iconName} size="1.25rem" />
         </ActionButton>
