@@ -10,11 +10,24 @@ const hasInitialOption = (element) => 'initialOption' in element;
 
 const hasInitialOptions = (element) => 'initialOptions' in element;
 
-export const getInitialValue = (element) =>
-  (hasInitialValue(element) && element.initialValue) ||
-  (hasInitialTime(element) && element.initialTime) ||
-  (hasInitialDate(element) && element.initialDate) ||
-  (hasInitialOption(element) && element.initialOption.value) ||
-  (hasInitialOptions(element) &&
-    element.initialOptions.map((option) => option.value)) ||
-  undefined;
+export const getInitialValue = (element) => {
+  if (!element) {
+    return undefined;
+  }
+  if (hasInitialValue(element)) {
+    return element.initialValue;
+  }
+  if (hasInitialTime(element)) {
+    return element.initialTime;
+  }
+  if (hasInitialDate(element)) {
+    return element.initialDate;
+  }
+  if (hasInitialOption(element)) {
+    return element.initialOption?.value;
+  }
+  if (hasInitialOptions(element)) {
+    return element.initialOptions?.map((option) => option.value);
+  }
+  return undefined;
+};
