@@ -49,7 +49,20 @@ export default function TotpModal({ handleLogin }) {
               padding: 0.6rem 0.4rem;
             `}
           >
-            <Input type="password" onChange={handleEdit} placeholder="123456" />
+            <Input
+              id="ec-totp-code"
+              name="totpCode"
+              type="password"
+              onChange={handleEdit}
+              placeholder="123456"
+              autoComplete="one-time-code"
+              aria-label="Two-factor authentication code"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(e);
+                }
+              }}
+            />
           </Box>
           <Modal.Footer>
             <Button type="secondary" onClick={handleClose}>

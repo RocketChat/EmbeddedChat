@@ -49,17 +49,23 @@ const InsertLinkToolBox = ({
       </Modal.Header>
       <Modal.Content css={styles.modalContent}>
         <Input
+          id="ec-link-text"
+          name="linkText"
           type="text"
           onChange={handleLinkTextOnChange}
           value={linkText}
           placeholder="Text"
+          aria-label="Link text"
           css={styles.inputWithFormattingBox}
         />
         <Input
+          id="ec-link-url"
+          name="linkUrl"
           type="text"
           onChange={handleLinkUrlOnChange}
           value={linkUrl}
           placeholder="URL"
+          aria-label="Link URL"
           css={styles.inputWithFormattingBox}
         />
       </Modal.Content>

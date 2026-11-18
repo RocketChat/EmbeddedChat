@@ -909,7 +909,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             ref={setMessageRef}
           />
 
-          <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+          <input
+            type="file"
+            hidden
+            ref={inputRef}
+            id="ec-file-input"
+            name="ec-file-input"
+            aria-label="Upload file"
+            onChange={sendAttachment}
+          />
           <Box css={styles.actionButtonsContainer}>
             {isUserAuthenticated ? (
               !isChannelArchived ? (
