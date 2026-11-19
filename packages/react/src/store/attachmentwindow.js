@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 const useAttachmentWindowStore = create((set) => ({
   attachmentWindowOpen: false,
-  data: null,
+  data: [],
   toggle: () =>
     set((state) => ({ attachmentWindowOpen: !state.attachmentWindowOpen })),
   setData: (file) => {

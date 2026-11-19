@@ -12,12 +12,12 @@ const useDropBox = () => {
   const handleDragDrop = (e) => {
     e.preventDefault();
     toggle();
-    setData(e.dataTransfer.files[0]);
+    setData([...e.dataTransfer.files]);
   };
 
   const handlePaste = (file) => {
     toggle();
-    setData(file);
+    setData([file]);
   };
 
   return {
