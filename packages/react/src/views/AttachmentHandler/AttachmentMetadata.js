@@ -56,6 +56,7 @@ const AttachmentMetadata = ({
         css`
           display: flex;
           flex-direction: column;
+          line-height: normal;
           @media (max-width: 420px) {
             flex-direction: column;
             align-items: flex-start;
@@ -102,6 +103,7 @@ const AttachmentMetadata = ({
             @media (max-width: 420px) {
               flex-direction: column;
               align-items: flex-start;
+              gap: 2px;
             }
           `}
         >
@@ -110,6 +112,7 @@ const AttachmentMetadata = ({
               css={css`
                 margin: 0;
                 font-size: 12px;
+                line-height: 1.25;
                 opacity: 0.7;
               `}
             >
@@ -122,6 +125,7 @@ const AttachmentMetadata = ({
             <Box
               css={css`
                 font-size: 12px;
+                line-height: 1.25;
                 opacity: 0.7;
                 @media (max-width: 420px) {
                   margin-left: 0;
