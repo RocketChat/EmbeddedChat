@@ -25,7 +25,7 @@ export default class EmbeddedChatApi {
   constructor(
     host: string,
     rid: string,
-    { getToken, saveToken, deleteToken }: IRocketChatAuthOptions
+    { getToken, saveToken, deleteToken }: IRocketChatAuthOptions,
   ) {
     this.host = host;
     this.rid = rid;
@@ -71,7 +71,7 @@ export default class EmbeddedChatApi {
   private async _restRequest(
     endpoint: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    body?: any
+    body?: any,
   ) {
     const options: RequestInit = {};
     if (body !== undefined) {
@@ -149,7 +149,7 @@ export default class EmbeddedChatApi {
         if (!response.data.me.username) {
           await this.updateUserUsername(
             response.data.userId,
-            response.data.me.name
+            response.data.me.name,
           );
         }
         return { status: response.status, me: response.data.me };
@@ -219,7 +219,7 @@ export default class EmbeddedChatApi {
     } catch (error) {
       console.error(
         "Auto-login failed:",
-        error instanceof Error ? error.message : error
+        error instanceof Error ? error.message : error,
       );
     }
   }
@@ -293,7 +293,7 @@ export default class EmbeddedChatApi {
           if (message) {
             this.onMessageCallbacks.forEach((callback) => callback(message));
           }
-        }
+        },
       );
       this._activeSubscriptions.push(roomMsgSub);
 
@@ -311,7 +311,7 @@ export default class EmbeddedChatApi {
             // Legacy "typing" event: args[1] is a boolean
             this.handleTypingEvent({ typingUser, isTyping: !!activities });
           }
-        }
+        },
       );
       this._activeSubscriptions.push(notifyRoomSub);
 
@@ -323,10 +323,10 @@ export default class EmbeddedChatApi {
           const messageId = args[0]?._id;
           if (messageId) {
             this.onMessageDeleteCallbacks.forEach((callback) =>
-              callback(messageId)
+              callback(messageId),
             );
           }
-        }
+        },
       );
       this._activeSubscriptions.push(deleteRoomSub);
 
@@ -345,7 +345,7 @@ export default class EmbeddedChatApi {
               message.renderType = "blocks";
               this.onMessageCallbacks.forEach((callback) => callback(message));
             }
-          }
+          },
         );
         this._activeSubscriptions.push(notifyUserMsgSub);
 
@@ -354,7 +354,7 @@ export default class EmbeddedChatApi {
           [`${userId}/uiInteraction`, false],
           (data: any) => {
             this.onUiInteractionCallbacks.forEach((callback) => callback(data));
-          }
+          },
         );
         this._activeSubscriptions.push(notifyUserUiSub);
       }
@@ -374,7 +374,7 @@ export default class EmbeddedChatApi {
 
   async removeMessageListener(callback: (message: any) => void) {
     this.onMessageCallbacks = this.onMessageCallbacks.filter(
-      (c) => c !== callback
+      (c) => c !== callback,
     );
   }
 
@@ -389,7 +389,7 @@ export default class EmbeddedChatApi {
 
   async removeMessageDeleteListener(callback: (messageId: string) => void) {
     this.onMessageDeleteCallbacks = this.onMessageDeleteCallbacks.filter(
-      (c) => c !== callback
+      (c) => c !== callback,
     );
   }
 
@@ -404,13 +404,13 @@ export default class EmbeddedChatApi {
 
   async removeTypingStatusListener(callback: (users: string[]) => void) {
     this.onTypingStatusCallbacks = this.onTypingStatusCallbacks.filter(
-      (c) => c !== callback
+      (c) => c !== callback,
     );
   }
 
   async addActionTriggeredListener(callback: (data: any) => void) {
     const idx = this.onActionTriggeredCallbacks.findIndex(
-      (c) => c === callback
+      (c) => c === callback,
     );
     if (idx !== -1) {
       this.onActionTriggeredCallbacks[idx] = callback;
@@ -421,7 +421,7 @@ export default class EmbeddedChatApi {
 
   async removeActionTriggeredListener(callback: (data: any) => void) {
     this.onActionTriggeredCallbacks = this.onActionTriggeredCallbacks.filter(
-      (c) => c !== callback
+      (c) => c !== callback,
     );
   }
 
@@ -436,7 +436,7 @@ export default class EmbeddedChatApi {
 
   async removeUiInteractionListener(callback: (data: any) => void) {
     this.onUiInteractionCallbacks = this.onUiInteractionCallbacks.filter(
-      (c) => c !== callback
+      (c) => c !== callback,
     );
   }
 
@@ -457,14 +457,14 @@ export default class EmbeddedChatApi {
     }
     const newTypingStatus = cloneArray(this.typingUsers);
     this.onTypingStatusCallbacks.forEach((callback) =>
-      callback(newTypingStatus)
+      callback(newTypingStatus),
     );
   }
 
   async getRCAppInfo() {
     try {
       const response = await fetch(
-        `${this.host}/api/apps/public/${ROCKETCHAT_APP_ID}/info`
+        `${this.host}/api/apps/public/${ROCKETCHAT_APP_ID}/info`,
       );
 
       if (!response.ok) {
@@ -480,7 +480,7 @@ export default class EmbeddedChatApi {
   async updateUserNameThroughSuggestion(userid: string) {
     try {
       const suggestedUsername = await this._restRequest(
-        "/v1/users.getUsernameSuggestion"
+        "/v1/users.getUsernameSuggestion",
       );
       if (suggestedUsername.success) {
         return await this._restRequest("/v1/users.update", "POST", {
@@ -555,7 +555,7 @@ export default class EmbeddedChatApi {
       latest?: string;
       count?: number;
     } = {},
-    isChannelPrivate = false
+    isChannelPrivate = false,
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
@@ -564,7 +564,7 @@ export default class EmbeddedChatApi {
     const count = options?.count != null ? `&count=${options.count}` : "";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -580,7 +580,7 @@ export default class EmbeddedChatApi {
       count?: number;
       offset?: number;
     } = {},
-    isChannelPrivate = false
+    isChannelPrivate = false,
   ) {
     const roomType = isChannelPrivate ? "groups" : "channels";
     const endp = anonymousMode ? "anonymousread" : "messages";
@@ -590,7 +590,7 @@ export default class EmbeddedChatApi {
     const offset = options?.offset ? `&offset=${options.offset}` : "&offset=0";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}${offset}`
+        `/v1/${roomType}.${endp}?roomId=${this.rid}${oldest}${latest}${count}${offset}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : String(err));
@@ -600,7 +600,7 @@ export default class EmbeddedChatApi {
 
   async getThreadMessages(
     tmid: string,
-    isChannelPrivate = false
+    isChannelPrivate = false,
   ): Promise<any> {
     try {
       return await this._restRequest(`/v1/chat.getThreadMessages?tmid=${tmid}`);
@@ -614,7 +614,7 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.roles?roomId=${this.rid}`
+        `/v1/${roomType}.roles?roomId=${this.rid}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : String(err));
@@ -650,7 +650,7 @@ export default class EmbeddedChatApi {
         "stream-notify-room",
         `${this.rid}/user-activity`,
         username,
-        typing ? ["user-typing"] : []
+        typing ? ["user-typing"] : [],
       );
     } catch (err) {
       // DDP typing indicator fails when connection is temporarily down — expected, safe to ignore
@@ -752,7 +752,7 @@ export default class EmbeddedChatApi {
   async getStarredMessages(): Promise<any> {
     try {
       return await this._restRequest(
-        `/v1/chat.getStarredMessages?roomId=${this.rid}`
+        `/v1/chat.getStarredMessages?roomId=${this.rid}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -763,7 +763,7 @@ export default class EmbeddedChatApi {
   async getPinnedMessages(): Promise<any> {
     try {
       return await this._restRequest(
-        `/v1/chat.getPinnedMessages?roomId=${this.rid}`
+        `/v1/chat.getPinnedMessages?roomId=${this.rid}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -774,7 +774,7 @@ export default class EmbeddedChatApi {
   async getMentionedMessages(): Promise<any> {
     try {
       return await this._restRequest(
-        `/v1/chat.getMentionedMessages?roomId=${this.rid}`
+        `/v1/chat.getMentionedMessages?roomId=${this.rid}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -806,7 +806,7 @@ export default class EmbeddedChatApi {
   async reactToMessage(
     emoji: string,
     messageId: string,
-    shouldReact: boolean | string
+    shouldReact: boolean | string,
   ): Promise<any> {
     try {
       return await this._restRequest("/v1/chat.react", "POST", {
@@ -852,7 +852,7 @@ export default class EmbeddedChatApi {
     file: File,
     fileName: string,
     fileDescription = "",
-    threadId = undefined
+    threadId = undefined,
   ) {
     try {
       const currentUser = await this.auth.getCurrentUser();
@@ -866,7 +866,7 @@ export default class EmbeddedChatApi {
 
       const uploadResult = await this._restUpload(
         `/v1/rooms.media/${this.rid}`,
-        form
+        form,
       );
 
       if (!uploadResult.success || !uploadResult.file?._id) {
@@ -879,7 +879,7 @@ export default class EmbeddedChatApi {
         "POST",
         threadId
           ? { msg: "", description: fileDescription || "", tmid: threadId }
-          : { msg: "", description: fileDescription || "" }
+          : { msg: "", description: fileDescription || "" },
       );
     } catch (err) {
       console.error("sendAttachment error:", err);
@@ -899,7 +899,7 @@ export default class EmbeddedChatApi {
     const roomType = isChannelPrivate ? "groups" : "channels";
     try {
       return await this._restRequest(
-        `/v1/${roomType}.members?roomId=${this.rid}`
+        `/v1/${roomType}.members?roomId=${this.rid}&count=500`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -911,8 +911,8 @@ export default class EmbeddedChatApi {
     try {
       return await this._restRequest(
         `/v1/chat.search?roomId=${this.rid}&searchText=${encodeURIComponent(
-          text
-        )}`
+          text,
+        )}`,
       );
     } catch (err: any) {
       console.error(err instanceof Error ? err.message : err);
@@ -935,7 +935,7 @@ export default class EmbeddedChatApi {
       const interaction = await this._restRequest(
         `/apps/ui.interaction/${appId}`,
         "POST",
-        { triggerId, ...userInteraction }
+        { triggerId, ...userInteraction },
       );
       this.onActionTriggeredCallbacks.forEach((cb) => cb(interaction));
       return interaction;
@@ -976,7 +976,7 @@ export default class EmbeddedChatApi {
 
   async userData(username: string): Promise<any> {
     return await this._restRequest(
-      `/v1/users.info?username=${encodeURIComponent(username)}`
+      `/v1/users.info?username=${encodeURIComponent(username)}`,
     );
   }
 }
