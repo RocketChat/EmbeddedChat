@@ -1,3 +1,4 @@
+import path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
@@ -10,6 +11,18 @@ import analyze from 'rollup-plugin-analyzer';
 import dts from 'rollup-plugin-dts';
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
+const messageParserEsm = path.resolve(
+  process.cwd(),
+  '../../',
+  'node_modules/@rocket.chat/message-parser/dist/messageParser.mjs'
+);
+
+const messageParserAlias = {
+  name: 'message-parser-esm-alias',
+  resolveId(source) {
+    return source === '@rocket.chat/message-parser' ? messageParserEsm : null;
+  },
+};
 
 export default [
   {
@@ -42,6 +55,7 @@ export default [
       '@embeddedchat/markups',
     ],
     plugins: [
+      messageParserAlias,
       replace(
         PRODUCTION
           ? {

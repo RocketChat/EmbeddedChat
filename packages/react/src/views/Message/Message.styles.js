@@ -357,7 +357,9 @@ export const getMessageToolboxStyles = (theme) => {
   const styles = {
     toolboxContainer: css`
       display: none;
-      .ec-message:hover & {
+      .ec-message:hover &,
+      .ec-message:focus-within &,
+      &[data-generated-ui-open='true'] {
         display: flex;
         position: absolute;
         bottom: 100%;
