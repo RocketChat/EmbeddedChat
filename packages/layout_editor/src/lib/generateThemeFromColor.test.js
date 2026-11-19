@@ -223,6 +223,22 @@ test('an explicit light or dark mode refinement overrides an adapter response', 
   );
 });
 
+test('mode refinements without the word mode or theme are kept', () => {
+  [
+    ['Switch it to dark', 'dark'],
+    ['Change it to dark', 'dark'],
+    ['Set it to dark', 'dark'],
+    ['Turn it to light', 'light'],
+    ['Change to light', 'light'],
+  ].forEach(([request, mode]) => {
+    assert.deepEqual(
+      limitRefinementSuggestion({ primaryHex: '#ef4444' }, request),
+      { mode },
+      request
+    );
+  });
+});
+
 test('explicit corner and font refinements override an adapter response', () => {
   assert.deepEqual(
     limitRefinementSuggestion(
