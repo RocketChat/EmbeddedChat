@@ -37,16 +37,16 @@ Ensure that the "Enable CORS" option is turned on in your Rocket.Chat server. Yo
 
 #### Prerequisites
 
-- **Node.js**: Version 22 (LTS) is required. Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
+- **Node.js**: The required version is pinned in [`.nvmrc`](.nvmrc) (currently Node.js 24). Use [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm) for easy switching between Node.js versions.
 
-  To install and use the correct Node.js version, execute the following commands with the specific version number:
+  To install and use the correct Node.js version, run the following commands from the repository root. NVM reads the version from `.nvmrc`, so no version number needs to be typed:
 
   ```bash
-  nvm install <version>
-  nvm use <version>
+  nvm install
+  nvm use
   ```
 
-  Replace `<version>` with the required Node.js version
+  Running `yarn` with any other Node.js major version fails at the `preinstall` step with `Error: Required Node.js major version is ...`.
 
 - **Yarn Workspaces**: Ensure Yarn workspaces are enabled. If not, run:
 
