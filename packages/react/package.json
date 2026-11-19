@@ -16,6 +16,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 rollup -c --context=window --environment NODE_ENV:production",
     "watch": "cross-env NODE_OPTIONS=--max-old-space-size=4096 rollup -c --watch --context=window",
     "test:lint": "eslint src/**/*.js",
+    "test": "node --test src/store/messageStore.test.mjs",
     "format": "prettier --write 'src/' ",
     "format:check": "prettier --check 'src/' ",
     "lint": "eslint 'src/**/*.js'",
