@@ -70,18 +70,21 @@ const AttachmentPreview = () => {
 
   const submit = async () => {
     if (isPending) return;
+    if (!fileName || !fileName.trim()) return;
     if (msgMaxLength && description.length > msgMaxLength) return;
 
     setIsPending(true);
     try {
       await RCInstance.sendAttachment(
         data,
-        fileName,
+        fileName.trim(),
         parseEmoji(description),
         ECOptions?.enableThreads ? threadId : undefined
       );
       toggle();
       setData(null);
+    } catch (error) {
+      console.error('Error uploading attachment:', error);
     } finally {
       setIsPending(false);
     }
@@ -250,7 +253,10 @@ const AttachmentPreview = () => {
           Cancel
         </Button>
 
-        <Button disabled={isPending || isOverLimit} onClick={submit}>
+        <Button
+          disabled={isPending || isOverLimit || !fileName?.trim()}
+          onClick={submit}
+        >
           {isPending ? 'Sending...' : 'Send'}
         </Button>
       </Modal.Footer>
