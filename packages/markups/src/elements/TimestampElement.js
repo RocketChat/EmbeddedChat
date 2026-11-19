@@ -12,8 +12,10 @@ function timeAgo(dateParam, locale) {
   const hours = Math.round(minutes / 60);
   const days = Math.round(hours / 24);
   const weeks = Math.round(days / 7);
-  const months = new Date(date).getMonth() - new Date().getMonth();
-  const years = new Date(date).getFullYear() - new Date().getFullYear();
+  // Derive months and years from the elapsed time, like the smaller units,
+  // so the sign and magnitude stay correct across month and year boundaries.
+  const months = Math.round(days / 30);
+  const years = Math.round(days / 365);
 
   if (Math.abs(seconds) < 60) {
     return int.format(seconds, 'seconds');
