@@ -12,8 +12,10 @@ const formatTimestamp = (timestamp) => {
 
   return isDifferentDay
     ? `${date.toLocaleDateString('en-US', {
-        weekday: 'long',
-      })} ${formattedTime}`
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })}, ${formattedTime}`
     : formattedTime;
 };
 
