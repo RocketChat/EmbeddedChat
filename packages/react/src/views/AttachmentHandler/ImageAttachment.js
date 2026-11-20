@@ -224,7 +224,9 @@ const ImageAttachment = ({
       </Box>
       {showGallery && (
         <ImageGallery
-          currentFileId={extractIdFromUrl(attachment.title_link)}
+          currentFileId={extractIdFromUrl(
+            attachment.title_link || attachment.image_url
+          )}
           setShowGallery={setShowGallery}
         />
       )}

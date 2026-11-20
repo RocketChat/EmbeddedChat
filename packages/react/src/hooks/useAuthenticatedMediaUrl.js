@@ -129,15 +129,46 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
       }
 
       try {
-        const response = await fetch(cleanUrl, {
-          method: 'GET',
-          headers: {
-            'X-Auth-Token': token,
-            'X-User-Id': userId,
-          },
-          credentials: 'include',
-          signal: controller.signal,
-        });
+        let response;
+        try {
+          response = await fetch(cleanUrl, {
+            method: 'GET',
+            headers: {
+              'X-Auth-Token': token,
+              'X-User-Id': userId,
+            },
+            signal: controller.signal,
+          });
+        } catch (fetchErr) {
+          // If cross-origin request failed (e.g. CORS preflight blocked on static upload path),
+          // fallback to same-origin relative path if available in reverse proxy / dev setups
+          if (
+            typeof window !== 'undefined' &&
+            isProtected &&
+            cleanUrl.includes('/file-upload/')
+          ) {
+            try {
+              const parsed = new URL(cleanUrl);
+              if (parsed.origin !== window.location.origin) {
+                const proxyUrl = `${parsed.pathname}${parsed.search}`;
+                response = await fetch(proxyUrl, {
+                  method: 'GET',
+                  headers: {
+                    'X-Auth-Token': token,
+                    'X-User-Id': userId,
+                  },
+                  signal: controller.signal,
+                });
+              } else {
+                throw fetchErr;
+              }
+            } catch (_) {
+              throw fetchErr;
+            }
+          } else {
+            throw fetchErr;
+          }
+        }
 
         if (!response.ok) {
           throw new Error(`Media fetch failed with status ${response.status}`);
