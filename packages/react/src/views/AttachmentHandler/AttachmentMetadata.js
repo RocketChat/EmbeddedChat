@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
-import { ActionButton, Box, Tooltip } from '@embeddedchat/ui-elements';
+import PropTypes from 'prop-types';
+import {
+  ActionButton,
+  Box,
+  Tooltip,
+  useToastBarDispatch,
+} from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
+import RCContext from '../../context/RCInstance';
 
 const AttachmentMetadata = ({
   attachment,
@@ -11,9 +18,68 @@ const AttachmentMetadata = ({
   onExpandCollapseClick,
   isExpanded,
 }) => {
+  const { RCInstance } = useContext(RCContext);
+  const dispatchToastMessage = useToastBarDispatch();
+
   const handleDownload = async () => {
+    if (!url) {
+      return;
+    }
+
     try {
-      const response = await fetch(url);
+      const fetchOptions = {
+        redirect: 'error',
+      };
+
+      const isHttpUrl = /^https?:\/\//i.test(url);
+      if (isHttpUrl && RCInstance) {
+        try {
+          const targetUrl = new URL(url);
+          const host = RCInstance.getHost?.() || '';
+          const hostUrl = host ? new URL(host) : null;
+          if (
+            hostUrl &&
+            targetUrl.origin === hostUrl.origin &&
+            targetUrl.pathname.startsWith('/file-upload/')
+          ) {
+            const token =
+              RCInstance?.auth?.currentUser?.authToken ||
+              RCInstance?.token ||
+              null;
+            const userId =
+              RCInstance?.auth?.currentUser?.userId ||
+              RCInstance?.userId ||
+              null;
+            if (token && userId) {
+              fetchOptions.headers = {
+                'X-Auth-Token': token,
+                'X-User-Id': userId,
+              };
+            }
+          }
+        } catch (_) {
+          // Ignore URL parse failure and proceed with standard fetch
+        }
+      }
+
+      const response = await fetch(url, fetchOptions);
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          dispatchToastMessage({
+            type: 'error',
+            message:
+              'Access denied. You do not have permission to download this file.',
+          });
+        } else {
+          dispatchToastMessage({
+            type: 'error',
+            message: `Download failed with status ${response.status}`,
+          });
+        }
+        return;
+      }
+
       const data = await response.blob();
       const downloadUrl = URL.createObjectURL(data);
       const anchor = document.createElement('a');
@@ -26,6 +92,10 @@ const AttachmentMetadata = ({
       URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Error downloading the file:', error);
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Error downloading the file. Please try again.',
+      });
     }
   };
 
@@ -164,6 +234,15 @@ const AttachmentMetadata = ({
       </Box>
     </Box>
   );
+};
+
+AttachmentMetadata.propTypes = {
+  attachment: PropTypes.object,
+  url: PropTypes.string,
+  variantStyles: PropTypes.object,
+  msg: PropTypes.any,
+  onExpandCollapseClick: PropTypes.func,
+  isExpanded: PropTypes.bool,
 };
 
 export default AttachmentMetadata;
