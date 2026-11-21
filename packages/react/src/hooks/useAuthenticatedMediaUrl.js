@@ -1,20 +1,34 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import RCContext from '../context/RCInstance';
 
-// In-memory cache for protected media blobs to avoid redundant network fetches
+// In-memory cache for protected media blobs to avoid redundant network fetches.
+// Scoped to each embed's signed-in session (userId) to prevent cross-account cache access.
 const mediaBlobCache = new Map();
 const MAX_CACHE_SIZE = 100;
 
-const cacheBlob = (url, blob) => {
+const getCacheKey = (userId, url) => `${userId}:${url}`;
+
+const cacheBlob = (userId, url, blob) => {
+  if (!userId || !url || !blob) {
+    return;
+  }
   if (mediaBlobCache.size >= MAX_CACHE_SIZE) {
     const oldestKey = mediaBlobCache.keys().next().value;
     mediaBlobCache.delete(oldestKey);
   }
-  mediaBlobCache.set(url, blob);
+  mediaBlobCache.set(getCacheKey(userId, url), blob);
 };
 
-export const clearMediaBlobCache = () => {
-  mediaBlobCache.clear();
+export const clearMediaBlobCache = (userId) => {
+  if (userId) {
+    Array.from(mediaBlobCache.keys()).forEach((key) => {
+      if (key.startsWith(`${userId}:`)) {
+        mediaBlobCache.delete(key);
+      }
+    });
+  } else {
+    mediaBlobCache.clear();
+  }
 };
 
 /**
@@ -88,7 +102,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
+    let activeController = null;
 
     if (!mediaPath || typeof mediaPath !== 'string') {
       setMediaUrl('');
@@ -105,18 +119,28 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
     }
 
     const loadProtectedMedia = async (user) => {
+      // Cancel previous in-flight fetch for this hook instance
+      if (activeController) {
+        activeController.abort();
+      }
+      activeController = new AbortController();
+      const { signal } = activeController;
+
       const { token, userId } = getCredentialsFromUser(user, RCInstance);
 
       if (!token || !userId) {
-        if (isMounted) setMediaUrl(cleanUrl);
+        if (isMounted && !signal.aborted) {
+          setMediaUrl(cleanUrl);
+        }
         return;
       }
 
-      // Check in-memory blob cache first
-      if (mediaBlobCache.has(cleanUrl)) {
-        const cachedBlob = mediaBlobCache.get(cleanUrl);
+      // Check session-scoped in-memory blob cache first
+      const cacheKey = getCacheKey(userId, cleanUrl);
+      if (mediaBlobCache.has(cacheKey)) {
+        const cachedBlob = mediaBlobCache.get(cacheKey);
         const objectUrl = URL.createObjectURL(cachedBlob);
-        if (isMounted) {
+        if (isMounted && !signal.aborted) {
           if (activeBlobUrlRef.current) {
             URL.revokeObjectURL(activeBlobUrlRef.current);
           }
@@ -128,57 +152,52 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         return;
       }
 
+      let targetUrl;
+      let hostUrl;
       try {
-        let response;
-        try {
-          response = await fetch(cleanUrl, {
-            method: 'GET',
-            headers: {
-              'X-Auth-Token': token,
-              'X-User-Id': userId,
-            },
-            signal: controller.signal,
-          });
-        } catch (fetchErr) {
-          // If cross-origin request failed (e.g. CORS preflight blocked on static upload path),
-          // fallback to same-origin relative path if available in reverse proxy / dev setups
-          if (
-            typeof window !== 'undefined' &&
-            isProtected &&
-            cleanUrl.includes('/file-upload/')
-          ) {
-            try {
-              const parsed = new URL(cleanUrl);
-              if (parsed.origin !== window.location.origin) {
-                const proxyUrl = `${parsed.pathname}${parsed.search}`;
-                response = await fetch(proxyUrl, {
-                  method: 'GET',
-                  headers: {
-                    'X-Auth-Token': token,
-                    'X-User-Id': userId,
-                  },
-                  signal: controller.signal,
-                });
-              } else {
-                throw fetchErr;
-              }
-            } catch (_) {
-              throw fetchErr;
-            }
-          } else {
-            throw fetchErr;
-          }
+        targetUrl = new URL(cleanUrl);
+        hostUrl = effectiveHost ? new URL(effectiveHost) : null;
+      } catch (_) {
+        if (isMounted && !signal.aborted) {
+          setMediaUrl(cleanUrl);
         }
+        return;
+      }
+
+      // Strictly ensure target origin matches the configured Rocket.Chat host
+      if (!hostUrl || targetUrl.origin !== hostUrl.origin) {
+        if (isMounted && !signal.aborted) {
+          setMediaUrl(cleanUrl);
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(cleanUrl, {
+          method: 'GET',
+          headers: {
+            'X-Auth-Token': token,
+            'X-User-Id': userId,
+          },
+          redirect: 'error',
+          signal,
+        });
 
         if (!response.ok) {
           throw new Error(`Media fetch failed with status ${response.status}`);
         }
 
         const blob = await response.blob();
-        cacheBlob(cleanUrl, blob);
+
+        // Prevent late response from populating cache or setting state after session change or unmount
+        if (signal.aborted || !isMounted) {
+          return;
+        }
+
+        cacheBlob(userId, cleanUrl, blob);
 
         const objectUrl = URL.createObjectURL(blob);
-        if (isMounted) {
+        if (isMounted && !signal.aborted) {
           if (activeBlobUrlRef.current) {
             URL.revokeObjectURL(activeBlobUrlRef.current);
           }
@@ -188,9 +207,9 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
           URL.revokeObjectURL(objectUrl);
         }
       } catch (err) {
-        if (err.name !== 'AbortError') {
+        if (err.name !== 'AbortError' && isMounted && !signal.aborted) {
           // Gracefully fallback to cleanUrl on fetch error
-          if (isMounted) setMediaUrl(cleanUrl);
+          setMediaUrl(cleanUrl);
         }
       }
     };
@@ -202,19 +221,36 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
       RCInstance.auth
         .getCurrentUser()
         .then((user) => {
-          if (isMounted) loadProtectedMedia(user);
+          if (isMounted) {
+            loadProtectedMedia(user);
+          }
         })
         .catch(() => {
-          if (isMounted) setMediaUrl(cleanUrl);
+          if (isMounted) {
+            setMediaUrl(cleanUrl);
+          }
         });
     } else {
       loadProtectedMedia(null);
     }
 
     const handleAuthChange = (user) => {
-      if (!isMounted) return;
+      if (!isMounted) {
+        return;
+      }
+      // Cancel pending fetches immediately when session changes
+      if (activeController) {
+        activeController.abort();
+        activeController = null;
+      }
       if (!user) {
         clearMediaBlobCache();
+        if (activeBlobUrlRef.current) {
+          URL.revokeObjectURL(activeBlobUrlRef.current);
+          activeBlobUrlRef.current = null;
+        }
+        setMediaUrl(cleanUrl);
+        return;
       }
       loadProtectedMedia(user);
     };
@@ -225,7 +261,10 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
     return () => {
       isMounted = false;
-      controller.abort();
+      if (activeController) {
+        activeController.abort();
+        activeController = null;
+      }
       if (activeBlobUrlRef.current) {
         URL.revokeObjectURL(activeBlobUrlRef.current);
         activeBlobUrlRef.current = null;
