@@ -21,7 +21,8 @@ const useSearchEmoji = (
       }
 
       // Check if user is typing emoji syntax (:emoji:)
-      const emojiMatch = message.match(/:([a-zA-Z0-9_+-]*?)$/);
+      // Colon must be preceded by whitespace or be at the start of the message
+      const emojiMatch = message.match(/(?:^|\s):([a-zA-Z0-9_+-]*?)$/);
 
       if (emojiMatch) {
         const query = emojiMatch[1].toLowerCase();
