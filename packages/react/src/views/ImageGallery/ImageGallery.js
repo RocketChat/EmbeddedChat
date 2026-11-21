@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   ActionButton,
@@ -11,6 +12,17 @@ import {
 import { useRCContext } from '../../context/RCInstance';
 import { Swiper, SwiperSlide } from './Swiper';
 import getImageGalleryStyles from './ImageGallery.styles';
+import useAuthenticatedMediaUrl from '../../hooks/useAuthenticatedMediaUrl';
+
+const GalleryImage = ({ url, imageStyle }) => {
+  const mediaUrl = useAuthenticatedMediaUrl(url);
+  return <img src={mediaUrl} css={imageStyle} />;
+};
+
+GalleryImage.propTypes = {
+  url: PropTypes.string,
+  imageStyle: PropTypes.any,
+};
 
 const ImageGallery = ({ currentFileId, setShowGallery }) => {
   const { theme } = useTheme();
@@ -104,7 +116,7 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
               {files.map(({ _id, url }) => (
                 <SwiperSlide key={_id}>
                   <Box css={styles.imageContainer}>
-                    <img src={url} css={styles.image} />
+                    <GalleryImage url={url} imageStyle={styles.image} />
                   </Box>
                 </SwiperSlide>
               ))}
