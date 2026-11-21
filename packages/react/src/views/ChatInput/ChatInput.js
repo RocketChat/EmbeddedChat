@@ -582,7 +582,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     sendTypingStart();
     const message = val ?? e?.target?.value ?? messageRef.current?.value ?? '';
 
-    const shouldParseEmoji = !message.match(/:([a-zA-Z0-9_+-]*?)$/);
+    const shouldParseEmoji = !message.match(/(?:^|\s):([a-zA-Z0-9_+-]*?)$/);
     const parsedMessage = shouldParseEmoji ? parseEmoji(message) : message;
     // Toolbar actions (for example, link insertion) provide a new value without
     // a native input event. Those updates must be written explicitly; native
