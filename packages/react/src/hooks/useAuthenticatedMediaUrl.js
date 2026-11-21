@@ -104,7 +104,15 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
     let isMounted = true;
     let activeController = null;
 
+    const cleanupActiveBlobUrl = () => {
+      if (activeBlobUrlRef.current) {
+        URL.revokeObjectURL(activeBlobUrlRef.current);
+        activeBlobUrlRef.current = null;
+      }
+    };
+
     if (!mediaPath || typeof mediaPath !== 'string') {
+      cleanupActiveBlobUrl();
       setMediaUrl('');
       return undefined;
     }
@@ -114,6 +122,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
     // External media or non-protected uploads are delivered directly with zero overhead
     if (!isProtected) {
+      cleanupActiveBlobUrl();
       setMediaUrl(cleanUrl);
       return undefined;
     }
@@ -130,6 +139,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
       if (!token || !userId) {
         if (isMounted && !signal.aborted) {
+          cleanupActiveBlobUrl();
           setMediaUrl(cleanUrl);
         }
         return;
@@ -141,9 +151,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         const cachedBlob = mediaBlobCache.get(cacheKey);
         const objectUrl = URL.createObjectURL(cachedBlob);
         if (isMounted && !signal.aborted) {
-          if (activeBlobUrlRef.current) {
-            URL.revokeObjectURL(activeBlobUrlRef.current);
-          }
+          cleanupActiveBlobUrl();
           activeBlobUrlRef.current = objectUrl;
           setMediaUrl(objectUrl);
         } else {
@@ -159,6 +167,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         hostUrl = effectiveHost ? new URL(effectiveHost) : null;
       } catch (_) {
         if (isMounted && !signal.aborted) {
+          cleanupActiveBlobUrl();
           setMediaUrl(cleanUrl);
         }
         return;
@@ -167,6 +176,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
       // Strictly ensure target origin matches the configured Rocket.Chat host
       if (!hostUrl || targetUrl.origin !== hostUrl.origin) {
         if (isMounted && !signal.aborted) {
+          cleanupActiveBlobUrl();
           setMediaUrl(cleanUrl);
         }
         return;
@@ -198,9 +208,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
 
         const objectUrl = URL.createObjectURL(blob);
         if (isMounted && !signal.aborted) {
-          if (activeBlobUrlRef.current) {
-            URL.revokeObjectURL(activeBlobUrlRef.current);
-          }
+          cleanupActiveBlobUrl();
           activeBlobUrlRef.current = objectUrl;
           setMediaUrl(objectUrl);
         } else {
@@ -208,6 +216,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         }
       } catch (err) {
         if (err.name !== 'AbortError' && isMounted && !signal.aborted) {
+          cleanupActiveBlobUrl();
           // Gracefully fallback to cleanUrl on fetch error
           setMediaUrl(cleanUrl);
         }
@@ -227,6 +236,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         })
         .catch(() => {
           if (isMounted) {
+            cleanupActiveBlobUrl();
             setMediaUrl(cleanUrl);
           }
         });
@@ -245,10 +255,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
       }
       if (!user) {
         clearMediaBlobCache();
-        if (activeBlobUrlRef.current) {
-          URL.revokeObjectURL(activeBlobUrlRef.current);
-          activeBlobUrlRef.current = null;
-        }
+        cleanupActiveBlobUrl();
         setMediaUrl(cleanUrl);
         return;
       }
@@ -265,10 +272,7 @@ const useAuthenticatedMediaUrl = (mediaPath, host) => {
         activeController.abort();
         activeController = null;
       }
-      if (activeBlobUrlRef.current) {
-        URL.revokeObjectURL(activeBlobUrlRef.current);
-        activeBlobUrlRef.current = null;
-      }
+      cleanupActiveBlobUrl();
       if (RCInstance?.auth?.removeAuthListener) {
         RCInstance.auth.removeAuthListener(handleAuthChange);
       }

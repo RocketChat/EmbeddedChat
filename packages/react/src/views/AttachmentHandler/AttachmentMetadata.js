@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import {
@@ -20,45 +20,51 @@ const AttachmentMetadata = ({
 }) => {
   const { RCInstance } = useContext(RCContext);
   const dispatchToastMessage = useToastBarDispatch();
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
-    if (!url) {
+    if (!url || isDownloading) {
       return;
     }
 
+    setIsDownloading(true);
     try {
-      const fetchOptions = {
-        redirect: 'error',
-      };
+      let fetchOptions;
 
       const isHttpUrl = /^https?:\/\//i.test(url);
-      if (isHttpUrl && RCInstance) {
-        try {
-          const targetUrl = new URL(url);
-          const host = RCInstance.getHost?.() || '';
-          const hostUrl = host ? new URL(host) : null;
-          if (
-            hostUrl &&
-            targetUrl.origin === hostUrl.origin &&
-            targetUrl.pathname.startsWith('/file-upload/')
-          ) {
-            const token =
-              RCInstance?.auth?.currentUser?.authToken ||
-              RCInstance?.token ||
-              null;
-            const userId =
-              RCInstance?.auth?.currentUser?.userId ||
-              RCInstance?.userId ||
-              null;
-            if (token && userId) {
-              fetchOptions.headers = {
-                'X-Auth-Token': token,
-                'X-User-Id': userId,
-              };
+      if (isHttpUrl) {
+        fetchOptions = {
+          redirect: 'error',
+        };
+
+        if (RCInstance) {
+          try {
+            const targetUrl = new URL(url);
+            const host = RCInstance.getHost?.() || '';
+            const hostUrl = host ? new URL(host) : null;
+            if (
+              hostUrl &&
+              targetUrl.origin === hostUrl.origin &&
+              targetUrl.pathname.startsWith('/file-upload/')
+            ) {
+              const token =
+                RCInstance?.auth?.currentUser?.authToken ||
+                RCInstance?.token ||
+                null;
+              const userId =
+                RCInstance?.auth?.currentUser?.userId ||
+                RCInstance?.userId ||
+                null;
+              if (token && userId) {
+                fetchOptions.headers = {
+                  'X-Auth-Token': token,
+                  'X-User-Id': userId,
+                };
+              }
             }
+          } catch (_) {
+            // Ignore URL parse failure and proceed with standard fetch
           }
-        } catch (_) {
-          // Ignore URL parse failure and proceed with standard fetch
         }
       }
 
@@ -96,6 +102,8 @@ const AttachmentMetadata = ({
         type: 'error',
         message: 'Error downloading the file. Please try again.',
       });
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -228,6 +236,7 @@ const AttachmentMetadata = ({
               icon="download"
               size="small"
               onClick={handleDownload}
+              disabled={isDownloading}
             />
           </Tooltip>
         </Box>
