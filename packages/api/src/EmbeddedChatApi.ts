@@ -63,6 +63,8 @@ export default class EmbeddedChatApi {
     this._authListener = (user: any) => {
       if (user) {
         this._applyCredentials(user);
+      } else {
+        this.sdk.rest.setCredentials(undefined);
       }
     };
     this.auth.onAuthChange(this._authListener);
@@ -221,6 +223,7 @@ export default class EmbeddedChatApi {
         "Auto-login failed:",
         error instanceof Error ? error.message : error
       );
+      throw error;
     }
   }
 
