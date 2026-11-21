@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useTheme, Box } from '@embeddedchat/ui-elements';
+import { Box } from '@embeddedchat/ui-elements';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import RCContext from '../../context/RCInstance';
 import { useUserStore } from '../../store';
@@ -8,14 +8,24 @@ export default function TypingUsers({ extraUsers = [] }) {
   const { RCInstance } = useContext(RCContext);
   const currentUserName = useUserStore((state) => state.username);
   const [typingUsers, setTypingUsers] = useState([]);
-  const { theme } = useTheme();
 
   useEffect(() => {
-    RCInstance.addTypingStatusListener((t) => {
-      setTypingUsers((t || []).filter((u) => u !== currentUserName));
-    });
-    return () => RCInstance.removeTypingStatusListener(setTypingUsers);
-  }, [RCInstance, setTypingUsers, currentUserName]);
+    if (!RCInstance?.addTypingStatusListener) {
+      return undefined;
+    }
+
+    const handleTypingStatus = (users) => {
+      setTypingUsers((users || []).filter((u) => u && u !== currentUserName));
+    };
+
+    RCInstance.addTypingStatusListener(handleTypingStatus);
+
+    return () => {
+      if (RCInstance?.removeTypingStatusListener) {
+        RCInstance.removeTypingStatusListener(handleTypingStatus);
+      }
+    };
+  }, [RCInstance, currentUserName]);
 
   const allTypingUsers = useMemo(
     () => [...new Set([...typingUsers, ...extraUsers])],
