@@ -1,4 +1,9 @@
 module.exports = {
+  env: {
+    test: {
+      presets: [['@babel/preset-env', { modules: 'commonjs' }]],
+    },
+  },
   presets: [
     [
       '@babel/preset-env',
