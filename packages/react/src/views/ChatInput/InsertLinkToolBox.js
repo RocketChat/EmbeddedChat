@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { Modal, Input, Button, useTheme } from '@embeddedchat/ui-elements';
 import validator from 'validator';
 import { getInsertLinkModalStyles } from './ChatInput.styles';
@@ -10,6 +10,8 @@ const InsertLinkToolBox = ({
 }) => {
   const { theme } = useTheme();
   const styles = getInsertLinkModalStyles(theme);
+  const linkTextId = useId();
+  const linkUrlId = useId();
   const [linkText, setLinkText] = useState(selectedText || '');
   const [linkUrl, setLinkUrl] = useState('');
   const [isUrlValid, setIsUrlValid] = useState(false);
@@ -49,17 +51,23 @@ const InsertLinkToolBox = ({
       </Modal.Header>
       <Modal.Content css={styles.modalContent}>
         <Input
+          id={linkTextId}
+          name="linkText"
           type="text"
           onChange={handleLinkTextOnChange}
           value={linkText}
           placeholder="Text"
+          aria-label="Link text"
           css={styles.inputWithFormattingBox}
         />
         <Input
+          id={linkUrlId}
+          name="linkUrl"
           type="text"
           onChange={handleLinkUrlOnChange}
           value={linkUrl}
           placeholder="URL"
+          aria-label="Link URL"
           css={styles.inputWithFormattingBox}
         />
       </Modal.Content>

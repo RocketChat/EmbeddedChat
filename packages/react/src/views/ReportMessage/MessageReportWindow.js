@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Input, useTheme } from '@embeddedchat/ui-elements';
+import { Box, Input } from '@embeddedchat/ui-elements';
 import { css } from '@emotion/react';
 import ReportWindowButtons from './ReportWindowButtons';
 import styles from './ReportMessage.styles';
 
 const MessageReportWindow = ({ messageId, message }) => {
+  const reportReasonId = useId();
   const [reportDescription, setDescription] = useState(' ');
   return (
     <ReportWindowButtons
@@ -19,8 +20,11 @@ const MessageReportWindow = ({ messageId, message }) => {
     >
       <Box css={styles.conatiner}>
         <Input
+          id={reportReasonId}
+          name="reportDescription"
           textArea
           placeholder="Why do you want to report this message?"
+          aria-label="Reason for reporting this message"
           onChange={(e) => {
             setDescription(e.target.value);
           }}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -54,6 +54,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const draftHost = RCInstance.getHost();
 
   const inputRef = useRef(null);
+  const fileInputId = useId();
   const typingRef = useRef();
   const draftTimerRef = useRef();
   const messageRef = useRef(null);
@@ -909,7 +910,15 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
             ref={setMessageRef}
           />
 
-          <input type="file" hidden ref={inputRef} onChange={sendAttachment} />
+          <input
+            type="file"
+            hidden
+            ref={inputRef}
+            id={fileInputId}
+            name="file-upload"
+            aria-label="Upload file"
+            onChange={sendAttachment}
+          />
           <Box css={styles.actionButtonsContainer}>
             {isUserAuthenticated ? (
               !isChannelArchived ? (

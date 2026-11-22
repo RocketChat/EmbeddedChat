@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useId } from 'react';
 import { css } from '@emotion/react';
 import {
   GenericModal,
@@ -15,6 +15,8 @@ import styles from './LoginForm.styles';
 export default function LoginForm() {
   const userRef = useRef(null);
   const passRef = useRef(null);
+  const usernameId = useId();
+  const passwordId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -64,27 +66,33 @@ export default function LoginForm() {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
-  const handleKeyPress = (event) => {
+  const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      handleSubmit();
+      event.preventDefault();
+      handleSubmit(event);
     }
   };
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
   const fields = [
     {
+      id: usernameId,
+      name: 'username',
       label: 'Email or username',
       ref: userRef,
       onChange: handleEdituserOrEmail,
       placeholder: 'example@example.com',
       error: usernameError,
+      autoComplete: 'username',
     },
     {
+      id: passwordId,
+      name: 'password',
       label: 'Password',
       ref: passRef,
       type: showPassword ? 'text' : 'password',
       onChange: handleEditPassword,
       error: passwordError,
-      autoComplete: 'new-password',
+      autoComplete: 'current-password',
     },
   ];
 
@@ -97,16 +105,23 @@ export default function LoginForm() {
         onClose={handleClose}
       >
         <Box>
-          {fields.map((field, index) => (
-            <Box key={index} css={styles.fieldContainer}>
-              <Box css={styles.fieldLabel}>{field.label}</Box>
+          {fields.map((field) => (
+            <Box key={field.id} css={styles.fieldContainer}>
+              <Box is="label" htmlFor={field.id} css={styles.fieldLabel}>
+                {field.label}
+              </Box>
               <Box css={styles.fieldRow}>
                 <Input
+                  id={field.id}
+                  name={field.name}
                   type={field.type || 'text'}
                   ref={field.ref}
                   onChange={field.onChange}
                   placeholder={field.placeholder}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
+                  autoComplete={field.autoComplete}
+                  aria-required="true"
+                  aria-invalid={field.error ? 'true' : 'false'}
                   style={{
                     ...(field.error && {
                       borderColor: theme.colors.destructive,
@@ -114,9 +129,13 @@ export default function LoginForm() {
                     }),
                   }}
                 />
-                {field.label === 'Password' && (
+                {field.name === 'password' && (
                   <Box
+                    is="button"
                     type="button"
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
                     css={styles.passwordEye}
                     onClick={handleTogglePassword}
                   >

@@ -34,6 +34,14 @@ const styles = {
     cursor: pointer;
     position: absolute;
     right: 1em;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
   `,
 };
 
