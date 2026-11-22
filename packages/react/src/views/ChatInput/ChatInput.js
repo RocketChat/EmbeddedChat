@@ -51,7 +51,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
   const aiAdapter = ECOptions?.aiAdapter ?? null;
   const { theme } = useTheme();
   const styles = getChatInputStyles(theme);
-  const draftHost = RCInstance.getHost();
+  const draftHost = RCInstance?.getHost?.() || '';
 
   const inputRef = useRef(null);
   const typingRef = useRef();
