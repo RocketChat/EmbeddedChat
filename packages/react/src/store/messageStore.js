@@ -48,6 +48,15 @@ const useMessageStore = create((set, get) => ({
     }
   },
   removeMessage: (messageId) => {
+    if (get().threadMainMessage?._id === messageId) {
+      return set((state) => ({
+        deletedMessage: state.threadMainMessage,
+        messages: state.messages.filter((m) => m._id !== messageId),
+        isThreadOpen: false,
+        threadMainMessage: null,
+        threadMessages: [],
+      }));
+    }
     const threadMessage = get().threadMessages.find((m) => m._id === messageId);
     const message = get().messages.find((m) => m._id === messageId);
     if (threadMessage) {
