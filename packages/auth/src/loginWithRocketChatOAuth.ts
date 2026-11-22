@@ -2,7 +2,7 @@ import { Api } from "./Api";
 import { getRCAppInfo } from "./utils/getRCAppInfo";
 import { getRCAuthorizeURL } from "./utils/getRCAuthorizeURL";
 
-const loginWithRocketChatOAuth = async (config: { api: Api }) => {
+const getRocketChatOAuthCredentials = async (config: { api: Api }) => {
   const appInfo = await getRCAppInfo(config.api.baseUrl);
   if (!appInfo) {
     throw new Error("EmbeddedChatApp not found on server");
@@ -44,19 +44,14 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
 
   return new Promise<any>((resolve) => {
     if (popup) {
-      const onMessage = async (e: MessageEvent) => {
+      const onMessage = (e: MessageEvent) => {
         if (e.origin !== new URL(config.api.baseUrl).origin) {
           return;
         }
         if (e.data.type === "rc-oauth-callback") {
           const { accessToken, expiresIn, serviceName } = e.data.credentials;
-          const response = await config.api.post("/api/v1/login", {
-            accessToken,
-            expiresIn,
-            serviceName,
-          });
           popup.close();
-          resolve(response.data);
+          resolve({ accessToken, expiresIn, serviceName });
         }
       };
       window.addEventListener("message", onMessage);
@@ -72,4 +67,4 @@ width=800,height=600,left=-1000,top=-1000,rel=opener`;
   });
 };
 
-export default loginWithRocketChatOAuth;
+export default getRocketChatOAuthCredentials;

@@ -196,11 +196,13 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
+    let subscribed = true;
     const handleAuthChange = (user) => {
       if (user) {
         const { isChannelPrivate } = useChannelStore.getState();
         RCInstance.connect(isChannelPrivate)
           .then(() => {
+            if (!subscribed || RCInstance.auth.currentUser !== user) return;
             console.log(`Connected to RocketChat ${RCInstance.host}`);
             const me = user.me || user.data?.me;
             if (me) {
@@ -222,6 +224,7 @@ const EmbeddedChat = (props) => {
     RCInstance.auth.onAuthChange(handleAuthChange);
 
     return () => {
+      subscribed = false;
       RCInstance.auth.removeAuthListener(handleAuthChange);
     };
   }, [
