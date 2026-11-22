@@ -67,11 +67,12 @@ const inferFontFamily = (description) => {
   return undefined;
 };
 
+// "switch to dark", "change it to light", "set it to dark", ...
+const MODE_REQUEST = /\b(?:switch|change|set|turn)\s+(?:it\s+)?to\s+(light|dark)\b/;
+
 const inferMode = (description) => {
   const prompt = description.toLowerCase();
-  const requestedMode = prompt.match(
-    /\b(?:switch|change|set|turn)\s+(?:it\s+)?to\s+(light|dark)\b/
-  );
+  const requestedMode = prompt.match(MODE_REQUEST);
   if (requestedMode) return requestedMode[1];
 
   const namedThemeMode = prompt.match(/\b(light|dark)\s+(?:mode|theme)\b/);
@@ -125,7 +126,7 @@ const requestedRefinementFields = (description) => {
     inferFontFamily(description) ||
     /\b(font|typeface|typography)\b/.test(prompt)
   ) fields.add('fontFamily');
-  if (/\b(dark|light)\s+(mode|theme)\b|\bswitch\s+to\s+(dark|light)\b/.test(prompt)) {
+  if (/\b(dark|light)\s+(mode|theme)\b/.test(prompt) || MODE_REQUEST.test(prompt)) {
     fields.add('mode');
   }
   if (/\b(message view|message type|bubble|flat)\b/.test(prompt)) {
