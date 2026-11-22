@@ -21,6 +21,7 @@ const Button = ({
   return (
     <button
       type="button"
+      disabled={disabled}
       css={styles.main(type, size)}
       className={`ec-button ec-button--${size} ${
         square ? `ec-button-square` : ``
