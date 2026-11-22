@@ -26,6 +26,11 @@ const getButtonStyles = (theme) => {
       line-height: 1.25rem;
       min-width: 80px;
       outline: none;
+      &:focus-visible {
+        outline: 2px solid
+          ${theme.colors.ring || theme.colors.primary || 'currentColor'};
+        outline-offset: 2px;
+      }
       overflow: hidden;
       padding-block: calc(18px - 0.625rem);
       padding: calc(18px - 0.625rem) 14px;

@@ -124,9 +124,18 @@ const Menu = ({
   }, []);
 
   useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
     const onBodyClick = (e) => {
       if (
-        isOpen &&
         wrapperRef.current &&
         !wrapperRef.current.contains(e.target) &&
         !sheetRef.current?.contains(e.target)
@@ -136,9 +145,11 @@ const Menu = ({
     };
 
     document.addEventListener('click', onBodyClick);
+    document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.removeEventListener('click', onBodyClick);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, [isOpen]);
 
