@@ -18,6 +18,7 @@ import {
 } from '@embeddedchat/ui-elements';
 import { ChatLayout } from './ChatLayout';
 import { ChatHeader } from './ChatHeader';
+import PinnedMessageBanner from './PinnedMessageBanner';
 import { RCInstanceProvider } from '../context/RCInstance';
 import {
   useUserStore,
@@ -354,6 +355,8 @@ const EmbeddedChat = (props) => {
                 setFullScreen={setFullScreen}
               />
             )}
+
+            <PinnedMessageBanner />
 
             <ChatLayout />
 
