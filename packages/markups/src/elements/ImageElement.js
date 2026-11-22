@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const PLACEHOLDER_ORIGIN = 'https://placeholder.invalid';
+
 const sanitizeUrl = (url) => {
   if (!url || typeof url !== 'string') {
     return null;
@@ -11,9 +13,17 @@ const sanitizeUrl = (url) => {
     return null;
   }
 
-  // Allow relative URLs starting with / (but not protocol-relative //)
-  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
-    return trimmed;
+  // Allow relative paths starting with / (block //, /\, and host redirects)
+  if (trimmed.startsWith('/')) {
+    if (trimmed.startsWith('//') || trimmed.startsWith('/\\')) {
+      return null;
+    }
+    try {
+      const resolved = new URL(trimmed, PLACEHOLDER_ORIGIN);
+      return resolved.origin === PLACEHOLDER_ORIGIN ? trimmed : null;
+    } catch {
+      return null;
+    }
   }
 
   try {
@@ -41,12 +51,11 @@ const getLabelText = (label) => {
 };
 
 const ImageElement = ({ src, label }) => {
+  const alt = getLabelText(label);
   const safeSrc = sanitizeUrl(src);
   if (!safeSrc) {
-    return null;
+    return alt || null;
   }
-
-  const alt = getLabelText(label);
 
   return (
     <a
@@ -60,7 +69,9 @@ const ImageElement = ({ src, label }) => {
         alt={alt}
         style={{
           maxWidth: '100%',
+          maxHeight: '300px',
           height: 'auto',
+          objectFit: 'contain',
           display: 'inline-block',
         }}
       />
