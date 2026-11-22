@@ -47,6 +47,24 @@ const getGlobalStyles = (theme) => css`
       background: ${theme.colors.background}!important;
     }
   }
+
+  @keyframes ec-message-highlight {
+    0% {
+      background-color: ${alpha(theme.colors.primary, 0.35)};
+    }
+    100% {
+      background-color: transparent;
+    }
+  }
+
+  .ec-message-highlighted {
+    animation: ec-message-highlight 2s ease-out;
+    border-radius: ${theme.radius || '4px'};
+  }
+
+  .ec-message-highlighted .ec-message-body {
+    animation: ec-message-highlight 2s ease-out;
+  }
 `;
 
 const GlobalStyles = () => {

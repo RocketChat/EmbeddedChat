@@ -19,6 +19,7 @@ import MentionedMessages from '../MessageAggregators/MentionedMessages';
 import ThreadedMessages from '../MessageAggregators/ThreadedMessages';
 import StarredMessages from '../MessageAggregators/StarredMessages';
 import PinnedMessages from '../MessageAggregators/PinnedMessages';
+import { PinnedMessageBanner } from '../PinnedMessageBanner';
 import SearchMessages from '../MessageAggregators/SearchMessages';
 import FileGallery from '../MessageAggregators/FileGallery';
 import Roominfo from '../RoomInformation/RoomInformation';
@@ -106,24 +107,20 @@ const ChatLayout = () => {
   ]);
 
   const getPinnedMessages = useCallback(async () => {
-    if (isUserAuthenticated && showPinned) {
+    if (isUserAuthenticated) {
       try {
         if (!isUserAuthenticated && !anonymousMode) {
           return;
         }
         const { messages } = await RCInstance.getPinnedMessages();
-        setPinnedMessages(messages);
+        if (messages) {
+          setPinnedMessages(messages);
+        }
       } catch (e) {
         console.error(e);
       }
     }
-  }, [
-    isUserAuthenticated,
-    anonymousMode,
-    RCInstance,
-    showPinned,
-    setPinnedMessages,
-  ]);
+  }, [isUserAuthenticated, anonymousMode, RCInstance, setPinnedMessages]);
 
   useEffect(() => {
     getStarredMessages();
@@ -131,7 +128,7 @@ const ChatLayout = () => {
 
   useEffect(() => {
     getPinnedMessages();
-  }, [getPinnedMessages, showSidebar, showPinned]);
+  }, [getPinnedMessages, RCInstance?.rid, showPinned]);
   return (
     <Box
       css={styles.layout}
@@ -143,6 +140,7 @@ const ChatLayout = () => {
       onDrop={(e) => handleDragDrop(e)}
     >
       <Box css={styles.chatMain}>
+        <PinnedMessageBanner />
         <ChatBody
           anonymousMode={anonymousMode}
           showRoles={showRoles}
