@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useId } from 'react';
 import { css } from '@emotion/react';
 import {
   GenericModal,
@@ -15,6 +15,8 @@ import styles from './LoginForm.styles';
 export default function LoginForm() {
   const userRef = useRef(null);
   const passRef = useRef(null);
+  const usernameId = useId();
+  const passwordId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -66,13 +68,14 @@ export default function LoginForm() {
   };
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      handleSubmit();
+      event.preventDefault();
+      handleSubmit(event);
     }
   };
   const iconName = showPassword ? 'eyeopen' : 'eyeclose';
   const fields = [
     {
-      id: 'ec-login-user',
+      id: usernameId,
       name: 'username',
       label: 'Email or username',
       ref: userRef,
@@ -82,7 +85,7 @@ export default function LoginForm() {
       autoComplete: 'username',
     },
     {
-      id: 'ec-login-password',
+      id: passwordId,
       name: 'password',
       label: 'Password',
       ref: passRef,
@@ -126,7 +129,7 @@ export default function LoginForm() {
                     }),
                   }}
                 />
-                {field.label === 'Password' && (
+                {field.name === 'password' && (
                   <Box
                     is="button"
                     type="button"

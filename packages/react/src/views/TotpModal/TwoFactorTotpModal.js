@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { css } from '@emotion/react';
 import PropTypes from 'prop-types';
 import {
@@ -11,6 +11,7 @@ import {
 import { totpModalStore, useUserStore } from '../../store';
 
 export default function TotpModal({ handleLogin }) {
+  const totpInputId = useId();
   const [accessCode, setAccessCode] = useState(null);
   const isTotpModalOpen = totpModalStore((state) => state.isTotpModalOpen);
   const setIsTotpModalOpen = totpModalStore(
@@ -50,7 +51,7 @@ export default function TotpModal({ handleLogin }) {
             `}
           >
             <Input
-              id="ec-totp-code"
+              id={totpInputId}
               name="totpCode"
               type="password"
               onChange={handleEdit}
@@ -59,6 +60,7 @@ export default function TotpModal({ handleLogin }) {
               aria-label="Two-factor authentication code"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  e.preventDefault();
                   handleSubmit(e);
                 }
               }}
