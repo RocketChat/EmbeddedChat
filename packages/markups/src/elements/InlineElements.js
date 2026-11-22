@@ -9,6 +9,7 @@ import Emoji from './Emoji';
 import ChannelMention from '../mentions/ChannelMention';
 import ColorElement from './ColorElement';
 import LinkSpan from './LinkSpan';
+import ImageElement from './ImageElement';
 import UserMention from '../mentions/UserMention';
 import TimestampElement from './TimestampElement';
 
@@ -52,6 +53,15 @@ const InlineElements = ({ contents }) =>
                 ? content.value.label
                 : [content.value.label]
             }
+          />
+        );
+
+      case 'IMAGE':
+        return (
+          <ImageElement
+            key={index}
+            src={content.value.src?.value}
+            label={content.value.label}
           />
         );
 
