@@ -37,6 +37,8 @@ const MessageHeader = ({
   const showName = ECOptions?.showName;
   const channelLevelRoles = useMemberStore((state) => state.memberRoles);
   const admins = useMemberStore((state) => state.admins);
+  const moderators = useMemberStore((state) => state.moderators);
+  const owners = useMemberStore((state) => state.owners);
 
   const isPinned = message.pinned;
   const isStarred =
@@ -167,6 +169,26 @@ const MessageHeader = ({
               className={appendClassNames('ec-message-user-role')}
             >
               Admin
+            </Box>
+          )}
+
+          {moderators?.includes(message?.u?.username) && (
+            <Box
+              as="span"
+              css={styles.userRole}
+              className={appendClassNames('ec-message-user-role')}
+            >
+              Moderator
+            </Box>
+          )}
+
+          {owners?.includes(message?.u?.username) && (
+            <Box
+              as="span"
+              css={styles.userRole}
+              className={appendClassNames('ec-message-user-role')}
+            >
+              Owner
             </Box>
           )}
 

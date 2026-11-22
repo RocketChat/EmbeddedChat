@@ -14,34 +14,36 @@ const useFetchChatData = (showRoles) => {
   const setMessages = useMessageStore((state) => state.setMessages);
   const setMessagesOffset = useMessageStore((state) => state.setMessagesOffset);
   const setAdmins = useMemberStore((state) => state.setAdmins);
+  const setModerators = useMemberStore((state) => state.setModerators);
+  const setOwners = useMemberStore((state) => state.setOwners);
   const setMemberRoles = useMemberStore((state) => state.setMemberRoles);
   const permissionsRef = useRef(null);
   const setStarredMessages = useStarredMessageStore(
-    (state) => state.setStarredMessages
+    (state) => state.setStarredMessages,
   );
   const setPinnedMessages = usePinnedMessageStore(
-    (state) => state.setPinnedMessages
+    (state) => state.setPinnedMessages,
   );
   const isUserAuthenticated = useUserStore(
-    (state) => state.isUserAuthenticated
+    (state) => state.isUserAuthenticated,
   );
   const setViewUserInfoPermissions = useUserStore(
-    (state) => state.setViewUserInfoPermissions
+    (state) => state.setViewUserInfoPermissions,
   );
   const setDeleteMessageRoles = useMessageStore(
-    (state) => state.setDeleteMessageRoles
+    (state) => state.setDeleteMessageRoles,
   );
   const setDeleteOwnMessageRoles = useMessageStore(
-    (state) => state.setDeleteOwnMessageRoles
+    (state) => state.setDeleteOwnMessageRoles,
   );
   const setForceDeleteMessageRoles = useMessageStore(
-    (state) => state.setForceDeleteMessageRoles
+    (state) => state.setForceDeleteMessageRoles,
   );
   const setUserPinPermissions = useUserStore(
-    (state) => state.setUserPinPermissions
+    (state) => state.setUserPinPermissions,
   );
   const setEditMessagePermissions = useMessageStore(
-    (state) => state.setEditMessagePermissions
+    (state) => state.setEditMessagePermissions,
   );
 
   const setters = useMemo(
@@ -61,7 +63,7 @@ const useFetchChatData = (showRoles) => {
       setForceDeleteMessageRoles,
       setUserPinPermissions,
       setEditMessagePermissions,
-    ]
+    ],
   );
 
   const permissionKeys = useMemo(
@@ -74,7 +76,7 @@ const useFetchChatData = (showRoles) => {
         ['userPin', 'pin-message'],
         ['editMessage', 'edit-message'],
       ]),
-    []
+    [],
   );
 
   const applyPermissions = useCallback(
@@ -86,13 +88,13 @@ const useFetchChatData = (showRoles) => {
         }
       });
     },
-    [permissionKeys, setters]
+    [permissionKeys, setters],
   );
 
   const createPermissionsMap = useCallback(
     (permissions) =>
       new Map(permissions.update.map((item) => [item._id, item])),
-    []
+    [],
   );
   const fetchAndSetPermissions = useCallback(async () => {
     try {
@@ -145,7 +147,7 @@ const useFetchChatData = (showRoles) => {
         const { messages, count } = await RCInstance.getMessages(
           anonymousMode,
           undefined,
-          channelIsPrivate
+          channelIsPrivate,
         );
 
         if (messages) {
@@ -159,17 +161,18 @@ const useFetchChatData = (showRoles) => {
 
         if (showRoles) {
           const { roles } = await RCInstance.getChannelRoles(channelIsPrivate);
-          const fetchedRoles = await RCInstance.getUserRoles();
-          const fetchedAdmins = fetchedRoles?.result;
+          const { admins, moderators, owners } =
+            await RCInstance.getUserRoles();
 
-          const adminUsernames = fetchedAdmins?.map((user) => user.username);
-          setAdmins(adminUsernames);
+          setAdmins(admins);
+          setModerators(moderators);
+          setOwners(owners);
 
           const rolesObj =
             roles?.length > 0
               ? roles.reduce(
                   (obj, item) => ({ ...obj, [item.u.username]: item }),
-                  {}
+                  {},
                 )
               : {};
 
@@ -185,8 +188,10 @@ const useFetchChatData = (showRoles) => {
       showRoles,
       setMessages,
       setAdmins,
+      setModerators,
+      setOwners,
       setMemberRoles,
-    ]
+    ],
   );
 
   const getStarredMessages = useCallback(
@@ -203,7 +208,7 @@ const useFetchChatData = (showRoles) => {
         }
       }
     },
-    [isUserAuthenticated, RCInstance, setStarredMessages]
+    [isUserAuthenticated, RCInstance, setStarredMessages],
   );
 
   const getPinnedMessages = useCallback(
@@ -220,7 +225,7 @@ const useFetchChatData = (showRoles) => {
         }
       }
     },
-    [isUserAuthenticated, RCInstance, setPinnedMessages]
+    [isUserAuthenticated, RCInstance, setPinnedMessages],
   );
 
   return {
