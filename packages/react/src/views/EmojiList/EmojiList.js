@@ -19,7 +19,7 @@ function EmojiList({
   const handleEmojiClick = useCallback(
     (selectedEmoji) => {
       const currentMessage = messageRef.current.value;
-      const emojiMatch = currentMessage.match(/:(.*?)$/);
+      const emojiMatch = currentMessage.match(/(?:^|\s):([a-zA-Z0-9_+-]*?)$/);
 
       if (emojiMatch) {
         // Replace the :query with the selected emoji
