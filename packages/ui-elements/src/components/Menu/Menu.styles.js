@@ -72,10 +72,13 @@ export const getMenuItemStyles = ({ theme, mode }) => {
       white-space: nowrap;
       gap: 0.2rem;
       color: ${theme.colors.foreground};
-      &:hover {
+      &:hover,
+      &:focus,
+      &:focus-visible {
         background-color: ${mode === 'light'
           ? darken(theme.colors.background, 0.05)
           : lighten(theme.colors.background, 2)};
+        outline: none;
         cursor: pointer;
       }
     `,
@@ -95,10 +98,13 @@ export const getMenuItemStyles = ({ theme, mode }) => {
       text-align: left;
       border: 0;
       background: transparent;
-      &:hover {
+      &:hover,
+      &:focus,
+      &:focus-visible {
         background-color: ${mode === 'light'
           ? darken(theme.colors.background, 0.05)
           : lighten(theme.colors.background, 2)};
+        outline: none;
         cursor: pointer;
       }
       & + & {
