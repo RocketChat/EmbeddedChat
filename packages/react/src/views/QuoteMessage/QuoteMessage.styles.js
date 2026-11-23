@@ -10,7 +10,6 @@ const getQuoteMessageStyles = (theme) => {
       color: ${theme.colors.foreground};
       padding: 0.5rem;
       z-index: 1200;
-      border: 1px solid ${theme.colors.border};
       border-radius: ${theme.radius};
       max-width: 100%;
       box-sizing: border-box;
