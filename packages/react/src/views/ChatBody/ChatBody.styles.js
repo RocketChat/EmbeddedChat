@@ -32,6 +32,24 @@ export const getChatbodyStyles = (theme, mode) => {
       text-overflow: ellipsis;
       white-space: nowrap;
     `,
+
+    dateIndicatorStyles: css`
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1050;
+      padding: 1px 8px;
+      border-radius: 2px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: ${theme.colors.secondary};
+      color: ${theme.colors.primary};
+      box-shadow: ${theme.shadows[1]};
+      opacity: 0.9;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    `,
   };
 
   return styles;
