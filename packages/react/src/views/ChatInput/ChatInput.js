@@ -111,6 +111,8 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     isChannelArchived: state.isChannelArchived,
   }));
 
+  const channelName = channelInfo?.name || ECOptions?.channelName;
+
   const { members, setMembersHandler } = useMemberStore((state) => ({
     members: state.members,
     setMembersHandler: state.setMembersHandler,
@@ -886,7 +888,9 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 ? isChannelArchived
                   ? 'Room archived'
                   : canSendMsg
-                  ? `Message #${channelInfo.name}`
+                  ? channelName
+                    ? `Message #${channelName}`
+                    : 'Type a message'
                   : 'This room is read only'
                 : 'Sign in to chat'
             }
