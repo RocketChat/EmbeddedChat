@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { css } from '@emotion/react';
 import {
   Box,
@@ -758,6 +764,37 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     }
   };
 
+  const placeholder = useMemo(() => {
+    if (!isUserAuthenticated) {
+      return 'Sign in to chat';
+    }
+    if (isChannelArchived) {
+      return 'Room archived';
+    }
+    if (!canSendMsg) {
+      return 'This room is read only';
+    }
+    if (threadId) {
+      return 'Reply in thread...';
+    }
+    if (channelName) {
+      const prefix = channelInfo?.t === 'd' ? '@' : '#';
+      const formattedName =
+        channelName.startsWith('@') || channelName.startsWith('#')
+          ? channelName
+          : `${prefix}${channelName}`;
+      return `Message ${formattedName}`;
+    }
+    return 'Type a message';
+  }, [
+    isUserAuthenticated,
+    isChannelArchived,
+    canSendMsg,
+    threadId,
+    channelName,
+    channelInfo?.t,
+  ]);
+
   return (
     <Box className={`ec-chat-input ${classNames}`} style={styleOverrides}>
       <Box css={styles.quoteContainer}>
@@ -883,17 +920,7 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
                 ? 'false'
                 : 'true'
             }
-            data-placeholder={
-              isUserAuthenticated
-                ? isChannelArchived
-                  ? 'Room archived'
-                  : canSendMsg
-                  ? channelName
-                    ? `Message #${channelName}`
-                    : 'Type a message'
-                  : 'This room is read only'
-                : 'Sign in to chat'
-            }
+            data-placeholder={placeholder}
             css={css`
               ${styles.textInput}
               ${isChannelArchived &&

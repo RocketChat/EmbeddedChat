@@ -1,5 +1,5 @@
-﻿---
+---
 "@embeddedchat/react": patch
 ---
 
-Fix ChatInput placeholder rendering "Message #undefined" when channel info is not yet loaded, falling back to ECOptions channelName or "Type a message".
+Improve ChatInput placeholder resolution with fallback to ECOptions channelName, direct message prefixing (@username), thread input prompt, and clean computed state.
