@@ -13,7 +13,12 @@ import {
 import { Attachments } from '../AttachmentHandler';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
-import { useMessageStore, useUserStore, useSidebarStore } from '../../store';
+import {
+  useChannelStore,
+  useMessageStore,
+  useUserStore,
+  useSidebarStore,
+} from '../../store';
 import RCContext from '../../context/RCInstance';
 import { MessageBody } from './MessageBody';
 import { MessageReactions } from './MessageReactions';
@@ -174,15 +179,31 @@ const Message = ({
     }
   };
 
-  const getMessageLink = async (id) => {
-    const host = await RCInstance.getHost();
-    const res = await RCInstance.channelInfo();
-    return `${host}/channel/${res.room.name}/?msg=${id}`;
+  const getMessageLink = async ({ _id, rid = RCInstance.rid }) => {
+    const host = RCInstance.getHost().replace(/\/+$/, '');
+    const { channelInfo } = useChannelStore.getState();
+    const room =
+      channelInfo?._id && channelInfo._id === rid
+        ? channelInfo
+        : (await RCInstance.channelInfo())?.room;
+    const roomPaths = { c: 'channel', p: 'group', d: 'direct', l: 'live' };
+    const roomPath = roomPaths[room?.t];
+    // Rocket.Chat's own DM permalinks prefer the subscription's room ID.
+    const roomIdentifier =
+      room?.t === 'd' || room?.t === 'l' ? room._id : room?.name;
+
+    if (room?._id !== rid || !roomPath || !roomIdentifier) {
+      throw new Error('Cannot build a message link without room information');
+    }
+
+    return `${host}/${roomPath}/${encodeURIComponent(
+      roomIdentifier
+    )}?msg=${encodeURIComponent(_id)}`;
   };
 
   const handleCopyMessageLink = async (msg) => {
     try {
-      const messageLink = await getMessageLink(msg._id);
+      const messageLink = await getMessageLink(msg);
       await navigator.clipboard.writeText(messageLink);
       dispatchToastMessage({
         type: 'success',
