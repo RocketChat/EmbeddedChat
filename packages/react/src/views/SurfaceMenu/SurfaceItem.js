@@ -11,6 +11,8 @@ const SurfaceItem = ({ item, size }) => (
       size={size}
       iconSize="small"
       color={item.type}
+      aria-label={item.label}
+      {...item.ariaProps}
     />
   </Tooltip>
 );

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { Box, useTheme } from '@embeddedchat/ui-elements';
+import { UiKitMessage } from '@embeddedchat/ui-kit';
 import { Markdown } from '../Markdown';
 import MessageHeader from './MessageHeader';
 import { MessageBody } from './MessageBody';
@@ -50,7 +51,6 @@ const Message = ({
               })}
             />
           )}
-
           {!message.t ? (
             <>
               <MessageBody
@@ -63,6 +63,12 @@ const Message = ({
                 lastSequential={lastSequential}
               >
                 <Markdown body={message} isReaction={false} />
+
+                {message.blocks && (
+                  <div style={{ marginTop: '8px' }}>
+                    {UiKitMessage(message.blocks)}
+                  </div>
+                )}
 
                 {!message.t && message._id === '62vhmKJGNoxgvLL7M' ? (
                   <MessageToolbox variantStyles={variantStyles} />

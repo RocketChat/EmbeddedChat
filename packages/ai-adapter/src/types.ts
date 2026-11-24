@@ -1,3 +1,5 @@
+import { LayoutBlock } from "@rocket.chat/ui-kit";
+
 export interface Message {
   _id: string;
   msg: string;
@@ -39,5 +41,9 @@ export interface IAIAdapter {
     context?: AIContext
   ): Promise<string[]>;
   summarize?(messages: Message[], context?: AIContext): Promise<string>;
+  generateUIBlocks(
+    prompt: string,
+    existingBlocks?: LayoutBlock[]
+  ): Promise<{ blocks: LayoutBlock[]; componentType: string }>;
   isAvailable(): Promise<boolean>;
 }

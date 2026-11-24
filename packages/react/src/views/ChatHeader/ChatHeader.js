@@ -228,19 +228,24 @@ const ChatHeader = ({
   };
   const handleLogout = useCallback(async () => {
     try {
-      await RCInstance.logout();
+      const error = await RCInstance.logout();
+      if (error) throw error;
+    } catch (e) {
+      dispatchToastMessage({
+        type: 'error',
+        message: 'Could not finish signing out of Rocket.Chat.',
+      });
+    } finally {
       setMessages([]);
       setChannelInfo({});
       setShowSidebar(false);
       setUserAvatarUrl(null);
       useMessageStore.setState({ isMessageLoaded: false });
-    } catch (e) {
-      console.error(e);
-    } finally {
       setIsUserAuthenticated(false);
     }
   }, [
     RCInstance,
+    dispatchToastMessage,
     setIsUserAuthenticated,
     setMessages,
     setChannelInfo,
