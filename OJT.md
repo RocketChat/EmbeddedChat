@@ -18,24 +18,52 @@
 
 ## Current understanding
 
-The root cause is a client-side **UI State Leak** in Zustand state management:
-- When a parent message is deleted on the server, Rocket.Chat sends a delete event over DDP WebSocket (`notify-room: ${this.rid}/deleteMessage`).
-- `removeMessage(messageId)` in `messageStore.js` is triggered. It finds the message in `messages` and filters it out.
-- However, Zustand retains all other store variables unless explicitly updated. Thus, `isThreadOpen` remains `true` and `threadMainMessage` continues to hold the deleted parent message object.
-- Because `ChatBody.js` conditionally renders `<ThreadMessageList>` whenever `isThreadOpen` is `true`, the thread panel stays open on the screen with stale data.
+The root cause is a client-side **UI State Leak** in Zustand state management across two distinct deletion mechanisms in Rocket.Chat:
+
+1. **Hard Delete (0 Replies / Direct Delete)**:
+   - When a parent message with no replies is deleted, Rocket.Chat fires a WebSocket delete event (`notify-room: ${this.rid}/deleteMessage`).
+   - `removeMessage(messageId)` in `messageStore.js` is triggered. While it filtered the message out of `messages`, it previously left `isThreadOpen: true` and `threadMainMessage` intact.
+
+2. **Soft Delete / Tombstone (>= 1 Replies Exist)**:
+   - When a parent message with existing thread replies is deleted, Rocket.Chat does *not* hard-delete the record (to avoid orphaning child replies). Instead, it broadcasts a regular message update via `room-messages` with `message.t = 'rm'` (which displays as *"message removed"* in the UI).
+   - This update bypasses `removeMessage` and lands in **`upsertMessage(message)`** in `messageStore.js`.
+   - Previously, `upsertMessage` only updated the message in `messages` without checking if the active thread's parent was just marked as `'rm'`, leaving the thread view open.
 
 ### Key Insights & Edge Cases Considered
-1. **Frontend Scope vs. Backend Scope**: EmbeddedChat is purely a frontend client library. Regardless of how the Rocket.Chat server manages thread reply persistence, the frontend is responsible for closing the thread UI when its parent message is removed from the room.
-2. **Selective Closing**: Calling `closeThread()` unconditionally inside `removeMessage()` would introduce a regression: deleting an unrelated message (e.g. Message B in main chat) while viewing Message A's thread would cause Message A's thread to unexpectedly close.
-3. **Targeted Condition**: We must compare `get().threadMainMessage?._id === messageId`. Only when the deleted message is the parent of the currently active thread should `closeThread()` be invoked.
+1. **Frontend Scope vs. Backend Scope**: EmbeddedChat is purely a frontend client library. Regardless of how the Rocket.Chat server manages thread reply persistence, the frontend is responsible for closing an active thread UI when its parent message is deleted/removed.
+2. **Selective Closing**: Calling `closeThread()` unconditionally would introduce regressions: deleting an unrelated message in the main channel while viewing a thread would snap the active thread shut.
+3. **Dual-Path Handling**: We must protect both deletion paths:
+   - `removeMessage`: checks `get().threadMainMessage?._id === messageId`.
+   - `upsertMessage`: checks `message.t === 'rm' && get().threadMainMessage?._id === message._id`.
 
-## Proposed Solution (Pending Verification)
+---
 
-Add a targeted parent check at the beginning of `removeMessage` in `packages/react/src/store/messageStore.js`:
+## Implemented Solution & Testing
+
+Both paths have been implemented in `packages/react/src/store/messageStore.js`:
 
 ```javascript
+  upsertMessage: (message, enableThreads = false) => {
+    // 1. Soft-delete check: close thread if the active parent message was marked as removed
+    if (message.t === 'rm' && get().threadMainMessage?._id === message._id) {
+      get().closeThread();
+    }
+
+    if (message.tmid && enableThreads) {
+      if (get().threadMainMessage?._id === message.tmid) {
+        set((state) => ({
+          threadMessages: upsertMessage(state.threadMessages, message),
+        }));
+      }
+    } else {
+      set((state) => ({
+        messages: upsertMessage(state.messages, message),
+      }));
+    }
+  },
+
   removeMessage: (messageId) => {
-    // If the deleted message is the parent of the currently open thread, close it
+    // 2. Hard-delete check: close thread if the active parent message was deleted
     if (get().threadMainMessage?._id === messageId) {
       get().closeThread();
     }
@@ -59,13 +87,66 @@ Add a targeted parent check at the beginning of `removeMessage` in `packages/rea
   },
 ```
 
-## Next steps & Verification Plan
+### Testing Results Completed:
+- **`removeMessage` with 0 replies**: Tested and verified. When a parent message with no replies is deleted while the thread view is open, the thread view closes immediately.
+- **`upsertMessage` with multiple replies**: Tested and verified. When a parent message with existing replies is deleted while the thread view is open, the incoming `t: 'rm'` event immediately closes the thread view.
 
-1. **Manual Testing in Storybook**:
-   - **Positive Test (Bug Fix)**: Open thread on parent Message A -> delete Message A -> verify the thread view closes and returns cleanly to the main channel message list.
-   - **Negative Test (Regression Check)**: Open thread on Message A -> delete unrelated Message B in the main channel -> verify Message A's thread remains open.
-2. **Automated Unit Tests**:
-   - Run existing unit tests for `messageStore` to ensure no regressions.
-   - Add a unit test verifying `removeMessage` closes the active thread when the parent message is deleted.
-3. **Changeset**:
-   - Run `npx changeset` to create a patch release entry for `@embeddedchat/react`.
+---
+
+## Secondary Investigation: Hiding "View thread" on Deleted Messages
+
+Following discussion with the mentor regarding whether the `[View thread]` button should remain accessible once a parent message is deleted:
+
+### Problem Identified in UI
+In `packages/react/src/views/Message/Message.js` (line 376), thread metrics were conditionally rendered solely based on `message.tcount`:
+```javascript
+{message.tcount && type !== 'thread' ? (
+  <MessageMetrics ... />
+) : null}
+```
+Because this check did not inspect `message.t`, messages that were soft-deleted (`message.t === 'rm'`) continued to display the `[View thread]` button and reply counter beneath the *"message removed"* placeholder, allowing users to open the thread.
+
+### Technical Concept: What is `message.t`?
+In Rocket.Chat's database schema:
+- **`t`** represents the **System Message Type**.
+- For regular chat messages, `message.t` is `undefined` (`!message.t` is `true`).
+- When a message is deleted with replies, Rocket.Chat sets `message.t = 'rm'` (removed) and clears `msg`.
+- Existing components in `Message.js` already guard against system messages using `!message.t` (e.g., hiding the message text body at line 269 and the hover toolbox at line 305).
+
+### Implementation in `Message.js`
+Updated line 376 to match the rest of `Message.js` by guarding with `!message.t`:
+
+```javascript
+{!message.t && message.tcount && type !== 'thread' ? (
+  <MessageMetrics
+    message={message}
+    handleOpenThread={handleOpenThread}
+    variantStyles={variantStyles}
+  />
+) : null}
+```
+
+### Testing Results Completed:
+- Verified in Storybook: When a parent message is deleted, the `[View thread]` button and reply count immediately disappear alongside the message body, leaving only the *"message removed"* tombstone.
+
+---
+
+## Status & PR Strategy
+
+We now have two distinct, independently verified solutions ready to present:
+
+1. **Primary Fix (Issue #1080 - Core State Leak)**:
+   - Changes in `packages/react/src/store/messageStore.js` (`upsertMessage` and `removeMessage`).
+   - Ensures that an active, open thread view always closes if its parent message is deleted (handling both 0-reply hard deletes and multi-reply soft deletes).
+
+2. **Secondary UI Enhancement (`Message.js`)**:
+   - Guard in `packages/react/src/views/Message/Message.js` hiding the `[View thread]` button on deleted parent messages.
+   - If maintainers want thread replies hidden when a parent is deleted, this patch can be included. If maintainers prefer preserving thread reply accessibility under tombstones (like Slack/Discord), the primary fix alone can be submitted.
+
+---
+
+## Next Steps
+
+1. Run existing automated unit tests for `messageStore` and UI components.
+2. Generate a changeset (`npx changeset`) for `@embeddedchat/react`.
+3. Open PR with the primary fix and present the secondary enhancement to maintainers for guidance.
