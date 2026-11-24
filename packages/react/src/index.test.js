@@ -4,6 +4,13 @@ import { createRoot } from 'react-dom/client';
 
 import { EmbeddedChat } from './index';
 
+jest.mock('@embeddedchat/ui-kit', () => ({
+  parseGeneratedUiConfigurations: jest.fn(() => ({
+    configurations: [],
+    errors: [],
+  })),
+}));
+
 jest.mock('@embeddedchat/api', () => ({
   EmbeddedChatApi: jest.fn().mockImplementation(() => ({
     autoLogin: jest.fn().mockResolvedValue(undefined),
