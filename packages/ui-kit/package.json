@@ -10,7 +10,9 @@
         "url": "https://github.com/RocketChat/EmbeddedChat"
     },
     "files": [
-        "dist"
+        "dist",
+        "generated-ui.mjs",
+        "generated-ui.d.mts"
     ],
     "scripts": {
         "prebuild": "rimraf dist",
@@ -74,6 +76,7 @@
     },
     "dependencies": {
         "@embeddedchat/markups": "workspace:^",
+        "@embeddedchat/ui-elements": "workspace:^",
         "@emotion/babel-preset-css-prop": "^11.11.0",
         "@emotion/react": "11.7.1",
         "@rocket.chat/message-parser": "^0.31.29",

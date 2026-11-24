@@ -9,6 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { EmbeddedChatApi } from '@embeddedchat/api';
+import { parseGeneratedUiConfigurations } from '@embeddedchat/ui-kit';
 import {
   Box,
   ToastBarProvider,
@@ -65,6 +66,9 @@ const EmbeddedChat = (props) => {
     dark = false,
     remoteOpt = false,
     layoutMode = 'bubble',
+    tokenStorageKey = null,
+    generatedUi = null,
+    onGeneratedUiAction = null,
   } = config;
 
   const auth = useMemo(
@@ -79,7 +83,20 @@ const EmbeddedChat = (props) => {
   const { classNames, styleOverrides } = useComponentOverrides('EmbeddedChat');
   const [fullScreen, setFullScreen] = useState(false);
   const [isSynced, setIsSynced] = useState(!remoteOpt);
-  const { getToken, saveToken, deleteToken } = getTokenStorage(secure);
+  const storageKey = useMemo(() => {
+    if (tokenStorageKey) return tokenStorageKey;
+    try {
+      const url = new URL(host?.includes('://') ? host : `http://${host}`);
+      return url.host ? `ec_token_${url.host}` : 'ec_token';
+    } catch {
+      return 'ec_token';
+    }
+  }, [tokenStorageKey, host]);
+
+  const { getToken, saveToken, deleteToken } = useMemo(
+    () => getTokenStorage(secure, storageKey),
+    [secure, storageKey]
+  );
   const {
     setIsUserAuthenticated,
     setUsername: setAuthenticatedUsername,
@@ -179,11 +196,13 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, auth, setIsLoginIn]);
 
   useEffect(() => {
+    let subscribed = true;
     const handleAuthChange = (user) => {
       if (user) {
         const { isChannelPrivate } = useChannelStore.getState();
         RCInstance.connect(isChannelPrivate)
           .then(() => {
+            if (!subscribed || RCInstance.auth.currentUser !== user) return;
             const me = user.me || user.data?.me;
             if (me) {
               setAuthenticatedAvatarUrl(me.avatarUrl);
@@ -204,6 +223,7 @@ const EmbeddedChat = (props) => {
     RCInstance.auth.onAuthChange(handleAuthChange);
 
     return () => {
+      subscribed = false;
       RCInstance.auth.removeAuthListener(handleAuthChange);
     };
   }, [
@@ -237,6 +257,18 @@ const EmbeddedChat = (props) => {
   }, [RCInstance, remoteOpt, setIsSynced]);
 
   const memoizedAiAdapter = useMemo(() => aiAdapter, [aiAdapter]);
+  const generatedUiResult = useMemo(
+    () => parseGeneratedUiConfigurations(generatedUi),
+    [generatedUi]
+  );
+  useEffect(() => {
+    if (generatedUiResult.errors.length) {
+      console.error(
+        '[EmbeddedChat] Invalid generated UI:',
+        generatedUiResult.errors.join(' ')
+      );
+    }
+  }, [generatedUiResult]);
 
   const ECOptions = useMemo(
     () => ({
@@ -256,6 +288,8 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       aiAdapter: memoizedAiAdapter,
+      generatedUi: generatedUiResult.configurations,
+      onGeneratedUiAction,
     }),
     [
       enableThreads,
@@ -274,6 +308,8 @@ const EmbeddedChat = (props) => {
       anonymousMode,
       layoutMode,
       memoizedAiAdapter,
+      generatedUiResult,
+      onGeneratedUiAction,
     ]
   );
 
@@ -355,6 +391,7 @@ EmbeddedChat.propTypes = {
   style: PropTypes.object,
   hideHeader: PropTypes.bool,
   dark: PropTypes.bool,
+  tokenStorageKey: PropTypes.string,
   aiAdapter: PropTypes.shape({
     name: PropTypes.string,
     sendPrompt: PropTypes.func.isRequired,
@@ -362,6 +399,11 @@ EmbeddedChat.propTypes = {
     summarize: PropTypes.func,
     isAvailable: PropTypes.func.isRequired,
   }),
+  generatedUi: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.arrayOf(PropTypes.object),
+  ]),
+  onGeneratedUiAction: PropTypes.func,
 };
 
 export default memo(EmbeddedChat);

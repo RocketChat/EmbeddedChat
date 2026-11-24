@@ -10,6 +10,7 @@ const useMessageItemsStore = create((set) => ({
     'edit',
     'delete',
     'report',
+    'ai',
   ],
 
   menuItems: [],
