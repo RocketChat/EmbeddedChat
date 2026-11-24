@@ -6,7 +6,7 @@ import PreviewAudio from './PreviewType/audio';
 import PreviewDefault from './PreviewType/default';
 
 const CheckPreviewType = ({ data }) => {
-  const type = data ? data.type.split('/')[0] : '';
+  const type = data?.type ? data.type.split('/')[0] : '';
 
   const [previewURL, setPreviewURL] = useState('');
   const dispatchToastMessage = useToastBarDispatch();
@@ -20,15 +20,63 @@ const CheckPreviewType = ({ data }) => {
     }
   }, [data, dispatchToastMessage]);
 
+  useEffect(() => {
+    if (!data) {
+      setPreviewURL('');
+      return undefined;
+    }
+
+    const mediaType = data.type ? data.type.split('/')[0] : '';
+    const isImage = mediaType === 'image';
+    const isAudio = mediaType === 'audio';
+    const isImageTooLarge = isImage && data.size / 1000 >= 10000;
+
+    if ((!isImage && !isAudio) || isImageTooLarge) {
+      setPreviewURL('');
+      return undefined;
+    }
+
+    let objectUrl = '';
+    let isCancelled = false;
+
+    if (
+      typeof window !== 'undefined' &&
+      window.URL &&
+      typeof window.URL.createObjectURL === 'function'
+    ) {
+      try {
+        objectUrl = window.URL.createObjectURL(data);
+        setPreviewURL(objectUrl);
+      } catch (err) {
+        // Fallback to FileReader if createObjectURL is unavailable or throws
+      }
+    }
+
+    if (!objectUrl && typeof FileReader !== 'undefined') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (!isCancelled) {
+          setPreviewURL(e.target?.result || '');
+        }
+      };
+      reader.readAsDataURL(data);
+    }
+
+    return () => {
+      isCancelled = true;
+      if (
+        objectUrl &&
+        typeof window !== 'undefined' &&
+        window.URL?.revokeObjectURL
+      ) {
+        window.URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [data]);
+
   if (!data) {
     return null;
   }
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    setPreviewURL(e.target.result);
-  };
-  reader.readAsDataURL(data);
 
   switch (type) {
     case 'image': {
