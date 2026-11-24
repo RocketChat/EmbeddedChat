@@ -12,6 +12,8 @@
     "postinstall": "yarn build",
     "build": "lerna run build",
     "lint": "lerna run lint",
+    "test": "yarn test:unit",
+    "test:unit": "yarn workspace @embeddedchat/ai-adapter test && yarn workspace layout_editor test",
     "build:storybook": "lerna run build-storybook",
     "format": "lerna run format",
     "format:check": "lerna run format:check",
