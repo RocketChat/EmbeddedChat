@@ -8,6 +8,7 @@ function PreviewImage({ previewURL }) {
     <Box>
       <img
         src={previewURL || null}
+        alt="Upload preview"
         style={{
           maxWidth: '90%',
           objectFit: 'contain',
