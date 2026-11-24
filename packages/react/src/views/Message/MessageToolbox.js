@@ -117,8 +117,8 @@ export const MessageToolbox = ({
   );
 
   const isVisibleForMessageType =
-    message.files?.[0].type !== 'audio/mpeg' &&
-    message.files?.[0].type !== 'video/mp4';
+    message.files?.[0]?.type !== 'audio/mpeg' &&
+    message.files?.[0]?.type !== 'video/mp4';
 
   const canDeleteMessage = isAllowedToForceDeleteMessage
     ? true
@@ -178,7 +178,7 @@ export const MessageToolbox = ({
         id: 'edit',
         onClick: () => handleEditMessage(message),
         iconName: 'edit',
-        visible: isAllowedToEditMessage,
+        visible: isAllowedToEditMessage && isVisibleForMessageType,
         color: isEditing ? 'secondary' : 'default',
         ghost: !isEditing,
       },
@@ -187,7 +187,7 @@ export const MessageToolbox = ({
         id: 'copy',
         onClick: () => handleCopyMessage(message),
         iconName: 'copy',
-        visible: true,
+        visible: isVisibleForMessageType,
       },
       link: {
         label: 'Copy link',
@@ -251,14 +251,15 @@ export const MessageToolbox = ({
       handleEditMessage,
       handlerReportMessage,
       handleCopyMessage,
+      handleCopyMessageLink,
       isAllowedToPin,
+      isAllowedToEditMessage,
+      isVisibleForMessageType,
+      canDeleteMessage,
+      isAllowedToReport,
       generatedUiConfigurations,
       openGeneratedUiId,
       generatedUiDialogId,
-      canDeleteMessage,
-      handleCopyMessageLink,
-      isAllowedToEditMessage,
-      isAllowedToReport,
     ]
   );
 
@@ -289,6 +290,8 @@ export const MessageToolbox = ({
           label: options[item].label,
           iconName: options[item].iconName,
           type: options[item].type,
+          color: options[item].color,
+          ghost: options[item].ghost,
           ariaProps: options[item].ariaProps,
         };
       }
