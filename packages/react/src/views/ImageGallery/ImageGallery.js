@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   ActionButton,
@@ -41,13 +42,42 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
     fetchAllImages();
   }, [RCInstance, setFiles, setCurrentFileIndex, currentFileId]);
 
+  useEffect(() => {
+    const previousActiveElement = document.activeElement;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowGallery(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (
+        previousActiveElement &&
+        typeof previousActiveElement.focus === 'function'
+      ) {
+        previousActiveElement.focus();
+      }
+    };
+  }, [setShowGallery]);
+
   return (
     <ReactPortal wrapperId="overlay-items">
-      <Box css={styles.overlay}>
+      <Box
+        css={styles.overlay}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image gallery"
+      >
         <ActionButton
           css={styles.exit}
           onClick={() => setShowGallery(false)}
           size="medium"
+          aria-label="Close image gallery"
         >
           <Icon name="cross" />
         </ActionButton>
@@ -101,20 +131,28 @@ const ImageGallery = ({ currentFileId, setShowGallery }) => {
               initialSlide={currentFileIndex}
               injectStyles={[styles.swiperInject]}
             >
-              {files.map(({ _id, url }) => (
+              {files.map(({ _id, url, name }) => (
                 <SwiperSlide key={_id}>
                   <Box css={styles.imageContainer}>
-                    <img src={url} css={styles.image} />
+                    <img
+                      src={url}
+                      alt={name || 'Gallery image'}
+                      css={styles.image}
+                    />
                   </Box>
                 </SwiperSlide>
               ))}
             </Swiper>
-            )
           </Box>
         )}
       </Box>
     </ReactPortal>
   );
+};
+
+ImageGallery.propTypes = {
+  currentFileId: PropTypes.string,
+  setShowGallery: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;

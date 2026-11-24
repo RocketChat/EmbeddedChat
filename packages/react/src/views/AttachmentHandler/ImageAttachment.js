@@ -94,14 +94,39 @@ const ImageAttachment = ({
           />
         </Box>
         {isExpanded && (
-          <Box onClick={() => setShowGallery(true)}>
+          <Box
+            is="button"
+            type="button"
+            onClick={() => setShowGallery(true)}
+            aria-label={`View full image: ${
+              attachment.title || attachment.description || 'Attachment'
+            }`}
+            css={css`
+              background: none;
+              border: none;
+              padding: 0;
+              margin: 0;
+              cursor: pointer;
+              display: block;
+              width: 100%;
+              text-align: left;
+              border-radius: inherit;
+              &:focus-visible {
+                outline: 2px solid
+                  ${theme.colors.ring || theme.colors.primary || 'currentColor'};
+                outline-offset: 2px;
+              }
+            `}
+          >
             <img
               src={host + attachment.image_url}
+              alt={attachment.title || attachment.description || 'Attachment'}
               style={{
                 maxWidth: '100%',
                 objectFit: 'contain',
                 borderBottomLeftRadius: 'inherit',
                 borderBottomRightRadius: 'inherit',
+                display: 'block',
               }}
             />
           </Box>
@@ -110,10 +135,8 @@ const ImageAttachment = ({
           attachment.attachments.map((nestedAttachment, index) => (
             <Box css={variantStyles.imageAttachmentContainer} key={index}>
               <Box
-                onClick={() => setShowGallery(true)}
                 css={[
                   css`
-                    cursor: pointer;
                     border-radius: inherit;
                     line-height: 0;
                     padding: 0.5rem;
@@ -159,15 +182,50 @@ const ImageAttachment = ({
                   }
                   variantStyles={variantStyles}
                 />
-                <img
-                  src={host + nestedAttachment.image_url}
-                  style={{
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    borderBottomLeftRadius: 'inherit',
-                    borderBottomRightRadius: 'inherit',
-                  }}
-                />
+                <Box
+                  is="button"
+                  type="button"
+                  onClick={() => setShowGallery(true)}
+                  aria-label={`View full image: ${
+                    nestedAttachment.title ||
+                    nestedAttachment.description ||
+                    'Attachment'
+                  }`}
+                  css={css`
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    cursor: pointer;
+                    display: block;
+                    width: 100%;
+                    text-align: left;
+                    border-radius: inherit;
+                    &:focus-visible {
+                      outline: 2px solid
+                        ${theme.colors.ring ||
+                        theme.colors.primary ||
+                        'currentColor'};
+                      outline-offset: 2px;
+                    }
+                  `}
+                >
+                  <img
+                    src={host + nestedAttachment.image_url}
+                    alt={
+                      nestedAttachment.title ||
+                      nestedAttachment.description ||
+                      'Attachment'
+                    }
+                    style={{
+                      maxWidth: '100%',
+                      objectFit: 'contain',
+                      borderBottomLeftRadius: 'inherit',
+                      borderBottomRightRadius: 'inherit',
+                      display: 'block',
+                    }}
+                  />
+                </Box>
               </Box>
               {showGallery && (
                 <ImageGallery

@@ -75,7 +75,7 @@ const LinkPreview = ({
                       ? `${url}${isThumbnail}`
                       : isThumbnail
                   }
-                  alt={meta.ogImageAlt}
+                  alt={meta.ogImageAlt || meta.ogTitle || 'Link preview image'}
                   style={{
                     width: '100%',
                     height: 'auto',
