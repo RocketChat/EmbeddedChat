@@ -35,6 +35,7 @@ import { getChatbodyStyles } from './ChatBody.styles';
 import UiKitModal from '../ModalBlock/uiKit/UiKitModal';
 import useUiKitStore from '../../store/uiKitStore';
 import useUiKitActionManager from '../../hooks/uiKit/useUiKitActionManager';
+import useThreadDeletionToast from '../../hooks/useThreadDeletionToast';
 
 const ChatBody = ({
   anonymousMode,
@@ -43,6 +44,7 @@ const ChatBody = ({
   scrollToBottom,
   clearUnreadDividerRef,
 }) => {
+  useThreadDeletionToast();
   const { classNames, styleOverrides } = useComponentOverrides('ChatBody');
   const { theme, mode } = useTheme();
   const styles = getChatbodyStyles(theme, mode);
