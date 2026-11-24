@@ -1,11 +1,9 @@
-import test from "node:test";
+import test, { mock } from "node:test";
 import assert from "node:assert/strict";
 import { GeminiAdapter } from "../dist/index.mjs";
 
-const originalFetch = globalThis.fetch;
-
 test.afterEach(() => {
-  globalThis.fetch = originalFetch;
+  mock.reset();
 });
 
 test("GeminiAdapter initializes with default configurations", () => {
@@ -17,7 +15,7 @@ test("GeminiAdapter sendPrompt formats contents and task configs correctly", asy
   let requestedUrl = "";
   let requestOptions = null;
 
-  globalThis.fetch = async (url, options) => {
+  mock.method(globalThis, "fetch", async (url, options) => {
     requestedUrl = String(url);
     requestOptions = options;
     return {
@@ -32,7 +30,7 @@ test("GeminiAdapter sendPrompt formats contents and task configs correctly", asy
         ],
       }),
     };
-  };
+  });
 
   const adapter = new GeminiAdapter({
     apiKey: "test-api-key",
@@ -94,10 +92,10 @@ test("GeminiAdapter sendPrompt formats contents and task configs correctly", asy
 });
 
 test("GeminiAdapter sendPrompt throws error when response is not ok", async () => {
-  globalThis.fetch = async () => ({
+  mock.method(globalThis, "fetch", async () => ({
     ok: false,
     status: 403,
-  });
+  }));
 
   const adapter = new GeminiAdapter({ apiKey: "bad-key" });
   const context = { roomId: "r1", userId: "u1", history: [] };
@@ -116,10 +114,10 @@ test("GeminiAdapter sendPrompt throws error when response is not ok", async () =
 
 test("GeminiAdapter isAvailable returns true when API is responsive", async () => {
   let pingUrl = "";
-  globalThis.fetch = async (url) => {
+  mock.method(globalThis, "fetch", async (url) => {
     pingUrl = String(url);
     return { ok: true };
-  };
+  });
 
   const adapter = new GeminiAdapter({ apiKey: "my-key" });
   const available = await adapter.isAvailable();
@@ -129,9 +127,9 @@ test("GeminiAdapter isAvailable returns true when API is responsive", async () =
 });
 
 test("GeminiAdapter isAvailable returns false on failure or network error", async () => {
-  globalThis.fetch = async () => {
+  mock.method(globalThis, "fetch", async () => {
     throw new Error("Connection refused");
-  };
+  });
 
   const adapter = new GeminiAdapter({ apiKey: "my-key" });
   const available = await adapter.isAvailable();

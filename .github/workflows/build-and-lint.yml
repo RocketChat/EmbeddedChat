@@ -42,5 +42,8 @@ jobs:
       - name: Lint check
         run: yarn lint
 
+      - name: Run unit tests
+        run: yarn test
+
       - name: Build
         run: yarn build && yarn build:storybook

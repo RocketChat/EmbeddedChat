@@ -14,8 +14,7 @@
     }
   },
   "scripts": {
-    "pretest": "yarn build",
-    "test": "node --test tests/*.test.js",
+    "test": "yarn build && node --test tests/*.test.js",
     "build": "rollup -c",
     "dev": "rollup -c --watch",
     "format": "prettier --write 'src/' 'tests/'",

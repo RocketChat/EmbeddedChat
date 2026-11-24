@@ -1,11 +1,9 @@
-import test from "node:test";
+import test, { mock } from "node:test";
 import assert from "node:assert/strict";
 import { OpenAIAdapter } from "../dist/index.mjs";
 
-const originalFetch = globalThis.fetch;
-
 test.afterEach(() => {
-  globalThis.fetch = originalFetch;
+  mock.reset();
 });
 
 test("OpenAIAdapter initializes with default configurations", () => {
@@ -17,7 +15,7 @@ test("OpenAIAdapter sendPrompt formats headers, payload, and extracts content", 
   let requestedUrl = "";
   let requestOptions = null;
 
-  globalThis.fetch = async (url, options) => {
+  mock.method(globalThis, "fetch", async (url, options) => {
     requestedUrl = String(url);
     requestOptions = options;
     return {
@@ -30,7 +28,7 @@ test("OpenAIAdapter sendPrompt formats headers, payload, and extracts content", 
         ],
       }),
     };
-  };
+  });
 
   const adapter = new OpenAIAdapter({
     apiKey: "sk-test-token",
@@ -72,10 +70,10 @@ test("OpenAIAdapter sendPrompt formats headers, payload, and extracts content", 
 });
 
 test("OpenAIAdapter sendPrompt throws error on API failure", async () => {
-  globalThis.fetch = async () => ({
+  mock.method(globalThis, "fetch", async () => ({
     ok: false,
     status: 401,
-  });
+  }));
 
   const adapter = new OpenAIAdapter({ apiKey: "invalid-key" });
   const context = { roomId: "r1", userId: "u1", history: [] };
@@ -95,7 +93,7 @@ test("OpenAIAdapter sendPrompt throws error on API failure", async () => {
 test("OpenAIAdapter generateUIBlocks requests schema and validates response", async () => {
   let capturedBody = null;
 
-  globalThis.fetch = async (_url, options) => {
+  mock.method(globalThis, "fetch", async (_url, options) => {
     capturedBody = JSON.parse(options.body);
     return {
       ok: true,
@@ -118,7 +116,7 @@ test("OpenAIAdapter generateUIBlocks requests schema and validates response", as
         ],
       }),
     };
-  };
+  });
 
   const adapter = new OpenAIAdapter({
     apiKey: "sk-test",
@@ -138,7 +136,7 @@ test("OpenAIAdapter generateUIBlocks requests schema and validates response", as
 test("OpenAIAdapter uses json_object fallback for non-strict models", async () => {
   let capturedBody = null;
 
-  globalThis.fetch = async (_url, options) => {
+  mock.method(globalThis, "fetch", async (_url, options) => {
     capturedBody = JSON.parse(options.body);
     return {
       ok: true,
@@ -161,7 +159,7 @@ test("OpenAIAdapter uses json_object fallback for non-strict models", async () =
         ],
       }),
     };
-  };
+  });
 
   const adapter = new OpenAIAdapter({
     apiKey: "sk-test",
@@ -176,11 +174,11 @@ test("OpenAIAdapter isAvailable checks /models endpoint", async () => {
   let pingUrl = "";
   let authHeader = "";
 
-  globalThis.fetch = async (url, options) => {
+  mock.method(globalThis, "fetch", async (url, options) => {
     pingUrl = String(url);
     authHeader = options?.headers?.Authorization;
     return { ok: true };
-  };
+  });
 
   const adapter = new OpenAIAdapter({ apiKey: "sk-test" });
   const available = await adapter.isAvailable();
@@ -191,9 +189,9 @@ test("OpenAIAdapter isAvailable checks /models endpoint", async () => {
 });
 
 test("OpenAIAdapter isAvailable returns false on network error", async () => {
-  globalThis.fetch = async () => {
+  mock.method(globalThis, "fetch", async () => {
     throw new Error("Network timeout");
-  };
+  });
 
   const adapter = new OpenAIAdapter({ apiKey: "sk-test" });
   const available = await adapter.isAvailable();
