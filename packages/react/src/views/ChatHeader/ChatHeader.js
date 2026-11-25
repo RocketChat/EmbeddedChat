@@ -327,6 +327,7 @@ const ChatHeader = ({
     isUserAuthenticated,
     RCInstance,
     setChannelInfo,
+    handleLogout,
     setIsChannelPrivate,
     dispatchToastMessage,
     isChannelPrivate,
