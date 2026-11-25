@@ -5,9 +5,7 @@ const useMemberStore = create((set) => ({
   showMembers: false,
   setShowMembers: (showMembers) => set(() => ({ showMembers })),
   memberRoles: {},
-  admins: [],
   setMemberRoles: (memberRoles) => set((state) => ({ ...state, memberRoles })),
-  setAdmins: (admins) => set(() => ({ admins })),
   setMembersHandler: (memberList) => set(() => ({ members: memberList })),
 }));
 
