@@ -1,0 +1,186 @@
+name: PR Community Tested
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  community-tested:
+    if: |
+      github.event.issue.pull_request != null &&
+      startsWith(github.event.comment.body, '/tested')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Process /tested command
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const repo        = context.repo;
+
+            const { data: pr } = await github.rest.pulls.get({
+              ...repo,
+              pull_number: issueNumber,
+            });
+            const prAuthor = pr.user.login;
+
+            if (pr.state !== "open") {
+              core.info("PR is not open. Skipping.");
+              return;
+            }
+
+            const triggerCommentId = context.payload.comment.id;
+            const commenter        = context.actor;
+
+            // Eligibility: not the PR author, not a bot, has >=1 merged PR in this repo
+            const isAuthor = commenter === prAuthor;
+            const isBot    = commenter.endsWith("[bot]");
+
+            let hasMergedPR = false;
+            if (!isAuthor && !isBot) {
+              const { data: searchResult } = await github.rest.search.issuesAndPullRequests({
+                q: `repo:${repo.owner}/${repo.repo} is:pr is:merged author:${commenter}`,
+              });
+              hasMergedPR = searchResult.total_count > 0;
+            }
+
+            const isEligible =
+              !isAuthor &&
+              !isBot &&
+              hasMergedPR &&
+              (context.payload.comment.body ?? "").trim().toLowerCase() === "/tested";
+
+            await github.rest.reactions.createForIssueComment({
+              ...repo,
+              comment_id: triggerCommentId,
+              content: isEligible ? "+1" : "eyes",
+            });
+
+            if (!isEligible) {
+              let reason;
+              if (isAuthor)          reason = "you are the author of this PR";
+              else if (isBot)        reason = "bot accounts cannot run this command";
+              else if (!hasMergedPR) reason = "only contributors with at least one merged PR in this repository can run `/tested`";
+              else                   reason = "the comment must be exactly `/tested`";
+
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body: `@${commenter} Your \`/tested\` was not counted -- ${reason}.`,
+              });
+              core.info(`${commenter} not eligible: ${reason}`);
+              return;
+            }
+
+            const SCORE_MARKER    = "<!-- community-tested-score -->";
+            const VERIFIED_MARKER = "<!-- verified-testers:";
+
+            const allComments = await github.paginate(
+              github.rest.issues.listComments,
+              { ...repo, issue_number: issueNumber, per_page: 100 }
+            );
+
+            const scoreComment = allComments.find(
+              (c) => c.body?.includes(SCORE_MARKER) && c.user.type === "Bot"
+            );
+
+            // Parse the persisted verified-testers list, or start fresh
+            const testers = new Set();
+            if (scoreComment) {
+              const match = scoreComment.body.match(/<!-- verified-testers:\s*(.*?)\s*-->/);
+              if (match) {
+                match[1].split(",").map((s) => s.trim()).filter(Boolean).forEach((l) => testers.add(l));
+              }
+            }
+
+            // Short-circuit if this person has already been counted
+            if (testers.has(commenter)) {
+              core.info(`${commenter} already verified. Skipping.`);
+              return;
+            }
+
+            const isFirstTester = testers.size === 0;
+            testers.add(commenter);
+
+            core.info(`Verified testers: ${testers.size} -- [${[...testers].join(", ")}]`);
+
+            const LABEL_NAME = "community-tested";
+
+            // Apply the label on the first eligible tester
+            if (testers.size >= 1) {
+              try {
+                await github.rest.issues.getLabel({ ...repo, name: LABEL_NAME });
+              } catch (err) {
+                if (err.status === 404) {
+                  await github.rest.issues.createLabel({
+                    ...repo,
+                    name: LABEL_NAME,
+                    color: "0075ca",
+                    description: "Tested by community contributors with >=1 merged PR in this repo",
+                  });
+                } else {
+                  throw err;
+                }
+              }
+
+              await github.rest.issues.addLabels({
+                ...repo,
+                issue_number: issueNumber,
+                labels: [LABEL_NAME],
+              });
+
+              // On the first verified tester, ask them to upload a demo video
+              if (isFirstTester) {
+                await github.rest.issues.createComment({
+                  ...repo,
+                  issue_number: issueNumber,
+                  body:
+                    `@${commenter} has marked this PR as community-tested!\n\n` +
+                    `Please reply with a **demo video** showing your test so reviewers can verify the behaviour.`,
+                });
+              }
+
+              core.info(`Label "${LABEL_NAME}" applied -- ${testers.size} tester(s).`);
+            }
+
+            // Build and persist the score comment (embeds the verified list for future runs)
+            const confidence =
+              testers.size >= 4 ? "High (4+ testers)"    :
+              testers.size >= 2 ? "Medium (2-3 testers)"  :
+                                  "Low (1 tester)";
+
+            const scoreBody =
+              `${SCORE_MARKER}\n` +
+              `${VERIFIED_MARKER} ${[...testers].join(", ")} -->\n` +
+              `### Community Testing Confidence\n` +
+              `| Testers | Confidence |\n` +
+              `|---------|------------|\n` +
+              `| ${[...testers].join(", ")} | ${confidence} |`;
+
+            await core.summary
+              .addHeading("Community Tested Progress", 3)
+              .addTable([
+                [{ data: "Testers", header: true }, { data: "Confidence", header: true }],
+                [[...testers].join(", "), confidence],
+              ])
+              .write();
+
+            if (scoreComment) {
+              await github.rest.issues.updateComment({
+                ...repo,
+                comment_id: scoreComment.id,
+                body: scoreBody,
+              });
+              core.info("Confidence score comment updated.");
+            } else {
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body: scoreBody,
+              });
+              core.info("Confidence score comment created.");
+            }
