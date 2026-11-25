@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { ActionButton, Box, Tooltip } from '@embeddedchat/ui-elements';
 import { Markdown } from '../Markdown';
+import RCContext from '../../context/RCInstance';
 
 const AttachmentMetadata = ({
   attachment,
@@ -11,19 +12,77 @@ const AttachmentMetadata = ({
   onExpandCollapseClick,
   isExpanded,
 }) => {
+  const { RCInstance } = useContext(RCContext);
+  const [downloadUrl, setDownloadUrl] = React.useState(url);
+
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const prepareDownloadUrl = async () => {
+      const { userId, authToken } = (await RCInstance.auth.getCurrentUser()) || {};
+      if (!isMounted) return;
+      if (userId && authToken) {
+        const separator = url.includes('?') ? '&' : '?';
+        setDownloadUrl(
+          `${url}${separator}rc_uid=${encodeURIComponent(userId)}&rc_token=${encodeURIComponent(authToken)}`
+        );
+      } else {
+        setDownloadUrl(url);
+      }
+    };
+
+    prepareDownloadUrl();
+    return () => {
+      isMounted = false;
+    };
+  }, [RCInstance, url]);
+  const getExtensionFromMimeType = (mimeType = '') => {
+    if (!mimeType.includes('/')) return '';
+    const rawExt = mimeType.split('/')[1].toLowerCase();
+    if (rawExt === 'mpeg') return 'mp3';
+    if (rawExt === 'jpeg') return 'jpg';
+    return rawExt;
+  };
+
+  const getDownloadFileName = (blobType = '') => {
+    const baseName = (attachment?.title || 'download').trim();
+    const hasExtension = /\.[a-z0-9]+$/i.test(baseName);
+    const extensionFromBlob = getExtensionFromMimeType(blobType);
+
+    const isMediaAttachment = Boolean(
+      attachment?.audio_url || attachment?.video_url || attachment?.image_url
+    );
+
+    if (!isMediaAttachment) {
+      return baseName;
+    }
+
+    if (!hasExtension && extensionFromBlob) {
+      return `${baseName}.${extensionFromBlob}`;
+    }
+
+    if (hasExtension && extensionFromBlob) {
+      const currentExtension = baseName.split('.').pop().toLowerCase();
+      if (
+        (attachment?.audio_url || attachment?.video_url || attachment?.image_url) &&
+        ['txt', 'text'].includes(currentExtension)
+      ) {
+        return `${baseName.replace(/\.[^.]+$/, '')}.${extensionFromBlob}`;
+      }
+    }
+
+    return baseName;
+  };
+
   const handleDownload = async () => {
     try {
-      const response = await fetch(url);
-      const data = await response.blob();
-      const downloadUrl = URL.createObjectURL(data);
       const anchor = document.createElement('a');
       anchor.href = downloadUrl;
-      anchor.download = attachment?.title || 'download';
+      anchor.download = getDownloadFileName(attachment?.audio_type || attachment?.video_type || attachment?.image_type || '');
 
       document.body.appendChild(anchor);
       anchor.click();
       document.body.removeChild(anchor);
-      URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Error downloading the file:', error);
     }

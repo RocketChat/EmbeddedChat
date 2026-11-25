@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
 import { Box, Avatar, useTheme } from '@embeddedchat/ui-elements';
@@ -23,9 +23,68 @@ const AudioAttachment = ({
   const { authorIcon, authorName } = author;
 
   const [isExpanded, setIsExpanded] = useState(true);
+  const [audioSrc, setAudioSrc] = useState('');
+  const [nestedAudioSrcMap, setNestedAudioSrcMap] = useState({});
   const toggleExpanded = () => {
     setIsExpanded((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadAudioWithAuth = async () => {
+      const { userId, authToken } = (await RCInstance.auth.getCurrentUser()) || {};
+      const sourceUrl = host + attachment.audio_url;
+      if (!isMounted) return;
+      if (userId && authToken) {
+        const separator = sourceUrl.includes('?') ? '&' : '?';
+        setAudioSrc(
+          `${sourceUrl}${separator}rc_uid=${encodeURIComponent(userId)}&rc_token=${encodeURIComponent(authToken)}`
+        );
+      } else {
+        setAudioSrc(sourceUrl);
+      }
+    };
+
+    if (attachment?.audio_url) {
+      loadAudioWithAuth();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [RCInstance, attachment?.audio_url, host]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadNestedAudio = async () => {
+      if (!attachment?.attachments?.length) return;
+
+      const { userId, authToken } = (await RCInstance.auth.getCurrentUser()) || {};
+      const nextMap = {};
+
+      attachment.attachments.forEach((nestedAttachment, index) => {
+        if (!nestedAttachment?.audio_url) return;
+        const sourceUrl = host + nestedAttachment.audio_url;
+        if (userId && authToken) {
+          const separator = sourceUrl.includes('?') ? '&' : '?';
+          nextMap[index] = `${sourceUrl}${separator}rc_uid=${encodeURIComponent(userId)}&rc_token=${encodeURIComponent(authToken)}`;
+        } else {
+          nextMap[index] = sourceUrl;
+        }
+      });
+
+      if (isMounted) {
+        setNestedAudioSrcMap(nextMap);
+      }
+    };
+
+    loadNestedAudio();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [RCInstance, attachment?.attachments, host]);
 
   return (
     <Box>
@@ -76,7 +135,7 @@ const AudioAttachment = ({
         >
           <AttachmentMetadata
             attachment={attachment}
-            url={host + (attachment.title_url || attachment.audio_url)}
+            url={host + (attachment.audio_url || attachment.title_url)}
             variantStyles={variantStyles}
             msg={msg}
             onExpandCollapseClick={toggleExpanded}
@@ -85,7 +144,7 @@ const AudioAttachment = ({
         </Box>
         {isExpanded && (
           <audio
-            src={host + attachment.audio_url}
+            src={audioSrc || host + attachment.audio_url}
             style={{ maxHeight: '100%', maxWidth: '100%' }}
             controls
           />
@@ -138,12 +197,14 @@ const AudioAttachment = ({
                   attachment={nestedAttachment}
                   url={
                     host +
-                    (nestedAttachment.title_url || nestedAttachment.audio_url)
+                    (nestedAttachment.audio_url || nestedAttachment.title_url)
                   }
                   variantStyles={variantStyles}
                 />
                 <audio
-                  src={host + nestedAttachment.audio_url}
+                  src={
+                    nestedAudioSrcMap[index] || host + nestedAttachment.audio_url
+                  }
                   width="100%"
                   controls
                 />
