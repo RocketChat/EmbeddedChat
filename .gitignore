@@ -16,3 +16,14 @@ node_modules
 .vscode
 
 .gitpod.yml
+
+# Local development and analysis files (never commit)
+/.github/agents/
+/.github/instructions/
+/.github/prompts/
+/.github/skills/
+/.github/FUNDING.yml
+/.gsd/
+/memory/
+/ANALYZE.md
+
