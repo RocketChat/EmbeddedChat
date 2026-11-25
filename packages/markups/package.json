@@ -16,6 +16,7 @@
         "prebuild": "rimraf dist",
         "build": "rollup -c --context=window --environment NODE_ENV:production",
         "watch": "rollup -c --watch --context=window",
+        "test": "jest",
         "test:lint": "eslint src/**/*.js",
         "format": "prettier --write 'src/' ",
         "format:check": "prettier --check 'src/' ",
