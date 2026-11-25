@@ -48,7 +48,6 @@ const Message = ({
       [message.messageParentBox, className],
       style
     );
-
   const { RCInstance, ECOptions } = useContext(RCContext);
   showAvatar = ECOptions?.showAvatar && showAvatar;
   const { showSidebar, setShowSidebar } = useSidebarStore();

@@ -35,6 +35,11 @@ const useMessageStore = create((set, get) => ({
       };
     }),
   upsertMessage: (message, enableThreads = false) => {
+
+    if (message.t === 'rm' && get().threadMainMessage?._id === message._id){
+      get().closeThread();
+    }
+
     if (message.tmid && enableThreads) {
       if (get().threadMainMessage?._id === message.tmid) {
         set((state) => ({
@@ -48,6 +53,11 @@ const useMessageStore = create((set, get) => ({
     }
   },
   removeMessage: (messageId) => {
+
+    if (get().threadMainMessage?._id === messageId) {
+      get().closeThread();
+    }
+
     const threadMessage = get().threadMessages.find((m) => m._id === messageId);
     const message = get().messages.find((m) => m._id === messageId);
     if (threadMessage) {
