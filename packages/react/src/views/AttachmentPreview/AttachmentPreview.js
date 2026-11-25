@@ -74,14 +74,18 @@ const AttachmentPreview = () => {
 
     setIsPending(true);
     try {
-      await RCInstance.sendAttachment(
-        data,
-        fileName,
-        parseEmoji(description),
-        ECOptions?.enableThreads ? threadId : undefined
-      );
+      await Promise.all(
+        data.map((file) =>
+          RCInstance.sendAttachment(
+            file,
+            file.name,
+            parseEmoji(description),
+            ECOptions?.enableThreads ? threadId : undefined
+          )
+        )
+      )
       toggle();
-      setData(null);
+      setData([]);
     } finally {
       setIsPending(false);
     }
@@ -112,40 +116,46 @@ const AttachmentPreview = () => {
 
       <Modal.Content>
         <Box css={styles.modalContent}>
-          <Box
-            css={css`
-              text-align: center;
-              margin-top: 1rem;
-            `}
-          >
-            <CheckPreviewType data={data} />
-          </Box>
 
+          {/* 1. THE PARENT ROW: Only handles horizontal scrolling and spacing */}
           <Box
             css={css`
-              margin: 30px;
+              display: flex;
+              flex-direction: row;
+              overflow-x: auto;
+              gap: 1rem;
+              margin-top: 1rem;
+              padding-bottom: 1rem;
             `}
           >
-            <Box css={styles.inputContainer}>
+            {data.map((file, index) => (
+              /* 2. THE LOCAL WRAPPER: Enforces the 200px height limit on each individual item */
               <Box
-                is="span"
+                key={index}
                 css={css`
-                  font-weight: 550;
-                  margin-bottom: 0.5rem;
+                  flex: 0 0 auto !important;
+                  height: 200px !important;
+                  width: auto !important;
+                  display: flex !important;
+                  align-items: center;
+                  justify-content: center;
+
+                  /* Forces the generated image inside to obey the 200px limit */
+                  & img, & > div {
+                    height: 100% !important;
+                    width: auto !important;
+                    max-width: none !important;
+                    object-fit: contain !important;
+                  }
                 `}
               >
-                File name
+                <CheckPreviewType data={file} />
               </Box>
-              <Input
-                onChange={handleFileName}
-                value={fileName}
-                type="text"
-                css={styles.input}
-                placeholder="name"
-              />
-              <TypingUsers />
-            </Box>
+            ))}
+          </Box>
 
+          {/* 3. THE RESTORED DESCRIPTION INPUT */}
+          <Box css={css`margin: 30px;`}>
             <Box css={styles.inputContainer}>
               <Box
                 is="span"
@@ -181,9 +191,7 @@ const AttachmentPreview = () => {
                   value={description}
                   css={css`
                     ${styles.input};
-                    border-color: ${isOverLimit
-                      ? theme.colors.destructive
-                      : null};
+                    border-color: ${isOverLimit ? theme.colors.destructive : null};
                     color: ${isOverLimit ? theme.colors.destructive : null};
                   `}
                 />
@@ -202,9 +210,7 @@ const AttachmentPreview = () => {
                   >
                     <Box
                       css={css`
-                        color: ${isOverLimit
-                          ? theme.colors.destructive
-                          : 'transparent'};
+                        color: ${isOverLimit ? theme.colors.destructive : 'transparent'};
                         font-weight: 500;
                         text-align: left;
                         flex: 1 1 auto;
@@ -215,16 +221,12 @@ const AttachmentPreview = () => {
                       aria-hidden={!isOverLimit}
                       role={isOverLimit ? 'alert' : undefined}
                     >
-                      {isOverLimit
-                        ? `Cannot upload file, description is over the ${msgMaxLength} character limit`
-                        : ''}
+                      {isOverLimit ? `Cannot upload file, description is over the ${msgMaxLength} character limit` : ''}
                     </Box>
 
                     <Box
                       css={css`
-                        color: ${isOverLimit
-                          ? theme.colors.destructive
-                          : '#6b7280'};
+                        color: ${isOverLimit ? theme.colors.destructive : '#6b7280'};
                         min-width: 68px;
                         text-align: right;
                         flex: 0 0 auto;
@@ -238,6 +240,7 @@ const AttachmentPreview = () => {
               </Box>
             </Box>
           </Box>
+
         </Box>
       </Modal.Content>
 
