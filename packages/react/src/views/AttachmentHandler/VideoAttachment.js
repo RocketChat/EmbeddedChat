@@ -42,7 +42,6 @@ const VideoAttachment = ({
       <Box
         css={[
           css`
-            line-height: 0;
             border-radius: inherit;
             padding: 0.5rem;
             @media (max-width: 450px) {
@@ -115,6 +114,7 @@ const VideoAttachment = ({
               borderBottomRightRadius: 'inherit',
               maxWidth: '100%',
               maxHeight: '200px',
+              display: 'block',
             }}
           >
             <source
@@ -129,7 +129,6 @@ const VideoAttachment = ({
               <Box
                 css={[
                   css`
-                    line-height: 0;
                     border-radius: inherit;
                     padding: 0.5rem;
                     @media (max-width: 450px) {
@@ -188,6 +187,7 @@ const VideoAttachment = ({
                     borderBottomLeftRadius: 'inherit',
                     borderBottomRightRadius: 'inherit',
                     maxWidth: '300px',
+                    display: 'block',
                   }}
                 >
                   <source
