@@ -57,7 +57,7 @@ const AttachmentMetadata = ({
           display: flex;
           flex-direction: column;
           line-height: normal;
-          @media (max-width: 420px) {
+          @media (max-width: 450px) {
             flex-direction: column;
             align-items: flex-start;
           }
@@ -69,7 +69,7 @@ const AttachmentMetadata = ({
         <div
           css={css`
             margin: 10px 0px;
-            @media (max-width: 420px) {
+            @media (max-width: 450px) {
               margin: 5px 0px;
             }
           `}
@@ -88,7 +88,7 @@ const AttachmentMetadata = ({
           flex-direction: row;
           align-items: center;
           gap: 8px;
-          @media (max-width: 420px) {
+          @media (max-width: 450px) {
             flex-direction: column;
             align-items: flex-start;
           }
@@ -100,7 +100,7 @@ const AttachmentMetadata = ({
             flex-direction: row;
             align-items: center;
             gap: 4px;
-            @media (max-width: 420px) {
+            @media (max-width: 450px) {
               flex-direction: column;
               align-items: flex-start;
               gap: 2px;
@@ -127,7 +127,7 @@ const AttachmentMetadata = ({
                 font-size: 12px;
                 line-height: 1.25;
                 opacity: 0.7;
-                @media (max-width: 420px) {
+                @media (max-width: 450px) {
                   margin-left: 0;
                 }
               `}
@@ -143,7 +143,7 @@ const AttachmentMetadata = ({
             flex-direction: row;
             align-items: center;
             gap: 8px;
-            @media (max-width: 420px) {
+            @media (max-width: 450px) {
               margin-top: 5px;
             }
           `}

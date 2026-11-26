@@ -85,7 +85,7 @@ const AudioAttachment = ({
         {isExpanded && (
           <audio
             src={host + attachment.audio_url}
-            style={{ maxHeight: '100%', maxWidth: '100%' }}
+            style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }}
             controls
           />
         )}
@@ -143,6 +143,7 @@ const AudioAttachment = ({
                 <audio
                   src={host + nestedAttachment.audio_url}
                   width="100%"
+                  style={{ display: 'block' }}
                   controls
                 />
               </Box>

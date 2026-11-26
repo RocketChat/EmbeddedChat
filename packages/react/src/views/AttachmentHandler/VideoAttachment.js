@@ -114,6 +114,7 @@ const VideoAttachment = ({
               borderBottomRightRadius: 'inherit',
               maxWidth: '100%',
               maxHeight: '200px',
+              display: 'block',
             }}
           >
             <source
@@ -186,6 +187,7 @@ const VideoAttachment = ({
                     borderBottomLeftRadius: 'inherit',
                     borderBottomRightRadius: 'inherit',
                     maxWidth: '300px',
+                    display: 'block',
                   }}
                 >
                   <source
