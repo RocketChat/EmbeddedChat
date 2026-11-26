@@ -1,28 +1,31 @@
-import { ApiError } from "../Api";
-
 export async function tokenRequestHandler(
   method: string = "GET",
   url: string,
   token?: string
 ): Promise<any> {
-  try {
-    const headers: { [key: string]: string } = {
-      "Content-Type": "application/json",
-    };
+  const response = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    ...(token ? { body: JSON.stringify({ token }) } : {}),
+  });
 
-    const response = await fetch(url, {
-      method,
-      headers,
-      credentials: "include",
-      ...(token ? { body: JSON.stringify({ token }) } : {}),
-    });
-
-    if (!response.ok) {
-      throw new ApiError(response, "Failed Api Request for " + url);
+  // The app's GET endpoint returns 400 when the session cookie is absent.
+  if (method === "GET" && response.status === 400) {
+    const body = (await response.text()).trim();
+    const missingCookie = ["no cookie header", "ec-token not found"];
+    if (
+      missingCookie.some(
+        (reason) => body === reason || body === JSON.stringify(reason)
+      )
+    ) {
+      return null;
     }
-
-    return response.json();
-  } catch (error) {
-    console.error(`Error with ${method} request:`, error);
   }
+  if (!response.ok) {
+    throw new Error(
+      `Session cookie ${method} failed (HTTP ${response.status}).`
+    );
+  }
+  return response.json();
 }
