@@ -129,9 +129,7 @@ export const MessageAggregator = ({
   };
 
   const isMessageNewDay = (current, previous) =>
-    !previous ||
-    shouldRender(previous) ||
-    !isSameDay(new Date(current.ts), new Date(previous.ts));
+    !previous || !isSameDay(new Date(current.ts), new Date(previous.ts));
 
   const noMessages = messageList?.length === 0 || !messageRendered;
   const ViewComponent = viewType === 'Popup' ? Popup : Sidebar;
