@@ -91,12 +91,19 @@ const useFetchChatData = (showRoles) => {
 
   const createPermissionsMap = useCallback(
     (permissions) =>
-      new Map(permissions.update.map((item) => [item._id, item])),
+      new Map(
+        Array.isArray(permissions?.update)
+          ? permissions.update.map((item) => [item._id, item])
+          : []
+      ),
     []
   );
   const fetchAndSetPermissions = useCallback(async () => {
     try {
       const permissions = await RCInstance.permissionInfo();
+      if (!permissions || !Array.isArray(permissions.update)) {
+        return permissionsRef.current?.map || null;
+      }
 
       if (
         !permissionsRef.current ||
@@ -107,6 +114,7 @@ const useFetchChatData = (showRoles) => {
 
         permissionsRef.current = {
           map: permissionsMap,
+          raw: permissions,
         };
 
         applyPermissions(permissionsMap);
