@@ -363,27 +363,23 @@ const ChatInput = ({ scrollToBottom, clearUnreadDividerRef }) => {
     let quotedMessages = '';
 
     if (quoteMessage.length > 0) {
-      // for (const quote of quoteMessage) {
-      //   const { msg, attachments, _id } = quote;
-      //   if (msg || attachments) {
-      //     const msgLink = await getMessageLink(_id);
-      //     quotedMessages += `[ ](${msgLink})`;
-      //   }
-      // }
-
-      const quoteArray = await Promise.all(
-        quoteMessage.map(async (quote) => {
-          const { msg, attachments, _id } = quote;
-          if (msg || attachments) {
-            const msgLink = await getMessageLink(_id);
-            quotedMessages += `[ ](${msgLink})`;
-          }
-          return quotedMessages;
-        })
-      );
-      quotedMessages = quoteArray.join('');
+      try {
+        const quoteLinks = await Promise.all(
+          quoteMessage.map(async (quote) => {
+            const { msg, attachments, _id } = quote;
+            if (msg || attachments) {
+              const msgLink = await getMessageLink(_id);
+              return msgLink ? `[ ](${msgLink})` : '';
+            }
+            return '';
+          })
+        );
+        quotedMessages = quoteLinks.filter(Boolean).join('');
+      } catch (err) {
+        console.error('Error generating quote links:', err);
+      }
       pendingMessage = createPendingMessage(
-        `${quotedMessages}\n${message}`,
+        quotedMessages ? `${quotedMessages}\n${message}` : message,
         userInfo
       );
     } else {
