@@ -19,18 +19,20 @@ const VideoAttachment = ({
   attachment,
   host,
   type,
-  author,
+  author = {},
   variantStyles = {},
   msg,
 }) => {
   const { RCInstance } = useContext(RCContext);
   const { theme } = useTheme();
   const getUserAvatarUrl = (icon) => {
-    const instanceHost = RCInstance.getHost();
-    const URL = `${instanceHost}${icon}`;
-    return URL;
+    if (!icon) return '';
+    const instanceHost = RCInstance?.getHost
+      ? RCInstance.getHost()
+      : host || '';
+    return `${instanceHost}${icon}`;
   };
-  const { authorIcon, authorName } = author;
+  const { authorIcon, authorName } = author || {};
 
   const [isExpanded, setIsExpanded] = useState(true);
   const toggleExpanded = () => {
@@ -140,7 +142,7 @@ const VideoAttachment = ({
                     ? variantStyles.pinnedContainer
                     : variantStyles.quoteContainer) ||
                     css`
-                      ${type === 'file'
+                      ${nestedAttachment.type === 'file'
                         ? `border: 3px solid ${theme.colors.border};`
                         : ''}
                     `,
@@ -163,11 +165,11 @@ const VideoAttachment = ({
                       ]}
                     >
                       <Avatar
-                        url={getUserAvatarUrl(authorIcon)}
+                        url={getUserAvatarUrl(nestedAttachment.author_icon)}
                         alt="avatar"
                         size="1.2em"
                       />
-                      <Box>@{authorName}</Box>
+                      <Box>@{nestedAttachment.author_name}</Box>
                     </Box>
                   </>
                 ) : (
@@ -191,7 +193,7 @@ const VideoAttachment = ({
                   }}
                 >
                   <source
-                    src={host + attachment.video_url}
+                    src={host + nestedAttachment.video_url}
                     type={userAgentMIMETypeFallback(
                       nestedAttachment.video_type
                     )}
@@ -210,4 +212,8 @@ export default VideoAttachment;
 VideoAttachment.propTypes = {
   attachment: PropTypes.object,
   host: PropTypes.string,
+  type: PropTypes.string,
+  author: PropTypes.object,
+  variantStyles: PropTypes.object,
+  msg: PropTypes.object,
 };
