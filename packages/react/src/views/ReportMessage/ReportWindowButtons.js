@@ -51,6 +51,7 @@ const ReportWindowButtons = ({
   };
 
   const messageDescription = (msg) => {
+    if (!msg) return null;
     if (msg.file) {
       if (msg.attachments[0]?.description) {
         return (

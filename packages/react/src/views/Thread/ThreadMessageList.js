@@ -24,6 +24,10 @@ const ThreadMessageList = ({
     .filter(Boolean)
     .sort((a, b) => new Date(a.ts) - new Date(b.ts));
 
+  const reportedMessage = sortedMessages.find(
+    (msg) => msg._id === messageToReport
+  );
+
   return (
     <>
       {sortedMessages.map((msg, index, arr) => {
@@ -52,7 +56,12 @@ const ThreadMessageList = ({
           onDismiss={onDismissCatchUp}
         />
       ))}
-      {showReportMessage && <MessageReportWindow messageId={messageToReport} />}
+      {showReportMessage && (
+        <MessageReportWindow
+          messageId={messageToReport}
+          message={reportedMessage}
+        />
+      )}
     </>
   );
 };
