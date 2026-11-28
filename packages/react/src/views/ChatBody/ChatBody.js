@@ -437,7 +437,7 @@ const ChatBody = ({
         <LoginForm />
 
         {uiKitModalOpen && (
-          <UiKitModal key={Math.random()} initialView={uiKitModalData} />
+          <UiKitModal key={uiKitModalData?.id} initialView={uiKitModalData} />
         )}
       </Box>
 
