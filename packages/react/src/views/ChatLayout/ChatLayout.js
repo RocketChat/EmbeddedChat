@@ -170,7 +170,7 @@ const ChatLayout = () => {
           {showCurrentUserInfo && <UserInformation />}
           {uiKitContextualBarOpen && (
             <UiKitContextualBar
-              key={Math.random()}
+              key={uiKitContextualBarData?.id}
               initialView={uiKitContextualBarData}
             />
           )}
